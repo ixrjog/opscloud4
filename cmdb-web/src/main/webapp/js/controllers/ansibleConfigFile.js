@@ -35,7 +35,7 @@ app.controller('ansibleVersionCtrl', function ($scope, $state, $uibModal, $parse
 });
 
 
-app.controller('ansibleConfigCtrl', function ($scope, $state, $uibModal, toaster, httpService, staticModel) {
+app.controller('ansibleHostConfigCtrl', function ($scope, $state, $uibModal, toaster, httpService, staticModel) {
 
     $scope.envType = staticModel.envType;
 
@@ -899,6 +899,100 @@ app.controller('configFileInfoInstanceCtrl', function ($scope, $uibModalInstance
     };
 });
 
+/**
+ * Ansible参数配置
+ */
+app.controller('ansibleConfigCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster) {
+
+        $scope.configMap = {};
+
+        $scope.itemGroup = "ANSIBLE";
+
+        /**
+         * 获取配置
+         */
+        $scope.getConfig = function () {
+            var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
+                "&env=";
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    $scope.configMap = data.body;
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+
+        /**
+         * 更新配置
+         */
+        $scope.updateConfig = function () {
+            var url = "/config/center/update";
+            httpService.doPostWithJSON(url, $scope.configMap).then(function (data) {
+                if (data.success) {
+                    toaster.pop("success", "配置保存成功!");
+                    $scope.getConfig();
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+        $scope.getConfig();
+
+        $scope.describeRegions = function () {
+            var url = "/aliyun/api/describeRegions";
+
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    var regions = data.body;
+                    viewRegions(regions);
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+
+        // 查看regions
+        var viewRegions = function (regions) {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'regionsInfo',
+                controller: 'regionsInstanceCtrl',
+                size: 'lg',
+                resolve: {
+                    httpService: function () {
+                        return httpService;
+                    },
+                    regions: function () {
+                        return regions;
+                    }
+                }
+            })
+        };
+
+
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+
+        $scope.closeAlert = function () {
+            $scope.alert = {
+                type: "",
+                msg: ""
+            };
+        }
+
+    }
+);
 
 app.controller('versionInstanceCtrl', function ($scope, $uibModalInstance, $uibModal, toaster, versionItem) {
     //$scope.localAuthPoint = authPoint;

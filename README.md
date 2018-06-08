@@ -78,18 +78,10 @@ Starting ApacheDS - default...
 ```$xslt
 安装Tomcat 并在webapps下部署 opscloud.war
 修改配置文件 WEB-INF/classes/server.properties
+启动Tomcat 首次登录使用admin/opscloud
 ```
 
 ### 安装步骤6 ansible
-* 更新yum源（可忽略）
-```$xslt
-mv /etc/yum.repos.d/CentOS-Base.repo /etc/yum.repos.d/CentOS-Base.repo.backup
-cd /etc/yum.repos.d/
-wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-6.repo
-# 运行yum makecache生成缓存
-yum makecache
-yum -y update
-```
 * 安装
 ```$xslt
 yum install epel-release -y
@@ -199,7 +191,6 @@ accelerate_multi_key = yes
   - 批量同步（首次需要手动同步，以后服务器修改和授权，配置会自动同步）
   - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
   - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
-
 
 ## 基本功能
 
