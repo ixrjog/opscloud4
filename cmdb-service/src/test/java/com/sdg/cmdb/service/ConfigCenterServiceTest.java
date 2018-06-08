@@ -1,5 +1,6 @@
 package com.sdg.cmdb.service;
 
+import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.LdapItemEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.ZabbixItemEnum;
@@ -79,7 +80,7 @@ public class ConfigCenterServiceTest {
 
     @Test
     public void testGetAliyunEcsItemGroup() {
-        configCenterService.refreshCache(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey(),"online");
+        configCenterService.refreshCache(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey(), "online");
         configCenterService.refreshCache(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
         //configCenterService.refreshCache(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
         HashMap<String, String> map = configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
@@ -98,7 +99,7 @@ public class ConfigCenterServiceTest {
 
     @Test
     public void testGetPublicItemGroup() {
-        configCenterService.refreshCache(ConfigCenterItemGroupEnum.PUBLIC.getItemKey(),"online");
+        configCenterService.refreshCache(ConfigCenterItemGroupEnum.PUBLIC.getItemKey(), "online");
         HashMap<String, String> map = configCenterService.getItemGroup(ConfigCenterItemGroupEnum.PUBLIC.getItemKey());
         System.err.println(map.get(PublicItemEnum.OFFICE_DMZ_IP_NETWORK_ID.getItemKey()));
         System.err.println(map.get(PublicItemEnum.IPTABLES_WEBSERVICE_PATH.getItemKey()));
@@ -116,7 +117,7 @@ public class ConfigCenterServiceTest {
 
     @Test
     public void testGetJenkins() {
-        configCenterService.refreshCache(ConfigCenterItemGroupEnum.JENKINS.getItemKey(),"online");
+        configCenterService.refreshCache(ConfigCenterItemGroupEnum.JENKINS.getItemKey(), "online");
         HashMap<String, String> map = configCenterService.getItemGroup(ConfigCenterItemGroupEnum.JENKINS.getItemKey());
         System.err.println(map.get(JenkinsItemEnum.JENKINS_HOST.getItemKey()));
         System.err.println(map.get(JenkinsItemEnum.JENKINS_USER.getItemKey()));
@@ -126,7 +127,6 @@ public class ConfigCenterServiceTest {
     }
 
 
-
     @Test
     public void testGetDingtalkItemGroup() {
         configCenterService.refreshCache(ConfigCenterItemGroupEnum.DINGTALK.getItemKey());
@@ -134,6 +134,19 @@ public class ConfigCenterServiceTest {
         HashMap<String, String> map = configCenterService.getItemGroup(ConfigCenterItemGroupEnum.DINGTALK.getItemKey());
         System.err.println(map.get(DingtalkItemEnum.DINGTALK_TOKEN_FT_BUILD.getItemKey()));
         System.err.println(map.get(DingtalkItemEnum.DINGTALK_TOKEN_ANDROID_BUILD.getItemKey()));
+
+    }
+
+
+    @Test
+    public void testGetConfigCenterItemGroup() {
+
+        HashMap<String, ConfigCenterDO> map = configCenterService.getConfigCenterItemGroup("ANSIBLE","");
+
+        for (String key : map.keySet()) {
+            ConfigCenterDO c = map.get(key);
+            System.err.println(c);
+        }
 
     }
 

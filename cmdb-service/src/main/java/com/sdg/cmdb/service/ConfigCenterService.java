@@ -52,9 +52,7 @@ public interface ConfigCenterService {
     BusinessWrapper<Boolean> refreshCache(String itemGroup);
 
     boolean refreshCache(String itemGroup,String env);
-
-
-
+    
     /**
      * 保存单记录
      * @param configCenterDO
