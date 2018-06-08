@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ProjectDao">
+
+    <select id="getProjectManagementSize" parameterType="object" resultType="_long">
+        SELECT count(*) from project_management
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName LIKE "%" #{projectName} "%"
+            </if>
+            <if test="projectType != -1">
+                AND projectType = #{projectType}
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+            <if test="leaderUsername != null and leaderUsername != ''">
+                AND leaderUsername LIKE "%" #{leaderUsername} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getProjectManagementPage" parameterType="object" resultType="ProjectManagementDO">
+        SELECT * FROM project_management
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName LIKE "%" #{projectName} "%"
+            </if>
+            <if test="projectType != -1">
+                AND projectType = #{projectType}
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+            <if test="leaderUsername != null and leaderUsername != ''">
+                AND leaderUsername LIKE "%" #{leaderUsername} "%"
+            </if>
+        </where>
+        ORDER BY projectName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getProjectManagementAll" parameterType="object" resultType="ProjectManagementDO">
+        SELECT * FROM project_management
+        WHERE status != 1 AND  status != 0
+        ORDER BY projectName DESC
+    </select>
+
+
+    <select id="getProjectManagementById" parameterType="_long" resultType="ProjectManagementDO">
+        SELECT * FROM project_management
+        WHERE id = #{id}
+    </select>
+
+    <!-- 新增指定ProjectManagement -->
+    <insert id="addProjectManagement" parameterType="ProjectManagementDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO project_management (
+        projectName,
+        beginTime,
+        projectType,
+        ttl,
+        leaderUserId,
+        leaderUsername,
+        content
+        ) VALUES (
+        #{projectName},
+        #{beginTime},
+        #{projectType},
+        #{ttl},
+        #{leaderUserId},
+        #{leaderUsername},
+        #{content}
+        );
+    </insert>
+
+    <!-- 更新指定ProjectManagement信息 -->
+    <update id="updateProjectManagement" parameterType="ProjectManagementDO">
+        UPDATE project_management
+        SET
+        projectName = #{projectName},
+        beginTime = #{beginTime},
+        projectType = #{projectType},
+        ttl = #{ttl},
+        leaderUserId = #{leaderUserId},
+        leaderUsername = #{leaderUsername},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateProjectManagementStatus" parameterType="ProjectManagementVO">
+        UPDATE project_management
+        SET
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delProjectManagement" parameterType="_long">
+        DELETE FROM project_management WHERE id = #{id}
+    </delete>
+
+    <select id="getProjectPropertyByPmIdAndType" parameterType="object" resultType="ProjectPropertyDO">
+        SELECT * FROM project_property
+        <where>
+            pmId = #{pmId}
+            <if test="propertyType != -1">
+                AND propertyType = #{propertyType}
+            </if>
+        </where>
+    </select>
+
+
+    <insert id="addProjectProperty" parameterType="ProjectPropertyDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO project_property (
+        pmId,
+        propertyType,
+        propertyValue
+        ) VALUES (
+        #{pmId},
+        #{propertyType},
+        #{propertyValue}
+        );
+    </insert>
+
+    <delete id="delProjectProperty" parameterType="_long">
+        DELETE FROM project_property WHERE id = #{id}
+    </delete>
+
+    <insert id="addProjectHeartbeat" parameterType="ProjectHeartbeatDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO project_heartbeat (
+        pmId,
+        userId,
+        username,
+        heartbeatType
+        ) VALUES (
+        #{pmId},
+        #{userId},
+        #{username},
+        #{heartbeatType}
+        );
+    </insert>
+
+    <select id="getProjectHeartbeatByPmId" parameterType="_long" resultType="ProjectHeartbeatDO">
+        SELECT * FROM project_heartbeat
+        WHERE pmId = #{pmId}
+        ORDER BY gmtCreate DESC
+        limit #{cnt}
+    </select>
+
+
+    <select id="getProjectHeartbeatSize" parameterType="object" resultType="_long">
+        SELECT count(*) from project_management AS management
+        INNER JOIN project_property AS property
+        ON management.ID = property.pmId AND leaderUserId = #{userId} OR (propertyType = 0 AND propertyValue =
+        #{userId})
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName LIKE "%" #{projectName} "%"
+            </if>
+            <if test="projectType != -1">
+                AND projectType = #{projectType}
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+            <if test="leaderUsername != null and leaderUsername != ''">
+                AND leaderUsername LIKE "%" #{leaderUsername} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getProjectHeartbeatPage" parameterType="object" resultType="ProjectManagementDO">
+        SELECT * from project_management AS management
+        LEFT JOIN project_property AS property
+        ON management.ID = property.pmId AND (propertyType = 0 AND propertyValue = #{userId})
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName LIKE "%" #{projectName} "%"
+            </if>
+            <if test="projectType != -1">
+                AND projectType = #{projectType}
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+            <if test="leaderUsername != null and leaderUsername != ''">
+                AND leaderUsername LIKE "%" #{leaderUsername} "%"
+            </if>
+            AND ( leaderUserId = #{userId} OR  propertyValue = #{userId} )
+        </where>
+        ORDER BY projectName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+</mapper>

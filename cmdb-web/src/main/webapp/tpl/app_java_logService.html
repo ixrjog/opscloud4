@@ -1,0 +1,393 @@
+<style>
+    .tagPath .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">日志服务</h1>
+                    <small class="text-muted">业务日志查询</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="Java日志查询">
+                    <div class="panel panel-default" ng-controller="javaLogCtrl">
+                        <div class="panel-body">
+
+
+                            <div class="form-group">
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label"><span
+                                            style="color: #ec2121;">*</span>服务器组</label>
+                                    <div class="col-lg-4">
+                                        <ui-select ng-model="nowLogServiceServerGroupCfgVO.selected"
+                                                   on-select="onSelected()"
+                                                   theme="bootstrap">
+                                            <ui-select-match placeholder="搜索服务器组名称......">
+                                                {{$select.selected.serverGroupDO.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in logServiceServerGroupCfgVOList | filter: $select.search">
+                                                <div ng-bind-html="item.serverGroupDO.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <i uib-popover-html="nowLogServiceServerGroupCfgVO.selected.info"
+                                       ng-show="nowLogServiceServerGroupCfgVO.selected != null"
+                                       popover-trigger="'mouseenter'"
+                                       class="icon icon-info"
+                                       style="color: green;"></i>
+                                    <b style="color: #286090">{{serverGroupCfgInfo}}</b>
+                                    <button type="button" class="btn btn-info"
+                                            ng-show="nowLogServiceServerGroupCfgVO.selected != null && nowLogServiceServerGroupCfgVO.selected.serverGroupId  != ''"
+                                            ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                </div>
+                            </div>
+                            <br/>
+                            <div style="font-size:0.5em;">&nbsp;</div>
+
+                            <!--查询时间-->
+                            <div class="form-group"
+                                 ng-show="nowLogServiceServerGroupCfgVO.selected != null && nowLogServiceServerGroupCfgVO.selected.serverGroupId  != ''">
+                                <div class="col-md-6">
+                                    <!--<button type="button" class="btn btn-sm btn-info"-->
+                                    <!--ng-click="today()">Today-->
+                                    <!--</button>-->
+                                    <label class="col-lg-3 control-label">开始时间</label>
+                                    <div class="col-lg-5">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" uib-datepicker-popup
+                                                   ng-model="queryItem.beginDate"
+                                                   is-open="popupBeginDate.opened" datepicker-options="dateOptions"
+                                                   ng-required="true" close-text="Close"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default"
+                                                        ng-click="openBeginDate()">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div uib-timepicker arrowkeys="false" ng-model="queryItem.beginTime"
+                                             ng-change="changed()"
+                                             hour-step="hstep" minute-step="mstep" show-meridian="false"
+                                             show-spinners="false"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!--<button type="button" class="btn btn-sm btn-info"-->
+                                    <!--ng-click="today()">Today-->
+                                    <!--</button>-->
+                                    <label class="col-lg-3 control-label">结束时间</label>
+                                    <div class="col-lg-5">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" uib-datepicker-popup
+                                                   ng-model="queryItem.endDate"
+                                                   is-open="popupEndDate.opened" datepicker-options="dateOptions"
+                                                   ng-required="true" close-text="Close"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default"
+                                                        ng-click="openEndDate()">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div uib-timepicker arrowkeys="false" ng-model="queryItem.endTime"
+                                             ng-change="changed()"
+                                             hour-step="hstep" minute-step="mstep" show-meridian="false"
+                                             show-spinners="false"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+                            <!--日志文件-->
+                            <div class="form-group tagPath"
+                                 ng-show="nowLogServiceServerGroupCfgVO.selected != null && nowLogServiceServerGroupCfgVO.selected.serverGroupId  != ''">
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label">日志路径
+                                        <i uib-popover-html="javaLogHelp.tagPath"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" placeholder="日志路径..."
+                                               ng-model="queryItem.tagPath">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label">常用日志
+                                        <i uib-popover-html="javaLogHelp.history"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-9">
+                                        <ui-select ng-model="nowLogServicePath.selected"
+                                                   ng-change="chgLogPathSelected()"
+                                                   theme="bootstrap">
+                                            <ui-select-match placeholder="搜索日志路径&名称......">
+                                                {{$select.selected.tagPath}}
+                                            </ui-select-match>
+                                            <ui-select-choices
+                                                    refresh="queryLogServicePath($select.search)"
+                                                    refresh-dalay="0"
+                                                    repeat="item in logServicePathList | filter: $select.search">
+                                                <div ng-bind-html="item.tagPath | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+                            <!--搜索内容-->
+                            <div class="form-group"
+                                 ng-show="nowLogServiceServerGroupCfgVO.selected != null && nowLogServiceServerGroupCfgVO.selected.serverGroupId  != ''">
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label">搜索内容
+                                        <i uib-popover-html="javaLogHelp.search"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" placeholder="多个关键字用空格分割、可在最后加上*"
+                                               ng-model="queryItem.search">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="checkbox col-lg-4">
+                                        <label>
+                                            <input type="checkbox" ng-model="isException"
+                                                   ng-click="setException()">
+                                            <b style="color: #286090">Exception日志</b>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+
+                            <!--查询条件设置-->
+                            <!--ng-if="nowLogServiceServerGroupCfgVO.selected != null"-->
+                            <!--<uib-accordion>-->
+                            <!--<div class="list-group col-md-12">-->
+                            <!--<div class="panel panel-default">-->
+                            <!--<div uib-accordion-group class="panel-info" is-open="searchStatusOpen">-->
+                            <!--<uib-accordion-heading>查询条件-->
+                            <!--<i class="pull-right glyphicon"-->
+                            <!--ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>-->
+                            <!--</uib-accordion-heading>-->
+
+                            <!--<div class="form-group">-->
+                            <!--<div class="col-lg-3">-->
+                            <!--&lt;!&ndash;<button type="button" class="btn btn-sm btn-success"&ndash;&gt;-->
+                            <!--&lt;!&ndash;ng-click="today()">Today&ndash;&gt;-->
+                            <!--&lt;!&ndash;</button>&ndash;&gt;-->
+                            <!--<div class="input-group">-->
+                            <!--<input type="text" class="form-control" uib-datepicker-popup-->
+                            <!--ng-model="queryItem.dt"-->
+                            <!--is-open="popup.opened" datepicker-options="dateOptions"-->
+                            <!--ng-required="true" close-text="Close"/>-->
+                            <!--<span class="input-group-btn">-->
+                            <!--<button type="button" class="btn btn-default"-->
+                            <!--ng-click="open()">-->
+                            <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                            <!--</button>-->
+                            <!--</span>-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-lg-2">-->
+                            <!--<div uib-timepicker arrowkeys="false" ng-model="queryItem.time"-->
+                            <!--ng-change="changed()"-->
+                            <!--hour-step="hstep" minute-step="mstep" show-meridian="false"-->
+                            <!--show-spinners="false"></div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-lg-4">-->
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">查询时长(分钟)</span>-->
+                            <!--<input type="text" class="form-control" style="width: 50px;"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--ng-model="queryItem.toMinutes">-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="form-group">-->
+                            <!--<div class="col-lg-8">-->
+                            <!--<div class="input-group col-md-4">-->
+                            <!--<span class="input-group-addon">日志路径</span>-->
+                            <!--<input type="text" class="form-control" style="width: 550px;"-->
+                            <!--placeholder="日志路径..."-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--ng-model="queryItem.tagPath">-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-8">-->
+                            <!--<div class="input-group col-md-4">-->
+                            <!--<span class="input-group-addon">常用日志</span>-->
+                            <!--<ui-select ng-model="nowLogServicePath.selected"-->
+                            <!--theme="bootstrap"-->
+                            <!--style="width: 550px;">-->
+                            <!--<ui-select-match placeholder="搜索日志路径&名称......">-->
+                            <!--{{$select.selected.tagPath}}-->
+                            <!--</ui-select-match>-->
+                            <!--<ui-select-choices-->
+                            <!--refresh="queryLogServicePath($select.search)"-->
+                            <!--refresh-dalay="0"-->
+                            <!--repeat="item in logServicePathList | filter: $select.search">-->
+                            <!--<div ng-bind-html="item.tagPath | highlight: $select.search"></div>-->
+                            <!--</ui-select-choices>-->
+                            <!--</ui-select>-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--</div>-->
+                            <!--&lt;!&ndash;style="width: 300px;"&ndash;&gt;-->
+                            <!--<div class="form-group">-->
+                            <!--<div class="col-lg-6">-->
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">搜素内容</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--placeholder="多个关键字用空格分割、可在最后加上*"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--ng-model="queryItem.search">-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<div class="col-lg-6">-->
+                            <!--<button type="button" class="btn btn-sm pull-left"-->
+                            <!--style="background-color: #2e6da4; color: white;"-->
+                            <!--ng-click="setException()">查询Exception日志-->
+                            <!--</button>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--</uib-accordion>-->
+
+                            <!--日志分布视图-->
+                            <uib-accordion ng-if="pageData != null && pageData != ''">
+                                <div class="list-group col-md-12">
+                                    <div class="panel panel-default">
+                                        <div uib-accordion-group class="panel-info" is-open="logHistogramsStatusOpen">
+                                            <uib-accordion-heading>日志分布视图
+                                                <i class="pull-right glyphicon"
+                                                   ng-class="{'glyphicon-chevron-down': myJobStatusOpen, 'glyphicon-chevron-right': !myJobStatusOpen}"></i>
+                                            </uib-accordion-heading>
+                                            <div style="margin-top: 5px;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <td class="col-md-4">开始时间</td>
+                                                        <td class="col-md-4">结束时间</td>
+                                                        <td class="col-md-2">日志条目</td>
+                                                        <td>操作</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    <tr ng-repeat="item in pageData">
+                                                        <td>
+                                                            <b style="color: #286090">{{item.gmtFrom}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #286090">{{item.gmtTo}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #286090">{{item.totalCount}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <button ng-click="javaLogList(item)"
+                                                                    class="btn btn-xs glyphicon glyphicon-search"
+                                                                    style="background-color: #2e6da4; color: white;">
+                                                                日志详情
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                                total-items="totalItems" ng-model="currentPage"
+                                                                items-per-page="pageLength" max-size="10"
+                                                                ng-change="pageChanged(currentPage)"
+                                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                                        </td>
+                                                    </tr>
+                                                    </tfoot>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion>
+
+
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="javaLogInfo">
+    <div ng-include="'tpl/modal/java_log_info_modal.html'"></div>
+</script>
+

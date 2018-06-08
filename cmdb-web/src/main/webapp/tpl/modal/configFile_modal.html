@@ -1,0 +1,84 @@
+<div class="modal-header">
+    <h3 class="modal-title">文件详情</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>文件组名</label>
+            <div class="col-lg-9">
+                <ui-select ng-model="nowFileGroup.selected" theme="bootstrap">
+                    <ui-select-match placeholder="搜索文件组名称......">{{$select.selected.groupName}}</ui-select-match>
+                    <ui-select-choices refresh="queryGroup($select.search)" refresh-dalay="0" repeat="item in fileGroupList | filter: $select.search">
+                        <div ng-bind-html="item.groupName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>文件名</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" placeholder="文件名" ng-model="item.fileName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>环境类型</label>
+            <div class="col-lg-9">
+                <select class="form-control" ng-model="item.envType" ng-options="envItem.code as envItem.name for envItem in envTypes" required>
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">说明</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" placeholder="说明" ng-model="item.fileDesc">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>路径</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" placeholder="路径" ng-model="item.filePath">
+            </div>
+        </div>
+        <div class="form-group" ng-show="item.fileType == 1">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>执行命令</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" placeholder="执行命令" ng-model="item.invokeCmd">
+            </div>
+        </div>
+        <div class="form-group" ng-if="item.fileType == 1">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>参数</label>
+            <div class="col-lg-9">
+                <div ng-show="paramList.length == 0">
+                    <button ng-click="addParam(-1)" class="btn btn-sm btn-success"><span class="glyphicon glyphicon-plus"></span></button>
+                </div>
+                <div ng-repeat="paramItem in paramList track by $index" class="row">
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="参数" ng-model="paramItem" ng-change="changeParam($index, paramItem)">
+                    </div>
+                    <div class="col-lg-4">
+                        <span ng-click="addParam($index)" class="glyphicon glyphicon-plus"></span>
+                        <span ng-click="delParam($index)" class="glyphicon glyphicon-minus pull-right"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" ng-if="item.fileType == 0">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>内容</label>
+            <div class="col-lg-9">
+                <textarea class="form-control" rows="20" ng-model="item.fileContent"/>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <span class="glyphicon glyphicon-save"
+                  uib-popover-html="'保存'" popover-trigger="'mouseenter'"
+                  ng-click="saveData()"></span>
+            <span class="glyphicon glyphicon-remove"
+                  uib-popover-html="'关闭'" popover-trigger="'mouseenter'"
+                  ng-click="closeModal()" style="margin-left: 20px;"></span>
+        </div>
+    </form>
+    <div ng-if="alert.msg != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

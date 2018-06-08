@@ -1,0 +1,26 @@
+<div class="modal-header">
+    <h3 class="modal-title">文件组详情</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>文件组名</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="文件组名" ng-model="item.groupName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">文件组描述</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="文件组描述" ng-model="item.groupDesc">
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button class="btn btn-primary btn-sm" ng-click="saveData()">保存</button>
+            <button class="btn btn-default btn-sm" ng-click="closeModal()" style="margin-left: 20px;">关闭</button>
+        </div>
+    </form>
+    <div ng-if="alert.msg != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

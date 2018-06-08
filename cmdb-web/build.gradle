@@ -1,0 +1,24 @@
+apply plugin: 'war'
+
+war {
+    baseName = System.properties['pkgName']
+}
+
+
+dependencies {
+    compile project(":cmdb-keybox")
+    compile project(":cmdb-service")
+    compile project(":cmdb-task")
+    compile project(":cmdb-zabbix")
+
+    compile "taglibs:standard:1.1.2"
+    compile("javax.servlet:javax.servlet-api:3.1.0")
+    compile 'commons-fileupload:commons-fileupload:1.3.1'
+
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
+}
+
+processResources {
+    from "env/" + System.properties['env']
+    into "build/resources/main"
+}

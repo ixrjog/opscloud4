@@ -1,0 +1,63 @@
+<div class="modal-header">
+    <h3 class="modal-title">服务器&属性组信息</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>服务器组</label>
+            <div class="col-lg-9">
+                <ui-select ng-model="nowServerGroup.selected" theme="bootstrap" ng-disabled="groupItem.type =='edit'">
+                    <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0" repeat="item in serverGroupList | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>服务器</label>
+            <div class="col-lg-9">
+                <ui-select ng-model="nowServer.selected" theme="bootstrap" ng-disabled="groupItem.type =='edit'">
+                    <ui-select-match placeholder="搜索服务器名称......">{{($select.selected.serverName + ($select.selected.serialNumber != '' ? ('-' + $select.selected.serialNumber) : '') + '-(' + $select.selected.envTypeStr + ')')}}</ui-select-match>
+                    <ui-select-choices refresh="queryServer($select.search)" refresh-dalay="0" repeat="item in serverList | filter: $select.search">
+                        <div ng-bind-html="(item.serverName + (item.serialNumber != '' ? ('-' + item.serialNumber) : '') + '-(' + item.envTypeStr + ')') | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>属性组</label>
+            <div class="col-lg-9">
+                <ui-select ng-model="propertyGroup.selected" theme="bootstrap" ng-change="changePropertyGroup()" ng-disabled="groupItem.type =='edit'">
+                    <ui-select-match placeholder="搜索资源组名称......">{{$select.selected.groupName}}</ui-select-match>
+                    <ui-select-choices refresh="queryGroup($select.search)" refresh-dalay="0" repeat="item in propertyGroupList | filter: $select.search">
+                        <div ng-bind-html="item.groupName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group" ng-repeat="item in groupProperties">
+            <label class="col-lg-3 control-label">{{item.proDesc}}</label>
+            <label class="col-lg-4 control-label">{{item.proName}}</label>
+            <div class="col-lg-5">
+                <input type="text" class="form-control" ng-model="item.proValue">
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button ng-click="saveData()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-edit"></span>保存</button>
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: red; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭</button>
+            <!--<button class="btn btn-primary btn-sm" ng-click="saveData()">保存</button>-->
+            <!--<button class="btn btn-default btn-sm" ng-click="closeModal()" style="margin-left: 20px;">关闭</button>-->
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

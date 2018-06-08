@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ExplainDao">
+
+    <!-- 新增计划订阅 -->
+    <insert id="addRepoExplainSub" parameterType="ExplainInfo">
+        INSERT INTO explain_meta(
+          repo,
+          scanPath,
+          notifyEmails,
+          cdlAppId,
+          cdlGroup
+        ) VALUES (
+          #{repo},
+          #{scanPath},
+          #{notifyEmails},
+          #{cdlAppId},
+          #{cdlGroup}
+        )
+    </insert>
+    
+    <!-- 删除计划订阅 -->
+    <delete id="delRepoExplainSub" parameterType="_long">
+        DELETE FROM explain_meta WHERE id = #{id}
+    </delete>
+
+    <!-- 更新计划订阅 -->
+    <update id="updateRepoExplainSub" parameterType="ExplainInfo">
+        UPDATE explain_meta
+        SET repo = #{repo},
+        scanPath = #{scanPath},
+        notifyEmails = #{notifyEmails},
+        cdlAppId = #{cdlAppId},
+        cdlGroup = #{cdlGroup}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询总记录数 -->
+    <select id="queryRepoExplainSubListSize" resultType="_long">
+        SELECT count(*) FROM explain_meta WHERE repo LIKE "%" #{repo} "%"
+    </select>
+
+    <!-- 查询分页数据 -->
+    <select id="queryRepoExplainSubListPage" parameterType="object" resultType="ExplainInfo">
+        SELECT * FROM explain_meta
+        WHERE repo LIKE "%" #{repo} "%"
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 查询已订阅仓库 -->
+    <select id="queryRepoList" parameterType="object" resultType="string">
+        SELECT repo FROM explain_meta WHERE repo LIKE  "%" #{repo} "%"
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 查询指定的订阅 -->
+    <select id="getRepoSubById" parameterType="_long" resultType="ExplainInfo">
+        SELECT * FROM explain_meta WHERE id = #{id}
+    </select>
+
+    <!-- 新增执行计划 -->
+    <insert id="addExplainJob" parameterType="ExplainJob">
+        INSERT INTO explain_job(
+          metaId,
+          jobBranch,
+          jobWeight,
+          jobVersion,
+          jobStatus,
+          uniqueField
+        ) VALUES (
+          #{metaId},
+          #{jobBranch},
+          #{jobWeight},
+          #{jobVersion},
+          #{jobStatus},
+          #{uniqueField}
+        )
+    </insert>
+
+    <!-- 查询指定条件的执行计划 -->
+    <select id="queryExplainJobs" parameterType="ExplainJob" resultType="ExplainJob">
+        SELECT * FROM explain_job
+        <where>
+            <if test="metaId != 0">
+                metaId = #{metaId}
+            </if>
+            <if test="jobBranch != null and jobBranch != ''">
+                AND jobBranch = #{jobBranch}
+            </if>
+            <if test="jobStatus != null">
+                AND jobStatus = #{jobStatus}
+            </if>
+            AND uniqueField = 0
+        </where>
+    </select>
+
+    <!-- 查询指定条件的执行计划数目 -->
+    <select id="queryExplainJobSize" parameterType="ExplainJob" resultType="_long">
+        SELECT count(*) FROM explain_job
+        <where>
+            <if test="metaId != 0">
+                metaId = #{metaId}
+            </if>
+            <if test="jobBranch != null and jobBranch != ''">
+                AND jobBranch = #{jobBranch}
+            </if>
+            <if test="jobWeight != 0">
+                AND jobWeight = #{jobWeight}
+            </if>
+            AND jobStatus = #{jobStatus}
+        </where>
+    </select>
+
+    <!-- 查询指定条件的执行计划分页数据 -->
+    <select id="queryExplainJobPage" parameterType="object" resultType="ExplainJob">
+        SELECT count(*) FROM explain_job
+        <where>
+            <if test="job.metaId != 0">
+                metaId = #{job.metaId}
+            </if>
+            <if test="job.jobBranch != null and job.jobBranch != ''">
+                AND jobBranch = #{job.jobBranch}
+            </if>
+            <if test="job.jobWeight != 0">
+                AND jobWeight = #{job.jobWeight}
+            </if>
+            AND jobStatus = #{job.jobStatus}
+        </where>
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 更新计划任务 -->
+    <update id="updateExplainJob" parameterType="ExplainJob">
+        UPDATE explain_job
+        <set>
+            jobStatus = #{jobStatus},
+            <if test="jobWeight != 0">
+                jobWeight = #{jobWeight},
+            </if>
+            <if test="uniqueField != 0">
+                uniqueField = #{uniqueField},
+            </if>
+            jobVersion = jobVersion + 1
+        </set>
+        WHERE id = #{id}
+        AND jobVersion = #{jobVersion}
+    </update>
+
+    <!-- 获取权重版本规则下的job集合 -->
+    <select id="queryExplainJobsOrderByWeightVersion" resultType="ExplainJob">
+        SELECT * FROM explain_job
+        WHERE jobStatus = 0
+        AND uniqueField = 0
+        ORDER BY jobWeight DESC,jobVersion DESC
+    </select>
+</mapper>

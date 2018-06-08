@@ -1,0 +1,290 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+
+                    <h1 class="m-n font-thin h3 text-black">统计</h1>
+                    <small class="text-muted">服务器性能统计</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <div class="panel panel-default" ng-controller="serverloadCtrl">
+                <div class="panel-body">
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">名称</span>
+                                <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">IP</span>
+                                <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">服务器组</span>
+                                <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                       refresh-dalay="0"
+                                                       repeat="item in serverGroupList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">使用类型</span>
+                                <select class="form-control" ng-model="nowType"
+                                        ng-options="type.code as type.name for type in userType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">环境类型</span>
+                                <select class="form-control" ng-model="nowEnv"
+                                        ng-options="envItem.code as envItem.name for envItem in envType"
+                                        required>
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                    class="glyphicon glyphicon-search"></span>搜索
+                            </button>
+                            <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                    class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </form>
+
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">同步任务</span>
+                                <input type="text" class="form-control" ng-disabled="true" ng-model="task.beginTime">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" ng-click="taskReset()"><span
+                                    class="glyphicon glyphicon-repeat"></span>复位任务
+                            </button>
+                        </div>
+                    </form>
+
+                    <table class="table table-hover table-bordered table-striped" border=1>
+                        <tr>
+                            <td rowspan=2>PROD环境</td>
+                            <th>服务器总数</th>
+                            <th>CPU平均使用率</th>
+                            <th>平均Load</th>
+                            <th>内存平均使用率</th>
+                        </tr>
+                        <tr>
+                            <td>{{serverPerfData.cnt}}台</td>
+                            <td>
+                                <uib-progressbar animate="true" ng-show="serverPerfData.cpuUser != -1"
+                                                 value="serverPerfData.cpuUser"
+                                                 type="{{(serverPerfData.cpuUser <= 10 ? 'default' : (serverPerfData.cpuUser < 30 ? 'success' : (serverPerfData.cpuUser < 60 ? 'warning': 'danger')))}}">
+                                    <label style="color: #030303">{{serverPerfData.cpuUser}}%</label>
+                                </uib-progressbar>
+                                <!--<span class="label label-default" ng-if="serverPerfData.cpuUser == -1" >Null</span>-->
+                                <!--<span class="label label-success" ng-if="serverPerfData.cpuUser >= 0 && serverPerfData.cpuUser <= 10">{{serverPerfData.cpuUser}}%</span>-->
+                                <!--<span class="label label-primary" ng-if="serverPerfData.cpuUser > 10 && serverPerfData.cpuUser <= 30">{{serverPerfData.cpuUser}}%</span>-->
+                                <!--<span class="label label-warning" ng-if="serverPerfData.cpuUser > 30 && serverPerfData.cpuUser <= 60">{{serverPerfData.cpuUser}}%</span>-->
+                                <!--<span class="label label-danger" ng-if="serverPerfData.cpuUser > 60">{{serverPerfData.cpuUser}}%</span>-->
+                            </td>
+                            <td>
+                                <span class="label label-default" ng-if="serverPerfData.load == -1">Null</span>
+                                <span class="label label-success"
+                                      ng-if="serverPerfData.load >=0 && serverPerfData.load <= 1">{{serverPerfData.load}}</span>
+                                <span class="label label-warning"
+                                      ng-if="serverPerfData.load > 1 && serverPerfData.load <= 5">{{serverPerfData.load}}</span>
+                                <span class="label label-danger" ng-if="serverPerfData.load > 5">{{serverPerfData.load}}%</span>
+                            </td>
+                            <td>
+                                <uib-progressbar animate="true" ng-show="serverPerfData.memoryRate != -1"
+                                                 value="serverPerfData.memoryRate"
+                                                 type="{{(serverPerfData.memoryRate < 70 ? 'success' : (serverPerfData.memoryRate < 85 ? 'info' : 'danger'))}}">
+                                    <label style="color: #030303">{{serverPerfData.memoryRate}}%
+                                </uib-progressbar>
+                                <!--<span class="label label-default" ng-if="serverPerfData.memoryRate == -1">Null</span>-->
+                                <!--<span class="label label-success" ng-if="serverPerfData.memoryRate >= 0 && serverPerfData.memoryRate <= 70">{{serverPerfData.memoryRate}}%</span>-->
+                                <!--<span class="label label-warning" ng-if="serverPerfData.memoryRate > 70 && serverPerfData.memoryRate <= 85">{{serverPerfData.memoryRate}}%</span>-->
+                                <!--<span class="label label-danger" ng-if="serverPerfData.memoryRate > 85">{{serverPerfData.memoryRate}}%</span>-->
+                            </td>
+                        </tr>
+                    </table>
+
+                    <div class="panel panel-default" style="margin-top: 5px;;">
+                        <div class="panel-body">
+                            <div>
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td class="col-md-2">服务器</td>
+                                        <td class="col-md-1">IP</td>
+                                        <td class="col-md-1">类型</td>
+                                        <td class="col-md-1">环境</td>
+                                        <td class="col-md-2">系统负载</td>
+                                        <td class="col-md-1">LOAD(1/5/15)</td>
+                                        <td class="col-md-2">DISK</td>
+                                        <td class="col-md-1">数据扫描时间</td>
+                                        <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <b style="color: #777">{{item.serverGroupDO.name}}</b>
+                                            <br/>
+                                            <b style="color: #286090">{{item.serverName + "-" +item.serialNumber}}</b>
+                                        </td>
+                                        <td>
+                                            <div ng-show="item.publicIP != ''">
+                                                {{item.publicIP}}(公)
+                                                <br/>
+                                            </div>
+                                            {{item.insideIP}}(内)
+                                        </td>
+                                        <td>
+                                            <b ng-if="item.useType == 10">bi</b>
+                                            <b ng-if="item.useType == 1">zookeeper</b>
+                                            <b style="color: #990000" ng-if="item.useType == 2">web-service</b>
+                                            <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
+                                            <b ng-if="item.useType == 4">other</b>
+                                            <b ng-if="item.useType == 5">web-php</b>
+                                            <b style="color: #286090" ng-if="item.useType == 6">public</b>
+                                            <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
+                                            <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
+                                            <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                        </td>
+                                        <td>
+                                            <div class="col-md-5 pull-left" style="height: 15px;" ng-show="item.cpuUser != -1">CPU<b>{{item.cpuUser}}%</b></div>
+                                            <div class="col-md-7">
+                                                <div class="progress" style="height: 15px;"  ng-show="item.cpuUser != -1">
+                                                    <b class="progress-bar" role="progressbar"
+                                                       aria-valuenow="item.cpuUser" aria-valuemin="0"
+                                                       aria-valuemax="100"
+                                                       style="min-width: 0.5em; width: {{item.cpuUser}}%;"><span
+                                                            class="sr-only">{{item.cpuUser}}% Complete</span>
+                                                    </b>
+                                                </div>
+                                            </div>
+                                            </br>
+                                            <div class="col-md-5 pull-left" style="height: 15px;" ng-show="item.memoryRate != -1">MEM<b>{{item.memoryRate}}%</b></div>
+                                            <div class="col-md-7">
+                                                <div class="progress" style="height: 15px;" ng-show="item.memoryRate != -1">
+                                                    <b class="progress-bar" role="progressbar"
+                                                       aria-valuenow="item.memoryRate" aria-valuemin="0"
+                                                       aria-valuemax="100"
+                                                       style="min-width: 0.5em; width: {{item.memoryRate}}%;"><span
+                                                            class="sr-only">{{item.memoryRate}}% Complete</span>
+                                                    </b>
+                                                </div>
+                                            </div>
+                                            </br>
+                                            <div class="col-md-5 pull-left" style="height: 15px;" ng-show="item.cpuIowait != -1">IOWAIT<b>{{item.cpuIowait}}%</b></div>
+                                            <div class="col-md-7">
+                                                <div class="progress" style="height: 15px;" ng-show="item.cpuIowait != -1">
+                                                    <b class="progress-bar" role="progressbar"
+                                                       aria-valuenow="item.cpuIowait" aria-valuemin="0"
+                                                       aria-valuemax="100"
+                                                       style="min-width: 0.5em; width: {{item.cpuIowait}}%;"><span
+                                                            class="sr-only">{{item.cpuIowait}}% Complete</span>
+                                                    </b>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span ng-show="item.load1 != -1">
+                                                <b class="pull-left" style="color: #286090">{{item.load1}}</b>
+                                                <b class="pull-right" style="color: #777">1m</b>
+                                                </br>
+                                                <b class="pull-left" style="color: #286090">{{item.load5}}</b>
+                                                <b class="pull-right" style="color: #777">5m</b>
+                                                </br>
+                                                <b class="pull-left" style="color: #286090">{{item.load15}}</b>
+                                                <b class="pull-right" style="color: #777">15m</b>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div ng-show="item.diskSysRate != -1 && item.diskSysRate !=''">
+                                                Disk1:
+                                                <b style="color: green"
+                                                   ng-if="item.diskSysRate >= 0 && item.diskSysRate <= 70">{{item.diskSysRate}}%</b>
+                                                <b style="color: green"
+                                                   ng-if="item.diskSysRate > 70 &&  item.diskSysRate <= 85">{{item.diskSysRate}}%</b>
+                                                <b style="color: green" ng-if="item.diskSysRate > 85">{{item.diskSysRate}}%</b>
+                                                (使用率)
+                                                <i uib-popover-html="item.diskSysInfo" popover-trigger="'mouseenter'"
+                                                   class="icon icon-info" style="color: green;"></i>
+                                                <br/>
+                                            </div>
+                                            <div ng-show="item.diskDataRate != -1 && item.diskDataRate !=''">
+                                                Disk2:
+                                                <b style="color: green"
+                                                   ng-if="item.diskDataRate >= 0 && item.diskDataRate <= 70">{{item.diskDataRate}}%</b>
+                                                <b style="color: green"
+                                                   ng-if="item.diskDataRate > 70 &&  item.diskDataRate <= 85">{{item.diskDataRate}}%</b>
+                                                <b style="color: green" ng-if="item.diskDataRate > 85">{{item.diskDataRate}}%</b>
+                                                (使用率)
+                                                <i uib-popover-html="item.diskDataInfo" popover-trigger="'mouseenter'"
+                                                   class="icon icon-info" style="color: green;"></i>
+
+                                            </div>
+                                        </td>
+                                        <td>{{item.gmtModify}}</td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

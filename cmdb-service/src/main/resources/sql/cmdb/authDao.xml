@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.AuthDao">
+
+    <!-- 记录登录信息与对应此次登录的唯一标识 -->
+    <insert id="addUserLoginRecord" parameterType="UserDO">
+        INSERT INTO new_auth_user_login_token(
+          username,
+          token
+        ) VALUES (
+          #{username},
+          #{token}
+        )
+    </insert>
+
+    <!-- 重置指定用户所有token为无效 -->
+    <update id="updateUserTokenInvalid" parameterType="string">
+        UPDATE new_auth_user_login_token
+        SET invalid = 0
+        WHERE invalid = 1 AND username = #{username}
+    </update>
+
+    <!-- 重置所有用户所有token为无效 -->
+    <update id="updateTokenInvalid">
+        UPDATE new_auth_user_login_token
+        SET invalid = 0
+        WHERE invalid = 1
+    </update>
+
+    <!-- 检查token是否失效 -->
+    <select id="checkTokenHasInvalid" parameterType="string" resultType="_int">
+        SELECT count(*) FROM new_auth_user_login_token WHERE token = #{token} AND invalid = 1
+    </select>
+
+    <!-- 获取指定token对应的username -->
+    <select id="getUserByToken" parameterType="string" resultType="string">
+        SELECT username FROM new_auth_user_login_token WHERE token = #{token}
+    </select>
+
+    <!-- 获取指定用户被授权的资源列表 -->
+    <select id="getUserAuthorizedResource" parameterType="string" resultType="ResourceDO">
+        SELECT a2.*
+        FROM new_auth_user_role a0
+          LEFT JOIN new_auth_role_resources a1 ON a0.roleId = a1.roleId
+          LEFT JOIN new_auth_resources a2 ON a1.resourceId = a2.id
+          <if test="resourceGroup != null">
+              JOIN new_auth_resource_group a3 ON a2.id = a3.resourceId
+              JOIN new_auth_rgroup a4 ON a3.groupId = a4.id AND a4.groupCode = #{resourceGroup}
+          </if>
+        WHERE a0.username = #{username}
+        GROUP BY a2.id
+    </select>
+
+    <!-- 判断用户是否可访问某个资源 -->
+    <select id="checkUserHasResourceAuthorize" parameterType="string" resultType="_int">
+        SELECT count(*)
+        FROM new_auth_user_login_token a0
+          JOIN new_auth_user_role a1 ON a0.username = a1.username AND a0.token = #{token}
+          JOIN new_auth_role_resources a2 ON a1.roleId = a2.roleId
+          JOIN new_auth_resources a3 ON a2.resourceId = a3.id AND a3.resourceName = #{resourceName}
+    </select>
+
+    <!-- 获取当前登录有效的用户列表 -->
+    <select id="getLoginUsers" resultType="UserDO">
+        SELECT username,token FROM new_auth_user_login_token WHERE invalid = 1
+    </select>
+
+
+
+
+
+
+
+
+
+
+    <!-- 获取资源组数目 -->
+    <select id="getResourceGroupSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM new_auth_rgroup
+        <where>
+            groupCode LIKE "%"#{groupCode}"%"
+        </where>
+    </select>
+
+    <!-- 获取资源组分页数据 -->
+    <select id="getResourceGroupPage" parameterType="object" resultType="ResourceGroupDO">
+        SELECT * FROM new_auth_rgroup
+        <where>
+            groupCode LIKE "%"#{groupCode}"%"
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增资源组信息 -->
+    <insert id="addResourceGroup" parameterType="ResourceGroupDO">
+        INSERT ignore INTO new_auth_rgroup(groupCode, groupDesc) VALUES (#{groupCode}, #{groupDesc})
+    </insert>
+
+    <!-- 更新资源组信息 -->
+    <update id="updateResourceGroup" parameterType="ResourceGroupDO">
+        UPDATE new_auth_rgroup
+        SET groupDesc = #{groupDesc}
+        WHERE id = #{id}
+        AND groupCode = #{groupCode}
+    </update>
+
+    <!-- 获取指定资源组映射的资源数目 -->
+    <select id="queryResourcesByGroupId" parameterType="_long" resultType="_int">
+        SELECT count(*) FROM new_auth_resource_group
+        WHERE groupId = #{id}
+    </select>
+
+    <!-- 删除指定的资源组信息 -->
+    <delete id="delResourceGroupByGroupId" parameterType="_long">
+        DELETE FROM new_auth_rgroup WHERE id = #{id}
+    </delete>
+
+    <!-- 获取指定groupid的group信息 -->
+    <select id="getResourceGroupByGroupId" parameterType="_long" resultType="ResourceGroupDO">
+        SELECT * FROM new_auth_rgroup WHERE id = #{groupId}
+    </select>
+
+
+
+
+
+
+
+    <!-- 获取指定条件的资源数目 -->
+    <select id="queryResourceSize" parameterType="object" resultType="_long">
+        SELECT count(DISTINCT a0.id) FROM new_auth_resources a0
+        <if test="groupId != 0">
+            JOIN new_auth_resource_group a1 on a0.id = a1.resourceId
+            AND a1.groupId = #{groupId}
+        </if>
+        <where>
+            <if test="resourceName != null and resourceName != ''">
+                a0.resourceName like "%"#{resourceName}"%"
+            </if>
+            <if test="authType != -1">
+                AND a0.needAuth = #{authType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取指定条件的资源分页数据 -->
+    <select id="queryResourcePage" parameterType="object" resultType="ResourceDO">
+        SELECT a0.* FROM new_auth_resources a0
+        <if test="groupId != 0">
+            JOIN new_auth_resource_group a1 on a0.id = a1.resourceId
+            AND a1.groupId = #{groupId}
+        </if>
+        <where>
+            <if test="resourceName != null and resourceName != ''">
+                a0.resourceName like "%"#{resourceName}"%"
+            </if>
+            <if test="authType != -1">
+                AND a0.needAuth = #{authType}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增资源信息 -->
+    <insert id="addResource" parameterType="ResourceDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO new_auth_resources (
+            resourceName,
+            resourceDesc,
+            needAuth
+        ) VALUES (
+            #{resourceName},
+            #{resourceDesc},
+            #{needAuth}
+        );
+    </insert>
+
+    <!-- 新增资源&资源组关系 -->
+    <insert id="addResourceGroupRelay" parameterType="_long">
+        INSERT INTO new_auth_resource_group(groupId, resourceId) VALUES (#{groupId}, #{resourceId});
+    </insert>
+
+    <!-- 更新资源名称 -->
+    <update id="updateResource" parameterType="ResourceDO">
+        UPDATE new_auth_resources
+        SET resourceName = #{resourceName},
+          resourceDesc = #{resourceDesc},
+          needAuth = #{needAuth}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定的资源 -->
+    <delete id="delResource" parameterType="_long">
+        DELETE FROM new_auth_resources WHERE id = #{id}
+    </delete>
+
+    <!-- 删除指定的资源&资源组关系 -->
+    <delete id="delResourceGroupRelay" parameterType="_long">
+        DELETE FROM new_auth_resource_group WHERE resourceId = #{resourceId}
+    </delete>
+
+    <!-- 获取指定资源的角色使用情况 -->
+    <select id="getResourceRoleRelay" parameterType="_long" resultType="_int">
+        SELECT COUNT(*) FROM new_auth_role_resources WHERE resourceId = #{resourceId}
+    </select>
+
+    <!-- 获取指定资源所在的资源组 -->
+    <select id="getGroupByResourceId" parameterType="_long" resultType="ResourceGroupDO">
+        SELECT a1.* FROM new_auth_resource_group a0 JOIN new_auth_rgroup a1 on a0.groupId = a1.id
+        WHERE a0.resourceId = #{resourceId}
+    </select>
+
+    <!-- 获取指定资源名称的资源信息 -->
+    <select id="getResourceByResourceName" parameterType="string" resultType="ResourceDO">
+        SELECT * FROM new_auth_resources WHERE resourceName = #{resourceName}
+    </select>
+
+
+
+
+
+
+
+
+
+
+    <!-- 获取指定条件的角色数目 -->
+    <select id="queryRoleSize" parameterType="object" resultType="_long">
+        SELECT count(DISTINCT a0.id) FROM new_auth_role a0
+        <if test="resourceId != 0">
+            JOIN new_auth_role_resources a1 ON a0.id = a1.roleId
+            AND a1.resourceId = #{resourceId}
+        </if>
+        WHERE a0.roleName like "%" #{roleName} "%"
+    </select>
+
+    <!-- 获取指定条件的角色分页数据 -->
+    <select id="queryRolePage" parameterType="object" resultType="RoleDO">
+        SELECT a0.* FROM new_auth_role a0
+        <if test="resourceId != 0">
+            JOIN new_auth_role_resources a1 ON a0.id = a1.roleId
+            AND a1.resourceId = #{resourceId}
+        </if>
+        WHERE a0.roleName like "%" #{roleName} "%"
+        GROUP BY a0.id
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增角色 -->
+    <insert id="addRole" parameterType="RoleDO">
+        INSERT INTO new_auth_role(roleName, roleDesc) VALUES (#{roleName}, #{roleDesc});
+    </insert>
+
+    <!-- 更新角色 -->
+    <update id="updateRole" parameterType="RoleDO">
+        UPDATE new_auth_role SET roleName = #{roleName}, roleDesc = #{roleDesc}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定角色 -->
+    <delete id="delRole" parameterType="_long">
+        DELETE FROM new_auth_role WHERE id = #{id}
+    </delete>
+
+    <!-- 获取指定角色使用用户数 -->
+    <select id="getRoleUsers" parameterType="_long" resultType="_int">
+        SELECT count(*) FROM new_auth_user_role WHERE roleId = #{roleId}
+    </select>
+
+    <!-- 获取单一条件下的role数据 -->
+    <select id="getRole" parameterType="RoleDO" resultType="RoleDO">
+        SELECT * FROM new_auth_role
+        <where>
+            <if test="id != 0">
+                id = #{id}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                AND roleName = #{roleName}
+            </if>
+        </where>
+    </select>
+
+
+
+
+
+    <!-- 获取指定角色绑定的资源列表数目 -->
+    <select id="getRoleBindResourceSize" parameterType="_long" resultType="_long">
+        SELECT count(DISTINCT a1.id) FROM new_auth_role_resources a0 JOIN new_auth_resources a1
+        ON a0.resourceId = a1.id
+        <if test="resourceGroupId != 0">
+            JOIN new_auth_resource_group a2 ON a1.id = a2.resourceId AND a2.groupId = #{resourceGroupId}
+        </if>
+        WHERE a0.roleId = #{roleId}
+    </select>
+
+    <!-- 获取指定角色绑定资源列表分页数据 -->
+    <select id="getRoleBindResourcePage" parameterType="object" resultType="ResourceDO">
+        SELECT a1.* FROM new_auth_role_resources a0 JOIN new_auth_resources a1
+        ON a0.resourceId = a1.id
+        <if test="resourceGroupId != 0">
+            JOIN new_auth_resource_group a2 ON a1.id = a2.resourceId AND a2.groupId = #{resourceGroupId}
+        </if>
+        WHERE a0.roleId = #{roleId}
+        ORDER BY a0.gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取指定角色未绑定的资源列表数目 -->
+    <select id="getRoleUnbindResourceSize" parameterType="_long" resultType="_long">
+        SELECT count(*) FROM new_auth_resources a0
+        <if test="resourceGroupId != 0">
+            JOIN new_auth_resource_group a1 ON a0.id = a1.resourceId AND a1.groupId = #{resourceGroupId}
+        </if>
+        WHERE a0.id NOT IN
+        (
+          SELECT resourceId FROM new_auth_role_resources WHERE roleId = #{roleId} GROUP BY resourceId
+        ) AND a0.needAuth = 0
+    </select>
+
+    <!-- 获取指定角色未绑定的资源列表分页数据 -->
+    <select id="getRoleUnbindResourcePage" parameterType="object" resultType="ResourceDO">
+        SELECT * FROM new_auth_resources a0
+        <if test="resourceGroupId != 0">
+            JOIN new_auth_resource_group a1 ON a0.id = a1.resourceId AND a1.groupId = #{resourceGroupId}
+        </if>
+        WHERE a0.id NOT IN
+        (
+        SELECT resourceId FROM new_auth_role_resources WHERE roleId = #{roleId} GROUP BY resourceId
+        ) AND a0.needAuth = 0
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增角色资源的绑定关系 -->
+    <insert id="roleResourceBind" parameterType="_long">
+        INSERT ignore INTO new_auth_role_resources(roleId, resourceId) VALUES (#{roleId}, #{resourceId});
+    </insert>
+
+    <!-- 解除角色资源的绑定关系 -->
+    <delete id="roleResourceUnbind" parameterType="_long">
+        DELETE FROM new_auth_role_resources WHERE roleId = #{roleId} AND resourceId = #{resourceId}
+    </delete>
+
+
+
+
+
+
+
+
+
+    <!-- 获取用户数目 -->
+    <select id="getUserSize" parameterType="object" resultType="_long">
+        SELECT count(*) FROM new_auth_user_role
+        <where>
+            <if test="username != null and username != ''">
+                username like "%"#{username}"%"
+            </if>
+            <if test="roleId != 0">
+                AND roleId = #{roleId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取用户分页数据 -->
+    <select id="getUserPage" parameterType="object" resultType="UserDO">
+        SELECT * FROM new_auth_user_role
+        <where>
+            <if test="username != null and username != ''">
+                username like "%"#{username}"%"
+            </if>
+            <if test="roleId != 0">
+                AND roleId = #{roleId}
+            </if>
+        </where>
+        ORDER BY username
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取用户分信息 -->
+    <select id="getUser" parameterType="object" resultType="UserDO">
+        SELECT * FROM new_auth_user_role
+        WHERE username = #{username}
+    </select>
+
+
+    <!-- 建立用户角色绑定关系 -->
+    <insert id="userRoleBind" parameterType="object">
+        INSERT ignore INTO new_auth_user_role(username, roleId) VALUES (#{username}, #{roleId});
+    </insert>
+
+    <!-- 解除用户角色绑定关系 -->
+    <delete id="userRoleUnbind" parameterType="object">
+        DELETE FROM new_auth_user_role WHERE username = #{username} AND roleId = #{roleId}
+    </delete>
+
+    <!-- 获取用户的角色列表 -->
+    <select id="getUserRoles" parameterType="string" resultType="RoleDO">
+        SELECT a1.* FROM new_auth_user_role a0 LEFT JOIN new_auth_role a1 ON a0.roleId = a1.id
+        WHERE a0.username = #{username}
+    </select>
+
+    <!-- 获取用户的角色Id列表 -->
+    <select id="getUserRoleIds" parameterType="string" resultType="_long">
+        SELECT a1.id FROM new_auth_user_role a0 LEFT JOIN new_auth_role a1 ON a0.roleId = a1.id
+        WHERE a0.username = #{username}
+    </select>
+
+    <!-- 获取拥有指定角色的用户集合 -->
+    <select id="getUsersByRole" parameterType="_long" resultType="string">
+        SELECT username FROM new_auth_user_role WHERE roleId = #{roleId}
+    </select>
+
+
+    <!-- 获取指定资源组下指定用户被授权的资源集合 -->
+    <select id="getUserAuthResources" parameterType="object" resultType="ResourceDO">
+        SELECT a6.*
+        FROM new_auth_user_login_token a0
+          JOIN new_auth_user_role a1 ON a0.username = a1.username AND a0.invalid = 1
+          JOIN new_auth_role a2 ON a1.roleId = a2.id
+          JOIN new_auth_role_resources a3 ON a2.id = a3.roleId
+          JOIN new_auth_resource_group a4 ON a3.resourceId = a4.resourceId
+          JOIN new_auth_rgroup a5 ON a4.groupId = a5.id
+          JOIN new_auth_resources a6 ON a3.resourceId = a6.id
+        WHERE a0.token = #{token}
+              AND a5.groupCode IN
+        <foreach item="item" index="index" collection="list" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+        GROUP BY a6.id;
+    </select>
+</mapper>
+

@@ -1,0 +1,224 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">DNS</h1>
+                    <small class="text-muted">DNS配置管理</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="DNSMASQ(内网)">
+                    <div class="panel panel-default" ng-controller="dnsmasqOfficeCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">配置类型</span>
+                                        <select class="form-control" ng-model="nowDnsmasqItemType"
+                                                ng-options="type.code as type.name for type in dnsmasqItemType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">配置项</span>
+                                        <input type="text" class="form-control" ng-model="queryItemValue" placeholder="配置项">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addDnsmasq()"
+                                            ng-if="contains(authPoint, '/dns/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>配置项类型</td>
+                                                <td>配置项</td>
+                                                <td>说明</td>
+                                                <td>创建时间</td>
+                                                <td ng-if="contains(authPoint, '/dns/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <span class="label label-default"
+                                                          ng-if="item.itemType == 0">system</span>
+                                                    <span class="label label-info"
+                                                          ng-if="item.itemType == 1">server</span>
+                                                    <span class="label label-danger"
+                                                          ng-if="item.itemType == 2">address</span>
+                                                </td>
+                                                <td>{{item.item}}={{item.itemValue}}</td>
+                                                <td>{{item.content}}</td>
+                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
+                                                    : item.gmtModify}}
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/dns/save')">
+                                                    <button ng-click="editDnsmasq(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                                    <button ng-click="delDnsmasq(item.id)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                                    <!--<button type="button"-->
+                                                            <!--class="btn btn-danger btn-default btn-xs pull-right"-->
+                                                            <!--style="margin-left: 20px;" ng-click="delDnsmasq(item.id)"><span-->
+                                                            <!--class="glyphicon glyphicon-floppy-remove"></span></button>-->
+                                                    <!--<button type="button" class="btn btn-info btn-xs pull-right"-->
+                                                            <!--ng-click="editDnsmasq(item)"><span-->
+                                                            <!--class="glyphicon glyphicon-edit"></span></button>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="DNSMASQ(阿里云)">
+                    <div class="panel panel-default" ng-controller="dnsmasqAliyunCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">配置类型</span>
+                                        <select class="form-control" ng-model="nowDnsmasqItemType"
+                                                ng-options="type.code as type.name for type in dnsmasqItemType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">配置项</span>
+                                        <input type="text" class="form-control" ng-model="queryItemValue" placeholder="配置项">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addDnsmasq()"
+                                            ng-if="contains(authPoint, '/dns/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>配置项类型</td>
+                                                <td>配置项</td>
+                                                <td>说明</td>
+                                                <td>创建时间</td>
+                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <span class="label label-default"
+                                                          ng-if="item.itemType == 0">system</span>
+                                                    <span class="label label-info"
+                                                          ng-if="item.itemType == 1">server</span>
+                                                    <span class="label label-danger"
+                                                          ng-if="item.itemType == 2">address</span>
+                                                </td>
+                                                <td>{{item.item}}={{item.itemValue}}</td>
+                                                <td>{{item.content}}</td>
+                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
+                                                    : item.gmtModify}}
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/server/save')">
+
+                                                    <button ng-click="editDnsmasq(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                                    <button ng-click="delDnsmasq(item.id)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="5">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="dnsmasqInfo">
+    <div ng-include="'tpl/modal/dnsmasq_info_modal.html'"></div>
+</script>

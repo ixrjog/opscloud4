@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.CiDao">
+
+    <!-- 获取服务器数目 -->
+    <select id="getCiDeployStatisticsSize" parameterType="object" resultType="_long">
+        SELECT count(*) from ci_deploy_statistics
+        <where>
+            <if test="projectName != null and projectName != ''">
+                AND projectName like "%" #{projectName} "%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+            <if test="deployType != -1">
+                AND deployType = #{deployType}
+            </if>
+            <if test="bambooDeployRollback != -1">
+                AND bambooDeployRollback = #{bambooDeployRollback}
+            </if>
+            <if test="errorCode != -1">
+                AND errorCode = #{errorCode}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit 0,100
+        <!--  select * from ci_deploy_statistics  Order By gmtCreate Desc limit 0,100 -->
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="getCiDeployStatisticsPage" parameterType="object" resultType="CiDeployStatisticsDO">
+        SELECT * FROM ci_deploy_statistics
+        <where>
+            <if test="projectName != null and projectName != ''">
+                AND projectName like "%" #{projectName} "%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+            <if test="deployType != -1">
+                AND deployType = #{deployType}
+            </if>
+            <if test="bambooDeployRollback != -1">
+                AND bambooDeployRollback = #{bambooDeployRollback}
+            </if>
+            <if test="errorCode != -1">
+                AND errorCode = #{errorCode}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 创建统计信息 -->
+    <insert id="addCiDeployStatistics" parameterType="CiDeployStatisticsDO">
+        INSERT INTO ci_deploy_statistics(
+        projectName,
+        groupName,
+        env,
+        status,
+        deployId,
+        bambooDeployVersion,
+        bambooBuildNumber,
+        bambooDeployProject,
+        bambooDeployRollback,
+        bambooManualBuildTriggerReasonUserName,
+        errorCode,
+        branchName,
+        deployType
+        ) VALUES (
+        #{projectName},
+        #{groupName},
+        #{env},
+        #{status},
+        #{deployId},
+        #{bambooDeployVersion},
+        #{bambooBuildNumber},
+        #{bambooDeployProject},
+        #{bambooDeployRollback},
+        #{bambooManualBuildTriggerReasonUserName},
+        #{errorCode},
+        #{branchName},
+        #{deployType}
+        )
+    </insert>
+
+    <!-- 获取指定deployId的统计信息 -->
+    <select id="getCiDeployStatisticsByDeployId" parameterType="_long" resultType="CiDeployStatisticsDO">
+        SELECT * FROM ci_deploy_statistics WHERE deployId = #{deployId}
+    </select>
+
+    <!-- 按id查询 -->
+    <select id="getCiDeployStatisticsById" parameterType="_long" resultType="CiDeployStatisticsDO">
+        SELECT * FROM ci_deploy_statistics WHERE id = #{id}
+    </select>
+
+
+    <!-- 更新状态 -->
+    <update id="updateCiDeployStatistics" parameterType="CiDeployStatisticsDO">
+        UPDATE ci_deploy_statistics
+        SET
+        status = #{status},
+        errorCode = #{errorCode}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 创建统计信息 -->
+    <insert id="addCiDeployServerVersion" parameterType="CiDeployServerVersionDO">
+        INSERT INTO ci_deploy_server_version(
+        serverId,
+        ciDeployStatisticsId
+        ) VALUES (
+        #{serverId},
+        #{ciDeployStatisticsId}
+        )
+    </insert>
+
+    <!-- 更新状态 -->
+    <update id="updateCiDeployServerVersion" parameterType="CiDeployServerVersionDO">
+        UPDATE ci_deploy_server_version
+        SET
+        ciDeployStatisticsId = #{ciDeployStatisticsId}
+        WHERE serverId = #{serverId}
+    </update>
+
+    <select id="getCiDeployServerVersionByServerId" parameterType="_long" resultType="CiDeployServerVersionDO">
+        SELECT * FROM ci_deploy_server_version WHERE serverId = #{serverId}
+    </select>
+
+
+    <!--统计部署次数-->
+    <select id="getCiDeployedCnt" resultType="_int">
+        SELECT COUNT(*) AS cnt FROM ci_deploy_statistics;
+    </select>
+
+    <!--统计项目总数-->
+    <select id="getCiProjectCnt" resultType="_int">
+        SELECT COUNT( DISTINCT projectName ) AS cnt
+        FROM ci_deploy_statistics;
+    </select>
+
+    <select id="statusCiDeployProject" resultType="CiProjectVO">
+        SELECT projectName, COUNT(*) AS cnt
+        FROM ci_deploy_statistics
+        WHERE env = "back" OR env = "production"
+        GROUP BY projectName
+        ORDER BY cnt DESC
+        limit 20;
+    </select>
+
+    <select id="statusCiDeployUser" resultType="CiDeployUserVO">
+        SELECT bambooManualBuildTriggerReasonUserName AS username, COUNT(*) AS cnt
+        FROM ci_deploy_statistics
+        GROUP BY username
+        ORDER BY cnt DESC
+        limit 20;
+    </select>
+
+    <select id="statusCiRepo" resultType="CiRepoVO">
+        SELECT bambooDeployProject AS repo, COUNT(*) AS cnt
+        FROM ci_deploy_statistics
+        GROUP BY repo
+        ORDER BY cnt DESC
+        limit 20;
+    </select>
+
+    <select id="statusCiDeploy" resultType="CiDeployVO">
+        SELECT projectName ,
+               groupName,
+               bambooDeployVersion AS version,
+               bambooManualBuildTriggerReasonUserName AS username,
+               gmtCreate,
+               gmtModify
+        FROM ci_deploy_statistics
+        ORDER BY gmtCreate DESC
+        limit 14
+    </select>
+
+
+</mapper>

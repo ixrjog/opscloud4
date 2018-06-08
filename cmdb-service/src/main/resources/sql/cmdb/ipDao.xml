@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.IPDao">
+
+    <!-- 查询指定条件的ip数目 -->
+    <select id="queryIPSize" parameterType="IPDetailQuery" resultType="_long">
+        SELECT count(*) FROM new_ip_detail
+        <where>
+            <if test="ip != null and ip != ''">
+                ip LIKE "%"#{ip}"%"
+            </if>
+            <if test="ipNetworkId != 0">
+                AND ipNetworkId = #{ipNetworkId}
+            </if>
+            <if test="ipType != -1">
+                AND ipType = #{ipType}
+            </if>
+            <if test="useType == 0">
+                AND serverId != 0
+            </if>
+            <if test="useType == 1">
+                AND serverId = 0
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询指定条件的ip分页数据 -->
+    <select id="queryIPPage" parameterType="object" resultType="IPDetailDO">
+        SELECT * FROM new_ip_detail
+        <where>
+            <if test="detailQuery.ip != null and detailQuery.ip != ''">
+                ip LIKE "%"#{detailQuery.ip}"%"
+            </if>
+            <if test="detailQuery.ipNetworkId != 0">
+                AND ipNetworkId = #{detailQuery.ipNetworkId}
+            </if>
+            <if test="detailQuery.ipType != -1">
+                AND ipType = #{detailQuery.ipType}
+            </if>
+            <if test="detailQuery.useType == 0">
+                AND serverId != 0
+            </if>
+            <if test="detailQuery.useType == 1">
+                AND serverId = 0
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+    
+    <!-- 批量保存指定ip组的ip集合 -->
+    <insert id="saveIPList" parameterType="object">
+        INSERT ignore INTO new_ip_detail(
+          ipNetworkId,
+          serverId,
+          ip,
+          ipType,
+          content
+        ) VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+        (
+            #{item.ipNetworkId},
+            #{item.serverId},
+            #{item.ip},
+            #{item.ipType},
+            #{item.content}
+        )
+        </foreach>
+    </insert>
+
+    <!-- 新增ip信息 -->
+    <insert id="addIP" parameterType="IPDetailDO" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT ignore INTO new_ip_detail(
+          ipNetworkId,
+          serverId,
+          ip,
+          ipType,
+          content
+        ) VALUES (
+          #{ipNetworkId},
+          #{serverId},
+          #{ip},
+          #{ipType},
+          #{content}
+        )
+    </insert>
+
+    <!-- 更新指定的ip信息 -->
+    <update id="updateIP" parameterType="IPDetailDO">
+        UPDATE new_ip_detail
+        SET
+          ipNetworkId = #{ipNetworkId},
+          serverId = #{serverId},
+          ip = #{ip},
+          ipType = #{ipType},
+          content = #{content}
+        WHERE
+          id = #{id}
+    </update>
+
+    <!-- 删除指定的ip信息 -->
+    <delete id="delIP" parameterType="_long">
+        DELETE FROM new_ip_detail WHERE id = #{id}
+    </delete>
+
+    <!-- 检查指定段的ip是否被使用 -->
+    <select id="checkIPHasUse" parameterType="object" resultType="_int">
+        SELECT count(*) FROM new_ip_detail
+        WHERE ipNetworkId = #{groupId}
+        AND ip = #{ip}
+        AND serverId != 0
+        AND serverId != #{serverId}
+    </select>
+
+    <!-- 获取指定ipId的详情 -->
+    <select id="getIPDetail" parameterType="IPDetailDO" resultType="IPDetailDO">
+        SELECT * FROM new_ip_detail
+        <where>
+            <if test="id != -1">
+                id = #{id}
+            </if>
+            <if test="ip != null and ip != ''">
+                AND ip = #{ip}
+            </if>
+            <if test="ipNetworkId != 0">
+                AND ipNetworkId = #{ipNetworkId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 清除指定server占用的ip -->
+    <select id="clearServerIP" parameterType="_long">
+        UPDATE new_ip_detail
+        SET serverId = 0
+        WHERE serverId = #{serverId}
+    </select>
+
+    <!-- 清除指定server占用的ip -->
+    <select id="getAllServerIP" parameterType="_long" resultType="IPDetailDO">
+        SELECT * FROM new_ip_detail
+        WHERE serverId = #{serverId}
+    </select>
+
+
+
+</mapper>

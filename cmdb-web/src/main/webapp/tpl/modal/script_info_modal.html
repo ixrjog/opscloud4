@@ -1,0 +1,129 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <!--<h3 class="modal-title">项目管理配置</h3>-->
+    <h3 class="modal-title">
+        <b style="color: #286090">Script</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+
+                <div class="form-group version">
+                    <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>名称</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="Script名称" ng-disabled="isView"
+                               ng-model="scriptItem.scriptName">
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!isView">
+                    <label class="col-lg-2 control-label">说明</label>
+                    <!--cols="20"-->
+                    <div class="col-lg-10">
+                        <textarea class="form-control" rows="1" ng-model="scriptItem.content"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!isView">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>类型</label>
+                        <div class="col-lg-8">
+                            <!--required--> <!--ng-disabled="todoDetail.todoStatus >= 1"-->
+                            <select class="form-control" ng-model="scriptItem.scriptType"
+
+                                    ng-options="sType.code as sType.name for sType in scriptType">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>系统Task</label>
+                        <div class="col-lg-8">
+                            <!--&lt;!&ndash;required&ndash;&gt; &lt;!&ndash;ng-disabled="todoDetail.todoStatus >= 1"-->
+                            <select class="form-control" ng-model="scriptItem.sysScript"
+
+                                    ng-options="ssType .code as ssType .name for ssType in sysScriptType">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="!isView">
+                    <label class="col-lg-2 control-label">Script</label>
+                    <!--cols="20"-->
+                    <div class="col-lg-10">
+                        <textarea class="form-control" rows="20" ng-model="scriptItem.script"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="isView">
+                      <pre style="background-color: #777" hljs
+                           hljs-source="scriptItem.script"></pre>
+                </div>
+
+            </uib-tabset>
+        </div>
+    </form>
+
+
+    <!--按钮-->
+    <div class="form-group">
+
+
+        <div style="text-align:center;">
+            <button class="btn btn-xs" ng-show="!isView"
+                    style="background-color:  #2e6da4; color: white;"
+                    ng-click="saveScript()">保存
+            </button>
+
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #ff8700; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+
+        </div>
+
+    </div>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+
+</div>

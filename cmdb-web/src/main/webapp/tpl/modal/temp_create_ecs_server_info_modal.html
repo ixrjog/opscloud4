@@ -1,0 +1,316 @@
+<div class="modal-header">
+    <h3 class="modal-title">ECS新建</h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>区域ID</td>
+                <td>名称</td>
+                <!--<td>instance类型</td>-->
+                <td>网络类型</td>
+                <td>cpu</td>
+                <td>memory</td>
+                <td>容量(GB)</td>
+                <td>IO优化实例</td>
+                <td>系统盘类型</td>
+                <td>数据盘类型</td>
+                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>{{template.zoneId}}</td>
+                <td>{{template.name}}</td>
+                <!--<td>{{template.instanceType}}</td>-->
+                <td>
+                    <span class="label label-success" ng-if="template.networkSupport == 0">经典</span>
+                    <span class="label label-primary" ng-if="template.networkSupport == 1">全部</span>
+                    <span class="label label-danger" ng-if="template.networkSupport == 2">VPC</span>
+                </td>
+                <td>{{template.cpu}}</td>
+                <td>
+                    <span class="label label-default" ng-if="template.memory == 1">1GB</span>
+                    <span class="label label-success" ng-if="template.memory == 2">2GB</span>
+                    <span class="label label-success" ng-if="template.memory == 4">4GB</span>
+                    <span class="label label-primary" ng-if="template.memory == 8">8GB</span>
+                    <span class="label label-danger" ng-if="template.memory == 16">16GB</span>
+                    <span class="label label-danger" ng-if="template.memory == 32">32GB</span>
+                    <span class="label label-danger" ng-if="template.memory == 64">64GB</span>
+                </td>
+                <td>{{template.dataDiskSize}}</td>
+                <td>
+                    <span class="label label-primary" ng-if="template.ioOptimized == 'none'">否</span>
+                    <span class="label label-success" ng-if="template.ioOptimized == 'optimized'">是</span>
+                </td>
+                <td>
+                    <span class="label label-primary" ng-if="template.systemDiskCategory == 'cloud'">普通云盘</span>
+                    <span class="label label-success" ng-if="template.systemDiskCategory == 'cloud_efficiency'">高效云盘</span>
+                    <span class="label label-warning" ng-if="template.systemDiskCategory == 'ephemeral_ssd'">本地SSD盘</span>
+                    <span class="label label-danger" ng-if="template.systemDiskCategory == 'cloud_ssd'">SSD云盘</span>
+                </td>
+                <td>
+                    <span class="label label-primary" ng-if="template.dataDisk1Category == 'cloud'">普通云盘</span>
+                    <span class="label label-success" ng-if="template.dataDisk1Category == 'cloud_efficiency'">高效云盘</span>
+                    <span class="label label-warning" ng-if="template.dataDisk1Category == 'ephemeral_ssd'">本地SSD盘</span>
+                    <span class="label label-danger" ng-if="template.dataDisk1Category == 'cloud_ssd'">SSD云盘</span>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+        </table>
+    </div>
+
+    <form class="bs-example form-horizontal">
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器组名称</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                        <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                           repeat="item in serverGroupList | filter: $select.search">
+                            <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">服务器名称</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="服务器名称" required
+                           ng-model="serverItem.serverName">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.serverType"
+                            ng-options="serverItem.code as serverItem.name for serverItem in serverType" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>登录类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.loginType"
+                            ng-options="logItem.code as logItem.name for logItem in logType" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">登录用户</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="登录用户" ng-model="serverItem.loginUser">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>环境类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.envType"
+                            ng-options="envItem.code as envItem.name for envItem in envType" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">公网网段</label>
+                    <div class="col-lg-8">
+                        <ui-select ng-model="nowPublicGroup.selected" theme="bootstrap">
+                            <ui-select-match placeholder="搜索公网IP段名称......">{{$select.selected.ipNetwork}}
+                            </ui-select-match>
+                            <ui-select-choices refresh="queryPublicIPGroup($select.search)" refresh-dalay="0"
+                                               repeat="item in publicGroupList | filter: $select.search">
+                                <div ng-bind-html="item.ipNetwork | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+            <div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">内网网段</label>
+                    <div class="col-lg-8">
+                        <ui-select ng-model="nowInternalGroup.selected" theme="bootstrap">
+                            <ui-select-match placeholder="搜索内网IP组名称......">{{$select.selected.ipNetwork}}
+                            </ui-select-match>
+                            <ui-select-choices refresh="queryInternalIPGroup($select.search)" refresh-dalay="0"
+                                               repeat="item in internalGroupList | filter: $select.search">
+                                <div ng-bind-html="item.ipNetwork | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>是否需要公网</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.allocatePublicIpAddress"
+                            ng-options="ipItem.code as ipItem.name for ipItem in allocatePublicIp" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">数据盘(GB)</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="数据盘容量（输入0不创建数据盘）" ng-model="templateItem.dataDiskSize">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">服务器数量</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="服务器数量" ng-model="serverItem.cnt">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>镜像</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowImage.selected" theme="bootstrap">
+                        <ui-select-match placeholder="镜像名称......">{{$select.selected.imageName}}</ui-select-match>
+                        <ui-select-choices refresh="queryImage($select.search)" refresh-dalay="0"
+                                           repeat="item in imageList | filter: $select.search">
+                            <div ng-bind-html="item.imageName | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>网络类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="nowNetwork.selected"
+                            ng-options="network.networkType as network.networkDesc for network in networkList" required>
+                    <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="col-md-6" ng-show="nowNetwork.selected =='vpc'">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>VPC网络</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowVpc.selected" theme="bootstrap" ng-change="changeVpc()">
+                        <ui-select-match placeholder="搜索VPC名称......">{{$select.selected.vpcDesc}}</ui-select-match>
+                        <ui-select-choices refresh="queryVpc($select.search)" refresh-dalay="0"
+                                           repeat="item in vpcList | filter: $select.search">
+                            <div ng-bind-html="item.vpcDesc | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" ng-show="nowNetwork.selected =='vpc'">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>虚拟交换机</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowVswitch.selected" theme="bootstrap">
+                        <ui-select-match placeholder="搜索虚拟交换机名称......">{{$select.selected.vswitchDesc}}</ui-select-match>
+                        <ui-select-choices refresh="queryVswitch($select.search)" refresh-dalay="0"
+                                           repeat="item in vswitchList | filter: $select.search">
+                            <div ng-bind-html="item.vswitchDesc | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>安全组</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowSecurityGroup.selected" theme="bootstrap">
+                        <ui-select-match placeholder="搜索安全组名称......">{{$select.selected.securityGroupDesc}}</ui-select-match>
+                        <ui-select-choices refresh="querySecurityGroup($select.search)" refresh-dalay="0"
+                                           repeat="item in securityGroupList | filter: $select.search">
+                            <div ng-bind-html="item.securityGroupDesc | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="text-align:center;">
+                <button type="button" class="btn btn-sm btn-info" ng-click="create()"><span
+                        class="glyphicon glyphicon-floppy-save"></span>新建
+                </button>
+            </div>
+        </div>
+    </form>
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>服务器</td>
+                <td>序列号</td>
+                <td>公网IP</td>
+                <td>内网IP</td>
+                <td>使用类型</td>
+                <td>环境</td>
+                <td ng-if="contains(authPoint, '/server/power')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <td>{{item.serverName}}</td>
+                <td>{{item.serialNumber}}</td>
+                <td>{{item.publicIp}}</td>
+                <td>{{item.insideIp}}</td>
+                <td>
+                    <span class="label label-default" ng-if="item.useType == 10">bi</span>
+                    <span class="label label-default" ng-if="item.useType == 1">zookeeper</span>
+                    <span class="label label-danger" ng-if="item.useType == 2">web-service</span>
+                    <span class="label label-warning" ng-if="item.useType == 3">mysql</span>
+                    <span class="label label-primary" ng-if="item.useType == 4">other</span>
+                    <span class="label label-info" ng-if="item.useType == 5">web-php</span>
+                    <span class="label label-primary" ng-if="item.useType == 6">public</span>
+                    <span class="label label-warning" ng-if="item.useType == 7">redis</span>
+                    <span class="label label-info" ng-if="item.useType == 8">web-server</span>
+                    <span class="label label-info" ng-if="item.useType == 9">front-end</span>
+                </td>
+                <td>
+                    <span class="label label-default" ng-if="item.envType == 0">保留</span>
+                    <span class="label label-info" ng-if="item.envType == 1">dev</span>
+                    <span class="label label-success" ng-if="item.envType == 2">daily</span>
+                    <span class="label label-warning" ng-if="item.envType == 3">gray</span>
+                    <span class="label label-danger" ng-if="item.envType == 4">prod</span>
+                    <span class="label label-primary" ng-if="item.envType == 5">test</span>
+                    <span class="label label-primary" ng-if="item.envType == 6">back</span>
+                </td>
+                <td ng-if="contains(authPoint, '/server/power')">
+                    <button type="button" class="btn btn-sm btn-danger pull-right" ng-click="powerOnServer(item.id)"><span class="glyphicon glyphicon-off"></span>on</button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="7">
+                    <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <!--<div ng-if="alert.type != ''">-->
+        <!--<div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>-->
+    <!--</div>-->
+</div>

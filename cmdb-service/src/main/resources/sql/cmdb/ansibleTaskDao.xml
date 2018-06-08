@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.AnsibleTaskDao">
+
+    <insert id="addAnsibleTask" parameterType="AnsibleTaskDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ansible_tasks(
+        userId,
+        userName,
+        serverCnt,
+        taskType,
+        cmd,
+        taskScriptId,
+        finalized
+        ) VALUES (
+        #{userId},
+        #{userName},
+        #{serverCnt},
+        #{taskType},
+        #{cmd},
+        #{taskScriptId},
+        #{finalized}
+        )
+    </insert>
+
+
+    <select id="getAnsibleTask" parameterType="_long" resultType="AnsibleTaskDO">
+        SELECT * FROM oc_ansible_tasks WHERE id = #{id}
+    </select>
+
+    <update id="updateAnsibleTask" parameterType="AnsibleTaskDO">
+        UPDATE oc_ansible_tasks
+        SET finalized= #{finalized}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addAnsibleTaskServer" parameterType="AnsibleTaskServerDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_ansible_tasks_server(
+        ansibleTaskId,
+        serverId,
+        ip,
+        returncode,
+        result,
+        success,
+        msg
+        ) VALUES (
+        #{ansibleTaskId},
+        #{serverId},
+        #{ip},
+        #{returncode},
+        #{result},
+        #{success},
+        #{msg}
+        )
+    </insert>
+
+    <select id="cntAnsibleTaskServerByTaskId" parameterType="_long" resultType="_int">
+        SELECT COUNT(*) FROM oc_ansible_tasks_server
+        WHERE ansibleTaskId = #{ansibleTaskId}
+    </select>
+
+    <select id="queryAnsibleTaskServerByTaskId" parameterType="_long" resultType="AnsibleTaskServerDO">
+        SELECT * FROM oc_ansible_tasks_server WHERE ansibleTaskId = #{ansibleTaskId}
+    </select>
+
+    <select id="queryTaskScriptPage" parameterType="object" resultType="TaskScriptDO">
+        SELECT * FROM oc_task_script
+        <where>
+            <if test="userId > 0">
+                (userId = #{userId} OR scriptType = 1)
+            </if>
+            <if test="scriptName != null and scriptName != ''">
+                AND scriptName like "%" #{scriptName} "%"
+            </if>
+            <if test="sysScript != -1">
+                AND sysScript = #{sysScript}
+            </if>
+        </where>
+        ORDER BY scriptName DESC,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getTaskScriptSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) from oc_task_script
+        <where>
+            <if test="userId > 0">
+                (userId = #{userId} OR scriptType = 1)
+            </if>
+            <if test="scriptName != null and scriptName != ''">
+                AND scriptName like "%" #{scriptName} "%"
+            </if>
+            <if test="sysScript != -1">
+                AND sysScript = #{sysScript}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryTaskScriptPageByAdmin" parameterType="object" resultType="TaskScriptDO">
+        SELECT * FROM oc_task_script
+        <where>
+            <if test="scriptName != null and scriptName != ''">
+                scriptName like "%" #{scriptName} "%"
+            </if>
+            <if test="sysScript != -1">
+                AND sysScript = #{sysScript}
+            </if>
+        </where>
+        ORDER BY scriptName DESC,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getTaskScriptSizeByAdmin" parameterType="object" resultType="_long">
+        SELECT COUNT(*) from oc_task_script
+        <where>
+            <if test="scriptName != null and scriptName != ''">
+                scriptName like "%" #{scriptName} "%"
+            </if>
+            <if test="sysScript != -1">
+                AND sysScript = #{sysScript}
+            </if>
+        </where>
+    </select>
+
+
+    <update id="updateTaskScript" parameterType="TaskScriptDO">
+        UPDATE oc_task_script
+        SET scriptName= #{scriptName},
+        content = #{content},
+        script = #{script},
+        scriptType = #{scriptType},
+        sysScript = #{sysScript}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addTaskScript" parameterType="TaskScriptDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_task_script(
+        scriptName,
+        content,
+        userId,
+        username,
+        script,
+        scriptType,
+        sysScript
+        ) VALUES (
+        #{scriptName},
+        #{content},
+        #{userId},
+        #{username},
+        #{script},
+        #{scriptType},
+        #{sysScript}
+        )
+    </insert>
+
+    <select id="getTaskScript" parameterType="_long" resultType="TaskScriptDO">
+        SELECT * from oc_task_script
+        WHERE id = #{id}
+    </select>
+
+    <select id="getTaskScriptByScriptName" parameterType="object" resultType="TaskScriptDO">
+        SELECT * from oc_task_script
+        WHERE scriptName = #{scriptName}
+    </select>
+
+    <select id="queryAnsibleTaskPage" parameterType="object" resultType="AnsibleTaskDO">
+        SELECT * FROM oc_ansible_tasks
+        <where>
+            <if test="cmd != null and cmd != ''">
+                AND cmd like "%" #{cmd} "%"
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getAnsibleTaskSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) from oc_ansible_tasks
+        <where>
+            <if test="cmd != null and cmd != ''">
+                AND cmd like "%" #{cmd} "%"
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,413 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">首页</h1>
+                    <small class="text-muted">欢迎来到研发协作管理平台！</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!--<div hljs hljs-source="toPrettyJSON(editObject, 4)"></div>-->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <uib-accordion close-others="oneAtATime">
+                <div ng-controller="dashboardCtrl">
+
+
+                    <div uib-accordion-group class="panel-default" heading="持续集成" is-open="true"
+                         is-disabled="status.isFirstDisabled">
+                        <div class="form-group col-lg-6">
+
+                            <div class="col-lg-12">
+                                <div uib-accordion-group class="panel-default" heading="最新发布"
+                                     is-open="true" is-disabled="">
+                                    <div style="margin-top: 5px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td class="col-md-5">项目名</td>
+                                                <td class="col-md-5">操作人</td>
+                                                <td class="col-md-2">时间</td>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr ng-repeat="item in ciStatusVO.ciDeployList" style="font-size:1em;">
+                                                <td>
+                                                    <b style="color: #d75f00;">{{item.projectName}}</b>
+                                                    <i uib-popover-html="item.deployInfo"
+                                                       popover-trigger="'mouseenter'"
+                                                       class="icon icon-info"
+                                                       style="color: green;"></i>
+                                                </td>
+                                                <td>
+                                                    <span style="color: #286090;"
+                                                          ng-show="item.username != 'liangjian'">{{item.username}}</span>
+                                                    <span style="color: darkred;"
+                                                          ng-show="item.username == 'liangjian'"><i
+                                                            class="icon icon-badge"></i>{{item.username}}</span>
+                                                </td>
+                                                <td>
+                                                    <b class="pull-right" style="color: #777">{{item.timeView}}</b>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size:1em;">&nbsp;</div>
+                            <div class="col-lg-12">
+                                <div uib-accordion-group class="panel-default" heading="其它统计"
+                                     is-open="true">
+                                    <b>项目总数</b><b class="pull-right"
+                                                  style="color: #286090">{{ciStatusVO.projectCnt}}</b>
+                                    <br/>
+                                    <b>总部署次数</b><b class="pull-right"
+                                                   style="color: #286090">{{ciStatusVO.deployedCnt}}</b>
+                                </div>
+                            </div>
+
+
+                        </div>
+                        <div class="form-group col-lg-6">
+                            <!--<div class="col-lg-6">-->
+                                <!--<div uib-accordion-group class="panel-default" heading="活跃用户Top20"-->
+                                     <!--is-open="true" is-disabled="">-->
+                                    <!--<div style="margin-top: 5px;">-->
+                                        <!--<table class="table table-striped">-->
+                                            <!--<tbody>-->
+                                            <!--<div ng-repeat="item in ciStatusVO.topUserList"-->
+                                                 <!--style="font-size:1em;">-->
+                                                <!--<span style="color: #286090;" ng-show="item.username != 'liangjian'">{{item.username}}</span>-->
+                                                <!--<span style="color: darkred;" ng-show="item.username == 'liangjian'"><i-->
+                                                        <!--class="icon icon-badge"></i>{{item.username}}</span>-->
+                                                <!--<b style="color: #286090" class="pull-right">{{item.cnt}}</b>-->
+                                            <!--</div>-->
+                                            <!--</tbody>-->
+                                        <!--</table>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <div class="col-lg-6" id="ciTopUser"
+                                 style="border:1px solid ghostwhite; min-width: 300px; height: 770px; margin: 0 auto"></div>
+
+                            <div class="col-lg-6" id="ciTopProject"
+                                 style="border:1px solid ghostwhite; min-width: 300px; height: 770px; margin: 0 auto"></div>
+
+                            <!--<div uib-accordion-group class="panel-default" heading="热门项目Top20"-->
+                            <!--is-open="true" is-disabled="status.isFirstDisabled">-->
+                            <!--<div style="margin-top: 5px;">-->
+                            <!--<table class="table table-striped">-->
+                            <!--<tbody>-->
+                            <!--<div ng-repeat="item in ciStatusVO.topProjectList"-->
+                            <!--style="font-size:1em;">-->
+                            <!--<b style="color: #286090">{{item.projectName}}</b>-->
+                            <!--<b style="color: #286090" class="pull-right">{{item.cnt}}</b>-->
+                            <!--</div>-->
+                            <!--</tbody>-->
+                            <!--</table>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                        </div>
+
+
+                    </div>
+
+                    <div uib-accordion-group class="panel-default" heading="堡垒机" is-open="true"
+                         is-disabled="status.isFirstDisabled">
+
+                        <!--最后登陆-->
+                        <div class="form-group col-lg-12">
+                            <div class="col-lg-6">
+                                <div uib-accordion-group class="panel-default" heading="KeyboxLogin"
+                                     is-open="true" is-disabled="">
+                                    <div style="margin-top: 5px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td class="col-md-3">用户</td>
+                                                <td class="col-md-7">服务器</td>
+                                                <td class="col-md-2">时间</td>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr ng-repeat="item in keyboxStatusVO.lastLoginByKeybox"
+                                                style="font-size:1em;">
+                                                <td>
+                                                    <b style="color: #286090;">{{item.userDO.displayName}}</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090;">{{item.serverDO.serverName}}-{{item.serverDO.serialNumber}}</b>
+                                                    <span class="label" style="color: #777;" ng-if="item.serverDO.envType == 0">[保留]</span>
+                                                    <span class="label" style="color: #5bc0de;"
+                                                          ng-if="item.serverDO.envType == 1">[dev]</span>
+                                                    <span class="label" style="color: #449d44;"
+                                                          ng-if="item.serverDO.envType == 2">[daily]</span>
+                                                    <span class="label" style="color: #ec971f;"
+                                                          ng-if="item.serverDO.envType == 3">[gray]</span>
+                                                    <span class="label" style="color: #d9534f;"
+                                                          ng-if="item.serverDO.envType == 4">[prod]</span>
+                                                    <span class="label" style="color: #5e5e5e;"
+                                                          ng-if="item.serverDO.envType == 5">[test]</span>
+                                                    <span class="label" style="color: #286090;"
+                                                          ng-if="item.serverDO.envType == 6">[back]</span>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090">{{item.timeView}}</b>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div uib-accordion-group class="panel-default" heading="GetwayLogin"
+                                     is-open="true" is-disabled="">
+                                    <div style="margin-top: 5px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td class="col-md-3">用户</td>
+                                                <td class="col-md-7">服务器</td>
+                                                <td class="col-md-2">时间</td>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr ng-repeat="item in keyboxStatusVO.lastLoginByGetway"
+                                                style="font-size:1em;">
+                                                <td>
+                                                    <b style="color: #286090;">{{item.userDO.displayName}}</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090;">{{item.serverDO.serverName}}-{{item.serverDO.serialNumber}}</b>
+                                                    <span class="label" style="color: #777;" ng-if="item.serverDO.envType == 0">[保留]</span>
+                                                    <span class="label" style="color: #5bc0de;"
+                                                          ng-if="item.serverDO.envType == 1">[dev]</span>
+                                                    <span class="label" style="color: #449d44;"
+                                                          ng-if="item.serverDO.envType == 2">[daily]</span>
+                                                    <span class="label" style="color: #ec971f;"
+                                                          ng-if="item.serverDO.envType == 3">[gray]</span>
+                                                    <span class="label" style="color: #d9534f;"
+                                                          ng-if="item.serverDO.envType == 4">[prod]</span>
+                                                    <span class="label" style="color: #5e5e5e;"
+                                                          ng-if="item.serverDO.envType == 5">[test]</span>
+                                                    <span class="label" style="color: #286090;"
+                                                          ng-if="item.serverDO.envType == 6">[back]</span>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090">{{item.timeView}}</b>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="font-size:1em;">&nbsp;</div>
+
+                        <!--月汇总-->
+                        <div class="form-group col-lg-12">
+                            <div class="col-lg-12" id="keyboxLoginByWeek"
+                                 style="border:1px solid ghostwhite; min-width: 310px; height: 400px; margin: 0 auto"></div>
+                        </div>
+
+                        <div class="form-group col-lg-8">
+
+                            <div class="col-lg-12">
+                                <div uib-accordion-group class="panel-default" heading="活跃服务器Top10"
+                                     is-open="true" is-disabled="">
+                                    <div style="margin-top: 5px;">
+                                        <table class="table table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td class="col-md-4">名称</td>
+                                                <td class="col-md-4">IP</td>
+                                                <td class="col-md-2">环境</td>
+                                                <td class="col-md-2">累计登陆</td>
+                                            </tr>
+                                            </thead>
+
+                                            <tbody>
+                                            <tr ng-repeat="item in keyboxStatusVO.topServerList"
+                                                 style="font-size:1em;">
+                                                <td class="col-lg-4">
+                                                    <b ng-show="item.serialNumber != ''" style="color: #286090;">{{item.serverName}}-{{item.serialNumber}}</b>
+                                                    <b ng-show="item.serialNumber == ''" style="color: #286090;">{{item.serverName}}</b>
+                                                </td>
+
+                                                <td class="col-lg-4">
+                                                    <span class="label" style="color: green">{{item.insideIp}}</span>
+                                                </td>
+
+                                                <td class="col-lg-2">
+                                                    <span class="label" style="color: #777;" ng-if="item.envType == 0">保留</span>
+                                                    <span class="label" style="color: #5bc0de;"
+                                                          ng-if="item.envType == 1">dev</span>
+                                                    <span class="label" style="color: #449d44;"
+                                                          ng-if="item.envType == 2">daily</span>
+                                                    <span class="label" style="color: #ec971f;"
+                                                          ng-if="item.envType == 3">gray</span>
+                                                    <span class="label" style="color: #d9534f;"
+                                                          ng-if="item.envType == 4">prod</span>
+                                                    <span class="label" style="color: #5e5e5e;"
+                                                          ng-if="item.envType == 5">test</span>
+                                                    <span class="label" style="color: #286090;"
+                                                          ng-if="item.envType == 6">back</span>
+                                                </td>
+                                                <td class="col-lg-2">
+                                                    <b style="color: #286090">{{item.cnt}}</b>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size:1em;">&nbsp;</div>
+
+                            <div class="col-lg-12">
+                                <div uib-accordion-group class="panel-default" heading="其它统计"
+                                     is-open="true">
+                                    <b>授权用户总数</b><b class="pull-right"
+                                                    style="color: #286090">{{keyboxStatusVO.authedUserCnt}}</b>
+                                    <br/>
+                                    <b>总使用次数</b><b class="pull-right"
+                                                   style="color: #286090">{{keyboxStatusVO.keyboxLoginCnt}}</b>
+                                </div>
+                            </div>
+                            <!--<div class="col-lg-4">-->
+                                <!--<div uib-accordion-group class="panel-default" heading="活跃用户Top10"-->
+                                     <!--is-open="true" is-disabled="status.isFirstDisabled">-->
+                                    <!--<div style="margin-top: 5px;">-->
+                                        <!--<table class="table table-striped">-->
+                                            <!--<tbody>-->
+                                            <!--<div ng-repeat="item in keyboxStatusVO.topUserList"-->
+                                                 <!--style="font-size:1em;">-->
+                                                <!--<span style="color: #286090" ng-show="item.username != 'liangjian'">{{item.username}}</span>-->
+                                                <!--<span style="color: darkred;" ng-show="item.username == 'liangjian'"><i-->
+                                                        <!--class="icon icon-badge"></i>{{item.username}}</span>-->
+                                                <!--<b style="color: #286090" class="pull-right">{{item.cnt}}</b>-->
+                                            <!--</div>-->
+                                            <!--</tbody>-->
+                                        <!--</table>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                        <div class="form-group col-lg-4">
+                            <div class="col-lg-12" id="keyboxTopUser"
+                                 style="border:1px solid ghostwhite; min-width: 300px; height: 630px; margin: 0 auto"></div>
+                            <div style="font-size:1em;">&nbsp;</div>
+                        </div>
+                    </div>
+
+                    <div uib-accordion-group class="panel-default" heading="日志服务" is-open="true"
+                         is-disabled="status.isFirstDisabled">
+                        <!--<b>AAAAAAAA</b>-->
+                        <!--This content is straight in the template.-->
+                        <div class="form-group col-lg-8">
+
+                            <div class="col-lg-6" id="lsTopProject"
+                                 style="border:1px solid ghostwhite; min-width: 300px; height: 450px; margin: 0 auto"></div>
+
+                            <div class="col-lg-6" id="lsTopUser"
+                                 style="border:1px solid ghostwhite; min-width: 300px; height: 450px; margin: 0 auto"></div>
+                            <!--<div class="col-lg-6">-->
+                                <!--<div uib-accordion-group class="panel-default" heading="活跃项目Top10"-->
+                                     <!--is-open="true" is-disabled="">-->
+                                    <!--<div style="margin-top: 5px;">-->
+                                        <!--<table class="table table-striped">-->
+                                            <!--<tbody>-->
+                                            <!--<div ng-repeat="item in logServiceStatusVO.topGroupList"-->
+                                                 <!--style="font-size:1em;">-->
+                                                <!--<b style="color: #286090">{{item.groupName}}</b>-->
+                                                <!--<b style="color: #286090" class="pull-right">{{item.cnt}}</b>-->
+                                            <!--</div>-->
+                                            <!--</tbody>-->
+                                        <!--</table>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-lg-6">-->
+                                <!--<div uib-accordion-group class="panel-default" heading="活跃用户Top10"-->
+                                     <!--is-open="true" is-disabled="status.isFirstDisabled">-->
+                                    <!--<div style="margin-top: 5px;">-->
+                                        <!--<table class="table table-striped">-->
+                                            <!--<tbody>-->
+                                            <!--<div ng-repeat="item in logServiceStatusVO.topUserList"-->
+                                                 <!--style="font-size:1em;">-->
+                                                <!--<span style="color: #286090" ng-show="item.username != 'liangjian'">{{item.username}}</span>-->
+                                                <!--<span style="color: darkred;" ng-show="item.username == 'liangjian'"><i-->
+                                                        <!--class="icon icon-badge"></i>{{item.username}}</span>-->
+                                                <!--<b style="color: #286090" class="pull-right">{{item.cnt}}</b>-->
+                                            <!--</div>-->
+                                            <!--</tbody>-->
+                                        <!--</table>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        </div>
+                        <div class="form-group col-lg-4">
+
+                            <div class="col-lg-12" id="lgStatus" style="border:1px solid ghostwhite; min-width: 310px; height: 300px; max-width: 600px; margin: 0 auto"></div>
+                            <!--<div class="col-lg-12">-->
+                                <!--<div uib-accordion-group class="panel-default" heading="查询统计"-->
+                                     <!--is-open="true">-->
+                                    <!--<b>Today</b><b class="pull-right"-->
+                                                   <!--style="color: #286090">{{logServiceStatusVO.cntMap.day}}</b>-->
+                                    <!--<br/>-->
+                                    <!--<b>Week</b><b class="pull-right"-->
+                                                  <!--style="color: #286090">{{logServiceStatusVO.cntMap.week}}</b>-->
+                                    <!--<br/>-->
+                                    <!--<b>Month</b><b class="pull-right" style="color: #286090">{{logServiceStatusVO.cntMap.month}}</b>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                            <div style="font-size:1em;">&nbsp;</div>
+                            <div class="col-lg-12">
+                                <div uib-accordion-group class="panel-default" heading="配置统计"
+                                     is-open="true" is-disabled="status.isFirstDisabled">
+                                    <b>服务器组数量</b><b class="pull-right">{{logServiceStatusVO.logServiceCfgVO.serverGroupCfgCnt}}</b>
+                                    <br/>
+                                    <b>服务器数量</b><b
+                                        class="pull-right">{{logServiceStatusVO.logServiceCfgVO.serverCnt}}</b>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div uib-accordion-group class="panel-default" heading="服务器" is-open="true"
+                         is-disabled="status.isFirstDisabled">
+                        <div class="col-lg-6" id="serverType"  style="border:1px solid ghostwhite; min-width: 300px; height: 300px; margin: 0 auto"></div>
+
+                        <div class="col-lg-6" id="serverEnvType"  style="border:1px solid ghostwhite; min-width: 300px; height: 300px; margin: 0 auto"></div>
+
+                        <div style="font-size:1em;">&nbsp;</div>
+                        <div class="col-lg-12" id="serverCreate" style="border:1px solid ghostwhite; min-width: 310px; height: 400px; margin: 0 auto"></div>
+
+                    </div>
+
+                </div>
+            </uib-accordion>
+
+        </div>
+    </div>
+    <!-- / main -->
+</div>

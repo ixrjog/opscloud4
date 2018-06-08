@@ -1,0 +1,93 @@
+<div class="modal-header">
+    <h3 class="modal-title">日志清理配置</h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>服务器</td>
+                <td>IP</td>
+                <td>环境</td>
+                <td>磁盘使用率</td>
+                <td>日志保留(天)</td>
+                <td>启用</td>
+                <td>执行时间</td>
+                <td ng-if="contains(authPoint, '/server/power')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <b>{{item.groupName}}</b>
+                    <b style="color: #777" class="pull-right">组</b>
+                    </br>
+                    <b style="color: #286090">{{item.serverName}}-{{item.serialNumber}}</b>
+                    <b style="color: #777" class="pull-right">名称</b>
+                </td>
+                <td>
+                     <span ng-show="item.publicIp != null">
+                                                      <span>{{item.publicIp}}</span>
+                                                           <b class="pull-right">公网</b>
+                         </br>
+                                                    </span>
+                    </span>{{item.insideIp}}</span>
+                    <b class="pull-right">内网</b>
+                </td>
+                <td>
+                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                </td>
+                <td>
+                    <div class="progress" ng-show="item.diskRate != -1">
+                                                        <span class="progress-bar" role="progressbar"
+                                                              aria-valuenow="item.diskRate" aria-valuemin="0"
+                                                              aria-valuemax="100"
+                                                              style="min-width: 2em; width: {{item.diskRate}}%;">
+                                                            {{item.diskRate}}%
+                                                        </span>
+                    </div>
+                </td>
+                <td>{{item.viewHistory}}</td>
+                <td>
+                    <b class="fa fa-circle-o"
+                       uib-popover-html="'禁用'" popover-trigger="'mouseenter'"
+                       style="color: #777" ng-if="item.enabled == 0"></b>
+                    <b class="fa fa-circle"
+                       uib-popover-html="'启用'" popover-trigger="'mouseenter'"
+                       style="color: #449d44" ng-if="item.enabled == 1"></b>
+                </td>
+                <td>{{item.cleanupTime}}</td>
+            </tr>
+            </tbody>
+            <tfoot>
+        </table>
+    </div>
+    <form class="bs-example form-horizontal">
+
+        <div class="form-group">
+            <label class="col-lg-2 control-label">日志保留(天)</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="天数" ng-model="item.history">
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="text-align:center;">
+                <button ng-click="saveItem(item)"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                    <span class="glyphicon glyphicon-ok"></span>保存</button>
+
+                <!--<span class="glyphicon glyphicon-save" ng-click="saveItem(item)"></span>-->
+            </div>
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

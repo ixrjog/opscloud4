@@ -1,0 +1,60 @@
+<div class="modal-header">
+    <h3 class="modal-title">系统信息</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>配置项名称</label>
+            <div class="col-lg-9">
+                <input type="text" class="form-control" placeholder="配置项名称" ng-model="item.configName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>配置项层级</label>
+            <div class="col-lg-9">
+                <select class="form-control" ng-disabled="item.id != 0" ng-model="nowLevel" ng-change="changeLevel(nowLevel)" ng-options="type.code as type.name for type in todoLevels">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="nowLevel == 1">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>上级配置项</label>
+            <div class="col-lg-9">
+                <ui-select ng-model="nowParentConfig.selected" theme="bootstrap" ng-disabled="item.id != 0">
+                    <ui-select-match placeholder="搜索上级类目名称......">{{$select.selected.configName}}</ui-select-match>
+                    <ui-select-choices refresh="queryParentConfig($select.search)" refresh-dalay="0" repeat="item in configList | filter: $select.search">
+                        <div ng-bind-html="item.configName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="nowLevel == 0">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>处理角色</label>
+            <div class="col-lg-9">
+                <ui-select ng-model="nowRole.selected" theme="bootstrap">
+                    <ui-select-match placeholder="搜索角色......">{{$select.selected.roleName}}</ui-select-match>
+                    <ui-select-choices refresh="queryRole($select.search)" refresh-dalay="0" repeat="item in roleList | filter: $select.search">
+                        <div ng-bind-html="item.roleName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button ng-click="saveData()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-edit"></span>保存</button>
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: red; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭</button>
+
+            <!--<button class="btn btn-primary btn-sm" ng-click="saveData()">保存</button>-->
+            <!--<button class="btn btn-default btn-sm" ng-click="closeModal()" style="margin-left: 20px;">关闭</button>-->
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

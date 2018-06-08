@@ -1,0 +1,928 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <!--<h3 class="modal-title">项目管理配置</h3>-->
+    <h3 class="modal-title">
+        <b style="color: #286090">{{todoItem.title}}</b>工单
+    </h3>
+    <div>
+        <b ng-show="todoItem.todoType == 0" class="pull-left">运维类工单</b>
+        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
+           class="icon icon-info" style="color: green;"></i>
+    </div>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+                <uib-tab index="0" heading="项目配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group projectName">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">项目名称
+                                <i uib-popover-html="todoHelp.projectName"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                <input type="text" class="form-control" placeholder="项目名称"
+                                       ng-model="todoDetail.newProjectMap.projectName">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default"
+                                            ng-click="checkProjectName(todoDetail.newProjectMap.projectName)"><i
+                                            class="glyphicon glyphicon-check pull-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>项目说明</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder="简短描述"
+                                      ng-model="todoDetail.newProjectMap.projectContent"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>构建工具</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="todoDetail.newProjectMap.buildTool"
+                                        ng-options="tool.code as tool.name for tool in buildTools">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>JDK版本</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="todoDetail.newProjectMap.jdkVersion"
+                                        ng-options="jdk.code as jdk.name for jdk in jdks">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!--popover-trigger="'mouseenter'"-->
+                    <!--popover-is-open="true"-->
+                    <div class="form-group build-params">
+                        <label class="col-lg-2 control-label">附加构建参数
+                            <i uib-popover-html="todoHelp.buildParams"
+                               popover-trigger="'mouseenter'"
+                               class="icon icon-info"
+                               style="color: green;"></i></label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="不要填写环境参数例如：-Pdaily"
+                                   ng-model="todoDetail.newProjectMap.buildParams">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">部署类型</label>
+                            <div class="col-lg-8">
+                                <div class="input-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="todoDetail.newProjectMap.deployType" value=0
+                                               ng-checked="true">
+                                        <b style="margin-left: 5px; color: #286090">War</b>
+                                    </label>
+                                    <label class="radio-inline" style="margin-left: 50px;">
+                                        <input type="radio" ng-model="todoDetail.newProjectMap.deployType" value=1
+                                               ng-checked="false">
+                                        <b style="margin-left: 5px; color: #286090">Jar</b>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>Tomcat版本</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="todoDetail.newProjectMap.tomcatVersion"
+                                        ng-options="tomcat.code as tomcat.name for tomcat in tomcats">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!--<span style="color: #ec2121;">*</span>-->
+                            <label class="col-lg-4 control-label">(Stash)Project</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowStashProject.selected" theme="bootstrap"
+                                           ng-change="changeStashProject()">
+                                    <ui-select-match placeholder="搜索stash项目名......">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryStashProject($select.search)" refresh-dalay="0"
+                                                       repeat="item in stashProjectList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!--<span style="color: #ec2121;">*</span>-->
+                            <label class="col-lg-4 control-label">(Stash)Repository</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowStashRepository.selected" theme="bootstrap"
+                                           ng-change="changeStashRepository()">
+                                    <ui-select-match placeholder="搜索stash仓库名......">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryStashRepository($select.search)" refresh-dalay="0"
+                                                       repeat="item in stashRepositoryList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group environmentVariables">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">工作目录</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="默认为项目根目录"
+                                       ng-model="todoDetail.newProjectMap.workingSubDirectory">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">环境参数
+                                <i uib-popover-html="todoHelp.environmentVariables"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="默认为系统参数"
+                                       ng-model="todoDetail.newProjectMap.environmentVariables">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!--<span style="color: #ec2121;">*</span>-->
+                            <label class="col-lg-4 control-label">项目负责人</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowLeaderUser.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索用户名......">
+                                        {{$select.selected.username}}<{{$select.selected.displayName}}>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryUsers($select.search)" refresh-dalay="0"
+                                                       repeat="item in userList | filter: $select.search">
+                                        <div ng-bind-html="item.username + '<' + item.displayName + '>' | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+
+                        <!--<div class="col-md-6">-->
+                        <!--<label class="col-lg-4 control-label">上线日期</label>-->
+                        <!--<div class="col-lg-8">-->
+                        <!--<div class="input-group">-->
+                        <!--<input type="text" class="form-control" ng-model="pm.dt" uib-datepicker-popup-->
+                        <!--is-open="popup.opened" datepicker-options="dateOptions"-->
+                        <!--ng-required="true" close-text="Close"/>-->
+                        <!--<span class="input-group-btn">-->
+                        <!--<button type="button" class="btn btn-default"-->
+                        <!--ng-click="open()">-->
+                        <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                        <!--</button>-->
+                        <!--</span>-->
+                        <!--</div>-->
+
+                        <!--</div>-->
+                        <!--</div>-->
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">工单备注</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" ng-model="pm.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <!--提交-->
+                            <div style="text-align:center;">
+                                <button class="btn btn-xs" ng-show="todoDetail.todoStatus == 0"
+                                        style="background-color: #d75f00; color: white;"
+                                        ng-click="submitTodo()">提交
+                                </button>
+
+                                <!--保存-->
+
+                                <button ng-click="saveTodo()" ng-show="todoDetail.todoStatus <= 0"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-ok"></span>保存
+                                </button>
+
+                                <button ng-click="resetTodo()" ng-show="todoDetail.todoStatus <= 0"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #449d44; color: white;">
+                                    <span class="glyphicon glyphicon-repeat"></span>重置
+                                </button>
+                            </div>
+                            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+                            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="构建配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group">
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>分支
+                                <i uib-popover-html="todoHelp.branch"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <select class="form-control" ng-model="nowBranch.selected" ng-disabled="doQueryRefs"
+                                        ng-options="ref.name group by ref.type for ref in refs">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <button ng-click="getRefs()" ng-disabled="doQueryRefs"
+                                    class="btn btn-sm"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <i class="fa fa-code-fork" ng-show="!doQueryRefs"></i>
+                                <i class="fa fa-spin fa-spinner" ng-show="doQueryRefs"></i>获取最新分支
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器环境
+                                <i uib-popover-html="todoHelp.serverEnv"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="builderPlan.envType"
+                                        ng-options="env.code as env.name for env in envType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">构建参数</label>
+                            <div class="col-lg-8">
+                                <div class="input-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="builderPlan.needEnvParams" value=1
+                                               ng-checked="true">
+                                        <b style="margin-left: 5px; color: #286090">有</b>
+                                    </label>
+                                    <label class="radio-inline" style="margin-left: 50px;">
+                                        <input type="radio" ng-model="builderPlan.needEnvParams" value=0
+                                               ng-checked="false">
+                                        <b style="margin-left: 5px; color: #286090">无</b>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group projectName" ng-show="builderPlan.needEnvParams == true">
+                        <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>profile参数
+                            <i uib-popover-html="todoHelp.envParams"
+                               popover-trigger="'mouseenter'"
+                               popover-placement="left-top"
+                               class="icon icon-info"
+                               style="color: green;"></i>
+                        </label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="激活profile配置参数,若为默认值可留空."
+                                   ng-model="builderPlan.envParams">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">备注</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder=""
+                                      ng-model="builderPlan.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="todoDetail.todoStatus <= 0">
+                            <!--保存-->
+                            <button ng-click="saveBuilderPlan()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存构建配置
+                            </button>
+                            <!--重置-->
+                            <button ng-click="resetBuilderPlan()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--计划详情-->
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped"
+                               ng-show="builderPlanList != null && builderPlanList.length != 0">
+                            <thead>
+                            <tr>
+                                <td class="col-md-1">分支</td>
+                                <td class="col-md-1">环境</td>
+                                <td class="col-md-4">
+                                    <b style="color: #286090">构建参数</b>
+                                </td>
+                                <td class="col-md-3">备注</td>
+                                <td class="col-md-3">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in builderPlanList">
+                                <td>{{item.branch}}</td>
+                                <td>
+                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                </td>
+                                <td>{{item.envParams}}</td>
+                                <td>{{item.content}}</td>
+                                <td>
+                                    <button ng-click="editBuilderPlan(item)"
+                                            class="btn btn-xs"
+                                            style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                    </button>
+
+                                    <button ng-click="delBuilderPlan(item.id)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="5">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </uib-tab>
+                <uib-tab index="2" heading="服务器配置" ng-show="builderPlanList != null && builderPlanList.length != 0">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器环境
+                                <i uib-popover-html="todoHelp.serverEnv"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="newServer.envType"
+                                        ng-options="plan.envType as plan.envName for plan in builderPlanList">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group zoneType">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>所属区域
+                                <i uib-popover-html="todoHelp.zoneType"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <div class="input-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="newServer.zoneType" value=0
+                                               ng-checked="true">
+                                        <b style="margin-left: 5px; color: #286090">内部虚拟机</b>
+                                    </label>
+                                    <label class="radio-inline" style="margin-left: 50px;">
+                                        <input type="radio" ng-model="newServer.zoneType" value=1
+                                               ng-checked="false">
+                                        <b style="margin-left: 5px; color: #286090">阿里云</b>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6" ng-if="newServer.zoneType == 1">
+                            <label class="col-lg-4 control-label">是否开通公网
+                                <i uib-popover-html="todoHelp.allocateIp"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="checkbox col-lg-8">
+                                <label>
+                                    <input type="checkbox" ng-model="newServer.allocateIp"><b
+                                        style="color: #286090">开通公网IP</b>
+                                </label>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>虚拟机规格
+                            </label>
+                            <!--required-->
+                            <div class="col-lg-8">
+                                <select class="form-control" ng-model="newServer.instanceType"
+                                        ng-options="item.code as item.name for item in instanceType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">数据盘容量(GB)</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="数据盘默认容量100GB"
+                                       ng-model="newServer.dataDiskSize">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">虚拟机数量</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="至少开通1台虚拟机"
+                                       ng-model="newServer.serverCnt">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">备注</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder=""
+                                      ng-model="newServer.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="todoDetail.todoStatus <= 0">
+                            <!--保存-->
+                            <button ng-click="saveNewServer()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存服务器配置
+                            </button>
+                            <!--重置-->
+                            <button ng-click="resetNewServer()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </div>
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped"
+                               ng-show="newServerList != null && newServerList.length !=0">
+                            <thead>
+                            <tr>
+                                <td class="col-md-2">服务器环境</td>
+                                <td>配置</td>
+                                <td class="col-md-3">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in newServerList">
+                                <td>
+                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                    <!--<b style="color: #286090">{{item.serverGroupDO.name}}</b>-->
+                                    <!--<b style="color: #777">{{item.serverGroupDO.content}}</b>-->
+                                </td>
+                                <td>
+                                    <b style="color: #286090" ng-if="item.zoneType == 0">私有云</b>
+                                    <b style="color: #286090" ng-if="item.zoneType == 1">阿里云</b>
+                                    <b style="color: #777" class="pull-right">区域</b>
+                                    <br/>
+                                    <div ng-if="item.zoneType == 1 && item.allocateIp == true">
+                                        <b style="color: #286090">开通</b>
+                                        <b style="color: #777" class="pull-right">公网IP</b>
+                                        <br/>
+                                    </div>
+                                    <b style="color: #286090" ng-if="item.instanceType == 0">1C2G</b>
+                                    <b style="color: #286090" ng-if="item.instanceType == 1">2C4G</b>
+                                    <b style="color: #286090" ng-if="item.instanceType == 2">4C8G</b>
+                                    <b style="color: #777" class="pull-right">规格</b>
+                                    <br/>
+                                    <b style="color: #286090">{{item.dataDiskSize}}GB</b>
+                                    <b style="color: #777" class="pull-right">数据盘容量</b>
+                                    <br/>
+                                    <b style="color: #286090">{{item.serverCnt}}</b>
+                                    <b style="color: #777" class="pull-right">申请数量</b>
+                                    <br/>
+                                    <b style="color: #777" ng-show="item.content != ''">备注:{{item.content}}</b>
+                                </td>
+                                <td>
+                                    <button ng-click="editNewServer(item)"
+                                            class="btn btn-xs"
+                                            style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                    </button>
+
+                                    <button ng-click="delNewServer(item.id)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'删除服务器配置'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>删除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </uib-tab>
+                <uib-tab index="3" heading="用户配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>用户名</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowUser.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索用户名称......">
+                                        {{$select.selected.username}}<{{$select.selected.displayName}}>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryUsers($select.search)" refresh-dalay="0"
+                                                       repeat="item in userList | filter: $select.search">
+                                        <div ng-bind-html="item.username + '<' + item.displayName + '>' | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-lg-2">
+                                <button ng-click="addUser()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-plus"></span>添加
+                                </button>
+
+                                <!--<span class="glyphicon glyphicon-plus" ng-click="addItem()"></span>-->
+                            </div>
+                        </div>
+                    </form>
+
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td class="col-md-3">用户</td>
+                                <td class="col-md-3">姓名</td>
+                                <td class="col-md-7">
+                                    <b style="color: #286090">Email</b>
+                                </td>
+                                <td class="col-md-2">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="user in todoDetail.newProjectMap.users">
+                                <td>{{user.username}}</td>
+                                <td>{{user.displayName}}</td>
+                                <td>{{user.mail}}</td>
+                                <td>
+                                    <button ng-click="delUser(user)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="todoDetail.todoStatus <= 0">
+                            <!--保存-->
+                            <button ng-click="saveTodo()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="4" heading="其它配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group projectName">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">tomcat名称
+                                <i uib-popover-html="todoHelp.tomcatAppName"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                <input type="text" class="form-control" placeholder="tomcat名称"
+                                       ng-model="todoDetail.newProjectMap.tomcatAppName">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default"
+                                            ng-click="checkProjectName(todoDetail.newProjectMap.projectName)"><i
+                                            class="glyphicon glyphicon-check pull-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6 tomcatWebAppsPath">
+                            <label class="col-lg-4 control-label">路径配置
+                                <i uib-popover-html="todoHelp.tomcatWebAppsPath"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="webapps路径配置"
+                                       ng-model="todoDetail.newProjectMap.tomcatWebAppsPath">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group httpStatus">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">check页配置
+                                <i uib-popover-html="todoHelp.httpStatus"
+                                   popover-trigger="'mouseenter'"
+                                   popover-placement="left-top"
+                                   class="icon icon-info"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="check页配置"
+                                       ng-model="todoDetail.newProjectMap.httpStatus">
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>挂载域名</label>
+                            <div class="checkbox col-lg-8">
+                                <label>
+                                    <input type="checkbox" ng-model="todoDetail.newProjectMap.webWww"><b
+                                        style="color: #286090">（闪电购）www.52shangou.com</b>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>挂载域名</label>
+                            <div class="checkbox col-lg-8">
+                                <label>
+                                    <input type="checkbox" ng-model="todoDetail.newProjectMap.webManage"><b
+                                        style="color: #286090">（后台）manage.51xianqu.com</b>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>挂载域名</label>
+                            <div class="checkbox col-lg-8">
+                                <label>
+                                    <input type="checkbox" ng-model="todoDetail.newProjectMap.webKa"><b
+                                        style="color: #286090">（一号管家）ka.52shangou.com</b>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="todoDetail.todoStatus <= 0">
+                            <!--保存-->
+                            <button ng-click="saveTodo()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+
+                            <button ng-click="resetTodoOtherCfg()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </div>
+
+                </uib-tab>
+
+                <uib-tab index="5" heading="工单处理" ng-if="checkAuth('/todo/invokeTodoDetail')"
+                         ng-show="todoDetail.todoStatus == 1">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group" style="text-align:center;">
+                        <h4 class="modal-title">
+                            <b style="color: #286090;">管理员操作界面</b>
+                        </h4>
+                    </div>
+
+                    <div class="list-group">
+                        <a class="list-group-item" style="background-color: #00a8f3;">
+                            <h4 class="list-group-item-heading" style="color: white;">创建ServerGroup</h4>
+                            <p class="list-group-item-text" style="color: white; font-size:1.3em;">
+                                ServerGroupName:group_{{todoDetail.newProjectMap.projectName}}
+                                <button ng-click="invokeNewProjectTode(0)"
+                                        ng-show="todoDetail.newProjectMap.procServerGroup == false"
+                                        class="btn btn-xs pull-right"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-wrench"></span>执行
+                                </button>
+                                <br/>
+                                <span class="label label-success pull-right"
+                                      ng-show="todoDetail.newProjectMap.procServerGroup == true">Success</span>
+                            </p>
+                        </a>
+                        <div style="font-size:1em;">&nbsp;</div>
+                        <a class="list-group-item" style="background-color: #D44950;">
+                            <h4 class="list-group-item-heading" style="color: white;">创建ECS服务器</h4>
+
+                            <div class="list-group-item-text" style="color: white; font-size:1.3em;" class="col-md-12"
+                               ng-repeat="server in todoDetail.todoNewServerDetailList">
+                                <b style="color: white;">* </b>
+                                <i style="color: white;">{{todoDetail.newProjectMap.projectName}}-</i>
+                                <b style="color: #777" ng-if="server.envType == 0">保留</b>
+                                <b style="color: #5bc0de" ng-if="server.envType == 1">dev</b>
+                                <b style="color: #449d44" ng-if="server.envType == 2">daily</b>
+                                <b style="color: #ec971f" ng-if="server.envType == 3">gray</b>
+                                <b style="color: #d9534f" ng-if="server.envType == 4">prod</b>
+                                <b style="color: #5e5e5e" ng-if="server.envType == 5">test</b>
+                                <b style="color: #286090" ng-if="server.envType == 6">back</b>
+
+                                <i style="color: white;" ng-if="server.zoneType == 0">(Office</i>
+                                <i style="color: white;" ng-if="server.zoneType == 1">(Aliyun</i>
+
+                                <i style="color: white;" ng-if="server.zoneType == 1 && server.allocateIp == true">&开通公网IP</i>
+                                <i style="color: white;" ng-if="server.instanceType == 0">&规格1C2G</i>
+                                <i style="color: white;" ng-if="server.instanceType == 1">&规格2C4G</i>
+                                <i style="color: white;" ng-if="server.instanceType == 2">&规格4C8G</i>
+
+                                <i style="color: white;">Disk{{server.dataDiskSize}}GB)</i>
+                                <i style="color: white;">x {{server.serverCnt}}</i>
+
+                                <button ng-click="invokeNewProjectTode(1)"
+                                        class="btn btn-xs pull-right"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-wrench"></span>执行
+                                </button>
+                            </div>
+
+
+
+                        </a>
+                        <div style="font-size:1em;">&nbsp;</div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="todoDetail.todoStatus > 0">
+                            <!--保存-->
+                            <button ng-click="saveTodo()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+
+                            <button ng-click="resetTodoOtherCfg()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </div>
+
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+    </form>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

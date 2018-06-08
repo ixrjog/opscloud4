@@ -1,0 +1,151 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">IP段</h1>
+                    <small class="text-muted">维护IP段</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md" ng-controller="ipGroupCtrl">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <form class="form-inline" role="form">
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">IP网络段</span>
+                        <input type="text" class="form-control" ng-model="ipNetwork" placeholder="IP网络段">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">服务器组</span>
+                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                            <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                               repeat="item in serverGroupList | filter: $select.search">
+                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-group">
+                        <span class="input-group-addon">IP类型</span>
+                        <select class="form-control" ng-model="nowIpType"
+                                ng-options="type.code as type.name for type in ipType">
+                            <option value="">---请选择---</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                            class="glyphicon glyphicon-search"></span>搜索
+                    </button>
+                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                            class="glyphicon glyphicon-repeat"></span>重置
+                    </button>
+                    <button type="button" class="btn btn-success" ng-click="addIPGroup()"
+                            ng-if="contains(authPoint, '/ipgroup/save')"><span class="glyphicon glyphicon-plus"></span>新增
+                    </button>
+                </div>
+            </form>
+            <div class="panel panel-default" style="margin-top: 5px;;">
+                <div class="panel-body">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <td>IP段</td>
+                            <td>DNS</td>
+                            <td>IP类型</td>
+                            <td>说明</td>
+                            <td>添加时间</td>
+                            <td class="col-md-2"
+                                ng-if="contains(authPoint, '/ipgroup/save') || contains(authPoint, '/ipgroup/create') || contains(authPoint, '/ipgroup/del')">
+                                操作
+                            </td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in pageData">
+                            <td>
+                                <b style="color: #286090">{{item.ipNetwork}}</b>
+                                <b style="color: #777" class="pull-right">段地址</b>
+                                </br>
+                                <b style="color: #286090">{{item.gateWay}}</b>
+                                <b style="color: #777" class="pull-right">网关</b>
+                            </td>
+                            <td>
+                                <b>{{item.dnsOne}}</b>
+                                <b style="color: #777" class="pull-right">DNS1</b>
+                            <span ng-show="item.dnsTwo != ''">
+                                </br>
+                                <b>{{item.dnsTwo}}</b>
+                            <b style="color: #777" class="pull-right">DNS2</b>
+                            </span>
+                            </td>
+                            <td>
+                                <b style="color: #449d44" ng-if="item.ipType == 0">公网</b>
+                                <b style="color: #777" ng-if="item.ipType == 1">内网</b>
+                            </td>
+                            <td>{{item.content}}</td>
+                            <td>{{item.gmtCreate}}</td>
+                            <td ng-if="contains(authPoint, '/ipgroup/save') || contains(authPoint, '/ipgroup/create') || contains(authPoint, '/ipgroup/del')">
+                                <button ng-click="editIPGroup(item)"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                <!--<span class="glyphicon glyphicon-pencil" ng-click="editIPGroup(item)"-->
+                                        <!--ng-if="contains(authPoint, '/ipgroup/save')"></span>-->
+
+                                <button ng-click="createIPs(item.id)"
+                                        ng-show="item.ipType == 1"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-transfer"></span>生成IP</button>
+
+                                <!--<span type="button" class="glyphicon glyphicon-transfer" ng-show="item.ipType == 1" style="margin-left: 20px;"-->
+                                      <!--uib-popover-html="'生成IP'" popover-trigger="'mouseenter'"-->
+                                        <!--ng-click="createIPs(item.id)" ng-if="contains(authPoint, '/ipgroup/create')">-->
+                                <!--</span>-->
+
+                                <button ng-click="delIPGroup(item.id)" ng-if="contains(authPoint, '/ipgroup/del')"
+                                        class="btn btn-xs pull-right"
+                                        style="background-color: red; color: white;">
+                                    <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                                <!--<span class="glyphicon glyphicon-trash pull-right"-->
+                                        <!--ng-click="delIPGroup(item.id)" ng-if="contains(authPoint, '/ipgroup/del')"></span>-->
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="7">
+                                <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"
+                                    ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                    ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="ipGroup">
+    <div ng-include="'tpl/modal/ipgroup_modal.html'"></div>
+</script>

@@ -1,0 +1,175 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <!--<div class="bg-light lter b-b wrapper-md">-->
+        <!--<div class="row">-->
+        <!--<div class="col-sm-6 col-xs-12">-->
+        <!--<h1 class="m-n font-thin h3 text-black">堡垒机</h1>-->
+        <!--<small class="text-muted">堡垒机日常使用</small>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <div ng-controller="keyboxCtrl">
+                <div class="panel" ng-show="showType == 'table'">
+                    <div class="panel-body">
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">服务器组</span>
+                                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                        <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                                           repeat="item in serverGroupList | filter: $select.search">
+                                            <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">环境类型</span>
+                                    <select class="form-control" ng-model="nowEnv"
+                                            ng-options="envItem.code as envItem.name for envItem in envType" required>
+                                        <option value="">--请选择--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                        class="glyphicon glyphicon-search"></span>搜索
+                                </button>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-success" ng-click="loginBoxList()"><span
+                                        class="glyphicon glyphicon-log-in"></span>Login
+                                </button>
+                            </div>
+                        </form>
+                        <div style="font-size:1em;">&nbsp;</div>
+                        <form class="form-inline" role="form">
+                            <div class="col-lg-1">
+                                    <input type="checkbox" ng-model="envChoose.prod" ng-click="chooseEnv(4)"><b style="color: #d9534f"> prod</b>
+                            </div>
+                            <div class="col-lg-1">
+                                    <input type="checkbox" ng-model="envChoose.back" ng-click="chooseEnv(6)"><b style="color: #286090"> back</b>
+                            </div>
+                            <div class="col-lg-1">
+                                    <input type="checkbox" ng-model="envChoose.gray" ng-click="chooseEnv(3)"><b style="color: #ec971f"> gray</b>
+                            </div>
+                            <div class="col-lg-1">
+                                    <input type="checkbox" ng-model="envChoose.daily" ng-click="chooseEnv(2)"><b style="color: #449d44"> daily</b>
+                            </div>
+                        </form>
+                      
+                        <table class="table table-hover table-bordered table-striped" style="margin-top: 5px;">
+                            <thead>
+                            <tr>
+                                <td class="col-md-1">
+                                    <label class="checkbox i-checks m-l-md"
+                                           style="margin-top:0;margin-bottom: 0;margin-left: 27px;">
+                                        <input type="checkbox" ng-model="allChoose" ng-change="chooseAllItem()"><i></i>
+                                    </label>
+                                </td>
+                                <td class="col-md-4">服务器</td>
+                                <td class="col-md-2">序号</td>
+                                <td class="col-md-2">环境</td>
+                                <td class="col-md-4">登录地址</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in pageData">
+                                <td>
+                                    <label class="checkbox i-checks m-l-md" style="margin-top:0;margin-bottom: 0;">
+                                        <input type="checkbox" ng-model="item.choose"><i></i>
+                                    </label>
+                                </td>
+                                <td>
+                                    <b style="color: #286090" class="pull-left">{{item.serverName}}</b>
+                                    <b style="color: #777" class="pull-right">{{item.serverGroupDO.name}}</b>
+                                </td>
+                                <td>{{item.serialNumber}}</td>
+                                <td>
+                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                </td>
+                                <td>{{item.loginUser}}@{{item.insideIP.ip}}</td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="9">
+                                    <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"
+                                        ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                        ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div ng-show="showType == 'xterm'" class="row">
+                    <div class="col-md-12">
+                        <button type="button" class="btn btn-info btn-sm" ng-click="chooseAll()"><span
+                                class="glyphicon glyphicon-th-large"></span>选中所有
+                        </button>
+                        <button type="button" class="btn btn-info btn-sm" ng-click="closeAll()"><span
+                                class="glyphicon glyphicon-log-out"></span>关闭所有
+                        </button>
+                    </div>
+                    <div resizable id="{{boxItem.id}}" r-directions="['right', 'bottom']" r-width="boxItem.width"
+                         r-height="boxItem.height"
+                         style="font-size: 8px; margin: 10px;border-radius: 4px;padding: 0px;"
+                         ng-repeat="boxItem in boxList" class="col-md-6"
+                         ng-class="{
+                     'keybox-focus' : (boxItem.hasChoose || allChoosed),
+                     'keybox-unFocus' : !(boxItem.hasChoose || allChoosed)}" ng-click="chooseOne(boxItem)">
+                        <div class="panel-default">
+                            <div class="panel-heading" style="color: #777;">
+                                <span class="label label-default" ng-if="boxItem.instance.envType == 0">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(保留)</span>
+                                <span class="label label-info" ng-if="boxItem.instance.envType == 1">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(dev)</span>
+                                <span class="label label-success" ng-if="boxItem.instance.envType == 2">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(daily)</span>
+                                <span class="label label-warning" ng-if="boxItem.instance.envType == 3">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(gray)</span>
+                                <span class="label label-danger" ng-if="boxItem.instance.envType == 4">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(prod)</span>
+                                <span class="label label-primary" ng-if="boxItem.instance.envType == 5">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(test)</span>
+                                <span class="label label-primary" ng-if="boxItem.instance.envType == 6">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(back)</span>
+
+                                <span class="label label-success">{{boxItem.instance.publicIP != null ? ("公网:" + boxItem.instance.publicIP.ip) : ""}}</span>
+                                <span class="label label-info">{{boxItem.instance.insideIP != null ? ("内网:" + boxItem.instance.insideIP.ip) : ""}}</span>
+
+                                <i uib-popover-html="boxItem.instance.serverInfo" popover-trigger="'mouseenter'"
+                                   popover-placement="bottom"
+                                   class="icon icon-info" style="color: green;"></i>
+
+                                <button type="button" class="btn btn-info btn-xs pull-right"
+                                        ng-click="closeItem(boxItem.id)"><span
+                                        class="glyphicon glyphicon-log-out"></span>logout
+                                </button>
+                            </div>
+                            <div ng-bind-html="boxItem.xtermDom"></div>
+                            <div ng-show="boxItem.showError">{{boxItem.errorInfo}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

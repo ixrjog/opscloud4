@@ -1,0 +1,190 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">服务器</h1>
+                    <small class="text-muted">服务器维护</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <div class="panel panel-default" ng-controller="physicalServerCtrl">
+                <div class="panel-body">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th>服务器总数</th>
+                            <th>Cpu总核数</th>
+                            <th>内存总数</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>{{vmData.cnt}}台</td>
+                            <td>{{vmData.cpuCnt}}核</td>
+                            <td>{{vmData.memoryCnt/1024}}GB</td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">名称</span>
+                                <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">使用类型</span>
+                                <select class="form-control" ng-model="useType"
+                                        ng-options="serverUseType.code as serverUseType.name for serverUseType in serverUseType"
+                                        required>
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                    class="glyphicon glyphicon-search"></span>搜索
+                            </button>
+                            <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                    class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                            <button type="button" class="btn btn-success" ng-click="psCheck()"
+                                    ng-if="contains(authPoint, '/server/psCheck')">校验数据
+                            </button>
+                        </div>
+                    </form>
+                    <div class="panel panel-default" style="margin-top: 5px;;">
+                        <div class="panel-body">
+                            <div>
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>服务器</td>
+                                        <td>IP信息</td>
+                                        <td>使用类型</td>
+                                        <td>硬件信息</td>
+                                        <td>数据存储</td>
+                                        <td>内存使用率</td>
+                                        <td>系统资产标签</td>
+                                        <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>{{item.serverName}}</td>
+                                        <td>
+                                            <div ng-repeat="ipDetail in item.ipDetailList">
+                                                <span>{{ipDetail.ip}}</span>
+                                                <b class="pull-right" style="color: #286090" ng-if="ipDetail.ipUseType == 0">系统</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 1">远程管理</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 2">IPMI管理</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 3">网卡1</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 4">网卡2</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 5">网卡3</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 6">网卡4</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 7">其它</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 8">虚拟</b>
+                                                <b class="pull-right" ng-if="ipDetail.ipUseType == 9">备用</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <b style="color: #777" ng-if="item.useType == 0">物理机</b>
+                                            <b style="color: green" ng-if="item.useType == 1">虚拟化</b>
+                                            <b style="color:  #ec971f" ng-if="item.useType == 2">BI</b>
+                                            <span ng-if="item.useType == 3">其它用途</span>
+                                        </td>
+                                        <td>
+                                            CPU:{{item.cpu}}核
+                                            <br/>
+                                            内存:
+                                            <span ng-if="item.memory < 262144">{{item.memory/1024}}GB</span>
+                                            <b style="color: #286090" ng-if="item.memory >= 262144">{{item.memory/1024}}GB</b>
+                                        </td>
+                                        <td>
+                                            <div class="progress"  ng-show="item.esxiHostDO.dsRate != null">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="item.esxiHostDO.dsRate" aria-valuemin="0" aria-valuemax="100"
+                                                     style="min-width: 2em; width: {{item.esxiHostDO.dsRate}}%;">
+                                                    {{item.esxiHostDO.dsRate}}%
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="progress"  ng-show="item.esxiHostDO != null">
+                                                <div class="progress-bar" role="progressbar" aria-valuenow="item.esxiHostDO.memoryUseRate" aria-valuemin="0" aria-valuemax="100"
+                                                     style="min-width: 2em; width: {{item.esxiHostDO.memoryUseRate}}%;">
+                                                    {{item.esxiHostDO.memoryUseRate}}%
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>{{item.systemAssetTag}}</td>
+                                        <td ng-if="contains(authPoint, '/server/psSave')">
+                                            <!--VM清单-->
+                                            <button ng-click="vmServerList(item.esxiHostDO)"
+                                                    ng-show="item.useType == 1"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                                <span class="glyphicon glyphicon-list"></span>VM清单</button>
+                                            <!--存储清单-->
+                                            <button ng-click="vmDatastoresList(item.esxiHostDO)"
+                                                    ng-show="item.useType == 1"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                                <span class="fa fa-database"></span>存储清单</button>
+                                            <!--<span ng-show="item.useType == 1"-->
+                                                    <!--class="fa fa-database" style="margin-left: 20px;"-->
+                                                  <!--uib-popover-html="'存储清单'" popover-trigger="'mouseenter'"-->
+                                                    <!--ng-click="vmDatastoresList(item.esxiHostDO)"></span>-->
+
+                                            <button ng-click="delPs(item)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                                            <!--<span class="glyphicon glyphicon-trash pull-right"-->
+                                                    <!--ng-click="delPs(item)">-->
+                                            <!--</span>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="vmServerList">
+    <div ng-include="'tpl/modal/vmserverlist_modal.html'"></div>
+</script>
+<script type="text/ng-template" id="vmDatastoresList">
+    <div ng-include="'tpl/modal/vmdatastoreslist_modal.html'"></div>
+</script>

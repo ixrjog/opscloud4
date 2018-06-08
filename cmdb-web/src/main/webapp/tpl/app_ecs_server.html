@@ -1,0 +1,528 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">服务器</h1>
+                    <small class="text-muted">服务器维护</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!--右侧弹出信息-->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <uib-tabset>
+                <uib-tab index="0" heading="ECS服务器">
+                    <div class="panel panel-default" ng-controller="ecsServerCtrl">
+                        <div class="panel-body">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Ecs服务器总数</th>
+                                    <th>EcsCpu总核数</th>
+                                    <th>Ecs内存总数</th>
+                                    <th>Ecs带宽总数</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ecsData.cnt}}台</td>
+                                    <td>{{ecsData.cpuCnt}}核</td>
+                                    <td>{{ecsData.memoryCnt/1024}}GB</td>
+                                    <td>{{ecsData.bandwidthCnt}}Mbps</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">IP</span>
+                                        <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">状态</span>
+                                        <select class="form-control" ng-model="nowStatus"
+                                                ng-options="status.code as status.name for status in ecsStatus">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info"
+                                            ng-click="doQuery()"
+                                            ng-disabled="butSearchDisabled">
+                                        <i
+                                                class="glyphicon glyphicon-search"></i>搜索
+                                    </button>
+
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+
+                                    <!--同步按钮-->
+                                    <button type="button" class="btn btn-success"
+                                            popover-trigger="'mouseenter'"
+                                            uib-popover-html="'同步并校验阿里云数据'"
+
+                                            ng-click="ecsSync(0)"
+                                            ng-if="contains(authPoint, '/server/ecsSync')"
+                                            ng-disabled="butSyncDisabled">
+                                        <i class="fa fa-spin fa-spinner" ng-show="butSyncSpinDisabled"></i>
+                                        <i class="glyphicon glyphicon-refresh" ng-show="!butSyncSpinDisabled"></i>
+                                        SyncAliyun
+                                    </button>
+
+                                    <button type="button" class="btn btn-success" ng-show="false"
+                                            popover-trigger="'mouseenter'"
+                                            uib-popover-html="'同步并校验金融云数据'"
+                                            ng-click="ecsSync(1)"
+                                            ng-if="contains(authPoint, '/server/ecsSync')"
+                                            ng-disabled="butSyncDisabled">
+                                        <i class="fa fa-spin fa-spinner" ng-show="butSyncSpinDisabled"></i>
+                                        <i class="glyphicon glyphicon-refresh" ng-show="!butSyncSpinDisabled"></i>
+                                        SyncFinance
+                                    </button>
+
+                                    <!--<button type="button" class="btn btn-success"-->
+                                    <!--ng-click="ecsCheck()"-->
+                                    <!--ng-disabled="butCheckDisabled"-->
+                                    <!--ng-if="contains(authPoint, '/server/ecsCheck')">-->
+                                    <!--<i class="fa fa-spin fa-spinner" ng-show="butCheckSpinDisabled"></i>-->
+                                    <!--<i class="glyphicon glyphicon-check" ng-show="!butCheckSpinDisabled"></i>校验-->
+                                    <!--</button>-->
+                                </div>
+                            </form>
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>服务器</td>
+                                                <td>IP</td>
+                                                <td>规格</td>
+                                                <td>可用区(ZoneId)</td>
+                                                <td>状态</td>
+                                                <td>创建时间</td>
+                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>{{item.serverName}}
+
+                                                    <!--<span class="glyphicon glyphicon-cloud-upload" ng-click="ecsRename(item)"></span>-->
+                                                </td>
+                                                <td>
+                                                    <span ng-show="item.publicIp != ''">
+                                                           <span>{{item.publicIp}}</span>
+                                                    </span>
+                                                    <!--<span class="icon icon-refresh pull-left"-->
+                                                    <!--ng-click="allocateIp(item)" ng-show="item.publicIp == ''">-->
+                                                    <!--</span>-->
+
+                                                    <b class="pull-right">公</b>
+                                                    </br>
+
+                                                    </span>{{item.insideIp}}</span>
+                                                    <b class="pull-right">内</b>
+                                                </td>
+                                                <td>
+                                                    {{item.cpu}}C/{{item.memory/1024}}GB
+                                                    <i uib-popover-html="item.info" popover-trigger="'mouseenter'"
+                                                       class="icon icon-info" style="color: green;"></i>
+                                                    <br/>
+                                                </td>
+                                                <td>{{item.area}}
+                                                    <br/>
+                                                    <i class="fa fa-bank"
+                                                       style="background-color: #ff5f87; color: white;"
+                                                       popover-trigger="金融云"
+                                                       ng-show="item.finance == true">Finance</i>
+                                                </td>
+                                                <td>
+                                                    <!--<b style="color: #286090" ng-if="item.status == 0">新增</b>-->
+                                                    <span class="label label-primary"
+                                                          ng-if="item.status == 0">未录入</span>
+
+                                                    <span class="label label-success"
+                                                          ng-if="item.status == 1">已录入</span>
+
+                                                    <span class="label label-info" ng-if="item.status == 2">下线</span>
+
+                                                    <span class="label label-default" ng-if="item.status == 3">删除</span>
+                                                    <!---->
+                                                    <!--<b class="glyphicon glyphicon-remove" style="color: #777"-->
+                                                    <!--ng-if="item.status == 2">下线</b>-->
+                                                    <!--<b style="color: #d9534f" ng-if="item.status == 3">删除</b>-->
+                                                </td>
+                                                <td>{{item.creationTime}}</td>
+                                                <td ng-if="contains(authPoint, '/server/ecsSave')">
+
+                                                    <button ng-click="addServer(item)"
+                                                            popover-trigger="'mouseenter'"
+                                                            uib-popover-html="'录入服务器表'"
+                                                            class="btn btn-xs  pull-left"
+                                                            style="margin-left: 5px; background-color: #00af00; color: white;">
+                                                        <span class="glyphicon glyphicon-plus"></span>添加
+                                                    </button>
+
+                                                    <button ng-click="setDelEcs(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #f89406; color: white;">
+                                                        <span class="glyphicon glyphicon-ban-circle"></span>下线
+                                                    </button>
+
+                                                    <!--推送主机名 glyphicon-arrow-up-->
+                                                    <button ng-click="ecsRename(item)"
+                                                            class="btn btn-xs"
+                                                            popover-trigger="'mouseenter'"
+                                                            uib-popover-html="'推送主机名'"
+                                                            style="background-color: #00a8f3; color: white;">
+                                                        <i class="glyphicon glyphicon-repeat"></i>Name
+                                                    </button>
+
+                                                    <button ng-click="allocateIp(item)" ng-show="item.publicIp == ''"
+                                                            class="btn btn-xs"
+                                                            popover-trigger="'mouseenter'"
+                                                            uib-popover-html="'开通公网IP,需要重启服务器'"
+                                                            style="background-color: #eea236; color: white;">
+                                                        <span class="glyphicon glyphicon-plus"></span>IP
+                                                    </button>
+
+                                                    <button ng-click="delEcs(item)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="margin-left: 20px; background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="7">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="ECS模版">
+                    <div class="panel panel-default" ng-controller="ecsTemplateCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">ZoneId</span>
+                                        <select class="form-control" ng-model="queryZoneId"
+                                                ng-options="zoneId.code as zoneId.name for zoneId in zoneIds">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>地域ID</td>
+                                                <td>名称</td>
+                                                <td>instance类型</td>
+                                                <td>网络类型</td>
+                                                <td>cpu</td>
+                                                <td>memory</td>
+                                                <td>数据盘容量(GB)</td>
+                                                <td>IO优化实例</td>
+                                                <td>系统盘类型</td>
+                                                <td>数据盘类型</td>
+                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>{{item.zoneId}}</td>
+                                                <td>{{item.name}}</td>
+                                                <td>{{item.instanceType}}</td>
+                                                <td>
+                                                    <b style="color: #449d44" ng-if="item.networkSupport == 0">经典</b>
+                                                    <b style="color: #286090" ng-if="item.networkSupport == 1">全部</b>
+                                                    <b style="color: #d9534f" ng-if="item.networkSupport == 2">VPC</b>
+                                                </td>
+                                                <td>{{item.cpu}}</td>
+                                                <td>
+                                                    <span ng-if="item.memory < 8">{{item.memory}}GB</span>
+                                                    <b style="color: #449d44"
+                                                       ng-if="item.memory >= 8">{{item.memory}}GB</b>
+                                                </td>
+                                                <td>{{item.dataDiskSize}}</td>
+                                                <td>
+                                                    <b style="color: #449d44"
+                                                       ng-if="item.ioOptimized == 'optimized'">是</b>
+                                                    <span ng-if="item.ioOptimized == 'none'">否</span>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="item.systemDiskCategory == 'cloud'">普通云盘</span>
+                                                    <b style="color: green"
+                                                       ng-if="item.systemDiskCategory == 'cloud_efficiency'">高效云盘</b>
+                                                    <b style="color: #d9534f"
+                                                       ng-if="item.systemDiskCategory == 'ephemeral_ssd'">本地SSD盘</b>
+                                                    <b style="color: #d99a53"
+                                                       ng-if="item.systemDiskCategory == 'cloud_ssd'">SSD云盘</b>
+                                                </td>
+                                                <td>
+                                                    <span ng-if="item.dataDisk1Category == 'cloud'">普通云盘</span>
+                                                    <b style="color: green"
+                                                       ng-if="item.dataDisk1Category == 'cloud_efficiency'">高效云盘</b>
+                                                    <b style="color: #d9534f"
+                                                       ng-if="item.dataDisk1Category == 'ephemeral_ssd'">本地SSD盘</b>
+                                                    <b style="color: #d99a53"
+                                                       ng-if="item.dataDisk1Category == 'cloud_ssd'">SSD云盘</b>
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/ecsServer/template/save')">
+
+                                                    <button ng-click="create(item)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-plus"></span>新建
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="11">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="2" heading="ECS相关配置">
+                    <div class="panel panel-default" ng-controller="ecsConfigCtrl">
+                        <div class="panel-body">
+
+                            <div class="form-group">
+                                <h4 class="modal-title"><b style="color: #286090">ECS镜像管理</b>
+                                </h4>
+                                <button type="button" class="btn btn-info" ng-click="addImage()"><span
+                                        class="glyphicon glyphicon-plus"></span>新增
+                                </button>
+                            </div>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <!--<td><b style="color: #286090">镜像ID</b></td>-->
+                                                <td><b style="color: #286090">显示名称</b></td>
+                                                <td><b style="color: #286090">操作</b></td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="image in imageList">
+                                                <td>{{image.imageName}}</td>
+                                                <td>
+                                                    <button ng-click="delImage(image.id)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="form-group">
+                                <h4 class="modal-title"><b style="color: #286090">VPC管理</b>
+                                </h4>
+                                <button type="button" class="btn btn-info" ng-click="rsyncVpcNetwork()"><span
+                                        class="fa fa-circle-o-notch"></span>同步Vpc网络配置
+                                </button>
+                            </div>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <!--<td><b style="color: #286090">镜像ID</b></td>-->
+                                                <td class="col-md-2"><b style="color: #286090">VPC</b></td>
+                                                <td class="col-md-4"><b style="color: #286090">交换机</b></td>
+                                                <td class="col-md-4"><b style="color: #286090">安全组</b></td>
+                                                <td class="col-md-2"><b style="color: #286090">操作</b></td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="vpc in vpcList">
+                                                <td>{{vpc.aliyunVpcId}}
+                                                    <b>{{vpc.vpcDesc}}</b>
+                                                </td>
+                                                <td>
+                                                    <div class="col-md-12" ng-repeat="vSwitch in vpc.vSwitchs">
+                                                        <span ng-show="vSwitch.vswitchDesc != ''">{{vSwitch.vswitchId}}<{{vSwitch.vswitchDesc}}></span>
+                                                        <span ng-show="vSwitch.vswitchDesc == ''"> {{vSwitch.vswitchId}}</span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="col-md-12"
+                                                         ng-repeat="securityGroup in vpc.securityGroups">
+                                                        <span ng-show="vSwitch.vswitchDesc != ''">
+                                                            {{securityGroup.securityGroupId}}<{{securityGroup.securityGroupDesc}}>
+                                                        </span>
+                                                        <span ng-show="vSwitch.vswitchDesc == ''">
+                                                            {{securityGroup.securityGroupId}}
+                                                        </span>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button ng-click="delVpc(vpc.id)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+                <uib-tab index="4" heading="Aliyun配置">
+                    <div class="panel panel-default" ng-controller="aliyunConfigCtrl">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group col-lg-12">
+                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_ACCESS_KEY</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" placeholder="Aliyun ECS AccessKey"
+                                               uib-popover-html="'登录阿里云控制台，右上角个人头像菜单-AccessKey管理'"
+                                               popover-trigger="'mouseenter'"
+                                               ng-model="configMap.ALIYUN_ECS_ACCESS_KEY.value">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_ACCESS_SECRET</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" placeholder="Aliyun ECS AccessSecret"
+                                               uib-popover-html="'登录阿里云控制台，右上角个人头像菜单-AccessKey管理'"
+                                               popover-trigger="'mouseenter'"
+                                               ng-model="configMap.ALIYUN_ECS_ACCESS_SECRET.value">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_REGION_ID</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control"
+                                               placeholder="查询的地域ID:华东1,香港,美国西部1,按此格式添加:cn-hangzhou,cn-hongkong,us-west-1"
+                                               uib-popover-html="'查询的区域ID,可在查询并测试配置中查看区域名称对应的地域ID'"
+                                               popover-trigger="'mouseenter'"
+                                               ng-model="configMap.ALIYUN_ECS_REGION_ID.value">
+                                    </div>
+
+                                    <button ng-click="describeRegions()"
+                                            class="btn btn-xs"
+                                            style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                        <span class="glyphicon glyphicon-search"></span>查询并测试配置
+                                    </button>
+                                </div>
+
+
+                                <!--按钮-->
+                                <div class="form-group">
+
+                                    <div style="text-align:center;">
+
+                                        <button class="btn btn-xs"
+                                                style="background-color:  #2e6da4; color: white;"
+                                                ng-click="updateConfig()">保存配置
+                                        </button>
+
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="serverInfo">
+    <div ng-include="'tpl/modal/server_info_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="createEcsInstance">
+    <div ng-include="'tpl/modal/create_ecs_server_info_modal.html'"></div>
+</script>
+
+
+<script type="text/ng-template" id="regionsInfo">
+    <div ng-include="'tpl/modal/aliyun/aliyun_regions_info_modal.html'"></div>
+</script>
+
+
+<script type="text/ng-template" id="imagesInfo">
+    <div ng-include="'tpl/modal/aliyun/aliyun_images_info_modal.html'"></div>
+</script>

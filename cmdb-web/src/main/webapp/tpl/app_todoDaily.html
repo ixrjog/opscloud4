@@ -1,0 +1,441 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">日常工单</h1>
+                    <small class="text-muted">新增,处理,反馈日常工单</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="日常工单">
+                    <div class="panel panel-default" ng-controller="todoDailyCtrl">
+                        <div class="panel-body">
+                            <form name="form" class="form-inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon">工单主类别</span>
+                                    <select class="form-control" ng-model="queryDO.levelOne" ng-change="changeLevel1()"
+                                            ng-options="type.id as type.configName for type in level1List">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group" ng-if="queryDO.levelOne != -1">
+                                    <span class="input-group-addon">工单具体分类</span>
+                                    <select class="form-control" ng-model="queryDO.levelTwo"
+                                            ng-options="type.id as type.configName for type in level2List">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">隐私类型</span>
+                                    <select class="form-control" ng-model="queryDO.privacy"
+                                            ng-options="type.code as type.name for type in typeList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">工单级别</span>
+                                    <select class="form-control" ng-model="queryDO.urgents"
+                                            ng-options="type.code as type.name for type in urgentList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">查询范围</span>
+                                    <select class="form-control" ng-model="queryDO.sponsor"
+                                            ng-options="type.code as type.name for type in userTypeList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">工单状态</span>
+                                    <select class="form-control" ng-model="queryDO.todoStatus"
+                                            ng-options="type.code as type.name for type in todoStatusList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-info" ng-click="queryTodo()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div style="margin-top: 5px;" ng-if="pageData.length != 0">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>主类别&具体分类</td>
+                                        <td class="col-md-2">隐私类型&级别&发起者&时间</td>
+                                        <td class="col-md-5">工单处理日志</td>
+                                        <td class="col-md-1">状态</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <div>
+                                                <b>{{item.levelOne.configName}}</b>
+                                            </div>
+                                            <div>
+                                                <b style="color: #286090">{{item.levelTwo.configName}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <b ng-if="item.privacy == 0" style="color: #286090" class="pull-left">公开</b>
+                                            <b ng-if="item.privacy == 1" style="color: #ec971f" class="pull-left">私密</b>
+                                            <b style="color: #777" class="pull-right">隐私类型</b>
+                                            </br>
+                                            <b ng-if="item.urgents == 0" style="color: #449d44" class="pull-left">一般</b>
+                                            <b ng-if="item.urgents == 1" style="color: #ec971f" class="pull-left">重要</b>
+                                            <b ng-if="item.urgents == 2" style="color: #d9534f" class="pull-left">紧急</b>
+                                            <b style="color: #777" class="pull-right">级别</b>
+                                            </br>
+                                            <b style="color: #286090" class="pull-left">{{item.sponsor}}</b>
+                                            <b style="color: #777" class="pull-right">发起者</b>
+                                            </br>
+                                            <b style="color: #286090" class="pull-left">{{item.gmtCreate}}</b>
+                                            <b style="color: #777" class="pull-right">时间</b>
+                                        </td>
+                                        <td>
+                                            <div class="padder">
+                                                <div class="streamline b-l b-info m-l-lg m-b padder-v">
+                                                    <div ng-repeat="logItem in item.dailyLogDOList">
+                                                        <!--处理人-->
+                                                        <div class="sl-item b-success b-l"
+                                                             ng-show="logItem.todoStatus != 0">
+                                                            <div class="m-l">
+                                                                <div class="text-muted">{{logItem.gmtCreate}}</div>
+                                                                <p>
+                                                                    <b href class="pull-left" style="color: #286090">{{logItem.processUser}}</b>
+                                                                    <b style="color: #777"
+                                                                       class="text-primary pull-right">处理人</b>
+                                                                    <br>
+                                                                <div ng-if="logItem.todoStatus == 0">
+                                                                    {{logItem.dailyContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 2">
+                                                                    {{logItem.dailyFeedbackContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 1">
+                                                                    {{(logItem.dailyFeedbackContent == null ||
+                                                                    logItem.dailyFeedbackContent == "") ? "处理完成!" :
+                                                                    logItem.dailyFeedbackContent}}
+                                                                </div>
+
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <div class="sl-item b-primary b-l"
+                                                             ng-show="logItem.todoStatus == 0">
+                                                            <div class="m-l">
+                                                                <div class="text-muted">{{logItem.gmtCreate}}</div>
+                                                                <p>
+                                                                    <b href class="pull-left" style="color: #286090">{{logItem.processUser}}</b>
+                                                                    <b style="color: #777"
+                                                                       class="text-primary pull-right">发起人</b>
+                                                                    <br>
+                                                                <div ng-if="logItem.todoStatus == 0">
+                                                                    {{logItem.dailyContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 2">
+                                                                    {{logItem.dailyFeedbackContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 1">
+                                                                    {{(logItem.dailyFeedbackContent == null ||
+                                                                    logItem.dailyFeedbackContent == "") ? "处理完成!" :
+                                                                    logItem.dailyFeedbackContent}}
+                                                                </div>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+
+                                                        <!--<a class="pull-left thumb-sm avatar m-l-n-md">-->
+                                                        <!--<img src="img/a9.jpg" class="img-circle" alt="...">-->
+                                                        <!--</a>-->
+                                                        <!--<div class="m-l-lg">-->
+                                                        <!--<div class="m-b-xs">-->
+                                                        <!--<a href class="h4">-->
+                                                        <!--<span ng-if="logItem.todoStatus == 0">发起人:</span>-->
+                                                        <!--<span ng-if="logItem.todoStatus != 0">处理人:</span>-->
+                                                        <!--{{logItem.processUser}}-->
+                                                        <!--</a>-->
+                                                        <!--<span class="text-muted m-l-sm pull-right">-->
+                                                        <!--{{logItem.gmtCreate}}-->
+                                                        <!--</span>-->
+                                                        <!--</div>-->
+                                                        <!--<div class="m-b" style="word-wrap: break-word; word-break: break-all;">-->
+                                                        <!--<div ng-if="logItem.todoStatus == 0">{{logItem.dailyContent}}</div>-->
+                                                        <!--<div ng-if="logItem.todoStatus == 2">{{logItem.dailyFeedbackContent}}</div>-->
+                                                        <!--<div ng-if="logItem.todoStatus == 1">{{(logItem.dailyFeedbackContent == null || logItem.dailyFeedbackContent == "") ? "处理完成!" : logItem.dailyFeedbackContent}}</div>-->
+                                                        <!--</div>-->
+                                                        <!--</div>-->
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div ng-if="item.todoStatus == 0">处理中</div>
+                                            <div ng-if="item.todoStatus == 1">完成</div>
+                                            <div ng-if="item.todoStatus == 2">待反馈</div>
+                                        </td>
+                                        <td>
+                                            <button ng-click="editItem(item)"
+                                                    ng-if="app.settings.user.username == item.sponsor && item.todoStatus != 1"
+                                                    class="btn btn-xs"
+                                                    style="background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                            <!--<span ng-if="app.settings.user.username == item.sponsor && item.todoStatus != 1"-->
+                                                  <!--class="glyphicon glyphicon-pencil pull-left"-->
+                                                  <!--ng-click="editItem(item)">编辑</span>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="8">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="待处理工单">
+                    <div class="panel panel-default" ng-controller="todoDailyPendProcessCtrl">
+                        <div class="panel-body">
+                            <form name="form" class="form-inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon">工单主类别</span>
+                                    <select class="form-control" ng-model="queryDO.levelOne" ng-change="changeLevel1()"
+                                            ng-options="type.id as type.configName for type in level1List">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group" ng-if="queryDO.levelOne != -1">
+                                    <span class="input-group-addon">工单具体分类</span>
+                                    <select class="form-control" ng-model="queryDO.levelTwo"
+                                            ng-options="type.id as type.configName for type in level2List">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">隐私类型</span>
+                                    <select class="form-control" ng-model="queryDO.privacy"
+                                            ng-options="type.code as type.name for type in typeList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">工单级别</span>
+                                    <select class="form-control" ng-model="queryDO.urgents"
+                                            ng-options="type.code as type.name for type in urgentList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">工单状态</span>
+                                    <select class="form-control" ng-model="queryDO.todoStatus"
+                                            ng-options="type.code as type.name for type in todoStatusList">
+                                        <option value="">----请选择----</option>
+                                    </select>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-info" ng-click="queryTodo()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-primary" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div style="margin-top: 5px;" ng-if="pageData.length != 0">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td class="col-md-2">主类别&具体分类</td>
+                                        <td class="col-md-3">隐私类型&级别&发起者&时间</td>
+                                        <td class="col-md-5">工单处理日志</td>
+                                        <td class="col-md-1">状态</td>
+                                        <td class="col-md-1">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <div>
+                                                <b>{{item.levelOne.configName}}</b>
+                                            </div>
+                                            <div>
+                                                <b style="color: #286090">{{item.levelTwo.configName}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <b ng-if="item.privacy == 0" style="color: #286090" class="pull-left">公开</b>
+                                            <b ng-if="item.privacy == 1" style="color: #ec971f" class="pull-left">私密</b>
+                                            <b style="color: #777" class="pull-right">隐私类型</b>
+                                            </br>
+                                            <b ng-if="item.urgents == 0" style="color: #449d44" class="pull-left">一般</b>
+                                            <b ng-if="item.urgents == 1" style="color: #ec971f" class="pull-left">重要</b>
+                                            <b ng-if="item.urgents == 2" style="color: #d9534f" class="pull-left">紧急</b>
+                                            <b style="color: #777" class="pull-right">级别</b>
+                                            </br>
+                                            <b style="color: #286090" class="pull-left">{{item.sponsor}}</b>
+                                            <b style="color: #777" class="pull-right">发起者</b>
+                                            </br>
+                                            <b style="color: #286090" class="pull-left">{{item.gmtCreate}}</b>
+                                            <b style="color: #777" class="pull-right">时间</b>
+                                            <!--<div ng-if="item.privacy == 0">隐私类型:公开</div>-->
+                                            <!--<div ng-if="item.privacy == 1">隐私类型:私密</div>-->
+                                            <!--<div ng-if="item.urgents == 0">级别:一般</div>-->
+                                            <!--<div ng-if="item.urgents == 1">级别:重要</div>-->
+                                            <!--<div ng-if="item.urgents == 2">级别:紧急</div>-->
+                                            <!--<div>{{"发起者:" + item.sponsor}}</div>-->
+                                            <!--<div>{{"时间:" + item.gmtCreate}}</div>-->
+                                        </td>
+                                        <td>
+                                            <div class="padder">
+                                                <div class="streamline b-l b-info m-l-lg m-b padder-v">
+                                                    <div ng-repeat="logItem in item.dailyLogDOList">
+                                                        <!--处理人-->
+                                                        <div class="sl-item b-success b-l"
+                                                             ng-show="logItem.todoStatus != 0">
+                                                            <div class="m-l">
+                                                                <div class="text-muted">{{logItem.gmtCreate}}</div>
+                                                                <p>
+                                                                    <b href class="pull-left" style="color: #286090">{{logItem.processUser}}</b>
+                                                                    <b style="color: #777"
+                                                                       class="text-primary pull-right">处理人</b>
+                                                                    <br>
+                                                                <div ng-if="logItem.todoStatus == 0">
+                                                                    {{logItem.dailyContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 2">
+                                                                    {{logItem.dailyFeedbackContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 1">
+                                                                    {{(logItem.dailyFeedbackContent == null ||
+                                                                    logItem.dailyFeedbackContent == "") ? "处理完成!" :
+                                                                    logItem.dailyFeedbackContent}}
+                                                                </div>
+
+                                                                </p>
+                                                            </div>
+                                                        </div>
+
+                                                        <!--发起人-->
+                                                        <div class="sl-item b-primary b-l"
+                                                             ng-show="logItem.todoStatus == 0">
+                                                            <div class="m-l">
+                                                                <div class="text-muted">{{logItem.gmtCreate}}</div>
+                                                                <p>
+                                                                    <b href class="pull-left" style="color: #286090">{{logItem.processUser}}</b>
+                                                                    <b style="color: #777"
+                                                                       class="text-primary pull-right">发起人</b>
+                                                                    <br>
+                                                                <div ng-if="logItem.todoStatus == 0">
+                                                                    {{logItem.dailyContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 2">
+                                                                    {{logItem.dailyFeedbackContent}}
+                                                                </div>
+                                                                <div ng-if="logItem.todoStatus == 1">
+                                                                    {{(logItem.dailyFeedbackContent == null ||
+                                                                    logItem.dailyFeedbackContent == "") ? "处理完成!" :
+                                                                    logItem.dailyFeedbackContent}}
+                                                                </div>
+                                                                </p>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div ng-if="item.todoStatus == 0">处理中</div>
+                                            <div ng-if="item.todoStatus == 1">完成</div>
+                                            <div ng-if="item.todoStatus == 2">待反馈</div>
+                                        </td>
+                                        <td>
+                                            <div ng-show="item.todoStatus == 0">
+                                                <button ng-click="editItem(item)"
+                                                        class="btn btn-xs"
+                                                        style="background-color: #2e6da4; color: white;">
+                                                    <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                                <button ng-click="processFinish(item)"
+                                                        class="btn btn-xs pull-right"
+                                                        style="background-color: #2e6da4; color: white;">
+                                                    <span class="glyphicon glyphicon-ok"></span>完成</button>
+
+                                                <!--<span class="glyphicon glyphicon-pencil pull-left"-->
+                                                      <!--ng-click="editItem(item)">编辑</span>-->
+                                                <!---->
+                                                <!--<span class="glyphicon glyphicon-ok pull-right"-->
+                                                      <!--ng-click="processFinish(item)">处理完成</span>-->
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="8">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="todoDailyModal">
+    <div ng-include="'tpl/modal/tododaily_modal.html'"></div>
+</script>

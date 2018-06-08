@@ -1,0 +1,186 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+  <!-- main -->
+  <div class="col">
+    <!-- main header -->
+    <div class="bg-light lter b-b wrapper-md">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h1 class="m-n font-thin h3 text-black">资源管理</h1>
+          <small class="text-muted">维护资源&资源组相关信息</small>
+        </div>
+      </div>
+    </div>
+    <!-- / main header -->
+    <div class="wrapper-md">
+        <!-- toaster directive -->
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        <!-- / toaster directive -->
+
+        <uib-tabset>
+            <uib-tab index="0" heading="资源维护">
+                <div class="panel panel-default" ng-controller="resourceCtrl">
+                    <div class="panel-body">
+                        <div>
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">资源组</span>
+                                        <ui-select ng-model="resourceGroup.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索资源组名称......">{{$select.selected.groupCode}}</ui-select-match>
+                                            <ui-select-choices refresh="queryGroup($select.search)" refresh-dalay="0" repeat="item in resourceGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.groupCode | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">资源名称</span>
+                                        <input type="text" class="form-control" ng-model="resourceName" placeholder="资源名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">鉴权</span>
+                                        <select class="form-control" ng-model="nowAuthType" ng-options="type.code as type.name for type in authType">
+                                            <option value="">---请选择---</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span class="glyphicon glyphicon-search"></span>搜索</button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span class="glyphicon glyphicon-repeat"></span>重置</button>
+                                    <button type="button" class="btn btn-success" ng-click="addItem()"><span class="glyphicon glyphicon-plus"></span>新增</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div style="margin-top: 5px;">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <td>资源组</td>
+                                    <td>资源名称</td>
+                                    <td>资源描述</td>
+                                    <td>是否需要鉴权</td>
+                                    <td>创建日期</td>
+                                    <td class="col-md-2">操作</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in pageData">
+                                    <td>
+                                        <div ng-repeat="groupItem in item.groupDOList">
+                                            {{groupItem.groupCode + " - " + groupItem.groupDesc}}
+                                        </div>
+                                    </td>
+                                    <td>{{item.resourceName}}</td>
+                                    <td>{{item.resourceDesc}}</td>
+                                    <td>
+                                        <span ng-if="item.needAuth == 0">需要</span>
+                                        <span ng-if="item.needAuth == 1">不需要</span>
+                                    </td>
+                                    <td>{{item.gmtCreate}}</td>
+                                    <td>
+                                        <button ng-click="editItem(item)"
+                                                class="btn btn-xs"
+                                                style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                            <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                        <button ng-click="deleteItem(item.id)"
+                                                class="btn btn-xs pull-right"
+                                                style="background-color: red; color: white;">
+                                            <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                        <!--<button type="button" class="btn btn-xs btn-info pull-left" ng-click="editItem(item)"><span class="glyphicon glyphicon-edit"></span></button>-->
+                                        <!--<button type="button" class="btn btn-xs btn-danger pull-right" ng-click="deleteItem(item.id)"><span class="glyphicon glyphicon-floppy-remove"></span></button>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="6">
+                                        <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+            <uib-tab index="1" heading="资源组维护">
+                <div class="panel panel-default" ng-controller="resourceGroupCtrl">
+                    <div class="panel-body">
+                        <div>
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">组名称</span>
+                                        <input type="text" class="form-control" ng-model="groupCode" placeholder="组名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQueryGroup()"><span class="glyphicon glyphicon-search"></span>搜索</button>
+                                    <button type="button" class="btn btn-info" ng-click="reSetGroup()"><span class="glyphicon glyphicon-repeat"></span>重置</button>
+                                    <button type="button" class="btn btn-success" ng-click="addItem()"><span class="glyphicon glyphicon-plus"></span>新增</button>
+                                </div>
+                            </form>
+                        </div>
+                        <div style="margin-top: 5px;" ng-if="pageGroupData.length != 0">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <td>组code</td>
+                                    <td>组名称</td>
+                                    <td>创建日期</td>
+                                    <td class="col-md-2">操作</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in pageGroupData">
+                                    <td>{{item.groupCode}}</td>
+                                    <td>{{item.groupDesc}}</td>
+                                    <td>{{item.gmtCreate}}</td>
+                                    <td>
+                                        <button ng-click="editItem(item)"
+                                                class="btn btn-xs"
+                                                style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                            <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                        <button ng-click="delItem(item)"
+                                                class="btn btn-xs pull-right"
+                                                style="background-color: red; color: white;">
+                                            <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                                        <!--<button type="button" class="btn btn-xs btn-info pull-left" ng-click="editItem(item)"><span class="glyphicon glyphicon-edit"></span></button>-->
+                                        <!--<button type="button" class="btn btn-xs btn-danger pull-right" ng-click="delItem(item)"><span class="glyphicon glyphicon-floppy-remove"></span></button>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="4">
+                                        <ul style="margin: 0px; float: right;" uib-pagination total-items="totalGroupItems" ng-model="currentGroupPage" items-per-page="pageGroupLength" max-size="10" ng-change="pageGroupChanged(currentGroupPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </uib-tab>
+        </uib-tabset>
+    </div>
+  </div>
+  <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="resource">
+    <div ng-include="'tpl/modal/resource_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="resourceGroup">
+    <div ng-include="'tpl/modal/resourcegroup_modal.html'"></div>
+</script>

@@ -1,0 +1,72 @@
+<div class="modal-header">
+    <h3 class="modal-title">审核订阅</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>仓库</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="repo" ng-model="innerItem.repo">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>扫描路径</label>
+            <div class="col-lg-10">
+                <div ng-repeat="scanPath in innerItem.scanPathList track by $index">
+                    <div style="padding-top: 5px; padding-bottom: 5px;">
+                        <div class="col-lg-10" style="padding-left: 0px;padding-right:0px;">
+                            <input type="text" class="form-control" placeholder="scan path" ng-model="innerItem.scanPathList[$index]">
+                        </div>
+                        <div class="col-lg-2" style="padding-right:0px;">
+                            <button type="button" class="btn btn-xs btn-info" ng-click="addScanPath($index)">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="delScanPath($index)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>AppId</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="cdl appid" ng-model="innerItem.cdlAppId">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>group</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="cdl groupname" ng-model="innerItem.cdlGroup">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>通知列表</label>
+            <div class="col-lg-10">
+                <div ng-repeat="notifyEmail in innerItem.notifyEmailList track by $index">
+                    <div style="padding-top: 5px; padding-bottom: 5px;">
+                        <div class="col-lg-10" style="padding-left: 0px;padding-right:0px;">
+                            <input type="text" class="form-control" placeholder="email" ng-model="innerItem.notifyEmailList[$index]">
+                        </div>
+                        <div class="col-lg-2" style="padding-right:0px;">
+                            <button type="button" class="btn btn-xs btn-info" ng-click="addNotifyEmail($index)">
+                                <span class="glyphicon glyphicon-plus"></span>
+                            </button>
+                            <button type="button" class="btn btn-xs btn-danger" ng-click="delNotifyEmail($index)">
+                                <span class="glyphicon glyphicon-remove"></span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button class="btn btn-primary btn-sm" ng-click="saveData()">保存</button>
+            <button class="btn btn-default btn-sm" ng-click="closeModal()" style="margin-left: 20px;">关闭</button>
+        </div>
+    </form>
+    <div ng-if="alert != null">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

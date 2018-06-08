@@ -1,0 +1,88 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+  <!-- main -->
+  <div class="col">
+    <!-- main header -->
+    <div class="bg-light lter b-b wrapper-md">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h1 class="m-n font-thin h3 text-black">配置文件组管理</h1>
+          <small class="text-muted">文件集合维护</small>
+        </div>
+      </div>
+    </div>
+    <!-- / main header -->
+    <div class="wrapper-md" ng-controller="configFileGroupCtrl">
+        <!-- toaster directive -->
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        <!-- / toaster directive -->
+
+        <div class="panel panel-default">
+            <div class="panel-body">
+                <div>
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">文件组名</span>
+                                <input type="text" class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" ng-click="doQuery()"><span class="glyphicon glyphicon-search"></span>搜索</button>
+                            <button type="button" class="btn btn-success" ng-click="addItem()"><span class="glyphicon glyphicon-plus"></span>新增</button>
+                        </div>
+                    </form>
+                </div>
+                <div style="margin-top: 5px;">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <td class="col-md-3">文件组名</td>
+                                <td>文件组描述</td>
+                                <td class="col-md-2">创建时间</td>
+                                <td class="col-md-2">操作</td>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in pageData">
+                            <td>{{item.groupName}}</td>
+                            <td>{{item.groupDesc}}</td>
+                            <td>{{item.gmtCreate}}</td>
+                            <td>
+                                <button ng-click="editItem(item)"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                <button ng-click="delItem(item.id)"
+                                        class="btn btn-xs pull-right"
+                                        style="background-color: red; color: white;">
+                                    <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                <!---->
+                                <!--<span class="glyphicon glyphicon-pencil" ng-click="editItem(item)"></span>-->
+                                <!--<span class="glyphicon glyphicon-trash pull-right" ng-click="delItem(item.id)"></span>-->
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="4">
+                                <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+    </div>
+  </div>
+  <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="configFileGroup">
+    <div ng-include="'tpl/modal/configFileGroup_modal.html'"></div>
+</script>

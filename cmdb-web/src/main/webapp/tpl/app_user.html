@@ -1,0 +1,94 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+  <!-- main -->
+  <div class="col">
+    <!-- main header -->
+    <div class="bg-light lter b-b wrapper-md">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h1 class="m-n font-thin h3 text-black">用户管理</h1>
+          <small class="text-muted">维护用户&角色信息</small>
+        </div>
+      </div>
+    </div>
+    <!-- / main header -->
+    <div class="wrapper-md">
+        <!-- toaster directive -->
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        <!-- / toaster directive -->
+
+        <div class="panel panel-default" ng-controller="userCtrl">
+            <div class="panel-body">
+                <div>
+                    <form class="form-inline" role="form">
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">用户名称</span>
+                                <input type="text" class="form-control" ng-model="username" placeholder="用户名称">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="input-group">
+                                <span class="input-group-addon">角色名称</span>
+                                <ui-select ng-model="role.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索角色名称......">{{$select.selected.roleName}}</ui-select-match>
+                                    <ui-select-choices refresh="queryRole($select.search)" refresh-dalay="0" repeat="item in roleList | filter: $select.search">
+                                        <div ng-bind-html="item.roleName | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <button type="button" class="btn btn-info" ng-click="doQuery()"><span class="glyphicon glyphicon-search"></span>搜索</button>
+                            <button type="button" class="btn btn-info" ng-click="reSet()"><span class="glyphicon glyphicon-repeat"></span>重置</button>
+                            <button type="button" class="btn btn-success" ng-click="addItem()"><span class="glyphicon glyphicon-plus"></span>新增</button>
+                            <button type="button" class="btn btn-success" ng-click="resetToken()"><span class="glyphicon glyphicon-refresh"></span>重置登录状态</button>
+                        </div>
+                    </form>
+                </div>
+                <div style="margin-top: 5px;">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <td>用户名称</td>
+                            <td>角色名称</td>
+                            <td>创建日期</td>
+                            <td class="col-md-2">操作</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in pageData">
+                            <td>{{item.username}}</td>
+                            <td>{{item.roleDO.roleName + " - " + item.roleDO.roleDesc}}</td>
+                            <td>{{item.gmtCreate}}</td>
+                            <td>
+                                <button ng-click="deleteItem(item)"
+                                        class="btn btn-xs pull-right"
+                                        style="background-color: red; color: white;">
+                                    <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                                <!--<button type="button" class="btn btn-xs btn-danger pull-left" ng-click="deleteItem(item)"><span class="glyphicon glyphicon-floppy-remove"></span></button>-->
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                        <tr>
+                            <td colspan="4">
+                                <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                            </td>
+                        </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+  </div>
+  <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="user">
+    <div ng-include="'tpl/modal/user_modal.html'"></div>
+</script>

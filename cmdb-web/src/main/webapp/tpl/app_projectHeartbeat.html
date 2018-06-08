@@ -1,0 +1,185 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">项目管理</h1>
+                    <small class="text-muted">项目线上生命周期管理</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <uib-tabset>
+                <div ng-controller="projectHeartbeatCtrl">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">项目名</span>
+                                        <input type="text" class="form-control" ng-model="queryProjectName"
+                                               placeholder="项目名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">负责人</span>
+                                        <input type="text" class="form-control" ng-model="queryLeaderUsername"
+                                               placeholder="负责人用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">项目类型</span>
+                                        <select class="form-control" ng-model="queryProjectType"
+                                                ng-options="type.code as type.name for type in projectType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">状态</span>
+                                        <select class="form-control" ng-model="queryStatus"
+                                                ng-options="type.code as type.name for type in projectStatus">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addServerGroup()"
+                                            ng-if="contains(authPoint, '/servergroup/update')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>名称</td>
+                                        <td class="col-md-2">项目信息</td>
+                                        <td>服务器组</td>
+                                        <td>用户</td>
+                                        <td>心跳</td>
+                                        <td class="col-md-2" ng-if="contains(authPoint, '/project/heartbeat/save')">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <b style="color: #286090" class="pull-left">{{item.projectName}}</b>
+                                            <br>
+                                            <b style="color: #777" class="pull-left">{{item.content}}</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #286090"
+                                               class="pull-left">{{item.leaderUser.displayName}}</b>
+                                            <i uib-popover-html="item.leaderUser.userInfo"
+                                               popover-trigger="'mouseenter'"
+                                               class="icon icon-info"
+                                               style="color: green;"></i>
+                                            <b style="color: #777"
+                                               class="pull-right">负责人</b>
+                                            <br/>
+                                            <b class="pull-left" style="color: #990000" ng-if="item.projectType == 1">临时</b>
+                                            <b class="pull-left" style="color: #286090" ng-if="item.projectType == 0">长期</b>
+                                            <b style="color: #777"
+                                               class="pull-right">期限</b>
+                                            <br/>
+                                            <b style="color: #286090"
+                                               class="pull-left">{{item.ttl}}</b>
+                                            <b style="color: #777"
+                                               class="pull-right">TTL</b>
+                                            <br/>
+                                            <b style="color: #286090" ng-if="item.status == 0" class="pull-left">正常</b>
+                                            <b style="color: darkred" ng-if="item.status == 1" class="pull-left">死亡</b>
+                                            <b style="color: #d75f00" ng-if="item.status == 2" class="pull-left">丢失</b>
+                                            <b style="color: #d7af00" ng-if="item.status == 3" class="pull-left">续签</b>
+                                            <b style="color: #777"
+                                               class="pull-right">状态</b>
+                                            <br/>
+                                            <b style="color: #286090" ng-if="item.beginTime != null && item.beginTime != ''"
+                                               class="pull-left">{{item.timeView}}</b>
+                                            <b style="color: #777" ng-if="item.beginTime != null && item.beginTime != ''"
+                                               class="pull-right">上线</b>
+                                        </td>
+                                        <td>
+                                            <div class="col-md-12" ng-repeat="serverGroup in item.serverGroups">
+                                                {{serverGroup.serverGroupDO.name}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="col-md-12" ng-repeat="user in item.users">
+                                                {{user.userDO.username}}<{{user.userDO.displayName}}>
+                                            </div>
+                                        </td>
+                                        <!--心跳-->
+                                        <td>
+                                            <div class="col-md-12" ng-repeat="heartbeat in item.heartbeats">
+                                                <b style="color: #286090" class="pull-left">{{heartbeat.userDO.username}}<{{heartbeat.userDO.displayName}}></b>
+                                                <i class="glyphicon glyphicon-heart" ng-if="heartbeat.heartbeatType == 0"
+                                                   style="color: darkred;"></i>
+                                                <i class="glyphicon glyphicon-heart-empty" ng-if="heartbeat.heartbeatType == 1"
+                                                   style="color: #777;"></i>
+                                                <b style="color: #777"
+                                                   class="pull-right">{{heartbeat.timeView}}</b>
+                                            </div>
+                                        </td>
+                                        <td ng-if="contains(authPoint, '/project/heartbeat/save')">
+
+                                            <button ng-click="saveHeartbeat(item,0)" ng-show="item.needHeartbeat == true"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: green; color: white;">
+                                                <span class="glyphicon glyphicon-heart"></span>续签
+                                            </button>
+
+                                            <button ng-click="saveHeartbeat(item,1)" ng-show="item.status != 1"
+                                                    class="btn btn-xs"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>终止
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="8">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="pmInstance">
+    <div ng-include="'tpl/modal/pm_info_modal.html'"></div>
+</script>

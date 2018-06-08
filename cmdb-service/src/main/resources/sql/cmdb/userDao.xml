@@ -1,0 +1,256 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.UserDao">
+
+    <!-- 保存用户信息 -->
+    <insert id="saveUserInfo" parameterType="UserDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO cmdb_user(
+        username,
+        displayName,
+        mail,
+        mobile,
+        pwd,
+        rsaKey,
+        authed
+        ) VALUES (
+        #{username},
+        #{displayName},
+        #{mail},
+        #{mobile},
+        #{pwd},
+        #{rsaKey},
+        #{authed}
+        ) on duplicate key update
+        displayName = #{displayName},
+        mail = #{mail},
+        mobile = #{mobile}
+        <if test="rsaKey != null">
+            ,rsaKey = #{rsaKey}
+        </if>
+    </insert>
+
+    <!-- 更新用户授权信息 -->
+    <update id="updateUserAuth" parameterType="UserDO">
+        UPDATE cmdb_user
+        SET
+          authed = #{authed}
+        WHERE username = #{username}
+    </update>
+
+    <!-- 获取指定用户名的数目 -->
+    <select id="getUserSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM cmdb_user WHERE username LIKE "%" #{username} "%"
+    </select>
+
+    <!-- 获取指定用户名的分页数据 -->
+    <select id="getUserPage" parameterType="object" resultType="UserDO">
+        SELECT
+          a0.*,
+          sum(if(a1.username IS NOT NULL, 1, 0)) AS servers
+        FROM cmdb_user a0 LEFT JOIN keybox_user_server a1 ON a0.username = a1.username
+        WHERE a0.username LIKE "%" #{username} "%"
+        GROUP BY a0.username
+        ORDER BY servers DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取指定持续集成用户组的数目 -->
+    <select id="getCiUserGroupSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM ci_user_group
+        <where>
+            <if test="groupName != null and groupName != ''">
+                groupName like "%" #{groupName} "%"
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取指定持续集成用户组的分页数据 -->
+    <select id="getCiUserGroupPage" parameterType="object" resultType="CiUserGroupDO">
+        SELECT * FROM ci_user_group
+        <where>
+            <if test="groupName != null and groupName != ''">
+                groupName like "%" #{groupName} "%"
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+        </where>
+        ORDER BY groupName DESC,gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <select id="getCiUserGroupByNameAndEnvType" parameterType="object" resultType="CiUserGroupDO">
+        SELECT * FROM ci_user_group
+        WHERE  groupName = #{groupName} AND envType = #{envType}
+    </select>
+
+    <select id="getCiUserGroupByServerGroupIdAndEnvType" parameterType="object" resultType="CiUserGroupDO">
+        SELECT * FROM ci_user_group
+        WHERE  serverGroupId = #{serverGroupId} AND envType = #{envType}
+    </select>
+
+    <select id="getCiUserGroupById" parameterType="object" resultType="CiUserGroupDO">
+        SELECT * FROM ci_user_group WHERE  id = #{id}
+    </select>
+
+
+    <insert id="addCiUserGroup" parameterType="CiUserGroupDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO ci_user_group (
+        groupName,
+        content,
+        serverGroupId,
+        envType
+        ) VALUES (
+        #{groupName},
+        #{content},
+        #{serverGroupId},
+        #{envType}
+        );
+    </insert>
+
+    <delete id="delCiUserGroup" parameterType="_long">
+        DELETE FROM ci_user_group WHERE id = #{id}
+    </delete>
+
+    <!-- 更新指定持续集成用户组 -->
+    <update id="updateCiUserGroup" parameterType="CiUserGroupDO">
+        UPDATE ci_user_group
+        SET serverGroupId = #{serverGroupId},
+        content = #{content},
+        envType = #{envType}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取指定用户名的用户信息 -->
+    <select id="getUserByName" parameterType="string" resultType="UserDO">
+        SELECT * FROM cmdb_user WHERE username = #{username} limit 1;
+    </select>
+
+    <!-- 获取指定用户名的用户信息 -->
+    <select id="getUserById" parameterType="_long" resultType="UserDO">
+        SELECT * FROM cmdb_user WHERE id = #{id};
+    </select>
+
+    <!-- 更新指定用户的密码 -->
+    <update id="updateUser" parameterType="UserDO">
+        UPDATE cmdb_user
+        SET pwd = #{pwd},
+        rsaKey = #{rsaKey},
+        mobile = #{mobile}
+        WHERE username = #{username}
+    </update>
+
+    <!-- 更新指定用户的zabbix授权 -->
+    <update id="updateUserZabbixAuthed" parameterType="UserDO">
+        UPDATE cmdb_user
+        SET zabbixAuthed = #{zabbixAuthed}
+        WHERE username = #{username}
+    </update>
+
+
+    <!-- 删除用户 -->
+    <delete id="delUser" parameterType="string">
+        DELETE FROM cmdb_user WHERE username = #{username}
+    </delete>
+
+    <!-- 查询所有用户 -->
+    <select id="getAllUser" resultType="UserDO">
+        SELECT * FROM cmdb_user ;
+    </select>
+
+    <!-- 按用户名查询显示名 -->
+    <select id="getDisplayNameByUserName" resultType="string" parameterType="string">
+        SELECT displayName FROM cmdb_user WHERE username = #{username} ;
+    </select>
+
+    <!-- 新增用户离职信息-->
+    <insert id="addUserLeave" parameterType="UserLeaveDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO cmdb_user_leave (
+        username,
+        userId,
+        displayName,
+        mail,
+        mobile,
+        dumpLdap,
+        dumpMail
+        ) VALUES (
+        #{username},
+        #{userId},
+        #{displayName},
+        #{mail},
+        #{mobile},
+        #{dumpLdap},
+        #{dumpMail}
+        );
+    </insert>
+
+    <!-- 更新指定用户的zabbix授权 -->
+    <update id="updateUserLeave" parameterType="UserLeaveDO">
+        UPDATE cmdb_user_leave
+        SET dumpLdap = #{dumpLdap}
+        WHERE username = #{username}
+    </update>
+
+    <!-- 获取指定用户名的离职用户分页数据 -->
+    <select id="getUserLeavePage" parameterType="object" resultType="UserLeaveDO">
+        SELECT * FROM cmdb_user_leave
+        <where>
+            <if test="username != null and username != ''">
+                username like "%" #{username} "%"
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取指定用户名的离职用户数目 -->
+    <select id="getUserLeaveSize" parameterType="object" resultType="_long">
+        SELECT count(*) from cmdb_user_leave
+        <where>
+            <if test="username != null and username != ''">
+                username like "%" #{username} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 删除离职用户 -->
+    <delete id="delUserLeave" parameterType="_long">
+        DELETE FROM cmdb_user_leave WHERE id = #{id}
+    </delete>
+
+
+    <!-- 获取持续集成用户权限数据 -->
+    <select id="getCiUserByUserId" parameterType="_long" resultType="CiUserDO">
+        SELECT * FROM ci_user
+        WHERE userId = #{userId}
+    </select>
+
+    <select id="getCiUserById" parameterType="_long" resultType="CiUserDO">
+        SELECT * FROM ci_user
+        WHERE id = #{id}
+    </select>
+
+    <!-- 获取持续集成用户权限数据 -->
+    <select id="getCiUserByUserIdAndusergroupId" parameterType="object" resultType="CiUserDO">
+        SELECT * FROM ci_user
+        WHERE userId = #{userId} AND usergroupId = #{usergroupId}
+    </select>
+
+    <insert id="addCiUser" parameterType="CiUserDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO ci_user (
+        userId,
+        usergroupId
+        ) VALUES (
+        #{userId},
+        #{usergroupId}
+        );
+    </insert>
+
+    <delete id="delCiUser" parameterType="_long">
+        DELETE FROM ci_user WHERE id = #{id}
+    </delete>
+
+</mapper>

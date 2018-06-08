@@ -1,0 +1,136 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">服务器监控</h1>
+                    <small class="text-muted">服务器监控，当前数据采集频率30s</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <div ng-controller="serverMonitorCtrl">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <form class="form-inline" role="form">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">名称</span>
+                                    <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon">使用类型</span>
+                                    <select class="form-control" ng-model="nowType" ng-options="type.code as type.name for type in userType">
+                                        <option value="">--请选择--</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button type="button" class="btn btn-default" ng-click="doQuery()">搜索</button>
+                                <button type="button" class="btn btn-info" ng-click="reSet()">重置</button>
+                            </div>
+                        </form>
+                        <div style="margin-top: 5px;">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <td class="col-md-3">服务器组名</td>
+                                    <td class="col-md-2">使用类型</td>
+                                    <td class="col-md-1">服务器数量</td>
+                                    <td class="col-md-1">授权数量</td>
+                                    <td class="col-md-4">说明</td>
+                                    <td class="col-md-1">操作</td>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr ng-repeat="item in pageData">
+                                    <td ng-if="item.detail != null" colspan="7">
+                                        <div>
+                                            <div class="col-md-3" style="padding-left: 0px;padding-right: 0px;" ng-repeat="serverItem in item.serverList">
+                                                <div class="panel panel-default">
+                                                    <div class="panel-heading">
+
+                                                        <span class="label label-default" ng-if="serverItem.envType == 0">{{serverItem.serverName + "-" + serverItem.serialNumber}}(保留)</span>
+                                                        <span class="label label-info" ng-if="serverItem.envType == 1">{{serverItem.serverName + "-" + serverItem.serialNumberr}}(dev)</span>
+                                                        <span class="label label-success" ng-if="serverItem.envType == 2">{{serverItem.serverName + "-" + serverItem.serialNumber}}(daily)</span>
+                                                        <span class="label label-warning" ng-if="serverItem.envType == 3">{{serverItem.serverName + "-" + serverItem.serialNumber}}(gray)</span>
+                                                        <span class="label label-danger" ng-if="serverItem.envType == 4">{{serverItem.serverName + "-" + serverItem.serialNumber}}(prod)</span>
+                                                        <span class="label label-primary" ng-if="serverItem.envType == 5">{{serverItem.serverName + "-" + serverItem.serialNumber}}(test)</span>
+                                                        <span class="label label-primary" ng-if="serverItem.envType == 6">{{serverItem.serverName + "-" + serverItem.serialNumber}}(back)</span>
+                                                        <!--<span class="label label-primary" ng-if="serverItem.envType == envType[$index].code" ng-repeat="envItem in envType">{{envType[$index].name}}</span>-->
+                                                        <!--{{serverItem.serverName + " - " + serverItem.serialNumber}}-->
+                                                        <span class="label label-info">{{serverItem.insideIp != null ? ("内网IP:" + serverItem.insideIp) : ""}}</span>
+                                                    </div>
+
+                                                    <div class="panel-body">
+                                                        <div class="col-md-6" style="padding-left: 0px;padding-right: 0px;">
+                                                            <div id="{{'cpu' + serverItem.id}}" style=" height: 150px;"></div>
+                                                        </div>
+                                                        <div class="col-md-6" style="padding-left: 0px;padding-right: 0px; height: 200px;">
+                                                            <div id="{{'mem' + serverItem.id}}" style=" height: 150px;"></div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td ng-if="item.detail == null">{{item.name}}</td>
+                                    <td ng-if="item.detail == null">
+                                        <b style="color: #777" ng-if="item.useType == 10">bi</b>
+                                        <b style="color: #843534" ng-if="item.useType == 1">zookeeper</b>
+                                        <b style="color: #286090" ng-if="item.useType == 2">web-service</b>
+                                        <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
+                                        <b style="color: #286090" ng-if="item.useType == 4">other</b>
+                                        <b style="color: #777" ng-if="item.useType == 5">web-php</b>
+                                        <b style="color: #286090" ng-if="item.useType == 6">public</b>
+                                        <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
+                                        <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
+                                        <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                                    </td>
+                                    <td ng-if="item.detail == null">
+                                        <span class="badge pull-right" ng-if="item.serverCnt == 0">{{item.serverCnt}}</span>
+                                        <span class="badge pull-right bg-success" ng-if="item.serverCnt > 0 && item.serverCnt < 10">{{item.serverCnt}}</span>
+                                        <span class="badge pull-right bg-info" ng-if="item.serverCnt >= 10">{{item.serverCnt}}</span>
+                                    </td>
+                                    <td ng-if="item.detail == null">
+                                        <span class="badge pull-right" ng-if="item.keyboxCnt == 0">{{item.keyboxCnt}}</span>
+                                        <span class="badge pull-right bg-success" ng-if="item.keyboxCnt > 0 && item.keyboxCnt < 10">{{item.keyboxCnt}}</span>
+                                        <span class="badge pull-right bg-info" ng-if="item.keyboxCnt >= 10">{{item.keyboxCnt}}</span>
+                                    </td>
+                                    <td ng-if="item.detail == null">{{item.content}}</td>
+                                    <td ng-if="item.detail == null">
+                                        <button ng-click="lookDetail($index, item)"
+                                                class="btn btn-xs"
+                                                style="background-color: #2e6da4; color: white;">
+                                            <span class="icon icon-graph"></span>图表</button>
+                                        <!--<span class="icon icon-graph" ng-click="lookDetail($index, item)"></span>-->
+                                    </td>
+                                </tr>
+                                </tbody>
+                                <tfoot>
+                                <tr>
+                                    <td colspan="10">
+                                        <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                    </td>
+                                </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

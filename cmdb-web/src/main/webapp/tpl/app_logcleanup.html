@@ -1,0 +1,215 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">日志弹性清理</h1>
+                    <small class="text-muted">日志弹性清理详情</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="服务器配置">
+                    <div class="panel panel-default" ng-controller="logcleanupCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">服务器名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">服务器组</span>
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">启用状态</span>
+                                        <select class="form-control" ng-model="nowEnabled"
+                                                ng-options="type.code as type.name for type in enabledType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="sync()"><span
+                                            class="glyphicon glyphicon-refresh"></span>Sync
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td class="col-md-2">服务器</td>
+                                                <td>IP</td>
+                                                <td class="col-md-1">环境</td>
+                                                <td class="col-md-2">磁盘使用率</td>
+                                                <td>详情</td>
+                                                <td>操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b>{{item.groupName}}</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.serverName}}-{{item.serialNumber}}</b>
+                                                </td>
+                                                <td>
+                                                    <span ng-show="item.publicIp != null && item.publicIp != ''">
+                                                      <span>{{item.publicIp}}</span>
+                                                           <b class="pull-right">公</b>
+                                                         </br>
+                                                    </span>
+                                                    </span>{{item.insideIp}}</span>
+                                                    <b class="pull-right">内</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                                </td>
+                                                <td>
+                                                    <div class="progress" ng-show="item.diskRate != -1">
+                                                        <span class="progress-bar" role="progressbar"
+                                                             aria-valuenow="item.diskRate" aria-valuemin="0"
+                                                             aria-valuemax="100"
+                                                             style="min-width: 2em; width: {{item.diskRate}}%;">
+                                                            {{item.diskRate}}%
+                                                        </span>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <b class="fa fa-circle-o"
+                                                       uib-popover-html="'禁用'" popover-trigger="'mouseenter'"
+                                                       style="color: #777" ng-if="item.enabled == 0"></b>
+                                                    <b class="fa fa-circle"
+                                                       uib-popover-html="'启用'" popover-trigger="'mouseenter'"
+                                                       style="color: #449d44" ng-if="item.enabled == 1"></b>
+                                                    <b class="pull-right">启用</b>
+
+                                                    <div ng-show="item.enabled == 1">
+                                                          <span class="glyphicon glyphicon-minus pull-left"
+                                                                ng-click="subtractHistory(item)"></span>
+                                                        <span style="margin-left: 20px;">{{item.viewHistory}}</span>
+                                                        <span class="glyphicon glyphicon-plus" style="margin-left: 20px;"
+                                                              ng-click="addHistory(item)"></span>
+                                                        <b class="pull-right">保留</b>
+                                                    </div>
+
+                                                    <div ng-show="item.enabled == 1 && item.cleanupTime != ''">
+                                                        {{item.cleanupTime}}
+                                                        <b class="pull-right">时间</b>
+                                                    </div>
+                                                    <div ng-show="item.enabled == 1 && item.cleanupTime != ''">
+                                                        {{item.cleanupResult}}
+                                                        <b class="pull-right">结果</b>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <button ng-click="edit(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                                    <button ng-click="refreshDiskRate(item)"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'刷新磁盘空间使用率'" popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                        <span class="glyphicon glyphicon-repeat"></span>刷新</button>
+
+                                                    <!--<span class="glyphicon glyphicon-repeat pull-right"-->
+                                                          <!--uib-popover-html="'刷新'" popover-trigger="'mouseenter'"-->
+                                                          <!--ng-click="refreshDiskRate(item)"></span>-->
+
+                                                    <button ng-click="setEnabled(item)"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'切换启用/禁用'" popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-refresh"></span>切换</button>
+
+                                                    <!--<span class="glyphicon glyphicon-refresh pull-right"-->
+                                                          <!--uib-popover-html="'切换'" popover-trigger="'mouseenter'"-->
+                                                          <!--ng-click="setEnabled(item)"></span>-->
+
+                                                    <button ng-click="cleanup(item)"
+                                                            ng-show="item.enabled == true"
+                                                            class="btn btn-xs pull-right"
+                                                            uib-popover-html="'执行清理日志任务'" popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-grain"></span>清理</button>
+
+                                                    <!--<span ng-show="item.enabled == true" style="color: #449d44"-->
+                                                          <!--uib-popover-html="'执行清理日志任务'" popover-trigger="'mouseenter'"-->
+                                                          <!--class="glyphicon glyphicon-grain pull-right"-->
+                                                          <!--ng-click="cleanup(item)"></span>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="logcleanupInfo">
+    <div ng-include="'tpl/modal/logcleanup_info_modal.html'"></div>
+</script>

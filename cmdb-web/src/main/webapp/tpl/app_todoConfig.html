@@ -1,0 +1,100 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+  <!-- main -->
+  <div class="col">
+    <!-- main header -->
+    <div class="bg-light lter b-b wrapper-md">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h1 class="m-n font-thin h3 text-black">工单配置项管理</h1>
+          <small class="text-muted">新增,更新,删除工单配置项</small>
+        </div>
+      </div>
+    </div>
+    <!-- / main header -->
+    <div class="wrapper-md" ng-controller="todoConfigCtrl">
+        <!-- toaster directive -->
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        <!-- / toaster directive -->
+        <form name="form" class="form-inline">
+            <div class="input-group">
+                <span class="input-group-addon">工单配置项名称</span>
+                <input ng-model="configName" type="text" class="form-control" placeholder="工单配置项名称......">
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon">工单层级</span>
+                <select class="form-control" ng-model="nowParent" ng-options="type.code as type.name for type in todoLevels">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+            <div class="input-group">
+                <button class="btn btn-info" type="button" ng-click="queryConfig()"><span class="glyphicon glyphicon-search"></span>搜索</button>
+            </div>
+            <div class="input-group">
+                <button class="btn btn-info" type="button" ng-click="addConfig()"><span class="glyphicon glyphicon-plus"></span>新增</button>
+            </div>
+        </form>
+
+        <div class="panel" style="margin-top: 5px;" ng-if="pageData != null && pageData.length != 0">
+            <div class="panel-body">
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <td>ID</td>
+                        <td>配置项名称</td>
+                        <td>父类目</td>
+                        <td>状态</td>
+                        <td>处理角色</td>
+                        <td>创建时间</td>
+                        <td class="col-md-2">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in pageData">
+                        <td>{{item.id}}</td>
+                        <td>{{item.configName}}</td>
+                        <td>
+                            <div ng-if="item.parentConfigDO != null">{{item.parentConfigDO.id + " - " + item.parentConfigDO.configName}}</div>
+                            <div ng-if="item.parentConfigDO == null">无父类目</div>
+                        </td>
+                        <td>{{item.configStatus == 0 ? "正常" : "逻辑删除"}}</td>
+                        <td>{{item.roleDO.roleName + " - " + item.roleDO.roleDesc}}</td>
+                        <td>{{item.gmtCreate}}</td>
+                        <td>
+                            <button ng-click="editConfig(item)"
+                                    ng-if="item.configStatus == 0"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                            <button ng-click="delConfig(item.id)"
+                                    ng-if="item.configStatus == 0"
+                                    class="btn btn-xs pull-right"
+                                    style="background-color: red; color: white;">
+                                <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                            <!--<button type="button" class="btn btn-info btn-xs" ng-if="item.configStatus == 0" ng-click="editConfig(item)"><span class="glyphicon glyphicon-edit"></span></button>-->
+                            <!--<button type="button" class="btn btn-danger btn-xs pull-right" ng-if="item.configStatus == 0" ng-click="delConfig(item.id)"><span class="glyphicon glyphicon-floppy-remove"></span></button>-->
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="7">
+                            <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+    </div>
+  </div>
+  <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="todoConfigModal">
+    <div ng-include="'tpl/modal/todoConfig_modal.html'"></div>
+</script>

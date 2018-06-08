@@ -1,0 +1,494 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ConfigDao">
+
+    <!-- 查询指定条件的属性组数目 -->
+    <select id="getConfigGroupSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM oc_config_property_group
+        <where>
+            <if test="groupName != null and groupName != ''">
+                groupName like "%" #{groupName} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询指定条件的属性组分页数据 -->
+    <select id="getConfigGroupPage" parameterType="object" resultType="ConfigPropertyGroupDO">
+        SELECT * FROM oc_config_property_group
+        <where>
+            <if test="groupName != null and groupName != ''">
+                groupName like "%" #{groupName} "%"
+            </if>
+        </where>
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 查询指定条件的属性组分页数据 -->
+    <select id="getConfigGroupByName" parameterType="string" resultType="ConfigPropertyGroupDO">
+        SELECT * FROM oc_config_property_group
+        WHERE groupName = #{groupName}
+    </select>
+
+    <!-- 查询指定条件的属性组分页数据 -->
+    <select id="getConfigFileGroupByName" parameterType="string" resultType="ConfigFileGroupDO">
+        SELECT * FROM oc_config_file_group
+        WHERE groupName = #{groupName}
+    </select>
+
+    <!-- 新增属性组 -->
+    <insert id="addConfigGroup" parameterType="ConfigPropertyGroupDO">
+        INSERT ignore INTO oc_config_property_group (
+        groupName,
+        groupDesc
+        ) VALUES (
+        #{groupName},
+        #{groupDesc}
+        );
+    </insert>
+
+    <!-- 更新属性组 -->
+    <update id="updateConfigGroup" parameterType="ConfigPropertyGroupDO">
+        UPDATE oc_config_property_group
+        SET
+        groupName = #{groupName},
+        groupDesc = #{groupDesc}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除属性组 -->
+    <delete id="delConfigGroup" parameterType="_long">
+        DELETE FROM oc_config_property_group WHERE id = #{id}
+    </delete>
+
+    <!-- 获取合适条件下的属性数目 -->
+    <select id="getConfigSize" parameterType="object" resultType="_long">
+        SELECT count(*) FROM oc_config_property
+        <where>
+            <if test="proName != null and proName != ''">
+                AND proName like "%" #{proName} "%"
+            </if>
+            <if test="groupId > 0">
+                AND groupId = #{groupId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取合适条件下的属性分页数据 -->
+    <select id="getConfigPage" parameterType="object" resultType="ConfigPropertyDO">
+        SELECT * FROM oc_config_property
+        <where>
+            <if test="proName != null and proName != ''">
+                AND proName like "%" #{proName} "%"
+            </if>
+            <if test="groupId > 0">
+                AND groupId = #{groupId}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增属性 -->
+    <insert id="addConfig" parameterType="ConfigPropertyDO">
+        INSERT ignore INTO oc_config_property(
+        proName,
+        proValue,
+        proDesc,
+        groupId
+        ) VALUES (
+        #{proName},
+        #{proValue},
+        #{proDesc},
+        #{groupId}
+        );
+    </insert>
+
+    <!-- 更新属性 -->
+    <update id="updateConfig" parameterType="ConfigPropertyDO">
+        UPDATE oc_config_property
+        SET
+        proName = #{proName},
+        proValue = #{proValue},
+        proDesc = #{proDesc},
+        groupId = #{groupId}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除属性 -->
+    <delete id="delConfig" parameterType="_long">
+        DELETE FROM oc_config_property WHERE id = #{id}
+    </delete>
+
+    <!-- 获取指定属性被依赖的服务器组数目 -->
+    <select id="getServerGroupsByConfigId" parameterType="_long" resultType="_long">
+        SELECT count(*) FROM oc_servergroup_properties WHERE propertyId = #{propertyId}
+    </select>
+
+    <!-- 获取指定属性组id的属性组数据 -->
+    <select id="getConfigPropertyGroupById" parameterType="_long" resultType="ConfigPropertyGroupDO">
+        SELECT * FROM oc_config_property_group WHERE id = #{id}
+    </select>
+
+    <!-- 获取指定服务器组&属性组的总数 -->
+    <select id="getServerPropertyGroupByGroupIdSize" parameterType="_long" resultType="_long">
+        SELECT count(DISTINCT a0.id) FROM oc_server_group a0 JOIN oc_servergroup_properties a1
+        ON a0.id = a1.groupId
+        <where>
+            <if test="groupId > 0">
+                AND a0.id = #{groupId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取指定服务器组&属性组的分页数据 -->
+    <select id="getServerPropertyGroupByGroupIdPage" parameterType="object" resultType="_long">
+        SELECT a0.id FROM oc_server_group a0 JOIN oc_servergroup_properties a1
+        ON a0.id = a1.groupId
+        <where>
+            <if test="groupId > 0">
+                AND a0.id = #{groupId}
+            </if>
+        </where>
+        GROUP BY a0.id
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取指定服务器组&服务器的属性总数 -->
+    <select id="getServerPropertyGroupByServerIdSize" parameterType="object" resultType="_long">
+        SELECT count(DISTINCT a0.id) FROM oc_server a0 JOIN oc_servergroup_properties a1
+        ON a0.id = a1.serverId
+        <where>
+            <if test="groupId > 0">
+                AND a0.serverGroupId = #{groupId}
+            </if>
+            <if test="serverId > 0">
+                AND a0.id = #{serverId}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取指定服务器组&服务器的属性的分页数据 -->
+    <select id="getServerPropertyGroupByServerIdPage" parameterType="object" resultType="_long">
+        SELECT a0.id FROM oc_server a0 JOIN oc_servergroup_properties a1
+        ON a0.id = a1.serverId
+        <where>
+            <if test="groupId > 0">
+                AND a0.serverGroupId = #{groupId}
+            </if>
+            <if test="serverId > 0">
+                AND a0.id = #{serverId}
+            </if>
+        </where>
+        GROUP BY a0.id
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取指定条件下的服务器组&属性组的数据 -->
+    <select id="getServerGroupProperty" parameterType="ServerGroupPropertiesDO" resultType="ServerGroupPropertiesDO">
+        SELECT * FROM oc_servergroup_properties
+        <where>
+            <if test="serverId != null and serverId > 0">
+                AND serverId = #{serverId}
+            </if>
+            <if test="groupId != null and groupId != 0">
+                AND groupId = #{groupId}
+            </if>
+            <if test="propertyGroupId != null and propertyGroupId != 0">
+                AND propertyGroupId = #{propertyGroupId}
+            </if>
+            <if test="propertyId != null and propertyId > 0">
+                AND propertyId = #{propertyId}
+            </if>
+        </where>
+        ORDER BY propertyGroupId
+    </select>
+
+    <!-- 删除指定id的服务器组&属性组的数据 -->
+    <delete id="delServerPropertyData" parameterType="ServerGroupPropertiesDO">
+        DELETE FROM oc_servergroup_properties
+        <where>
+            <if test="serverId != null and serverId > 0">
+                AND serverId = #{serverId}
+            </if>
+            <if test="groupId != null and groupId != 0">
+                AND groupId = #{groupId}
+            </if>
+            <if test="propertyGroupId != null and propertyGroupId != 0">
+                AND propertyGroupId = #{propertyGroupId}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 新增服务器组&属性组的数据 -->
+    <insert id="addServerPropertyData" parameterType="ServerGroupPropertiesDO">
+        INSERT INTO oc_servergroup_properties (
+        groupId,
+        serverId,
+        propertyId,
+        propertyValue,
+        propertyGroupId
+        ) VALUES (
+        #{groupId},
+        #{serverId},
+        #{propertyId},
+        #{propertyValue},
+        #{propertyGroupId}
+        );
+    </insert>
+
+    <!-- 查询指定服务器组id的属性组 -->
+    <select id="getPropertyGroupByGroupId" parameterType="_long" resultType="ConfigPropertyGroupDO">
+        SELECT a1.* FROM oc_servergroup_properties a0 JOIN oc_config_property_group a1
+        ON a0.propertyGroupId = a1.id
+        WHERE a0.groupId = #{groupId}
+        GROUP BY a1.id
+    </select>
+
+
+    <update id="updateServerGroupProperty" parameterType="ServerGroupPropertiesDO">
+        UPDATE oc_servergroup_properties
+        SET propertyValue = #{propertyValue}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 查询指定id的服务器&属性组的数据 -->
+    <select id="getServerPropertyData" parameterType="_long" resultType="ServerGroupPropertiesDO">
+        SELECT * FROM oc_servergroup_properties WHERE propertyId = #{propertyId} AND serverId = #{serverId}
+    </select>
+
+    <!-- 查询指定gourpId的所有配置数据 -->
+    <select id="getServerGroupPropertyByGroupId" parameterType="_long" resultType="ServerGroupPropertiesDO">
+        SELECT * FROM oc_servergroup_properties WHERE groupId = #{groupId}
+    </select>
+
+
+    <!-- 获取指定id的属性 -->
+    <select id="getConfigPropertyById" parameterType="_long" resultType="ConfigPropertyDO">
+        SELECT * FROM oc_config_property WHERE id = #{id}
+    </select>
+
+    <!-- 根据名称获取属性 -->
+    <select id="getConfigPropertyByName" parameterType="string" resultType="ConfigPropertyDO">
+        SELECT * FROM oc_config_property WHERE proName = #{proName}
+    </select>
+
+    <!-- 根据组id获取所有属性条目 -->
+    <select id="getConfigPropertyByGroupId" parameterType="_long" resultType="ConfigPropertyDO">
+        SELECT * FROM oc_config_property WHERE groupId = #{groupId}
+    </select>
+
+    <!-- 根据名称获取 -->
+    <select id="getConfigPropertyGroupByName" parameterType="string" resultType="ConfigPropertyGroupDO">
+        SELECT * FROM oc_config_property_group WHERE groupName = #{groupName}
+    </select>
+
+    <!-- 查询指定id的服务器组&属性组的数据 -->
+    <select id="getServerGroupPropertyData" parameterType="_long" resultType="ServerGroupPropertiesDO">
+        SELECT * FROM oc_servergroup_properties WHERE propertyId = #{propertyId} AND groupId = #{groupId}
+    </select>
+
+
+    <!-- 文件组新增 -->
+    <insert id="addConfigFileGroup" parameterType="ConfigFileGroupDO">
+        INSERT ignore INTO oc_config_file_group(
+        groupName,
+        groupDesc
+        ) VALUES (
+        #{groupName},
+        #{groupDesc}
+        )
+    </insert>
+
+    <!-- 更新文件组 -->
+    <update id="updateConfigFileGroup" parameterType="ConfigFileGroupDO">
+        UPDATE oc_config_file_group
+        SET
+        groupDesc = #{groupDesc}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除文件组 -->
+    <delete id="delConfigFileGroup" parameterType="_long">
+        DELETE FROM oc_config_file_group WHERE id = #{id}
+    </delete>
+
+    <!-- 查询文件组数目 -->
+    <select id="getConfigFileGroupSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM oc_config_file_group
+        <where>
+            <if test="groupName != null and groupName != ''">
+                groupName LIKE "%" #{groupName} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询文件组分页数据 -->
+    <select id="getConfigFileGroupPage" parameterType="object" resultType="ConfigFileGroupDO">
+        SELECT * FROM oc_config_file_group
+        <where>
+            <if test="groupName != null and groupName != ''">
+                groupName LIKE "%" #{groupName} "%"
+            </if>
+        </where>
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取指定id的文件组 -->
+    <select id="getConfigFileGroupById" parameterType="_long" resultType="ConfigFileGroupDO">
+        SELECT * FROM oc_config_file_group
+        WHERE id = #{id}
+    </select>
+
+    <!-- 新增文件配置 -->
+    <insert id="addConfigFile" parameterType="ConfigFileDO">
+        INSERT ignore INTO oc_config_file(
+        fileName, envType,useType, fileDesc, filePath, fileType, invokeCmd, params, fileContent, fileGroupId
+        ) VALUES (
+        #{fileName}, #{envType},#{useType}, #{fileDesc}, #{filePath}, #{fileType}, #{invokeCmd}, #{params}, #{fileContent}, #{fileGroupId}
+        )
+    </insert>
+
+    <!-- 更新文件配置 -->
+    <update id="updateConfigFile" parameterType="ConfigFileDO">
+        UPDATE oc_config_file
+        SET
+        fileName = #{fileName},
+        envType = #{envType},
+        useType = #{useType},
+        fileDesc = #{fileDesc},
+        filePath = #{filePath},
+        fileType = #{fileType},
+        invokeCmd = #{invokeCmd},
+        params = #{params},
+        fileContent = #{fileContent},
+        fileGroupId = #{fileGroupId}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除文件配置 -->
+    <delete id="delConfigFile" parameterType="_long">
+        DELETE FROM oc_config_file WHERE id = #{id}
+    </delete>
+
+    <!-- 获取文件数目 -->
+    <select id="getConfigFileSize" parameterType="ConfigFileDO" resultType="_long">
+        SELECT count(*) FROM oc_config_file
+        <where>
+            <if test="fileGroupId > 0">
+                AND fileGroupId = #{fileGroupId}
+            </if>
+            <if test="fileName != null and fileName != ''">
+                AND fileName LIKE "%" #{fileName} "%"
+            </if>
+            <if test="fileType != null">
+                AND fileType = #{fileType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取文件分页数据 -->
+    <select id="getConfigFilePage" parameterType="object" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file
+        <where>
+            <if test="configFileDO.fileGroupId > 0">
+                AND fileGroupId = #{configFileDO.fileGroupId}
+            </if>
+            <if test="configFileDO.fileName != null and configFileDO.fileName != ''">
+                AND fileName LIKE "%" #{configFileDO.fileName} "%"
+            </if>
+            <if test="configFileDO.fileType != null">
+                AND fileType = #{configFileDO.fileType}
+            </if>
+        </where>
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <select id="queryConfigFileByGroupId" parameterType="_long" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file
+        WHERE fileGroupId = #{fileGroupId}
+    </select>
+
+    <!-- 获取指定id的文件 -->
+    <select id="getConfigFileById" parameterType="_long" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file WHERE id = #{id}
+    </select>
+
+    <!-- 获取指定名称的文件 -->
+    <select id="getConfigFileByFileName" parameterType="object" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file WHERE fileName = #{fileName}
+    </select>
+
+    <!-- 获取指定名称&环境类型的文件 -->
+    <select id="getConfigFileByFileNameAndEnvType" parameterType="object" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file WHERE
+        fileName = #{fileName} AND envType = #{envType}
+    </select>
+
+    <!-- 从组获取指定名称&环境类型的文件 -->
+    <select id="getConfigFileByGroupAndFileNameAndEnvType" parameterType="object" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file WHERE
+        fileGroupId = #{fileGroupId} AND fileName = #{fileName} AND envType = #{envType}
+    </select>
+
+    <select id="queryFilePathByFileGroupId" parameterType="_long" resultType="ConfigFileDO">
+        SELECT DISTINCT filePath FROM oc_config_file
+        WHERE fileGroupId = #{fileGroupId}
+    </select>
+
+    <select id="queryConfigFileCopyByGroupId" parameterType="_long" resultType="ConfigFileCopyDO">
+        SELECT * FROM oc_config_file_copy
+        WHERE groupId = #{groupId}
+    </select>
+
+    <select id="queryConfigFileCopyByGroupName" parameterType="object" resultType="ConfigFileCopyDO">
+        SELECT * FROM oc_config_file_copy
+        WHERE groupName = #{groupName}
+    </select>
+
+    <select id="getConfigFileCopy" parameterType="_long" resultType="ConfigFileCopyDO">
+        SELECT * FROM oc_config_file_copy
+        WHERE id = #{id}
+    </select>
+
+
+    <delete id="delConfigFileCopy" parameterType="_long">
+        DELETE FROM oc_config_file_copy WHERE id = #{id}
+    </delete>
+
+    <insert id="addConfigFileCopy" parameterType="ConfigFileGroupDO">
+        INSERT INTO oc_config_file_copy (
+        groupId,
+        groupName,
+        serverId,
+        src,
+        dest,
+        username,
+        usergroup
+        ) VALUES (
+        #{groupId},
+        #{groupName},
+        #{serverId},
+        #{src},
+        #{dest},
+        #{username},
+        #{usergroup}
+        );
+    </insert>
+
+    <update id="updateConfigFileCopy" parameterType="ConfigFileGroupDO">
+        UPDATE oc_config_file_copy
+        SET
+        serverId = #{serverId},
+        src = #{src},
+        dest = #{dest},
+        username = #{username},
+        usergroup= #{usergroup}
+        WHERE id = #{id}
+    </update>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ScmDao">
+
+    <!-- 获取SCM权限组数目 -->
+    <select id="getScmPermissionsSize" parameterType="object" resultType="_long">
+        SELECT count(*) from scm_permissions
+        <where>
+            <if test="groupName != null and groupName != ''">
+                AND groupName like "%" #{groupName} "%"
+            </if>
+            <if test="scmProject != null and scmProject != ''">
+                AND scmProject like "%" #{scmProject} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取SCM权限组详情 -->
+    <select id="getScmPermissionsPage" parameterType="object" resultType="ScmPermissionsDO">
+        SELECT * FROM scm_permissions
+        <where>
+            <if test="groupName != null and groupName != ''">
+                AND groupName like "%" #{groupName} "%"
+            </if>
+            <if test="scmProject != null and scmProject != ''">
+                AND scmProject like "%" #{scmProject} "%"
+            </if>
+        </where>
+        ORDER BY groupName DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <select id="getScmPermissionsByScmProject" parameterType="object" resultType="ScmPermissionsDO">
+        SELECT * FROM scm_permissions
+        WHERE scmProject = #{scmProject}
+    </select>
+
+    <!--按scmProject查询配置-->
+    <select id="queryScmPermissionsByScmProject" parameterType="string" resultType="ScmPermissionsDO">
+        SELECT * FROM scm_permissions WHERE scmProject = #{scmProject}
+    </select>
+
+
+    <!-- 新增ScmPermissions-->
+    <insert id="addScmPermissions" parameterType="ScmPermissionsDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO scm_permissions (
+        ciUserGroupId,
+        scmProject,
+        groupName,
+        scmDescription
+        ) VALUES (
+        #{ciUserGroupId},
+        #{scmProject},
+        #{groupName},
+        #{scmDescription}
+        );
+    </insert>
+
+    <!-- 更新ScmPermissions -->
+    <update id="updateScmPermissions" parameterType="ScmPermissionsDO">
+        UPDATE scm_permissions
+        SET ciUserGroupId = #{ciUserGroupId},
+        scmProject = #{scmProject},
+        groupName = #{groupName},
+        scmDescription = #{scmDescription}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定ScmPermissions信息 -->
+    <delete id="delScmPermissionsById" parameterType="_long">
+        DELETE FROM scm_permissions WHERE id = #{id}
+    </delete>
+
+</mapper>

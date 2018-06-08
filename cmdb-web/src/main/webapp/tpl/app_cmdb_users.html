@@ -1,0 +1,197 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">cmdb用户管理</h1>
+                    <!--<small class="text-muted">可访问堡垒机列表管理</small>-->
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <div ng-controller="usersCtrl">
+                    <div style="margin-top: 5px;" class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">用户</span>
+                                        <input type="text" class="form-control" ng-model="username"
+                                               placeholder="用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success" ng-click="addUser()">
+                                        <span class="glyphicon glyphicon-plus"></span>新建用户
+                                    </button>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success" ng-click="addUsersMobile()">
+                                        <span class="fa fa-circle-o-notch"></span>填充手机号
+                                    </button>
+                                </div>
+                            </form>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>用户信息</td>
+                                        <td>角色</td>
+                                        <td>基本权限</td>
+                                        <td>LDAP持续集成组</td>
+                                        <td>LDAP组权限</td>
+                                        <td>更新时间</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <!--用户信息-->
+                                        <td>
+                                            {{item.username}}</br>
+                                            <b>{{item.displayName}}</b>
+                                            </br>
+                                            <!--<span class="label label-success" ng-if="item.mailAccountStatus == 'active'">Active</span>-->
+                                            <b style="color: #286090"> {{item.mail}}</b>
+                                            <b class="pull-right" style="color: #286090"
+                                               ng-if="item.mailAccountStatus == 'closed'">Closed</b>
+                                            <b class="pull-right" style="color: #ec971f"
+                                               ng-if="item.mailAccountStatus == 'locked'">Locked</b>
+                                            <b class="pull-right" style="color: #777"
+                                               ng-if="item.mailAccountStatus == 'null'">Del</b>
+                                            </br>
+                                            <b class="fa fa-phone"></b>
+                                            <b ng-show="item.mobile != ''">{{item.mobile}}</b>
+                                            <span class="fa fa-circle-o-notch"
+                                                  uib-popover-html="'填充手机号'" popover-trigger="'mouseenter'"
+                                                  ng-click="addUserMobile(item.id)"></span>
+                                        </td>
+                                        <td>
+                                            <div ng-repeat="role in item.roleDOList">
+                                                <b class="icon icon-badge" style="color: #d9534f"
+                                                   ng-if="role.roleName == 'admin'">{{role.roleName}}</b>
+                                                <b class="pull-right" style="color: #777"
+                                                   ng-if="role.roleName == 'admin'">管理员</b>
+
+                                                <b class="fa fa-coffee" style="color: #286090"
+                                                   ng-if="role.roleName == 'develop'">{{role.roleName}}</b>
+                                                <b class="pull-right" style="color: #777"
+                                                   ng-if="role.roleName == 'develop'">科学家</b>
+                                                <b style="color: #777"
+                                                   ng-if="role.roleName == 'base'">{{role.roleName}}</b>
+                                                <b class="pull-right" style="color: #777"
+                                                   ng-if="role.roleName == 'base'">基础使用者</b>
+                                            </div>
+                                        </td>
+                                        <!--<td>{{item.authed == 0 ? "未授权" : "已授权"}}</td>-->
+                                        <td>
+                                            <b style="color: #449d44" ng-if="item.authed != 0">已授权</b>
+                                            <b style="color: #777" ng-if="item.authed == 0">未授权</b>
+                                            <b class="pull-right" style="color: #777">堡垒机</b>
+                                            </br>
+                                            <b style="color: #449d44" ng-if="item.ldap != 0">已绑定</b>
+                                            <b style="color: #777" ng-if="item.ldap == 0">未绑定</b>
+                                            <b class="pull-right" style="color: #777">LDAP</b>
+                                        </td>
+                                        <td>
+                                            <!--<div class="col-md-12" ng-repeat="ldapGroup in item.ldapGroups">{{ldapGroup}}</div>-->
+                                            <div ng-repeat="bambooLdapGroup in item.bambooLdapGroups">
+                                                {{bambooLdapGroup.name}}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <!--<div class="col-md-12" ng-repeat="ldapGroup in item.ldapGroups">{{ldapGroup}}</div>-->
+                                            <div ng-repeat="otherLdapGroup in item.otherLdapGroups">
+                                                <span ng-if="otherLdapGroup.type == 1">{{otherLdapGroup.name}}</span>
+                                                <span ng-if="otherLdapGroup.type == 4">{{otherLdapGroup.name}}</span>
+                                                <span ng-if="otherLdapGroup.type == 9">{{otherLdapGroup.name}}</span>
+                                                <span style="color: #d9534f" ng-if="otherLdapGroup.type == 2">{{otherLdapGroup.name}}</span>
+
+                                                <span style="color: #286090" ng-if="otherLdapGroup.type == 3">{{otherLdapGroup.name}}</span>
+                                                <span style="color: #286090" ng-if="otherLdapGroup.type == 5">{{otherLdapGroup.name}}</span>
+                                                <span style="color: #286090" ng-if="otherLdapGroup.type == 6">{{otherLdapGroup.name}}</span>
+                                                <span style="color: #286090" ng-if="otherLdapGroup.type == 7">{{otherLdapGroup.name}}</span>
+
+                                                <span style="color: #449d44" ng-if="otherLdapGroup.type == 8">{{otherLdapGroup.name}}</span>
+                                                <span style="color: #ec971f" ng-if="otherLdapGroup.type == 10">{{otherLdapGroup.name}}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{item.gmtCreate}}</td>
+                                        <td>
+                                            <button ng-click="userLdapInfo(item)"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+                                            <!--<span class="glyphicon glyphicon-pencil pull-left"-->
+                                                  <!--ng-click="userLdapInfo(item)">-->
+                                            <!--</span>-->
+                                            <button ng-click="serverList(item.username)"
+                                                    class="btn btn-xs"
+                                                    uib-popover-html="'授权服务器组列表'" popover-trigger="'mouseenter'"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>授权组信息</button>
+
+                                            <!--<span class="glyphicon glyphicon-list" style="margin-left: 20px;"-->
+                                                  <!--uib-popover-html="'授权服务器组'" popover-trigger="'mouseenter'"-->
+                                                  <!--ng-click="serverList(item.username)">-->
+                                            <!--</span>-->
+
+                                            <button ng-click="userLeave(item.username)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="icon icon-user-unfollow"></span>离职</button>
+
+                                            <!--<span class="icon icon-user-unfollow pull-right" style="color: #d9534f"-->
+                                                  <!--ng-click="userLeave(item.username)"></span>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="userLdapInfo">
+    <div ng-include="'tpl/modal/user_ldap_info_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="keyBoxServerModal">
+    <div ng-include="'tpl/modal/keybox_server_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="userInfo">
+    <div ng-include="'tpl/modal/user_info_modal.html'"></div>
+</script>

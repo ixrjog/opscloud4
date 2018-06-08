@@ -1,0 +1,791 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ServerDao">
+
+    <!-- 获取ECS模版数目 -->
+    <select id="getEcsTemplateSize" parameterType="object" resultType="_long">
+        SELECT count(*) from ecs_template
+        <where>
+            <if test="zoneId != null and zoneId != ''">
+                zoneId = #{zoneId}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 获取获取ECS模版详情 -->
+    <select id="getEcsTemplatePage" parameterType="object" resultType="EcsTemplateDO">
+        SELECT * FROM ecs_template
+        <where>
+            <if test="zoneId != null and zoneId != ''">
+                zoneId = #{zoneId}
+            </if>
+        </where>
+        ORDER BY zoneId DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取VM模版数目 -->
+    <select id="getVmTemplateSize" resultType="_long">
+        SELECT count(*) from vm_template
+    </select>
+
+    <!-- 获取获取VM模版详情 -->
+    <select id="getVmTemplatePage" parameterType="object" resultType="VmTemplateDO">
+        SELECT * FROM vm_template
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="queryEcsTemplateById" parameterType="object" resultType="EcsTemplateDO">
+        SELECT * FROM ecs_template
+        WHERE id = #{id}
+    </select>
+
+    <!-- 获取服务器数目 -->
+    <select id="getServerSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="getServerPage" parameterType="object" resultType="ServerDO">
+        SELECT * FROM oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY serverName DESC,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取服务器数目 -->
+    <select id="getServerSizeByServerGroupIdAndEnvType" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_server
+        WHERE serverGroupId = #{serverGroupId}
+        AND envType = #{envType}
+    </select>
+
+
+    <!-- 获取物理服务器数目 -->
+    <select id="getPhysicalServerSize" parameterType="object" resultType="_long">
+        SELECT count(*) from physical_server
+        <where>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != -1">
+                AND useType = #{useType}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 获取服务器数目 -->
+    <select id="getZabbixServerSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="zabbixStatus != -1">
+                AND zabbixStatus = #{zabbixStatus}
+            </if>
+            <if test="zabbixMonitor != -1">
+                AND zabbixMonitor = #{zabbixMonitor}
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="extTomcatVersion != null and extTomcatVersion != ''">
+                AND extTomcatVersion like "%" #{extTomcatVersion} "%"
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 获取物理服务器详情 -->
+    <select id="getPhysicalServerPage" parameterType="object" resultType="PhysicalServerDO">
+        SELECT * FROM physical_server
+        <where>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != -1">
+                AND useType = #{useType}
+            </if>
+        </where>
+        ORDER BY serverName,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取物理服务器中的Esxi服务器 -->
+    <select id="getPhysicalServerEsxi" parameterType="object" resultType="PhysicalServerDO">
+        SELECT * FROM physical_server
+        WHERE useType = 1
+        ORDER BY serverName, gmtCreate DESC
+    </select>
+
+
+    <!-- 获取服务器详情 -->
+    <select id="getZabbixServerPage" parameterType="object" resultType="ServerDO">
+        SELECT * FROM oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="zabbixStatus != -1">
+                AND zabbixStatus = #{zabbixStatus}
+            </if>
+            <if test="zabbixMonitor != -1">
+                AND zabbixMonitor = #{zabbixMonitor}
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+            <if test="extTomcatVersion != null and extTomcatVersion != ''">
+                AND extTomcatVersion like "%" #{extTomcatVersion} "%"
+            </if>
+        </where>
+        ORDER BY serverName DESC,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取ECS服务器数目 -->
+    <select id="getEcsServerSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_ecs_server
+        <where>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取ECS服务器详情 -->
+    <select id="getEcsServerPage" parameterType="object" resultType="EcsServerDO">
+        SELECT * FROM oc_ecs_server
+        <where>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY serverName DESC,creationTime DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getEcsServerByFinance" parameterType="_boolean" resultType="EcsServerDO">
+        SELECT * FROM oc_ecs_server
+        WHERE finance = #{finance}
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="getVmServerPage" parameterType="object" resultType="VmServerDO">
+        SELECT * FROM new_vm_server
+        <where>
+            <if test="serverName != null and serverName != ''">
+                serverName like "%" #{serverName} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY serverName DESC,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取ECS服务器数目 -->
+    <select id="getVmServerSize" parameterType="object" resultType="_long">
+        SELECT count(*) from new_vm_server
+        <where>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
+    <!-- 按id查询vmServer -->
+    <select id="getVmServerById" parameterType="object" resultType="VmServerDO">
+        SELECT * from new_vm_server
+        WHERE id = #{id}
+    </select>
+
+    <!-- 新增指定server group的server -->
+    <insert id="addServerGroupServer" parameterType="ServerDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_server (
+          serverGroupId,
+          loginType,
+          loginUser,
+          envType,
+          publicIp,
+          publicIpId,
+          insideIp,
+          insideIpId,
+          serverType,
+          serverName,
+          area,
+          useType,
+          serialNumber,
+          ciGroup,
+          content
+        ) VALUES (
+          #{serverGroupId},
+          #{loginType},
+          #{loginUser},
+          #{envType},
+          #{publicIp},
+          #{publicIpId},
+          #{insideIp},
+          #{insideIpId},
+          #{serverType},
+          #{serverName},
+          #{area},
+          #{useType},
+          #{serialNumber},
+          #{ciGroup},
+          #{content}
+        );
+    </insert>
+
+    <!-- 更新指定servergroup的server信息 -->
+    <update id="updateServerGroupServer" parameterType="ServerDO">
+        UPDATE oc_server
+        SET
+          serverGroupId = #{serverGroupId},
+          loginType = #{loginType},
+          loginUser = #{loginUser},
+          envType = #{envType},
+          publicIp = #{publicIp},
+          publicIpId = #{publicIpId},
+          insideIp = #{insideIp},
+          insideIpId = #{insideIpId},
+          serverType = #{serverType},
+          serverName = #{serverName},
+          area = #{area},
+          useType = #{useType},
+          serialNumber = #{serialNumber},
+          ciGroup = #{ciGroup},
+          content = #{content},
+          zabbixStatus = #{zabbixStatus},
+          zabbixMonitor = #{zabbixMonitor}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateServerTomcatVersion" parameterType="ServerDO">
+        UPDATE oc_server
+        SET
+        extTomcatVersion = #{extTomcatVersion}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定servergroup 的 server信息 -->
+    <delete id="delServerGroupServer" parameterType="_long">
+        DELETE FROM oc_server WHERE id = #{id}
+    </delete>
+
+    <!-- 获取指定的serverid信息 -->
+    <select id="getServerInfoById" parameterType="_long" resultType="ServerDO">
+        SELECT * FROM oc_server WHERE id = #{id}
+    </select>
+
+    <!-- 获取指定servergroup的server数目 -->
+    <select id="getServersByGroupId" parameterType="_long" resultType="_long">
+        SELECT count(*) FROM oc_server WHERE serverGroupId = #{groupId};
+    </select>
+
+    <!-- 获取指定groupId的servers -->
+    <select id="acqServersByGroupId" parameterType="_long" resultType="ServerDO">
+        SELECT * FROM oc_server WHERE serverGroupId = #{groupId} ORDER BY id DESC;
+    </select>
+
+    <!-- 新增指定ecs server-->
+    <insert id="addEcsServer" parameterType="EcsServerDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ecs_server (
+        creationTime,
+        deviceAvailable,
+        serverName,
+        insideIp,
+        publicIp,
+        internetMaxBandwidthOut,
+        cpu,
+        memory,
+        systemDiskCategory,
+        systemDiskSize,
+        dataDiskCategory,
+        dataDiskSize,
+        ioOptimized,
+        instanceId,
+        area,
+        regionId,
+        finance,
+        internetChargeType,
+        status
+        ) VALUES (
+        #{creationTime},
+        #{deviceAvailable},
+        #{serverName},
+        #{insideIp},
+        #{publicIp},
+        #{internetMaxBandwidthOut},
+        #{cpu},
+        #{memory},
+        #{systemDiskCategory},
+        #{systemDiskSize},
+        #{dataDiskCategory},
+        #{dataDiskSize},
+        #{ioOptimized},
+        #{instanceId},
+        #{area},
+        #{regionId},
+        #{finance},
+        #{internetChargeType},
+        #{status}
+        );
+    </insert>
+
+    <!-- 更新ecs server -->
+    <update id="updateEcsServer" parameterType="EcsServerDO">
+        UPDATE oc_ecs_server
+        SET creationTime = #{creationTime},
+        deviceAvailable = #{deviceAvailable},
+        serverName = #{serverName},
+        serverId = #{serverId},
+        insideIp = #{insideIp},
+        publicIp = #{publicIp},
+        internetMaxBandwidthOut = #{internetMaxBandwidthOut},
+        cpu = #{cpu},
+        memory = #{memory},
+        systemDiskCategory = #{systemDiskCategory},
+        systemDiskSize = #{systemDiskSize},
+        dataDiskCategory = #{dataDiskCategory},
+        dataDiskSize = #{dataDiskSize},
+        ioOptimized = #{ioOptimized},
+        area = #{area},
+        regionId = #{regionId},
+        internetChargeType = #{internetChargeType},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 模糊查询匹配名称的系统列表数目 -->
+    <select id="queryEcsByInstanceId" parameterType="string" resultType="EcsServerDO">
+        SELECT * FROM oc_ecs_server WHERE instanceId = #{instanceId}
+    </select>
+
+    <!-- 按内网ip查询server -->
+    <select id="queryEcsByInsideIp" parameterType="string" resultType="EcsServerDO">
+        SELECT * FROM oc_ecs_server WHERE insideIp = #{insideIp}
+    </select>
+
+
+    <!-- 按内网ip查询server -->
+    <select id="queryServerByInsideIp" parameterType="string" resultType="ServerDO">
+        SELECT * FROM oc_server WHERE insideIp = #{insideIp}
+    </select>
+
+    <!-- 按类型查询所有server -->
+    <select id="queryServerByServerType" parameterType="_int" resultType="ServerDO">
+        SELECT * FROM oc_server WHERE serverType = #{serverType}
+    </select>
+
+
+    <!-- 新增vmServer-->
+    <insert id="addVmServer" parameterType="VmServerDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO new_vm_server (
+        serverName,
+        vmName,
+        serverId,
+        content,
+        insideIp,
+        publicIp,
+        cpu,
+        memory,
+        status
+        ) VALUES (
+        #{serverName},
+        #{vmName},
+        #{serverId},
+        #{content},
+        #{insideIp},
+        #{publicIp},
+        #{cpu},
+        #{memory},
+        #{status}
+        );
+    </insert>
+
+    <!-- 更新vmServer -->
+    <update id="updateVmServer" parameterType="VmServerDO">
+        UPDATE new_vm_server
+        SET serverName = #{serverName},
+        vmName = #{vmName},
+        serverId = #{serverId},
+        content = #{content},
+        insideIp = #{insideIp},
+        publicIp = #{publicIp},
+        cpu = #{cpu},
+        memory = #{memory},
+        status = #{status}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 按内网ip查询vmServer -->
+    <select id="queryVmServerByInsideIp" parameterType="string" resultType="VmServerDO">
+        SELECT * FROM new_vm_server WHERE insideIp = #{insideIp}
+    </select>
+
+    <select id="queryEcsStatistics" resultType="ServerStatisticsDO">
+        SELECT COUNT(id) AS cnt,  SUM(cpu) AS cpuCnt ,SUM(memory) AS memoryCnt ,SUM(internetMaxBandwidthOut) AS bandwidthCnt
+        FROM oc_ecs_server;
+    </select>
+
+    <select id="queryVmStatistics" resultType="ServerStatisticsDO">
+        SELECT COUNT(*) AS cnt,  SUM(memory) AS memoryCnt ,  SUM(cpu) AS cpuCnt
+        FROM new_vm_server;
+    </select>
+
+    <select id="queryPsStatistics" resultType="ServerStatisticsDO">
+        SELECT COUNT(*) AS cnt,  SUM(memory) AS memoryCnt ,  SUM(cpu) AS cpuCnt
+        FROM physical_server;
+    </select>
+
+    <select id="queryPsVmStatistics" resultType="ServerStatisticsDO">
+        SELECT COUNT(*) AS cnt,  SUM(memory) AS memoryCnt ,  SUM(cpu) AS cpuCnt
+        FROM physical_server
+        WHERE useType = 1;
+    </select>
+
+    <select id="queryPsBiStatistics" resultType="ServerStatisticsDO">
+        SELECT COUNT(*) AS cnt,  SUM(memory) AS memoryCnt ,  SUM(cpu) AS cpuCnt
+        FROM physical_server
+        WHERE useType = 2;
+    </select>
+
+    <!-- 删除指定server信息 -->
+    <delete id="delServerById" parameterType="_long">
+        DELETE FROM oc_server WHERE id = #{id}
+    </delete>
+
+    <!-- 删除指定ecsServer信息 -->
+    <delete id="delEcsServerById" parameterType="_long">
+        DELETE FROM oc_ecs_server WHERE id = #{id}
+    </delete>
+
+    <!-- 删除指定vmServer信息 -->
+    <delete id="delVmServerById" parameterType="_long">
+        DELETE FROM new_vm_server WHERE id = #{id}
+    </delete>
+
+    <!-- 获取Ecs服务器详情 -->
+    <select id="getEcsServerCost" parameterType="object" resultType="EcsServerDO">
+        SELECT * FROM oc_ecs_server
+        WHERE
+        <![CDATA[
+        creationTime >= #{startDate} AND creationTime < #{endDate}
+        ]]>
+        ORDER BY creationTime DESC
+    </select>
+
+    <!-- 获取Vm服务器详情 -->
+    <select id="getVmServerCost" parameterType="object" resultType="VmServerDO">
+        SELECT * FROM new_vm_server
+        WHERE
+        <![CDATA[
+        gmtCreate >= #{startDate} AND gmtCreate < #{endDate}
+        ]]>
+        ORDER BY gmtCreate DESC
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="getAllServer" resultType="ServerDO">
+        SELECT * FROM oc_server
+    </select>
+
+
+    <select id="getServerByType" parameterType="_int" resultType="ServerDO">
+        SELECT * FROM oc_server
+        WHERE serverType = #{serverType}
+    </select>
+
+    <!-- 获取服务器数目 -->
+    <select id="getServerPerfSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="getServerPerfPage" parameterType="object" resultType="ServerDO">
+        SELECT * FROM oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY serverName DESC,gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="queryServerPerfStatistics" parameterType="object" resultType="ServerDO">
+        SELECT * FROM oc_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="list.size() != 0">
+                AND serverGroupId IN
+                <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 按groupId&envType获取服务器列表 -->
+    <select id="getServersByGroupIdAndEnvType" parameterType="object" resultType="ServerDO">
+        SELECT * from oc_server
+        WHERE  serverGroupId = #{serverGroupId} AND envType = #{envType}
+    </select>
+
+    <!-- 新增指定serverUpstream信息-->
+    <insert id="addServerUpstream" parameterType="ServerUpstreamDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO server_upstream (
+        serverId,
+        insideIp,
+        serviceAction,
+        actionTime
+        ) VALUES (
+        #{serverId},
+        #{insideIp},
+        #{serviceAction},
+        #{actionTime}
+        );
+    </insert>
+
+    <!-- 更新指定serverUpstream信息 -->
+    <update id="updateServerUpstream" parameterType="ServerUpstreamDO">
+        UPDATE server_upstream
+        SET
+        serviceAction = #{serviceAction},
+        actionTime = #{actionTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取服务器详情 -->
+    <select id="queryServerUpstreamByIp" parameterType="object" resultType="ServerUpstreamDO">
+        SELECT * FROM server_upstream
+        WHERE insideIp = #{insideIp}
+    </select>
+
+    <!-- 查询EcsPropertyDO -->
+    <select id="queryEcsProperty" parameterType="object" resultType="EcsPropertyDO">
+        SELECT * FROM ecs_property
+        WHERE instanceId = #{instanceId}
+        AND propertyType = #{propertyType}
+        AND propertyValue = #{propertyValue}
+    </select>
+
+    <!-- 按serverId查询EcsPropertyDO -->
+    <select id="queryEcsPropertyByServerId" parameterType="_long" resultType="EcsPropertyDO">
+        SELECT * FROM ecs_property
+        WHERE serverId = #{serverId}
+    </select>
+
+    <!-- 删除Ecs属性 -->
+    <delete id="delEcsProperty" parameterType="_long">
+        DELETE FROM ecs_property WHERE id = #{id}
+    </delete>
+
+    <!-- 按instanceId & propertyType查询EcsPropertyDO -->
+    <select id="queryEcsPropertyAll" parameterType="object" resultType="EcsPropertyDO">
+        SELECT * FROM ecs_property
+        WHERE instanceId = #{instanceId}
+        AND propertyType = #{propertyType}
+    </select>
+
+    <!-- 新增指定EcsPropertyDO信息-->
+    <insert id="addEcsProperty" parameterType="EcsPropertyDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO ecs_property (
+        serverId,
+        instanceId,
+        propertyType,
+        propertyValue,
+        propertyName
+        ) VALUES (
+        #{serverId},
+        #{instanceId},
+        #{propertyType},
+        #{propertyValue},
+        #{propertyName}
+        );
+    </insert>
+
+    <select id="statusServerEnvType" resultType="ServerEnvTypeVO">
+       SELECT envType, COUNT(*) AS cnt
+       FROM oc_server
+       GROUP BY envType
+    </select>
+
+    <select id="statusServerType" resultType="ServerTypeVO">
+        SELECT serverType, COUNT(*) AS cnt
+        FROM oc_server
+        GROUP BY serverType
+    </select>
+
+    <select id="statusServerCreateByMonth" resultType="ServerCreateByMonthVO">
+        SELECT DATE_FORMAT(gmtCreate,'%Y-%m') AS dateCat ,
+        sum(case when serverType=1 then 1 else 0 end) as vmCnt,
+        sum(case when serverType=2 then 1 else 0 end) as ecsCnt
+        FROM oc_server
+        WHERE year(gmtCreate) &gt;= 2017
+        GROUP BY dateCat
+    </select>
+
+
+</mapper>

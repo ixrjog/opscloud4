@@ -1,0 +1,115 @@
+<div class="aside-wrap">
+  <div class="app-aside-footer dk">    
+    <div class="dropdown dropup" dropdown>
+      <a href class="pull-right wrapper m-r-xs" ng-click="app.settings.asideFolded = !app.settings.asideFolded">
+        <i class="fa {{app.settings.asideFolded ? 'fa-indent' : 'fa-dedent'}} fa-fw"></i>
+      </a>
+      <a href class="dropdown-toggle clear hidden-folded wrapper-sm padder" dropdown-toggle>
+        <span class="thumb-xxs avatar pull-left m-r-sm">
+          <img src="img/a0.jpg" alt="...">
+        </span>
+        <span class="hidden-sm hidden-md m-t-xs text-ellipsis">John.Smith</span>
+      </a>      
+      <!-- dropdown -->
+      <ul class="dropdown-menu animated fadeInRight w">
+        <li class="wrapper b-b m-b-sm bg-light m-t-n-xs">
+          <div>
+            <p>300mb of 500mb used</p>
+          </div>
+          <progressbar value="60" class="progress-xs m-b-none bg-white"></progressbar>
+        </li>
+        <li>
+          <a href>
+            <span class="badge bg-danger pull-right">30%</span>
+            <span>Settings</span>
+          </a>
+        </li>
+        <li>
+          <a ui-sref="app.page.profile">Profile</a>
+        </li>
+        <li>
+          <a ui-sref="app.docs">
+            <span class="label bg-info pull-right">new</span>
+            Help
+          </a>
+        </li>
+        <li class="divider"></li>
+        <li>
+          <a ui-sref="access.signin">Logout</a>
+        </li>
+      </ul>
+      <!-- / dropdown -->
+    </div>
+  </div>
+  <div class="navi-wrap">
+    <!-- nav -->
+    <nav ui-nav class="navi">
+      <!-- list -->
+      <ul class="nav dk">
+        <li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs">
+          <span>Discovery</span>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.home">
+            <i class="icon-disc icon"></i>
+            <span>Recommendation</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.genres">
+            <i class="icon-list icon"></i>
+            <span>Genres</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.mtv">
+            <i class="icon-social-youtube icon"></i>
+            <span>MTV</span>
+          </a>
+        </li>
+      </ul>
+      <ul class="nav">
+        <li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs">
+          <span>Your Music</span>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.playlist({fold:'bookmarkd'})">
+            <i class="icon-star icon"></i>
+            <span>Bookmarked</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.playlist({fold:'loved'})">
+            <i class="icon-heart icon"></i>
+            <span>Loved</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.playlist({fold:'history'})">
+            <i class="icon-clock icon"></i>
+            <span>History</span>
+          </a>
+        </li>
+        <li class="hidden-folded padder m-t m-b-sm text-muted text-u-c text-xs">
+          <span>Playlists</span>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.playlist({fold:'nature'})">
+            <b class="badge bg-info pull-right">3</b>
+            <i class="icon-playlist icon"></i>
+            <span>Nature</span>
+          </a>
+        </li>
+        <li ui-sref-active="active">
+          <a ui-sref="music.playlist({fold:'soundtracks'})">
+            <b class="badge dk pull-right">5</b>
+            <i class="icon-playlist icon"></i>
+            <span>Soundtracks</span>
+          </a>
+        </li>
+      </ul>
+      <!-- / list -->
+    </nav>
+    <!-- nav -->    
+  </div>
+</div>

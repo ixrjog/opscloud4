@@ -1,0 +1,55 @@
+<div class="container hbox" ng-controller="systemCtrl" ng-init="app.settings.container = false;">
+    <div class="m-b-lg">
+        <a href class="navbar-brand block m-t">系统列表</a>
+        <button type="button" class="btn glyphicon glyphicon-arrow-left pull-left" ng-click="goBack()"></button>
+    </div>
+
+    <div class="m-b-lg">
+        <div class="wrapper text-center">
+            <!--<strong>系统列表</strong>-->
+        </div>
+        <form name="form" class="form-validation">
+            <div class="input-group">
+                <input ng-model="systemName" type="text" class="form-control" placeholder="查询系统......">
+                <span class="input-group-btn">
+                    <button ng-click="querySystem()" class="btn btn-default" type="button">Go!</button>
+                </span>
+            </div><!-- /input-group -->
+        </form>
+
+        <div class="panel" style="margin-top: 5px;">
+            <div class="panel-body">
+                <div class="wrapper-md">
+                    <div class="row row-sm">
+                        <div class="col-lg-3 col-md-4 col-sm-6" ng-repeat="item in pageData">
+                            <div class="panel b-a">
+                                <div class="panel-heading text-center bg-info no-border">
+                                    <h4 class="text-u-c m-b-none">{{item.systemName}}</h4>
+                                    <div class="text-center">
+                                        <img ng-if="item.imgUrl != null && item.imgUrl != ''" ng-src="{{item.imgUrl}}" style="width: 40px; height: 40px;">
+                                        <div ng-if="item.imgUrl == null || item.imgUrl == ''" class="glyphicon glyphicon-picture"></div>
+                                    </div>
+                                    <h2 class="m-t-none">
+                                        <span class="text-sm">{{item.owner}}</span>
+                                    </h2>
+                                </div>
+                                <ul class="list-group">
+                                    <li class="list-group-item">
+                                        <i ng-if="item.systemDesc != null && item.systemDesc != ''" class="text-success m-r-xs">{{item.systemDesc}}</i>
+                                        <i ng-if="item.systemDesc == null || item.systemDesc == ''" class="text-success m-r-xs">写点什么介绍一下...</i>
+                                    </li>
+                                    <li class="list-group-item">
+                                        <i class="text-success m-r-xs"><a ng-href="{{item.systemUrl}}">{{item.systemUrl}}</a></i>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="text-center" ng-if="pageData != null && pageData.length != 0">
+                        <ul style="margin: 0px;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

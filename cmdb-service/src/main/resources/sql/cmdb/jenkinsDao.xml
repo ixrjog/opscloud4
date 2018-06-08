@@ -1,0 +1,550 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.JenkinsDao">
+
+
+    <insert id="addBuildArtifact" parameterType="BuildArtifactDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO jenkins_job_build_artifacts (
+        jobBuildsId,
+        artifactsName,
+        archiveUrl
+        ) VALUES (
+        #{jobBuildsId},
+        #{artifactsName},
+        #{archiveUrl}
+        );
+    </insert>
+
+    <select id="queryBuildArtifactByJobBuildsId" parameterType="_long" resultType="BuildArtifactDO">
+        SELECT * FROM jenkins_job_build_artifacts WHERE jobBuildsId = #{jobBuildsId}
+    </select>
+
+    <select id="queryBuildArtifact" parameterType="object" resultType="BuildArtifactDO">
+        SELECT * FROM jenkins_job_build_artifacts
+        WHERE jobBuildsId = #{jobBuildsId}
+        AND artifactsName = #{artifactsName}
+        AND archiveUrl = #{archiveUrl}
+    </select>
+
+    <!-- 新增指定webHooks -->
+    <insert id="addJenkinsJob" parameterType="JenkinsJobDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO jenkins_jobs (
+        jobName,
+        content,
+        jobEnvType,
+        repositoryUrl,
+        buildType,
+        created
+        ) VALUES (
+        #{jobName},
+        #{content},
+        #{jobEnvType},
+        #{repositoryUrl},
+        #{buildType},
+        #{created}
+        );
+    </insert>
+
+    <update id="updateJenkinsJob" parameterType="JenkinsJobDO">
+        UPDATE jenkins_jobs
+        SET jobName = #{jobName},
+            content = #{content},
+            jobEnvType = #{jobEnvType},
+            repositoryUrl = #{repositoryUrl},
+            buildType = #{buildType},
+            created = #{created}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delJenkinsJob" parameterType="_long">
+        DELETE FROM jenkins_jobs WHERE id = #{id}
+    </delete>
+
+    <insert id="addJenkinsJobBuild" parameterType="JenkinsJobBuildDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO jenkins_job_builds (
+        buildType,
+        jobId,
+        jobName,
+        username,
+        email,
+        mobile,
+        webHookId,
+        buildNumber
+        ) VALUES (
+        #{buildType},
+        #{jobId},
+        #{jobName},
+        #{username},
+        #{email},
+        #{mobile},
+        #{webHookId},
+        #{buildNumber}
+        );
+    </insert>
+
+    <update id="updateJenkinsJobBuild" parameterType="JenkinsJobBuildDO">
+        UPDATE jenkins_job_builds
+        SET buildNumber = #{buildNumber}
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="queryJenkinsJobByName" parameterType="string" resultType="JenkinsJobDO">
+        SELECT * FROM jenkins_jobs WHERE jobName = #{jobName}
+    </select>
+
+    <select id="queryJenkinsJobById" parameterType="_long" resultType="JenkinsJobDO">
+        SELECT * FROM jenkins_jobs WHERE id = #{id}
+    </select>
+
+    <select id="queryJobParamByJobId" parameterType="_long" resultType="JobParamDO">
+        SELECT * FROM jenkins_job_parameter WHERE jobId = #{jobId}
+    </select>
+
+    <select id="queryJobParamByJobIdAndName" parameterType="object" resultType="JobParamDO">
+        SELECT * FROM jenkins_job_parameter
+        WHERE jobId = #{jobId}
+        AND paramName = #{paramName}
+    </select>
+
+    <insert id="addJobParam" parameterType="JobParamDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO jenkins_job_parameter (
+        jobId,
+        paramName,
+        paramValue,
+        content
+        ) VALUES (
+        #{jobId},
+        #{paramName},
+        #{paramValue},
+        #{content}
+        );
+    </insert>
+
+    <select id="queryJobBuildParamByBuildsId" parameterType="_long" resultType="JobBuildParamDO">
+        SELECT * FROM jenkins_job_builds_parameter
+        WHERE buildsId = #{buildsId}
+    </select>
+
+    <select id="queryJobBuildParamByBuildsIdAndName" parameterType="object" resultType="JobBuildParamDO">
+        SELECT * FROM jenkins_job_builds_parameter
+        WHERE buildsId = #{buildsId}
+        AND paramName = #{paramName}
+    </select>
+
+    <insert id="addJobBuildParam" parameterType="JobBuildParamDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO jenkins_job_builds_parameter (
+        buildsId,
+        paramName,
+        paramValue
+        ) VALUES (
+        #{buildsId},
+        #{paramName},
+        #{paramValue}
+        );
+    </insert>
+
+    <update id="updateJobParam" parameterType="JobParamDO">
+        UPDATE jenkins_job_parameter
+        SET paramName = #{paramName},
+            paramValue = #{paramValue},
+            content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delJobParam" parameterType="_long">
+        DELETE FROM  jenkins_job_parameter WHERE id = #{id}
+    </delete>
+
+    <insert id="addJobNote" parameterType="JobNoteDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO jenkins_job_note (
+        jobName,
+        jobUrl,
+        buildFullUrl,
+        buildNumber,
+        buildPhase,
+        buildStatus,
+        buildUrl,
+        scmUrl,
+        scmBranch,
+        scmCommit,
+        notice,
+        webHook
+        ) VALUES (
+        #{jobName},
+        #{jobUrl},
+        #{buildFullUrl},
+        #{buildNumber},
+        #{buildPhase},
+        #{buildStatus},
+        #{buildUrl},
+        #{scmUrl},
+        #{scmBranch},
+        #{scmCommit},
+        #{notice},
+        #{webHook}
+        );
+    </insert>
+
+    <update id="updateJobNote" parameterType="JobNoteDO">
+        UPDATE jenkins_job_note
+        SET notice = #{notice},
+            webHook = #{webHook}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 获取jobs数目 -->
+    <select id="getJobsSize" parameterType="object" resultType="_long">
+        SELECT count(*) from jenkins_jobs
+        <where>
+            <if test="jobName != null and jobName != ''">
+                jobName like "%" #{jobName} "%"
+            </if>
+            <if test="jobEnvType != -1">
+                AND jobEnvType = #{jobEnvType}
+            </if>
+            <if test="buildType != -1">
+                AND buildType = #{buildType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取jobs详情 -->
+    <select id="getJobsPage" parameterType="object" resultType="JenkinsJobDO">
+        SELECT * FROM jenkins_jobs
+        <where>
+            <if test="jobName != null and jobName != ''">
+                jobName like "%" #{jobName} "%"
+            </if>
+            <if test="jobEnvType != -1">
+                AND jobEnvType = #{jobEnvType}
+            </if>
+            <if test="buildType != -1">
+                AND buildType = #{buildType}
+            </if>
+        </where>
+        ORDER BY jobName DESC, gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 获取job构建数目 -->
+    <select id="getJobBuildsSize" parameterType="object" resultType="_long">
+        SELECT count(*) from jenkins_job_builds
+        <where>
+            <if test="jobName != null and jobName != ''">
+                jobName like "%" #{jobName} "%"
+            </if>
+            <if test="buildNumber > 0">
+                AND buildNumber = #{buildNumber}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取job构建详情 -->
+    <select id="getJobBuildsPage" parameterType="object" resultType="JenkinsJobBuildDO">
+        SELECT * FROM jenkins_job_builds
+        <where>
+            <if test="jobName != null and jobName != ''">
+                jobName like "%" #{jobName} "%"
+            </if>
+            <if test="buildNumber > 0">
+                AND buildNumber = #{buildNumber}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC, jobName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="queryJobBuildsByJobNameAndBuildNumber" parameterType="object" resultType="JenkinsJobBuildDO">
+        SELECT * FROM jenkins_job_builds
+        WHERE jobName = #{jobName} AND buildNumber = #{buildNumber}
+    </select>
+
+
+    <select id="queryJobBuildsByQueue" parameterType="object" resultType="JenkinsJobBuildDO">
+        SELECT * FROM jenkins_job_builds
+        WHERE jobName = #{jobName} AND buildNumber = -1
+        ORDER BY gmtCreate
+        limit 1
+    </select>
+
+    <select id="queryJobBuildsById" parameterType="object" resultType="JenkinsJobBuildDO">
+        SELECT * FROM jenkins_job_builds
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryJobNoteByJobNameAndBuildNumber" parameterType="object" resultType="JobNoteDO">
+        SELECT * FROM jenkins_job_note
+        <where>
+            <if test="jobName != null and jobName != ''">
+                jobName = #{jobName}
+            </if>
+            <if test="buildNumber != -1">
+                AND buildNumber = #{buildNumber}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+    </select>
+
+    <select id="queryJobNote" parameterType="object" resultType="JobNoteDO">
+        SELECT * FROM jenkins_job_note
+        WHERE jobName = #{jobName}
+        AND buildNumber = #{buildNumber}
+        AND buildPhase = #{buildPhase}
+    </select>
+
+    <select id="queryRepositoryByUrl" parameterType="object" resultType="RepositoryDO">
+        SELECT * FROM repository
+        WHERE repositoryUrl = #{repositoryUrl}
+    </select>
+
+    <insert id="addRepository" parameterType="RepositoryDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO repository (
+        repositoryUrl,
+        repositoryType,
+        content
+        ) VALUES (
+        #{repositoryUrl},
+        #{repositoryType},
+        #{content}
+        );
+    </insert>
+
+    <select id="queryRefsByRepoId" parameterType="_long" resultType="RefsDO">
+        SELECT * FROM repository_refs
+        WHERE repositoryId = #{repositoryId}
+    </select>
+
+    <select id="queryRefsByRefAndRefType" parameterType="object" resultType="RefsDO">
+        SELECT * FROM repository_refs
+        WHERE ref = #{ref} AND refType = #{refType}
+    </select>
+
+    <delete id="delRefs" parameterType="_long">
+        DELETE FROM repository_refs WHERE id = #{id}
+    </delete>
+
+    <insert id="addRefs" parameterType="RefsDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO repository_refs (
+        repositoryId,
+        refType,
+        ref
+        ) VALUES (
+        #{repositoryId},
+        #{refType},
+        #{ref}
+        );
+    </insert>
+
+
+    <!-- 获取projects数目 -->
+    <select id="getProjectsSize" parameterType="object" resultType="_long">
+        SELECT count(*) from jenkins_projects
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName like "%" #{projectName} "%"
+            </if>
+            <if test="content != null and content != ''">
+                content like "%" #{content} "%"
+            </if>
+            <if test="buildType != -1">
+                AND buildType = #{buildType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取projects详情 -->
+    <select id="getProjectsPage" parameterType="object" resultType="JenkinsProjectsDO">
+        SELECT * FROM jenkins_projects
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName like "%" #{projectName} "%"
+            </if>
+            <if test="content != null and content != ''">
+                content like "%" #{content} "%"
+            </if>
+            <if test="buildType != -1">
+                AND buildType = #{buildType}
+            </if>
+        </where>
+        ORDER BY projectName DESC, gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="queryProjectsById" parameterType="_long" resultType="JenkinsProjectsDO">
+        SELECT * FROM jenkins_projects
+        WHERE id = #{id}
+    </select>
+
+
+    <insert id="addProjects" parameterType="JenkinsProjectsDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO jenkins_projects (
+        projectName,
+        content,
+        repositoryUrl,
+        buildType
+        ) VALUES (
+        #{projectName},
+        #{content},
+        #{repositoryUrl},
+        #{buildType}
+        );
+    </insert>
+
+    <update id="updateProjects" parameterType="JenkinsProjectsDO">
+        UPDATE jenkins_projects
+        SET projectName = #{projectName},
+        content = #{content},
+        repositoryUrl = #{repositoryUrl},
+        buildType = #{buildType}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delProjects" parameterType="_long">
+        DELETE FROM jenkins_projects WHERE id = #{id}
+    </delete>
+
+    <insert id="addBaseParam" parameterType="BaseParamDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO jenkins_projects_baseparameter (
+        projectId,
+        paramName,
+        paramValue,
+        paramType,
+        content
+        ) VALUES (
+        #{projectId},
+        #{paramName},
+        #{paramValue},
+        #{paramType},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateBaseParam" parameterType="BaseParamDO">
+        UPDATE jenkins_projects_baseparameter
+        SET paramName = #{paramName},
+        content = #{content},
+        paramValue = #{paramValue},
+        paramType = #{paramType}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delBaseParam" parameterType="_long">
+        DELETE FROM jenkins_projects_baseparameter WHERE id = #{id}
+    </delete>
+
+    <select id="queryBaseParamByProjectId" parameterType="_long" resultType="BaseParamDO">
+        SELECT * FROM jenkins_projects_baseparameter
+        WHERE projectId = #{projectId}
+        ORDER BY paramName DESC, gmtCreate DESC
+    </select>
+
+
+    <insert id="addProjectsEnv" parameterType="JenkinsProjectsEnvDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO jenkins_projects_env (
+        projectId,
+        envType,
+        jobsId,
+        content
+        ) VALUES (
+        #{projectId},
+        #{envType},
+        #{jobsId},
+        #{content}
+        );
+    </insert>
+
+    <select id="queryProjectsEnvByProjectId" parameterType="_long" resultType="JenkinsProjectsEnvDO">
+        SELECT * FROM jenkins_projects_env
+        WHERE projectId = #{projectId}
+        ORDER BY envType DESC
+    </select>
+
+
+    <select id="queryProjectsEnvByProjectIdAndEnvType" parameterType="_long" resultType="JenkinsProjectsEnvDO">
+        SELECT * FROM jenkins_projects_env
+        WHERE projectId = #{projectId}
+        AND envType = #{envType}
+    </select>
+
+    <select id="queryProjectsEnvById" parameterType="_long" resultType="JenkinsProjectsEnvDO">
+        SELECT * FROM jenkins_projects_env
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateProjectsEnv" parameterType="JenkinsProjectsEnvDO">
+        UPDATE jenkins_projects_env
+        SET jobsId = #{jobsId},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delProjectsEnv" parameterType="_long">
+        DELETE FROM jenkins_projects_env WHERE id = #{id}
+    </delete>
+
+    <select id="queryEnvParamByEnvId" parameterType="_long" resultType="JenkinsEnvParamDO">
+        SELECT * FROM jenkins_projects_env_parameter
+        WHERE envId = #{envId}
+    </select>
+
+    <select id="queryEnvParamByEnvIdAndParamName" parameterType="object" resultType="JenkinsEnvParamDO">
+        SELECT * FROM jenkins_projects_env_parameter
+        WHERE envId = #{envId}
+        AND paramName = #{paramName}
+    </select>
+
+    <insert id="addEnvParam" parameterType="JenkinsEnvParamDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO jenkins_projects_env_parameter (
+        envId,
+        paramName,
+        paramValue,
+        paramType,
+        content
+        ) VALUES (
+        #{envId},
+        #{paramName},
+        #{paramValue},
+        #{paramType},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateEnvParam" parameterType="JenkinsEnvParamDO">
+        UPDATE  jenkins_projects_env_parameter
+        SET paramValue = #{paramValue}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delEnvParam" parameterType="_long">
+        DELETE FROM  jenkins_projects_env_parameter WHERE id = #{id}
+    </delete>
+
+    <select id="queryJobUserByJobId" parameterType="_long" resultType="JobUserDO">
+        SELECT * FROM jenkins_job_user WHERE jobId = #{jobId}
+    </select>
+
+    <delete id="delJobUser" parameterType="_long">
+        DELETE FROM jenkins_job_user WHERE id = #{id}
+    </delete>
+
+    <insert id="addJobUser" parameterType="JobUserDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO jenkins_job_user (
+        jobId,
+        userId,
+        userType
+        ) VALUES (
+        #{jobId},
+        #{userId},
+        #{userType}
+        );
+    </insert>
+
+
+</mapper>

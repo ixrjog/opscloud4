@@ -1,0 +1,670 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.TodoDao">
+
+    <!-- 类目管理 -->
+
+    <!-- 新增类目 -->
+    <insert id="addTodoConfigItem" parameterType="TodoConfigDO">
+        INSERT INTO todo_config(
+            configName,
+            parentId,
+            roleId
+        ) VALUES (
+            #{configName},
+            #{parentId},
+            #{roleId}
+        );
+    </insert>
+
+    <!-- 更新类目 -->
+    <update id="updateTodoConfigById" parameterType="TodoConfigDO">
+        UPDATE todo_config
+        SET
+          configName = #{configName},
+          roleId = #{roleId}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除类目 -->
+    <update id="delTodoConfigById" parameterType="_long">
+        UPDATE todo_config
+        SET configStatus = 1
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询合适条件下的类目数目 -->
+    <select id="queryConfigItemSize" parameterType="object" resultType="_long">
+        SELECT count(*) FROM todo_config
+        <where>
+            <if test="queryName != null and queryName != ''">
+                configName LIKE "%" #{queryName} "%"
+            </if>
+            <if test="parent != -1">
+                AND parentId = #{parent}
+            </if>
+            <if test="valid != -1">
+                AND configStatus = #{valid}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询合适条件下的类目分页数据 -->
+    <select id="queryConfigItemPage" parameterType="object" resultType="TodoConfigDO">
+        SELECT * FROM todo_config
+        <where>
+            <if test="queryName != null and queryName != ''">
+                configName LIKE "%" #{queryName} "%"
+            </if>
+            <if test="parent != -1">
+                AND parentId = #{parent}
+            </if>
+            <if test="valid != -1">
+                AND configStatus = #{valid}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 查询指定id的类目信息 -->
+    <select id="queryConfigItemById" parameterType="_long" resultType="TodoConfigDO">
+        SELECT * FROM todo_config WHERE id = #{id}
+    </select>
+
+    <!-- 获取指定parentId的数目 -->
+    <select id="queryChildrenSizeByParentId" parameterType="_long" resultType="_long">
+        SELECT count(*) FROM todo_config WHERE parentId = #{id}
+    </select>
+
+    <!-- 查询指定id的子类目 -->
+    <select id="queryChildrenListById" parameterType="_long" resultType="TodoConfigDO">
+        SELECT * FROM todo_config WHERE parentId = #{id}
+    </select>
+
+    <!-- 类目管理 -->
+
+    <!-- 日常工单 -->
+
+    <!-- 新建工单 -->
+    <insert id="addTodoItem" parameterType="TodoDailyDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO todo_daily(
+            levelOne,
+            levelTwo,
+            sponsor,
+            privacy,
+            urgents,
+            contents,
+            feedbackContent,
+            todoStatus,
+            hasConfirm
+        ) VALUES (
+            #{levelOne},
+            #{levelTwo},
+            #{sponsor},
+            #{privacy},
+            #{urgents},
+            #{contents},
+            #{feedbackContent},
+            #{todoStatus},
+            #{hasConfirm}
+        );
+    </insert>
+
+    <!-- 更新工单 -->
+    <update id="updateTodoItem" parameterType="TodoDailyDO">
+        UPDATE todo_daily
+        SET
+            privacy = #{privacy},
+            urgents = #{urgents},
+            contents = #{contents},
+            feedbackContent = #{feedbackContent},
+            todoStatus = #{todoStatus},
+            hasConfirm = #{hasConfirm}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 查询工单数目 -->
+    <select id="queryTodoItemSize" parameterType="TodoDailyQueryDO" resultType="_long">
+        SELECT count(*) from todo_daily
+        <where>
+            <if test="levelOne > 0">
+                levelOne = #{levelOne}
+            </if>
+            <if test="levelTwo > 0">
+                AND levelTwo = #{levelTwo}
+            </if>
+            <if test="sponsor != 'all'">
+                AND sponsor = #{sponsor}
+            </if>
+            <if test="sponsor == 'all' and privacy == 0">
+                AND privacy = #{privacy}
+            </if>
+            <if test="sponsor == 'all' and privacy == 1">
+                AND (sponsor = #{nowUser} AND privacy = #{privacy})
+            </if>
+            <if test="sponsor != 'all' and privacy != -1">
+                AND privacy = #{privacy}
+            </if>
+            <if test="urgents != -1">
+                AND urgents = #{urgents}
+            </if>
+            <if test="todoStatus != -1">
+                AND todoStatus = #{todoStatus}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询工单分页数据 -->
+    <select id="queryTodoItemPage" parameterType="object" resultType="TodoDailyDO">
+        SELECT * FROM todo_daily
+        <where>
+            <if test="queryDO.levelOne > 0">
+                levelOne = #{queryDO.levelOne}
+            </if>
+            <if test="queryDO.levelTwo > 0">
+                AND levelTwo = #{queryDO.levelTwo}
+            </if>
+            <if test="queryDO.sponsor != 'all'">
+                AND sponsor = #{queryDO.sponsor}
+            </if>
+            <if test="queryDO.sponsor == 'all' and queryDO.privacy == 0">
+                AND privacy = #{queryDO.privacy}
+            </if>
+            <if test="queryDO.sponsor == 'all' and queryDO.privacy == 1">
+                AND (sponsor = #{queryDO.nowUser} AND privacy = #{queryDO.privacy})
+            </if>
+            <if test="queryDO.sponsor != 'all' and queryDO.privacy != -1">
+                AND privacy = #{queryDO.privacy}
+            </if>
+            <if test="queryDO.urgents != -1">
+                AND urgents = #{queryDO.urgents}
+            </if>
+            <if test="queryDO.todoStatus != -1">
+                AND todoStatus = #{queryDO.todoStatus}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增日常工单日志 -->
+    <insert id="addTodoDailyLog" parameterType="TodoDailyLogDO">
+        INSERT INTO todo_daily_log(
+            dailyId,
+            processUser,
+            dailyContent,
+            dailyFeedbackContent,
+            todoStatus,
+            sendNotify
+        ) VALUES (
+            #{dailyId},
+            #{processUser},
+            #{dailyContent},
+            #{dailyFeedbackContent},
+            #{todoStatus},
+            #{sendNotify}
+        );
+    </insert>
+
+    <!-- 查询日常订单日志 -->
+    <select id="queryTodoDailyLogByDailyId" parameterType="_long" resultType="TodoDailyLogDO">
+        SELECT * FROM todo_daily_log WHERE dailyId = #{dailyId}
+        ORDER BY gmtCreate DESC
+    </select>
+
+    <!-- 查询指定id的工单信息 -->
+    <select id="queryTodoById" parameterType="_long" resultType="TodoDailyDO">
+        SELECT * FROM todo_daily WHERE id = #{dailyId}
+    </select>
+
+    <!-- 日常工单 -->
+
+
+    <!-- 工单处理 -->
+
+    <!-- 查询满足合适规则的待处理工单集合数目 -->
+    <select id="queryProcessTodoDailySize" parameterType="object" resultType="_long">
+        SELECT count(*) FROM todo_daily
+        <where>
+            <if test="queryDO.levelOne > 0">
+                levelOne = #{queryDO.levelOne}
+            </if>
+            <if test="queryDO.levelTwo > 0">
+                AND levelTwo = #{queryDO.levelTwo}
+            </if>
+            AND levelOne IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="queryDO.privacy != -1">
+                AND privacy = #{queryDO.privacy}
+            </if>
+            <if test="queryDO.urgents != -1">
+                AND urgents = #{queryDO.urgents}
+            </if>
+            <if test="queryDO.todoStatus != -1">
+                AND todoStatus = #{queryDO.todoStatus}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询满足合适规则的待处理工单集合分页数据 -->
+    <select id="queryProcessTodoDailyPage" parameterType="object" resultType="TodoDailyDO">
+        SELECT * FROM todo_daily
+        <where>
+            <if test="queryDO.levelOne > 0">
+                levelOne = #{queryDO.levelOne}
+            </if>
+            <if test="queryDO.levelTwo > 0">
+                AND levelTwo = #{queryDO.levelTwo}
+            </if>
+            AND levelOne IN
+            <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            <if test="queryDO.privacy != -1">
+                AND privacy = #{queryDO.privacy}
+            </if>
+            <if test="queryDO.urgents != -1">
+                AND urgents = #{queryDO.urgents}
+            </if>
+            <if test="queryDO.todoStatus != -1">
+                AND todoStatus = #{queryDO.todoStatus}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 查询满足指定角色集合的配置项id集合 -->
+    <select id="queryTodoConfigListByRoles" parameterType="object" resultType="_long">
+        SELECT DISTINCT id FROM todo_config WHERE roleId IN
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </select>
+
+    <!-- 工单组 -->
+    <select id="queryTodoGroup" resultType="TodoGroupDO">
+        SELECT * FROM todo_group
+    </select>
+
+    <!-- 工单 -->
+    <select id="queryTodo" resultType="TodoDO">
+        SELECT * FROM todo
+    </select>
+
+    <select id="queryTodoInfoById" parameterType="_long" resultType="TodoDO">
+        SELECT * FROM todo WHERE id = #{id}
+    </select>
+
+    <select id="queryTodoByGroupId" parameterType="_long" resultType="TodoDO">
+        SELECT * FROM todo WHERE todoGroupId = #{todoGroupId}
+    </select>
+
+    <select id="queryTodoDetailById" parameterType="object" resultType="TodoDetailDO">
+        SELECT * FROM todo_detail
+        WHERE id = #{id}
+    </select>
+
+    <select id="queryTodoDetail" parameterType="object" resultType="TodoDetailDO">
+        SELECT * FROM todo_detail
+        WHERE initiatorUserId = #{initiatorUserId}
+        AND todoId = #{todoId}
+        AND todoStatus = #{todoStatus}
+    </select>
+
+    <select id="queryMyTodoJob" parameterType="object" resultType="TodoDetailDO">
+        SELECT * FROM todo_detail
+        WHERE initiatorUsername = #{initiatorUsername}
+        AND ( todoStatus = 1 OR todoStatus = 2 )
+    </select>
+
+    <select id="queryCompleteTodoJob" parameterType="object" resultType="TodoDetailDO">
+        SELECT * FROM todo_detail
+        WHERE initiatorUsername = #{initiatorUsername}
+        AND todoStatus >= 9
+        ORDER BY gmtCreate DESC
+        limit 5
+    </select>
+
+    <select id="queryAllTodoJob" resultType="TodoDetailDO">
+        SELECT * FROM todo_detail
+        WHERE todoStatus = 1 OR todoStatus = 2
+    </select>
+
+    <select id="queryAllCompleteTodoJob" resultType="TodoDetailDO">
+        SELECT * FROM todo_detail
+        WHERE todoStatus >= 9
+        ORDER BY gmtCreate DESC
+        limit 10
+    </select>
+
+    <delete id="delTodoDetail" parameterType="_long">
+        DELETE FROM todo_detail WHERE id = #{id}
+    </delete>
+
+    <insert id="addTodoDetail" parameterType="TodoDetailDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO todo_detail(
+        initiatorUserId,
+        initiatorUsername,
+        todoId,
+        assigneeUserId,
+        assigneeUsername,
+        approvalUserId,
+        approvalUsername,
+        todoStatus
+        ) VALUES (
+        #{initiatorUserId},
+        #{initiatorUsername},
+        #{todoId},
+        #{assigneeUserId},
+        #{assigneeUsername},
+        #{approvalUserId},
+        #{approvalUsername},
+        #{todoStatus}
+        );
+    </insert>
+
+    <update id="updateTodoDetail" parameterType="TodoDetailDO">
+        UPDATE todo_detail
+        SET
+        todoStatus = #{todoStatus},
+        assigneeUserId = #{assigneeUserId},
+        assigneeUsername = #{assigneeUsername},
+        approvalUserId = #{approvalUserId},
+        approvalUsername = #{approvalUsername}
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="queryTodoKeyboxDetail" parameterType="object" resultType="TodoKeyboxDetailDO">
+        SELECT * FROM todo_keybox_detail
+        WHERE todoDetailId = #{todoDetailId}
+        AND serverGroupId = #{serverGroupId}
+    </select>
+
+    <select id="queryTodoKeyboxDetailByTodoDetailId" parameterType="_long" resultType="TodoKeyboxDetailDO">
+        SELECT * FROM todo_keybox_detail
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <insert id="addTodoKeyboxDetail" parameterType="TodoKeyboxDetailDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_keybox_detail(
+        todoDetailId,
+        serverGroupId,
+        serverGroupName,
+        ciAuth,
+        ciUserGroupId,
+        ciUserGroupName
+        ) VALUES (
+        #{todoDetailId},
+        #{serverGroupId},
+        #{serverGroupName},
+        #{ciAuth},
+        #{ciUserGroupId},
+        #{ciUserGroupName}
+        );
+    </insert>
+
+    <delete id="delTodoKeyboxDetail" parameterType="_long">
+        DELETE FROM todo_keybox_detail WHERE id = #{id}
+    </delete>
+
+    <select id="queryTodoCiUserGroupDetailByTodoDetailId" parameterType="_long" resultType="TodoCiUserGroupDetailDO">
+        SELECT * FROM todo_ci_usergroup_detail
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <select id="queryTodoSystemAuthDetailByTodoDetailId" parameterType="_long" resultType="TodoSystemAuthDetailDO">
+        SELECT * FROM todo_system_auth_detail
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <select id="queryTodoSystemAuthDetailById" parameterType="_long" resultType="TodoSystemAuthDetailDO">
+        SELECT * FROM todo_system_auth_detail
+        WHERE id = #{id}
+    </select>
+
+    <insert id="addTodoCiUserGroupDetail" parameterType="TodoCiUserGroupDetailDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_ci_usergroup_detail(
+        todoDetailId,
+        ciUserGroupId,
+        ciUserGroupName,
+        envType,
+        serverGroupId,
+        serverGroupName,
+        processStatus
+        ) VALUES (
+        #{todoDetailId},
+        #{ciUserGroupId},
+        #{ciUserGroupName},
+        #{envType},
+        #{serverGroupId},
+        #{serverGroupName},
+        #{processStatus}
+        );
+    </insert>
+
+    <insert id="addTodoSystemAuthDetail" parameterType="TodoSystemAuthDetailDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_system_auth_detail(
+        todoDetailId,
+        name,
+        systemType,
+        content,
+        authed,
+        need,
+        processStatus
+        ) VALUES (
+        #{todoDetailId},
+        #{name},
+        #{systemType},
+        #{content},
+        #{authed},
+        #{need},
+        #{processStatus}
+        );
+    </insert>
+
+    <delete id="delTodoCiUserGroupDetail" parameterType="_long">
+        DELETE FROM todo_ci_usergroup_detail WHERE id = #{id}
+    </delete>
+
+    <!--更新 处理状态processStatus-->
+    <update id="updateTodoKeyboxDetail" parameterType="TodoKeyboxDetailDO">
+        UPDATE todo_keybox_detail
+        SET
+        processStatus = #{processStatus}
+        WHERE id = #{id}
+    </update>
+
+    <!--更新 处理状态processStatus-->
+    <update id="updateTodoCiUserGroupDetail" parameterType="TodoCiUserGroupDetailDO">
+        UPDATE todo_ci_usergroup_detail
+        SET
+        processStatus = #{processStatus}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateTodoSystemAuthDetail" parameterType="TodoSystemAuthDetailDO">
+        UPDATE todo_system_auth_detail
+        SET
+        need = #{need},
+        processStatus = #{processStatus}
+        WHERE id = #{id}
+    </update>
+
+
+    <insert id="addTodoVpnDetail" parameterType="TodoVpnDetailDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_vpn_detail(
+        todoDetailId,
+        ldapGroup,
+        need,
+        processStatus
+        ) VALUES (
+        #{todoDetailId},
+        #{ldapGroup},
+        #{need},
+        #{processStatus}
+        );
+    </insert>
+
+    <update id="updateTodoVpnDetail" parameterType="TodoVpnDetailDO">
+        UPDATE todo_vpn_detail
+        SET
+        need = #{need},
+        processStatus = #{processStatus}
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryTodoVpnDetailByTodoDetailId" parameterType="_long" resultType="TodoVpnDetailDO">
+        SELECT * FROM todo_vpn_detail
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <select id="queryTodoVpnDetailById" parameterType="_long" resultType="TodoVpnDetailDO">
+        SELECT * FROM todo_vpn_detail
+        WHERE id = #{id}
+    </select>
+
+    <!-- 按todoDetailId查询todoProperty -->
+    <select id="queryTodoPropertyByTodoDetailId" parameterType="object" resultType="TodoPropertyDO">
+        SELECT * FROM todo_property
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <!-- 按todoDetailId和todoKey查询todoProperty -->
+    <select id="queryTodoPropertyByTodoDetailIdAndTodoKey" parameterType="object" resultType="TodoPropertyDO">
+        SELECT * FROM todo_property
+        WHERE todoDetailId = #{todoDetailId} AND todoKey = #{todoKey}
+    </select>
+
+    <insert id="addTodoProperty" parameterType="TodoPropertyDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_property(
+        todoDetailId,
+        todoId,
+        todoName,
+        todoKey,
+        todoValue
+        ) VALUES (
+        #{todoDetailId},
+        #{todoId},
+        #{todoName},
+        #{todoKey},
+        #{todoValue}
+        );
+    </insert>
+
+    <delete id="delTodoPropertyById" parameterType="_long">
+        DELETE FROM todo_property WHERE id = #{id}
+    </delete>
+
+    <insert id="addTodoBuilderPlanDetail" parameterType="TodoBuilderPlanDetailDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_builder_plan_detail(
+        todoDetailId,
+        envType,
+        branch,
+        buildTool,
+        needEnvParams,
+        processStatus,
+        envParams,
+        content
+        ) VALUES (
+        #{todoDetailId},
+        #{envType},
+        #{branch},
+        #{buildTool},
+        #{needEnvParams},
+        #{processStatus},
+        #{envParams},
+        #{content}
+        );
+    </insert>
+
+    <delete id="delTodoBuilderPlanDetail" parameterType="_long">
+        DELETE FROM todo_builder_plan_detail WHERE id = #{id}
+    </delete>
+
+    <update id="updateTodoBuilderPlanDetail" parameterType="TodoBuilderPlanDetailDO">
+        UPDATE todo_builder_plan_detail
+        SET
+        envType = #{envType},
+        branch = #{branch},
+        envParams = #{envParams},
+        processStatus = #{processStatus},
+        content= #{content}
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryTodoBuilderPlanDetailByTodoDetailId" parameterType="_long" resultType="TodoBuilderPlanDetailDO">
+        SELECT * FROM todo_builder_plan_detail
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <select id="queryTodoBuilderPlanDetailByTodoDetailIdAndEnvType" parameterType="object"
+            resultType="TodoBuilderPlanDetailDO">
+        SELECT * FROM todo_builder_plan_detail
+        WHERE todoDetailId = #{todoDetailId} AND envType = #{envType}
+    </select>
+
+    <select id="queryTodoNewServerDetailByTodoDetailId" parameterType="_long" resultType="TodoNewServerDetailDO">
+        SELECT * FROM todo_new_server_detail
+        WHERE todoDetailId = #{todoDetailId}
+    </select>
+
+    <delete id="delTodoNewServerDetail" parameterType="_long">
+        DELETE FROM todo_new_server_detail WHERE id = #{id}
+    </delete>
+
+    <insert id="addTodoNewServerDetail" parameterType="TodoNewServerDetailDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO todo_new_server_detail(
+        todoDetailId,
+        envType,
+        instanceType,
+        zoneType,
+        allocateIp,
+        processStatus,
+        dataDiskSize,
+        serverCnt,
+        content
+        ) VALUES (
+        #{todoDetailId},
+        #{envType},
+        #{instanceType},
+        #{zoneType},
+        #{allocateIp},
+        #{processStatus},
+        #{dataDiskSize},
+        #{serverCnt},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateTodoNewServerDetail" parameterType="TodoNewServerDetailDO">
+        UPDATE todo_new_server_detail
+        SET
+        instanceType = #{instanceType},
+        zoneType = #{zoneType},
+        allocateIp = #{allocateIp},
+        processStatus = #{processStatus},
+        dataDiskSize = #{dataDiskSize},
+        serverCnt = #{serverCnt},
+        content= #{content}
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryTodoNewServerDetailByTodoDetailIdAndEnvType" parameterType="object"
+            resultType="TodoNewServerDetailDO">
+        SELECT * FROM todo_new_server_detail
+        WHERE todoDetailId = #{todoDetailId} AND envType = #{envType}
+    </select>
+
+</mapper>

@@ -1,0 +1,102 @@
+<div class="container w-auto-xs" ng-controller="accessArtifactsCtrl" ng-init="app.settings.container = false;">
+    <div class="m-b-lg">
+        <a href class="navbar-brand block m-t" style="color: #286090">Artifacts详情</a>
+        <button type="button" class="btn glyphicon glyphicon-arrow-left pull-left" ng-click="goBack()"></button>
+    </div>
+
+    <div class="m-b-lg">
+        <div class="wrapper text-center">
+        </div>
+
+        <div class="panel" style="margin-top: 5px;">
+            <div class="panel-body">
+                <div class="wrapper-md">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">任务名称:</span>
+                                <div class="col-md-9">
+                                    <span>{{artifactsItem.jobName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">任务类型:</span>
+                                <div class="col-md-9">
+                                    <b ng-if="artifactsItem.buildType == 0">前端构建</b>
+                                    <b ng-if="artifactsItem.buildType == 1">Android构建</b>
+                                    <b ng-if="artifactsItem.buildType == 2">iOS构建</b>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">构建时间:</span>
+                                <div class="col-md-9">
+                                    <span>{{artifactsItem.gmtCreate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">操作用户:</span>
+                                <div class="col-md-9">
+                                    <span>{{artifactsItem.username}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">内网下载地址:</span>
+                                <div class="col-md-9">
+                                    <a title="download" ng-href="{{artifactsItem.qrcode}}" style="color: #286090; font-size:3em;">下载</a >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">CDN下载地址:</span>
+                                <div class="col-md-9">
+                                    <a title="download" ng-href="{{artifactsItem.cdnUrl}}" style="color: #286090; font-size:1em;">{{artifactsItem.cdnUrl}}</a >
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">本页二维码:</span>
+                                <div class="col-md-9">
+                                    <qrcode data="https://work.52shangou.com/#/access/artifacts?id={{artifactsItem.id}}"
+                                            href="https://work.52shangou.com/#/access/artifacts?id={{artifactsItem.id}}"></qrcode>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">帮助文档:</span>
+                                <div class="col-md-9">
+                                    <a title="http://wiki.51xianqu.net/pages/viewpage.action?pageId=23495507"
+                                            ng-href="http://wiki.51xianqu.net/pages/viewpage.action?pageId=23495507"
+                                       style="color: #286090">http://wiki.51xianqu.net/pages/viewpage.action?pageId=23495507</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">备注:</span>
+                                <div class="col-md-9">
+                                    <span>下载安装ipa需要把设备ID发给蔡国。如果遇到不能安装的问题，请联系蔡国!</span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,105 @@
+<div class="modal-header">
+    <h3 class="modal-title">网段列表</h3>
+</div>
+<div class="modal-body">
+    <form class="form-inline" role="form">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">IP网络段</span>
+                <input type="text" class="form-control" ng-model="ipNetwork" placeholder="IP网络段">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">IP类型</span>
+                <select class="form-control" ng-model="nowIpType" ng-options="type.code as type.name for type in ipType">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-default" ng-click="doQuery()">搜索</button>
+            <button type="button" class="btn btn-info" ng-click="reSet()">重置</button>
+        </div>
+    </form>
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>IP段</td>
+                <td>网关</td>
+                <td>dns1</td>
+                <td>IP类型</td>
+                <td class="col-md-2" ng-if="contains(authPoint, '/servergroup/ipgroup/add')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <td>{{item.ipNetwork}}</td>
+                <td>{{item.gateWay}}</td>
+                <td>{{item.dnsOne}}</td>
+                <td>
+                    <span ng-if="item.ipType == 0">公网</span>
+                    <span ng-if="item.ipType == 1">内网</span>
+                </td>
+                <td ng-if="contains(authPoint, '/servergroup/ipgroup/add')">
+                    <button type="button" class="btn btn-xs btn-success" ng-click="addItem(item)">加入</button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="6">
+                    <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div style="margin-top: 5px;">
+        <div>
+            <h3>已加入列表</h3>
+            <span ng-if="joinedPageData.length == 0">
+                暂无数据
+            </span>
+        </div>
+
+        <table class="table table-hover table-bordered table-striped" ng-if="joinedPageData.length != 0">
+            <thead>
+            <tr>
+                <td>IP段</td>
+                <td>网关</td>
+                <td>dns1</td>
+                <td>IP类型</td>
+                <td>加入时间</td>
+                <td class="col-md-2" ng-if="contains(authPoint, '/servergroup/ipgroup/del')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in joinedPageData">
+                <td>{{item.ipNetwork}}</td>
+                <td>{{item.gateWay}}</td>
+                <td>{{item.dnsOne}}</td>
+                <td>
+                    <span ng-if="item.ipType == 0">公网</span>
+                    <span ng-if="item.ipType == 1">内网</span>
+                </td>
+                <td>{{item.gmtCreate}}</td>
+                <td ng-if="contains(authPoint, '/servergroup/ipgroup/del')">
+                    <button type="button" class="btn btn-xs btn-warning" ng-click="delItem(item)">移除</button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="6">
+                    <ul style="margin: 0px; float: right;" uib-pagination total-items="joinedTotalItems" ng-model="joinedCurrentPage" items-per-page="joinedPageLength" max-size="10" ng-change="joinedPageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+    <div ng-show="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

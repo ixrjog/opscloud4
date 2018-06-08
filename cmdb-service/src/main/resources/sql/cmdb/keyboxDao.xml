@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.KeyboxDao">
+
+    <!-- 获取应用密钥 -->
+    <select id="getApplicationKey" resultType="ApplicationKeyDO">
+        SELECT * FROM keybox_application_key limit 1;
+    </select>
+
+    <!-- 更新堡垒机公共密钥 -->
+    <update id="updateApplicationKey" parameterType="ApplicationKeyDO">
+        UPDATE keybox_application_key
+        SET
+            publicKey = #{publicKey},
+            privateKey = #{privateKey}
+        WHERE
+            id = #{id}
+    </update>
+
+
+    <!-- 添加用户可访问堡垒机 -->
+    <insert id="addUserServer" parameterType="KeyboxUserServerDO">
+        INSERT ignore INTO keybox_user_server(
+            username,
+            serverGroupId
+        ) VALUES (
+            #{username},
+            #{serverGroupId}
+        );
+    </insert>
+
+    <!-- 更新用户服务器组关系 -->
+    <update id="updateUserServer" parameterType="KeyboxUserServerDO">
+        UPDATE keybox_user_server
+        SET
+            username = #{username},
+            serverGroupId = #{serverGroupId}
+        WHERE
+            id = #{id}
+    </update>
+
+    <!-- 删除用户可访问的堡垒机 -->
+    <delete id="delUserServer" parameterType="KeyboxUserServerDO">
+        DELETE FROM keybox_user_server
+        <where>
+            username = #{username}
+            <if test="serverGroupId > 0">
+                AND serverGroupId = #{serverGroupId}
+            </if>
+        </where>
+    </delete>
+
+    <!-- 获取指定条件的堡垒机列表数目 -->
+    <select id="getUserServerSize" parameterType="KeyboxUserServerDO" resultType="_long">
+        SELECT count(*) FROM keybox_user_server
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="username != null and username != ''">
+                AND username = #{username}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取指定服务器组的堡垒机授权用户数量 -->
+    <select id="getServerGroupSize" parameterType="_long" resultType="_int">
+        SELECT count(*) FROM keybox_user_server
+        <where>
+            serverGroupId = #{serverGroupId}
+        </where>
+    </select>
+
+    <!-- 获取指定条件的堡垒机列表 -->
+    <select id="getUserServerPage" parameterType="object" resultType="KeyboxUserServerDO">
+        SELECT * FROM keybox_user_server
+        <where>
+            <if test="userServer.serverGroupId > 0">
+                serverGroupId = #{userServer.serverGroupId}
+            </if>
+            <if test="userServer.username != null and userServer.username != ''">
+                AND username = #{userServer.username}
+            </if>
+        </where>
+        order BY serverGroupId DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 获取用户所有的服务器组集合 -->
+    <select id="getGroupListByUsername" parameterType="string" resultType="ServerGroupDO">
+        SELECT a0.* FROM oc_server_group a0 JOIN (
+        SELECT serverGroupId FROM keybox_user_server
+        WHERE username = #{username}
+        ) a1 on a0.id = a1.serverGroupId
+    </select>
+
+    <!-- 获取堡垒机服务器数目 -->
+    <select id="getBoxServerSize" parameterType="object" resultType="_long">
+        SELECT count(DISTINCT a2.id)
+        FROM keybox_user_server a0
+        JOIN oc_server_group a1 ON a0.serverGroupId = a1.id
+        JOIN oc_server a2 ON a1.id = a2.serverGroupId
+        WHERE username = #{username}
+        <if test="serverGroupId > 0">
+            AND a0.serverGroupId = #{serverGroupId}
+        </if>
+        <if test="envType != -1">
+            AND envType = #{envType}
+        </if>
+    </select>
+
+    <!-- 获取堡垒机服务器分页数据 -->
+    <select id="getBoxServerPage" parameterType="object" resultType="ServerDO">
+        SELECT a2.*
+        FROM keybox_user_server a0
+        JOIN oc_server_group a1 ON a0.serverGroupId = a1.id
+        JOIN oc_server a2 ON a1.id = a2.serverGroupId
+        WHERE username = #{username}
+        <if test="serverGroupId > 0">
+            AND a0.serverGroupId = #{serverGroupId}
+        </if>
+        <if test="envType != -1">
+            AND envType = #{envType}
+        </if>
+        ORDER BY a2.serverGroupId
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!--  按serverGroupId查询 -->
+    <select id="getUserServerByGroupId" parameterType="_long" resultType="KeyboxUserServerDO">
+        SELECT * FROM keybox_user_server
+        <where>
+            serverGroupId = #{serverGroupId}
+        </where>
+    </select>
+
+    <!--  查询所有数据 -->
+    <select id="getKeyboxUserServerAll" resultType="KeyboxUserServerDO">
+        SELECT * FROM keybox_user_server
+    </select>
+
+
+    <!-- 堡垒机服务器组用户管理分页数据查询 -->
+    <select id="getBoxGroupUserPage" parameterType="object" resultType="KeyboxUserServerDO">
+        SELECT * FROM keybox_user_server
+        WHERE serverGroupId = #{serverGroupId}
+        order BY username DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!--插入堡垒机使用统计-->
+    <insert id="addKeyboxStatus" parameterType="KeyboxLoginStatusDO">
+        INSERT INTO keybox_login_status(
+        userId,
+        username,
+        serverId,
+        loginType
+        ) VALUES (
+        #{userId},
+        #{username},
+        #{serverId},
+        #{loginType}
+        );
+    </insert>
+
+    <!--统计堡垒机中登陆最多的服务器Top10-->
+    <select id="statusKeyboxServer" resultType="KeyboxServerVO">
+       SELECT statusTab.serverId ,serverTab.serverName, serverTab.envType, serverTab.serialNumber, serverTab.insideIp, COUNT(*) AS cnt
+       FROM keybox_login_status AS statusTab
+       INNER JOIN oc_server AS serverTab ON  statusTab.serverId = serverTab.id
+       GROUP BY serverId
+       ORDER BY cnt DESC, serverTab.serverName, serverTab.envType DESC, serverTab.serialNumber
+       limit 10
+    </select>
+
+    <!--统计使用堡垒机最多的用户Top10-->
+    <select id="statusKeyboxUser" resultType="KeyboxUserVO">
+       SELECT username,COUNT(*) AS cnt
+       FROM keybox_login_status
+       GROUP BY username
+       ORDER BY cnt DESC
+       limit 10;
+    </select>
+
+    <select id="getKeyboxAuthedUserCnt" resultType="_int">
+       SELECT COUNT(*) AS cnt FROM cmdb_user WHERE authed = 1;
+    </select>
+
+    <select id="getKeyboxLoginCnt" resultType="_int">
+      SELECT COUNT(*) AS cnt FROM keybox_login_status;
+    </select>
+
+    <select id="getLastLogin" parameterType="_int" resultType="KeyboxLoginStatusDO">
+      SELECT * FROM keybox_login_status
+      WHERE loginType = #{loginType}
+      ORDER BY gmtCreate DESC
+      limit 10;
+    </select>
+
+
+    <select id="statusKeyboxLoginByCnt" parameterType="_int" resultType="KeyboxLoginChartsVO">
+        SELECT DATE_FORMAT(gmtCreate,'%Y-%m-%d') AS dateCat,
+        sum(case when loginType=0 then 1 else 0 end) as keyboxCnt,
+        sum(case when loginType=1 then 1 else 0 end) as getwayCnt
+        FROM keybox_login_status
+        WHERE DATE_SUB(CURDATE(), INTERVAL #{cnt} DAY) &lt;= date(gmtCreate)
+        GROUP BY dateCat
+    </select>
+
+
+</mapper>
+

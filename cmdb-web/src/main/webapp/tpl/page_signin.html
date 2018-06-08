@@ -1,0 +1,33 @@
+<div class="container w-xxl w-auto-xs" ng-controller="loginController" ng-init="app.settings.container = false;">
+    <!--<a href class="navbar-brand block m-t">{{app.name}}</a>-->
+    <a href class="navbar-brand block m-t">OpsCloud</a>
+    <div class="m-b-lg">
+        <div class="wrapper text-center">
+            <strong>运维管理平台</strong>
+        </div>
+
+        <form name="form" class="form-validation col-md-12">
+            <div class="text-danger wrapper text-center" ng-show="authError">
+                {{authError}}
+            </div>
+            <div class="list-group list-group-sm">
+                <div class="list-group-item">
+                    <input type="text" placeholder="Username" class="form-control no-border" ng-model="user.userName"
+                           required>
+                </div>
+                <div class="list-group-item">
+                    <input type="password" placeholder="Password" class="form-control no-border" ng-model="user.pwd"
+                           required>
+                </div>
+            </div>
+            <button type="submit" class="btn btn-lg col-md-12"
+                    style="background-color: #00af00 ;color: white;"
+                    ng-click="login()" ng-disabled="user.userName == '' || user.pwd == ''">
+                <i class="icon icon-login" ng-show="!btnDoLogin"></i>
+                <i class="fa fa-spin fa-spinnery" ng-show="btnDoLogin"></i>
+                Login
+            </button>
+        </form>
+    </div>
+    <div class="text-center" ng-include="'tpl/blocks/page_footer.html'"></div>
+</div>

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.SystemDao">
+
+    <!-- 新增系统 -->
+    <insert id="addSystem" parameterType="SystemDO">
+        INSERT ignore INTO cmdb_systems(
+            systemName,
+            systemUrl,
+            imgUrl,
+            systemDesc,
+            owner
+        ) VALUES (
+            #{systemName},
+            #{systemUrl},
+            #{imgUrl},
+            #{systemDesc},
+            #{owner}
+        );
+    </insert>
+
+    <!-- 更新系统 -->
+    <update id="updateSystem" parameterType="SystemDO">
+        UPDATE cmdb_systems
+        SET imgUrl = #{imgUrl},
+        systemUrl = #{systemUrl},
+        systemDesc = #{systemDesc},
+        owner = #{owner}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定系统 -->
+    <delete id="delSystemById" parameterType="_long">
+        DELETE FROM cmdb_systems WHERE id = #{id}
+    </delete>
+
+    <!-- 模糊查询匹配名称的系统列表数目 -->
+    <select id="querySystemsByNameSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM cmdb_systems WHERE systemName LIKE "%" #{systemName} "%"
+    </select>
+
+    <!-- 模糊查询匹配名称的系统列表分页数据 -->
+    <select id="querySystemByNamePage" parameterType="object" resultType="SystemDO">
+        SELECT * FROM cmdb_systems WHERE systemName LIKE "%" #{systemName} "%"
+        limit #{pageStart}, #{pageLength}
+    </select>
+</mapper>

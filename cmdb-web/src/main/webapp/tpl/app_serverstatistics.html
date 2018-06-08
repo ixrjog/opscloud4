@@ -1,0 +1,151 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">统计</h1>
+                    <small class="text-muted">服务器统计</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="服务器成本">
+                    <div class="panel panel-default" ng-controller="serverstatisticsCtrl">
+                        <div class="panel-body">
+
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">投产年</span>
+                                        <select class="form-control" ng-model="nowYear"
+                                                ng-options="year.code as year.name for year in serverCreateYear">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">投产月</span>
+                                        <select class="form-control" ng-model="nowMonth"
+                                                ng-options="month.code as month.name for month in serverCreateMonth">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span class="glyphicon glyphicon-search"></span>搜索</button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span class="glyphicon glyphicon-repeat"></span>重置</button>
+                                </div>
+                            </form>
+
+                            <table class="table table-hover table-bordered table-striped" border=1>
+                                <tr>
+                                    <td rowspan=2>本月新增汇总</td>
+                                    <th>服务器总数</th>
+                                    <th>CPU总核数</th>
+                                    <th>内存总数</th>
+                                    <th>预估总成本(月)</th>
+                                </tr>
+                                <tr>
+                                    <td>{{serverCostData.cnt}}台</td>
+                                    <td>{{serverCostData.cpuCnt}}核</td>
+                                    <td>{{serverCostData.memoryCnt/1024}}GB</td>
+                                    <td>{{serverCostData.cost}}元</td>
+                                </tr>
+
+                                <tr>
+                                    <td rowspan=2>ECS服务器汇总</td>
+                                    <th>Ecs服务器总数</th>
+                                    <th>EcsCpu总核数</th>
+                                    <th>Ecs内存总数</th>
+                                    <th>Ecs带宽总数</th>
+                                </tr>
+                                <tr>
+                                    <td>{{ecsData.cnt}}台</td>
+                                    <td>{{ecsData.cpuCnt}}核</td>
+                                    <td>{{ecsData.memoryCnt/1024}}GB</td>
+                                    <td>{{ecsData.bandwidthCnt}}Mbps</td>
+                                </tr>
+                                <tr>
+                                    <td rowspan=2>VM服务器汇总</td>
+                                    <th>Vm服务器总数</th>
+                                    <th>VmCpu总核数</th>
+                                    <th>Vm内存总数</th>
+                                    <th>资源利用率</th>
+                                </tr>
+                                <tr>
+                                    <td>{{vmData.cnt}}台</td>
+                                    <td>{{vmData.cpuCnt}}核</td>
+                                    <td>{{vmData.memoryCnt/1024}}GB</td>
+                                    <td>
+                                        <uib-progressbar class="progress-striped active" ng-show="vmData.rate != -1" value="vmData.rate"
+                                                         type="{{(vmData.rate < 70 ? 'success' : (vmData.rate < 85 ? 'info' : 'danger'))}}">{{vmData.rate}}%</uib-progressbar>
+                                    </td>
+                                </tr>
+                            </table>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>名称</td>
+                                                <td>描述</td>
+                                                <td>类型</td>
+                                                <td>cpu</td>
+                                                <td>内存</td>
+                                                <td>预估成本(月)</td>
+                                                <td>投产日期</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>{{item.serverName}}</td>
+                                                <td>{{item.content}}</td>
+                                                <td>
+                                                    <b style="color: #449d44" ng-if="item.serverType == 1">VM</b>
+                                                    <b style="color: #d9534f" ng-if="item.serverType == 0">物理机</b>
+                                                    <b style="color: #286090" ng-if="item.serverType == 2">ECS</b>
+                                                </td>
+                                                <td>{{item.cpu}}</td>
+                                                <td>
+                                                    <span ng-if="item.memory < 8192">{{item.memory/1024}}GB</span>
+                                                    <b style="color: #286090" ng-if="item.memory >= 8192">{{item.memory/1024}}GB</b>
+                                                </td>
+                                                <td>{{item.cost}}元</td>
+                                                <td>{{item.gmtCreate}}</td>
+                                            </tr>
+                                            </tbody>
+                                            <!--<tfoot>-->
+                                            <!--<tr>-->
+                                            <!--<td colspan="14">-->
+                                            <!--<ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged()" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>-->
+                                            <!--</td>-->
+                                            <!--</tr>-->
+                                            <!--</tfoot>-->
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

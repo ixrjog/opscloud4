@@ -1,0 +1,857 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12" ng-controller="ansibleVersionCtrl">
+                    <h1 class="m-n font-thin h3 text-black">Ansible Task
+                        <button ng-click="ansibleVersion()"
+                                class="btn btn-xs"
+                                style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                            <span class="icon icon-info"></span> Version
+                        </button>
+                    </h1>
+                    <small class="text-muted">服务器批量运维</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+
+                <uib-tab index="0" heading="Task Cmd">
+                    <div class="panel panel-default" ng-controller="serverTaskCmdCtrl">
+                        <div class="panel-body">
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label"><span
+                                            style="color: #ec2121;">*</span>服务器组</label>
+                                    <div class="col-lg-5">
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                                                   ng-change="changeServerGroup()">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size:1em;">&nbsp;</div>
+
+
+                            <!--<p style="background-color:#2e6da4;color: white">服务器列表:</p>-->
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">服务器列表</div>
+                                <div class="form-group">
+
+                                    <!--<form class="form-inline" role="form" style="background-color: #2e6da4">-->
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="allChoose" ng-click="chooseAllItem()"><b
+                                            style="color: #b92c28"> all</b>
+                                    </div>
+
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.prod" ng-click="chooseEnv(4)"><b
+                                            style="color: #d9534f"> prod</b>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.back" ng-click="chooseEnv(6)"><b
+                                            style="color: #286090"> back</b>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.gray" ng-click="chooseEnv(3)"><b
+                                            style="color: #ec971f"> gray</b>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.daily" ng-click="chooseEnv(2)"><b
+                                            style="color: #449d44"> daily</b>
+                                    </div>
+                                    <!--</form>-->
+                                </div>
+                                <table class="table" style="margin-top: 5px;">
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData" class="col-md-4">
+                                        <td class="col-md-12">
+                                            <input type="checkbox" ng-model="item.choose"><b
+                                                style="color: #286090 ;margin-left: 10px;">{{item.serverName}}</b>-{{item.serialNumber}}
+                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>@{{item.insideIP.ip}}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="9">
+                                            <ul style="margin: 0px; float: left;" uib-pagination
+                                                total-items="totalItems"
+                                                ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                <!--<div class="panel-footer">Panel footer</div>-->
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label">
+                                        <span style="color: #ec2121;">*</span>执行指令</label>
+                                    <div class="col-lg-9">
+                                        <input type="text" class="form-control" placeholder="执行指令"
+                                               ng-model="cmd">
+                                    </div>
+                                </div>
+
+                                <button class="btn btn-info" ng-click="doCmd()" ng-disabled="btnDoCmd">
+                                    <i class="fa fa-play"></i>执行
+                                </button>
+                            </div>
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">执行结果</div>
+                                <div ng-if="taskVO.taskServerList != null">
+                                    <span class="label" style="background-color: #3c3c3c">
+                                              <i class="fa fa-spin fa-spinner"
+                                                 ng-show="taskVO.ansibleTaskDO.finalized ==false"></i>
+                                              <b ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
+                                        <!--<i ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</i>-->
+                                              <i uib-popover-html="'执行指令'"
+                                                 popover-trigger="'mouseenter'">  Command:`{{taskVO.ansibleTaskDO.cmd}}`</i>
+                                              <i uib-popover-html="'服务器数量'"
+                                                 popover-trigger="'mouseenter'" class="label">  ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</i>
+
+                                        <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
+                                            style="color: #00a8f3"> 所有结果</b>
+                                        <input type="checkbox" ng-model="resultChoose.success"
+                                               ng-click="chooseResult(0)"><b
+                                            style="color: #00af00"> SUCCESS</b>
+                                        <input type="checkbox" ng-model="resultChoose.failed"
+                                               ng-click="chooseResult(1)"><b
+                                            style="color: #ef2929"> FAILED</b>
+                                        </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <form class="form-inline" role="form" ng-if="taskVO.taskServerList != null">
+                                        <table class="table" style="margin-top: 5px;">
+                                            <tbody>
+                                            <tr ng-repeat="taskServer in taskVO.taskServerList">
+                                                <td class="col-md-12" ng-show="checkResultShow(taskServer)">
+                                                    <div class="panel-heading" style="background-color: #2e6da4">
+                                                    <span class="label label-default"
+                                                          ng-if="taskServer.serverDO.envType == 0">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(保留)</span>
+                                                        <span class="label label-info"
+                                                              ng-if="taskServer.serverDO.envType == 1">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(dev)</span>
+                                                        <span class="label label-success"
+                                                              ng-if="taskServer.serverDO.envType == 2">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(daily)</span>
+                                                        <span class="label label-warning"
+                                                              ng-if="taskServer.serverDO.envType == 3">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(gray)</span>
+                                                        <span class="label label-danger"
+                                                              ng-if="taskServer.serverDO.envType == 4">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(prod)</span>
+                                                        <span class="label label-primary"
+                                                              ng-if="taskServer.serverDO.envType == 5">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(test)</span>
+                                                        <span class="label label-primary"
+                                                              ng-if="taskServer.serverDO.envType == 6">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(back)</span>
+
+                                                        <span class="label label-info">{{taskServer.ip}}</span>
+                                                        <span class="label label-success"
+                                                              ng-if="taskServer.result == 'SUCCESS'">{{taskServer.result}}</span>
+                                                        <span class="label label-danger"
+                                                              ng-if="taskServer.result != 'SUCCESS'">{{taskServer.result}}</span>
+                                                        <span class="label label-info"
+                                                              ng-show="taskServer.returncode != null">{{taskServer.returncode}}</span>
+
+                                                        <button ng-click="closeTaskServer(taskServer.serverId)"
+                                                                class="btn btn-xs pull-right"
+                                                                style="margin-left: 20px; background-color: #ff8700; color: white;">
+                                                            <span class="glyphicon glyphicon-remove"></span>关闭
+                                                        </button>
+                                                    </div>
+                                                    <pre style="background-color: #777" hljs
+                                                         hljs-source="taskServer.msg"></pre>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div ng-if="alert.type != ''">
+                                    <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="Task Script">
+                    <div class="panel panel-default" ng-controller="serverTaskScriptCtrl">
+                        <div class="panel-body">
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-lg-3 control-label"><span
+                                            style="color: #ec2121;">*</span>服务器组</label>
+                                    <div class="col-lg-5">
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                                                   ng-change="changeServerGroup()">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div style="font-size:1em;">&nbsp;</div>
+
+
+                            <!--<p style="background-color:#2e6da4;color: white">服务器列表:</p>-->
+
+                            <div class="panel panel-info">
+                                <div class="panel-heading">服务器列表</div>
+                                <div class="form-group">
+
+                                    <!--<form class="form-inline" role="form" style="background-color: #2e6da4">-->
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="allChoose" ng-click="chooseAllItem()"><b
+                                            style="color: #b92c28"> all</b>
+                                    </div>
+
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.prod" ng-click="chooseEnv(4)"><b
+                                            style="color: #d9534f"> prod</b>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.back" ng-click="chooseEnv(6)"><b
+                                            style="color: #286090"> back</b>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.gray" ng-click="chooseEnv(3)"><b
+                                            style="color: #ec971f"> gray</b>
+                                    </div>
+                                    <div class="col-lg-1">
+                                        <input type="checkbox" ng-model="envChoose.daily" ng-click="chooseEnv(2)"><b
+                                            style="color: #449d44"> daily</b>
+                                    </div>
+                                    <!--</form>-->
+                                </div>
+                                <table class="table" style="margin-top: 5px;">
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData" class="col-md-4">
+                                        <td class="col-md-12">
+                                            <input type="checkbox" ng-model="item.choose"><b
+                                                style="color: #286090 ;margin-left: 10px;">{{item.serverName}}</b>-{{item.serialNumber}}
+                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>@{{item.insideIP.ip}}
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="9">
+                                            <ul style="margin: 0px; float: left;" uib-pagination
+                                                total-items="totalItems"
+                                                ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                                <!--<div class="panel-footer">Panel footer</div>-->
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+
+
+                                <div class="col-md-4">
+                                    <label class="col-lg-2 control-label"><span
+                                            style="color: #ec2121;">*</span>Script</label>
+                                    <div class="col-lg-8">
+                                        <!--ng-change="changeServerGroup()"-->
+                                        <ui-select ng-model="nowTaskScript.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索Script名称......">
+                                                {{$select.selected.scriptName }}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryTaskScript($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in taskScriptList | filter: $select.search">
+                                                <div ng-bind-html="item.scriptName | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+
+                                    <div class="col-lg-2">
+                                        <button ng-click="viewScript()"
+                                                class="btn"
+                                                style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                            <span class="glyphicon glyphicon-search"></span>查看
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-4">
+                                    <label class="col-lg-2 control-label">参数</label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="script参数"
+                                               ng-model="params">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <button class="btn"
+                                            style="margin-left: 5px; background-color: #c9302c; color: white;"
+                                            ng-click="doScript()" ng-disabled="btnDoScript">
+                                        <i class="fa fa-play"></i>执行
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">执行结果</div>
+                                <div ng-if="taskVO.taskServerList != null">
+                                    <!--style="margin-left: 20px;-->
+                                    <span class="label" style="background-color: #3c3c3c">
+                                              <i class="fa fa-spin fa-spinner"
+                                                 ng-show="taskVO.ansibleTaskDO.finalized ==false"></i>
+                                              <b ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
+                                              <!--<i ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</i>-->
+                                              <i uib-popover-html="'Script文件路径'"
+                                                 popover-trigger="'mouseenter'">  ScriptFile:{{taskVO.ansibleTaskDO.cmd}}</i>
+                                              <i uib-popover-html="'服务器数量'"
+                                                 popover-trigger="'mouseenter'" class="label">  ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</i>
+
+                                        <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
+                                            style="color: #00a8f3"> 所有结果</b>
+                                        <input type="checkbox" ng-model="resultChoose.success"
+                                               ng-click="chooseResult(0)"><b
+                                            style="color: #00af00"> SUCCESS</b>
+                                        <input type="checkbox" ng-model="resultChoose.failed"
+                                               ng-click="chooseResult(1)"><b
+                                            style="color: #ef2929"> FAILED</b>
+                                        </span>
+                                </div>
+
+                                <div class="form-group">
+                                    <form class="form-inline" role="form" ng-if="taskVO.taskServerList != null">
+                                        <table class="table" style="margin-top: 5px;">
+                                            <tbody>
+                                            <tr ng-repeat="taskServer in taskVO.taskServerList">
+                                                <td class="col-md-12" ng-show="checkResultShow(taskServer)">
+                                                    <div class="panel-heading" style="background-color: #2e6da4">
+                                                    <span class="label label-default"
+                                                          ng-if="taskServer.serverDO.envType == 0">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(保留)</span>
+                                                        <span class="label label-info"
+                                                              ng-if="taskServer.serverDO.envType == 1">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(dev)</span>
+                                                        <span class="label label-success"
+                                                              ng-if="taskServer.serverDO.envType == 2">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(daily)</span>
+                                                        <span class="label label-warning"
+                                                              ng-if="taskServer.serverDO.envType == 3">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(gray)</span>
+                                                        <span class="label label-danger"
+                                                              ng-if="taskServer.serverDO.envType == 4">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(prod)</span>
+                                                        <span class="label label-primary"
+                                                              ng-if="taskServer.serverDO.envType == 5">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(test)</span>
+                                                        <span class="label label-primary"
+                                                              ng-if="taskServer.serverDO.envType == 6">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(back)</span>
+
+                                                        <span class="label label-info">{{taskServer.ip}}</span>
+                                                        <span class="label label-success"
+                                                              ng-if="taskServer.result == 'SUCCESS'">{{taskServer.result}}</span>
+                                                        <span class="label label-danger"
+                                                              ng-if="taskServer.result != 'SUCCESS'">{{taskServer.result}}</span>
+                                                        <span class="label label-info"
+                                                              ng-show="taskServer.returncode != null">{{taskServer.returncode}}</span>
+
+                                                        <button ng-click="closeTaskServer(taskServer.serverId)"
+                                                                class="btn btn-xs pull-right"
+                                                                style="margin-left: 20px; background-color: #ff8700; color: white;">
+                                                            <span class="glyphicon glyphicon-remove"></span>关闭
+                                                        </button>
+                                                    </div>
+                                                    <pre style="background-color: #777" hljs
+                                                         hljs-source="taskServer.msg"></pre>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div ng-if="alert.type != ''">
+                                    <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="2" heading="Task 查询">
+                    <div class="panel panel-default" ng-controller="serverTaskCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">命令</span>
+                                        <input type="text" class="form-control" ng-model="queryCmd" placeholder="执行的指令">
+                                    </div>
+                                </div>
+
+                                <!--<div class="form-group">-->
+                                <!--<div class="input-group">-->
+                                <!--<span class="input-group-addon">服务器组</span>-->
+                                <!--<ui-select ng-model="nowServerGroup.selected" theme="bootstrap">-->
+                                <!--<ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}-->
+                                <!--</ui-select-match>-->
+                                <!--<ui-select-choices refresh="queryServerGroup($select.search)"-->
+                                <!--refresh-dalay="0"-->
+                                <!--repeat="item in serverGroupList | filter: $select.search">-->
+                                <!--<div ng-bind-html="item.name | highlight: $select.search"></div>-->
+                                <!--</ui-select-choices>-->
+                                <!--</ui-select>-->
+                                <!--</div>-->
+                                <!--</div>-->
+                                <!--<div class="form-group">-->
+                                <!--<div class="input-group">-->
+                                <!--<span class="input-group-addon">使用类型</span>-->
+                                <!--<select class="form-control" ng-model="nowUseType"-->
+                                <!--ng-options="type.code as type.name for type in userType">-->
+                                <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                                <!--</select>-->
+                                <!--</div>-->
+                                <!--</div>-->
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>Task详情</td>
+                                                <td>Cmd/Script</td>
+                                                <td>创建时间</td>
+                                                <td>操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b style="color: #1e983b"
+                                                       ng-if="item.ansibleTaskDO.finalized == true">执行完成</b>
+                                                    <b style="color: #b92c28"
+                                                       ng-if="item.ansibleTaskDO.finalized == false">正在执行</b>
+                                                    <b class="pull-right">执行状态</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.ansibleTaskDO.serverCnt}}</b>
+                                                    <b class="pull-right">服务器数量</b>
+                                                    <!--</br>-->
+                                                    <!--<b style="color: #1e983b" ng-if="item.ansibleTaskDO.taskType == 0">Cmd</b>-->
+                                                    <!--<b style="color: #b92c28" ng-if="item.ansibleTaskDO.taskType== 1">Script</b>-->
+                                                    <!--<b class="pull-right">Task类型</b>-->
+                                                    </br>
+                                                    <b style="color: #286090">{{item.ansibleTaskDO.userName}}</b>
+                                                    <b class="pull-right">用户</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090">{{item.ansibleTaskDO.cmd}}</b>
+                                                </td>
+                                                <td>{{(item.ansibleTaskDO.gmtModify == null ||
+                                                    item.ansibleTaskDO.gmtModify == '') ? item.ansibleTaskDO.gmtCreate
+                                                    : item.ansibleTaskDO.gmtModify}}
+                                                </td>
+                                                <td>
+                                                    <button ng-click="viewScript(item)" ng-show="item.ansibleTaskDO.taskType == 1"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #00af00 ;color: white;">
+                                                        <span class="glyphicon glyphicon-search"></span>Script
+                                                    </button>
+
+                                                    <button ng-click="queryTask(item)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-search"></span>Task详情
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+                            <div class="panel panel-info">
+                                <div class="panel-heading">执行结果</div>
+                                <div ng-if="taskVO.taskServerList != null">
+                                    <!--style="margin-left: 20px;-->
+                                    <span class="label label-danger" ng-show="taskVO.ansibleTaskDO.finalized ==false">
+                                     <i class="fa fa-spin fa-spinner"></i>指令执行中...</span>
+                                    <span class="label label-success"
+                                          ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</span>
+                                    <span class="label"
+                                          uib-popover-html="'执行的指令'"
+                                          popover-trigger="'mouseenter'"
+                                          style="background-color: black">{{taskVO.ansibleTaskDO.cmd}}</span>
+                                    <span class="label"
+                                          uib-popover-html="'服务器数量'"
+                                          popover-trigger="'mouseenter'"
+                                          style="background-color: #d78700">Total:{{taskVO.ansibleTaskDO.serverCnt}}</span>
+
+                                    <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
+                                        style="color: #00a8f3"> 所有结果</b>
+                                    <input type="checkbox" ng-model="resultChoose.success" ng-click="chooseResult(0)"><b
+                                        style="color: #00af00"> SUCCESS</b>
+                                    <input type="checkbox" ng-model="resultChoose.failed" ng-click="chooseResult(1)"><b
+                                        style="color: #b92c28"> FAILED</b>
+                                </div>
+
+                                <div class="form-group">
+                                    <form class="form-inline" role="form" ng-if="taskVO.taskServerList != null">
+                                        <table class="table" style="margin-top: 5px;">
+                                            <tbody>
+                                            <tr ng-repeat="taskServer in taskVO.taskServerList">
+                                                <td class="col-md-12" ng-show="checkResultShow(taskServer)">
+                                                    <div class="panel-heading" style="background-color: #2e6da4">
+                                                    <span class="label label-default"
+                                                          ng-if="taskServer.serverDO.envType == 0">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(保留)</span>
+                                                        <span class="label label-info"
+                                                              ng-if="taskServer.serverDO.envType == 1">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(dev)</span>
+                                                        <span class="label label-success"
+                                                              ng-if="taskServer.serverDO.envType == 2">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(daily)</span>
+                                                        <span class="label label-warning"
+                                                              ng-if="taskServer.serverDO.envType == 3">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(gray)</span>
+                                                        <span class="label label-danger"
+                                                              ng-if="taskServer.serverDO.envType == 4">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(prod)</span>
+                                                        <span class="label label-primary"
+                                                              ng-if="taskServer.serverDO.envType == 5">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(test)</span>
+                                                        <span class="label label-primary"
+                                                              ng-if="taskServer.serverDO.envType == 6">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(back)</span>
+
+                                                        <span class="label label-info">{{taskServer.ip}}</span>
+                                                        <span class="label label-success"
+                                                              ng-if="taskServer.result == 'SUCCESS'">{{taskServer.result}}</span>
+                                                        <span class="label label-danger"
+                                                              ng-if="taskServer.result != 'SUCCESS'">{{taskServer.result}}</span>
+                                                        <span class="label label-info"
+                                                              ng-show="taskServer.returncode != null">{{taskServer.returncode}}</span>
+
+                                                        <button ng-click="closeTaskServer(taskServer.serverId)"
+                                                                class="btn btn-xs pull-right"
+                                                                style="margin-left: 20px; background-color: #ff8700; color: white;">
+                                                            <span class="glyphicon glyphicon-remove"></span>关闭
+                                                        </button>
+                                                    </div>
+                                                    <pre style="background-color: #777" hljs
+                                                         hljs-source="taskServer.msg"></pre>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="3" heading="服务器" ng-show="false">
+                    <div class="panel panel-default" ng-controller="serverTaskOldCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">IP</span>
+                                        <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">服务器组</span>
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">使用类型</span>
+                                        <select class="form-control" ng-model="nowUseType"
+                                                ng-options="type.code as type.name for type in userType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">环境类型</span>
+                                        <select class="form-control" ng-model="nowEnv"
+                                                ng-options="envItem.code as envItem.name for envItem in envType"
+                                                required>
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addServer()"
+                                            ng-if="contains(authPoint, '/server/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>服务器组</td>
+                                                <td>服务器</td>
+                                                <td>公网IP</td>
+                                                <td>内网IP</td>
+                                                <td>使用类型</td>
+                                                <td>环境</td>
+                                                <td>序列号</td>
+                                                <td>创建时间</td>
+                                                <td ng-if="contains(authPoint, '/task/servertask/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td ng-if="item.detail != null" colspan="9">
+                                                    <div class="padder">
+                                                        <div class="streamline b-l b-info m-l-lg m-b padder-v">
+                                                            <div ng-repeat="logItem in item.dailyLogDOList">
+                                                                <a class="pull-left thumb-sm avatar m-l-n-md">
+                                                                    <img src="img/a9.jpg" class="img-circle" alt="...">
+                                                                </a>
+                                                                <div class="m-l-lg">
+                                                                    <div class="m-b-xs">
+                                                                        <a href class="h4">
+                                                                            <span ng-if="logItem.todoStatus == 0">发起人:</span>
+                                                                            <span ng-if="logItem.todoStatus != 0">处理人:</span>
+                                                                            {{logItem.processUser}}
+                                                                        </a>
+                                                                        <span class="text-muted m-l-sm pull-right">
+                                                                                {{logItem.gmtCreate}}
+                                                                            </span>
+                                                                    </div>
+                                                                    <div class="m-b"
+                                                                         style="word-wrap: break-word; word-break: break-all;">
+                                                                        <div ng-if="logItem.todoStatus == 0">
+                                                                            {{logItem.dailyContent}}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </td>
+                                                <td ng-if="item.detail == null">{{item.serverGroupDO.name}}</td>
+                                                <td ng-if="item.detail == null">{{item.serverName}}</td>
+                                                <td ng-if="item.detail == null">{{item.publicIP.ip}}</td>
+                                                <td ng-if="item.detail == null">{{item.insideIP.ip}}</td>
+                                                <td ng-if="item.detail == null">
+                                                    <span class="label label-default"
+                                                          ng-if="item.useType == 10">bi</span>
+                                                    <span class="label label-default" ng-if="item.useType == 1">zookeeper</span>
+                                                    <span class="label label-danger" ng-if="item.useType == 2">web-service</span>
+                                                    <span class="label label-warning"
+                                                          ng-if="item.useType == 3">mysql</span>
+                                                    <span class="label label-primary"
+                                                          ng-if="item.useType == 4">other</span>
+                                                    <span class="label label-info"
+                                                          ng-if="item.useType == 5">web-php</span>
+                                                    <span class="label label-primary"
+                                                          ng-if="item.useType == 6">public</span>
+                                                    <span class="label label-warning"
+                                                          ng-if="item.useType == 7">redis</span>
+                                                    <span class="label label-info"
+                                                          ng-if="item.useType == 8">web-server</span>
+                                                    <span class="label label-info"
+                                                          ng-if="item.useType == 9">front-end</span>
+                                                </td>
+                                                <td ng-if="item.detail == null">
+                                                    <span class="label label-default"
+                                                          ng-if="item.envType == 0">保留</span>
+                                                    <span class="label label-info" ng-if="item.envType == 1">dev</span>
+                                                    <span class="label label-success"
+                                                          ng-if="item.envType == 2">daily</span>
+                                                    <span class="label label-warning"
+                                                          ng-if="item.envType == 3">gray</span>
+                                                    <span class="label label-danger"
+                                                          ng-if="item.envType == 4">prod</span>
+                                                    <span class="label label-primary"
+                                                          ng-if="item.envType == 5">test</span>
+                                                    <span class="label label-primary"
+                                                          ng-if="item.envType == 6">back</span>
+                                                </td>
+                                                <td ng-if="item.detail == null">{{item.serialNumber}}</td>
+                                                <td ng-if="item.detail == null">{{(item.gmtModify == null ||
+                                                    item.gmtModify == '') ? item.gmtCreate : item.gmtModify}}
+                                                </td>
+                                                <td ng-if="item.detail == null && contains(authPoint, '/task/servertask/save')">
+                                                    <button type="button" class="btn btn-info btn-xs pull-right"
+                                                            ng-click="lookDetail($index, item)">任务
+                                                    </button>
+                                                    <div class="btn-group" uib-dropdown is-open="status.isopen">
+                                                        <button id="single-button" type="button"
+                                                                class="btn btn-info btn-xs" uib-dropdown-toggle
+                                                                ng-disabled="disabled">
+                                                            <span class="glyphicon glyphicon-th-list"></span>task<span
+                                                                class="caret"></span>
+                                                        </button>
+                                                        <ul class="dropdown-menu" uib-dropdown-menu role="menu"
+                                                            aria-labelledby="single-button">
+                                                            <li role="menuitem"></li>
+                                                            <a ng-click="initializationSystem(item)"><span
+                                                                    class="glyphicon glyphicon-wrench"></span>
+                                                                Initialization System</a></li>
+                                                            <li role="menuitem"></li>
+                                                            <a ng-click="serverOffline(item)"><span
+                                                                    class="glyphicon glyphicon-wrench"></span> Server
+                                                                offline</a></li>
+                                                            <li role="menuitem"></li>
+                                                            <a ng-click="updateTomcat(item)"><span
+                                                                    class="glyphicon glyphicon-wrench"></span> Update
+                                                                Tomcat Version</a></li>
+                                                            <li class="divider"></li>
+                                                            <li role="menuitem"><a href="#">重启zabbix(agentd)</a></li>
+                                                            <li role="menuitem"><a href="#">重启tomcat</a></li>
+                                                            <li role="menuitem"><a href="#">关闭tomcat</a></li>
+                                                            <li role="menuitem"><a href="#">启动tomcat</a></li>
+                                                        </ul>
+                                                    </div>
+
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="versionInfoModal">
+    <div ng-include="'tpl/modal/ansible_version_info_modal.html'"></div>
+</script>
+
+
+<script type="text/ng-template" id="scriptInfoModal">
+    <div ng-include="'tpl/modal/script_info_modal.html'"></div>
+</script>
+
+
+<script type="text/ng-template" id="serverInfo">
+    <div ng-include="'tpl/modal/server_info_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="serverpsInfo">
+    <div ng-include="'tpl/modal/serverpg_modal.html'"></div>
+</script>

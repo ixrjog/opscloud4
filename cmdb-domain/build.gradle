@@ -1,0 +1,5 @@
+sourceCompatibility = 1.7
+
+dependencies {
+    testCompile project(":cmdb-service")
+}

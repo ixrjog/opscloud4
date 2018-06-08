@@ -1,0 +1,250 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">配置文件管理</h1>
+                    <small class="text-muted">标准配置文件,自定义配置文件管理</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="默认配置文件">
+                    <div class="panel panel-default" ng-controller="configFileCtrl">
+                        <div class="panel-body">
+                            <div>
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">文件组</span>
+                                            <ui-select ng-model="nowFileGroup.selected" theme="bootstrap">
+                                                <ui-select-match placeholder="搜索文件组名称......">
+                                                    {{$select.selected.groupName}}
+                                                </ui-select-match>
+                                                <ui-select-choices refresh="queryGroup($select.search)"
+                                                                   refresh-dalay="0"
+                                                                   repeat="item in fileGroupList | filter: $select.search">
+                                                    <div ng-bind-html="item.groupName | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">文件名</span>
+                                            <input type="text" class="form-control" ng-model="fileName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                        <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                                class="glyphicon glyphicon-repeat"></span>重置
+                                        </button>
+                                        <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                                class="glyphicon glyphicon-plus"></span>新增
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>文件组名</td>
+                                        <td class="col-md-6">配置文件</td>
+                                        <td>环境</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>{{item.fileGroupDO.groupName}}</td>
+                                        <td>
+                                            <b style="color: #777">{{item.filePath}}</b>
+                                            </br>
+                                            <b style="color: #286090">{{item.fileName}}</b>
+                                            <b class="pull-right">{{item.fileDesc}}</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                        </td>
+                                        <td>
+                                            <button ng-click="editItem(item)"
+                                                    class="btn btn-xs"
+                                                    ng-disabled="butEditDisabled"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <i class="glyphicon glyphicon-edit"></i>编辑
+                                            </button>
+
+                                            <button ng-click="launchItem(item.id)"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                <span class="glyphicon glyphicon-search"></span>预览
+                                            </button>
+
+                                            <button ng-click="createItem(item.id)"
+                                                    class="btn btn-xs"
+                                                    ng-disabled="butSaveDisabled"
+                                                    style="margin-left: 5px; background-color: #ff8700; color: white;">
+                                                <i class="fa fa-spin fa-spinner" ng-show="butSaveSpinDisabled"></i>
+                                                <i class="glyphicon glyphicon-save" ng-show="!butSaveSpinDisabled"></i>保存
+                                            </button>
+
+                                            <button ng-click="invokeItem(item.id)"
+                                                    class="btn btn-xs"
+                                                    ng-disabled="butInvokeDisabled"
+                                                    uib-popover-html="'同步配置并生效'" popover-trigger="'mouseenter'"
+                                                    style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                                                <i class="fa fa-spin fa-spinner" ng-show="butInvokeSpinDisabled"></i>
+                                                <i class="icon icon-control-play" ng-show="!butInvokeSpinDisabled"></i>执行
+                                            </button>
+
+
+
+                                            <button ng-click="delItem(item.id)"
+                                                    class="btn btn-xs pull-right"
+                                                    ng-disabled="butDelDisabled"
+                                                    style="background-color: red; color: white;">
+                                                <i class="glyphicon glyphicon-remove"></i>删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="自定义配置文件">
+                    <div class="panel panel-default" ng-controller="configFileDivCtrl">
+                        <div class="panel-body">
+                            <div>
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">文件组</span>
+                                            <ui-select ng-model="nowFileGroup.selected" theme="bootstrap">
+                                                <ui-select-match placeholder="搜索文件组名称......">
+                                                    {{$select.selected.groupName}}
+                                                </ui-select-match>
+                                                <ui-select-choices refresh="queryGroup($select.search)"
+                                                                   refresh-dalay="0"
+                                                                   repeat="item in fileGroupList | filter: $select.search">
+                                                    <div ng-bind-html="item.groupName | highlight: $select.search"></div>
+                                                </ui-select-choices>
+                                            </ui-select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">文件名</span>
+                                            <input type="text" class="form-control" ng-model="fileName">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                        <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                                class="glyphicon glyphicon-repeat"></span>重置
+                                        </button>
+                                        <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                                class="glyphicon glyphicon-plus"></span>新增
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>文件组名</td>
+                                        <td>文件名</td>
+                                        <td>说明</td>
+                                        <td>文件路径</td>
+                                        <td class="col-md-3">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>{{item.fileGroupDO.groupName}}</td>
+                                        <td>{{item.fileName}}</td>
+                                        <td>{{item.fileDesc}}</td>
+                                        <td>{{item.filePath}}</td>
+                                        <td>
+                                            <button type="button" ng-click="launchItem(item.id)"
+                                                    class="btn btn-info btn-xs">预览本地
+                                            </button>
+                                            <button type="button" ng-click="delItem(item.id)"
+                                                    class="btn btn-danger btn-xs pull-right" style="margin-left: 20px;">
+                                                删除
+                                            </button>
+                                            <button type="button" ng-click="createItem(item.id)"
+                                                    class="btn btn-success btn-xs pull-right"
+                                                    style="margin-left: 20px;">生成
+                                            </button>
+                                            <button type="button" ng-click="editItem(item)"
+                                                    class="btn btn-warning btn-xs pull-right"
+                                                    style="margin-left: 20px;">编辑
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="configFile">
+    <div ng-include="'tpl/modal/configFile_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="configFileInfo">
+    <div ng-include="'tpl/modal/configFile_info_modal.html'"></div>
+</script>

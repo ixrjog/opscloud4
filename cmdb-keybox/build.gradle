@@ -1,0 +1,8 @@
+dependencies {
+    compile project(":cmdb-service")
+
+    compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
+
+    compile group: 'org.springframework', name: 'spring-websocket', version: "${springVersion}"
+    compile group: 'org.springframework', name: 'spring-messaging', version: "${springVersion}"
+}

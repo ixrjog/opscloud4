@@ -1,0 +1,136 @@
+<div class="modal-header">
+    <h3 class="modal-title">LogService机器组配置</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+        <div class="form-group">
+
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">服务器组名称</label>
+                <div class="col-lg-8">
+                    <pre>{{logServiceServerGroupCfgItem.serverGroupDO.name}}</pre>
+                    <!--<input type="text" class="form-control" placeholder="服务器名称" required-->
+                    <!--ng-model="logServiceServerGroupCfgItem.serverGroupDO.name">-->
+                </div>
+            </div>
+
+
+        </div>
+        <div class="form-group">
+
+            <!--<span class="input-group-addon">选择服务器组</span>-->
+            <!--<ui-select ng-model="nowLogServiceServerGroupCfgVO.selected" on-select="onSelected()"-->
+            <!--theme="bootstrap">-->
+            <!--<ui-select-match placeholder="搜索服务器组名称......">-->
+            <!--{{$select.selected.serverGroupDO.name}}-->
+            <!--</ui-select-match>-->
+            <!--<ui-select-choices refresh="queryServerGroup($select.search)"-->
+            <!--refresh-dalay="0"-->
+            <!--repeat="item in logServiceServerGroupCfgVOList | filter: $select.search">-->
+            <!--<div ng-bind-html="item.serverGroupDO.name | highlight: $select.search"></div>-->
+            <!--</ui-select-choices>-->
+            <!--</ui-select>-->
+
+
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>Project</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="nowProject.selected" ng-change="queryLogstore()"
+                            ng-options="project for project in projectList" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+
+
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>Logstore</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="nowLogstore.selected"
+                            ng-options="logstore for logstore in logstoreList" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">Topic</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="可选"
+                           ng-model="logServiceServerGroupCfgItem.topic">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="text-align:center">
+                <button ng-click="saveCfg()"
+                        class="btn btn-xs glyphicon glyphicon-ok"
+                        style="background-color: #2e6da4; color: white;">保存
+                </button>
+            </div>
+        </div>
+
+
+        <div style="margin-top: 5px;">
+            <table class="table table-hover table-bordered table-striped">
+                <thead>
+                <tr>
+                    <td>服务器</td>
+                    <td>公网IP</td>
+                    <td>内网IP</td>
+                    <td>使用类型</td>
+                    <td>环境</td>
+                    <td>序列号</td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="item in machineGroup.serverList">
+                    <td>{{item.serverName}}</td>
+                    <td>{{item.publicIp}}</td>
+                    <td>{{item.insideIp}}</td>
+                    <td>
+                        <b style="color: #777" ng-if="item.useType == 10">bi</b>
+                        <b style="color: #843534" ng-if="item.useType == 1">zookeeper</b>
+                        <b style="color: #286090" ng-if="item.useType == 2">web-service</b>
+                        <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
+                        <b style="color: #286090" ng-if="item.useType == 4">other</b>
+                        <b style="color: #777" ng-if="item.useType == 5">web-php</b>
+                        <b style="color: #286090" ng-if="item.useType == 6">public</b>
+                        <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
+                        <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
+                        <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                    </td>
+                    <td>
+                        <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                        <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                        <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                        <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                        <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                        <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                        <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                    </td>
+                    <td>{{item.serialNumber}}</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+
+        <div class="form-group">
+            <div style="text-align:center">
+                <button ng-click="saveCfg()"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: limegreen; color: white;">
+                    <span class="glyphicon glyphicon-repeat"></span>同步数据</button>
+            </div>
+        </div>
+    </form>
+
+    <div ng-if="alert.type != ''">
+    <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

@@ -1,0 +1,77 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+  <!-- main -->
+  <div class="col">
+    <!-- main header -->
+    <div class="bg-light lter b-b wrapper-md">
+      <div class="row">
+        <div class="col-sm-6 col-xs-12">
+          <h1 class="m-n font-thin h3 text-black">订阅审核</h1>
+          <small class="text-muted">SQL审核订阅维护</small>
+        </div>
+      </div>
+    </div>
+    <!-- / main header -->
+    <div class="wrapper-md" ng-controller="explainCtrl">
+        <!-- toaster directive -->
+        <toaster-container toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+        <!-- / toaster directive -->
+
+        <form class="form-inline col-md-12" role="form">
+            <div class="form-group">
+                <div class="input-group">
+                    <span class="input-group-addon">订阅仓库</span>
+                    <ui-select ng-model="nowRepo.selected" theme="bootstrap">
+                        <ui-select-match placeholder="搜索仓库......">{{$select.selected}}</ui-select-match>
+                        <ui-select-choices refresh="queryRepo($select.search)" refresh-dalay="0" repeat="item in repoList | filter: $select.search">
+                            <div ng-bind-html="item | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="form-group">
+                <button type="button" class="btn btn-default" ng-click="doQuery()">搜索</button>
+                <button type="button" class="btn btn-success" ng-click="addItem()">新增</button>
+            </div>
+        </form>
+
+        <table class="table table-hover table-bordered table-striped">
+            <tbody>
+            <tr>
+                <div class="col-md-6" ng-repeat="item in pageData track by $index">
+                    <div class="panel panel-info" style="margin-top: 5px;;">
+                        <div class="panel-heading">{{"仓库：" + item.repo}}</div>
+                        <div class="panel-body">
+                            <div><span class="label label-info">扫描路径：</span></div>
+                            <div ng-repeat="scanPath in item.scanPathList">
+                                <span>{{scanPath}}</span>
+                            </div>
+                            <div><span class="label label-warning">通知列表：</span></div>
+                            <div ng-repeat="notifyEmail in item.notifyEmailList">
+                                <span>{{notifyEmail}}</span>
+                            </div>
+                            <div><span class="label label-primary">CDL AppID：</span></div>
+                            <div><span>{{item.cdlAppId}}</span></div>
+                            <div><span class="label label-primary">CDL GroupName：</span></div>
+                            <div><span>{{item.cdlGroup}}</span></div>
+                        </div>
+                        <div class="panel-footer">
+                            <button type="button" class="btn btn-primary btn-sm" ng-click="invokeItem(item.id)">执行</button>
+                            <button type="button" class="btn btn-warning btn-sm" ng-click="editItem(item)">编辑</button>
+                            <button type="button" class="btn btn-danger btn-sm pull-right" ng-click="delItem(item.id)">删除</button>
+                        </div>
+                    </div>
+                </div>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+  </div>
+  <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="explainModal">
+    <div ng-include="'tpl/modal/explain_modal.html'"></div>
+</script>

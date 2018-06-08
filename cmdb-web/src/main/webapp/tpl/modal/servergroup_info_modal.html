@@ -1,0 +1,32 @@
+<div class="modal-header">
+    <h3 class="modal-title">服务器组信息</h3>
+</div>
+<div class="modal-body">
+    <form role="form">
+        <div class="form-group">
+            <label class="control-label">服务器组名</label>
+            <input type="text" class="form-control" ng-model="showItem.name">
+        </div>
+        <div class="form-group">
+            <label class="control-label">使用类型</label>
+            <select class="form-control" ng-model="showItem.useType"
+                    ng-options="type.useType as type.typeName for type in userType">
+                <option value="">--请选择--</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label class="control-label">说明</label>
+            <textarea class="form-control" ng-model="showItem.content"></textarea>
+        </div>
+    </form>
+</div>
+
+<div class="modal-footer">
+    <div style="text-align:center;">
+        <button ng-click="saveEdit()"
+                class="btn btn-xs"
+                style="background-color: #2e6da4; color: white;">
+            <span class="glyphicon glyphicon-ok"></span>保存
+        </button>
+    </div>
+</div>

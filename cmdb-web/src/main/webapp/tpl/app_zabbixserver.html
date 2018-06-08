@@ -1,0 +1,542 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">Zabbix监控</h1>
+                    <small class="text-muted">服务器监控</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="服务器配置">
+                    <div class="panel panel-default" ng-controller="zabbixServerCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">IP</span>
+                                        <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">使用类型</span>
+                                        <select class="form-control" ng-model="nowType"
+                                                ng-options="type.code as type.name for type in userType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">环境类型</span>
+                                        <select class="form-control" ng-model="nowEnv"
+                                                ng-options="envItem.code as envItem.name for envItem in envType"
+                                                required>
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">服务器组</span>
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                </br>
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">监控状态</span>
+                                        <select class="form-control" ng-model="nowStatus"
+                                                ng-options="status.code as status.name for status in zabbixStatus">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">主机监控</span>
+                                        <select class="form-control" ng-model="nowMonitor"
+                                                ng-options="monitor.code as monitor.name for monitor in zabbixMonitor">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="refresh()"
+                                            ng-if="contains(authPoint, '/zabbixserver/refresh')"><span
+                                            class="glyphicon glyphicon-refresh"></span>Refresh
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>服务器</td>
+                                                <td>IP</td>
+                                                <td>使用类型</td>
+                                                <td>环境</td>
+                                                <td>序列号</td>
+                                                <td>监控配置</td>
+                                                <td>TomcatVersion</td>
+                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b style="color: #777">{{item.serverGroupDO.name}}</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.serverName}}</b>
+                                                </td>
+
+                                                <td>
+                                                    <span>
+                                                    <span ng-show="item.publicIP != null">
+                                                      <span>{{item.publicIP.ip}}</span>
+                                                           <b class="pull-right">公</b>
+                                                        </br>
+                                                    </span>
+                                                    </span>{{item.insideIP.ip}}</span>
+                                                    <b class="pull-right">内</b>
+                                                </td>
+                                                <td>
+                                                    <b ng-if="item.useType == 10">bi</b>
+                                                    <b ng-if="item.useType == 1">zookeeper</b>
+                                                    <b style="color: #990000" ng-if="item.useType == 2">web-service</b>
+                                                    <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
+                                                    <b ng-if="item.useType == 4">other</b>
+                                                    <b ng-if="item.useType == 5">web-php</b>
+                                                    <b style="color: #286090" ng-if="item.useType == 6">public</b>
+                                                    <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
+                                                    <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
+                                                    <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                                </td>
+                                                <td>{{item.serialNumber}}</td>
+                                                <td>
+                                                    <!--主机配置-->
+                                                    <b ng-show="item.zabbixMonitor  == 0"
+                                                       class="btn btn-xs"
+                                                       style="margin-left: 5px; background-color: #ff8700; color: white;">
+                                                        <span class="fa fa-gear"></span>未添加主机
+                                                    </b>
+
+                                                    <div ng-show="item.zabbixMonitor == 1">
+                                                        <span ng-show="item.zabbixStatus == 0"
+                                                              class="fa fa-bar-chart-o"
+                                                              uib-popover-html="'启用主机监控'"
+                                                              popover-trigger="'mouseenter'"
+                                                              style="margin-left: 5px; background-color: #00af00; color: white;">
+                                                        </span>
+
+                                                        <span ng-show="item.zabbixStatus == 1"
+                                                              class="fa  fa-bar-chart-o"
+                                                              uib-popover-html="'禁用主机监控'"
+                                                              popover-trigger="'mouseenter'"
+                                                              style="margin-left: 5px; background-color: #777; color: white;">
+                                                        </span>
+
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    {{item.tomcatVersion}}
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/zabbixserver/save')">
+                                                    <button ng-click="repair(item)"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'修复数据不一致'"
+                                                            popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                                        <span class="fa fa-circle-o-notch"></span>修复
+                                                    </button>
+
+
+                                                    <button ng-click="addHost(item)"
+                                                            ng-if="item.zabbixMonitor == 0"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'在Zabbix中添加主机监控配置'"
+                                                            popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-cog"></span>配置
+                                                    </button>
+                                                    <!--暂停监控-->
+                                                    <button ng-click="disableMonitor(item)"
+                                                            ng-if="item.zabbixStatus == 0"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'在Zabbix中禁用主机监控'"
+                                                            popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                                                        <span class="glyphicon glyphicon-pause"></span>暂停
+                                                    </button>
+                                                    <!--启用监控-->
+                                                    <button ng-click="enableMonitor(item)"
+                                                            ng-if="item.zabbixStatus == 1"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'在Zabbix中启用主机监控'"
+                                                            popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: #00af00; color: white;">
+                                                        <span class="glyphicon glyphicon-play"></span>启用
+                                                    </button>
+
+                                                    <button ng-click="delMonitor(item)"
+                                                            ng-if="item.zabbixMonitor == 1"
+                                                            class="btn btn-xs pull-right"
+                                                            uib-popover-html="'在Zabbix中删除主机监控配置'"
+                                                            popover-trigger="'mouseenter'"
+                                                            style="background-color: #ff8700; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>监控
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="用户配置">
+                    <div ng-controller="zabbixUserCtrl">
+                        <div style="margin-top: 5px;" class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">用户名</span>
+                                            <input type="text" class="form-control" ng-model="username"
+                                                   placeholder="授权用户">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-success" ng-click="syncZabbixUser()">
+                                            <span class="glyphicon glyphicon-refresh"></span>RsyncUsers
+                                        </button>
+                                    </div>
+                                </form>
+                                <div style="margin-top: 5px;">
+                                    <table class="table table-hover table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <td>用户</td>
+                                            <td>监控账户</td>
+                                            <td>堡垒机账户</td>
+                                            <td>服务器组</td>
+                                            <td>更新时间</td>
+                                            <td>操作</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="item in pageData">
+                                            <td>{{item.username}}
+                                                <span ng-show="item.displayName != ''">
+                                                    </br>
+                                                    <b>{{item.displayName}}</b>
+                                                </span>
+                                                </br>
+                                                <b class="glyphicon glyphicon-envelope"></b><b
+                                                        style="color: #286090">{{item.mail}}</b>
+                                                <b ng-show="item.mobile != ''"></br><span
+                                                        class="glyphicon glyphicon-earphone">{{item.mobile}}</span>
+                                                </b>
+
+                                            </td>
+                                            <td>
+                                                <b style="color: #449d44"
+                                                   ng-if="item.zabbixAuthed != 0">已授权</b>
+                                                <span
+                                                        ng-if="item.zabbixAuthed == 0">未授权</span>
+                                            </td>
+                                            <td>
+                                                <b style="color: #449d44" ng-if="item.authed != 0">已授权</b>
+                                                <span ng-if="item.authed == 0">未授权</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge"
+                                                      ng-if="item.servers == 0">{{item.servers}}</span>
+                                                <span class="badge bg-success pull-right"
+                                                      ng-if="item.servers > 0 && item.servers < 10">{{item.servers}}</span>
+                                                <span class="badge bg-info"
+                                                      ng-if="item.servers >= 10">{{item.servers}}</span>
+                                            <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate :
+                                                item.gmtModify}}
+                                            </td>
+                                            <td>
+                                                <!--<span class="glyphicon glyphicon-plus"-->
+                                                <!--ng-click="addZabbixAuth(item.username)"-->
+                                                <!--ng-show="item.zabbixAuthed == 0">-->
+                                                <!--</span>-->
+                                                <button ng-click="addZabbixAuth(item.username)"
+                                                        ng-show="item.zabbixAuthed == 0"
+                                                        class="btn btn-xs"
+                                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                    <span class="glyphicon glyphicon-plus"></span>授权
+                                                </button>
+
+                                                <button ng-click="delZabbixAuth(item.username)"
+                                                        ng-show="item.zabbixAuthed != 0"
+                                                        class="btn btn-xs pull-right"
+                                                        style="background-color: red; color: white;">
+                                                    <span class="glyphicon glyphicon-remove"></span>删除
+                                                </button>
+
+                                                <!--<span class="glyphicon glyphicon-trash pull-right"-->
+                                                <!--ng-click="delZabbixAuth(item.username)"-->
+                                                <!--ng-show="item.zabbixAuthed != 0"></span>-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="10">
+                                                <ul style="margin: 0px; float: right;" uib-pagination
+                                                    total-items="totalItems" ng-model="currentPage"
+                                                    items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                    previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="2" heading="监控模版配置">
+                    <div class="panel panel-default" ng-controller="zabbixTemplateCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">模版名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="模版名称">
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">启用</span>
+                                        <select class="form-control" ng-model="nowEnabled"
+                                                ng-options="select.code as select.name for select in defSelect">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="rsyncTemplate()"><span
+                                            class="glyphicon glyphicon-refresh"></span>Rsync
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>模版名称</td>
+                                                <td>模版ID</td>
+                                                <td>启用</td>
+                                                <td ng-if="contains(authPoint, '/zabbixserver/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b style="color: #777">{{item.templateName}}</b>
+                                                </td>
+                                                <td>
+                                                    {{item.templateid}}
+                                                </td>
+                                                <td>
+                                                    <b style="color: #777" ng-if="item.enabled == 0">否</b>
+                                                    <b style="color: #1e983b" ng-if="item.enabled == 1">是</b>
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/zabbixserver/save')">
+                                                    <button ng-click="setTemplate(item)" ng-show="item.enabled== 0"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                                        <span class="glyphicon glyphicon-plus"></span>启用
+                                                    </button>
+
+                                                    <button ng-click="setTemplate(item)" ng-show="item.enabled== 1"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #d78700; color: white;">
+                                                        <span class="fa fa-circle-o-notch"></span>禁用
+                                                    </button>
+
+
+                                                    <button ng-click="delTemplate(item)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: #b92c28; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="10">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="3" heading="ZabbixServer配置">
+                    <div class="panel panel-default" ng-controller="zabbixConfigCtrl">
+                        <div class="panel-body">
+                            <form class="form-horizontal">
+                                <div class="form-group col-lg-12">
+                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ZABBIX_API_URL</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" placeholder="Zabbix API URL"
+                                               uib-popover-html="'ApiUrl不要使用https,格式为http://hostname/api_jsonrpc.php'"
+                                               popover-trigger="'mouseenter'"
+                                               ng-model="configMap.ZABBIX_API_URL.value">
+                                    </div>
+
+                                    <button ng-click="zabbixVersion()"
+                                            class="btn btn-xs"
+                                            style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                        <span class="glyphicon glyphicon-search"></span>测试配置
+                                    </button>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ZABBIX_API_USER</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control" placeholder="Zqbbix管理员账户"
+                                               ng-model="configMap.ZABBIX_API_USER.value">
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-lg-12">
+                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ZABBIX_API_PASSWD</label>
+                                    <div class="col-lg-6">
+                                        <input type="text" class="form-control"
+                                               placeholder="Zqbbix管理员密码"
+                                               ng-model="configMap.ZABBIX_API_PASSWD.value">
+                                    </div>
+                                </div>
+
+
+                                <!--按钮-->
+                                <div class="form-group">
+
+                                    <div style="text-align:center;">
+
+                                        <button class="btn btn-xs"
+                                                style="background-color:  #2e6da4; color: white;"
+                                                ng-click="updateConfig()">保存配置
+                                        </button>
+
+                                    </div>
+                                </div>
+
+                            </form>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="zabbixVersionInfo">
+    <div ng-include="'tpl/modal/zabbix/zabbix_version_info_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="addHostInfo">
+    <div ng-include="'tpl/modal/zabbix/add_host_modal.html'"></div>
+</script>

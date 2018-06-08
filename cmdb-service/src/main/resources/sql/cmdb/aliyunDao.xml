@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.AliyunDao">
+
+    <!-- 获取ECS镜像列表 -->
+    <select id="getEcsImage" parameterType="object" resultType="AliyunEcsImageDO">
+        SELECT * FROM oc_aliyun_ecs_image
+        <where>
+            <if test="queryDesc != null and queryDesc != ''">
+                imageDesc LIKE "%" #{queryDesc} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 按id查询ECS镜像 -->
+    <select id="queryEcsImageById" parameterType="_long" resultType="AliyunEcsImageDO">
+        SELECT * FROM oc_aliyun_ecs_image
+        WHERE id = #{id}
+    </select>
+
+    <insert id="addEcsImage" parameterType="AliyunEcsImageDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_aliyun_ecs_image (
+        imageId,
+        imageDesc,
+        imageType,
+        version
+        ) VALUES (
+        #{imageId},
+        #{imageDesc},
+        #{imageType},
+        #{version}
+        );
+    </insert>
+
+    <delete id="delEcsImage" parameterType="_long">
+        DELETE FROM oc_aliyun_ecs_image WHERE id = #{id}
+    </delete>
+
+    <!--查询EcsImage详情页-->
+    <select id="getEcsImagePage" resultType="AliyunEcsImageDO">
+        SELECT * FROM oc_aliyun_ecs_image
+    </select>
+
+    <!-- 获取阿里云网络类型 -->
+    <select id="getNetwork" parameterType="object" resultType="AliyunNetworkDO">
+        SELECT * FROM oc_aliyun_network
+    </select>
+
+    <!-- 按网络类型查询阿里云网络 -->
+    <select id="getNetworkByType" parameterType="object" resultType="AliyunNetworkDO">
+        SELECT * FROM oc_aliyun_network
+        WHERE networkType = #{networkType}
+    </select>
+
+    <!-- 查询阿里云vpc网络列表 -->
+    <select id="queryAliyunVpc" parameterType="object" resultType="AliyunVpcDO">
+        SELECT * FROM oc_aliyun_vpc
+        <where>
+            <if test="networkId != -1">
+                networkId = #{networkId}
+            </if>
+            <if test="queryDesc != null and queryDesc != ''">
+                AND vpcDesc LIKE "%" #{queryDesc} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getAliyunVpc" parameterType="_long" resultType="AliyunVpcDO">
+        SELECT * FROM oc_aliyun_vpc
+        WHERE id = #{id}
+    </select>
+
+    <delete id="delAliyunVpc" parameterType="_long">
+        DELETE FROM oc_aliyun_vpc WHERE id = #{id}
+    </delete>
+
+    <!-- 按id查询阿里云vpc -->
+    <select id="queryAliyunVpcById" parameterType="_long" resultType="AliyunVpcDO">
+        SELECT * FROM oc_aliyun_vpc
+        WHERE id = #{id}
+    </select>
+
+    <select id="getAliyunVpcByAliyunVpcId" parameterType="object" resultType="AliyunVpcDO">
+        SELECT * FROM oc_aliyun_vpc
+        WHERE aliyunVpcId = #{aliyunVpcId}
+    </select>
+
+    <insert id="addAliyunVpc" parameterType="AliyunVpcDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_aliyun_vpc (
+        networkId,
+        aliyunVpcId,
+        vpcDesc
+        ) VALUES (
+        #{networkId},
+        #{aliyunVpcId},
+        #{vpcDesc}
+        );
+    </insert>
+
+
+    <!-- 查询阿里云vpc下的虚拟交换机 -->
+    <select id="queryAliyunVswitch" parameterType="object" resultType="AliyunVswitchDO">
+        SELECT * FROM oc_aliyun_vswitch
+        <where>
+            <if test="vpcId != -1">
+                vpcId = #{vpcId}
+            </if>
+            <if test="queryDesc != null and queryDesc != ''">
+                AND vswitchDesc LIKE "%" #{queryDesc} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 按id查询虚拟交换机 -->
+    <select id="queryAliyunVswitchById" parameterType="_long" resultType="AliyunVswitchDO">
+        SELECT * FROM oc_aliyun_vswitch
+        WHERE id = #{id}
+    </select>
+
+
+    <delete id="delAliyunVswitch" parameterType="_long">
+        DELETE FROM oc_aliyun_vswitch WHERE id = #{id}
+    </delete>
+
+    <insert id="addAliyunVswitch" parameterType="AliyunVswitchDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_aliyun_vswitch (
+        vpcId,
+        vswitchId,
+        vswitchDesc
+        ) VALUES (
+        #{vpcId},
+        #{vswitchId},
+        #{vswitchDesc}
+        );
+    </insert>
+
+    <!-- 查询vpc下的安全组 -->
+    <select id="querySecurityGroup" parameterType="object" resultType="AliyunVpcSecurityGroupDO">
+        SELECT * FROM oc_aliyun_vpc_security_group
+        <where>
+            <if test="vpcId != -1">
+                vpcId = #{vpcId}
+            </if>
+            <if test="queryDesc != null and queryDesc != ''">
+                AND securityGroupDesc LIKE "%" #{queryDesc} "%"
+            </if>
+        </where>
+    </select>
+
+    <!-- 按id查询安全组 -->
+    <select id="querySecurityGroupById" parameterType="_long" resultType="AliyunVpcSecurityGroupDO">
+        SELECT * FROM oc_aliyun_vpc_security_group
+        WHERE id = #{id}
+    </select>
+
+    <insert id="addSecurityGroup" parameterType="AliyunVpcSecurityGroupDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_aliyun_vpc_security_group (
+        vpcId,
+        securityGroupId,
+        securityGroupDesc
+        ) VALUES (
+        #{vpcId},
+        #{securityGroupId},
+        #{securityGroupDesc}
+        );
+    </insert>
+
+    <delete id="delSecurityGroup" parameterType="_long">
+        DELETE FROM oc_aliyun_vpc_security_group WHERE id = #{id}
+    </delete>
+
+</mapper>

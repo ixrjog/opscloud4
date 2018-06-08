@@ -1,0 +1,156 @@
+<div class="modal-header">
+    <h3 class="modal-title">服务器信息</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器组名称</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap" ng-change="changeServerGroup(nowServerGroup.selected)">>
+                        <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0" repeat="item in serverGroupList | filter: $select.search">
+                            <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器名称</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="服务器名称" required ng-model="serverItem.serverName">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.serverType" ng-options="serverItem.code as serverItem.name for serverItem in serverType" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>登录类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.loginType" ng-options="logItem.code as logItem.name for logItem in logType" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">登录用户</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="登录用户" ng-model="serverItem.loginUser">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>环境类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="serverItem.envType" ng-options="envItem.code as envItem.name for envItem in envType" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">区域</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="区域" ng-model="serverItem.area">
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">公网网段</label>
+                    <div class="col-lg-8">
+                        <ui-select ng-model="nowPublicGroup.selected" theme="bootstrap">
+                            <ui-select-match placeholder="搜索公网IP段名称......">{{$select.selected.ipNetwork}}</ui-select-match>
+                            <ui-select-choices refresh="queryPublicIPGroup($select.search)" refresh-dalay="0" repeat="item in publicGroupList | filter: $select.search">
+                                <div ng-bind-html="item.ipNetwork | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="nowPublicGroup.selected != null">
+                    <label class="col-lg-4 control-label">公网ip</label>
+                    <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                        <input type="text" class="form-control" placeholder="公网IP" ng-model="publicip">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default"
+                                    ng-click="checkIPUse(nowPublicGroup.selected.id, publicip)"><i class="glyphicon glyphicon-check pull-right"></i></button>
+                        </div>
+                    </div>
+
+                    <!--<button type="button" class="btn btn-xs btn-info" ng-click="checkIPUse(nowPublicGroup.selected.id, publicip)">校验</button>-->
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">内网网段</label>
+                    <div class="col-lg-8">
+                        <ui-select ng-model="nowInternalGroup.selected" theme="bootstrap">
+                            <ui-select-match placeholder="搜索内网IP组名称......">{{$select.selected.ipNetwork}}</ui-select-match>
+                            <ui-select-choices refresh="queryInternalIPGroup($select.search)" refresh-dalay="0" repeat="item in internalGroupList | filter: $select.search">
+                                <div ng-bind-html="item.ipNetwork | highlight: $select.search"></div>
+                            </ui-select-choices>
+                        </ui-select>
+                    </div>
+                </div>
+                <div class="col-md-6" ng-show="nowInternalGroup.selected != null">
+                    <label class="col-lg-4 control-label">内网ip</label>
+                    <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                        <input type="text" class="form-control" placeholder="内网ip" ng-model="insideip">
+                        <div class="input-group-btn">
+                            <button class="btn btn-default"
+                                    ng-click="checkIPUse(nowInternalGroup.selected.id, insideip)"><i class="glyphicon glyphicon-check pull-right"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">序列号</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="序列号" ng-model="serverItem.serialNumber">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">持续分组</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="持续分组" ng-model="serverItem.ciGroup">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">说明</label>
+            <div class="col-lg-10">
+                <textarea class="form-control" cols="3" ng-model="serverItem.content"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="text-align:center;">
+                <!--保存-->
+                <button ng-click="saveServerItem(insideip, publicip)"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                    <span class="glyphicon glyphicon-ok"></span>保存</button>
+
+                <button ng-click="resetServerItem()"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: #449d44; color: white;">
+                    <span class="glyphicon glyphicon-repeat"></span>重置</button>
+
+                <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+                <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+            </div>
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

@@ -1,0 +1,101 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">{{todoItem.title}}</b>工单
+    </h3>
+    <div>
+        <b ng-show="todoItem.todoType == 0" class="pull-left">运维类工单</b>
+        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
+           class="icon icon-info" style="color: green;"></i>
+    </div>
+</div>
+
+
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>名称</td>
+                <td>描述</td>
+                <td>授权</td>
+                <td ng-show="todoDetail.todoStatus == 0">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in todoDetail.todoSystemAuthDetailList">
+                <!--用户信息-->
+                <td>{{item.name}}
+                </td>
+                <td>{{item.content}}
+                </td>
+                <td>
+                    <b style="color: #449d44" ng-if="item.authed == true">已授权</b>
+                    <span style="color: #777" ng-if="item.authed == false">未授权</span>
+                    <b style="color: #449d44" class="pull-right" ng-if="item.need == true">已申请授权</b>
+                </td>
+                <td ng-show="todoDetail.todoStatus == 0">
+                <span class="glyphicon glyphicon-plus pull-left" ng-show="item.authed == false && item.need == false"
+                      style="color: #449d44"
+                      uib-popover-html="'申请授权'" popover-trigger="'mouseenter'"
+                      ng-click="setItem(item.id)">
+                </span>
+                <span class="glyphicon glyphicon-remove pull-right" ng-show="item.need == true"
+                      style="color: #d9534f"
+                      uib-popover-html="'撤销申请'" popover-trigger="'mouseenter'"
+                      ng-click="setItem(item.id)">
+                </span>
+                </td>
+            </tr>
+
+            <tr>
+                <td>
+                    <b>堡垒机</b>
+                </td>
+                <td>{{todoDetail.todoSystemAuthGetway.content}}</td>
+                <td>
+                    <b style="color: #449d44" ng-if="todoDetail.todoSystemAuthGetway.authed == true">已授权</b>
+                    <span style="color: #777" ng-if="todoDetail.todoSystemAuthGetway.authed == false">未授权</span>
+                    <b style="color: #449d44" class="pull-right" ng-if="todoDetail.todoSystemAuthGetway.need == true">已申请授权</b>
+                </td>
+                <td ng-show="todoDetail.todoStatus == 0">
+                    <span class="glyphicon glyphicon-plus pull-left"
+                          ng-show="todoDetail.todoSystemAuthGetway.need == false"
+                          style="color: #449d44"
+                          uib-popover-html="'申请授权'" popover-trigger="'mouseenter'"
+                          ng-click="setItem(todoDetail.todoSystemAuthGetway.id)">
+                    </span>
+                    <span class="glyphicon glyphicon-remove pull-right"
+                          ng-show="todoDetail.todoSystemAuthGetway.need == true"
+                          style="color: #d9534f"
+                          uib-popover-html="'撤销申请'" popover-trigger="'mouseenter'"
+                          ng-click="setItem(todoDetail.todoSystemAuthGetway.id)">
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+    <div class="form-group">
+        <div style="text-align:center;">
+            <button class="btn btn-xs" ng-show="todoDetail.todoStatus == 0"
+                    style="background-color: #2e6da4; color: white;"
+                    ng-click="submitTodo()">提交
+            </button>
+        </div>
+
+        <div style="text-align:center;">
+            <button class="btn btn-xs" ng-show="todoDetail.todoStatus != 0"
+                    style="background-color: #2e6da4; color: white;"
+                    ng-click="closeModal()">关闭
+            </button>
+        </div>
+    </div>
+
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+</div>

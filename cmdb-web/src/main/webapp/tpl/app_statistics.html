@@ -1,0 +1,347 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">统计</h1>
+                    <small class="text-muted">部署统计</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="部署详情">
+                    <div class="panel panel-default" ng-controller="deployStatisticsCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">状态</span>
+                                        <select class="form-control" ng-model="nowStatus"
+                                                ng-options="status.code as status.name for status in deployStatus">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">部署类型</span>
+                                        <select class="form-control" ng-model="nowDeployType"
+                                                ng-options="type.code as type.name for type in deployType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">回滚操作</span>
+                                        <select class="form-control" ng-model="nowDeployRollback"
+                                                ng-options="rollback.code as rollback.name for rollback in deployRollback">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">部署结果</span>
+                                        <select class="form-control" ng-model="nowErrorCode"
+                                                ng-options="errorCode.code as errorCode.name for errorCode in deployErrorCode">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>项目名</td>
+                                                <td>环境</td>
+                                                <td>部署信息</td>
+                                                <td>分支</td>
+                                                <td>状态</td>
+                                                <td>部署时间</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b>{{item.projectName}}</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #777" ng-if="item.env == 'default'">保留</b>
+                                                    <b style="color: #5bc0de" ng-if="item.env == 'dev'">dev</b>
+                                                    <b style="color: #449d44" ng-if="item.env == 'daily'">daily</b>
+                                                    <b style="color: #ec971f" ng-if="item.env == 'gray'">gray</b>
+                                                    <b style="color: #d9534f" ng-if="item.env == 'production'">prod</b>
+                                                    <b style="color: #5e5e5e" ng-if="item.env == 'test'">test</b>
+                                                    <b style="color: #286090" ng-if="item.env == 'back'">back</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090" class="pull-left">{{item.bambooDeployVersion}}</b>
+                                                    <b style="color: #777" class="pull-right">版本名称</b>
+                                                    <br/>
+                                                    <b style="color: #286090" class="pull-left">{{item.bambooBuildNumber}}</b>
+                                                    <b style="color: #777" class="pull-right">构建编号</b>
+                                                    <br/>
+                                                    <b style="color: #286090" ng-if="item.deployType == 0"
+                                                       class="pull-left">WAR</b>
+                                                    <b style="color: #ec971f" ng-if="item.deployType == 1"
+                                                       class="pull-left">PKG</b>
+                                                    <b style="color: #777" class="pull-right">包类型</b>
+                                                    <br/>
+                                                    <b style="color: #5bc0de" class="pull-left">{{item.groupName}}</b>
+                                                    <b style="color: #777" class="pull-right">服务器集群</b>
+                                                    <br/>
+                                                    <i style="color: #286090" class="icon icon-user pull-left">
+                                                        {{item.bambooManualBuildTriggerReasonUserName}}</i>
+                                                    <i uib-popover-html="item.userInfo" popover-trigger="'mouseenter'"
+                                                       class="icon icon-info" style="color: green;"></i>
+                                                    <b style="color: #777" class="pull-right">执行者</b>
+
+                                                <td>
+                                                    <i class="fa fa-code-fork"><span class="label label-default">{{item.branchName}}</span></i>
+                                                    <br/>
+                                                    <b style="color: #777">{{item.bambooDeployProject}}</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #449d44" ng-if="item.status == 0"
+                                                       class="pull-left">部署完毕</b>
+                                                    <b style="color: #ec971f" ng-if="item.status == 1"
+                                                       class="pull-left">正在部署</b>
+                                                    <b style="color: #5bc0de" ng-if="item.status == 2"
+                                                       class="pull-left">恢复正常</b>
+                                                    <b style="color: #777" class="pull-right">状态</b>
+                                                    <br/>
+                                                    <b style="color: #449d44" ng-if="item.errorCode == 0">正常</b>
+                                                    <b style="color: #d9534f" ng-if="item.errorCode == 1">错误</b>
+                                                    <b style="color: #777" class="pull-right">结果</b>
+                                                    <br/>
+                                                    <b style="color: #286090"
+                                                       ng-if="item.bambooDeployRollback == false">否</b>
+                                                    <b class="fa fa-undo" style="color: #449d44"
+                                                       ng-if="item.bambooDeployRollback == true">是</b>
+                                                    <b style="color: #777" class="pull-right">回滚操作</b>
+                                                </td>
+                                                <td>
+                                                    <i class="icon icon-control-play"> {{item.gmtCreate}}</i>
+                                                    <br/>
+                                                    <i class="icon icon-control-end"> {{item.gmtModify}}</i>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="14">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="服务器项目版本详情">
+                    <div class="panel panel-default" ng-controller="deployVersionStatisticsCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">IP</span>
+                                        <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">服务器组</span>
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">环境类型</span>
+                                        <select class="form-control" ng-model="nowEnv"
+                                                ng-options="envItem.code as envItem.name for envItem in envType"
+                                                required>
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addServer()"
+                                            ng-if="contains(authPoint, '/server/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>服务器</td>
+                                                <td>IP</td>
+                                                <td>环境</td>
+                                                <td>序列号</td>
+                                                <td>版本信息</td>
+                                                <td>仓库</td>
+                                                <td>结束时间</td>
+                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b style="color: #777">{{item.serverVO.serverGroupDO.name}}</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.serverVO.serverName}}</b>
+                                                </td>
+                                                <td>
+                                                    <span ng-show="item.serverVO.publicIP != null">{{item.serverVO.publicIP.ip}}(公)<br/>
+                                                    </span>
+                                                    {{item.serverVO.insideIP.ip}}(内)
+                                                </td>
+                                                <td>
+                                                    <b style="color: #777" ng-if="item.serverVO.envType == 0">保留</b>
+                                                    <b style="color: #5bc0de" ng-if="item.serverVO.envType == 1">dev</b>
+                                                    <b style="color: #449d44"
+                                                       ng-if="item.serverVO.envType == 2">daily</b>
+                                                    <b style="color: #ec971f"
+                                                       ng-if="item.serverVO.envType == 3">gray</b>
+                                                    <b style="color: #d9534f"
+                                                       ng-if="item.serverVO.envType == 4">prod</b>
+                                                    <b style="color: #5e5e5e"
+                                                       ng-if="item.serverVO.envType == 5">test</b>
+                                                    <b style="color: #286090"
+                                                       ng-if="item.serverVO.envType == 6">back</b>
+                                                </td>
+                                                <td>{{item.serverVO.serialNumber}}</td>
+                                                <td>
+                                                    <div ng-show="item.ciDeployStatisticsDO.bambooDeployVersion != ''">
+                                                        <b style="color: #286090" class="pull-left">{{item.ciDeployStatisticsDO.bambooDeployVersion}}</b>
+                                                        <b style="color: #777" class="pull-right">版本名称</b>
+                                                        <br/>
+                                                        <b style="color: #286090" class="pull-left">{{item.ciDeployStatisticsDO.bambooBuildNumber}}</b>
+                                                        <b style="color: #777" class="pull-right">构建编号</b>
+
+                                                        <br/>
+                                                        <b style="color: #286090" ng-if="item.ciDeployStatisticsDO.deployType == 0"
+                                                           class="pull-left">WAR</b>
+                                                        <b style="color: #ec971f" ng-if="item.ciDeployStatisticsDO.deployType == 1"
+                                                           class="pull-left">PKG</b>
+                                                        <b style="color: #777" class="pull-right">包类型</b>
+                                                        <br/>
+                                                        <b style="color: #5bc0de" class="pull-left">{{item.ciDeployStatisticsDO.groupName}}</b>
+                                                        <b style="color: #777" class="pull-right">服务器集群</b>
+                                                        <br/>
+                                                        <i style="color: #286090" class="icon icon-user pull-left">
+                                                            {{item.ciDeployStatisticsDO.bambooManualBuildTriggerReasonUserName}}</i>
+                                                        <i uib-popover-html="item.userInfo" popover-trigger="'mouseenter'"
+                                                           class="icon icon-info" style="color: green;"></i>
+                                                        <b style="color: #777" class="pull-right">执行者</b>
+
+
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div ng-show="item.ciDeployStatisticsDO.branchName != ''">
+                                                        <i class="fa fa-code-fork"><span class="label label-default">{{item.ciDeployStatisticsDO.branchName}}</span></i>
+                                                        <br/>
+                                                        <b style="color: #777">{{item.ciDeployStatisticsDO.bambooDeployProject}}</b>
+                                                    </div>
+                                                </td>
+                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ?
+                                                    item.ciDeployStatisticsDO.gmtCreate :
+                                                    item.ciDeployStatisticsDO.gmtModify}}
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/server/save')">
+                                                    <button type="button"
+                                                            class="btn btn-danger btn-default btn-xs pull-right"
+                                                            style="margin-left: 20px;" ng-click="delServer(item)"><span
+                                                            class="glyphicon glyphicon-floppy-remove"></span></button>
+                                                    <button type="button" class="btn btn-info btn-xs pull-right"
+                                                            ng-click="editServer(item)"><span
+                                                            class="glyphicon glyphicon-edit"></span></button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="11">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

@@ -1,0 +1,147 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">Ansible Script</h1>
+                    <small class="text-muted">服务器批量任务脚本配置</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="Script">
+                    <div class="panel panel-default" ng-controller="taskScriptCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryScriptName"
+                                               placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">系统Task</span>
+                                        <select class="form-control" ng-model="nowSysScript"
+                                                ng-options="sysScript.code as sysScript.name for sysScript in sysScriptType"
+                                                required>
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addScript()"
+                                            ng-if="contains(authPoint, '/task/script/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>名称</td>
+                                                <td>说明</td>
+                                                <td>类型</td>
+                                                <td>系统Task</td>
+                                                <td>创建时间</td>
+                                                <td ng-if="contains(authPoint, '/task/script/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b style="color: #286090">{{item.scriptName}}</b>
+                                                </td>
+                                                <td>
+                                                    {{item.content}}
+                                                </td>
+                                                <td>
+                                                    <b style="color: #990000" ng-if="item.scriptType == 0">private</b>
+                                                    <b style="color: #449d44" ng-if="item.scriptType == 1">public</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #990000" ng-if="item.sysScript == 0">否</b>
+                                                    <b style="color: #449d44" ng-if="item.sysScript == 1">是</b>
+                                                </td>
+                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
+                                                    : item.gmtModify}}
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/task/script/save')">
+                                                    <button ng-click="editScript(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                                    </button>
+
+                                                    <button ng-click="viewScript(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                                        <span class="glyphicon glyphicon-search"></span>查看
+                                                    </button>
+
+                                                    <button ng-click="delScript(item)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+
+                                                    <!--<span class="glyphicon glyphicon-pencil"-->
+                                                    <!--style="font-size:1em" ng-click="editServer(item)"></span>-->
+                                                    <!--<span class="glyphicon glyphicon-trash pull-right"-->
+                                                    <!--style="font-size:1em" ng-click="delServer(item)"></span>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+
+
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="scriptInfoModal">
+    <div ng-include="'tpl/modal/script_info_modal.html'"></div>
+</script>
+

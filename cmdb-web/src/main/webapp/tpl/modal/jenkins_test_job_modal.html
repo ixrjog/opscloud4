@@ -1,0 +1,346 @@
+<style>
+    .build-triggers .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">JenkinsTestJob</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+                <uib-tab index="0" heading="Job配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group" ng-show="jobItem.id == 0">
+                        <div class="col-md-6">
+                            <!--<span style="color: #ec2121;">*</span>-->
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>项目名</label>
+                            <!--<label class="col-lg-4 control-label">(Stash)Project</label>-->
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowStashProject.selected" theme="bootstrap"
+                                           ng-change="changeStashProject()">
+                                    <ui-select-match placeholder="搜索stash项目名......">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryStashProject($select.search)" refresh-dalay="0"
+                                                       repeat="item in stashProjectList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <!--<span style="color: #ec2121;">*</span>-->
+                            <label class="col-lg-4 control-label"><span
+                                    style="color: #ec2121;">*</span>Repository</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowStashRepository.selected" theme="bootstrap"
+                                           ng-change="changeStashRepository()">
+                                    <ui-select-match placeholder="搜索stash仓库名......">
+                                        {{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryStashRepository($select.search)" refresh-dalay="0"
+                                                       repeat="item in stashRepositoryList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group build-params">
+                        <label class="col-lg-2 control-label">仓库地址</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="仓库地址" ng-disabled="true"
+                                   ng-model="jobItem.repositoryUrl">
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-disabled="nowStashRepository.selected == null" ng-show="jobItem.id == 0">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"></span><span
+                                    style="color: #ec2121;">*</span>选择分支</label>
+                            <div class="col-lg-8">
+                                <select class="form-control" ng-model="nowBranch.selected" ng-disabled="doQueryRefs"
+                                        ng-options="ref.name group by ref.type for ref in refs">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <button ng-click="getRefs()" ng-disabled="doQueryRefs"
+                                    class="btn btn-sm"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <i class="fa fa-code-fork" ng-show="!doQueryRefs"></i>
+                                <i class="fa fa-spin fa-spinner" ng-show="doQueryRefs"></i>获取最新分支
+                            </button>
+                        </div>
+                    </div>
+
+
+                    <div class="form-group" ng-show="jobItem.id == 0">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>关键名称
+                            </label>
+                            <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                <input type="text" class="form-control" placeholder="任务名称" ng-model="jobName">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default"
+                                            ng-click="checkJobName(jobItem.jobName)"><i
+                                            class="glyphicon glyphicon-check pull-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">完整任务名</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="完整任务名" ng-disabled="true"
+                                   ng-model="nowFullJobName">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>环境类型</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="jobItem.jobEnvType"
+                                        ng-options="jobEnv.code as jobEnv.name for jobEnv in jobEnvType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>构建类型</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="jobItem.buildType"
+                                        ng-disabled="jobItem.buildType != -1"
+                                        ng-options="build.code as build.name for build in buildType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>Build工具</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="nowBuildTools.selected"
+                                        ng-options="tool.code as tool.name for tool in buildTools"
+                                        ng-change="changeBuildTools()">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>参数</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="参数"
+                                   ng-model="params.buildParams">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>Test report
+                            XMLs</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="$name-test/build/test-results/**/*.xml"
+                                   ng-model="params.junitTestResultReport">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">HTML directory to archive</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="$name-test/build/reports/tests/"
+                                   ng-model="params.htmlReport">
+                        </div>
+                    </div>
+
+
+                    <div class="form-group build-triggers">
+                        <!--周期进行项目构建（源码是否发生变化没有关系）-->
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">周期构建
+                                <i uib-popover-html="help.buildPeriodically"
+                                   popover-trigger="'mouseenter'"
+                                   class="icon icon-info pull-right"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="H 7 * * *"
+                                       ng-model="params.buildPeriodically">
+                            </div>
+                        </div>
+                        <!--定时检查源码变更，如果有更新就checkout最新code下来，然后执行构建动作。如果没有更新就不会执行构建-->
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">定时检查
+                                <i uib-popover-html="help.pollSCM"
+                                   popover-trigger="'mouseenter'"
+                                   class="icon icon-info pull-right"
+                                   style="color: green;"></i>
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="H 18 * * *"
+                                       ng-model="params.pollSCM">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Job说明</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder="简短描述"
+                                      ng-model="jobItem.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <div style="text-align:center;">
+
+                                <button ng-click="saveJob()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-ok"></span>保存
+                                </button>
+
+                                <button ng-click="resetJob()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #449d44; color: white;">
+                                    <span class="glyphicon glyphicon-repeat"></span>重置
+                                </button>
+                            </div>
+                            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+                            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="邮件用户列表配置" ng-show="jobItem.id > 0">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>用户名</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowUser.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索用户名称......">
+                                        {{$select.selected.username}}<{{$select.selected.displayName}}>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryUsers($select.search)" refresh-dalay="0"
+                                                       repeat="item in userList | filter: $select.search">
+                                        <div ng-bind-html="item.username + '<' + item.displayName + '>' | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-lg-2">
+                                <button ng-click="addUser()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-plus"></span>添加
+                                </button>
+
+                                <!--<span class="glyphicon glyphicon-plus" ng-click="addItem()"></span>-->
+                            </div>
+                        </div>
+                    </form>
+
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td class="col-md-3">用户</td>
+                                <td class="col-md-3">姓名</td>
+                                <td class="col-md-7">
+                                    <b style="color: #286090">Email</b>
+                                </td>
+                                <td class="col-md-2">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="user in mailUserList">
+                                <td>{{user.username}}</td>
+                                <td>{{user.displayName}}</td>
+                                <td>{{user.mail}}</td>
+                                <td>
+                                    <button ng-click="delUser(user)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="jobItem.id > 0">
+                            <!--保存-->
+                            <button ng-click="saveJob()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+    </form>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

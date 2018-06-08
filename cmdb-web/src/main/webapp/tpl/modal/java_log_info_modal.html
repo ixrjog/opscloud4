@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <h3 class="modal-title">日志详情</h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td class="col-md-2">时间</td>
+                <td>内容</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <td>
+                    <div>{{item.gmtLogtime}}</div>
+                </td>
+                <td>
+                    <div>
+                        <span>
+                            <b style="color: #777">server:</b>
+                            <b style="color: #286090">{{item.source}}</b>
+                            <i uib-popover-html="item.serverInfo"
+                               popover-trigger="'mouseenter'"
+                               class="icon icon-info"
+                               style="color: green;"></i>
+                            <!--<b class="pull-right" style="color: #777">服务器信息</b>-->
+                        </span>
+                    </div>
+
+                    <div>
+                        <span ng-show="item.path != '-'">
+
+                            <b style="color: #777">path:</b>
+                            <b style="color: #286090;word-wrap:break-word;">{{item.path}}</b>
+                            <!--<b class="pull-right" style="color: #777">日志文件</b>-->
+                        </span>
+                    </div>
+                    <!--word-wrap:break-word;-->
+                    <!--white-space:nowrap; width:150px;-->
+                    <!--word-break:break-all;-->
+                    <div style="color: #286090; word-wrap:break-word; width:700px;" >
+                        <span>
+                            <b style="color: #777">content:</b>
+                            <!--<b style="color: #286090;">{{item.content}}</b>-->
+                            <b ng-bind-html="item.content | highlight:queryItem.search">
+                            </b>
+                        </span>
+                    </div>
+
+                </td>
+            </tr>
+            </tbody>
+            <!--<tfoot>-->
+            <!--<tr>-->
+            <!--<td colspan="7">-->
+            <!--<ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"-->
+            <!--ng-model="currentPage" items-per-page="pageLength" max-size="10"-->
+            <!--ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--</tfoot>-->
+        </table>
+    </div>
+</div>

@@ -1,0 +1,13 @@
+rootProject.name = 'cmdb'
+include 'cmdb-web'
+include 'cmdb-service'
+include 'cmdb-domain'
+include 'cmdb-util'
+include 'cmdb-api'
+include 'cmdb-keybox'
+include 'cmdb-task'
+include 'cmdb-extend'
+include 'cmdb-login'
+include 'cmdb-zabbix'
+include 'cmdb-plugin'
+

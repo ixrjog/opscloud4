@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.GitlabDao">
+
+    <!-- 删除指定webHooks -->
+    <delete id="delWebHooks" parameterType="_long">
+        DELETE FROM gitlab_webhooks WHERE id = #{id}
+    </delete>
+
+    <!-- 新增指定webHooks -->
+    <insert id="addWebHooks" parameterType="GitlabWebHooksDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO gitlab_webhooks (
+        commitBefore,
+        commitAfter,
+        ref,
+        userId,
+        userName,
+        email,
+        projectId,
+        projectName,
+        projectDescription,
+        repositoryName,
+        repositoryUrl,
+        repositoryDescription,
+        repositoryHomepage,
+        webHooksType,
+        triggerBuild,
+        totalCommitsCount
+        ) VALUES (
+        #{commitBefore},
+        #{commitAfter},
+        #{ref},
+        #{userId},
+        #{userName},
+        #{email},
+        #{projectId},
+        #{projectName},
+        #{projectDescription},
+        #{repositoryName},
+        #{repositoryUrl},
+        #{repositoryDescription},
+        #{repositoryHomepage},
+        #{webHooksType},
+        #{triggerBuild},
+        #{totalCommitsCount}
+        );
+    </insert>
+
+
+    <!-- 获取webHooks数目 -->
+    <select id="getWebHooksSize" parameterType="object" resultType="_long">
+        SELECT count(*) from gitlab_webhooks
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName like "%" #{projectName} "%"
+            </if>
+            <if test="repositoryName != null and repositoryName != ''">
+                AND repositoryName like "%" #{repositoryName} "%"
+            </if>
+            <if test="webHooksType != -1">
+                AND webHooksType = #{webHooksType}
+            </if>
+            <if test="triggerBuild != -1">
+                AND triggerBuild = #{triggerBuild}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取webHooks详情 -->
+    <select id="getWebHooksPage" parameterType="object" resultType="GitlabWebHooksDO">
+        SELECT * FROM gitlab_webhooks
+        <where>
+            <if test="projectName != null and projectName != ''">
+                projectName like "%" #{projectName} "%"
+            </if>
+            <if test="repositoryName != null and repositoryName != ''">
+                AND repositoryName like "%" #{repositoryName} "%"
+            </if>
+            <if test="webHooksType != -1">
+                AND webHooksType = #{webHooksType}
+            </if>
+            <if test="triggerBuild != -1">
+                AND triggerBuild = #{triggerBuild}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="queryWebHooksById" parameterType="_long" resultType="GitlabWebHooksDO">
+        SELECT * FROM gitlab_webhooks
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- 删除指定Commits -->
+    <delete id="delCommits" parameterType="_long">
+        DELETE FROM gitlab_webhooks_commits WHERE id = #{id}
+    </delete>
+
+    <!-- 新增指定Commits -->
+    <insert id="addCommits" parameterType="GitlabWebHooksCommitsDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO gitlab_webhooks_commits (
+        webHooksId,
+        commitsId,
+        message,
+        timestamp,
+        url,
+        autherName,
+        autherEmail
+        ) VALUES (
+        #{webHooksId},
+        #{commitsId},
+        #{message},
+        #{timestamp},
+        #{url},
+        #{autherName},
+        #{autherEmail}
+        );
+    </insert>
+
+    <!-- 模糊查询匹配名称的系统列表数目 -->
+    <select id="queryCommitsByWebHooksId" parameterType="_long" resultType="GitlabWebHooksCommitsDO">
+        SELECT * FROM gitlab_webhooks_commits WHERE webHooksId = #{webHooksId}
+    </select>
+
+    <select id="queryCommitsByCommit" parameterType="string" resultType="GitlabWebHooksCommitsDO">
+        SELECT * FROM gitlab_webhooks_commits WHERE commitsId = #{commitsId}
+    </select>
+
+</mapper>

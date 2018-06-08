@@ -1,0 +1,55 @@
+dependencies {
+    //compile project(":cmdb-api")
+    compile project(":cmdb-domain")
+    compile project(":cmdb-util")
+    compile project(":cmdb-login")
+    compile project(":cmdb-plugin")
+
+    //compile 'com.shandiangou.org:org-api:1.4.1-SNAPSHOT'
+
+    compile ("com.alibaba:dubbo:${dubboVersion}") {
+        exclude group:'org.springframework', module: 'spring'
+    }
+
+    compile ("org.apache.zookeeper:zookeeper:3.4.6") {
+        exclude group:'junit', module: 'junit'
+        exclude group:'io.netty', module: 'netty'
+        exclude group:'org.slf4j', module: '*'
+        exclude group:'jline', module: 'jline'
+        exclude group:'log4j', module:'log4j'
+    }
+
+    compile ('com.101tec:zkclient:0.7') {
+        exclude group:'org.apache.zookeeper', module: 'zookeeper'
+        exclude group:'log4j', module:'log4j'
+        exclude group:'org.slf4j', module:'*'
+    }
+
+    compile "com.alibaba:druid:${druidVersion}"
+    compile "mysql:mysql-connector-java:${mysqlVersion}"
+
+    compile "org.mybatis:mybatis-spring:1.2.+"
+    compile "org.mybatis:mybatis:3.2.+"
+    // jenkins
+    compile "com.offbytwo.jenkins:jenkins-client:0.3.7"
+    // gitlab
+    compile "org.gitlab4j:gitlab4j-api:4.3.5"
+    // bamboo
+    //compile "com.atlassian.bamboo:bamboo-specs-api:6.2.2"
+    // Gson
+    compile "com.google.code.gson:gson:2.8.2"
+
+    compile group: 'org.eclipse.jgit', name: 'org.eclipse.jgit', version: '4.6.1.201703071140-r'
+
+    compile "com.squareup.okhttp:okhttp-apache:2.7.5"
+
+    compile 'org.springframework.ldap:spring-ldap-core:2.1.0.RELEASE'
+
+    compile group: 'org.codehaus.groovy', name: 'groovy-all', version: '2.4.7'
+
+    compile group: 'com.jcraft', name: 'jsch', version: '0.1.54'
+
+//    compile ('com.sdg:cloudstack-explain:0.1.6-SNAPSHOT') {
+//        exclude group:'log4j', module:'log4j'
+//    }
+}

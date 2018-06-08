@@ -1,0 +1,184 @@
+<div class="modal-header">
+    <h3 class="modal-title">日志详情</h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td class="col-md-2">时间</td>
+                <td>内容</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <td>
+                    <div>{{item.gmtLogtime}}</div>
+                </td>
+                <td>
+                    <div>
+                        <span>
+                            <b style="color: #777">uri:</b>
+                            <b style="color: #286090;word-wrap:break-word;">{{item.uri}}</b>
+                        </span>
+                    </div>
+
+                    <div>
+                        <span  ng-show="item.args != '-'">
+                            <b style="color: #777">args:</b>
+                                                     <i uib-popover-html="item.argsInfo"
+                                                        popover-trigger="'mouseenter'"
+                                                        class="icon icon-info"
+                                                        style="color: green;"></i>
+                            <b class="pull-right" style="color: #777">参数</b>
+                            <!--<p style="color: #286090;word-wrap:break-word;">{{item.args}}</p>-->
+                        </span>
+                    </div>
+
+                    <div>
+                        <span ng-show="item.bodyBytesSent != '-'">
+
+                            <b  style="color: #777">bodyBytesSent:</b>
+                            <b style="color: #286090;word-wrap:break-word;">{{item.bodyBytesSent}}</b>
+                            <b class="pull-right" style="color: #777">传送页面的字节数</b>
+                        </span>
+                    </div>
+
+                    <div>
+                        <span ng-show="item.method != '-'">
+                            <b  style="color: #777">method:</b>
+                            <b style="color: green;word-wrap:break-word;">{{item.method}}</b>
+                            <b class="pull-right" style="color: #777">请求方法</b>
+                        </span>
+                    </div>
+
+                    <div><span ng-show="item.mobile != '-'">
+
+                        <b  style="color: #777">mobile:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.mobile}}</b>
+                        <b class="pull-right" style="color: #777">卖家手机</b>
+                    </span></div>
+
+                    <div><span ng-show="item.protocol != '-'">
+
+                        <b  style="color: #777">protocol:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.protocol}}</b>
+                        <b class="pull-right" style="color: #777">协议</b>
+                    </span></div>
+
+                    <div><span ng-show="item.requestTime != '-'">
+
+                        <b  style="color: #777">requestTime:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.requestTime}}</b>
+                        <b class="pull-right" style="color: #777">整体请求延时(单位为秒精度毫秒)</b>
+                    </span></div>
+
+                    <div><span ng-show="item.slbAddr != '-'">
+
+                        <b  style="color: #777">slbAddr:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.slbAddr}}</b>
+                        <b class="pull-right" style="color: #777">阿里云SLB</b>
+                    </span></div>
+
+                    <div><span ng-show="item.sourceIp != '-'">
+
+                        <b  style="color: #777">sourceIp:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.sourceIp}}</b>
+                        <b class="pull-right" style="color: #777">访问者IP</b>
+                    </span></div>
+
+                    <div><span ng-show="item.status != '-'">
+
+                        <b  style="color: #777">status:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.status}}</b>
+                        <b class="pull-right" style="color: #777">请求状态</b>
+                    </span></div>
+
+                    <div><span ng-show="item.timeLocal != '-'">
+
+                        <b  style="color: #777">timeLocal:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.timeLocal}}</b>
+                        <b class="pull-right" style="color: #777">Nginx本地时间</b>
+                    </span></div>
+
+                    <div>
+                        <span ng-show="item.upstreamAddr != '-'">
+                            <b  style="color: #777">upstreamAddr:</b>
+                            <b style="color: #286090;word-wrap:break-word;">{{item.upstreamAddr}}</b>
+                            <i uib-popover-html="item.serverInfo"
+                               popover-trigger="'mouseenter'"
+                               class="icon icon-info"
+                               style="color: green;"></i>
+                            <b class="pull-right" style="color: #777">后端服务器</b>
+                        </span>
+                    </div>
+
+                    <div><span ng-show="item.upstreamResponseTime != '-'">
+
+                        <b  style="color: #777">upstreamResponseTime:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.upstreamResponseTime}}</b>
+                        <b class="pull-right" style="color: #777">后端服务器请求时间(单位为秒精度毫秒)</b>
+                    </span></div>
+
+                    <div><span  ng-show="item.userAgent != '-'">
+
+                            <b style="color: #777">userAgent:</b>
+                            <b style="color: #286090;word-wrap:break-word;">{{item.userAgent}}</b>
+                        </span></div>
+
+                    <div><span ng-show="item.token != '-'">
+
+                        <b  style="color: #777">token:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.token}}</b>
+                        <b class="pull-right" style="color: #777">token</b>
+                    </span></div>
+
+                    <div><span ng-show="item.traceId != '-' && item.traceId != ''">
+
+                        <b  style="color: #777">traceId:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.traceId}}</b>
+                        <b class="pull-right" style="color: #777">traceId</b>
+                    </span></div>
+
+                    <div><span ng-show="item.lat != '-'">
+
+                        <b  style="color: #777">lat:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.lat}}</b>
+                        <b class="pull-right" style="color: #777">lat</b>
+                    </span></div>
+
+                    <div><span ng-show="item.lng != '-'">
+
+                        <b  style="color: #777">lng:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.lng}}</b>
+                        <b class="pull-right" style="color: #777">lng</b>
+                    </span></div>
+
+                    <div><span ng-show="item.nss != '-' && item.nss != ''">
+
+                        <b  style="color: #777">nss:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.nss}}</b>
+                        <b class="pull-right" style="color: #777">nss</b>
+                    </span></div>
+                    <div><span ng-show="item.udid != '-'">
+
+                        <b  style="color: #777">udid:</b>
+                        <b style="color: #286090;word-wrap:break-word;">{{item.udid}}</b>
+                        <b class="pull-right" style="color: #777">udid</b>
+                    </span></div>
+                </td>
+            </tr>
+            </tbody>
+            <!--<tfoot>-->
+            <!--<tr>-->
+            <!--<td colspan="7">-->
+            <!--<ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"-->
+            <!--ng-model="currentPage" items-per-page="pageLength" max-size="10"-->
+            <!--ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>-->
+            <!--</td>-->
+            <!--</tr>-->
+            <!--</tfoot>-->
+        </table>
+    </div>
+</div>

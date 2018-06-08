@@ -1,0 +1,183 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">持续集成</h1>
+                    <small class="text-muted">构建任务管理</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="任务管理">
+                    <div class="panel panel-default" ng-controller="jenkinsJobsCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">构建任务名</span>
+                                        <input type="text" class="form-control" ng-model="queryJobName"
+                                               placeholder="jobName">
+                                    </div>
+                                </div>
+                                <!--<div class="form-group">-->
+                                    <!--<div class="input-group">-->
+                                        <!--<span class="input-group-addon">仓库名</span>-->
+                                        <!--<input type="text" class="form-control" ng-model="queryRepositoryName"-->
+                                               <!--placeholder="repositoryName">-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">环境类型</span>
+                                        <select class="form-control" ng-model="nowJobEnvType"
+                                                ng-options="jobEnv.code as jobEnv.name for jobEnv in jobEnvType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">构建类型</span>
+                                        <select class="form-control" ng-model="nowBuildType"
+                                                ng-options="build.code as build.name for build in buildType"
+                                                required>
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addJob()"
+                                            ng-if="contains(authPoint, '/jenkins/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td class="col-md-3">任务</td>
+                                                <td class="col-md-4">参数</td>
+                                                <td>环境类型</td>
+                                                <td>构建类型</td>
+                                                <td>创建时间</td>
+                                                <td ng-if="contains(authPoint, '/jenkins/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>{{item.jobName}}
+                                                    <b class="pull-right">名称</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.repositoryUrl}}</b>
+                                                    <b class="pull-right" ng-show="item.repositoryUrl != ''">仓库</b>
+                                                    </br>
+                                                    {{item.content}}
+                                                    <b class="pull-right" ng-show="item.content != ''">说明</b>
+                                                </td>
+                                                <td>
+                                                    <div class="col-md-12" ng-repeat="param in item.params">
+                                                        <b style="color: #d9534f">{{param.paramName}}</b>
+                                                        :
+                                                        <b style="color: darkred">{{param.paramValue}}</b>
+                                                        <b class="pull-right" ng-show="param.content != ''">{{param.content}}</b>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <b style="color: darkred" ng-if="item.jobEnvType== 0">err</b>
+                                                    <b style="color: #d9534f" ng-if="item.jobEnvType == 1">prod</b>
+                                                    <b style="color: #449d44" ng-if="item.jobEnvType == 2">daily</b>
+                                                    <b style="color: #ec971f" ng-if="item.jobEnvType == 3">gray</b>
+                                                    <b style="color: #ec971f" ng-if="item.jobEnvType == 4">onlineDev</b>
+                                                    <b style="color: #d9534f" ng-if="item.jobEnvType == 5">release</b>
+                                                    <b style="color: red" ng-if="item.jobEnvType == 6">all</b>
+                                                    <b style="color: grey" ng-if="item.jobEnvType == 7">debug</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: darkred" ng-if="item.buildType== 0">前端构建</b>
+                                                    <b style="color: #286090" ng-if="item.buildType == 1">Android</b>
+                                                    <b style="color: green" ng-if="item.buildType == 2">IOS</b>
+                                                </td>
+                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
+                                                    : item.gmtModify}}
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/jenkins/save')">
+
+                                                    <button ng-click="buildJob(item)"
+                                                            class="btn btn-xs"
+                                                            ng-disabled="butSaveDisabled"
+                                                            style="margin-left: 5px; background-color: green; color: white;">
+                                                        <i class="fa fa-spin fa-spinner" ng-show="butBuildSpinDisabled"></i>
+                                                        <i class="icon icon-control-play" ng-show="!butBuildSpinDisabled"></i>执行
+                                                    </button>
+
+                                                    <button ng-click="editJob(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                                    </button>
+
+                                                    <button ng-click="delJob(item.id)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="6">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<!--新增jenkins任务-->
+<script type="text/ng-template" id="jenkinsJobModal">
+    <div ng-include="'tpl/modal/jenkins_job_modal.html'"></div>
+</script>
+
+<!--build-ios参数选择-->
+<script type="text/ng-template" id="jenkinsJobBuildModal">
+    <div ng-include="'tpl/modal/jenkins_job_build_modal.html'"></div>
+</script>

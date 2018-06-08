@@ -1,0 +1,494 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{userItem.username}}
+        <b style="color: #286090">{{userItem.displayName}}</b></h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>名称</td>
+                <td>描述</td>
+                <td>授权</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <b>confluence-users</b>
+                </td>
+                <td>wiki普通用户</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.confluenceUsers == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.confluenceUsers == 0">未授权</span>
+                </td>
+                <td>
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'confluence-users')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.confluenceUsers == 1">-->
+                    <!--</span>-->
+
+                    <button ng-click="delUserGroup(userItem.username,'confluence-users')"
+                            ng-show="userItem.userLdapGroupVO.confluenceUsers == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'confluence-users')"
+                            ng-show="userItem.userLdapGroupVO.confluenceUsers == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'confluence-users')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.confluenceUsers == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #286090" class="icon icon-badge">confluence-admin</b>
+                </td>
+                <td>wiki管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.confluenceAdmin == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.confluenceAdmin == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'confluence-admin')"
+                            ng-show="userItem.userLdapGroupVO.confluenceAdmin == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'confluence-admin')"
+                            ng-show="userItem.userLdapGroupVO.confluenceAdmin == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'confluence-admin')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.confluenceAdmin == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'confluence-admin')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.confluenceAdmin == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #ec971f" class="icon icon-diamond">confluence-administrators</b>
+                </td>
+                <td>wiki系统管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.confluenceAdministrators == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.confluenceAdministrators == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'confluence-administrators')"
+                            ng-show="userItem.userLdapGroupVO.confluenceAdministrators == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'confluence-administrators')"
+                            ng-show="userItem.userLdapGroupVO.confluenceAdministrators == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'confluence-administrators')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.confluenceAdministrators == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'confluence-administrators')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.confluenceAdministrators == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>jira-users</b>
+                </td>
+                <td>jira普通用户</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.jiraUsers == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.jiraUsers == 0">未授权</span>
+                </td>
+                <td>
+
+                    <button ng-click="delUserGroup(userItem.username,'jira-users')"
+                            ng-show="userItem.userLdapGroupVO.jiraUsers == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'jira-users')"
+                            ng-show="userItem.userLdapGroupVO.jiraUsers == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'jira-users')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.jiraUsers == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'jira-users')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.jiraUsers == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #286090" class="icon icon-badge">jira-administrators</b>
+                </td>
+                <td>jira管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.jiraAdministrators == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.jiraAdministrators == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'jira-administrators')"
+                            ng-show="userItem.userLdapGroupVO.jiraAdministrators == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'jira-administrators')"
+                            ng-show="userItem.userLdapGroupVO.jiraAdministrators == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'jira-administrators')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.jiraAdministrators == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'jira-administrators')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.jiraAdministrators == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #ec971f" class="icon icon-diamond">crowd-admin</b>
+                </td>
+                <td>crowd管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.crowdAdmin == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.crowdAdmin == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'crowd-admin')"
+                            ng-show="userItem.userLdapGroupVO.crowdAdmin == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'crowd-admin')"
+                            ng-show="userItem.userLdapGroupVO.crowdAdmin == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+                    <!---->
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'crowd-admin')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.crowdAdmin == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'crowd-admin')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.crowdAdmin == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #286090" class="icon icon-badge">stash-admin</b>
+                </td>
+                <td>stash管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.stashAdmin == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.stashAdmin == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'stash-admin')"
+                            ng-show="userItem.userLdapGroupVO.stashAdmin == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'stash-admin')"
+                            ng-show="userItem.userLdapGroupVO.stashAdmin == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'stash-admin')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.stashAdmin == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'stash-admin')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.stashAdmin == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #286090" class="icon icon-badge">Administrators</b>
+                </td>
+                <td>通用管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.administrators == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.administrators == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'Administrators')"
+                            ng-show="userItem.userLdapGroupVO.administrators == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'Administrators')"
+                            ng-show="userItem.userLdapGroupVO.administrators == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'Administrators')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.administrators == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'Administrators')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.administrators == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>nexus-developer</b>
+                </td>
+                <td>nexus开发者权限</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.nexusDeveloper == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.nexusDeveloper == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'nexus-developer')"
+                            ng-show="userItem.userLdapGroupVO.nexusDeveloper == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'nexus-developer')"
+                            ng-show="userItem.userLdapGroupVO.nexusDeveloper == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                    <!--ng-click="delUserGroup(userItem.username,'nexus-developer')"-->
+                    <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.nexusDeveloper == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                    <!--ng-click="addUserGroup(userItem.username,'nexus-developer')"-->
+                    <!--ng-show="userItem.userLdapGroupVO.nexusDeveloper == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #ec971f" class="icon icon-diamond">nexus-administrators</b>
+                </td>
+                <td>nexus管理员</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.userLdapGroupVO.nexusAdministrators == 1">已授权</b>
+                    <span ng-if="userItem.userLdapGroupVO.nexusAdministrators == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="delUserGroup(userItem.username,'nexus-administrators')"
+                            ng-show="userItem.userLdapGroupVO.nexusAdministrators == 1"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="addUserGroup(userItem.username,'nexus-administrators')"
+                            ng-show="userItem.userLdapGroupVO.nexusAdministrators == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+
+                               <!--<span class="glyphicon glyphicon-log-out pull-right"-->
+                                     <!--ng-click="delUserGroup(userItem.username,'nexus-administrators')"-->
+                                     <!--style="color: #d9534f" ng-show="userItem.userLdapGroupVO.nexusAdministrators == 1">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                          <!--ng-click="addUserGroup(userItem.username,'nexus-administrators')"-->
+                          <!--ng-show="userItem.userLdapGroupVO.nexusAdministrators == 0">-->
+                    <!--</span>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>名称</td>
+                <td>描述</td>
+                <td>类型</td>
+                <td>状态</td>
+                <td>操作</td>
+                <td ng-if="contains(authPoint, '/server/del')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <td>
+                    <b>堡垒机</b>
+                </td>
+                <td>堡垒机授权</td>
+                <td>SYSTEM</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.authed == 1">已授权</b>
+                    <span ng-if="userItem.authed == 0">未授权</span>
+                </td>
+                <td>
+                    <button ng-click="unauth(userItem.username)"
+                            ng-show="userItem.authed != 0"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
+
+                    <button ng-click="auth(userItem.username)"
+                            ng-show="userItem.authed == 0"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>授权
+                    </button>
+                    <!---->
+                    <!--<span style="color: #d9534f" class="glyphicon glyphicon-log-out pull-right"-->
+                          <!--ng-click="unauth(userItem.username)"-->
+                          <!--ng-show="userItem.authed != 0">-->
+                    <!--</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left" ng-click="auth(userItem.username)"-->
+                          <!--ng-show="userItem.authed == 0">-->
+                    <!--</span>-->
+
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>LDAP绑定</b>
+                </td>
+                <td>LDAP绑定</td>
+                <td>LDAP</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.ldap != 0">已绑定</b>
+                    <span ng-if="userItem.ldap == 0">未绑定</span>
+                </td>
+                <td>
+                    <button ng-click="unbind(userItem.username)"
+                            ng-show="userItem.ldap != 0"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解绑不可恢复
+                    </button>
+
+                    <!--<span style="color: #d9534f" class="glyphicon glyphicon-log-out pull-right"-->
+                          <!--ng-click="unbind(userItem.username)"-->
+                          <!--ng-show="userItem.ldap != 0">不可恢复</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b style="color: #286090">{{userItem.mail}}</b>
+                </td>
+                <td>邮箱</td>
+                <td>LDAP</td>
+                <td>
+                    <b style="color: #449d44" ng-if="userItem.mailAccountStatus == 'active'">正常</b>
+                    <b style="color: #ec971f" ng-if="userItem.mailAccountStatus == 'closed'">关闭</b>
+                    <span ng-if="userItem.mailAccountStatus == 'locked'">锁定</span>
+                    <span ng-if="userItem.mailAccountStatus == 'null'">删除</span>
+                </td>
+                <td>
+                    <button ng-click="closeMail(userItem.username)"
+                            ng-show="userItem.mailAccountStatus == 'active'"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>关闭邮箱
+                    </button>
+
+                    <button ng-click="activeMail(userItem.username)"
+                            ng-show="userItem.mailAccountStatus == 'closed'"
+                            class="btn btn-xs pull-left"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-log-in"></span>激活邮箱
+                    </button>
+
+                    <!--<span style="color: #d9534f" class="glyphicon glyphicon-log-out pull-right"-->
+                          <!--ng-click="closeMail(userItem.username)"-->
+                          <!--ng-show="userItem.mailAccountStatus == 'active'">关闭邮箱</span>-->
+                    <!--<span class="glyphicon glyphicon-log-in pull-left"-->
+                          <!--ng-click="activeMail(userItem.username)"-->
+                          <!--ng-show="userItem.mailAccountStatus == 'closed'">激活邮箱</span>-->
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <b>LDAP组</b>
+                </td>
+                <td>ldap组数量</td>
+                <td>LDAP-GROUP</td>
+                <td>
+                    <span class="badge pull-right" ng-if="userItem.ldapGroups.length == 0">{{userItem.ldapGroups.length}}</span>
+                    <span class="badge pull-right bg-success"
+                          ng-if="userItem.ldapGroups.length > 0 && userItem.ldapGroups.length < 10">{{userItem.ldapGroups.length}}</span>
+                    <span class="badge pull-right bg-info" ng-if="userItem.ldapGroups.length >= 10">{{userItem.ldapGroups.length}}</span>
+                </td>
+                <td>
+                    <button ng-click="unbindGroup(userItem.username)"
+                            ng-show="userItem.ldapGroups.length > 0"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>不可恢复
+                    </button>
+
+                    <!--<span style="color: #d9534f" class="glyphicon glyphicon-log-out pull-right"-->
+                          <!--ng-click="unbindGroup(userItem.username)" ng-show="userItem.ldapGroups.length > 0">不可恢复</span>-->
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

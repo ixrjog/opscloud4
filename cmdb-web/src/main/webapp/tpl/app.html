@@ -1,0 +1,86 @@
+  <!-- navbar -->
+  <div data-ng-include=" 'tpl/blocks/header.html' " class="app-header navbar">
+  </div>
+  <!-- / navbar -->
+
+  <!-- menu -->
+  <div data-ng-include=" 'tpl/blocks/aside.html' " class="app-aside hidden-xs {{app.settings.asideColor}}">
+  </div>
+  <!-- / menu -->
+
+  <!-- content -->
+  <div class="app-content">
+    <div ui-butterbar></div>
+    <a href class="off-screen-toggle hide" ui-toggle-class="off-screen" data-target=".app-aside" ></a>
+    <div class="app-content-body fade-in-up" ui-view></div>
+  </div>
+  <!-- /content -->
+
+  <!-- aside right -->
+  <div class="app-aside-right pos-fix no-padder w-md w-auto-xs bg-white b-l animated fadeInRight hide">
+    <div class="vbox">
+      <div class="wrapper b-b b-t b-light m-b">
+        <a href class="pull-right text-muted text-md" ui-toggle-class="show" target=".app-aside-right"><i class="icon-close"></i></a>
+        Chat
+      </div>
+      <div class="row-row">
+        <div class="cell">
+          <div class="cell-inner padder">
+            <!-- chat list -->
+            <div class="m-b">
+              <a href class="pull-left thumb-xs avatar"><img src="img/a2.jpg" alt="..."></a>
+              <div class="clear">
+                <div class="pos-rlt wrapper-sm b b-light r m-l-sm">
+                  <span class="arrow left pull-up"></span>
+                  <p class="m-b-none">Hi John, What's up...</p>
+                </div>
+                <small class="text-muted m-l-sm"><i class="fa fa-ok text-success"></i> 2 minutes ago</small>
+              </div>
+            </div>
+            <div class="m-b">
+              <a href class="pull-right thumb-xs avatar"><img src="img/a3.jpg" class="img-circle" alt="..."></a>
+              <div class="clear">
+                <div class="pos-rlt wrapper-sm bg-light r m-r-sm">
+                  <span class="arrow right pull-up arrow-light"></span>
+                  <p class="m-b-none">Lorem ipsum dolor :)</p>
+                </div>
+                <small class="text-muted">1 minutes ago</small>
+              </div>
+            </div>
+            <div class="m-b">
+              <a href class="pull-left thumb-xs avatar"><img src="img/a2.jpg" alt="..."></a>
+              <div class="clear">
+                <div class="pos-rlt wrapper-sm b b-light r m-l-sm">
+                  <span class="arrow left pull-up"></span>
+                  <p class="m-b-none">Great!</p>
+                </div>
+                <small class="text-muted m-l-sm"><i class="fa fa-ok text-success"></i>Just Now</small>
+              </div>
+            </div>
+            <!-- / chat list -->
+          </div>
+        </div>
+      </div>
+      <div class="wrapper m-t b-t b-light">
+        <form class="m-b-none">
+          <div class="input-group">
+            <input type="text" class="form-control" placeholder="Say something">
+            <span class="input-group-btn">
+              <button class="btn btn-default" type="button">SEND</button>
+            </span>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- / aside right -->
+
+  <!-- footer -->
+  <div class="app-footer wrapper b-t bg-light">
+    <span class="pull-right">{{app.version}} <a href ui-scroll="app" class="m-l-sm text-muted"><i class="fa fa-long-arrow-up"></i></a></span>
+    &copy; 2016 Copyright.
+  </div>
+  <!-- / footer -->
+
+  <!--<div data-ng-include=" 'tpl/blocks/settings.html' " class="settings panel panel-default">-->
+  </div>

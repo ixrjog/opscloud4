@@ -1,0 +1,260 @@
+<div class="modal-header">
+    <h3 class="modal-title">项目管理配置</h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+                <uib-tab index="0" heading="项目配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">项目名称</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="项目名称" ng-model="pm.projectName">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">期限类型</label>
+                            <div class="col-lg-8">
+                                <div class="input-group">
+                                    <label class="radio-inline">
+                                        <input type="radio" ng-model="pm.projectType" value=0 ng-checked="true">
+                                        <b style="margin-left: 5px; color: #286090">长期</b>
+                                    </label>
+                                    <label class="radio-inline" style="margin-left: 50px;">
+                                        <input type="radio" ng-model="pm.projectType" value=1 ng-checked="false">
+                                        <b style="margin-left: 5px; color: #286090">临时</b>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">TTL(Day)</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="生命周期"
+                                       ng-model="pm.ttl">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <!--<span style="color: #ec2121;">*</span>-->
+                            <label class="col-lg-4 control-label">负责人</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowLeaderUser.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索用户名......">
+                                        {{$select.selected.username}}<{{$select.selected.displayName}}>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryUsers($select.search)" refresh-dalay="0"
+                                                       repeat="item in userList | filter: $select.search">
+                                        <div ng-bind-html="item.username + '<' + item.displayName + '>' | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">上线日期</label>
+                            <div class="col-lg-8">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" ng-model="pm.dt" uib-datepicker-popup
+                                           is-open="popup.opened" datepicker-options="dateOptions"
+                                           ng-required="true" close-text="Close"/>
+                                    <span class="input-group-btn">
+                                          <button type="button" class="btn btn-default"
+                                                  ng-click="open()">
+                                          <i class="glyphicon glyphicon-calendar"></i>
+                                          </button>
+                                    </span>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">说明</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" ng-model="pm.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <!--保存-->
+                            <button ng-click="saveItem()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+
+                            <button ng-click="resetServerItem()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+
+                            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+                            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+                        </div>
+
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="用户配置" ng-if="pm.id != 0">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>用户名</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowUser.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索用户名称......">
+                                        {{$select.selected.username}}<{{$select.selected.displayName}}>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryUsers($select.search)" refresh-dalay="0"
+                                                       repeat="item in userList | filter: $select.search">
+                                        <div ng-bind-html="item.username + '<' + item.displayName + '>' | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-lg-2">
+                                <button ng-click="addUser()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-plus"></span>添加
+                                </button>
+
+                                <!--<span class="glyphicon glyphicon-plus" ng-click="addItem()"></span>-->
+                            </div>
+                        </div>
+                    </form>
+
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td class="col-md-3">用户</td>
+                                <td class="col-md-3">姓名</td>
+                                <td class="col-md-7">
+                                    <b style="color: #286090">Email</b>
+                                </td>
+                                <td class="col-md-2">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in pm.users">
+                                <td>{{item.userDO.username}}</td>
+                                <td>{{item.userDO.displayName}}</td>
+                                <td>{{item.userDO.mail}}</td>
+                                <td>
+                                    <button ng-click="delUser(item.id)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"
+                                        ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                        ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
+                                        next-text="&rsaquo;"></ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+                </uib-tab>
+                <uib-tab index="2" heading="服务器组配置" ng-if="pm.id != 0">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>服务器组</label>
+                            <div class="col-lg-5">
+                                <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                                    <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                                       repeat="item in serverGroupList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-lg-2">
+                                <button ng-click="addServerGroup()"
+                                        class="btn btn-xs"
+                                        uib-popover-html="'添加服务器组'" popover-trigger="'mouseenter'"
+                                        style="background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-plus"></span>添加</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td>服务器组</td>
+                                <td class="col-md-3">描述</td>
+                                <td class="col-md-2">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in pm.serverGroups">
+                                <td>
+                                    <b style="color: #286090">{{item.serverGroupDO.name}}</b>
+                                    <b style="color: #777">{{item.serverGroupDO.content}}</b>
+                                </td>
+                                <td>
+                                    <b style="color: #777">{{item.serverGroupDO.content}}</b>
+                                </td>
+                                <td>
+                                    <button ng-click="delServerGroup(item.id)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除服务器组'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除</button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                    <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"
+                                        ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                        ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </uib-tab>
+            </uib-tabset>
+
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

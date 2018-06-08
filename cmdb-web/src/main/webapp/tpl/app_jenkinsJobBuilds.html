@@ -1,0 +1,156 @@
+<style>
+    .build-params .popover {
+        max-width: 600px !important;
+    }
+</style>
+
+
+
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">持续集成</h1>
+                    <small class="text-muted">构建任务详情</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="持续集成任务详情">
+                    <div class="panel panel-default" ng-controller="jenkinsJobBuildsCtrl">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">构建任务名</span>
+                                        <input type="text" class="form-control" ng-model="queryJobName" placeholder="jobName">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">任务编号</span>
+                                        <input type="text" class="form-control" ng-model="queryBuildNumber" placeholder="buildNumber">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addServer()"
+                                            ng-if="contains(authPoint, '/server/save')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+
+                            <div class="panel panel-default build-params" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>构建任务名</td>
+                                                <td>构建详情</td>
+                                                <td class="col-md-4">任务通知</td>
+                                                <td>创建时间</td>
+                                                <td>操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>{{item.jobName}}
+                                                    </br>
+                                                    {{item.content}}
+                                                </td>
+                                                <td>
+                                                    <b style="color: darkred" ng-if="item.buildType== 0">前端构建</b>
+                                                    <b style="color: #eea236" ng-if="item.buildType == 1">Android</b>
+                                                    <b style="color: green" ng-if="item.buildType == 2">IOS</b>
+                                                    <b class="pull-right">构建类型</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.buildNumber}}</b>
+                                                    <b class="pull-right">构建编号</b>
+                                                    </br>
+                                                    <b style="color: #286090">{{item.username}}<{{item.email}}></b>
+                                                    <b class="pull-right">用户</b>
+                                                    <div ng-show="item.webHooks.ref != null && item.webHooks.ref != ''">
+                                                        <b style="color: #286090" >{{item.webHooks.ref}}</b>
+                                                        <b class="pull-right">ref</b>
+                                                    </div>
+                                                    <div>
+                                                        <i uib-popover-html="item.paramsInfo"
+                                                           popover-trigger="'mouseenter'"
+                                                           class="icon icon-info pull-left"
+                                                           style="color: green;"></i>
+                                                        <b class="pull-right">执行参数</b>
+                                                    </div>
+                                                </td>
+
+                                                <td>
+                                                    <div class="col-md-12" ng-repeat="jobNote in item.jobNotes">
+                                                        <b style="color: #286090">阶段:</b>
+                                                            {{jobNote.buildPhase}}
+                                                        <b style="color: #286090" ng-if="jobNote.buildStatus !=''">状态:</b>
+                                                            {{jobNote.buildStatus}}
+                                                        <b style="color: #286090">时间:</b>
+                                                        {{jobNote.timeView}}
+                                                        <a style="color: green" href={{jobNote.buildConsoleUrl}} target="_blank">查看日志</a>
+                                                        <i uib-popover-html="'通知'"
+                                                           popover-trigger="'mouseenter'"
+                                                           class="glyphicon glyphicon-envelope pull-right"
+                                                           style="color: green;" ng-show="jobNote.notice == true"></i>
+                                                    </div>
+                                                </td>
+                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
+                                                    : item.gmtModify}}
+                                                </td>
+                                                <td>
+                                                    <button ng-click="rebuildJob(item.id)"
+                                                            class="btn btn-xs"
+                                                            ng-disabled="butSaveDisabled"
+                                                            style="margin-left: 5px; background-color: green; color: white;">
+                                                        <i class="fa fa-spin fa-spinner" ng-show="butBuildSpinDisabled"></i>
+                                                        <i class="icon icon-control-play" ng-show="!butBuildSpinDisabled"></i>执行
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="9">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

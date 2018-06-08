@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ZabbixServerDao">
+
+
+    <!-- 新增类目 -->
+    <insert id="addTemplate" parameterType="ZabbixTemplateDO">
+        INSERT INTO oc_zabbix_template(
+        templateName,
+        templateid,
+        enabled
+        ) VALUES (
+        #{templateName},
+        #{templateid},
+        #{enabled}
+        );
+    </insert>
+
+    <!-- 更新类目 -->
+    <update id="updateTemplate" parameterType="ZabbixTemplateDO">
+        UPDATE oc_zabbix_template
+        SET
+        enabled = #{enabled}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delTemplate" parameterType="_long">
+        DELETE FROM oc_zabbix_template WHERE id = #{id}
+    </delete>
+
+    <!-- 查询合适条件下的类目数目 -->
+    <select id="getTemplateSize" parameterType="object" resultType="_long">
+        SELECT count(*) FROM oc_zabbix_template
+        <where>
+            <if test="templateName != null and templateName != ''">
+                templateName LIKE "%" #{templateName} "%"
+            </if>
+            <if test="enabled != -1">
+                AND enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询合适条件下的类目分页数据 -->
+    <select id="getTemplatePage" parameterType="object" resultType="ZabbixTemplateDO">
+        SELECT * FROM oc_zabbix_template
+        <where>
+            <if test="templateName != null and templateName != ''">
+                templateName LIKE "%" #{templateName} "%"
+            </if>
+            <if test="enabled != -1">
+                AND enabled = #{enabled}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <select id="getTemplateByName" parameterType="object" resultType="ZabbixTemplateDO">
+        SELECT * FROM oc_zabbix_template
+        WHERE templateName = #{templateName}
+    </select>
+
+    <select id="getTemplate" parameterType="_long" resultType="ZabbixTemplateDO">
+        SELECT * FROM oc_zabbix_template
+        WHERE id = #{id}
+    </select>
+
+</mapper>

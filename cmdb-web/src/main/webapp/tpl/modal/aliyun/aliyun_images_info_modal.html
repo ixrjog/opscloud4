@@ -1,0 +1,81 @@
+<div class="modal-header">
+    <h3 class="modal-title"><b style="color: #286090">Images</b></h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <form class="form-horizontal">
+            <div class="form-group ">
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">版本号</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="版本号"
+                               ng-model="aliyunEcsImage.version">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">镜像说明</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="镜像说明"
+                               ng-model="aliyunEcsImage.imageDesc">
+                    </div>
+                </div>
+            </div>
+
+            <table class="table table-hover table-bordered table-striped" ng-show="alert.msg == ''">
+                <thead>
+                <tr>
+                    <td><b style="color: #286090">镜像ID</b></td>
+                    <td><b style="color: #286090">镜像名称</b></td>
+                    <td><b style="color: #286090">系统名称</b></td>
+                    <td><b style="color: #286090">创建时间</b></td>
+                    <td><b style="color: #286090">操作</b></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="image in images">
+                    <td>
+                        {{image.imageId}}
+                    </td>
+                    <td>
+                        {{image.imageName}}
+                    </td>
+                    <td>
+                        {{image.oSName}}
+                    </td>
+                    <td>
+                        {{image.creationTime}}
+                    </td>
+                    <td>
+                        <button ng-click="addImageItem(image)"
+                                class="btn btn-xs"
+                                style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                            <span class="glyphicon glyphicon-plus"></span>添加
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+    <!--按钮-->
+    <div class="form-group">
+
+        <div style="text-align:center;">
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+
+        </div>
+    </div>
+
+
+</div>

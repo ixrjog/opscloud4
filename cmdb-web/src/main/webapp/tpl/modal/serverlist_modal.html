@@ -1,0 +1,87 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{serverGroup.name}}服务器列表</h3>
+</div>
+<div class="modal-body">
+    <form class="form-inline" role="form">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">名称</span>
+                <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">使用类型</span>
+                <select class="form-control" ng-model="nowType" ng-options="type.code as type.name for type in useType">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">环境类型</span>
+                <select class="form-control" ng-model="nowEnv" ng-options="envItem.code as envItem.name for envItem in envType">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <button type="button" class="btn btn-default" ng-click="doQuery()">搜索</button>
+            <button type="button" class="btn btn-info" ng-click="reSet()">重置</button>
+        </div>
+    </form>
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>服务器</td>
+                <td>公网IP</td>
+                <td>内网IP</td>
+                <td>使用类型</td>
+                <td>环境</td>
+                <td>序列号</td>
+                <td ng-if="contains(authPoint, '/server/del')">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <td>{{item.serverName}}</td>
+                <td>{{item.publicIP.ip}}</td>
+                <td>{{item.insideIP.ip}}</td>
+                <td>
+                    <b style="color: #777" ng-if="item.useType == 10">bi</b>
+                    <b style="color: #843534" ng-if="item.useType == 1">zookeeper</b>
+                    <b style="color: #286090" ng-if="item.useType == 2">web-service</b>
+                    <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
+                    <b style="color: #286090" ng-if="item.useType == 4">other</b>
+                    <b style="color: #777" ng-if="item.useType == 5">web-php</b>
+                    <b style="color: #286090" ng-if="item.useType == 6">public</b>
+                    <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
+                    <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
+                    <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                </td>
+                <td>
+                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                </td>
+                <td>{{item.serialNumber}}</td>
+                <td ng-if="contains(authPoint, '/server/del')">
+                    <button type="button" class="btn btn-sm btn-danger pull-right" ng-click="delServer(item.id)">删除</button>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            <tr>
+                <td colspan="7">
+                    <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems" ng-model="currentPage" items-per-page="pageLength" max-size="10" ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                </td>
+            </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>

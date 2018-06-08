@@ -1,0 +1,126 @@
+allprojects {
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+
+    idea {
+        module {
+            downloadSources=true
+            downloadJavadoc=true
+        }
+    }
+
+    configurations {
+        provided
+        compile.extendsFrom provided
+        deployerJars
+    }
+
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                configuration = configurations.deployerJars
+                snapshotRepository(url: "http://nexus.opscloud.com/nexus/content/repositories/snapshots/") {
+                    authentication(userName: "opscloud", password: "opscloud")
+                }
+                repository(url:"http://nexus.nexus.opscloud.com/nexus/content/repositories/releases/") {
+                    authentication(userName: "opscloud", password: "opscloud")
+                }
+            }
+        }
+    }
+
+    task sourcesJar(type: Jar, dependsOn: classes) {
+        classifier = 'sources'
+        from sourceSets.main.allSource
+    }
+
+    task javadocJar(type: Jar, dependsOn: javadoc) {
+        classifier = 'javadoc'
+        from javadoc.destinationDir
+    }
+
+    artifacts {
+        archives sourcesJar
+        archives javadocJar
+    }
+
+    repositories {
+        maven {
+            name 'sdg-repository'
+            url 'http://repo1.maven.org/maven2/'
+        }
+        mavenLocal()
+    }
+
+    configurations.all {
+        // check for updates every build
+        resolutionStrategy.cacheChangingModulesFor 0, 'seconds'
+    }
+
+    group 'com.sdg'
+
+    version '1.0.0-SNAPSHOT'
+
+    sourceCompatibility = 1.8
+
+    tasks.withType(JavaCompile) {
+        options.encoding = "UTF-8"
+    }
+}
+
+ext {
+    springVersion='4.3.3.RELEASE'
+    druidVersion='1.0.14'
+    dubboVersion='2.5.3'
+    mysqlVersion='5.1.36'
+    slf4jVersion='1.7.12'
+    jacksonVersion='1.9.13'
+}
+
+
+subprojects {
+    dependencies {
+        deployerJars "org.apache.maven.wagon:wagon-http:2.2"
+        testCompile "org.sonarsource.scanner.gradle:sonarqube-gradle-plugin:2.2"
+        testCompile "org.jacoco:jacoco-maven-plugin:0.7.4.201502262128"
+
+        testCompile "junit:junit:4.12"
+        testCompile "org.mockito:mockito-all:1.10.19"
+        compile "org.apache.commons:commons-lang3:3.1"
+        compile "commons-collections:commons-collections:3.2.1"
+        compile "org.springframework:spring-context:${springVersion}"
+        compile "org.springframework:spring-context-support:${springVersion}"
+        compile "org.springframework:spring-core:${springVersion}"
+        compile "org.springframework:spring-beans:${springVersion}"
+        compile "org.springframework:spring-web:${springVersion}"
+        compile "org.springframework:spring-webmvc:${springVersion}"
+        compile "org.springframework:spring-tx:${springVersion}"
+        compile "org.springframework:spring-jdbc:${springVersion}"
+        compile "org.springframework:spring-test:${springVersion}"
+        compile "org.springframework:spring-aop:${springVersion}"
+        compile ('org.springframework.data:spring-data-redis:1.7.2.RELEASE')
+        compile 'redis.clients:jedis:2.6.3'
+
+        compile 'com.alibaba:fastjson:1.2.13'
+        compile "org.slf4j:slf4j-api:${slf4jVersion}"
+        compile "org.slf4j:log4j-over-slf4j:${slf4jVersion}"
+        compile "org.slf4j:jcl-over-slf4j:${slf4jVersion}"
+
+        compile "org.codehaus.jackson:jackson-core-asl:${jacksonVersion}"
+        compile "org.codehaus.jackson:jackson-mapper-asl:${jacksonVersion}"
+        compile "com.fasterxml.jackson.core:jackson-core:2.4.4"
+        compile "com.fasterxml.jackson.core:jackson-databind:2.4.4"
+
+        compile group: 'com.aliyun', name: 'aliyun-java-sdk-ecs', version: '2.2.3'
+        compile group: 'com.aliyun', name: 'aliyun-java-sdk-core', version: '3.0.8'
+        // 阿里云日志服务
+        compile group: 'com.google.protobuf', name: 'protobuf-java', version: '2.5.0'
+        compile group: 'com.aliyun.openservices', name: 'aliyun-log', version: '0.6.6'
+
+
+        compile group: 'com.vmware', name: 'vijava', version: '5.1'
+
+        compile 'ch.qos.logback:logback-classic:1.1.7'
+    }
+}

@@ -1,0 +1,27 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">{{propertyGroup[0].serverGroupDO.name}}</b>服务器组属性组信息</h3>
+</div>
+<div class="modal-body">
+    <div ng-repeat="item in propertyGroup">
+        <div class="panel panel-info" ng-repeat="(key, value) in item.propertyGroupDOMap">
+            <div class="panel-heading">
+                <b style="color: #286090">{{value.groupName}}</b>
+                <b class="pull-right" style="color: #777">{{value.groupDesc}}</b>
+            </div>
+            <div class="panel-body">
+                <table class="table table-hover table-bordered table-striped">
+                    <tr ng-repeat="propertyItem in item.groupPropertyMap[key]">
+                        <td>
+                            <div>
+                                <b style="color: #992011;">{{propertyItem.proName}}</b>
+                                <b style="color: #777;" class="pull-right">{{propertyItem.proDesc}}</b>
+                            </div>
+                            <b style="color: #149930;word-break:break-all;">{{propertyItem.proValue}}</b>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

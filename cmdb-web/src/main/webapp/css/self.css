@@ -1,0 +1,6 @@
+.keybox-focus {
+    border: 3px solid #23b7e5;
+}
+.keybox-unFocus {
+    border: 3px solid #cccccc;
+}

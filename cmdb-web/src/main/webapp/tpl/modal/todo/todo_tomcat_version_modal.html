@@ -1,0 +1,228 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <!--<h3 class="modal-title">项目管理配置</h3>-->
+    <h3 class="modal-title">
+        <b style="color: #286090">{{todoItem.title}}</b>工单
+    </h3>
+    <div>
+        <b ng-show="todoItem.todoType == 0" class="pull-left">运维类工单</b>
+        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
+           class="icon icon-info" style="color: green;"></i>
+    </div>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+                <div class="form-group" class="col-lg-12 control-label" style="color: #2e6da4;">
+                    <i class="icon icon-info"
+                       style="color: green;"></i>
+                    服务器组中的服务器集群使用相同的配置文件
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <!--<span style="color: #ec2121;">*</span>-->
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器组</label>
+                        <!--<label class="col-lg-4 control-label">(Stash)Project</label>-->
+                        <div class="col-lg-8">
+                            <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                                       ng-change="changeServerGroup()" ng-disabled="todoDetail.todoStatus >= 1">
+                                <ui-select-match placeholder="搜索服务器组名称......">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                   refresh-dalay="0"
+                                                   repeat="item in serverGroupList | filter: $select.search">
+                                    <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+
+                    <div class="col-md-6">
+                        <button ng-click="queryZabbixServer()" ng-show="nowServerGroup.selected != null"
+                                class="btn btn-sm"
+                                style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                            <i class="fa fa-search" ng-show="!doQueryRefs"></i>
+                            <i class="fa fa-spin fa-spinner" ng-show="doQueryRefs"></i>查看服务器集群版本详情
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group version">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">当前Tomcat</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="大版本号" ng-disabled="true"
+                                   ng-model="todoDetail.tomcatVersionMap.tomcatInstallVersion">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>选择版本</label>
+                        <div class="col-lg-8">
+                            <!--required-->
+                            <select class="form-control" ng-model="tomcatNewVersion.selected"
+                                    ng-disabled="todoDetail.todoStatus >= 1"
+                                    ng-options="tomcat.code as tomcat.name for tomcat in tomcats">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">当前JDK
+                        </label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="大版本号" ng-disabled="true"
+                                   ng-model="todoDetail.tomcatVersionMap.jdkInstallVersion">
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>选择版本</label>
+                        <div class="col-lg-8">
+                            <!--required-->
+                            <select class="form-control" ng-model="jdkNewVersion.selected"
+                                    ng-disabled="todoDetail.todoStatus >= 1"
+                                    ng-options="jdk.code as jdk.name for jdk in jdks">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 5px;" ng-show="pageData.length != 0">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <td>公网IP</td>
+                            <td>内网IP</td>
+                            <td>环境</td>
+                            <td>序列号</td>
+                            <td>当前安装的Tomcat版本</td>
+                            <td ng-show="todoDetail.todoStatus == 9">操作</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="item in pageData">
+                            <td>{{item.publicIP.ip}}</td>
+                            <td>{{item.insideIP.ip}}</td>
+                            <td>
+                                <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                            </td>
+                            <td>{{item.serialNumber}}</td>
+                            <td>
+                                {{item.tomcatVersion}}
+                            </td>
+                            <td ng-show="todoDetail.todoStatus == 9">
+                                <button class="btn btn-xs"
+                                        ng-disabled="butTaskUpdateTomcatDisabled"
+                                        uib-popover-html="'平台自动化任务帮助您完成升级Tomcat&JDK版本'"
+                                        popover-trigger="'mouseenter'"
+                                        style="background-color:  #ff8700; color: white;"
+                                        ng-click="taskUpdateTomcat(item.id)">
+                                    <i class="glyphicon glyphicon-arrow-up" ng-show="!butTaskUpdateTomcatDisabled"></i>
+                                    <i class="fa fa-spin fa-spinner" ng-show="butTaskUpdateTomcatDisabled"></i>
+                                    自动升级
+                                </button>
+
+                                <button class="btn btn-xs pull-right"
+                                        ng-disabled="butTaskUpdateTomcatDisabled"
+                                        uib-popover-html="'回滚到前版本'"
+                                        popover-trigger="'mouseenter'"
+                                        style="background-color:  #00a8f3; color: white;"
+                                        ng-click="taskRollbackTomcat(item.id)">
+                                    <i class="glyphicon glyphicon-repeat" ng-show="!butTaskUpdateTomcatDisabled"></i>
+                                    <i class="fa fa-spin fa-spinner" ng-show="butTaskUpdateTomcatDisabled"></i>
+                                    回滚
+                                </button>
+                            </td>
+                        </tr>
+                        </tbody>
+                        <tfoot>
+                    </table>
+                </div>
+
+            </uib-tabset>
+        </div>
+    </form>
+
+    <div ng-show="taskMsg != ''">
+        <pre>{{taskMsg}}</pre>
+    </div>
+
+    <!--按钮-->
+    <div class="form-group">
+
+        <div style="text-align:center;">
+            <!--提交-->
+
+                <button class="btn btn-xs" ng-show="todoDetail.todoStatus == 0"
+                        style="background-color:  #2e6da4; color: white;"
+                        ng-click="saveTodo()">提交
+                </button>
+
+                <button ng-click="resetTodo()" ng-show="todoDetail.todoStatus <= 0"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: #449d44; color: white;">
+                    <span class="glyphicon glyphicon-repeat"></span>重置
+                </button>
+
+                <button ng-click="closeModal()"
+                        class="btn btn-xs"
+                        style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                    <span class="glyphicon glyphicon-remove"></span>关闭
+                </button>
+
+            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+        </div>
+    </div>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+
+</div>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.IPServerGroupDao">
+
+    <!-- 获取指定serverGroupId关联的networkId集合数目 -->
+    <select id="queryIPGroupByServerGroupSize" parameterType="_long" resultType="_long">
+        SELECT count(*)
+        FROM new_sg_in_relation a0 LEFT JOIN new_ip_network a1 ON a0.ipNetworkId = a1.id
+        WHERE a0.serverGroupId = #{serverGroupId}
+        AND a1.id IS NOT NULL;
+    </select>
+
+    <!-- 获取指定serverGroupId关联的networkId集合分页数据 -->
+    <select id="queryIPGroupByServerGroupPage" parameterType="object" resultType="IPNetworkDO">
+        SELECT a1.*
+        FROM new_sg_in_relation a0 LEFT JOIN new_ip_network a1 ON a0.ipNetworkId = a1.id
+        WHERE a0.serverGroupId = #{serverGroupId}
+        AND a1.id IS NOT NULL
+        limit #{pageStart}, #{pageLength};
+    </select>
+
+    <!-- 清除指定serverGroupId的Network关系 -->
+    <delete id="delServerIPGroups" parameterType="_long">
+        DELETE FROM new_sg_in_relation WHERE serverGroupId = #{serverGroupId}
+    </delete>
+
+    <!-- 保存serverGroup&networkId的关系 -->
+    <insert id="addServerIPGroups" parameterType="object">
+        INSERT INTO new_sg_in_relation(
+          serverGroupId,
+          ipNetworkId,
+          ipType
+        ) VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+        (
+            #{item.serverGroupId},
+            #{item.ipNetworkId},
+            #{item.ipType}
+        )
+        </foreach>
+    </insert>
+</mapper>

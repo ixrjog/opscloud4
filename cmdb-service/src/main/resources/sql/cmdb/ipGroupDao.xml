@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.IPGroupDao">
+    
+    <!-- 查询指定条件下的IP组信息数目 -->
+    <select id="queryIpGroupSize" parameterType="IPGroupSearchVO" resultType="_long">
+        SELECT count(*) FROM new_ip_network
+        <where>
+            <if test="ipNetwork != null and ipNetwork != ''">
+                ipNetwork LIKE "%"#{ipNetwork}"%"
+            </if>
+            <if test="serverGroupId != 0">
+                AND serverGroupId = #{serverGroupId}
+            </if>
+            <if test="ipType != -1">
+                AND ipType = #{ipType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询指定条件下的IP组信息分页数据 -->
+    <select id="queryIpGroupPage" parameterType="IPGroupSearchVO" resultType="IPNetworkDO">
+        SELECT * FROM new_ip_network
+        <where>
+            <if test="searchVO.ipNetwork != null and searchVO.ipNetwork != ''">
+                ipNetwork LIKE "%"#{searchVO.ipNetwork}"%"
+            </if>
+            <if test="searchVO.serverGroupId != 0">
+                AND serverGroupId = #{searchVO.serverGroupId}
+            </if>
+            <if test="searchVO.ipType != -1">
+                AND ipType = #{searchVO.ipType}
+            </if>
+        </where>
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 新增IP组信息 -->
+    <insert id="addIPGroup" parameterType="IPNetworkDO">
+        INSERT INTO new_ip_network(
+          serverGroupId,
+          ipNetwork,
+          gateWay,
+          dnsOne,
+          dnsTwo,
+          ipType,
+          content,
+          produceMark
+        ) VALUES (
+          #{serverGroupId},
+          #{ipNetwork},
+          #{gateWay},
+          #{dnsOne},
+          #{dnsTwo},
+          #{ipType},
+          #{content},
+          #{produceMark}
+        );
+    </insert>
+
+    <!-- 更新指定IP组信息 -->
+    <update id="updateIPGroup" parameterType="IPNetworkDO">
+        UPDATE new_ip_network
+        SET
+          serverGroupId = #{serverGroupId},
+          ipNetwork = #{ipNetwork},
+          gateWay = #{gateWay},
+          dnsOne = #{dnsOne},
+          dnsTwo = #{dnsTwo},
+          ipType = #{ipType},
+          content = #{content},
+          produceMark = #{produceMark}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定的IP组信息 -->
+    <delete id="delIPGroup" parameterType="_long">
+        DELETE FROM new_ip_network WHERE id = #{id}
+    </delete>
+
+
+
+
+    <!-- 查询指定id的ipGroup信息 -->
+    <select id="queryIPGroupInfo" parameterType="_long" resultType="IPNetworkDO">
+        SELECT * FROM new_ip_network
+        WHERE id = #{id}
+    </select>
+</mapper>

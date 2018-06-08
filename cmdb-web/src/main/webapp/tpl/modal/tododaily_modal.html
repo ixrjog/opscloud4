@@ -1,0 +1,69 @@
+<div class="modal-header">
+    <h3 class="modal-title">日常工单</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>工单主类别</label>
+            <div class="col-lg-9">
+                <select class="form-control" ng-disabled="item.id != 0" ng-model="item.levelOne" ng-change="changeLevel1(item.levelOne)" ng-options="type.id as type.configName for type in level1List">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group" ng-if="item.levelOne != -1">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>工单具体分类</label>
+            <div class="col-lg-9">
+                <select class="form-control" ng-if="item.id == 0" ng-model="item.levelTwo" ng-options="type.id as type.configName for type in level2List">
+                    <option value="">----请选择----</option>
+                </select>
+                <input class="form-control" ng-if="item.id != 0" ng-disabled="item.id != 0" ng-model="item.levelTwo.configName">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>隐私类型</label>
+            <div class="col-lg-9">
+                <select class="form-control" ng-model="item.privacy" ng-options="type.code as type.name for type in typeList">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>工单级别</label>
+            <div class="col-lg-9">
+                <select class="form-control" ng-model="item.urgents" ng-options="type.code as type.name for type in urgentList">
+                    <option value="">----请选择----</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-3 control-label">工单内容</label>
+            <div class="col-lg-9">
+                <textarea class="form-control" rows="5" cols="4" ng-model="item.contents" ng-disabled="todoType != 'daily'"></textarea>
+            </div>
+        </div>
+        <div class="form-group" ng-if="item.id != 0">
+            <label class="col-lg-3 control-label">反馈内容</label>
+            <div class="col-lg-9">
+                <textarea class="form-control" rows="5" cols="4" ng-model="item.feedbackContent" ng-disabled="todoType == 'daily'"></textarea>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button ng-click="saveData()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-edit"></span>保存</button>
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: red; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭</button>
+
+            <!--<span class="glyphicon glyphicon-save" ng-click="saveData()">保存</span>-->
+            <!--<span class="glyphicon glyphicon-remove" ng-click="closeModal()" style="margin-left: 20px;">关闭</span>-->
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

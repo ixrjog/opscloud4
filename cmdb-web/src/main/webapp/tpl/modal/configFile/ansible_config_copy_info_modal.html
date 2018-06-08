@@ -1,0 +1,86 @@
+<div class="modal-header">
+    <h3 class="modal-title">Ansible主机配置文件同步配置</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">服务器组名称</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                               ng-change="changeServerGroup(nowServerGroup.selected)">>
+                        <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                        <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                           repeat="item in serverGroupList | filter: $select.search">
+                            <div ng-bind-html="item.name | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器名称</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowServer.selected" theme="bootstrap">
+                        <ui-select-match placeholder="搜索服务器名称......">{{($select.selected.serverName
+                            + ($select.selected.serialNumber != '' ? ('-' +
+                            $select.selected.serialNumber) : '') + '-(' +
+                            $select.selected.envTypeStr + ')')}}
+                        </ui-select-match>
+                        <ui-select-choices refresh="queryServer($select.search)" refresh-dalay="0"
+                                           repeat="item in serverList | filter: $select.search">
+                            <div ng-bind-html="(item.serverName + (item.serialNumber != '' ? ('-' + item.serialNumber) : '') + '-(' + item.envTypeStr + ')') | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>Src(源路径)</label>
+                <div class="col-lg-10">
+                    <select class="form-control" ng-model="item.src"
+                            ng-options="path.filePath as path.filePath for path in filePathList" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>Dest(目标路径)</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="目标路径" ng-model="item.dest">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">Owner</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="目标文件的权限owner" ng-model="item.username">
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label">Group</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="目标文件的权限group" ng-model="item.usergroup">
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group" style="text-align:center;">
+
+                <!--保存-->
+                <button ng-click="saveItem()"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                    <span class="glyphicon glyphicon-ok"></span>保存
+                </button>
+
+
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

@@ -1,0 +1,53 @@
+<div class="modal-header">
+    <h3 class="modal-title">Esxi:{{esxiHost.vmName}}中的虚拟机列表</h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+                <thead>
+                <tr>
+                    <th>虚拟机总数</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>{{vmSize}}台</td>
+                </tr>
+                </tbody>
+        </table>
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>服务器</td>
+                <td>内网IP</td>
+                <td>vCpu</td>
+                <td>memory</td>
+                <td>power</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <td>
+                    <b>{{item.vmName}}</b></td>
+                <td>{{item.insideIp}}</td>
+                <td>{{item.cpu}}</td>
+                <td>
+                    <span ng-if="item.memory < 4096">{{item.memory/1024}}GB</span>
+                    <b style="color: #449d44" ng-if="item.memory >= 4096">{{item.memory/1024}}GB</b>
+                </td>
+                <td>
+                    <span ng-if="item.powerState == 'poweredOn'" style="color: #449d44"
+                          uib-popover-html="'电源On'" popover-trigger="'mouseenter'"
+                            class="glyphicon glyphicon-off"></span>
+                    <span ng-if="item.powerState == 'poweredOff'" style="color: #d9534f"
+                          uib-popover-html="'电源Off'" popover-trigger="'mouseenter'"
+                            class="glyphicon glyphicon-off"></span>
+                    <span class="glyphicon glyphicon-ban-circle" style="color: #777"
+                          uib-popover-html="'VM暂停'" popover-trigger="'mouseenter'"
+                          ng-if="item.powerState == 'suspended'"></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

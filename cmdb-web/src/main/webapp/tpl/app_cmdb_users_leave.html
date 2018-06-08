@@ -1,0 +1,165 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">离职用户管理</h1>
+                    <!--<small class="text-muted">可访问堡垒机列表管理</small>-->
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <div ng-controller="usersLeaveCtrl">
+                    <div style="margin-top: 5px;" class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">离职用户</span>
+                                        <input type="text" class="form-control" ng-model="queryName"
+                                               placeholder="用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                            </form>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>用户</td>
+                                        <td>联系方式</td>
+                                        <td>LDAP</td>
+                                        <td>LDAP-GROUP</td>
+                                        <td>ZABBIX</td>
+                                        <td>MAIL</td>
+                                        <td>更新时间</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>{{item.username}}<b
+                                                ng-show="item.displayName != null && item.displayName != ''"><{{item.displayName}}></b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #286090" class="fa fa-envelope"
+                                               ng-show="item.mail != null && item.mail != ''">{{item.mail}}</b>
+                                            <span ng-show="item.mobile != ''">
+                                                <br/>
+                                                <b style="color: #5e5e5e" class="glyphicon glyphicon-earphone">{{item.mobile}}</b>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span style="color: #d9534f" ng-if="item.ldap != 0">未解除</span>
+                                            <span style="color: #449d44" ng-if="item.ldap == 0">已解除</span>
+                                        </td>
+                                        <td>
+                                            <div class="col-md-4" ng-repeat="ldapGroup in item.ldapGroups">
+                                                <b>{{ldapGroup}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span style="color: #d9534f"
+                                                  ng-if="item.zabbix == 1">开启</span>
+                                            <span style="color: #449d44"
+                                                  ng-if="item.zabbix == 0">关闭</span>
+                                        </td>
+                                        <td>
+                                            <span style="color: #d9534f"
+                                                  ng-if="item.mailAccountStatus == 'active'">开启</span>
+                                            <span style="color: #449d44"
+                                                  ng-if="item.mailAccountStatus == 'closed'">关闭</span>
+                                            <span style="color: #ec971f"
+                                                  ng-if="item.mailAccountStatus == 'locked'">锁定</span>
+                                            <span style="color: #777"
+                                                  ng-if="item.mailAccountStatus == 'null'">删除</span>
+                                        </td>
+                                        <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate :
+                                            item.gmtModify}}
+                                        </td>
+                                        <td>
+                                            <button ng-click="delLdapGroup(item.username)"
+                                                    ng-show="item.ldapGroups != ''"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>LDAPGROUP解绑
+                                            </button>
+
+                                            <button ng-click="delLdap(item.username)"
+                                                    ng-show="item.ldap != 0"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>LDAP解绑
+                                            </button>
+
+                                            <button class="btn btn-xs"
+                                                    ng-click="delZabbix(item.username)"
+                                                    ng-show="item.zabbix == 1"
+                                                    style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                                                <span class="glyphicon glyphicon-log-out">Zabbix</span>
+                                            </button>
+
+                                            <button class="btn btn-xs"
+                                                    ng-click="closeMail(item.username)"
+                                                    ng-show="item.mailAccountStatus == 'active'"
+                                                    style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                                <span class="glyphicon glyphicon-log-out">Email</span>
+                                            </button>
+
+                                            <button ng-click="delUserLeave(item.id)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>删除
+                                            </button>
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="userLdapInfo">
+    <div ng-include="'tpl/modal/user_ldap_info_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="keyBoxServerModal">
+    <div ng-include="'tpl/modal/keybox_server_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="userInfo">
+    <div ng-include="'tpl/modal/user_info_modal.html'"></div>
+</script>

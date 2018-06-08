@@ -1,0 +1,108 @@
+<style>
+    .build-params .popover {
+        max-width: 800px !important;
+    }
+</style>
+
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">{{jobItem.jobName}}
+            <a href="http://app.ci.51xianqu.net/job/{{jobItem.jobName}}/">
+                <img src="http://app.ci.51xianqu.net/job/{{jobItem.jobName}}/badge/icon"></a>
+        </b>
+        </br>
+        {{item.content}}
+    </h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+
+        <div class="panel-body">
+            <div>
+                <table class="table table-hover table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <td class="col-md-1">编号</td>
+                        <td class="col-md-2">任务详情</td>
+                        <td class="col-md-8">构建详情</td>
+                        <td class="col-md-1">操作</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr ng-repeat="item in pageData">
+                        <td>
+                            <b style="color: #c9302c" ng-if="item.buildNumber ==-1">队列</b>
+                            <b style="color: #286090" ng-if="item.buildNumber > 0">{{item.buildNumber}}</b>
+                        </td>
+                        <td>
+                            <b style="color: #286090">{{item.username}}<{{item.email}}></b>
+                            <div ng-show="item.webHooks.ref != null && item.webHooks.ref != ''">
+                                <b style="color: #286090">{{item.webHooks.ref}}</b>
+                            </div>
+                            <div class="build-params">
+                                <b>参数</b>
+                                <i uib-popover-html="item.paramsInfo"
+                                   popover-trigger="'mouseenter'"
+                                   class="icon icon-info pull-left"
+                                   style="color: green;"></i>
+                            </div>
+                            <div>
+                                {{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate : item.gmtModify}}
+                            </div>
+                            <div>
+                                <qrcode data="https://work.52shangou.com/#/access/artifacts?id={{item.id}}" href="https://work.52shangou.com/#/access/artifacts?id={{item.id}}"></qrcode>
+                            </div>
+
+                        </td>
+                        <td>
+                            <div class="col-md-12" ng-repeat="jobNote in item.jobNotes">
+                                <b style="color: #286090">阶段:</b>
+                                {{jobNote.buildPhase}}
+                                <b style="color: #286090" ng-if="jobNote.buildStatus !=''">状态:</b>
+                                <b style="color: green"
+                                   ng-if="jobNote.buildStatus =='SUCCESS'">{{jobNote.buildStatus}}</b>
+                                <b style="color: red"
+                                   ng-if="jobNote.buildStatus !='SUCCESS'">{{jobNote.buildStatus}}</b>
+                                <b style="color: #286090">时间:</b>
+                                {{jobNote.timeView}}
+                                <a style="color: green" href={{jobNote.buildConsoleUrl}}
+                                   target="_blank">日志</a>
+                                <i uib-popover-html="'message'"
+                                   popover-trigger="'mouseenter'"
+                                   class="glyphicon glyphicon-envelope pull-right"
+                                   style="color: green;" ng-show="jobNote.notice == true"></i>
+                            </div>
+
+                            <div class="col-md-12" ng-repeat="artifact in item.artifacts">
+                                <b style="color: #286090">artifact:</b>
+                                <a style="color: green" href={{artifact.archiveUrl}} target="_blank">{{artifact.artifactsName}}</a>
+                            </div>
+                        </td>
+                        <td>
+                            <button ng-click="rebuildJob(item.id)"
+                                    class="btn btn-xs"
+                                    ng-disabled="checkBuildCompleted(item.jobNotes)"
+                                    style="margin-left: 5px; background-color: green; color: white;">
+                                <i class="fa fa-spin fa-spinner" ng-show="butBuildSpinDisabled"></i>
+                                <i class="icon icon-control-play" ng-show="!butBuildSpinDisabled"></i>执行
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                    <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <ul style="margin: 0px; float: right;" uib-pagination total-items="totalItems"
+                                ng-model="currentPage" items-per-page="pageLength" max-size="10"
+                                ng-change="pageChanged(currentPage)" previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                        </td>
+                    </tr>
+                    </tfoot>
+                </table>
+            </div>
+        </div>
+        <!--</div>-->
+
+        <!--</table>-->
+    </div>
+</div>

@@ -1,0 +1,133 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">服务器组</h1>
+                    <small class="text-muted">服务器组维护</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <uib-tabset>
+                <div ng-controller="javaLogServiceManageCtrl">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName"
+                                               placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">使用类型</span>
+                                        <select class="form-control" ng-model="nowType"
+                                                ng-options="type.code as type.name for type in userType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
+                                    <button type="button" class="btn btn-success" ng-click="addServerGroup()"
+                                            ng-if="contains(authPoint, '/servergroup/update')"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>服务器组</td>
+                                        <td class="col-md-1">使用类型</td>
+                                        <td class="col-md-2">Project</td>
+                                        <td class="col-md-2">Logstore</td>
+                                        <td class="col-md-2">Topic</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <b style="color: #286090" class="pull-left">{{item.serverGroupDO.name}}</b>
+                                            <b style="color: #777" class="pull-right">{{item.serverGroupDO.content}}</b>
+                                        </td>
+                                        <td>
+                                            <b ng-if="item.serverGroupDO.useType == 10">bi</b>
+                                            <b ng-if="item.serverGroupDO.useType == 1">zookeeper</b>
+                                            <b style="color: #990000" ng-if="item.serverGroupDO.useType == 2">web-service</b>
+                                            <b style="color: #ec971f" ng-if="item.serverGroupDO.useType == 3">mysql</b>
+                                            <b ng-if="item.serverGroupDO.useType == 4">other</b>
+                                            <b ng-if="item.serverGroupDO.useType == 5">web-php</b>
+                                            <b style="color: #286090" ng-if="item.serverGroupDO.useType == 6">public</b>
+                                            <b style="color: #d9534f" ng-if="item.serverGroupDO.useType == 7">redis</b>
+                                            <b style="color: #449d44"
+                                               ng-if="item.serverGroupDO.useType == 8">web-server</b>
+                                            <b style="color: #5bc0de"
+                                               ng-if="item.serverGroupDO.useType == 9">front-end</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #286090" class="pull-left">{{item.project}}</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #286090" class="pull-left">{{item.logstore}}</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #286090" class="pull-left">{{item.topic}}</b>
+                                        </td>
+                                        <td>
+                                            <button ng-click="editMachineGroup(item)"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+                                            <!---->
+                                            <!--<span class="glyphicon glyphicon-pencil"-->
+                                                  <!--style="margin-left: 20px;"-->
+                                                  <!--ng-click="editMachineGroup(item)"></span>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="machineGroupInfo">
+    <div ng-include="'tpl/modal/machineGroup_info_modal.html'"></div>
+</script>

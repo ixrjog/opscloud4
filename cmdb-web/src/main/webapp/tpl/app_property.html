@@ -1,0 +1,191 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">服务器组属性管理</h1>
+                    <small class="text-muted">新增,更新,删除组属性</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="属性组">
+                    <div class="panel panel-default" ng-controller="propertyGroupCtrl">
+                        <div class="panel-body">
+                            <form name="form" class="form-inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon">属性组名称</span>
+                                    <input type="text" class="form-control" placeholder="属性组名称" ng-model="groupName">
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-info" ng-click="queryPropertyGroup()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+                            <div style="margin-top: 5px;" ng-if="pageData.length != 0">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>属性组</td>
+                                        <td>创建时间</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <b class="pull-left" style="color: #286090">{{item.groupName}}</b>
+                                            <b class="pull-right" style="color: #777">{{item.groupDesc}}</b>
+                                        </td>
+                                        <td>{{item.gmtCreate}}</td>
+                                        <td>
+                                            <button ng-click="editItem(item)"
+                                                    class="btn btn-xs pull-left"
+                                                    style="background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                            <button ng-click="delItem(item.id)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="4">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="属性">
+                    <div class="panel panel-default" ng-controller="propertyCtrl">
+                        <div class="panel-body">
+                            <form name="form" class="form-inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon">属性组</span>
+                                    <ui-select ng-model="propertyGroup.selected" theme="bootstrap">
+                                        <ui-select-match placeholder="搜索资源组名称......">{{$select.selected.groupName}}
+                                        </ui-select-match>
+                                        <ui-select-choices refresh="queryGroup($select.search)" refresh-dalay="0"
+                                                           repeat="item in propertyGroupList | filter: $select.search">
+                                            <div ng-bind-html="item.groupName | highlight: $select.search"></div>
+                                        </ui-select-choices>
+                                    </ui-select>
+                                </div>
+                                <div class="input-group">
+                                    <span class="input-group-addon">属性名称</span>
+                                    <input type="text" class="form-control" placeholder="属性名称" ng-model="proName">
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-info" ng-click="queryProperty()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                                <div class="input-group">
+                                    <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                            class="glyphicon glyphicon-plus"></span>新增
+                                    </button>
+                                </div>
+                            </form>
+                            <div style="margin-top: 5px;" ng-if="pageData.length != 0">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>属性</td>
+                                        <td class="col-md-4">属性描述</td>
+                                        <td>创建时间</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <b class="pull-left" style="color: #777">[{{item.groupDO.groupName}}]</b>
+                                            <b class="pull-right" style="color: #777">{{item.groupDO.groupDesc}}</b>
+                                            </br>
+                                            <b class="pull-left" style="color: #286090">{{item.proName}}</b>
+                                            <b class="pull-right" style="color: #777">属性名</b>
+                                            <span ng-show="item.proValue != ''">
+                                                </br>
+                                                <b class="pull-left" style="color: #449d44">{{item.proValue}}</b>
+                                                <b class="pull-right" style="color: #777">默认值</b>
+                                            </span>
+                                        </td>
+                                        <td>{{item.proDesc}}</td>
+                                        <td>{{item.gmtCreate}}</td>
+                                        <td>
+                                            <button ng-click="editItem(item)"
+                                                    class="btn btn-xs pull-left"
+                                                    style="background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                            <button ng-click="delItem(item.id)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                            <!---->
+                                            <!--<span ng-click="editItem(item)"-->
+                                                  <!--class="glyphicon glyphicon-pencil pull-left"></span>-->
+                                            <!--<span ng-click="delItem(item.id)"-->
+                                                  <!--class="glyphicon glyphicon-trash pull-right"></span>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="propertyGroupModal">
+    <div ng-include="'tpl/modal/propertygroup_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="propertyModal">
+    <div ng-include="'tpl/modal/property_modal.html'"></div>
+</script>

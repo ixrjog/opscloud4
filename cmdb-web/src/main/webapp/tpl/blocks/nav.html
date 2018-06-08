@@ -1,0 +1,591 @@
+<ul class="nav">
+    <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
+        <span>导航菜单</span>
+    </li>
+
+
+    <li ui-sref-active="active">
+        <a ui-sref="app.dashboard">
+            <i class="glyphicon glyphicon-stats icon text-info-dker"></i>
+            <span class="font-bold">首页</span>
+        </a>
+    </li>
+
+    <!-- 服务器管理 -->
+
+    <li ng-if="checkMenu('app.servergroup') || checkMenu('app.server') || checkMenu('app.property') || checkMenu('app.serverTemplate')">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-menu-hamburger icon text-primary-dker"></i>
+            <span class="font-bold">服务器管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>服务器管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.servergroup')">
+                <a ui-sref="app.servergroup">
+                    <span>服务器组</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.server')">
+                <a ui-sref="app.server">
+                    <span>服务器</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.ecsServer')">
+                <a ui-sref="app.ecsServer">
+                    <span>ECS服务器</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.vmServer')">
+                <a ui-sref="app.vmServer">
+                    <span>VM服务器</span>
+                </a>
+            </li>
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.physicalServer')">-->
+                <!--<a ui-sref="app.physicalServer">-->
+                    <!--<span>物理服务器</span>-->
+                <!--</a>-->
+            <!--</li>-->
+            <li ui-sref-active="active" ng-if="checkMenu('app.property')">
+                <a ui-sref="app.property">
+                    <span>属性管理</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!-- 服务器管理 -->
+
+    <!-- 持续集成  checkMenu('app.ci') -->
+    <li ng-if="false">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-menu-hamburger icon text-primary-dker"></i>
+            <span class="font-bold">持续集成</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>持续集成</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.webHooks')">
+                <a ui-sref="app.webHooks">
+                    <span>WebHooks</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsJobs')">
+                <a ui-sref="app.jenkinsJobs">
+                    <span>build任务管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsJobBuilds')">
+                <a ui-sref="app.jenkinsJobBuilds">
+                    <span>build任务详情</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsFt')">
+                <a ui-sref="app.jenkinsFt">
+                    <span>前端持续集成</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsAndroid')">
+                <a ui-sref="app.jenkinsAndroid">
+                    <span>Android持续集成</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsIos')">
+                <a ui-sref="app.jenkinsIos">
+                    <span>iOS持续集成</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsTest')">
+                <a ui-sref="app.jenkinsTest">
+                    <span>自动化测试管理</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <!-- 持续集成 -->
+
+
+    <!-- 监控管理 -->
+
+    <li ng-if="checkMenu('app.zabbixserver') || checkMenu('app.servermonitor')">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-eye-open icon text-primary-dker"></i>
+            <span class="font-bold">服务器监控</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>服务器监控</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.zabbixserver')">
+                <a ui-sref="app.zabbixserver">
+                    <span>Zabbix管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.servermonitor')">
+                <a ui-sref="app.servermonitor">
+                    <span>监控查看</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="line dk" ng-if="checkMenu('app.zabbixserver') || checkMenu('app.servermonitor')"></li>
+
+    <!-- 监控管理 -->
+
+    <!-- 项目管理  ng-if="checkMenu('app.projectManagement') || checkMenu('app.projectHeartbeat')"-->
+
+    <li ng-if="false">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-eye-open icon text-primary-dker"></i>
+            <span class="font-bold">项目管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>项目生命周期管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.projectManagement')">
+                <a ui-sref="app.projectManagement">
+                    <span>线上生命周期管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.projectHeartbeat')">
+                <a ui-sref="app.projectHeartbeat">
+                    <span>线上生命周期</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li ng-if="false" class="line dk"
+        ng-if="checkMenu('app.projectManagement') || checkMenu('app.projectHeartbeat')"></li>
+
+    <!-- 项目管理 -->
+
+    <!-- 任务管理 -->
+
+    <li ng-if="checkMenu('app.logcleanup') || checkMenu('app.servertask')">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-music icon text-primary-dker"></i>
+            <span class="font-bold">任务管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>任务管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.servertask')">
+                <a ui-sref="app.servertask">
+                    <span>Task</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.taskScript')">
+                <a ui-sref="app.taskScript">
+                    <span>Script</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.logcleanup')">
+                <a ui-sref="app.logcleanup">
+                    <span>日志弹性清理</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="line dk" ng-if="checkMenu('app.logcleanup') || checkMenu('app.servertask')"></li>
+
+    <!-- 任务管理 -->
+
+    <!-- 统计 ng-if="checkMenu('app.statistics')"-->
+
+    <li ng-if="false">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-stats icon text-primary-dker"></i>
+            <span class="font-bold">统计</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>统计</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.statistics')">
+                <a ui-sref="app.statistics">
+                    <span>部署统计</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.serverstatistics')">
+                <a ui-sref="app.serverstatistics">
+                    <span>服务器统计</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.serverperfstatistics')">
+                <a ui-sref="app.serverperfstatistics">
+                    <span>服务器性能统计</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.serverload')">
+                <a ui-sref="app.serverload">
+                    <span>服务器负载</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li ng-if="false" class="line dk" ng-if="checkMenu('app.statistics')"></li>
+
+    <!-- 统计 -->
+
+    <!-- IP管理 -->
+
+    <li ng-if="checkMenu('app.ipgroup') || checkMenu('app.ip')">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-cog icon text-primary-dker"></i>
+            <span class="font-bold">IP管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>IP管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.ipgroup')">
+                <a ui-sref="app.ipgroup">
+                    <span>IP段</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.ip')">
+                <a ui-sref="app.ip">
+                    <span>IP</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+    <li class="line dk" ng-if="checkMenu('app.ipgroup') || checkMenu('app.ip')"></li>
+
+    <!-- IP管理 -->
+
+    <!-- 配置管理 -->
+
+    <li ng-if="checkMenu('app.configFile') || checkMenu('app.configFileGroup') || checkMenu('app.configCenter')">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i class="glyphicon glyphicon-book icon text-primary-dker"></i>
+            <span class="font-bold">配置管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>配置管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.ansibleConfigFile">
+                    <span>Ansibles主机文件</span>
+                </a>
+            </li>
+
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.getwayConfigFile">
+                    <span>Getway配置管理</span>
+                </a>
+            </li>
+
+
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.configFile">
+                    <span>文件管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFileGroup')">
+                <a ui-sref="app.configFileGroup">
+                    <span>文件组管理</span>
+                </a>
+            </li>
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.configCenter')">-->
+            <!--<a ui-sref="app.configCenter">-->
+            <!--<span>系统配置中心</span>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.dns')">-->
+            <!--<a ui-sref="app.dns">-->
+            <!--<span>DNS配置</span>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.iptables')">-->
+            <!--<a ui-sref="app.dns">-->
+            <!--<span>IPTABLES配置</span>-->
+            <!--</a>-->
+            <!--</li>-->
+        </ul>
+    </li>
+    <li class="line dk"
+        ng-if="checkMenu('app.configFile') || checkMenu('app.configFileGroup') || checkMenu('app.configCenter')"></li>
+
+    <!-- 配置管理 -->
+
+    <!-- 工单管理 ng-if="checkMenu('app.todoConfig') || checkMenu('app.todoDaily')" -->
+
+    <li ng-if="false">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i class="glyphicon glyphicon-retweet icon text-primary-dker"></i>
+            <span class="font-bold">我的工单</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>工单管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.todoConfig')">
+                <a ui-sref="app.todoConfig">
+                    <span>工单配置</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.todo')">
+                <a ui-sref="app.todo">
+                    <span>标准工单</span>
+                </a>
+            </li>
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.todoDaily')">-->
+            <!--<a ui-sref="app.todoDaily">-->
+            <!--<span>其它工单</span>-->
+            <!--</a>-->
+            <!--</li>-->
+        </ul>
+    </li>
+
+    <li ng-if="false" class="line dk" ng-if="checkMenu('app.todoConfig') || checkMenu('app.todoDaily')"></li>
+
+    <!-- 工单管理 -->
+
+    <!-- 日志服务  ng-if="checkMenu('app.logService')"-->
+
+    <li ng-if="false">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i class="glyphicon glyphicon-th-large icon text-primary-dker"></i>
+            <span class="font-bold">日志服务</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>日志服务</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.logService')">
+                <a ui-sref="app.logService">
+                    <span>Nginx日志</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.javaLogService')">
+                <a ui-sref="app.javaLogService">
+                    <span>业务日志</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.javaLogServiceManage')">
+                <a ui-sref="app.javaLogServiceManage">
+                    <span>业务日志配置</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li ng-if="false" class="line dk" ng-if="checkMenu('app.logService')"></li>
+
+    <!-- 日志服务 -->
+
+
+    <!-- 堡垒机 -->
+
+    <li ng-if="checkMenu('app.keyboxmanage') || checkMenu('app.keybox')">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i class="glyphicon glyphicon-th-large icon text-primary-dker"></i>
+            <span class="font-bold">堡垒机</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>堡垒机</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.keyboxmanage')">
+                <a ui-sref="app.keyboxmanage">
+                    <span>堡垒机管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.keybox')">
+                <a ui-sref="app.keybox">
+                    <span>堡垒机</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="line dk" ng-if="checkMenu('app.keyboxmanage') || checkMenu('app.keybox')"></li>
+
+    <!-- 堡垒机 -->
+
+    <!-- 用户管理 -->
+
+    <li ng-if="checkMenu('app.keyboxmanage') || checkMenu('app.users')">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i class="glyphicon glyphicon-user icon text-primary-dker"></i>
+            <span class="font-bold">用户管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>用户管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.users')">
+                <a ui-sref="app.users">
+                    <span>用户管理</span>
+                </a>
+            </li>
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.usersLeave')">-->
+            <!--<a ui-sref="app.usersLeave">-->
+            <!--<span>离职用户管理</span>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.ciusers')">-->
+            <!--<a ui-sref="app.ciusers">-->
+            <!--<span>持续集成权限</span>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.cigroups')">-->
+            <!--<a ui-sref="app.cigroups">-->
+            <!--<span>持续集成组管理</span>-->
+            <!--</a>-->
+            <!--</li>-->
+            <!--<li ui-sref-active="active" ng-if="checkMenu('app.scmgroups')">-->
+            <!--<a ui-sref="app.scmgroups">-->
+            <!--<span>SCM组管理</span>-->
+            <!--</a>-->
+            <!--</li>-->
+        </ul>
+    </li>
+
+    <li class="line dk" ng-if="checkMenu('app.keyboxmanage') || checkMenu('app.users')"></li>
+    <!-- 用户管理 -->
+
+    <!-- 系统管理&个人详情 -->
+
+    <li ui-sref-active="active" ng-if="checkMenu('app.system') || checkMenu('app.userDetail')">
+        <a ui-sref="app.system">
+            <i class="glyphicon glyphicon-th icon text-info-dker"></i>
+            <span class="font-bold">系统管理</span>
+        </a>
+    </li>
+    <li ui-sref-active="active" ng-if="checkMenu('app.userDetail')">
+        <a ui-sref="app.userDetail">
+            <i class="glyphicon glyphicon-th icon text-info-dker"></i>
+            <span class="font-bold">个人详情</span>
+        </a>
+    </li>
+
+    <li ui-sref-active="active" ng-if="checkMenu('app.explain')">
+        <a ui-sref="app.explain">
+            <i class="glyphicon glyphicon-th icon text-info-dker"></i>
+            <span class="font-bold">订阅审核</span>
+        </a>
+    </li>
+
+    <li class="line dk" ng-if="checkMenu('app.system') || checkMenu('app.userDetail') || checkMenu('app.explain')"></li>
+
+    <!-- 系统管理&个人详情 -->
+
+    <!-- 权限管理 -->
+
+    <li ng-if="checkMenu('app.resource') || checkMenu('app.role') || checkMenu('app.user')">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i class="glyphicon glyphicon-flash icon text-primary-dker"></i>
+            <span class="font-bold">权限管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>权限管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.resource')">
+                <a ui-sref="app.resource">
+                    <span>资源管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.role')">
+                <a ui-sref="app.role">
+                    <span>角色管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.user')">
+                <a ui-sref="app.user">
+                    <span>用户管理</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <li class="line dk" ng-if="checkMenu('app.resource') || checkMenu('app.role') || checkMenu('app.user')"></li>
+
+    <!-- 权限管理 -->
+</ul>
+<!-- / list -->

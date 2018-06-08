@@ -1,0 +1,94 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">{{todoItem.title}}</b>工单
+    </h3>
+    <div>
+        <b ng-show="todoItem.todoType == 0" class="pull-left">运维类工单</b>
+        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'"  popover-placement="bottom"
+           class="icon icon-info" style="color: green;"></i>
+    </div>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group" ng-show="todoDetail.todoStatus == 0">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>服务器组</label>
+            <div class="col-lg-5">
+                <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                    <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
+                    <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                       repeat="item in serverGroupList | filter: $select.search">
+                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-lg-3">
+                <label>
+                    <input type="checkbox" ng-model="item.choose"><b> 需要持续集成权限</b>
+                </label>
+            </div>
+            <div class="col-lg-2">
+                <span class="glyphicon glyphicon-plus"
+                      uib-popover-html="'添加'" popover-trigger="'mouseenter'"
+                      ng-click="addItem(item.choose)"></span>
+            </div>
+        </div>
+    </form>
+
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>服务器组</td>
+                <td class="col-md-3">持续集成组</td>
+                <td class="col-md-2" ng-show="todoDetail.todoStatus == 0">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in todoDetail.todoKeyboxDetailList">
+                <td>
+                    <b style="color: #286090">{{item.serverGroupName}}</b>
+                    <!--<b class="pull-right" style="color: #777">组</b>-->
+                    </br>
+                    <!--服务器描述-->
+                    <b style="color: #777">{{item.serverGroupContent}}</b>
+                </td>
+                <td>
+                    <b style="color: #449d44" ng-if="item.ciAuth == false">无需授权</b>
+                    <span style="color: #777" ng-if="item.ciAuth == true">
+                        <b ng-show="item.ciUserGroupId != 0" style="color: #286090">{{item.ciUserGroupName}}</b>
+                        <b ng-show="item.ciUserGroupId == 0" style="color: red">持续集成权限组未配置</b>
+                    </span>
+                </td>
+                <td ng-show="todoDetail.todoStatus == 0">
+                    <span class="glyphicon glyphicon-remove pull-right"
+                          style="color: #d9534f"
+                          uib-popover-html="'移除'" popover-trigger="'mouseenter'"
+                          ng-click="delItem(item.id)">
+                    </span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="form-group">
+        <div style="text-align:center;">
+            <button class="btn btn-xs" ng-show="todoDetail.todoStatus == 0"
+               style="background-color: #2e6da4; color: white;"
+               ng-click="submitTodo()">提交
+            </button>
+        </div>
+
+        <div style="text-align:center;">
+            <button class="btn btn-xs" ng-show="todoDetail.todoStatus != 0"
+                    style="background-color: #2e6da4; color: white;"
+               ng-click="closeModal()">关闭
+            </button>
+        </div>
+    </div>
+
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

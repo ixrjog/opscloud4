@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.LogCleanupDao">
+
+    <!-- 获取服务器数目 -->
+    <select id="getLogCleanupPropertySize" parameterType="object" resultType="_long">
+        SELECT count(*) from log_cleanup_property
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="enabled != -1">
+                AND enabled = #{enabled}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 获取服务器详情 -->
+    <select id="getLogCleanupPropertyPage" parameterType="object" resultType="LogCleanupPropertyDO">
+        SELECT * FROM log_cleanup_property
+        <where>
+            <if test="serverGroupId > 0">
+                serverGroupId = #{serverGroupId}
+            </if>
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="enabled != -1">
+                AND enabled = #{enabled}
+            </if>
+        </where>
+        ORDER BY diskRate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <!-- 查询所有启用的LogCleanupPropertyDO条目 -->
+    <select id="getAllEnabledLogCleanupProperty" parameterType="object" resultType="LogCleanupPropertyDO">
+        SELECT * FROM log_cleanup_property
+        WHERE enabled = TRUE
+    </select>
+
+    <select id="getAllLogCleanupProperty" parameterType="object" resultType="LogCleanupPropertyDO">
+        SELECT * FROM log_cleanup_property
+    </select>
+
+    <!-- 按serverId查找 -->
+    <select id="getLogCleanupPropertyByServerId" parameterType="object" resultType="LogCleanupPropertyDO">
+        SELECT * FROM log_cleanup_property
+        WHERE  serverId = #{serverId}
+    </select>
+
+    <!-- 更新LogCleanupProperty -->
+    <update id="updateLogCleanupProperty" parameterType="LogCleanupPropertyDO">
+        UPDATE log_cleanup_property
+        SET history = #{history},
+        enabled = #{enabled},
+        diskRate = #{diskRate},
+        cleanupTime = #{cleanupTime},
+        cleanupResult = #{cleanupResult}
+        WHERE id = #{id}
+    </update>
+
+    <update id="updateLogCleanupPropertyByResult" parameterType="LogCleanupPropertyDO">
+        UPDATE log_cleanup_property
+        SET cleanupResult = #{cleanupResult}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 新增指定LogCleanupProperty-->
+    <insert id="addLogCleanupProperty" parameterType="LogCleanupPropertyDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO log_cleanup_property (
+        serverGroupId,
+        groupName,
+        serverId,
+        serverName,
+        serialNumber,
+        diskRate,
+        history,
+        enabled,
+        envType,
+        cleanupTime
+        ) VALUES (
+        #{serverGroupId},
+        #{groupName},
+        #{serverId},
+        #{serverName},
+        #{serialNumber},
+        #{diskRate},
+        #{history},
+        #{enabled},
+        #{envType},
+        #{cleanupTime}
+        );
+    </insert>
+
+
+    <!-- 删除指定LogCleanupProperty信息 -->
+    <delete id="delLogCleanupProperty" parameterType="_long">
+        DELETE FROM log_cleanup_property WHERE id = #{id}
+    </delete>
+
+    <!-- 按serverGroupId查找 -->
+    <select id="getLogCleanupConfigurationByEnvType" parameterType="_int" resultType="LogCleanupConfigurationDO">
+        SELECT * FROM log_cleanup_configuration
+        WHERE  envType = #{envType}
+    </select>
+
+</mapper>

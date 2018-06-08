@@ -1,0 +1,278 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">VM服务器</h1>
+                    <small class="text-muted">服务器维护</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+
+            <uib-tabset>
+                <uib-tab index="0" heading="VM服务器">
+                    <div class="panel panel-default" ng-controller="vmServerCtrl">
+                        <div class="panel-body">
+                            <table class="table table-hover table-bordered table-striped">
+                                <thead>
+                                <tr>
+                                    <th>Vm服务器总数</th>
+                                    <th>VmCpu总核数</th>
+                                    <th>Vm内存总数</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{vmData.cnt}}台</td>
+                                    <td>{{vmData.cpuCnt}}核</td>
+                                    <td>{{vmData.memoryCnt/1024}}GB</td>
+                                </tr>
+                                </tbody>
+                            </table>
+
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">IP</span>
+                                        <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">状态</span>
+                                        <select class="form-control" ng-model="nowStatus"
+                                                ng-options="status.code as status.name for status in vmStatus">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"
+                                            ng-disabled="butSearchDisabled">
+                                        <i class="glyphicon glyphicon-search"></i>搜索
+                                    </button>
+
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><i
+                                            class="glyphicon glyphicon-repeat"></i>重置
+                                    </button>
+
+                                    <button type="button" class="btn btn-success" ng-click="ecsRefresh()"
+                                            ng-disabled="butRefreshDisabled"
+                                            ng-if="contains(authPoint, '/server/vmRefresh')">
+                                        <i class="fa fa-spin fa-spinner" ng-show="butRefreshSpinDisabled"></i>
+                                        <i class="glyphicon glyphicon-refresh" ng-show="!butRefreshSpinDisabled"></i>同步
+                                    </button>
+
+                                    <button type="button" class="btn btn-success"
+                                            ng-click="ecsCheck()"
+                                            ng-disabled="butCheckDisabled"
+                                            ng-if="contains(authPoint, '/server/vmCheck')">
+                                        <i class="fa fa-spin fa-spinner" ng-show="butCheckSpinDisabled"></i>
+                                        <i class="glyphicon glyphicon-check" ng-show="!butCheckSpinDisabled"></i>校验
+                                    </button>
+                                </div>
+                            </form>
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>服务器</td>
+                                                <td>IP</td>
+                                                <td>CPU</td>
+                                                <td>内存</td>
+                                                <td>状态</td>
+                                                <td class="col-md-3" ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>
+                                                    <b style="color: #286090">{{item.serverName}}</b>
+                                                    <i class="glyphicon glyphicon-pencil" uib-popover-html="'修改名称'"
+                                                       popover-trigger="'mouseenter'"
+                                                       ng-click="vmRename(item)"></i>
+                                                    <b style="color: #777" class="pull-right">名称</b>
+                                                    </br>
+                                                    <b>{{item.vmName}}</b>
+                                                    <b style="color: #777" class="pull-right">VM名称</b>
+                                                </td>
+                                                <td>{{item.insideIp}}
+                                                    <b style="color: #777" class="pull-right">内网</b>
+                                                </td>
+                                                <td>{{item.cpu}}</td>
+                                                <td>
+                                                    <span ng-if="item.memory < 8192">{{item.memory/1024}}GB</span>
+                                                    <b style="color: #449d44" ng-if="item.memory >= 8192">{{item.memory/1024}}GB</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color: #286090" ng-if="item.status == 0">新增</b>
+
+                                                    <b class="glyphicon glyphicon-ok" style="color: #449d44"
+                                                       ng-if="item.status == 1">关联</b>
+                                                    <b class="glyphicon glyphicon-remove" style="color: #777"
+                                                       ng-if="item.status == 2">下线</b>
+                                                    <b style="color: #d9534f" ng-if="item.status == 3">删除</b>
+                                                </td>
+                                                <td ng-if="contains(authPoint, '/server/vmSave')">
+                                                    <!--添加-->
+                                                    <button ng-click="addVmServer(item)" ng-show="item.status == 0"
+                                                            class="btn btn-xs  pull-left"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-plus"></span>添加
+                                                    </button>
+                                                    <!--<span class="glyphicon glyphicon-plus pull-left" style="margin-left: 20px;"-->
+                                                    <!--ng-click="addVmServer(item)" ng-show="item.status == 0">-->
+                                                    <!--</span>-->
+                                                    <!--标记删除-->
+                                                    <button ng-click="setDelVm(item)"
+                                                            class="btn btn-xs"
+                                                            uib-popover-html="'标记删除'" popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                        <span class="glyphicon glyphicon-ban-circle"></span>标记删除
+                                                    </button>
+                                                    <!--<span class="glyphicon glyphicon-ban-circle" style="margin-left: 20px;"-->
+                                                    <!--ng-click="setDelVm(item)" uib-popover-html="'标记删除'" popover-trigger="'mouseenter'"></span>-->
+
+                                                    <button ng-click="vmPowerOn(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #449d44; color: white;">
+                                                        <span class="glyphicon glyphicon-off"></span>开机
+                                                    </button>
+
+                                                    <button ng-click="vmPowerOff(item)"
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #d9534f; color: white;">
+                                                        <span class="glyphicon glyphicon-off"></span>关机
+                                                    </button>
+                                                    <!--<span style="color: #449d44; margin-left: 20px;" class="glyphicon glyphicon-off"-->
+                                                    <!--uib-popover-html="'电源On'" popover-trigger="'mouseenter'"-->
+                                                    <!--ng-click="vmPowerOn(item)">-->
+                                                    <!--</span>-->
+                                                    <!--<span style="color: #d9534f; margin-left: 20px;" class="glyphicon glyphicon-off"-->
+                                                    <!--uib-popover-html="'电源Off'" popover-trigger="'mouseenter'"-->
+                                                    <!--ng-click="vmPowerOff(item)"></span>-->
+
+                                                    <button ng-click="delVm(item)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="margin-left: 20px; background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
+                                                    <!--<span class="glyphicon glyphicon-trash pull-right"-->
+                                                    <!--ng-click="delVm(item)"></span>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="7">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="VM模版">
+                    <div class="panel panel-default" ng-controller="vmTemplateCtrl">
+                        <div class="panel-body">
+
+                            <div class="panel panel-default" style="margin-top: 5px;;">
+                                <div class="panel-body">
+                                    <div>
+                                        <table class="table table-hover table-bordered table-striped">
+                                            <thead>
+                                            <tr>
+                                                <td>serverId</td>
+                                                <td>名称</td>
+                                                <td>cpu</td>
+                                                <td>memory</td>
+                                                <td>系统盘容量(GB)</td>
+                                                <td>数据盘容量(GB)</td>
+                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                            <tr ng-repeat="item in pageData">
+                                                <td>{{item.serverId}}</td>
+                                                <td>{{item.name}}</td>
+                                                <td>{{item.cpu}}</td>
+                                                <td>
+                                                    <span class="label label-default"
+                                                          ng-if="item.memory == 1024">1GB</span>
+                                                    <span class="label label-success"
+                                                          ng-if="item.memory == 2048">2GB</span>
+                                                    <span class="label label-success"
+                                                          ng-if="item.memory == 4096">4GB</span>
+                                                    <span class="label label-primary"
+                                                          ng-if="item.memory == 8192">8GB</span>
+                                                </td>
+                                                <td>{{item.sysDiskSize}}</td>
+                                                <td>{{item.dataDiskSize}}</td>
+                                                <td ng-if="contains(authPoint, '/server/template/ecs/save')">
+                                                    <button type="button"
+                                                            class="btn btn-info btn-default btn-xs pull-right"
+                                                            style="margin-left: 20px;" ng-click="create(item)"><span
+                                                            class="glyphicon glyphicon-plus"></span>新建
+                                                    </button>
+                                                    <!--<button type="button" class="btn btn-info btn-xs pull-right" ng-click="expansion(item)"><span class="glyphicon glyphicon-plus"></span>扩容</button>-->
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                            <tfoot>
+                                            <tr>
+                                                <td colspan="11">
+                                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                                        total-items="totalItems" ng-model="currentPage"
+                                                        items-per-page="pageLength" max-size="10"
+                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                        next-text="&rsaquo;"></ul>
+                                                </td>
+                                            </tr>
+                                            </tfoot>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+
+
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="serverInfo">
+    <div ng-include="'tpl/modal/server_info_modal.html'"></div>
+</script>

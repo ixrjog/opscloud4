@@ -1,0 +1,59 @@
+<div class="modal-header">
+    <h3 class="modal-title">IP组信息</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>IP网络段</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="IP网络段" ng-model="ipGroup.ipNetwork">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>网关</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="网关" ng-model="ipGroup.gateWay">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>DNS1</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="DNS1" ng-model="ipGroup.dnsOne">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">DNS2</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="DNS2" ng-model="ipGroup.dnsTwo">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>IP类型</label>
+            <div class="col-lg-8">
+                <select class="form-control" ng-model="ipGroup.ipType" ng-options="type.code as type.name for type in ipType">
+                    <option value="">---请选择---</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">说明</label>
+            <div class="col-lg-8">
+                <textarea class="form-control" cols="3" ng-model="ipGroup.content"></textarea>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button ng-click="saveData()"
+                    class="btn btn-xs"
+                    style="background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-ok"></span>保存</button>
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: red; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭</button>
+        </div>
+    </form>
+    <div ng-if="alert != null">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

@@ -1,0 +1,158 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <!--<h3 class="modal-title">项目管理配置</h3>-->
+    <h3 class="modal-title">
+        <b style="color: #286090">{{todoItem.title}}</b>工单
+    </h3>
+    <div>
+        <b ng-show="todoItem.todoType == 0" class="pull-left">运维类工单</b>
+        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
+           class="icon icon-info" style="color: green;"></i>
+    </div>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+                <div class="form-group" class="col-lg-12 control-label" style="color: #2e6da4;">
+                    <i class="icon icon-info"
+                       style="color: green;"></i>
+                    SCM权限纬度是Project，若申请了权限Project下所有的仓库(repository)皆可访问，工单中可预览仓库和分支
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <!--<span style="color: #ec2121;">*</span>-->
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>项目名</label>
+                        <!--<label class="col-lg-4 control-label">(Stash)Project</label>-->
+                        <div class="col-lg-8">
+                            <ui-select ng-model="nowStashProject.selected" theme="bootstrap"
+                                       ng-change="changeStashProject()">
+                                <ui-select-match placeholder="搜索stash项目名......">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryStashProject($select.search)" refresh-dalay="0"
+                                                   repeat="item in stashProjectList | filter: $select.search">
+                                    <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <!--<span style="color: #ec2121;">*</span>-->
+                        <label class="col-lg-4 control-label">Repository</label>
+                        <div class="col-lg-8">
+                            <ui-select ng-model="nowStashRepository.selected" theme="bootstrap"
+                                       ng-change="changeStashRepository()">
+                                <ui-select-match placeholder="搜索stash仓库名......">
+                                    {{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryStashRepository($select.search)" refresh-dalay="0"
+                                                   repeat="item in stashRepositoryList | filter: $select.search">
+                                    <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group" ng-show="nowStashRepository.selected != null">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"></span>查看分支</label>
+                        <div class="col-lg-8">
+                            <select class="form-control" ng-model="nowBranch.selected" ng-disabled="doQueryRefs"
+                                    ng-options="ref.name group by ref.type for ref in refs">
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <button ng-click="getRefs()" ng-disabled="doQueryRefs"
+                                class="btn btn-sm"
+                                style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                            <i class="fa fa-code-fork" ng-show="!doQueryRefs"></i>
+                            <i class="fa fa-spin fa-spinner" ng-show="doQueryRefs"></i>获取最新分支
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label class="col-lg-2 control-label">持续集成权限组</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="持续集成权限组名称，申请SCM权限会关联持续集成！"
+                                   ng-model="todoDetail.scmMap.groupName" ng-disabled="true">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-12">
+                        <label class="col-lg-2 control-label">Desc</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="SCM项目Desc"
+                                   ng-model="todoDetail.scmMap.scmDesc" ng-disabled="true">
+                        </div>
+                    </div>
+                </div>
+
+            </uib-tabset>
+        </div>
+    </form>
+
+    <!--按钮-->
+    <div class="form-group">
+
+        <div style="text-align:center;">
+            <!--提交-->
+            <div style="text-align:center;">
+                <button class="btn btn-xs" ng-show="todoDetail.todoStatus == 0"
+                        style="background-color:  #2e6da4; color: white;"
+                        ng-click="saveTodo()">提交
+                </button>
+
+                <button ng-click="resetTodo()" ng-show="todoDetail.todoStatus <= 0"
+                        class="btn btn-xs"
+                        style="margin-left: 5px; background-color: #449d44; color: white;">
+                    <span class="glyphicon glyphicon-repeat"></span>重置
+                </button>
+            </div>
+            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+        </div>
+    </div>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

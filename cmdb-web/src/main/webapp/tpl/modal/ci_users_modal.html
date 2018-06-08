@@ -1,0 +1,75 @@
+<div class="modal-header">
+    <h3 class="modal-title">{{user.username}}({{user.displayName}})的持续集成权限组列表</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>持续集成权限组</label>
+            <div class="col-lg-8">
+                <ui-select ng-model="nowCigroup.selected" theme="bootstrap">
+                    <ui-select-match placeholder="搜索持续集成权限组名称......">{{$select.selected.searchGroupName}}</ui-select-match>
+                    <ui-select-choices refresh="queryCiGroup($select.search)" refresh-dalay="0"
+                                       repeat="item in cigroupList | filter: $select.search">
+                        <div ng-bind-html="item.searchGroupName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-lg-2">
+                <button type="button" class="btn btn-info btn-sm" ng-click="addItem()"><span
+                        class="glyphicon glyphicon-plus"></span></button>
+            </div>
+        </div>
+    </form>
+
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>权限组名称</td>
+                <td>说明</td>
+                <td>服务器组名称</td>
+                <td>环境</td>
+                <td>操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in pageData">
+                <!--用户信息-->
+                <td>{{item.ciUserGroupDO.groupName}}
+                </td>
+                <td>{{item.ciUserGroupDO.content}}
+                </td>
+                <td>
+                    {{item.serverGroupName}}
+                </td>
+                <td>
+                    <b style="color: #777" ng-if="item.ciUserGroupDO.envType == 0">ALL</b>
+                    <b style="color: #5bc0de" ng-if="item.ciUserGroupDO.envType == 1">dev</b>
+                    <b style="color: #449d44" ng-if="item.ciUserGroupDO.envType == 2">daily</b>
+                    <b style="color: #ec971f" ng-if="item.ciUserGroupDO.envType == 3">gray</b>
+                    <b style="color: #d9534f" ng-if="item.ciUserGroupDO.envType == 4">prod</b>
+                    <b style="color: #5e5e5e" ng-if="item.ciUserGroupDO.envType == 5">test</b>
+                    <b style="color: #286090" ng-if="item.ciUserGroupDO.envType == 6">back</b>
+                </td>
+                <td>
+                    <button ng-click="delCiuser(item.id)"
+                            class="btn btn-xs pull-right"
+                            style="background-color: red; color: white;">
+                        <span class="glyphicon glyphicon-log-out"></span>解除</button>
+
+                    <!--<span class="glyphicon glyphicon-log-out pull-right" style="color: #d9534f"-->
+                            <!--ng-click="delCiuser(item.id)"></span>-->
+
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

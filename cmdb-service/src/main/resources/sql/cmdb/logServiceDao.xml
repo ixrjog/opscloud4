@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.LogServiceDao">
+
+    <!-- 查询一定条件下分页LogServiceCfgDO信息 -->
+    <select id="queryLogServiceCfgPage" parameterType="object" resultType="LogServiceCfgDO">
+        SELECT * FROM log_service_cfg
+        <where>
+            <if test="serverName != null and serverName != ''">
+                serverName LIKE "%" #{serverName} "%"
+            </if>
+        </where>
+        ORDER BY serverName DESC
+        limit #{start}, #{length}
+    </select>
+
+    <insert id="addLogService" parameterType="LogServiceDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO log_service (
+        userId,
+        username,
+        project,
+        logstore,
+        topic,
+        query,
+        timeFrom,
+        timeTo,
+        totalCount
+        ) VALUES (
+        #{userId},
+        #{username},
+        #{project},
+        #{logstore},
+        #{topic},
+        #{query},
+        #{timeFrom},
+        #{timeTo},
+        #{totalCount}
+        );
+    </insert>
+
+    <insert id="addLogHistograms" parameterType="LogHistogramsDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO log_histograms (
+        logServiceId,
+        timeFrom,
+        timeTo,
+        totalCount
+        ) VALUES (
+        #{logServiceId},
+        #{timeFrom},
+        #{timeTo},
+        #{totalCount}
+        );
+    </insert>
+
+    <select id="getLogHistogramsSize" parameterType="_long" resultType="_int">
+        SELECT count(*) from log_histograms
+        WHERE logServiceId = #{logServiceId}
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="getLogHistogramsPage" parameterType="object" resultType="LogHistogramsDO">
+        SELECT * FROM log_histograms
+        WHERE logServiceId = #{logServiceId}
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="queryLogServiceById" parameterType="object" resultType="LogServiceDO">
+        SELECT * FROM log_service
+        WHERE id = #{id}
+    </select>
+
+
+    <!-- 查询一定条件下分页LogServicePathDO信息 -->
+    <select id="queryLogServicePathPage" parameterType="object" resultType="LogServicePathDO">
+        SELECT * FROM log_service_path
+        <where>
+            <if test="tagPath != null and tagPath != ''">
+                tagPath LIKE "%" #{tagPath} "%"
+            </if>
+            <if test="serverGroupId > 0">
+                AND serverGroupId = #{serverGroupId}
+            </if>
+        </where>
+        ORDER BY searchCnt DESC
+        limit #{start}, #{length}
+    </select>
+
+    <select id="queryLogServicePath" parameterType="object" resultType="LogServicePathDO">
+        SELECT * FROM log_service_path
+        WHERE tagPath = #{tagPath}
+        AND serverGroupId = #{serverGroupId}
+    </select>
+
+
+    <select id="getLogServicePathSize" parameterType="object" resultType="_int">
+        SELECT count(*) from log_service_path
+        <where>
+            <if test="tagPath != null and tagPath != ''">
+                tagPath LIKE "%" #{tagPath} "%"
+            </if>
+            <if test="serverGroupId > 0">
+                AND serverGroupId = #{serverGroupId}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryLogServiceServerGroupCfg" parameterType="_long" resultType="LogServiceServerGroupCfgDO">
+        SELECT * FROM log_service_servergroup_cfg
+        WHERE serverGroupId = #{serverGroupId}
+    </select>
+
+    <insert id="addLogServiceServerGroupCfg" parameterType="LogServiceServerGroupCfgDO" useGeneratedKeys="true"
+            keyColumn="id" keyProperty="id">
+        INSERT INTO log_service_servergroup_cfg (
+        serverGroupId,
+        serverGroupName,
+        project,
+        logstore,
+        topic
+        ) VALUES (
+        #{serverGroupId},
+        #{serverGroupName},
+        #{project},
+        #{logstore},
+        #{topic}
+        );
+    </insert>
+
+    <update id="updateLogServiceServerGroupCfg" parameterType="LogServiceServerGroupCfgDO">
+        UPDATE log_service_servergroup_cfg
+        SET project = #{project},
+        logstore = #{logstore},
+        topic = #{topic}
+        WHERE id = #{id}
+    </update>
+
+
+    <insert id="addLogServicePath" parameterType="LogServicePathDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO log_service_path (
+        serverGroupId,
+        tagPath,
+        searchCnt
+        ) VALUES (
+        #{serverGroupId},
+        #{tagPath},
+        #{searchCnt}
+        );
+    </insert>
+
+    <update id="updateLogServicePath" parameterType="LogServicePathDO">
+        UPDATE log_service_path
+        SET searchCnt = #{searchCnt}
+        WHERE id = #{id}
+    </update>
+
+    <!--统计使用日志服务的用户-->
+    <select id="statusLogServiceUser" resultType="LogServiceUserVO">
+        SELECT userId, username, count(*) AS cnt
+        FROM log_service
+        GROUP BY userId ORDER BY cnt DESC
+        limit 10
+    </select>
+
+    <select id="statusLogServiceCntByDay" parameterType="_int" resultType="_int">
+        SELECT count(*) AS cnt FROM log_service
+        WHERE DATE_SUB(CURDATE(), INTERVAL #{dayCnt} DAY) &lt;= date(gmtCreate)
+        limit 10
+    </select>
+
+    <select id="statusLogServiceGroup" parameterType="_int" resultType="LogServiceGroupVO">
+        SELECT topic AS groupName, count(*) AS cnt FROM log_service
+        GROUP BY topic ORDER BY cnt DESC
+        limit 10
+    </select>
+
+
+    <select id="getLogServiceServerGroupCfgCnt" resultType="_int">
+        SELECT count(*) AS cnt FROM log_service_servergroup_cfg
+    </select>
+
+    <select id="getLogServiceServerGroupServerCnt" resultType="_int">
+         SELECT count(*) AS cnt FROM oc_server
+         WHERE (envType &gt;= 3
+         AND envType != 5)
+         AND serverGroupId IN (SELECT DISTINCT serverGroupId FROM log_service_servergroup_cfg )
+    </select>
+
+
+</mapper>

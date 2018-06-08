@@ -1,0 +1,6 @@
+dependencies {
+    compile project(":cmdb-extend")
+    compile project(":cmdb-plugin")
+
+    compile 'org.springframework.ldap:spring-ldap-core:2.1.0.RELEASE'
+}

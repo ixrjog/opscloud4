@@ -1,0 +1,130 @@
+<div class="container w-auto-xs" ng-controller="accessTodoCtrl" ng-init="app.settings.container = false;">
+    <div class="m-b-lg">
+        <a href class="navbar-brand block m-t">工单详情</a>
+        <button type="button" class="btn glyphicon glyphicon-arrow-left pull-left" ng-click="goBack()"></button>
+    </div>
+
+    <div class="m-b-lg">
+        <div class="wrapper text-center">
+        </div>
+
+        <div class="panel" style="margin-top: 5px;">
+            <div class="panel-body">
+                <div class="wrapper-md">
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">工单主类目:</span>
+                                <div class="col-md-9">
+                                    <span>{{todoItem.levelOne.configName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">工单具体目:</span>
+                                <div class="col-md-9">
+                                    <span>{{todoItem.levelTwo.configName}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">创建时间:</span>
+                                <div class="col-md-9">
+                                    <span>{{todoItem.gmtCreate}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">隐私类型:</span>
+                                <div class="col-md-9">
+                                    <div ng-if="todoItem.privacy == 0">公开</div>
+                                    <div ng-if="todoItem.privacy == 1">私密</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">级别:</span>
+                                <div class="col-md-9">
+                                    <div ng-if="todoItem.urgents == 0">一般</div>
+                                    <div ng-if="todoItem.urgents == 1">重要</div>
+                                    <div ng-if="todoItem.urgents == 2">紧急</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">发起者:</span>
+                                <div class="col-md-9">
+                                    <span>{{todoItem.sponsor}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">工单状态:</span>
+                                <div class="col-md-9">
+                                    <div ng-if="todoItem.todoStatus == 0">处理中</div>
+                                    <div ng-if="todoItem.todoStatus == 1">完成</div>
+                                    <div ng-if="todoItem.todoStatus == 2">待反馈</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">工单内容:</span>
+                                <div class="col-md-9">
+                                    <span>{{todoItem.contents}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">反馈内容:</span>
+                                <div class="col-md-9">
+                                    <span>{{todoItem.feedbackContent}}</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div>
+                                <span class="col-md-3">处理过程:</span>
+                                <div class="col-md-9">
+                                    <div class="padder">
+                                        <div class="streamline b-l b-info m-l-lg m-b padder-v">
+                                            <div ng-repeat="logItem in todoItem.dailyLogDOList">
+                                                <a class="pull-left thumb-sm avatar m-l-n-md">
+                                                    <img src="img/a9.jpg" class="img-circle" alt="...">
+                                                </a>
+                                                <div class="m-l-lg">
+                                                    <div class="m-b-xs">
+                                                        <a href class="h4">
+                                                            <span ng-if="logItem.todoStatus == 0">发起人:</span>
+                                                            <span ng-if="logItem.todoStatus != 0">处理人:</span>
+                                                            {{logItem.processUser}}
+                                                        </a>
+                                                            <span class="text-muted m-l-sm pull-right">
+                                                                {{logItem.gmtCreate}}
+                                                            </span>
+                                                    </div>
+                                                    <div class="m-b">
+                                                        <div ng-if="logItem.todoStatus == 0">{{logItem.dailyContent}}</div>
+                                                        <div ng-if="logItem.todoStatus == 2">{{logItem.dailyFeedbackContent}}</div>
+                                                        <div ng-if="logItem.todoStatus == 1">{{(logItem.dailyFeedbackContent == null || logItem.dailyFeedbackContent == "") ? "处理完成!" : logItem.dailyFeedbackContent}}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

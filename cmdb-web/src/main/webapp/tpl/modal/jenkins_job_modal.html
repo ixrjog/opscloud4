@@ -1,0 +1,297 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">JenkinsJob</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+                <uib-tab index="0" heading="Job配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>任务名称
+                            </label>
+                            <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                <input type="text" class="form-control" placeholder="任务名称" ng-model="jobItem.jobName">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default"
+                                            ng-click="checkJobName(jobItem.jobName)"><i
+                                            class="glyphicon glyphicon-check pull-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group build-params">
+                        <label class="col-lg-2 control-label">仓库地址</label>
+                        <div class="col-lg-10">
+                            <input type="text" class="form-control" placeholder="仓库地址"
+                                   ng-model="jobItem.repositoryUrl">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>环境类型</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="jobItem.jobEnvType"
+                                        ng-options="jobEnv.code as jobEnv.name for jobEnv in jobEnvType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>构建类型</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="jobItem.buildType" ng-disabled="jobItem.buildType != -1"
+                                        ng-options="build.code as build.name for build in buildType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">Job说明</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder="简短描述"
+                                      ng-model="jobItem.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <div style="text-align:center;">
+
+                                <button ng-click="saveJob()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-ok"></span>保存
+                                </button>
+
+                                <button ng-click="resetJob()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #449d44; color: white;">
+                                    <span class="glyphicon glyphicon-repeat"></span>重置
+                                </button>
+                            </div>
+                            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+                            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="参数配置" ng-show="jobItem.id != 0">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>参数名称
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="param name"
+                                       ng-model="nowParam.paramName">
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>参数值
+                            </label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="param value"
+                                       ng-model="nowParam.paramValue">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="col-lg-2 control-label">备注</label>
+                        <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder=""
+                                      ng-model="nowParam.content"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <!--保存-->
+                            <button ng-click="saveParam()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+                            <!--重置-->
+                            <button ng-click="resetParam()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #449d44; color: white;">
+                                <span class="glyphicon glyphicon-repeat"></span>重置
+                            </button>
+                        </div>
+                    </div>
+
+                    <!--计划详情-->
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped"
+                               ng-show="paramList != null && paramList.length != 0">
+                            <thead>
+                            <tr>
+                                <td class="col-md-1">参数名称</td>
+                                <td class="col-md-1">参数值</td>
+                                <td class="col-md-3">备注</td>
+                                <td class="col-md-3">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="item in paramList">
+                                <td>{{item.paramName}}</td>
+                                <td>{{item.paramValue}}</td>
+                                <td>{{item.content}}</td>
+                                <td>
+                                    <button ng-click="editParam(item)"
+                                            class="btn btn-xs"
+                                            style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                    </button>
+
+                                    <button ng-click="delParam(item.id)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="5">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                </uib-tab>
+                <uib-tab index="2" heading="用户配置">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+                    <form class="form-horizontal">
+                        <div class="form-group">
+                            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>用户名</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowUser.selected" theme="bootstrap">
+                                    <ui-select-match placeholder="搜索用户名称......">
+                                        {{$select.selected.username}}<{{$select.selected.displayName}}>
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryUsers($select.search)" refresh-dalay="0"
+                                                       repeat="item in userList | filter: $select.search">
+                                        <div ng-bind-html="item.username + '<' + item.displayName + '>' | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                            <div class="col-lg-2">
+                                <button ng-click="addUser()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-plus"></span>添加
+                                </button>
+
+                                <!--<span class="glyphicon glyphicon-plus" ng-click="addItem()"></span>-->
+                            </div>
+                        </div>
+                    </form>
+
+                    <div style="margin-top: 5px;">
+                        <table class="table table-hover table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <td class="col-md-3">用户</td>
+                                <td class="col-md-3">姓名</td>
+                                <td class="col-md-7">
+                                    <b style="color: #286090">Email</b>
+                                </td>
+                                <td class="col-md-2">操作</td>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr ng-repeat="user in todoDetail.newProjectMap.users">
+                                <td>{{user.username}}</td>
+                                <td>{{user.displayName}}</td>
+                                <td>{{user.mail}}</td>
+                                <td>
+                                    <button ng-click="delUser(user)"
+                                            class="btn btn-xs pull-right"
+                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
+                                            style="background-color: red; color: white;">
+                                        <span class="glyphicon glyphicon-log-out"></span>移除
+                                    </button>
+                                </td>
+                            </tr>
+                            </tbody>
+                            <tfoot>
+                            <tr>
+                                <td colspan="4">
+                                </td>
+                            </tr>
+                            </tfoot>
+                        </table>
+                    </div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;" ng-show="todoDetail.todoStatus <= 0">
+                            <!--保存-->
+                            <button ng-click="saveTodo()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+
+    </form>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

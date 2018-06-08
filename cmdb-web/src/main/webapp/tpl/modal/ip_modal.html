@@ -1,0 +1,52 @@
+<div class="modal-header">
+    <h3 class="modal-title">IP信息</h3>
+</div>
+<div class="modal-body">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>IP段</label>
+            <div class="col-lg-8">
+                <ui-select ng-model="nowIPGroup.selected" theme="bootstrap">
+                    <ui-select-match placeholder="搜索IP组名称......">{{$select.selected.ipNetwork}}</ui-select-match>
+                    <ui-select-choices refresh="queryIPGroup($select.search)" refresh-dalay="0" repeat="item in ipGroupList | filter: $select.search">
+                        <div ng-bind-html="item.ipNetwork | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>IP</label>
+            <div class="col-lg-8">
+                <input type="text" class="form-control" placeholder="IP" ng-model="ip.ip">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>IP类型</label>
+            <div class="col-lg-8">
+                <select class="form-control" ng-model="ip.ipType" ng-options="type.code as type.name for type in ipType">
+                    <option value="">--请选择--</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-4 control-label">说明</label>
+            <div class="col-lg-8">
+                <textarea class="form-control" cols="3" ng-model="ip.content"></textarea>
+            </div>
+        </div>
+        <div class="form-group" style="text-align: center;">
+            <button ng-click="saveData()"
+                    class="btn btn-xs"
+                    style="background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-ok"></span>保存</button>
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: red; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭</button>
+        </div>
+    </form>
+    <div ng-if="alert != null">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

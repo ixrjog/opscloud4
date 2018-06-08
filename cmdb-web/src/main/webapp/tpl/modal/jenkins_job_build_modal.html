@@ -1,0 +1,170 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">JenkinsJob(iOS)</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">任务名称</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="任务名称"
+                           ng-model="jobItem.jobName" ng-disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group build-params">
+                <label class="col-lg-2 control-label">仓库地址</label>
+                <div class="col-lg-10">
+                    <input type="text" class="form-control" placeholder="仓库地址"
+                           ng-model="jobItem.repositoryUrl" ng-disabled="true">
+                </div>
+            </div>
+
+            <div class="form-group">
+
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>分支</label>
+                    <div class="col-lg-8">
+                        <select class="form-control" ng-model="nowMbranch.selected" ng-disabled="doQueryRefs"
+                                ng-options="ref.name group by ref.type for ref in refs">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <button ng-click="getRefs()" ng-disabled="doQueryRefs"
+                            class="btn btn-sm"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <i class="fa fa-code-fork" ng-show="!doQueryRefs"></i>
+                        <i class="fa fa-spin fa-spinner" ng-show="doQueryRefs"></i>获取最新分支
+                    </button>
+
+                    <button ng-click="showConfigRefs()"
+                            class="btn btn-sm"
+                            style="margin-left: 5px; background-color: darkgreen; color: white;">
+                        <i class="glyphicon glyphicon-wrench"></i>手动维护
+                    </button>
+                </div>
+            </div>
+
+
+            <div class="form-group" ng-show="showConfigRefsMenu">
+
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">branches</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="branches名称"
+                               ng-model="nowBranches">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <button ng-click="chgRefs(nowBranches,0)"
+                            class="btn btn-sm"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <i class="fa fa-code-fork"></i>添加/删除
+                    </button>
+
+                </div>
+            </div>
+
+            <div class="form-group" ng-show="showConfigRefsMenu">
+
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">tags</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="tags名称"
+                               ng-model="nowTags">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <button ng-click="chgRefs(nowTags,1)"
+                            class="btn btn-sm"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <i class="fa fa-code-fork"></i>添加/删除
+                    </button>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">环境类型</label>
+                    <div class="col-lg-8">
+                        <!--required-->
+                        <select class="form-control" ng-model="nowEnvType.selected"
+                                ng-options="jobEnv.name as jobEnv.name for jobEnv in jobEnvType">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="col-lg-2 control-label">Job说明</label>
+                <div class="col-lg-10">
+                            <textarea class="form-control" cols="3" placeholder=""
+                                      ng-model="jobItem.content" ng-disabled="true"></textarea>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div style="text-align:center;">
+                    <div style="text-align:center;">
+
+
+                        <button ng-click="buildJob()"
+                                class="btn btn-sm"
+                                ng-disabled="runBuilding"
+                                style="margin-left: 5px; background-color: green; color: white;">
+                            <i class="fa fa-spin fa-spinner" ng-show="runBuilding"></i>
+                            <i class="icon icon-control-play" ng-show="!runBuilding"></i>执行
+                        </button>
+
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </form>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

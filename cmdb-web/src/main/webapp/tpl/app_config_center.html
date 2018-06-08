@@ -1,0 +1,151 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">配置中心</h1>
+                    <small class="text-muted">系统环境配置</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="默认配置文件">
+                    <div class="panel panel-default" ng-controller="configCenterCtrl">
+                        <div class="panel-body">
+                            <div>
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">配置项</span>
+                                            <input type="text" class="form-control" ng-model="queryItem">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">配置项目组</span>
+                                            <select class="form-control" ng-model="queryItemGroup"
+                                                    ng-options="groupType.code as groupType.name for groupType in itemGroupType">
+                                                <option value="">--请选择--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">系统环境</span>
+                                            <select class="form-control" ng-model="queryEnv"
+                                                    ng-options="env.code as env.name for env in envType">
+                                                <option value="">--请选择--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                        <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                                class="glyphicon glyphicon-repeat"></span>重置
+                                        </button>
+                                        <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                                class="glyphicon glyphicon-plus"></span>新增
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>配置项组</td>
+                                        <td>配置项</td>
+                                        <td>环境</td>
+                                        <td>说明</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>{{item.itemGroup}}</td>
+                                        <td>
+                                            <b style="color: #d9534f">{{item.item}}</b>
+                                            <b style="color: #777" class="pull-right">配置项</b>
+                                            </br>
+                                            <b style="color: #449d44">{{item.value}}</b>
+                                            <b style="color: #777" class="pull-right">值</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: #777" ng-if="item.env == 'default'">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.env == 'dev'">dev</b>
+                                            <b style="color: #449d44" ng-if="item.env == 'daily'">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.env == 'gray'">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.env == 'online'">online</b>
+                                            <b style="color: #5e5e5e" ng-if="item.env == 'test'">test</b>
+                                        </td>
+                                        <td>{{item.content}}</td>
+                                        <td>
+                                            <!--<span ng-click="editItem(item)"-->
+                                                    <!--class="glyphicon glyphicon-pencil pull-left">-->
+                                            <!--</span>-->
+
+                                            <button ng-click="editItem(item)"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑</button>
+
+                                            <button ng-click="refreshCache(item)"
+                                                    class="btn btn-xs"
+                                                    uib-popover-html="'刷新缓存'" popover-trigger="'mouseenter'"
+                                                    style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                <span class="glyphicon glyphicon-refresh"></span>刷新</button>
+
+                                            <!--<span ng-click="refreshCache(item)" style="margin-left: 10px;"-->
+                                                    <!--uib-popover-html="'刷新缓存'" popover-trigger="'mouseenter'"-->
+                                                    <!--class="glyphicon glyphicon-refresh"></span>-->
+                                            <!--<span ng-click="delItem(item.id)"-->
+                                                    <!--class="glyphicon glyphicon-trash pull-right"-->
+                                                    <!--style="margin-left: 10px;"></span>-->
+
+                                            <button ng-click="delItem(item.id)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="6">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="configCenterInfo">
+    <div ng-include="'tpl/modal/configCenter_info_modal.html'"></div>
+</script>

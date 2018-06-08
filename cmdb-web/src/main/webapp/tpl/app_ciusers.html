@@ -1,0 +1,106 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">持续集成用户管理</h1>
+                    <!--<small class="text-muted">可访问堡垒机列表管理</small>-->
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <div ng-controller="ciusersCtrl">
+                    <div style="margin-top: 5px;" class="panel panel-default">
+                        <div class="panel-body">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">用户</span>
+                                        <input type="text" class="form-control" ng-model="username"
+                                               placeholder="用户名">
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                                <button type="button" class="btn btn-success" ng-click="doRefresh()"><span
+                                        class="glyphicon glyphicon-refresh"></span>同步数据
+                                </button>
+                            </form>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>用户信息</td>
+                                        <td>持续集成组</td>
+                                        <td>操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <!--用户信息-->
+                                        <td>
+                                            {{item.username}}</br>
+                                            <b>{{item.displayName}}</br></b>
+                                            <b style="color: #286090">{{item.mail}}</b>
+                                        </td>
+                                        <td>
+                                            <div ng-repeat="ciUser in item.ciUsers">
+                                                <b style="color: #449d44" ng-if="ciUser.serverGroupName == ''">{{ciUser.ciUserGroupDO.groupName}}</b>
+                                                <b style="color: #286090" ng-if="ciUser.serverGroupName != ''">{{ciUser.ciUserGroupDO.groupName}}<span style="color: #777">({{ciUser.serverGroupName}})</span></b>
+                                                <b class="pull-right" style="color: #777"
+                                                   ng-if="ciUser.serverGroupName != '' && ciUser.ciUserGroupDO.content != ''">{{ciUser.ciUserGroupDO.content}}</b>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <button ng-click="ciUsergroupList(item)"
+                                                    class="btn btn-xs"
+                                                    uib-popover-html="'持续集成权限组详情'" popover-trigger="'mouseenter'"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-list"></span>权限组</button>
+
+                                                <!--<span class="glyphicon glyphicon-list"-->
+                                                      <!--ng-click="ciUsergroupList(item)"></span>-->
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="ciusersModal">
+    <div ng-include="'tpl/modal/ci_users_modal.html'"></div>
+</script>
+

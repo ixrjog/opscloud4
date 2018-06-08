@@ -1,0 +1,78 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+    .projectName .popover {
+        max-width: 400px !important;
+    }
+
+    .environmentVariables .popover {
+        max-width: 400px !important;
+    }
+
+    .zoneType .popover {
+        max-width: 500px !important;
+    }
+
+    .tomcatWebAppsPath .popover {
+        max-width: 500px !important;
+    }
+
+    .httpStatus .popover {
+        max-width: 500px !important;
+    }
+</style>
+<div class="modal-header">
+    <!--<h3 class="modal-title">项目管理配置</h3>-->
+    <h3 class="modal-title">
+        <b style="color: #286090">Ansible Version</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+
+                <div class="form-group version">
+                    <label class="col-lg-2" style="color: #2b669a;">Ansible命令路径</label>
+                    <label class="col-lg-10" style="color: #c9302c;">{{versionItem.ansibleBinPath}}</label>
+                </div>
+
+                <div class="form-group version">
+                    <label class="col-lg-2" style="color: #2b669a;">AnsibleScript路径</label>
+                    <label class="col-lg-10" style="color: #c9302c;">{{versionItem.ansibleTaskScriptPath}}</label>
+                </div>
+
+                <div class="form-group version">
+                    <label class="col-lg-2" style="color: #2b669a;">Ansible版本</label>
+                    <label class="col-lg-10" style="color: #c9302c;">{{versionItem.version}}</label>
+                </div>
+
+                <div class="form-group">
+                      <pre style="background-color: #777" hljs
+                           hljs-source="versionItem.versionInfo"></pre>
+                </div>
+
+            </uib-tabset>
+        </div>
+    </form>
+
+
+    <!--按钮-->
+    <div class="form-group">
+        <div style="text-align:center;">
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #ff8700; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,47 @@
+<div class="modal-header">
+    <h3 class="modal-title"><b style="color: #286090">Regions</b></h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped" ng-show="alert.msg == ''">
+            <thead>
+            <tr>
+                <td><b style="color: #286090">地域名称</b></td>
+                <td><b style="color: #286090">地域Id</b></td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="region in regions">
+                <td>
+                    {{region.localName}}
+                </td>
+                <td>
+                    {{region.regionId}}
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+    <!--按钮-->
+    <div class="form-group">
+
+        <div style="text-align:center;">
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+
+            <!--<span class="glyphicon glyphicon-save" ng-click="saveServerItem(insideip, publicip)"></span>-->
+            <!--<span class="glyphicon glyphicon-repeat" style="margin-left: 20px;" ng-click="resetServerItem()"></span>-->
+        </div>
+    </div>
+
+
+</div>

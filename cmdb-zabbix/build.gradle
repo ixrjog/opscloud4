@@ -1,0 +1,5 @@
+dependencies {
+    compile project(":cmdb-domain")
+    compile project(":cmdb-service")
+    compile 'org.apache.httpcomponents:fluent-hc:4.5.1'
+}

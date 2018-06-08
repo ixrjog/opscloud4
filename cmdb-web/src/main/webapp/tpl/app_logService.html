@@ -1,0 +1,416 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">日志服务</h1>
+                    <small class="text-muted">Nginx访问日志查询</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="Nginx访问日志查询">
+                    <div class="panel panel-default" ng-controller="nginxLogCtrl">
+                        <div class="panel-body">
+
+
+                            <div class="form-group">
+
+                                <div class="col-md-6">
+                                    <!--<span style="color: #ec2121;">*</span>-->
+                                    <label class="col-lg-2 control-label">域名</label>
+                                    <div class="col-lg-8">
+                                        <ui-select ng-model="nowLogServiceCfg.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索域名配置......">
+                                                {{$select.selected.serverName}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryLogServiceCfg($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in logServiceCfgList | filter: $select.search">
+                                                <div ng-bind-html="item.serverName | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="form-group" ng-if="nowLogServiceCfg.selected != null">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <br/>
+                            <div style="font-size:1em;">&nbsp;</div>
+                            <!--查询时间-->
+                            <div class="form-group" ng-if="nowLogServiceCfg.selected != null">
+                                <div class="col-md-6">
+                                    <!--<button type="button" class="btn btn-sm btn-info"-->
+                                    <!--ng-click="today()">Today-->
+                                    <!--</button>-->
+                                    <label class="col-lg-2 control-label">开始时间</label>
+                                    <div class="col-lg-5">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" uib-datepicker-popup
+                                                   ng-model="queryItem.beginDate"
+                                                   is-open="popupBeginDate.opened" datepicker-options="dateOptions"
+                                                   ng-required="true" close-text="Close"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default"
+                                                        ng-click="openBeginDate()">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div uib-timepicker arrowkeys="false" ng-model="queryItem.beginTime"
+                                             ng-change="changed()"
+                                             hour-step="hstep" minute-step="mstep" show-meridian="false"
+                                             show-spinners="false"></div>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <!--<button type="button" class="btn btn-sm btn-info"-->
+                                    <!--ng-click="today()">Today-->
+                                    <!--</button>-->
+                                    <label class="col-lg-2 control-label">结束时间</label>
+                                    <div class="col-lg-5">
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" uib-datepicker-popup
+                                                   ng-model="queryItem.endDate"
+                                                   is-open="popupEndDate.opened" datepicker-options="dateOptions"
+                                                   ng-required="true" close-text="Close"/>
+                                            <span class="input-group-btn">
+                                                <button type="button" class="btn btn-default"
+                                                        ng-click="openEndDate()">
+                                                    <i class="glyphicon glyphicon-calendar"></i>
+                                                </button>
+                                            </span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div uib-timepicker arrowkeys="false" ng-model="queryItem.endTime"
+                                             ng-change="changed()"
+                                             hour-step="hstep" minute-step="mstep" show-meridian="false"
+                                             show-spinners="false"></div>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">uri</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--placeholder="接口"-->
+                            <!--aria-describedby="basic-addon3" ng-model="queryItem.uri">-->
+                            <!--<span class="input-group-addon">args</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--placeholder="参数"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--ng-model="queryItem.args">-->
+                            <!--</div>-->
+
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">status</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="请求状态"-->
+                            <!--ng-model="queryItem.status">-->
+                            <!--<span class="input-group-addon">sourceIp</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="客户端IP"-->
+                            <!--ng-model="queryItem.sourceIp">-->
+                            <!--<span class="input-group-addon">mobile</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="卖家手机号"-->
+                            <!--ng-model="queryItem.mobile">-->
+                            <!--<span class="input-group-addon">requestTime</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="请求延时(单位秒精度毫秒)"-->
+                            <!--ng-model="queryItem.requestTime">-->
+                            <!--</div>-->
+                            <div style="font-size:1em;">&nbsp;</div>
+                            <div class="form-group" ng-if="nowLogServiceCfg.selected != null">
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label">uri
+                                        <i uib-popover-html="todoHelp.buildParams"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="接口"
+                                               ng-model="queryItem.uri">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label">args
+                                        <i uib-popover-html="todoHelp.buildParams"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="参数"
+                                               ng-model="queryItem.args">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size:1em;">&nbsp;</div>
+                            <div class="form-group" ng-if="nowLogServiceCfg.selected != null">
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label">status
+                                        <i uib-popover-html="todoHelp.buildParams"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="请求状态"
+                                               ng-model="queryItem.status">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label">sourceIp
+                                        <i uib-popover-html="todoHelp.buildParams"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="客户端IP"
+                                               ng-model="queryItem.sourceIp">
+                                    </div>
+                                </div>
+                            </div>
+                            <div style="font-size:1em;">&nbsp;</div>
+                            <div class="form-group" ng-if="nowLogServiceCfg.selected != null">
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label">mobile
+                                        <i uib-popover-html="todoHelp.buildParams"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="卖家手机号"
+                                               ng-model="queryItem.mobile">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label">requestTime
+                                        <i uib-popover-html="todoHelp.buildParams"
+                                           popover-trigger="'mouseenter'"
+                                           class="icon icon-info"
+                                           style="color: green;"></i></label>
+                                    <div class="col-lg-10">
+                                        <input type="text" class="form-control" placeholder="请求延时(单位秒精度毫秒)"
+                                               ng-model="queryItem.requestTime">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!--<div class="form-group">-->
+                            <!--<div class="col-md-3">-->
+                            <!--<form class="form-inline" role="form">-->
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">域名</span>-->
+                            <!--<ui-select ng-model="nowLogServiceCfg.selected" theme="bootstrap">-->
+                            <!--<ui-select-match placeholder="搜索域名配置......">-->
+                            <!--{{$select.selected.serverName}}-->
+                            <!--</ui-select-match>-->
+                            <!--<ui-select-choices refresh="queryLogServiceCfg($select.search)"-->
+                            <!--refresh-dalay="0"-->
+                            <!--repeat="item in logServiceCfgList | filter: $select.search">-->
+                            <!--<div ng-bind-html="item.serverName | highlight: $select.search"></div>-->
+                            <!--</ui-select-choices>-->
+                            <!--</ui-select>-->
+                            <!--</div>-->
+
+                            <!--<div class="form-group" ng-if="nowLogServiceCfg.selected != null">-->
+                            <!--<button type="button" class="btn btn-info" ng-click="doQuery()"><span-->
+                            <!--class="glyphicon glyphicon-search"></span>搜索-->
+                            <!--</button>-->
+                            <!--</div>-->
+                            <!--</form>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--<br/>-->
+
+                            <!--查询条件设置-->
+                            <!--<uib-accordion ng-if="nowLogServiceCfg.selected != null">-->
+                            <!--<div class="list-group col-md-12">-->
+                            <!--<div class="panel panel-default">-->
+                            <!--<div uib-accordion-group class="panel-info" is-open="searchStatusOpen">-->
+                            <!--<uib-accordion-heading>查询条件-->
+                            <!--<i class="pull-right glyphicon"-->
+                            <!--ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>-->
+                            <!--</uib-accordion-heading>-->
+
+                            <!--<form class="form-inline">-->
+                            <!--<div class="col-md-3">-->
+                            <!--<button type="button" class="btn btn-sm btn-info"-->
+                            <!--ng-click="today()">Today-->
+                            <!--</button>-->
+                            <!--<div class="input-group">-->
+                            <!--<input type="text" class="form-control" uib-datepicker-popup-->
+                            <!--ng-model="queryItem.dt"-->
+                            <!--is-open="popup.opened" datepicker-options="dateOptions"-->
+                            <!--ng-required="true" close-text="Close"/>-->
+                            <!--<span class="input-group-btn">-->
+                            <!--<button type="button" class="btn btn-default"-->
+                            <!--ng-click="open()">-->
+                            <!--<i class="glyphicon glyphicon-calendar"></i>-->
+                            <!--</button>-->
+                            <!--</span>-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-md-3">-->
+                            <!--<div uib-timepicker arrowkeys="false" ng-model="queryItem.time"-->
+                            <!--ng-change="changed()"-->
+                            <!--hour-step="hstep" minute-step="mstep" show-meridian="false"-->
+                            <!--show-spinners="false"></div>-->
+                            <!--</div>-->
+
+                            <!--<div class="col-md-6">-->
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">查询时长(分钟)</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--ng-model="queryToMinutes">-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</form>-->
+
+                            <!--<div class="form-group">-->
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">uri</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--placeholder="接口"-->
+                            <!--aria-describedby="basic-addon3" ng-model="queryItem.uri">-->
+                            <!--<span class="input-group-addon">args</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--placeholder="参数"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--ng-model="queryItem.args">-->
+                            <!--</div>-->
+
+                            <!--<div class="input-group">-->
+                            <!--<span class="input-group-addon">status</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="请求状态"-->
+                            <!--ng-model="queryItem.status">-->
+                            <!--<span class="input-group-addon">sourceIp</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="客户端IP"-->
+                            <!--ng-model="queryItem.sourceIp">-->
+                            <!--<span class="input-group-addon">mobile</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="卖家手机号"-->
+                            <!--ng-model="queryItem.mobile">-->
+                            <!--<span class="input-group-addon">requestTime</span>-->
+                            <!--<input type="text" class="form-control"-->
+                            <!--aria-describedby="basic-addon3"-->
+                            <!--placeholder="请求延时(单位秒精度毫秒)"-->
+                            <!--ng-model="queryItem.requestTime">-->
+                            <!--</div>-->
+                            <!--</div>-->
+
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</div>-->
+                            <!--</uib-accordion>-->
+
+                            <!--日志分布视图-->
+                            <uib-accordion ng-if="pageData != null && pageData != ''">
+                                <div class="list-group col-md-12">
+                                    <div class="panel panel-default">
+                                        <div uib-accordion-group class="panel-info" is-open="logHistogramsStatusOpen">
+                                            <uib-accordion-heading>日志分布视图
+                                                <i class="pull-right glyphicon"
+                                                   ng-class="{'glyphicon-chevron-down': myJobStatusOpen, 'glyphicon-chevron-right': !myJobStatusOpen}"></i>
+                                            </uib-accordion-heading>
+                                            <div style="margin-top: 5px;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <td class="col-md-4">开始时间</td>
+                                                        <td class="col-md-4">结束时间</td>
+                                                        <td class="col-md-2">日志条目</td>
+                                                        <td>操作</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+
+                                                    <tr ng-repeat="item in pageData">
+                                                        <td>
+                                                            <b style="color: #286090">{{item.gmtFrom}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #286090">{{item.gmtTo}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #286090">{{item.totalCount}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <button ng-click="nginxLogList(item)"
+                                                                    class="btn btn-xs glyphicon glyphicon-search"
+                                                                    style="background-color: #2e6da4; color: white;">
+                                                                日志详情
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                    <tfoot>
+                                                    <tr>
+                                                        <td colspan="4">
+                                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                                total-items="totalItems" ng-model="currentPage"
+                                                                items-per-page="pageLength" max-size="10"
+                                                                ng-change="pageChanged(currentPage)"
+                                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                                        </td>
+                                                    </tr>
+                                                    </tfoot>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </uib-accordion>
+
+
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="nginxLogInfo">
+    <div ng-include="'tpl/modal/nginx_log_info_modal.html'"></div>
+</script>
+

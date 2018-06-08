@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" data-ng-app="app">
+<head>
+  <meta charset="utf-8" />
+  <title>服务器管理平台</title>
+  <meta name="description" content="app, web app, responsive, responsive layout, admin, admin panel, admin dashboard, flat, flat ui, ui kit, AngularJS, ui route, charts, widgets, components" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <link rel="stylesheet" href="css/bootstrap.css" type="text/css" />
+  <link rel="stylesheet" href="css/animate.css" type="text/css" />
+  <link rel="stylesheet" href="css/font-awesome.min.css" type="text/css" />
+  <link rel="stylesheet" href="css/simple-line-icons.css" type="text/css" />
+  <link rel="stylesheet" href="css/font.css" type="text/css" />
+  <link rel="stylesheet" href="css/app.css" type="text/css" />
+
+    <link rel="stylesheet" href="css/self.css" type="text/css"/>
+
+    <link rel="stylesheet" href="vendor/jquery/xterm/xterm.css" type="text/css" />
+    <link rel="stylesheet" href="vendor/modules/angular-resizable/angular-resizable.min.css" type="text/css"/>
+
+    <link rel="stylesheet" href="vendor/angular/angular-highlightjs/github.min.css"/>
+</head>
+<body ng-controller="AppCtrl">
+  <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
+
+
+  <!-- jQuery -->
+  <script src="vendor/jquery/jquery.min.js"></script>
+  <script src="vendor/jquery/xterm/xterm.js"></script>
+  <script src="vendor/angular/angular-highlightjs/highlight.min.js"></script>
+  <script src="vendor/libs/qrcode/qrcode.js"></script>
+
+  <!-- Angular -->
+  <script src="vendor/angular/angular.min.js"></script>
+  <script src="vendor/angular/angular-qrcode/angular-qrcode.js"></script>
+
+  <script src="vendor/angular/angular-animate/angular-animate.min.js"></script>
+  <script src="vendor/angular/angular-cookies/angular-cookies.min.js"></script>
+  <script src="vendor/angular/angular-resource/angular-resource.min.js"></script>
+  <script src="vendor/angular/angular-sanitize/angular-sanitize.min.js"></script>
+  <script src="vendor/angular/angular-touch/angular-touch.js"></script>
+<!-- Vendor -->
+  <script src="vendor/angular/angular-ui-router/angular-ui-router.js"></script>
+  <script src="vendor/modules/angular-websocket/angular-websocket.js"></script>
+  <script src="vendor/angular/ngstorage/ngStorage.js"></script>
+
+  <!-- bootstrap -->
+  <script src="vendor/angular/angular-bootstrap/ui-bootstrap-tpls.js"></script>
+  <!-- lazyload -->
+  <script src="vendor/angular/oclazyload/ocLazyLoad.js"></script>
+  <!-- translate -->
+  <script src="vendor/angular/angular-translate/angular-translate.js"></script>
+  <script src="vendor/angular/angular-translate/loader-static-files.js"></script>
+  <script src="vendor/angular/angular-translate/storage-cookie.js"></script>
+  <script src="vendor/angular/angular-translate/storage-local.js"></script>
+
+  <script src="vendor/modules/angular-resizable/angular-resizable.min.js"></script>
+
+  <script src="vendor/angular/angular-highlightjs/angular-highlightjs.min.js"></script>
+
+  <!-- App -->
+  <script src="js/app.js"></script>
+  <script src="js/config.js"></script>
+  <script src="js/config.lazyload.js"></script>
+  <script src="js/config.router.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/services/ui-load.js"></script>
+  <script src="js/services/http-service.js"></script>
+  <script src="js/filters/fromNow.js"></script>
+  <script src="js/directives/setnganimate.js"></script>
+  <script src="js/directives/ui-butterbar.js"></script>
+  <script src="js/directives/ui-focus.js"></script>
+  <script src="js/directives/ui-fullscreen.js"></script>
+  <script src="js/directives/ui-jq.js"></script>
+  <script src="js/directives/ui-module.js"></script>
+  <script src="js/directives/ui-nav.js"></script>
+  <script src="js/directives/ui-scroll.js"></script>
+  <script src="js/directives/ui-shift.js"></script>
+  <script src="js/directives/ui-toggleclass.js"></script>
+  <script src="js/directives/ui-validate.js"></script>
+  <!-- Lazy loading -->
+
+    <script src="js/services/model.js"></script>
+</body>
+</html>

@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ServerGroupDao">
+
+    <!-- 查询一定条件下服务器组数量 -->
+    <select id="queryServerGroupSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) FROM oc_server_group
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE "%" #{name} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="list.size() != 0">
+                AND name IN
+                <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询一定条件下分页服务器组信息 -->
+    <select id="queryServerGroupPage" parameterType="object" resultType="ServerGroupDO">
+        SELECT * FROM oc_server_group
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE "%" #{name} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="list.size() != 0">
+                AND name IN
+                <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+                    #{item}
+                </foreach>
+            </if>
+        </where>
+        ORDER BY name DESC
+        limit #{start}, #{length}
+    </select>
+
+    <!-- 更新服务器组信息 -->
+    <update id="updateServerGroupInfo" parameterType="ServerGroupDO">
+        UPDATE oc_server_group
+        SET name = #{name},
+          content = #{content},
+          ipNetwork = #{ipNetwork},
+          useType = #{useType}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 新增服务器组信息 -->
+    <insert id="addServerGroupInfo" parameterType="ServerGroupDO">
+        INSERT INTO oc_server_group(
+            name,
+            content,
+            ipNetwork,
+            useType
+        ) VALUES (
+            #{name},
+            #{content},
+            #{ipNetwork},
+            #{useType}
+        )
+    </insert>
+
+    <!-- 删除服务器信息 -->
+    <delete id="delServerGroupInfo" parameterType="_long">
+        DELETE FROM oc_server_group WHERE id = #{id}
+    </delete>
+
+    <!-- 服务器组绑定指定的ip组 -->
+    <insert id="addServerIPGroup" parameterType="object">
+        INSERT ignore INTO new_sg_in_relation(
+          serverGroupId,
+          ipNetworkId,
+          ipType
+        ) VALUES (
+          #{serverGroupId},
+          #{ipNetworkId},
+          #{ipType}
+        );
+    </insert>
+
+    <!-- 服务器组解绑指定的ip组 -->
+    <delete id="delServerIPGroup" parameterType="_long">
+        DELETE FROM new_sg_in_relation
+        WHERE serverGroupId = #{serverGroupId}
+        AND ipNetworkId = #{ipNetworkId}
+    </delete>
+
+    <!-- 获取指定id的group -->
+    <select id="queryServerGroupById" parameterType="_long" resultType="ServerGroupDO">
+        SELECT * FROM oc_server_group WHERE id = #{groupId}
+    </select>
+
+    <!-- 获取指定name的group -->
+    <select id="queryServerGroupByName" parameterType="string" resultType="ServerGroupDO">
+        SELECT * from oc_server_group WHERE name = #{name}
+    </select>
+
+    <!-- 查询所有的group-->
+    <select id="queryServerGroup" resultType="ServerGroupDO">
+        SELECT * from oc_server_group
+    </select>
+
+    <!--按使用类型查询-->
+    <select id="queryServerGroupByUseType" resultType="ServerGroupDO">
+        SELECT * from oc_server_group
+        WHERE useType = #{useType}
+    </select>
+
+    <!-- 获取指定用户对应的服务器组集合 -->
+    <select id="getGroupsByName" parameterType="string" resultType="ServerGroupDO">
+        SELECT a1.* FROM keybox_user_server a0 JOIN oc_server_group a1 ON a0.serverGroupId = a1.id
+        WHERE a0.username = #{username}
+        GROUP BY a1.id
+    </select>
+
+    <!-- 查询服务器组授权用户信息   SELECT a.* ,group_concat(username) AS users ,COUNT(*) AS userCnt      -->
+    <select id="queryKeyboxServerGroupPage" parameterType="object" resultType="ServerGroupVO">
+        SELECT a.*, COUNT(username) AS userCnt
+        FROM oc_server_group a LEFT JOIN keybox_user_server b ON a.id=b.serverGroupId
+        WHERE a.name LIKE "%" #{name} "%"
+        GROUP BY a.name
+        ORDER BY userCnt DESC
+        limit #{start}, #{length}
+    </select>
+
+    <!--查询日志服务的服务器组-->
+    <select id="queryLogServiceServerGroupPage" parameterType="object" resultType="ServerGroupDO">
+        SELECT * FROM oc_server_group
+        <where>
+            <if test="username != null and username != ''">
+                id IN ( select serverGroupId from keybox_user_server where username = #{username} )
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE "%" #{name} "%"
+            </if>
+        </where>
+        ORDER BY name DESC
+        limit #{start}, #{length}
+    </select>
+
+    <!--查询日志服务的服务器组数量-->
+    <select id="queryLogServiceServerGroupSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) FROM oc_server_group
+        <where>
+            <if test="username != null and username != ''">
+                id IN ( select serverGroupId from keybox_user_server where username = #{username} )
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            <if test="name != null and name != ''">
+                AND name LIKE "%" #{name} "%"
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 查询一定条件下服务器组数量 -->
+    <select id="queryProjectServerGroupSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) FROM oc_server_group AS sg
+        LEFT JOIN project_property AS property
+        ON sg.id = property.propertyValue AND property.propertyType = 1
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE "%" #{name} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            AND propertyValue IS NULL
+        </where>
+    </select>
+
+    <!-- 查询一定条件下分页服务器组信息 -->
+    <select id="queryProjectServerGroupPage" parameterType="object" resultType="ServerGroupDO">
+        SELECT * FROM oc_server_group AS sg
+        LEFT JOIN project_property AS property
+        ON sg.id = property.propertyValue AND property.propertyType = 1
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE "%" #{name} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+            AND propertyValue IS NULL
+        </where>
+        ORDER BY name DESC
+        limit #{start}, #{length}
+    </select>
+
+
+    <!-- 查询一定条件下分页服务器组信息 -->
+    <select id="queryUseTypePage" parameterType="object" resultType="ServerGroupUseTypeDO">
+        SELECT * FROM oc_server_group_useType
+        <where>
+            <if test="typeName != null and typeName != ''">
+                typeName LIKE "%" #{typeName} "%"
+            </if>
+        </where>
+        ORDER BY typeName DESC
+        limit #{start}, #{length}
+    </select>
+
+    <!-- 查询一定条件下服务器组数量 -->
+    <select id="queryUseTypeSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) FROM oc_server_group_useType
+        <where>
+            <if test="typeName != null and typeName != ''">
+                typeName LIKE "%" #{typeName} "%"
+            </if>
+        </where>
+    </select>
+
+    <!--新增服务器组使用类型信息-->
+    <insert id="addServerGroupUseType" parameterType="ServerGroupUseTypeDO">
+        INSERT INTO oc_server_group_useType(
+        useType,
+        typeName,
+        content
+        ) VALUES (
+        #{useType},
+        #{typeName},
+        #{content}
+        )
+    </insert>
+
+    <!-- 更新服务器组使用类型信息 -->
+    <update id="updateServerGroupUseType" parameterType="ServerGroupUseTypeDO">
+        UPDATE oc_server_group_useType
+        SET useType = #{useType},
+        typeName = #{typeName},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 删除服务器组使用类型信息 -->
+    <delete id="delServerGroupUseType" parameterType="_long">
+        DELETE FROM oc_server_group_useType WHERE id = #{id}
+    </delete>
+
+    <select id="getServerGroupUseTypeByUseType" parameterType="_int" resultType="ServerGroupUseTypeDO">
+        SELECT * FROM oc_server_group_useType
+        WHERE useType = #{useType}
+    </select>
+
+</mapper>

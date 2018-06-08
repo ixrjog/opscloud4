@@ -1,0 +1,102 @@
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">{{todoItem.title}}</b>工单
+    </h3>
+    <div>
+        <b ng-show="todoItem.todoType == 0" class="pull-left">运维类工单</b>
+        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
+           class="icon icon-info" style="color: green;"></i>
+    </div>
+</div>
+
+<div class="modal-body" ng-show="todoDetail.todoStatus == 0">
+    <form class="form-horizontal">
+        <div class="form-group">
+            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>持续集成权限组</label>
+            <div class="col-lg-8">
+                <ui-select ng-model="nowCigroup.selected" theme="bootstrap">
+                    <ui-select-match placeholder="搜索持续集成权限组名称......">{{$select.selected.searchGroupName}}
+                    </ui-select-match>
+                    <ui-select-choices refresh="queryCiGroup($select.search)" refresh-dalay="0"
+                                       repeat="item in cigroupList | filter: $select.search">
+                        <div ng-bind-html="item.searchGroupName | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+            </div>
+            <div class="col-lg-2">
+                <span class="glyphicon glyphicon-plus"
+                      uib-popover-html="'添加'" popover-trigger="'mouseenter'"
+                      ng-click="addItem()"></span>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <table class="table table-hover table-bordered table-striped">
+            <thead>
+            <tr>
+                <td>权限组名称</td>
+                <td>说明</td>
+                <td>服务器组名称</td>
+                <td>环境</td>
+                <td ng-show="todoDetail.todoStatus == 0">操作</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr ng-repeat="item in todoDetail.todoCiUserGroupDetailList">
+                <!--用户信息-->
+                <td>{{item.ciUserGroupName}}
+                </td>
+                <td>{{item.content}}
+                </td>
+                <td>
+                    {{item.serverGroupName}}
+                </td>
+                <td>
+                    <b style="color: #777" ng-if="item.envType == 0">ALL</b>
+                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                </td>
+                <td ng-show="todoDetail.todoStatus == 0">
+                <span class="glyphicon glyphicon-remove pull-right"
+                      style="color: #d9534f"
+                      uib-popover-html="'移除'" popover-trigger="'mouseenter'"
+                      ng-click="delItem(item.id)">
+                </span>
+                </td>
+            </tr>
+            </tbody>
+            <tfoot>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+<div class="form-group">
+    <div style="text-align:center;">
+        <button class="btn btn-xs" ng-show="todoDetail.todoStatus == 0"
+                style="background-color: #2e6da4; color: white;"
+                ng-click="submitTodo()">提交
+        </button>
+
+    </div>
+
+    <div style="text-align:center;">
+        <button class="btn btn-xs" ng-show="todoDetail.todoStatus != 0"
+                style="background-color: #2e6da4; color: white;"
+                ng-click="closeModal()">关闭
+        </button>
+    </div>
+</div>
+
+
+<div ng-if="alert.type != ''">
+    <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+</div>
+</div>

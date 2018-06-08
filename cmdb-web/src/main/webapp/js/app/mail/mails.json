@@ -1,0 +1,143 @@
+{
+  "mails":[
+    {
+      "id": 10,
+      "subject": "Angular is Awesome",
+      "from": "james@gmail.com",
+      "avatar": "img/a10.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Titudin venenatis ipsum ac feugiat. Vestibulum ullamcorper Neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat.",
+      "attach":[
+        {"name":"c1.jpg", "url":"img/c1.jpg"},
+        {"name":"c3.jpg", "url":"img/c3.jpg"}
+      ],
+      "date":"12:20 7/23/2014",
+      "label":"angular",
+      "fold":"important"
+    },
+    {
+      "id": 9,
+      "subject": "Bootstrap components written in pure AngularJS",
+      "from": "james@gmail.com",
+      "avatar": "img/a9.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Retur adipiscing elit. Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper Neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat.",
+      "date":"12:20 7/23/2014",
+      "label":"bootstrap",
+      "fold":"important"
+    },
+    {
+      "id": 8,
+      "subject": "Nesting view in Angular",
+      "from": "jessica@gmail.com",
+      "avatar": "img/a1.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat.",
+      "attach":[
+        {"name":"c0.jpg", "url":"img/c0.jpg"}
+      ],
+      "date":"16:20 7/22/2014",
+      "label":"angular",
+      "fold":"important"
+    },
+    {
+      "id": 7,
+      "subject": "Lazy loading Angular controllers, directives and services",
+      "from": "lucy@hotmail.com",
+      "avatar": "img/a2.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper sodales nisi nec condimentum. Mauris convallis mauris at pellentesque volutpat. Phasellus at ultricies neque, quis malesuada augue. Donec eleifend condimentum nisl eu consectetur. Integer eleifend, nisl venenatis consequat iaculis, lectus arcu malesuada sem, dapibus porta quam lacus eu neque.",
+      "date":"10:20 7/22/2014",
+      "label":"angular",
+      "fold":"sent",
+      "state":"unread"
+    },
+    {
+      "id": 6,
+      "subject": "What a hot day",
+      "from": "Jobs@jobhunter.com",
+      "avatar": "img/a3.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Duis non malesuada est, quis congue nibh. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper sodales nisi nec condimentum. Mauris convallis mauris at pellentesque volutpat. Phasellus at ultricies neque, quis malesuada augue. Donec eleifend",
+      "date":"3:20 7/22/2014",
+      "label":"client",
+      "fold":"starred",
+      "state":"unread"
+    },
+    {
+      "id": 5,
+      "subject": "Oho!",
+      "from": "Peter@microsoft.com",
+      "avatar": "img/a4.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Turpis egestas lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      "date":"2:20 7/22/2014",
+      "label":"",
+      "fold":"sent"
+    },
+    {
+      "id": 4,
+      "subject": "Meeting",
+      "from": "newsletter@yahoo.com",
+      "avatar": "img/a5.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Fames ac turpis egestas. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper sodales nisi nec condimentum. Mauris convallis mauris at pellentesque volutpat. Phasellus at ultricies neque, quis malesuada augue. Donec eleifend",
+      "date":"1:20 7/22/2014",
+      "label":"work",
+      "fold":"starred"
+    },
+    {
+      "id": 3,
+      "subject": "Product version released",
+      "from": "ad@advent.com",
+      "avatar": "img/a6.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Consectetur adipiscing elit. Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper sodales nisi nec condimentum. Mauris convallis mauris at pellentesque volutpat. Phasellus at ultricies neque, quis malesuada augue. Donec eleifend",
+      "date":"4:20 7/21/2014",
+      "label":"",
+      "fold":"starred"
+    },
+    {
+      "id": 2,
+      "subject": "Hi, What's up",
+      "from": "help@helpdesk.com",
+      "avatar": "img/a7.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper sodales nisi nec condimentum. Mauris convallis mauris at pellentesque volutpat. Phasellus at ultricies neque, quis malesuada augue. Donec eleifend",
+      "date":"6:20 7/15/2014",
+      "label":"",
+      "fold":"trash"
+    },
+    {
+      "id": 1,
+      "subject": "Kick-off meeting at 5:00 pm",
+      "from": "developer@apple.com",
+      "avatar": "img/a8.jpg",
+      "to":[
+        {"name":"Mogen", "email":"mogen.abc@hotmail.com"}
+      ],
+      "content":"Morbi id neque quam. Aliquam sollicitudin venenatis ipsum ac feugiat. Vestibulum ullamcorper sodales nisi nec condimentum. Mauris convallis mauris at pellentesque volutpat. Phasellus at ultricies neque, quis malesuada augue. Donec eleifend",
+      "date":"18:00 6/15/2014",
+      "label":"work",
+      "fold":"starred"
+    }
+  ]
+}

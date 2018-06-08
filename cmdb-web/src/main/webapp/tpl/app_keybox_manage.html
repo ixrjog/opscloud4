@@ -1,0 +1,392 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">堡垒机管理</h1>
+                    <!--<small class="text-muted">可访问堡垒机列表管理</small>-->
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <uib-tabset>
+                <uib-tab index="0" heading="用户">
+                    <div ng-controller="keyboxManageUserCtrl">
+                        <div style="margin-top: 5px;" class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">授权用户</span>
+                                            <input type="text" class="form-control" ng-model="username"
+                                                   placeholder="授权用户">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-success" ng-click="addUser()">
+                                            <span class="glyphicon glyphicon-plus"></span>新建用户
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="createGlobalFile()">
+                                            <span class="glyphicon glyphicon-floppy-save"></span>生成全局文件
+                                        </button>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info"
+                                                ng-click="createAllUserGroupConfigFile()"><span
+                                                class="glyphicon glyphicon-floppy-save"></span>生成所有用户配置
+                                        </button>
+                                    </div>
+                                </form>
+                                <div style="margin-top: 5px;">
+                                    <table class="table table-hover table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <td>授权用户</td>
+                                            <td>姓名</td>
+                                            <td>Email</td>
+                                            <td>授权</td>
+                                            <td>授权服务器组</td>
+                                            <td>更新时间</td>
+                                            <td>操作</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="item in pageData">
+                                            <td>{{item.username}}</td>
+                                            <td>{{item.displayName}}</td>
+                                            <td>{{item.mail}}</td>
+                                            <!--<td>{{item.authed == 0 ? "未授权" : "已授权"}}</td>-->
+                                            <td>
+                                                <b ng-if="item.authed != 0" style="color: #449d44">已授权</b>
+                                                <span ng-if="item.authed == 0">未授权</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge pull-right" ng-if="item.servers == 0">{{item.servers}}</span>
+                                                <span class="badge pull-right bg-success"
+                                                      ng-if="item.servers > 0 && item.servers < 10">{{item.servers}}</span>
+                                                <span class="badge pull-right bg-info" ng-if="item.servers >= 10">{{item.servers}}</span>
+                                            </td>
+                                            <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate :
+                                                item.gmtModify}}
+                                            </td>
+                                            <td>
+                                                <!--authorize-->
+                                                <button ng-click="addAuth(item.username)"
+                                                        ng-show="item.servers != 0"
+                                                        class="btn btn-xs"
+                                                        uib-popover-html="'授权&更新授权'" popover-trigger="'mouseenter'"
+                                                        style="margin-left: 5px; background-color: red; color: white;">
+                                                    <span class="glyphicon glyphicon-log-in"></span>授权</button>
+
+                                                <!--<span  class="glyphicon glyphicon-log-in"-->
+                                                       <!--uib-popover-html="'授权&更新授权'" popover-trigger="'mouseenter'"-->
+                                                        <!--ng-click="addAuth(item.username)" ng-show="item.servers != 0">-->
+                                                <!--</span>-->
+
+                                                <button ng-click="serverList(item.username)"
+                                                        class="btn btn-xs"
+                                                        uib-popover-html="'授权服务器组列表'" popover-trigger="'mouseenter'"
+                                                        style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                    <span class="glyphicon glyphicon-th-list"></span>服务器组</button>
+
+                                                <!--<span class="glyphicon glyphicon-th-list" style="margin-left: 20px;"-->
+                                                      <!--uib-popover-html="'授权服务器组列表'" popover-trigger="'mouseenter'"-->
+                                                        <!--ng-click="serverList(item.username)"></span>-->
+
+                                                <button ng-click="delAuth(item.username)"
+                                                        ng-show="item.authed != 0"
+                                                        class="btn btn-xs pull-right"
+                                                        style="background-color: red; color: white;">
+                                                    <span class="glyphicon glyphicon-log-out"></span>解除</button>
+
+                                                <!--<span class="glyphicon glyphicon-log-out pull-right" style="color: #d9534f"-->
+                                                      <!--uib-popover-html="'解除授权'" popover-trigger="'mouseenter'"-->
+                                                        <!--ng-click="delAuth(item.username)" ng-show="item.authed != 0">-->
+                                                <!--</span>-->
+
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="10">
+                                                <ul style="margin: 0px; float: right;" uib-pagination
+                                                    total-items="totalItems" ng-model="currentPage"
+                                                    items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                    previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+
+                                    <div style="font-size:0.5em;">&nbsp;</div>
+                                    <div class="panel panel-info">
+                                        <div class="panel-heading">执行结果</div>
+                                        <div ng-if="taskVO.taskServerList != null">
+                                      <span class="label" style="background-color: #3c3c3c">
+                                              <i class="fa fa-spin fa-spinner"
+                                                 ng-show="taskVO.ansibleTaskDO.finalized ==false"></i>
+                                              <b ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
+                                              <i ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</i>
+                                              <i uib-popover-html="'执行的指令'"
+                                                 popover-trigger="'mouseenter'">  任务/指令:{{taskVO.ansibleTaskDO.cmd}}</i>
+                                              <i uib-popover-html="'服务器数量'"
+                                                 popover-trigger="'mouseenter'" class="label">  ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</i>
+
+                                        <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
+                                              style="color: #00a8f3"> 所有结果</b>
+                                        <input type="checkbox" ng-model="resultChoose.success"
+                                               ng-click="chooseResult(0)"><b
+                                              style="color: #00af00"> SUCCESS</b>
+                                        <input type="checkbox" ng-model="resultChoose.failed"
+                                               ng-click="chooseResult(1)"><b
+                                              style="color: #ef2929"> FAILED</b>
+                                        </span>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <form class="form-inline" role="form" ng-if="taskVO.taskServerList != null">
+                                                <table class="table" style="margin-top: 5px;">
+                                                    <tbody>
+                                                    <tr ng-repeat="taskServer in taskVO.taskServerList">
+                                                        <td class="col-md-12" ng-show="checkResultShow(taskServer)">
+                                                            <div class="panel-heading" style="background-color: #2e6da4">
+                                                    <span class="label label-default"
+                                                          ng-if="taskServer.serverDO.envType == 0">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(保留)</span>
+                                                                <span class="label label-info"
+                                                                      ng-if="taskServer.serverDO.envType == 1">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(dev)</span>
+                                                                <span class="label label-success"
+                                                                      ng-if="taskServer.serverDO.envType == 2">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(daily)</span>
+                                                                <span class="label label-warning"
+                                                                      ng-if="taskServer.serverDO.envType == 3">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(gray)</span>
+                                                                <span class="label label-danger"
+                                                                      ng-if="taskServer.serverDO.envType == 4">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(prod)</span>
+                                                                <span class="label label-primary"
+                                                                      ng-if="taskServer.serverDO.envType == 5">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(test)</span>
+                                                                <span class="label label-primary"
+                                                                      ng-if="taskServer.serverDO.envType == 6">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(back)</span>
+
+                                                                <span class="label label-info">{{taskServer.ip}}</span>
+                                                                <span class="label label-success"
+                                                                      ng-if="taskServer.result == 'SUCCESS'">{{taskServer.result}}</span>
+                                                                <span class="label label-danger"
+                                                                      ng-if="taskServer.result != 'SUCCESS'">{{taskServer.result}}</span>
+                                                                <span class="label label-info"
+                                                                      ng-show="taskServer.returncode != null">{{taskServer.returncode}}</span>
+
+                                                                <button ng-click="closeTaskServer(taskServer.serverId)"
+                                                                        class="btn btn-xs pull-right"
+                                                                        style="margin-left: 20px; background-color: #ff8700; color: white;">
+                                                                    <span class="glyphicon glyphicon-remove"></span>关闭
+                                                                </button>
+                                                            </div>
+                                                            <pre style="background-color: #777" hljs
+                                                                 hljs-source="taskServer.msg"></pre>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div ng-if="alert.type != ''">
+                                            <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="服务器组">
+                    <div ng-controller="keyboxManageServerGroupCtrl">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">名称</span>
+                                            <input type="text" class="form-control" ng-model="queryName"
+                                                   placeholder="名称">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                        <button type="button" class="btn btn-success" ng-click="checkUser()"><span
+                                                class="glyphicon glyphicon-check"></span>CheckUsers
+                                        </button>
+                                    </div>
+                                </form>
+                                <div style="margin-top: 5px;">
+                                    <table class="table table-hover table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <td class="col-md-1">服务器组名</td>
+                                            <td class="col-md-1">使用类型</td>
+                                            <td class="col-md-1">服务器</td>
+                                            <td class="col-md-1">授权数量</td>
+                                            <td class="col-md-5">授权用户</td>
+                                            <td class="col-md-2">说明</td>
+                                            <td class="col-md-1">操作</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="item in pageData">
+                                            <td>{{item.name}}</td>
+                                            <td>
+                                                <b style="color: #777" ng-if="item.useType == 10">bi</b>
+                                                <b style="color: #843534" ng-if="item.useType == 1">zookeeper</b>
+                                                <b style="color: #286090" ng-if="item.useType == 2">web-service</b>
+                                                <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
+                                                <b style="color: #286090" ng-if="item.useType == 4">other</b>
+                                                <b style="color: #777" ng-if="item.useType == 5">web-php</b>
+                                                <b style="color: #286090" ng-if="item.useType == 6">public</b>
+                                                <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
+                                                <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
+                                                <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                                            </td>
+                                            <td>
+                                                <span class="badge pull-right" ng-if="item.serverCnt == 0">0</span>
+                                                <span class="badge pull-right bg-success"
+                                                      ng-if="item.serverCnt > 0 && item.serverCnt < 10">{{item.serverCnt}}</span>
+                                                <span class="badge pull-right bg-info" ng-if="item.serverCnt >= 10">{{item.serverCnt}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge pull-right" ng-if="item.userCnt == 0">0</span>
+                                                <span class="badge pull-right bg-success"
+                                                      ng-if="item.userCnt > 0 && item.userCnt < 10">{{item.userCnt}}</span>
+                                                <span class="badge pull-right bg-info" ng-if="item.userCnt >= 10">{{item.userCnt}}</span>
+                                            </td>
+                                            <td>
+                                                <div class="col-md-6" ng-repeat="userName in item.users">{{userName}}</div>
+                                            </td>
+                                            <td>{{item.content}}</td>
+                                            <td>
+                                                <button ng-click="userList(item.id)"
+                                                        class="btn btn-xs"
+                                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                    <span class="icon icon-users"></span>用户详情</button>
+
+                                                <!--<span  class="icon icon-users"-->
+                                                        <!--ng-click="userList(item.id)">-->
+                                                <!--</span>-->
+                                                <button ng-click="delServerGroup(item)" ng-if="contains(authPoint, '/servergroup/del')"
+                                                        class="btn btn-xs pull-right"
+                                                        style="background-color: red; color: white;">
+                                                    <span class="glyphicon glyphicon-remove"></span>删除</button>
+
+                                                <!--<button type="button" class="btn btn-danger btn-xs pull-right"-->
+                                                        <!--ng-click="delServerGroup(item)"-->
+                                                        <!--ng-if="contains(authPoint, '/servergroup/del')">删除-->
+                                                <!--</button>-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="7">
+                                                <ul style="margin: 0px; float: right;" uib-pagination
+                                                    total-items="totalItems" ng-model="currentPage"
+                                                    items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                    previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="2" heading="堡垒机密钥管理">
+                    <div ng-controller="keyboxManageKeyCtrl">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>私钥(rsa)</label>
+                                            <div class="col-md-8">
+                                                <textarea class="form-control" ng-model="keyItem.originalPrivateKey"
+                                                          rows="16"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8" style="text-align: center;">
+
+                                            <button ng-click="saveKey()"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-ok"></span>保存</button>
+                                            <!---->
+                                            <!--<button type="button" class="btn btn-sm" ng-click="saveKey()">-->
+                                               <!---->
+                                                <!---->
+                                                <!--<span class="glyphicon glyphicon-save" style="color: white"></span>-->
+                                            <!--</button>-->
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label">加密的私钥(rsa)</label>
+                                            <div class="col-md-9">
+                                                <textarea class="form-control" ng-model="keyItem.privateKey"
+                                                          rows="16"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label">公钥(public key)</label>
+                                            <div class="col-md-9">
+                                                <textarea class="form-control" ng-model="keyItem.publicKey"
+                                                          rows="5"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+            </uib-tabset>
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+<script type="text/ng-template" id="keyBoxServerModal">
+    <div ng-include="'tpl/modal/keybox_server_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="keyBoxUserModal">
+    <div ng-include="'tpl/modal/keybox_user_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="userInfo">
+    <div ng-include="'tpl/modal/user_info_modal.html'"></div>
+</script>

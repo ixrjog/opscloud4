@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.ConfigCenterDao">
+
+
+    <!-- 获取指定itemGroup组的所有配置项 -->
+    <select id="queryConfigCenterByItemGroup" parameterType="string" resultType="ConfigCenterDO">
+        SELECT * FROM oc_config_center
+        WHERE itemGroup = #{itemGroup}
+        AND env = #{env}
+    </select>
+
+    <!-- 获取指定item的配置项 -->
+    <select id="queryConfigCenterByItem" parameterType="string" resultType="ConfigCenterDO">
+        SELECT * FROM oc_config_center
+        WHERE item = #{item}
+        AND env = #{env}
+    </select>
+
+
+    <!-- 查询指定条件的属性组数目 -->
+    <select id="getConfigCenterSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM oc_config_center
+        <where>
+            <if test="item != null and item != ''">
+                AND item like "%" #{item} "%"
+            </if>
+            <if test="itemGroup != null and itemGroup != ''">
+                AND itemGroup = #{itemGroup}
+            </if>
+            <if test="env != null and env != ''">
+                AND env = #{env}
+            </if>
+        </where>
+    </select>
+
+
+    <!-- 获取合适条件下的属性分页数据 -->
+    <select id="getConfigCenterPage" parameterType="object" resultType="ConfigCenterDO">
+        SELECT * FROM oc_config_center
+        <where>
+            <if test="item != null and item != ''">
+                AND item like "%" #{item} "%"
+            </if>
+            <if test="itemGroup != null and itemGroup != ''">
+                AND itemGroup = #{itemGroup}
+            </if>
+            <if test="env != null and env != ''">
+                AND env = #{env}
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <!-- 更新指定配置项信息 -->
+    <update id="updateConfigCenter" parameterType="ConfigCenterDO">
+        UPDATE oc_config_center
+        SET
+        itemGroup = #{itemGroup},
+        env = #{env},
+        value = #{value},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 新增配置项信息-->
+    <insert id="addConfigCenter" parameterType="ConfigCenterDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_config_center (
+        itemGroup,
+        env,
+        item,
+        value,
+        content
+        ) VALUES (
+        #{itemGroup},
+        #{env},
+        #{item},
+        #{value},
+        #{content}
+        );
+    </insert>
+
+    <!-- 删除配置项信息 -->
+    <delete id="delConfigCenter" parameterType="_long">
+        DELETE FROM oc_config_center WHERE id = #{id}
+    </delete>
+
+
+</mapper>
+

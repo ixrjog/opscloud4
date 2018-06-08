@@ -1,0 +1,296 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false; 
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">个人信息</h1>
+                    <small class="text-muted">个人信息查看,维护</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md" ng-controller="userCtrl">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+
+            <div class="panel">
+                <div class="panel-body">
+                    <form class="form-horizontal">
+
+                        <div class="form-group" ng-show="contains(authPoint, 'canEdit')">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">用户</label>
+                                <div class="col-md-6">
+                                    <input type="text" class="form-control" ng-model="queryName" placeholder="查询用户名">
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="button" class="btn btn-info" ng-click="queryUserInfo()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">用户</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" ng-model="userDetail.username" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">姓名</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" ng-model="userDetail.displayName" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">Email</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" ng-model="userDetail.mail" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">手机</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" ng-model="userDetail.mobile">
+                                </div>
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<div class="col-md-8">-->
+                                <!--<label class="col-md-3 control-label">翻墙(shadowsocks)服务器</label>-->
+                                <!--<div class="col-md-9">-->
+                                    <!--<b style="color: #286090">{{userDetail.shadowsocksServer1}} :-->
+                                        <!--{{userDetail.shadowsocksPort}}-->
+                                        <!--</br>-->
+                                        <!--{{userDetail.shadowsocksServer2}} : {{userDetail.shadowsocksPort}}</b>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">密码(getway,shadowsocks)</label>
+                                <!--<div class="col-md-9">-->
+
+                                    <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                        <input type="text" class="form-control" placeholder="密码" ng-model="userDetail.vPwd" ng-readonly="!contains(authPoint, 'canEdit')">
+                                        <div class="input-group-btn">
+                                            <button class="btn btn-default"
+                                                    ng-click="viewPwd()"><i class="fa fa-eye pull-right"></i></button>
+                                        </div>
+                                    </div>
+
+
+
+                                    <!--<input type="text" class="form-control" ng-model="userDetail.pwd"-->
+                                           <!--ng-readonly="!contains(authPoint, 'canEdit')">-->
+                                <!--</div>-->
+                            </div>
+                        </div>
+                        <!--<div class="form-group">-->
+                            <!--<div class="col-md-8">-->
+                                <!--<label class="col-md-3 control-label">Terminal Getway 配置</label>-->
+                                <!--<div class="col-md-9">-->
+                                    <!--<a href="http://demo.com/pages/viewpage.action?pageId=4620339"-->
+                                       <!--class="btn btn-info btn-sm">使用说明</a>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+
+                        <!--平台权限-->
+                        <div class="form-group" ng-if="false">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">平台权限</label>
+                                <div class="col-md-9">
+                                    <table class="table table-hover table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <td>名称</td>
+                                            <td>描述</td>
+                                            <td>授权</td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr>
+                                            <td>
+                                                <b>confluence-users</b>
+                                            </td>
+                                            <td>wiki普通用户</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.confluenceUsers == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.confluenceUsers == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #286090">confluence-admin</b>
+                                            </td>
+                                            <td>wiki管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.confluenceAdmin == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.confluenceAdmin == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #d9534f">confluence-administrators</b>
+                                            </td>
+                                            <td>wiki系统管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.confluenceAdministrators == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.confluenceAdministrators == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b>jira-users</b>
+                                            </td>
+                                            <td>jira普通用户</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.jiraUsers == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.jiraUsers == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #286090">jira-administrators</b>
+                                            </td>
+                                            <td>jira管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.jiraAdministrators == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.jiraAdministrators == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #d9534f">crowd-admin</b>
+                                            </td>
+                                            <td>crowd管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.crowdAdmin == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.crowdAdmin == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #d9534f">stash-admin</b>
+                                            </td>
+                                            <td>stash管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.stashAdmin == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.stashAdmin == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #449d44">Administrators</b>
+                                            </td>
+                                            <td>通用管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.administrators == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.administrators == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #286090">nexus-developer</b>
+                                            </td>
+                                            <td>nexus开发者权限</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.nexusDeveloper == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.nexusDeveloper == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <b style="color: #d9534f">nexus-administrators</b>
+                                            </td>
+                                            <td>nexus管理员</td>
+                                            <td>
+                                                <b style="color: #777"
+                                                   ng-if="userDetail.userLdapGroupVO.nexusAdministrators == 0">未授权</b>
+                                                <b style="color: #449d44"
+                                                   ng-if="userDetail.userLdapGroupVO.nexusAdministrators == 1">已授权</b>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">服务器组列表</label>
+                                <div class="col-md-9">
+                                    <div class="col-md-6" ng-repeat="groupItem in userDetail.groupDOList">
+                                        <b class="pull-left" style="color: #286090">{{groupItem.name}}</b>
+                                            <b class="pull-right">  {{groupItem.content}}</b>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">账户</label>
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" ng-model="userDetail.username" readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">公钥(rsa)</label>
+                                <div class="col-md-9">
+                                    <textarea class="form-control" ng-model="userDetail.rsaKey" rows="8"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="col-md-8" style="text-align: center;">
+                                <button ng-click="saveUserInfo()"
+                                        class="btn btn-xs"
+                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                    <span class="glyphicon glyphicon-ok"></span>保存</button>
+                                <!--<span class="glyphicon  glyphicon-save" ng-click="saveUserInfo()"></span>-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- / main -->
+</div>

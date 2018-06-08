@@ -1,0 +1,50 @@
+<div class="modal-header">
+    <h3 class="modal-title">dnsmasq信息</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+        <div class="form-group">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>配置类型</label>
+                <div class="col-lg-8">
+                    <select class="form-control" ng-model="dnsmasqItem.itemType"
+                            ng-options="dnsmasqItem.code as dnsmasqItem.name for dnsmasqItem in dnsmasqItemType"
+                            required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div ng-show="dnsmasqItem.itemType == 0">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>item</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="item" required ng-model="dnsmasqItem.item">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">配置项目</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="/域名/IP" ng-model="dnsmasqItem.itemValue">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">说明</label>
+            <div class="col-lg-10">
+                <textarea class="form-control" cols="3" ng-model="dnsmasqItem.content"></textarea>
+            </div>
+        </div>
+        <div class="form-group">
+            <div style="text-align:center;">
+                <button ng-click="saveDnsmasqItem()"
+                        class="btn btn-xs"
+                        style="background-color: #2e6da4; color: white;">
+                    <span class="glyphicon glyphicon-edit"></span>保存</button>
+            </div>
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>
