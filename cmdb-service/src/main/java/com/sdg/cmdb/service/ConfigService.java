@@ -188,6 +188,12 @@ public interface ConfigService {
 
     BusinessWrapper<Boolean> saveFileCopy(ConfigFileCopyVO configFileCopyVO);
 
+    TableVO<List<ConfigFileCopyDoScriptVO>> getFileCopyScriptPage(String groupName ,int page, int length);
+
+    BusinessWrapper<Boolean>  saveFileCopyScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO);
+
+
+
     List<ConfigFileCopyVO> queryFileCopy(String groupName);
 
     BusinessWrapper<Boolean> delFileCopy(long id);
@@ -241,12 +247,18 @@ public interface ConfigService {
     boolean createConfigFileByName(String fileName);
 
     /**
-     * 创建并更新指定名称的配置文件
+     * 创建并更新指定名称的配置文件(废弃)
      *
      * @param fileName
      * @return
      */
     void createAndInvokeConfigFile(String fileName, int envType);
+
+
+    /**
+     * 用户相关的配置文件自动同步和执行script
+     */
+    void invokeUserConfig();
 
     /**
      * 执行命令

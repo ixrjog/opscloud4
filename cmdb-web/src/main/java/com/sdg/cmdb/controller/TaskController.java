@@ -155,6 +155,18 @@ public class TaskController {
         return new HttpResult(ansibleTaskService.scriptTask(cmdVO));
     }
 
+    @RequestMapping(value = "/cmd/copySever/doScript", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult postDoScript(@RequestParam long id) {
+        return new HttpResult(ansibleTaskService.doScriptByCopyServer(id));
+    }
+
+    @RequestMapping(value = "/cmd/copySever/doScriptByGroup", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult postDoScript(@RequestParam String groupName) {
+        return new HttpResult(ansibleTaskService.doScriptByCopyByGroup(groupName));
+    }
+
     @RequestMapping(value = "/cmd/doScript/updateGetway", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult doUpdateGetway() {

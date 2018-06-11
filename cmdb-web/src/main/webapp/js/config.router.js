@@ -707,6 +707,26 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.shadowsocksConfigFile', {
+                        url: '/shadowsocksConfigFile',
+                        templateUrl: 'tpl/app_shadowsocks_config_file.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/shadowsocksConfigFile.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["configFile"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
                     .state('app.configFile', {
                         url: '/configFile',
                         templateUrl: 'tpl/app_configFile.html',

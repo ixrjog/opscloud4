@@ -143,8 +143,9 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
                 userDao.saveUserInfo(userDO);
 
                 logger.info("user :" + username + " login success!");
-                //新增业务，变更并同步翻墙配置
-                configService.createAndInvokeConfigFile(ConfigServiceImpl.CONFIG_FILE_SHADOWSOCKS, ServerDO.EnvTypeEnum.prod.getCode());
+                // 新增业务，变更并同步翻墙配置
+                configService.invokeUserConfig();
+                //configService.createAndInvokeConfigFile(ConfigServiceImpl.CONFIG_FILE_SHADOWSOCKS, ServerDO.EnvTypeEnum.prod.getCode());
 
                 return new BusinessWrapper<>(userDO);
             } else {

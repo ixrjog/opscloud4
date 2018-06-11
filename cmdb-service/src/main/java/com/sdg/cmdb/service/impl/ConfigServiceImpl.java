@@ -1,12 +1,14 @@
 package com.sdg.cmdb.service.impl;
 
 
+import com.sdg.cmdb.dao.cmdb.AnsibleTaskDao;
 import com.sdg.cmdb.dao.cmdb.ConfigDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
 import com.sdg.cmdb.domain.config.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
@@ -76,6 +78,9 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Resource
     private AnsibleTaskService ansibleTaskService;
+
+    @Resource
+    private AnsibleTaskDao ansibleTaskDao;
 
     @Resource
     private ConfigServerGroupService configServerGroupService;
@@ -510,12 +515,44 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
+    public TableVO<List<ConfigFileCopyDoScriptVO>> getFileCopyScriptPage(String groupName, int page, int length) {
+        long size = configDao.getConfigFileCopyDoScriptSize(groupName);
+        List<ConfigFileCopyDoScriptDO> list = configDao.getConfigFileCopyDoScriptPage(groupName, page * length, length);
+        List<ConfigFileCopyDoScriptVO> voList = new ArrayList<>();
+        for (ConfigFileCopyDoScriptDO doScriptDO : list) {
+            TaskScriptDO script = ansibleTaskDao.getTaskScript(doScriptDO.getTaskScriptId());
+            ConfigFileCopyDO copyDO = configDao.getConfigFileCopy(doScriptDO.getCopyId());
+
+            ServerDO serverDO = serverDao.getServerInfoById(copyDO.getServerId());
+            serverDO.setServerName(serverDO.acqServerName());
+            ConfigFileCopyDoScriptVO doScriptVO = new ConfigFileCopyDoScriptVO(doScriptDO, serverDO, script);
+            voList.add(doScriptVO);
+        }
+        return new TableVO<>(size, voList);
+    }
+
+    @Override
     public BusinessWrapper<Boolean> saveFileCopy(ConfigFileCopyVO configFileCopyVO) {
         try {
             if (configFileCopyVO.getId() == 0) {
                 configDao.addConfigFileCopy(new ConfigFileCopyDO(configFileCopyVO));
             } else {
                 configDao.updateConfigFileCopy(new ConfigFileCopyDO(configFileCopyVO));
+            }
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveFileCopyScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO) {
+        try {
+            if (configFileCopyDoScriptDO.getId() == 0) {
+                configDao.addConfigFileCopyDoScript(configFileCopyDoScriptDO);
+            } else {
+                configDao.updateConfigFileCopyDoScript(configFileCopyDoScriptDO);
             }
             return new BusinessWrapper<Boolean>(true);
         } catch (Exception e) {
@@ -608,9 +645,9 @@ public class ConfigServiceImpl implements ConfigService {
     public String getGetwayPath() {
         HashMap<String, String> configMap = acqGetwayConfigMap();
         String getway_user_conf_path = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
-        File tempFile = new File( getway_user_conf_path.trim());
+        File tempFile = new File(getway_user_conf_path.trim());
         String fileName = tempFile.getName();
-        return getway_user_conf_path.replace(fileName,"");
+        return getway_user_conf_path.replace(fileName, "");
 
     }
 
@@ -637,6 +674,14 @@ public class ConfigServiceImpl implements ConfigService {
                 invokeConfigFileCmd(configFileDO.getId());
             }
         });
+    }
+
+    @Override
+    public void invokeUserConfig() {
+        // List<ConfigFileCopyDO> list = configDao.queryConfigFileCopyByGroupName(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
+       // ansibleTaskService.doScriptByCopyByGroup(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
+        ansibleTaskService.doFileCopyByFileGroupName(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
+
     }
 
     /**

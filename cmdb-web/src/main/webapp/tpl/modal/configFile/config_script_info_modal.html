@@ -1,0 +1,66 @@
+<div class="modal-header">
+    <h3 class="modal-title">配置文件同步后执行Script配置</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>远程同步服务器</label>
+                <div class="col-lg-10">
+                    <select class="form-control" ng-model="nowCopyFile.selected"
+                            ng-options="copy as copy.serverDO.serverName for copy in fileCopyList" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>TaskScript</label>
+                <div class="col-lg-10">
+                    <select class="form-control" ng-model="nowScript.selected"
+                            ng-options="script as script.scriptName for script in taskScriptList" required>
+                        <option value="">--请选择--</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-lg-2 control-label">ScriptParams</label>
+            <div class="col-lg-10">
+                <input type="text" class="form-control" placeholder="可选参数" ng-model="item.params">
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-lg-12">
+             <pre style="background-color: #777" hljs
+                  hljs-source="nowScript.selected.script"></pre>
+            </div>
+        </div>
+
+        <div class="form-group" style="text-align:center;">
+
+            <!--保存-->
+            <button ng-click="saveItem()"
+                    class="btn btn-xs"
+                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-ok"></span>保存
+            </button>
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #d78700; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+
+
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

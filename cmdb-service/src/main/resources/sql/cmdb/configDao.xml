@@ -488,7 +488,50 @@
     </update>
 
 
+    <insert id="addConfigFileCopyDoScript" parameterType="ConfigFileCopyDoScriptDO">
+        INSERT INTO oc_config_file_copy_do_script (
+        copyId,
+        taskScriptId,
+        params,
+        groupName
+        ) VALUES (
+        #{copyId},
+        #{taskScriptId},
+        #{params},
+        #{groupName}
+        );
+    </insert>
+
+    <update id="updateConfigFileCopyDoScript" parameterType="ConfigFileCopyDoScriptDO">
+        UPDATE oc_config_file_copy_do_script
+        SET
+        copyId = #{copyId},
+        taskScriptId = #{taskScriptId},
+        params = #{params},
+        groupName = #{groupName}
+        WHERE id = #{id}
+    </update>
 
 
+    <select id="getConfigFileCopyDoScriptPage" parameterType="object" resultType="ConfigFileCopyDoScriptDO">
+        SELECT * FROM oc_config_file_copy_do_script
+        WHERE groupName = #{groupName}
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <select id="getConfigFileCopyDoScriptSize" parameterType="string" resultType="_long">
+        SELECT count(*) FROM oc_config_file_copy_do_script
+        WHERE groupName = #{groupName}
+    </select>
+
+    <select id="getConfigFileCopyDoScript" parameterType="_long" resultType="ConfigFileCopyDoScriptDO">
+        SELECT * FROM oc_config_file_copy_do_script
+        WHERE id = id
+    </select>
+
+    <select id="getConfigFileCopyDoScriptByCopyId" parameterType="_long" resultType="ConfigFileCopyDoScriptDO">
+        SELECT * FROM oc_config_file_copy_do_script
+        WHERE copyId = copyId
+    </select>
 
 </mapper>

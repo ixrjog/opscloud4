@@ -8,7 +8,7 @@ opsCloud开发使用交流  QQ群号:630913972
 ### 版本环境
 * Centos 6.x
 * JDK 8
-* Tomcat 8
+* Tomcat 8.0.36
 * Gradel 3
 * Mysql5.6 或 aliyunRDS
 * Redis 3.0.3
@@ -23,17 +23,28 @@ gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gra
 
 ### 安装步骤1 数据库
 ```$xslt
-# 安装 Mysql5.6+ 或使用AliyunRDS 
+# 安装 Mysql5.6 或使用AliyunRDS 
 # 建库
 create database opscloud character set utf8 collate utf8_bin;
 grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
 mysql -uopscloud -popscloud opscloud < ./opscloud.sql
+
+# Mysql5.7 不兼容
+已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
+# 查询
+select @@global.sql_mode
+# 修改
+set @@global.sql_mode=‘STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION’;
 ```
 
 ### 安装步骤2 Redis
 ```$xslt
 # 安装Redis3 或使用阿里云Redis
+http://download.redis.io/releases/redis-3.2.11.tar.gz
+tar -xzvf redis-3.2.11.tar.gz
+cd redis-3.2.11
+make && make install
 
 ```
 
@@ -75,13 +86,20 @@ Starting ApacheDS - default...
 ```
 
 ### 安装步骤5 部署
-```$xslt
+
 安装Tomcat 并在webapps下部署 opscloud.war
 修改配置文件 WEB-INF/classes/server.properties
-启动Tomcat 首次登录使用admin/opscloud
-```
 
-### 安装步骤6 ansible
+* 修改相关配置内容
+   - 配置文件修改路径：opsCloud/cmdb-web/env
+   - online/server.properties:
+   - 管理数据库配置修改：jdbc_url, jdbc_user, jdbc_password
+   - LDAP登陆认证配置修改：ldapUrl, ldapUserDn, ldapPwd
+   - nosql redis 配置修改：redis.host, redis.port, redis.pwd
+* 启动Tomcat 首次登录使用admin/opscloud
+
+
+### 安装步骤6 Ansible
 * 安装
 ```$xslt
 yum install epel-release -y

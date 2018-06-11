@@ -7,6 +7,7 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.config.ConfigFileCopyDO;
+import com.sdg.cmdb.domain.config.ConfigFileCopyDoScriptDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AnsibleItemEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
@@ -236,8 +237,8 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
                 AnsibleTaskServerDO taskServerDO = new AnsibleTaskServerDO(serverDO, ansibleTaskDO.getId());
                 try {
                     String invokeStr = taskCopy(true, serverDO.getInsideIp(), configFileCopyDO);
-                    //System.err.println(invokeStr);
                     CmdUtils.invokeAnsibleScriptTaskServer(taskServerDO, invokeStr);
+                    doCopyScript(configFileCopyDO);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -250,6 +251,15 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
             return new BusinessWrapper<>(false);
+        }
+    }
+
+    // 复制文件完成后执行Script
+    private void doCopyScript(ConfigFileCopyDO configFileCopyDO){
+        ConfigFileCopyDoScriptDO configFileCopyDoScriptDO = configDao.getConfigFileCopyDoScriptByCopyId(configFileCopyDO.getId());
+        if(configFileCopyDoScriptDO != null){
+            logger.info("ansible script task :" + configFileCopyDoScriptDO);
+            doScriptByCopyServer(configFileCopyDoScriptDO.getId());
         }
     }
 
@@ -269,6 +279,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
         try {
             for (ConfigFileCopyDO configFileCopyDO : list) {
+                logger.info("ansible copy task :" + configFileCopyDO);
                 ansibleTaskDao.addAnsibleTask(ansibleTaskDO);
                 // 异步处理任务
                 schedulerManager.registerJob(() -> {
@@ -278,6 +289,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
                         String invokeStr = taskCopy(true, serverDO.getInsideIp(), configFileCopyDO);
                         //System.err.println(invokeStr);
                         CmdUtils.invokeAnsibleScriptTaskServer(taskServerDO, invokeStr);
+                        doCopyScript(configFileCopyDO);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -299,6 +311,13 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
             List<ServerVO> serverList = cmdVO.getServerList();
 
             UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
+            if(userDO ==null){
+                userDO = new UserDO();
+                userDO.setId(0);
+                userDO.setUsername("SystemTask");
+
+            }
+
 
             TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScript(cmdVO.getTaskScriptId());
 
@@ -326,9 +345,21 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
             for (ServerVO serverVO : serverList) {
                 // 异步处理任务
                 schedulerManager.registerJob(() -> {
-                    AnsibleTaskServerDO taskServerDO = new AnsibleTaskServerDO(serverVO, ansibleTaskDO.getId());
+
+                    String ip = "";
+                    if (serverVO.getInsideIP() != null) {
+                        ip = serverVO.getInsideIP().getIp();
+                    } else {
+                        ip = serverDao.getServerInfoById(serverVO.getId()).getInsideIp();
+                    }
+                    ServerDO serverDO = new ServerDO(serverVO);
+                    serverDO.setInsideIp(ip);
+
+                    AnsibleTaskServerDO taskServerDO = new AnsibleTaskServerDO(serverDO, ansibleTaskDO.getId());
                     try {
-                        String invokeStr = taskScript(true, serverVO.getInsideIP().getIp(), cmd);
+
+
+                        String invokeStr = taskScript(true, ip, cmd);
                         //System.err.println("cmd:" + cmd);
                         //System.err.println(invokeStr);
                         CmdUtils.invokeAnsibleScriptTaskServer(taskServerDO, invokeStr);
@@ -350,8 +381,35 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         }
     }
 
+
     @Override
-    public BusinessWrapper<Boolean> scriptTaskUpdateGetway(){
+    public BusinessWrapper<Boolean> doScriptByCopyServer(long id) {
+        ConfigFileCopyDoScriptDO doScriptDO = configDao.getConfigFileCopyDoScript(id);
+        ConfigFileCopyDO configFileCopyDO = configDao.getConfigFileCopy(doScriptDO.getCopyId());
+
+        CmdVO cmdVO = new CmdVO();
+        cmdVO.setTaskScriptId(doScriptDO.getTaskScriptId());
+        cmdVO.setParams(doScriptDO.getParams());
+        ServerVO serverVO = new ServerVO(serverDao.getServerInfoById(configFileCopyDO.getServerId()));
+
+        List<ServerVO> servers = new ArrayList<>();
+        servers.add(serverVO);
+        cmdVO.setServerList(servers);
+        return scriptTask(cmdVO);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> doScriptByCopyByGroup(String groupName) {
+        List<ConfigFileCopyDoScriptDO> list = configDao.getConfigFileCopyDoScriptPage(groupName, 0, 100);
+        for (ConfigFileCopyDoScriptDO configFileCopyDoScriptDO : list) {
+            doScriptByCopyServer(configFileCopyDoScriptDO.getId());
+        }
+        return new BusinessWrapper<>(true);
+    }
+
+
+    @Override
+    public BusinessWrapper<Boolean> scriptTaskUpdateGetway() {
         TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY);
         CmdVO cmdVO = new CmdVO();
         cmdVO.setTaskScriptId(taskScriptDO.getId());
@@ -455,7 +513,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         CmdVO cmdVO = new CmdVO();
         cmdVO.setTaskScriptId(taskScriptDO.getId());
         cmdVO.setServerList(servers);
-        String params = "-d=" + username ;
+        String params = "-d=" + username;
         cmdVO.setParams(params);
         return this.scriptTask(cmdVO);
     }
@@ -465,12 +523,12 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     public TableVO<List<TaskScriptVO>> getTaskScriptPage(String scriptName, int sysScript, int page, int length) {
         UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
         long size = 0;
-        List<TaskScriptDO> list ;
+        List<TaskScriptDO> list;
         List<TaskScriptVO> listVO = new ArrayList<TaskScriptVO>();
-        if(authService.isRole(userDO.getUsername(), RoleDO.roleAdmin)) {
+        if (authService.isRole(userDO.getUsername(), RoleDO.roleAdmin)) {
             size = ansibleTaskDao.getTaskScriptSizeByAdmin(scriptName, sysScript);
             list = ansibleTaskDao.queryTaskScriptPageByAdmin(scriptName, sysScript, page * length, length);
-        }else{
+        } else {
             size = ansibleTaskDao.getTaskScriptSize(scriptName, userDO.getId(), sysScript);
             list = ansibleTaskDao.queryTaskScriptPage(scriptName, userDO.getId(), sysScript, page * length, length);
         }
@@ -603,8 +661,8 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
      * @return
      */
     private void init() {
-        ansibleConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.ANSIBLE.getItemKey(),"dev");
-        getwayConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey(),ConfigCenterServiceImpl.DEFAULT_ENV);
+        ansibleConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.ANSIBLE.getItemKey(), "dev");
+        getwayConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey(), ConfigCenterServiceImpl.DEFAULT_ENV);
     }
 
     @Override

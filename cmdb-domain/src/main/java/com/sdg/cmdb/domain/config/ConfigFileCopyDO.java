@@ -9,6 +9,8 @@ import java.io.Serializable;
 public class ConfigFileCopyDO implements Serializable {
 
 
+
+
     public ConfigFileCopyDO(){
 
     }
@@ -22,6 +24,22 @@ public class ConfigFileCopyDO implements Serializable {
         this.dest = configFileCopyVO.getDest();
         this.username = configFileCopyVO.getUsername();
         this.usergroup = configFileCopyVO.getUsergroup();
+    }
+
+    @Override
+    public String toString() {
+        return "ConfigFileCopyDO{" +
+                "id=" + id +
+                ", groupId=" + groupId +
+                ", groupName='" + groupName + '\'' +
+                ", serverId=" + serverId +
+                ", src='" +src + '\'' +
+                ", dest='" + dest + '\'' +
+                ", username='" + username + '\'' +
+                ", usergroup='" + usergroup + '\'' +
+                ", gmtCreate='" + gmtCreate + '\'' +
+                ", gmtModify='" + gmtModify + '\'' +
+                '}';
     }
 
     private long id;

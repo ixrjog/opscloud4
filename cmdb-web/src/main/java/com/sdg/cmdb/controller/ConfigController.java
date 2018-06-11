@@ -222,6 +222,7 @@ public class ConfigController {
 
     /**
      * 保存服务器同步配置
+     *
      * @param configFileCopyVO
      * @return
      */
@@ -233,7 +234,33 @@ public class ConfigController {
 
 
     /**
+     * 保存服务器同步后远程执行Script配置
+     *
+     * @param configFileCopyDoScriptDO
+     * @return
+     */
+    @RequestMapping(value = "/fileCopy/script/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult saveFileCopyScript(@RequestBody ConfigFileCopyDoScriptDO configFileCopyDoScriptDO) {
+        return new HttpResult(configService.saveFileCopyScript(configFileCopyDoScriptDO));
+    }
+
+    /**
+     * 保存服务器同步后远程执行Script详情页
+     *
+     * @param groupName
+     * @return
+     */
+    @RequestMapping(value = "/fileCopy/script/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getFileCopyScriptPage(@RequestParam String groupName, @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(configService.getFileCopyScriptPage(groupName, page, length));
+    }
+
+
+    /**
      * 查询服务器同步配置
+     *
      * @param groupName
      * @return
      */
@@ -245,6 +272,7 @@ public class ConfigController {
 
     /**
      * 删除服务器同步配置
+     *
      * @param id
      * @return
      */

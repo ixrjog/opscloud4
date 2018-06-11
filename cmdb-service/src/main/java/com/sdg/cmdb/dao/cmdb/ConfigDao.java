@@ -397,6 +397,7 @@ public interface ConfigDao {
 
     /**
      * 查询不重复的文件路径
+     *
      * @param fileGroupId
      * @return
      */
@@ -422,10 +423,40 @@ public interface ConfigDao {
 
     int updateConfigFileCopy(ConfigFileCopyDO configFileCopyDO);
 
-    List<ConfigFileCopyDO>   queryConfigFileCopyByGroupId(@Param("groupId") long groupId);
+    List<ConfigFileCopyDO> queryConfigFileCopyByGroupId(@Param("groupId") long groupId);
 
-    List<ConfigFileCopyDO>  queryConfigFileCopyByGroupName(@Param("groupName") String groupName);
+    List<ConfigFileCopyDO> queryConfigFileCopyByGroupName(@Param("groupName") String groupName);
 
+
+    int addConfigFileCopyDoScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO);
+
+    int updateConfigFileCopyDoScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO);
+
+
+    /**
+     * 查询指定条件的属性组数目
+     *
+     * @param groupName
+     * @return
+     */
+    long getConfigFileCopyDoScriptSize(@Param("groupName") String groupName);
+
+    /**
+     * 查询指定条件的属性组分页数据
+     *
+     * @param groupName
+     * @param pageStart
+     * @param pageLength
+     * @return
+     */
+    List<ConfigFileCopyDoScriptDO> getConfigFileCopyDoScriptPage(
+            @Param("groupName") String groupName, @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
+
+    ConfigFileCopyDoScriptDO getConfigFileCopyDoScript(
+            @Param("id") long id);
+
+    ConfigFileCopyDoScriptDO getConfigFileCopyDoScriptByCopyId(
+            @Param("copyId") long copyId);
 
 
 }

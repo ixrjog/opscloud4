@@ -84,9 +84,12 @@ public class ConfigurationFileControlService {
 
     public static final String GROUP_GETWAY = "filegroup_getway";
 
+    public static final String GROUP_SHADOWSOCKS = "filegroup_ss";
+
 
     public String build(ConfigFileDO configFileDO) {
         ConfigFileGroupDO configFileGroupDO = configDao.getConfigFileGroupById(configFileDO.getFileGroupId());
+        System.err.println(configFileGroupDO);
 
         if (configFileGroupDO.getGroupName().equalsIgnoreCase(GROUP_ANSIBLE))
             return ansibleHostService.acqHostsCfgByUseType(configFileDO.getUseType());
@@ -94,6 +97,8 @@ public class ConfigurationFileControlService {
         if (configFileGroupDO.getGroupName().equalsIgnoreCase(GROUP_GETWAY))
             return getwayService.acqHostConfig();
 
+        if (configFileGroupDO.getGroupName().equalsIgnoreCase(GROUP_SHADOWSOCKS))
+            return shadowsocksService.acqConfig();
 
         return "";
     }

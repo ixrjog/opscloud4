@@ -329,6 +329,11 @@
                 </a>
             </li>
 
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.shadowsocksConfigFile">
+                    <span>SS配置管理</span>
+                </a>
+            </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.configFile">

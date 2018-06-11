@@ -1,7 +1,5 @@
 package com.sdg.cmdb.service.control.configurationfile;
 
-
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sdg.cmdb.domain.auth.UserDO;
 import org.springframework.stereotype.Service;
@@ -28,8 +26,6 @@ public class ShadowsocksService extends ConfigurationFileControlAbs {
         this.addUser(shadowsocks_json);
         return shadowsocks_json.toString();
     }
-
-
 
 
     private void addUser(JSONObject shadowsocks_json) {

@@ -35,6 +35,12 @@ public interface AnsibleTaskService {
 
     BusinessWrapper<Boolean> scriptTask(CmdVO cmdVO);
 
+
+    BusinessWrapper<Boolean> doScriptByCopyServer(long id);
+
+    BusinessWrapper<Boolean> doScriptByCopyByGroup(String groupName);
+
+
     BusinessWrapper<Boolean> scriptTaskUpdateGetway();
 
     String taskScript(boolean isSudo, String hostgroupName, String cmd);
@@ -61,11 +67,9 @@ public interface AnsibleTaskService {
 
     TableVO<List<TaskScriptVO>> getTaskScriptPage(String scriptName, int sysScript, int page, int length);
 
-
     TaskScriptDO saveTaskScript(TaskScriptDO taskScriptDO);
 
     AnsibleVersionInfo acqAnsibleVersion();
-
 
     TableVO<List<AnsibleTaskVO>> getAnsibleTaskPage(String cmd, int page, int length);
 

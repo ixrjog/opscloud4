@@ -476,24 +476,6 @@ app.controller('ansibleConfigCopyCtrl', function ($scope, $state, $uibModal, toa
 
     $scope.allChoose = false;
 
-    $scope.chooseAllItem = function () {
-        if ($scope.allChoose) {
-            for (var i = 0; i < $scope.pageData.length; i++) {
-                $scope.pageData[i].choose = true;
-            }
-        } else {
-            for (var i = 0; i < $scope.pageData.length; i++) {
-                $scope.pageData[i].choose = false;
-            }
-        }
-    }
-
-    $scope.envChoose = {
-        prod: false,
-        back: false,
-        gray: false,
-        daily: false
-    };
 
     $scope.chooseAllResult = function () {
         $scope.resultChoose = {
@@ -539,31 +521,7 @@ app.controller('ansibleConfigCopyCtrl', function ($scope, $state, $uibModal, toa
         }
     }
 
-    $scope.chooseEnv = function (envCode) {
 
-        for (var i = 0; i < $scope.pageData.length; i++) {
-            //var item = $scope.pageData[i];
-            if ($scope.pageData[i].envType == envCode) {
-                switch (envCode) {
-                    case 4:
-                        $scope.pageData[i].choose = $scope.envChoose.prod;
-                        break;
-                    case 6:
-                        $scope.pageData[i].choose = $scope.envChoose.back;
-                        break;
-                    case 3:
-                        $scope.pageData[i].choose = $scope.envChoose.gray;
-                        break;
-                    case 2:
-                        $scope.pageData[i].choose = $scope.envChoose.daily;
-                        break;
-                    default:
-                        return;
-                }
-            }
-
-        }
-    }
 
     $scope.taskVO = {};
 
