@@ -173,6 +173,12 @@ public class TaskController {
         return new HttpResult(ansibleTaskService.scriptTaskUpdateGetway());
     }
 
+    @RequestMapping(value = "/cmd/doScript/getwaySetLogin", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult doGetwaySetLogin() {
+        return new HttpResult(ansibleTaskService.scriptTaskGetwaySetLogin());
+    }
+
 
     @RequestMapping(value = "/cmd/query", method = RequestMethod.GET)
     @ResponseBody

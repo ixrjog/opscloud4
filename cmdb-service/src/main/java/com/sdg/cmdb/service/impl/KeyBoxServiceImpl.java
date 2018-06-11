@@ -149,7 +149,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             return new BusinessWrapper<>(ErrorCode.userPwdNotInput);
         }
 
-        BusinessWrapper<Boolean> wrapper =ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
+        BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
         userDO.setAuthed(UserDO.AuthType.authed.getCode());
         userService.updateUserAuthStatus(userDO);
         return wrapper;
@@ -475,6 +475,23 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             lastLoginListDO.add(keyboxLoginStatusVO);
         }
         return lastLoginListDO;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveKey(String keyPath) {
+        ApplicationKeyDO applicationKeyDO = keyboxDao.getApplicationKey();
+        if (applicationKeyDO == null) return new BusinessWrapper<>(false);
+        try {
+            // 解密
+            String key = EncryptionUtil.decrypt(applicationKeyDO.getPrivateKey());
+            System.err.println(keyPath);
+            System.err.println(key);
+            IOUtils.writeFile(key, keyPath);
+            return new BusinessWrapper<>(true);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BusinessWrapper<>(false);
+        }
     }
 
 }

@@ -13,6 +13,29 @@ app.controller('getwayHostConfigCtrl', function ($scope, $state, $uibModal, toas
     $scope.filegroup = {};
 
 
+    /**
+     * 首次使用初始化Getway服务器
+     * @param item
+     */
+    $scope.doSetup = function (item) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'setupGetwayModal',
+            controller: 'setupGetwayInstanceCtrl',
+            size: 'lg',
+            resolve: {
+                httpService: function () {
+                    return httpService;
+                }
+            }
+        });
+
+        modalInstance.result.then(function () {
+            $scope.doQuery();
+        }, function () {
+            $scope.doQuery();
+        });
+    }
+
     $scope.queryUseType = function () {
         var url = "/servergroup/useType/query";
         httpService.doGet(url).then(function (data) {
@@ -554,13 +577,6 @@ app.controller('ansibleConfigCopyCtrl', function ($scope, $state, $uibModal, toa
         }
     }
 
-    $scope.envChoose = {
-        prod: false,
-        back: false,
-        gray: false,
-        daily: false
-    };
-
     $scope.chooseAllResult = function () {
         $scope.resultChoose = {
             all: true,
@@ -602,32 +618,6 @@ app.controller('ansibleConfigCopyCtrl', function ($scope, $state, $uibModal, toa
             } else {
                 return false;
             }
-        }
-    }
-
-    $scope.chooseEnv = function (envCode) {
-
-        for (var i = 0; i < $scope.pageData.length; i++) {
-            //var item = $scope.pageData[i];
-            if ($scope.pageData[i].envType == envCode) {
-                switch (envCode) {
-                    case 4:
-                        $scope.pageData[i].choose = $scope.envChoose.prod;
-                        break;
-                    case 6:
-                        $scope.pageData[i].choose = $scope.envChoose.back;
-                        break;
-                    case 3:
-                        $scope.pageData[i].choose = $scope.envChoose.gray;
-                        break;
-                    case 2:
-                        $scope.pageData[i].choose = $scope.envChoose.daily;
-                        break;
-                    default:
-                        return;
-                }
-            }
-
         }
     }
 
@@ -971,6 +961,274 @@ app.controller('configCopyInstanceCtrl', function ($scope, $uibModalInstance, ht
     }
 });
 
+/**
+ * 首次使用初始化Getway服务器-配置页面
+ */
+app.controller('setupGetwayInstanceCtrl', function ($scope, $uibModalInstance,$interval, httpService ) {
+
+
+    $scope.manageKeyPath = "";
+
+    $scope.getwaySetLoginScriptName ="getway_set_login";
+
+    $scope.updateGetwayScriptName ="getway -i";
+
+    $scope.configMap = {};
+
+    $scope.itemGroup = "GETWAY";
+
+    /**
+     * 获取配置
+     */
+    var getConfig = function () {
+        var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
+            "&env=";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.configMap = data.body;
+                $scope.manageKeyPath = $scope.configMap.GETWAY_USER_CONF_PATH.value + "/manage/id_rsa";
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    getConfig();
+
+    $scope.saveKey = function () {
+        var url = "/config/getway/saveKey?keyPath=" + $scope.manageKeyPath;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.alert.type="success";
+                $scope.alert.msg="privateKey创建成功！";
+            } else {
+                $scope.alert.type="warning";
+                $scope.alert.msg="privateKey创建失败！";
+            }
+        }, function (err) {
+            $scope.alert.type="error";
+            $scope.alert.msg=err;
+        });
+    }
+
+
+    $scope.getwaySetLogin = function () {
+        var url = "/task//cmd/doScript/getwaySetLogin";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.alert.type="success";
+                $scope.alert.msg="privateKey创建成功！";
+            } else {
+                $scope.alert.type="warning";
+                $scope.alert.msg="privateKey创建失败！";
+            }
+        }, function (err) {
+            $scope.alert.type="error";
+            $scope.alert.msg=err;
+        });
+    }
+
+    $scope.updateGetway = function () {
+        $scope.butRunCopyItem = true;
+
+        $scope.filegroupName
+        var url = "/task//cmd/doScript/updateGetway";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.taskVO.ansibleTaskDO = body.body;
+            }
+        }, function (err) {
+            $scope.alert.type = 'error';
+            $scope.alert.msg = err;
+        });
+    }
+
+    $scope.queryGroup = function (param) {
+        var url = "/config/fileGroup/query?"
+            + "groupName=" + param
+            + "&page=" + 0
+            + "&length=" + 15;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                // $scope.fileGroupList = body.data;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.alert = {
+        type: "",
+        msg: ""
+    };
+
+    $scope.closeAlert = function () {
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+    }
+
+    $scope.resultChoose = {
+        all: true,
+        success: false,
+        failed: false
+    };
+
+    $scope.allChoose = false;
+
+    $scope.chooseAllItem = function () {
+        if ($scope.allChoose) {
+            for (var i = 0; i < $scope.pageData.length; i++) {
+                $scope.pageData[i].choose = true;
+            }
+        } else {
+            for (var i = 0; i < $scope.pageData.length; i++) {
+                $scope.pageData[i].choose = false;
+            }
+        }
+    }
+
+    $scope.chooseAllResult = function () {
+        $scope.resultChoose = {
+            all: true,
+            success: false,
+            failed: false
+        };
+    }
+
+    $scope.chooseResult = function (code) {
+        var success = false;
+        var failed = false;
+        if (code == 0) {
+            success = true;
+        }
+        if (code == 1) {
+            failed = true;
+        }
+        $scope.resultChoose = {
+            all: false,
+            success: success,
+            failed: failed
+        };
+    }
+
+    $scope.checkResultShow = function (taskServer) {
+        if ($scope.resultChoose.all == true) return true;
+
+        var result = taskServer.result == 'SUCCESS';
+
+        if (result) {
+            if ($scope.resultChoose.success) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            if ($scope.resultChoose.failed) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
+    $scope.taskVO = {};
+
+    // x秒刷新1次待办工单
+    var timer1 = $interval(function () {
+
+        if ($scope.taskVO.ansibleTaskDO == null) return;
+
+        if ($scope.taskVO.ansibleTaskDO.finalized == false) {
+            $scope.queryTask();
+        }
+    }, 3000);
+
+    $scope.queryTask = function () {
+        var url = "/task/cmd/query?taskId=" + $scope.taskVO.ansibleTaskDO.id;
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.taskVO = body.body;
+                $scope.butRunCopyItem = false;
+            }
+        });
+    }
+
+    /**
+     * 关闭任务详情
+     * @param serverId
+     */
+
+
+    $scope.saveData = function () {
+        var url = "/config/file/save";
+
+        if ($scope.nowFileGroup.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定文件组名";
+            return;
+        }
+        $scope.item.fileGroupId = $scope.nowFileGroup.selected.id;
+
+        if ($scope.item.fileName == null || $scope.item.fileName == '') {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定文件名";
+            return;
+        }
+
+        if ($scope.item.useType == -1) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定使用类型";
+            return;
+        }
+
+        if ($scope.item.filePath == null || $scope.item.filePath == '') {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定路径";
+            return;
+        }
+
+        // if ($scope.item.fileType == 1 && ($scope.item.invokeCmd == null || $scope.item.invokeCmd == '')) {
+        //     $scope.alert.type = 'warning';
+        //     $scope.alert.msg = "必须指定执行命令";
+        //     return;
+        // }
+
+        $scope.item.params = JSON.stringify($scope.paramList);
+        httpService.doPostWithJSON(url, $scope.item).then(function (data) {
+            if (data.success) {
+                $scope.alert.type = 'success';
+                $scope.alert.msg = "保存成功！";
+
+                $scope.item = {
+                    fileType: $scope.item.fileType
+                };
+            } else {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = data.msg;
+            }
+        }, function (err) {
+            $scope.alert.type = 'danger';
+            $scope.alert.msg = err;
+        });
+    }
+
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
+});
 
 /**
  * GETWAY参数配置

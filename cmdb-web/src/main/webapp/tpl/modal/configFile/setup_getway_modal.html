@@ -1,0 +1,162 @@
+<div class="modal-header">
+    <h3 class="modal-title">Getway Setup</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="col-lg-3 control-label">创建privateKey</label>
+
+                <div class="col-lg-7">
+                    <input type="text"
+                           uib-popover-html="'在堡垒机管理菜单-堡垒机密钥管理-配置私钥(rsa)'" popover-trigger="'mouseenter'"
+                           class="form-control" placeholder="privateKey路径" ng-model="manageKeyPath">
+                </div>
+
+                <div class="col-lg-2">
+                    <button ng-click="saveKey()"
+                            class="btn"
+                            style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                        创建
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="col-lg-3 control-label">GetwayLogin配置</label>
+
+                <div class="col-lg-7">
+                    <input type="text"
+                           uib-popover-html="'Getway ssh登录后启动getway'" popover-trigger="'mouseenter'"
+                           class="form-control" placeholder="Script名称" ng-model="getwaySetLoginScriptName">
+                </div>
+
+                <div class="col-lg-2">
+                    <button ng-click="getwaySetLogin()"
+                            class="btn"
+                            style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                        Login配置
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-12">
+                <label class="col-lg-3 control-label">安装getway</label>
+
+                <div class="col-lg-7">
+                    <input type="text"
+                           uib-popover-html="'Getway ssh登录后启动getway'" popover-trigger="'mouseenter'"
+                           class="form-control" placeholder="Script名称" ng-model="updateGetwayScriptName">
+                </div>
+
+                <div class="col-lg-2">
+                    <button ng-click="updateGetway()"
+                            class="btn"
+                            style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                        安装
+                    </button>
+                </div>
+            </div>
+        </div>
+
+
+        <div style="font-size:0.5em;">&nbsp;</div>
+        <div class="panel panel-info">
+            <div class="panel-heading">执行结果</div>
+            <div ng-if="taskVO.taskServerList != null">
+                                      <span class="label" style="background-color: #3c3c3c">
+                                              <i class="fa fa-spin fa-spinner"
+                                                 ng-show="taskVO.ansibleTaskDO.finalized ==false"></i>
+                                              <b ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
+                                              <i ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</i>
+                                              <i uib-popover-html="'执行的指令'"
+                                                 popover-trigger="'mouseenter'">  任务/指令:{{taskVO.ansibleTaskDO.cmd}}</i>
+                                              <i uib-popover-html="'服务器数量'"
+                                                 popover-trigger="'mouseenter'" class="label">  ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</i>
+
+                                        <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
+                                              style="color: #00a8f3"> 所有结果</b>
+                                        <input type="checkbox" ng-model="resultChoose.success"
+                                               ng-click="chooseResult(0)"><b
+                                              style="color: #00af00"> SUCCESS</b>
+                                        <input type="checkbox" ng-model="resultChoose.failed"
+                                               ng-click="chooseResult(1)"><b
+                                              style="color: #ef2929"> FAILED</b>
+                                        </span>
+            </div>
+
+            <div class="form-group">
+                <form class="form-inline" role="form" ng-if="taskVO.taskServerList != null">
+                    <table class="table" style="margin-top: 5px;">
+                        <tbody>
+                        <tr ng-repeat="taskServer in taskVO.taskServerList">
+                            <td class="col-md-12" ng-show="checkResultShow(taskServer)">
+                                <div class="panel-heading" style="background-color: #2e6da4">
+                                                    <span class="label label-default"
+                                                          ng-if="taskServer.serverDO.envType == 0">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(保留)</span>
+                                    <span class="label label-info"
+                                          ng-if="taskServer.serverDO.envType == 1">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(dev)</span>
+                                    <span class="label label-success"
+                                          ng-if="taskServer.serverDO.envType == 2">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(daily)</span>
+                                    <span class="label label-warning"
+                                          ng-if="taskServer.serverDO.envType == 3">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(gray)</span>
+                                    <span class="label label-danger"
+                                          ng-if="taskServer.serverDO.envType == 4">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(prod)</span>
+                                    <span class="label label-primary"
+                                          ng-if="taskServer.serverDO.envType == 5">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(test)</span>
+                                    <span class="label label-primary"
+                                          ng-if="taskServer.serverDO.envType == 6">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(back)</span>
+
+                                    <span class="label label-info">{{taskServer.ip}}</span>
+                                    <span class="label label-success"
+                                          ng-if="taskServer.result == 'SUCCESS'">{{taskServer.result}}</span>
+                                    <span class="label label-danger"
+                                          ng-if="taskServer.result != 'SUCCESS'">{{taskServer.result}}</span>
+                                    <span class="label label-info"
+                                          ng-show="taskServer.returncode != null">{{taskServer.returncode}}</span>
+
+                                    <button ng-click="closeTaskServer(taskServer.serverId)"
+                                            class="btn btn-xs pull-right"
+                                            style="margin-left: 20px; background-color: #ff8700; color: white;">
+                                        <span class="glyphicon glyphicon-remove"></span>关闭
+                                    </button>
+                                </div>
+                                <pre style="background-color: #777" hljs
+                                     hljs-source="taskServer.msg"></pre>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                </form>
+            </div>
+        </div>
+        <div class="form-group">
+            <div ng-if="alert.type != ''">
+                <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="form-group" style="text-align:center;">
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #d78700; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+
+
+        </div>
+    </form>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

@@ -7,6 +7,7 @@ import com.sdg.cmdb.domain.config.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
 import com.sdg.cmdb.service.ConfigCenterService;
 import com.sdg.cmdb.service.ConfigService;
+import com.sdg.cmdb.service.KeyBoxService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,9 @@ public class ConfigController {
 
     @Resource
     private ConfigCenterService configCenterService;
+
+    @Resource
+    private KeyBoxService keyBoxService;
 
     /**
      * 属性分页数据
@@ -498,6 +502,19 @@ public class ConfigController {
         } else {
             return new HttpResult(wrapper.getCode(), wrapper.getMsg());
         }
+    }
+
+
+
+    /**
+     * 创建privateKey
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getway/saveKey", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryFilePath(@RequestParam String keyPath) {
+        return new HttpResult(keyBoxService.saveKey(keyPath));
     }
 
 }

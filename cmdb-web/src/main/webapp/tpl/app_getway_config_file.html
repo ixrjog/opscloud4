@@ -33,6 +33,11 @@
                                         </button>
 
                                         <button
+                                                type="button" class="btn btn-danger" ng-click="doSetup()"><span
+                                                class="icon icon-wrenc"></span>初始化Getway
+                                        </button>
+
+                                        <button
                                                 type="button" class="btn btn-success" ng-click="doQuery()"><span
                                                 class="glyphicon glyphicon-repeat"></span>刷新
                                         </button>
@@ -179,7 +184,7 @@
                                                 item.gmtModify}}
                                             </td>
                                             <td>
-                                                <button ng-click="launchItem(item)"
+                                                <button ng-click="launchItem(item)" ng-show="item.servers > 0"
                                                         class="btn btn-xs"
                                                         style="margin-left: 5px; background-color: limegreen; color: white;">
                                                     <span class="glyphicon glyphicon-search"></span>预览
@@ -482,4 +487,10 @@
 
 <script type="text/ng-template" id="configFileInfo">
     <div ng-include="'tpl/modal/configFile_info_modal.html'"></div>
+</script>
+
+
+<!--首次使用初始化Getway服务器-->
+<script type="text/ng-template" id="setupGetwayModal">
+    <div ng-include="'tpl/modal/configFile/setup_getway_modal.html'"></div>
 </script>

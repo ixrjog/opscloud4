@@ -43,6 +43,8 @@ public interface AnsibleTaskService {
 
     BusinessWrapper<Boolean> scriptTaskUpdateGetway();
 
+    BusinessWrapper<Boolean> scriptTaskGetwaySetLogin();
+
     String taskScript(boolean isSudo, String hostgroupName, String cmd);
 
     BusinessWrapper<Boolean> doFileCopy(long id);

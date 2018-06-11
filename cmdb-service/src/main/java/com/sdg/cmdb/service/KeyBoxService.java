@@ -124,4 +124,6 @@ public interface KeyBoxService {
 
     BusinessWrapper<Boolean> getwayStatus(String username ,String ip);
 
+    BusinessWrapper<Boolean> saveKey(String keyPath);
+
 }

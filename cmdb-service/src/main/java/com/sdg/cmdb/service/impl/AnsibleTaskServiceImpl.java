@@ -83,6 +83,8 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
     public static final String GETWAY = "getway";
 
+    public static final String GETWAY_SET_LOGIN = "getway_set_login";
+
 
     private HashMap<String, String> ansibleConfigMap;
 
@@ -419,6 +421,18 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         cmdVO.setServerList(servers);
         String params = "-i";
         cmdVO.setParams(params);
+        return this.scriptTask(cmdVO);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> scriptTaskGetwaySetLogin(){
+        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY_SET_LOGIN);
+        CmdVO cmdVO = new CmdVO();
+        cmdVO.setTaskScriptId(taskScriptDO.getId());
+        List<ServerVO> servers = acqGetwayServers();
+        if (servers.size() == 0)
+            return new BusinessWrapper<>(false);
+        cmdVO.setServerList(servers);
         return this.scriptTask(cmdVO);
     }
 
