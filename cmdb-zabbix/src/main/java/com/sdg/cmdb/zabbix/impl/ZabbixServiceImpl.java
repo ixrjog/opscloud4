@@ -193,25 +193,50 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
      * @return
      */
     private boolean login(String user, String password) {
-        if (this.auth != null) return true;
-
-        String auth = cacheZabbixService.getZabbixAuth();
-        if (!StringUtils.isEmpty(auth)) {
-            this.auth = auth;
+        if (checkAuth()) {
             return true;
         }
 
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder().paramEntry("user", user).paramEntry("password", password)
                 .method("user.login").build();
         JSONObject response = call(request);
+
         if (response == null || response.isEmpty()) return false;
         auth = response.getString("result");
         if (auth != null && !auth.isEmpty()) {
+            logger.info("Zabbix login success!");
             this.auth = auth;
             cacheZabbixService.insertZabbixAuth(auth);
             return true;
         }
         return false;
+    }
+
+    private boolean checkAuth() {
+        String auth = cacheZabbixService.getZabbixAuth();
+        if (!StringUtils.isEmpty(auth)) {
+            this.auth = auth;
+            JSONObject filter = new JSONObject();
+            filter.put("host", ZABBIX_SERVER_DEFAULT_NAME);
+            ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                    .method("host.get").paramEntry("filter", filter)
+                    .build();
+            JSONObject getResponse = call(request);
+
+            //ZabbixVersion version = new ZabbixVersion();
+            //version.setVersion(getApiVersion());
+            try {
+                JSONObject result = getResponse.getJSONArray("result").getJSONObject(0);
+                String hostid = result.getString("hostid");
+                if (Integer.valueOf(hostid) != 0) return true;
+                return false;
+            } catch (Exception e) {
+                logger.info("Check zabbix auth failed！");
+                return false;
+            }
+        } else {
+            return false;
+        }
     }
 
     @Override
@@ -220,13 +245,16 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         //System.err.println(request);
         JSONObject response = call(request);
 
+//        System.err.println(request);
+//        System.err.println(response);
+
         //System.err.println(response);
         return response.getString("result");
     }
 
     private JSONObject call(ZabbixRequest request) {
-        if (request.getAuth() == null && !request.getMethod().equalsIgnoreCase("apiinfo.version")) {
-            request.setAuth(this.auth);
+        if (request.getAuth() == null && !request.getMethod().equalsIgnoreCase("apiinfo.version") && !request.getMethod().equalsIgnoreCase("user.login")) {
+            request.setAuth(auth);
         }
         try {
             HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder.post().setUri(uri)
@@ -236,7 +264,10 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
             //System.err.println(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON));
             HttpEntity entity = response.getEntity();
             byte[] data = EntityUtils.toByteArray(entity);
-            return (JSONObject) JSON.parse(data);
+            JSONObject jsonObject = (JSONObject) JSON.parse(data);
+            //System.err.println("Zabbix API Request : "+request);
+            //System.err.println("Zabbix API Response : "+jsonObject);
+            return jsonObject;
         } catch (IOException e) {
             //e.printStackTrace();
             logger.error("zabbix server 登陆失败!");
@@ -318,8 +349,9 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
                 .method("host.get").paramEntry("filter", filter)
                 .build();
         JSONObject getResponse = call(request);
+
         ZabbixVersion version = new ZabbixVersion();
-        version.setVersion(this.getApiVersion());
+        version.setVersion(getApiVersion());
         try {
             JSONObject result = getResponse.getJSONArray("result").getJSONObject(0);
             String hostid = result.getString("hostid");
@@ -417,7 +449,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         request.putParam("groups", acqGroup(serverDO));
         request.putParam("templates", acqTemplate(host.getTemplates()));
 
-        if(host.isUseProxy()){
+        if (host.isUseProxy()) {
             request.putParam("proxy_hostid", proxyGet(host.getProxy().getHost()));
         }
         JSONObject getResponse = call(request);
@@ -471,7 +503,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         if (templates == null || templates.size() == 0) return new JSONArray();
         JSONArray templateArray = new JSONArray();
         for (ZabbixTemplateVO template : templates) {
-            if(template.isChoose()){
+            if (template.isChoose()) {
                 //int  templateid = templateGet(template.getTemplateName());
                 JSONObject t = new JSONObject();
                 t.put("templateid", templateGet(template.getTemplateName()));
@@ -794,8 +826,6 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         }
         request.putParam("user_medias", userMedias);
         JSONObject getResponse = call(request);
-        //System.err.println(request);
-        //System.err.println(getResponse);
         int userids = getResultId(getResponse, "userids");
 
         if (userids != 0) {
@@ -935,7 +965,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         JSONArray result = getResponse.getJSONArray("result");
         for (int i = 0; i < result.size(); i++) {
             JSONObject user = result.getJSONObject(i);
-            //System.err.println(user.get("alias"));
+
             UserDO userDO = userDao.getUserByName(user.get("alias").toString());
             if (userDO != null) continue;
             for (String userName : excludeUsers) {
@@ -990,8 +1020,6 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         }
         request.putParam("user_medias", userMedias);
         JSONObject getResponse = call(request);
-        //System.err.println(request);
-        //System.err.println(getResponse);
         int userids = getResultId(getResponse, "userids");
         if (userids != 0) {
             userDO.setZabbixAuthed(UserDO.ZabbixAuthType.authed.getCode());
@@ -1065,8 +1093,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         request.putParam("filter", filter);
 
         JSONObject getResponse = call(request);
-        //System.err.println(request);
-        //System.err.println(getResponse);
+
         return getResultId(getResponse, "actionid");
 
     }
@@ -1182,8 +1209,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         filter.put("conditions", conditions);
         request.putParam("filter", filter);
         JSONObject getResponse = call(request);
-        //System.err.println(request);
-        //System.err.println(getResponse);
+
         return getResultId(getResponse, "actionids");
 
     }
@@ -1566,7 +1592,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
             hostgroupCreate(serverGroupDO.getName());
         }
         // 添加服务器监控
-        if (hostCreate(serverDO,host)) {
+        if (hostCreate(serverDO, host)) {
             serverDO.setZabbixMonitor(isMonitor);
             serverDao.updateServerGroupServer(serverDO);
             return new BusinessWrapper<>(true);
@@ -1587,7 +1613,6 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
 
         ServerGroupDO serverGroupDO = new ServerGroupDO(serverGroupId);
         String proxyName = configServerGroupService.queryZabbixProxy(serverGroupDO);
-        System.err.println(proxyName);
         for (ZabbixProxy proxy : proxys) {
             if (proxy.getHost().equalsIgnoreCase(proxyName)) {
                 proxy.setSelected(true);
