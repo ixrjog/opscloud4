@@ -522,8 +522,15 @@ public class ConfigServiceImpl implements ConfigService {
         for (ConfigFileCopyDoScriptDO doScriptDO : list) {
             TaskScriptDO script = ansibleTaskDao.getTaskScript(doScriptDO.getTaskScriptId());
             ConfigFileCopyDO copyDO = configDao.getConfigFileCopy(doScriptDO.getCopyId());
-
+            if (copyDO == null) {
+                configDao.delConfigFileCopyDoScript(doScriptDO.getId());
+                continue;
+            }
             ServerDO serverDO = serverDao.getServerInfoById(copyDO.getServerId());
+            if (serverDO == null) {
+                configDao.delConfigFileCopyDoScript(doScriptDO.getId());
+                continue;
+            }
             serverDO.setServerName(serverDO.acqServerName());
             ConfigFileCopyDoScriptVO doScriptVO = new ConfigFileCopyDoScriptVO(doScriptDO, serverDO, script);
             voList.add(doScriptVO);

@@ -458,5 +458,6 @@ public interface ConfigDao {
     ConfigFileCopyDoScriptDO getConfigFileCopyDoScriptByCopyId(
             @Param("copyId") long copyId);
 
+   long delConfigFileCopyDoScript( @Param("id") long id);
 
 }
