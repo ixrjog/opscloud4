@@ -15,6 +15,19 @@ public class HostSystem implements Serializable {
     public static final String SUCCESS_STATUS="SUCCESS";
     public static final String HOST_FAIL_STATUS="HOSTFAIL";
 
+
+    @Override
+    public String toString() {
+        return "HostSystem{" +
+
+                "user='" + user + '\'' +
+                ", host='" +  host + '\'' +
+                ", port='" + port + '\'' +
+                ", errorMsg='" + errorMsg + '\'' +
+                ", instanceId='" + instanceId + '\'' +
+                '}';
+    }
+
     private String user = "root";
 
     private String host;

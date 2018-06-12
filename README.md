@@ -30,7 +30,7 @@ grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
 mysql -uopscloud -popscloud opscloud < ./opscloud.sql
 
-# Mysql5.7 不兼容
+# Mysql5.7 兼容性问题
 已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
 # 查询
 select @@global.sql_mode

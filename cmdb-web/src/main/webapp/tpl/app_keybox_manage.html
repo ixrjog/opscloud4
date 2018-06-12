@@ -326,48 +326,67 @@
                         <div class="panel">
                             <div class="panel-body">
                                 <div class="form-horizontal">
-                                    <div class="form-group">
-                                        <div class="col-md-8">
-                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>私钥(rsa)</label>
-                                            <div class="col-md-8">
-                                                <textarea class="form-control" ng-model="keyItem.originalPrivateKey"
-                                                          rows="16"></textarea>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
-                                        <div class="col-md-8" style="text-align: center;">
+                                    <!--<div class="form-group">-->
+                                        <!--<div class="col-md-8">-->
+                                            <!--<label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>私钥(rsa)</label>-->
+                                            <!--<div class="col-md-8">-->
+                                                <!--<textarea class="form-control" ng-model="keyItem.originalPrivateKey"-->
+                                                          <!--rows="16"></textarea>-->
+                                            <!--</div>-->
+                                        <!--</div>-->
+                                    <!--</div>-->
 
-                                            <button ng-click="saveKey()"
-                                                    class="btn btn-xs"
-                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                <span class="glyphicon glyphicon-ok"></span>保存</button>
-                                            <!---->
-                                            <!--<button type="button" class="btn btn-sm" ng-click="saveKey()">-->
-                                               <!---->
-                                                <!---->
-                                                <!--<span class="glyphicon glyphicon-save" style="color: white"></span>-->
-                                            <!--</button>-->
-                                        </div>
-                                    </div>
                                     <div class="form-group">
                                         <div class="col-md-8">
-                                            <label class="col-md-3 control-label">加密的私钥(rsa)</label>
+                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>加密的私钥(rsa)</label>
+                                            <pre  ng-show="!editPrivateKey" style="background-color: #54596a" hljs
+                                                 hljs-source="keyItem.privateKey"></pre>
                                             <div class="col-md-9">
-                                                <textarea class="form-control" ng-model="keyItem.privateKey"
+                                                <textarea  ng-show="editPrivateKey" class="form-control" ng-model="keyItem.privateKey"
                                                           rows="16"></textarea>
                                             </div>
                                         </div>
                                     </div>
+
+
+                                    <div class="form-group" style="text-align:center;">
+                                        <button ng-click="editKey()" ng-show="!editPrivateKey"
+                                                class="btn btn-xs"
+                                                style="margin-left: 5px; background-color: #00af00; color: white;">
+                                            <span class="glyphicon glyphicon-edit"></span>编辑私钥</button>
+
+                                        <button ng-click="saveKey()"  ng-show="editPrivateKey"
+                                                class="btn btn-xs"
+                                                style="margin-left: 5px; background-color: #ef2929; color: white;">
+                                            <span class="glyphicon glyphicon-ok"></span>保存私钥</button>
+                                    </div>
+
                                     <div class="form-group">
                                         <div class="col-md-8">
                                             <label class="col-md-3 control-label">公钥(public key)</label>
+                                            <pre ng-show="!editPublicKey" style="background-color: #54596a" hljs
+                                                 hljs-source="keyItem.publicKey"></pre>
                                             <div class="col-md-9">
-                                                <textarea class="form-control" ng-model="keyItem.publicKey"
+                                                <textarea ng-show="editPublicKey" class="form-control" ng-model="keyItem.publicKey"
                                                           rows="5"></textarea>
                                             </div>
                                         </div>
                                     </div>
+
+                                    <div class="form-group" style="text-align:center;">
+                                        <button ng-click="editPubKey()" ng-show="!editPublicKey"
+                                                class="btn btn-xs"
+                                                style="margin-left: 5px; background-color: #00af00; color: white;">
+                                            <span class="glyphicon glyphicon-edit"></span>编辑公钥</button>
+
+                                        <button ng-click="saveKey()"  ng-show="editPublicKey"
+                                                class="btn btn-xs"
+                                                style="margin-left: 5px; background-color: #ef2929; color: white;">
+                                            <span class="glyphicon glyphicon-ok"></span>保存公钥</button>
+                                    </div>
+
+
+
                                 </div>
                             </div>
                         </div>
