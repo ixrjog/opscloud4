@@ -3,16 +3,16 @@ package com.sdg.cmdb.service;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.EmailItemEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.ZabbixItemEnum;
+
 import com.sdg.cmdb.domain.projectManagement.ProjectManagementVO;
 import com.sdg.cmdb.domain.todo.TodoDailyVO;
 import com.sdg.cmdb.domain.todo.TodoDetailVO;
 import com.sdg.cmdb.util.TplUtils;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.mail.HtmlEmail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

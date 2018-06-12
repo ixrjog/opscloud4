@@ -8,6 +8,5 @@ include 'cmdb-keybox'
 include 'cmdb-task'
 include 'cmdb-extend'
 include 'cmdb-login'
-include 'cmdb-zabbix'
 include 'cmdb-plugin'
 
