@@ -1,6 +1,8 @@
 package com.sdg.cmdb.scheduler.task;
 
 import com.sdg.cmdb.service.ServerPerfService;
+
+import com.sdg.cmdb.service.impl.ServerPerfServiceImpl;
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.schedule.BaseJob;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
@@ -17,8 +19,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.sdg.cmdb.service.impl.ServerPerfServiceImpl.zabbix_cacha_gmtModify;
-import static com.sdg.cmdb.service.impl.ServerPerfServiceImpl.zabbix_cacha_status;
 
 
 /**
@@ -58,15 +58,15 @@ public class ZabbixCacheTask implements BaseJob, InitializingBean {
                 logger.info("ZabbixCacheTask : task is running");
                 return;
             }
-            cacheZabbixService.set(zabbix_cacha_status, "true");
+            cacheZabbixService.set(ServerPerfServiceImpl.zabbix_cacha_status, "true");
             SimpleDateFormat sdf = new SimpleDateFormat(TimeUtils.timeFormat);//小写的mm表示的是分钟
             Date date = new Date();
             String gmtModify = sdf.format(date);
-            cacheZabbixService.set(zabbix_cacha_gmtModify, gmtModify);
+            cacheZabbixService.set(ServerPerfServiceImpl.zabbix_cacha_gmtModify, gmtModify);
             logger.info("ZabbixCacheTask : task start");
 
             serverPerfService.cache();
-            cacheZabbixService.set(zabbix_cacha_status, "false");
+            cacheZabbixService.set(ServerPerfServiceImpl.zabbix_cacha_status, "false");
             logger.info("ZabbixCacheTask : end task");
         }
     }
@@ -77,7 +77,7 @@ public class ZabbixCacheTask implements BaseJob, InitializingBean {
      * @return
      */
     private boolean checkTaskRunning() {
-        String isRunning = cacheZabbixService.getKeyByString(zabbix_cacha_status);
+        String isRunning = cacheZabbixService.getKeyByString(ServerPerfServiceImpl.zabbix_cacha_status);
         if (isRunning == null ) {
             logger.info("ZabbixCacheTask : status is null");
             return false;
@@ -86,7 +86,7 @@ public class ZabbixCacheTask implements BaseJob, InitializingBean {
             logger.info("ZabbixCacheTask : status is false");
             return false;
         }
-        String gmtModify = cacheZabbixService.getKeyByString(zabbix_cacha_gmtModify);
+        String gmtModify = cacheZabbixService.getKeyByString(ServerPerfServiceImpl.zabbix_cacha_gmtModify);
         if (gmtModify == null) {
             logger.info("ZabbixCacheTask : gmtModify = null");
             return false;
