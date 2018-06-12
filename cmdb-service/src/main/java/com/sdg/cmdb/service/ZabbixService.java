@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix;
+package com.sdg.cmdb.service;
 
 
 import com.alibaba.fastjson.JSONObject;
@@ -7,8 +7,10 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
-import com.sdg.cmdb.domain.server.ServerVO;
-import com.sdg.cmdb.domain.zabbix.*;
+import com.sdg.cmdb.domain.zabbix.ZabbixHost;
+import com.sdg.cmdb.domain.zabbix.ZabbixProxy;
+import com.sdg.cmdb.domain.zabbix.ZabbixTemplateVO;
+import com.sdg.cmdb.domain.zabbix.ZabbixVersion;
 
 import java.util.List;
 

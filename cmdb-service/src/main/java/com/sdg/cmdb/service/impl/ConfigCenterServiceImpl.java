@@ -96,17 +96,25 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
 
     @Override
     public HashMap<String, ConfigCenterDO> getConfigCenterItemGroup(String itemGroup, String env) {
-        //System.err.println(invokeEnv);
         if (StringUtils.isEmpty(env) && !StringUtils.isEmpty(invokeEnv)) {
             env = invokeEnv;
         } else {
             env = DEFAULT_ENV;
         }
         List<ConfigCenterDO> list = configCenterDao.getConfigCenterPage("", itemGroup, env, 0, 100);
-        HashMap<String, ConfigCenterDO> map = new HashMap<>();
-        for (ConfigCenterDO config : list)
-            map.put(config.getItem(), config);
-        return map;
+        if (list.size() != 0) {
+            HashMap<String, ConfigCenterDO> map = new HashMap<>();
+            for (ConfigCenterDO config : list)
+                map.put(config.getItem(), config);
+            return map;
+        } else {
+            if (env.equalsIgnoreCase(DEFAULT_ENV)) {
+                return new HashMap<>();
+            } else {
+                return getConfigCenterItemGroup(itemGroup, DEFAULT_ENV);
+            }
+        }
+
     }
 
 

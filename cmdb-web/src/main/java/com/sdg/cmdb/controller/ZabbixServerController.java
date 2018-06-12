@@ -6,7 +6,6 @@ import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.zabbix.ZabbixHost;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.zabbix.ZabbixService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

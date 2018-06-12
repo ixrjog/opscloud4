@@ -1,10 +1,10 @@
-package com.sdg.cmdb.zabbix;
+package com.sdg.cmdb.service.impl;
 
 import com.sdg.cmdb.dao.cmdb.LogCleanupDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyDO;
+import com.sdg.cmdb.service.LogCleanupService;
 import com.sdg.cmdb.util.TimeUtils;
-import com.sdg.cmdb.zabbix.impl.LogCleanupServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

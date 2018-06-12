@@ -7,11 +7,7 @@ import com.sdg.cmdb.domain.auth.CiUserGroupVO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserLeaveVO;
 import com.sdg.cmdb.domain.scm.ScmPermissionsVO;
-import com.sdg.cmdb.service.AuthService;
-import com.sdg.cmdb.service.CiUserGroupService;
-import com.sdg.cmdb.service.GitService;
-import com.sdg.cmdb.service.UserService;
-import com.sdg.cmdb.zabbix.ZabbixService;
+import com.sdg.cmdb.service.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

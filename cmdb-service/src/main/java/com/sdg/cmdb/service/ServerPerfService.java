@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix;
+package com.sdg.cmdb.service;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;

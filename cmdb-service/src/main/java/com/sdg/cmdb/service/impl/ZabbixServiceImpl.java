@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix.impl;
+package com.sdg.cmdb.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -13,18 +13,12 @@ import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.config.ServerGroupPropertiesDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.ZabbixItemEnum;
-
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
-
 import com.sdg.cmdb.domain.zabbix.*;
 import com.sdg.cmdb.plugin.cache.CacheZabbixService;
-import com.sdg.cmdb.service.CiService;
-import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.service.ConfigServerGroupService;
+import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
-import com.sdg.cmdb.zabbix.ZabbixHistoryService;
-import com.sdg.cmdb.zabbix.ZabbixService;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;

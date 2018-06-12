@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix.impl;
+package com.sdg.cmdb.service.impl;
 
 /**
  * Created by liangjian on 2016/12/21.
@@ -11,11 +11,12 @@ import com.google.gson.reflect.TypeToken;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.zabbix.ZabbixHistoryItemEnum;
 import com.sdg.cmdb.domain.zabbix.ZabbixResult;
 import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.zabbix.ZabbixHistoryService;
-import com.sdg.cmdb.zabbix.ZabbixService;
-import com.sdg.cmdb.domain.zabbix.ZabbixHistoryItemEnum;
+
+import com.sdg.cmdb.service.ZabbixHistoryService;
+import com.sdg.cmdb.service.ZabbixService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;

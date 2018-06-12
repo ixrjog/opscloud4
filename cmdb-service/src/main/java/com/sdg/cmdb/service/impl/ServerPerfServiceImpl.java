@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix.impl;
+package com.sdg.cmdb.service.impl;
 
 
 import com.alibaba.fastjson.JSONArray;
@@ -8,21 +8,19 @@ import com.sdg.cmdb.dao.cmdb.LogCleanupDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.config.ConfigFileDO;
 import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.config.ServerGroupPropertiesDO;
 import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyDO;
 import com.sdg.cmdb.domain.server.*;
-import com.sdg.cmdb.domain.zabbix.ZabbixRequest;
 import com.sdg.cmdb.domain.zabbix.ZabbixResult;
+import com.sdg.cmdb.plugin.cache.CacheZabbixService;
 import com.sdg.cmdb.service.AuthService;
 import com.sdg.cmdb.service.ServerGroupService;
+import com.sdg.cmdb.service.ServerPerfService;
+import com.sdg.cmdb.service.ZabbixHistoryService;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
-import com.sdg.cmdb.zabbix.ServerPerfService;
-import com.sdg.cmdb.zabbix.ZabbixHistoryService;
-import com.sdg.cmdb.plugin.cache.CacheZabbixService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
@@ -31,10 +29,8 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 
 /**

@@ -8,12 +8,8 @@ import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerVO;
-import com.sdg.cmdb.service.AuthService;
-import com.sdg.cmdb.service.ConfigService;
-import com.sdg.cmdb.service.KeyBoxService;
-import com.sdg.cmdb.service.UserService;
+import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
-import com.sdg.cmdb.zabbix.ZabbixService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

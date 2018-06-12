@@ -7,7 +7,6 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.esxi.HostDatastoreInfoVO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.zabbix.ServerPerfService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

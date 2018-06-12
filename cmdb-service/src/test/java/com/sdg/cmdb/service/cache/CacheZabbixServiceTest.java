@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix.cache;
+package com.sdg.cmdb.service.cache;
 
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
@@ -6,8 +6,8 @@ import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerPerfVO;
 import com.sdg.cmdb.plugin.cache.CacheZabbixService;
-import com.sdg.cmdb.zabbix.ServerPerfService;
-import com.sdg.cmdb.zabbix.impl.ServerPerfServiceImpl;
+import com.sdg.cmdb.service.ServerPerfService;
+import com.sdg.cmdb.service.impl.ServerPerfServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;

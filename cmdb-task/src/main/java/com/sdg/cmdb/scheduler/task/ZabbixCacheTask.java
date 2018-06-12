@@ -1,9 +1,9 @@
 package com.sdg.cmdb.scheduler.task;
 
+import com.sdg.cmdb.service.ServerPerfService;
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.schedule.BaseJob;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
-import com.sdg.cmdb.zabbix.ServerPerfService;
 import com.sdg.cmdb.plugin.cache.CacheZabbixService;
 
 import org.slf4j.Logger;
@@ -17,8 +17,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import static com.sdg.cmdb.zabbix.impl.ServerPerfServiceImpl.zabbix_cacha_gmtModify;
-import static com.sdg.cmdb.zabbix.impl.ServerPerfServiceImpl.zabbix_cacha_status;
+import static com.sdg.cmdb.service.impl.ServerPerfServiceImpl.zabbix_cacha_gmtModify;
+import static com.sdg.cmdb.service.impl.ServerPerfServiceImpl.zabbix_cacha_status;
+
 
 /**
  * Created by liangjian on 2017/3/1.

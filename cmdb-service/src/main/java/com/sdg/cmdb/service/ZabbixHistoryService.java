@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix;
+package com.sdg.cmdb.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.sdg.cmdb.domain.server.ServerDO;

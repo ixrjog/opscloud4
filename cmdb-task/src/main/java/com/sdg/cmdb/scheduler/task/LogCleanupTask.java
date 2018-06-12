@@ -1,8 +1,8 @@
 package com.sdg.cmdb.scheduler.task;
 
+import com.sdg.cmdb.service.LogCleanupService;
 import com.sdg.cmdb.util.schedule.BaseJob;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
-import com.sdg.cmdb.zabbix.LogCleanupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;

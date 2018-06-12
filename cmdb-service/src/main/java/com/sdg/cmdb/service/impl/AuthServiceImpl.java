@@ -727,7 +727,7 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
 
         for (UserDO userDO : loginUserList) {
             if (!checkUserHasResourceAuthorize(userDO.getToken(), Permissions.lookAllServerGroup).isSuccess()) {
-                setUserGroup(userDO.getUsername());
+               // setUserGroup(userDO.getUsername());
             }
         }
     }
@@ -740,7 +740,6 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
      * @param username
      * @param userDO
      */
-
     private void setUserInit(String username, UserDO userDO) {
         authDao.updateUserTokenInvalid(username);
 

@@ -1,4 +1,4 @@
-package com.sdg.cmdb.zabbix.impl;
+package com.sdg.cmdb.service.impl;
 
 import com.sdg.cmdb.dao.cmdb.LogCleanupDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
@@ -9,14 +9,13 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.logCleanup.LogCleanupConfigurationDO;
 import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyDO;
 import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyVO;
-import com.sdg.cmdb.domain.server.EcsServerDO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.AnsibleTaskService;
+import com.sdg.cmdb.service.LogCleanupService;
+import com.sdg.cmdb.service.ServerPerfService;
 import com.sdg.cmdb.util.ArithUtils;
 import com.sdg.cmdb.util.TimeUtils;
-import com.sdg.cmdb.zabbix.LogCleanupService;
-import com.sdg.cmdb.zabbix.ServerPerfService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;

@@ -5,8 +5,8 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.task.CmdVO;
 import com.sdg.cmdb.service.AnsibleTaskService;
+import com.sdg.cmdb.service.LogCleanupService;
 import com.sdg.cmdb.service.ServerTaskService;
-import com.sdg.cmdb.zabbix.LogCleanupService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 

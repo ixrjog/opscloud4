@@ -141,8 +141,7 @@ public class ConfigCenterServiceTest {
     @Test
     public void testGetConfigCenterItemGroup() {
 
-        HashMap<String, ConfigCenterDO> map = configCenterService.getConfigCenterItemGroup("ANSIBLE","");
-
+        HashMap<String, ConfigCenterDO> map = configCenterService.getConfigCenterItemGroup("ZABBIX","");
         for (String key : map.keySet()) {
             ConfigCenterDO c = map.get(key);
             System.err.println(c);

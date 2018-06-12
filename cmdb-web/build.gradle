@@ -9,7 +9,7 @@ dependencies {
     compile project(":cmdb-keybox")
     compile project(":cmdb-service")
     compile project(":cmdb-task")
-    compile project(":cmdb-zabbix")
+    //compile project(":cmdb-zabbix")
 
     compile "taglibs:standard:1.1.2"
     compile("javax.servlet:javax.servlet-api:3.1.0")
