@@ -534,4 +534,8 @@
         WHERE copyId = copyId
     </select>
 
+    <delete id="delConfigFileCopyDoScript" parameterType="_long">
+        DELETE FROM oc_config_file_copy_do_script WHERE id = #{id}
+    </delete>
+
 </mapper>

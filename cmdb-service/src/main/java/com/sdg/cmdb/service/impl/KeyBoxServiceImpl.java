@@ -394,7 +394,11 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     public ApplicationKeyVO getApplicationKey() {
         ApplicationKeyDO applicationKeyDO = keyboxDao.getApplicationKey();
         if (applicationKeyDO == null) return new ApplicationKeyVO();
-        return new ApplicationKeyVO(applicationKeyDO);
+        ApplicationKeyVO applicationKeyVO = new ApplicationKeyVO(applicationKeyDO);
+        // 插入指纹
+        String md5 = EncryptionUtil.key2md5(applicationKeyVO);
+        applicationKeyVO.setMd5(EncryptionUtil.fingerprint(md5));
+        return applicationKeyVO;
     }
 
     @Override
@@ -405,8 +409,8 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             // 加密privateKey
             String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey());
             applicationKeyDO.setPrivateKey(privateKey);
-            System.err.println(applicationKeyVO);
-            System.err.println(applicationKeyDO);
+            //System.err.println(applicationKeyVO);
+            //System.err.println(applicationKeyDO);
             keyboxDao.updateApplicationKey(applicationKeyDO);
             return new BusinessWrapper<>(true);
         } catch (Exception e) {

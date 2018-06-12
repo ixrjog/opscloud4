@@ -15,17 +15,15 @@
  */
 package com.sdg.cmdb.util;
 
-import com.sdg.cmdb.domain.keybox.ApplicationKeyDO;
+
 import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
-import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
@@ -146,8 +144,23 @@ public class EncryptionUtil {
         return md5code.toUpperCase();
     }
 
+    /**
+     * 获取MD5的指纹格式
+     * @param md5
+     * @return
+     */
     public static String fingerprint(String md5){
-        return "";
+        String r= "";
+        for (int i = 0; i < md5.length(); i=i+2) {
+            char c1 = md5.charAt(i);
+            char c2 = md5.charAt(i+1);
+            r+=c1;
+            r+=c2;
+            if(i+2<md5.length()){
+                r+=":";
+            }
+        }
+        return r;
     }
 
 

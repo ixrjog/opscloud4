@@ -35,7 +35,7 @@ public class KeyBoxServiceTest {
 
     @Test
     public void testGetwayStatus() {
-        keyBoxService.getwayStatus("liangjian", "10.173.138.25");
+        keyBoxService.getwayStatus("manage", "10.17.1.152");
     }
 
 
@@ -46,7 +46,22 @@ public class KeyBoxServiceTest {
         System.err.println(key);
 
         System.err.println(EncryptionUtil.key2md5(key));
+
+        System.err.println(EncryptionUtil.decrypt(key.getPrivateKey()));
+
     }
 
+    @Test
+    public void testKey() {
+         System.err.println(EncryptionUtil.decrypt("key"));
+    }
+
+    @Test
+    public void testFingerprint() {
+        String s = "980AC217C6B51E7DC41040BEC1EDFEC8";
+        String r=EncryptionUtil.fingerprint(s);
+        System.err.println(r);
+
+    }
 
 }
