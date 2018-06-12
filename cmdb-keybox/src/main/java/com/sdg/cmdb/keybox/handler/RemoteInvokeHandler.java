@@ -22,6 +22,8 @@ public class RemoteInvokeHandler {
     public static final int SESSION_TIMEOUT = 6000;
 
     public static ConnectionSession getSession(ApplicationKeyDO applicationKeyDO, HostSystem hostSystem) {
+        System.err.println(applicationKeyDO);
+        System.err.println(hostSystem);
         JSch jSch = new JSch();
 
         String passphrase = applicationKeyDO.getPassphrase();

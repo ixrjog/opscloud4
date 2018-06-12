@@ -1,7 +1,7 @@
 'use strict';
 
 // 用户
-app.controller('keyboxManageUserCtrl', function($scope, $state, $interval, $uibModal, toaster, httpService) {
+app.controller('keyboxManageUserCtrl', function ($scope, $state, $interval, $uibModal, toaster, httpService) {
     $scope.username = "";
 
     /////////////////////////////////////////////////
@@ -11,112 +11,112 @@ app.controller('keyboxManageUserCtrl', function($scope, $state, $interval, $uibM
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
-    $scope.pageChanged = function() {
+    $scope.pageChanged = function () {
         init();
     };
 
     /////////////////////////////////////////////////
 
-    var init = function() {
+    var init = function () {
         var url = "/users?"
             + "username=" + $scope.username
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
 
-        httpService.doGet(url).then(function(data) {
-            if(data.success) {
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
                 var body = data.body;
                 $scope.totalItems = body.size;
                 $scope.pageData = body.data;
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     init();
 
-    $scope.doQuery = function() {
+    $scope.doQuery = function () {
         init();
     }
 
     /////////////////////////////////////////////////////////////
 
-    $scope.createGlobalFile = function() {
+    $scope.createGlobalFile = function () {
         var url = "/box/user/group/global/create";
 
-        httpService.doPost(url).then(function(data) {
-            if(data.success) {
+        httpService.doPost(url).then(function (data) {
+            if (data.success) {
                 toaster.pop("success", "创建成功!");
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
-    
+
     $scope.createAllUserGroupConfigFile = function () {
         var url = "/box/user/group/createAll";
 
-        httpService.doPost(url).then(function(data) {
-            if(data.success) {
+        httpService.doPost(url).then(function (data) {
+            if (data.success) {
                 toaster.pop("success", "创建成功!");
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     /////////////////////////////////////////////////////////////
 
-    $scope.addAuth = function(username) {
+    $scope.addAuth = function (username) {
         var url = "/box/auth/add?username=" + username;
 
-        httpService.doPost(url).then(function(data) {
-            if(data.success) {
+        httpService.doPost(url).then(function (data) {
+            if (data.success) {
                 $scope.taskVO.ansibleTaskDO = data.body;
                 $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
-    $scope.delAuth = function(username) {
+    $scope.delAuth = function (username) {
         var url = "/box/auth/del?username=" + username;
 
-        httpService.doDelete(url).then(function(data) {
-            if(data.success) {
+        httpService.doDelete(url).then(function (data) {
+            if (data.success) {
                 //toaster.pop("success", "执行成功!", data.body);
                 $scope.taskVO.ansibleTaskDO = data.body;
                 $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     ///////////////////////////////////////////////////////////
 
-    $scope.serverList = function(username) {
+    $scope.serverList = function (username) {
         var modalInstance = $uibModal.open({
             templateUrl: 'keyBoxServerModal',
             controller: 'keyBoxServerInstanceCtrl',
-            size : 'lg',
+            size: 'lg',
             resolve: {
-                httpService : function() {
+                httpService: function () {
                     return httpService;
                 },
-                username : function() {
+                username: function () {
                     return username;
                 }
             }
@@ -124,13 +124,13 @@ app.controller('keyboxManageUserCtrl', function($scope, $state, $interval, $uibM
 
         modalInstance.result.then(function () {
             $scope.doQuery();
-        }, function() {
+        }, function () {
             $scope.doQuery();
         });
     }
 
     ///////////////////////////////////////////////////////////
-    
+
     $scope.addUser = function () {
         var userItem = {
             id: 0,
@@ -305,7 +305,7 @@ app.controller('keyboxManageUserCtrl', function($scope, $state, $interval, $uibM
 });
 
 app.controller('userInstanceCtrl', function ($scope, $uibModalInstance, httpService, userItem) {
-    
+
     $scope.userItem = userItem;
 
     $scope.alert = {
@@ -319,13 +319,13 @@ app.controller('userInstanceCtrl', function ($scope, $uibModalInstance, httpServ
             msg: ""
         };
     }
-    
+
     /**
      * 保存user信息
      */
     $scope.saveUser = function () {
         var url = "/box/user/save";
-        
+
         httpService.doPostWithJSON(url, $scope.userItem).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
@@ -343,41 +343,41 @@ app.controller('userInstanceCtrl', function ($scope, $uibModalInstance, httpServ
 
 // 用户-服务器组管理
 app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, httpService, username) {
-    $scope.username = username ;
+    $scope.username = username;
     $scope.nowServerGroup = {};
     $scope.serverGroupList = [];
 
-    $scope.queryServerGroup = function(queryParam) {
+    $scope.queryServerGroup = function (queryParam) {
         var url = "/servergroup/query/page?page=0&length=10&name=" + queryParam + "&useType=0";
 
-        httpService.doGet(url).then(function(data) {
-            if(data.success) {
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
                 var body = data.body;
                 $scope.serverGroupList = body.data;
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     $scope.alert = {
-        type : "",
-        msg : ""
+        type: "",
+        msg: ""
     };
 
-    $scope.closeAlert = function() {
+    $scope.closeAlert = function () {
         $scope.alert = {
-            type : "",
-            msg : ""
+            type: "",
+            msg: ""
         };
     }
 
     //////////////////////////////////////////////////////
 
-    $scope.addItem = function(choose) {
-        if($scope.nowServerGroup.selected == null) {
+    $scope.addItem = function (choose) {
+        if ($scope.nowServerGroup.selected == null) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = "必须选择服务器组才能添加!";
         } else {
@@ -385,13 +385,13 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
         }
 
         var url = "/box/user/group/save";
-        
+
         var requestBody = {
-            username : username,
-            serverGroupId : $scope.nowServerGroup.selected.id,
-            ciChoose : choose
+            username: username,
+            serverGroupId: $scope.nowServerGroup.selected.id,
+            ciChoose: choose
         }
-        httpService.doPostWithJSON(url, requestBody).then(function(data) {
+        httpService.doPostWithJSON(url, requestBody).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "保存成功!";
@@ -400,18 +400,18 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
     }
 
-    $scope.delItem = function(groupId) {
+    $scope.delItem = function (groupId) {
         var url = "/box/user/group/del?"
             + "groupId=" + groupId
             + "&username=" + username;
 
-        httpService.doDelete(url).then(function(data) {
+        httpService.doDelete(url).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "删除成功!";
@@ -420,7 +420,7 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
@@ -433,22 +433,22 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
-    $scope.pageChanged = function(currentPage) {
+    $scope.pageChanged = function (currentPage) {
         $scope.currentPage = currentPage;
         init();
     };
 
     /////////////////////////////////////////////////
 
-    var init = function() {
+    var init = function () {
         var url = "/box/user/group?"
             + "page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
 
         var queryItem = {
-            username : username
+            username: username
         }
-        httpService.doPostWithJSON(url, queryItem).then(function(data) {
+        httpService.doPostWithJSON(url, queryItem).then(function (data) {
             if (data.success) {
                 var body = data.body;
                 $scope.pageData = body.data;
@@ -457,7 +457,7 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
@@ -465,10 +465,10 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
 
     init();
 
-    $scope.createFile = function() {
+    $scope.createFile = function () {
         var url = "/box/user/group/create?username=" + username;
 
-        httpService.doPost(url).then(function(data) {
+        httpService.doPost(url).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "创建成功!";
@@ -476,7 +476,7 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
@@ -484,8 +484,8 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
 });
 
 // 服务器组
-app.controller('keyboxManageServerGroupCtrl', function($scope, $state, $uibModal, toaster, httpService) {
-    $scope.queryName= "";
+app.controller('keyboxManageServerGroupCtrl', function ($scope, $state, $uibModal, toaster, httpService) {
+    $scope.queryName = "";
 
     /////////////////////////////////////////////////
 
@@ -494,65 +494,65 @@ app.controller('keyboxManageServerGroupCtrl', function($scope, $state, $uibModal
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
-    $scope.pageChanged = function() {
+    $scope.pageChanged = function () {
         init();
     };
 
     /////////////////////////////////////////////////
 
-    var init = function() {
+    var init = function () {
         var url = "/servergroup/keybox/page?"
             + "name=" + $scope.queryName
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
 
-        httpService.doGet(url).then(function(data) {
-            if(data.success) {
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
                 var body = data.body;
                 $scope.totalItems = body.size;
                 $scope.pageData = body.data;
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     init();
 
-    $scope.doQuery = function() {
+    $scope.doQuery = function () {
         init();
     }
 
     /////////////////////////////////////////////////////////////
 
-    $scope.checkUser = function() {
+    $scope.checkUser = function () {
         var url = "/box/checkUser";
 
-        httpService.doGet(url).then(function(data) {
-            if(data.success) {
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
                 toaster.pop("success", "校验用户成功!");
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
 
     /////////////////////////////////////////////////////////////
-    $scope.userList = function(id) {
+    $scope.userList = function (id) {
         var modalInstance = $uibModal.open({
             templateUrl: 'keyBoxUserModal',
             controller: 'keyBoxUserInstanceCtrl',
-            size : 'lg',
+            size: 'lg',
             resolve: {
-                httpService : function() {
+                httpService: function () {
                     return httpService;
                 },
-                serverGroupId : function() {
+                serverGroupId: function () {
                     return id;
                 }
             }
@@ -560,7 +560,7 @@ app.controller('keyboxManageServerGroupCtrl', function($scope, $state, $uibModal
 
         modalInstance.result.then(function () {
             $scope.doQuery();
-        }, function() {
+        }, function () {
             $scope.doQuery();
         });
     }
@@ -572,36 +572,36 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
     $scope.userList = [];
     $scope.serverGroupId = serverGroupId;
 
-    $scope.queryUser = function(queryParam) {
-          var url = "/users?username=" + queryParam + "&page=0&length=10";
-        httpService.doGet(url).then(function(data) {
-            if(data.success) {
+    $scope.queryUser = function (queryParam) {
+        var url = "/users?username=" + queryParam + "&page=0&length=10";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
                 var body = data.body;
                 $scope.userList = body.data;
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     $scope.alert = {
-        type : "",
-        msg : ""
+        type: "",
+        msg: ""
     };
 
-    $scope.closeAlert = function() {
+    $scope.closeAlert = function () {
         $scope.alert = {
-            type : "",
-            msg : ""
+            type: "",
+            msg: ""
         };
     }
 
     //////////////////////////////////////////////////////
 
-    $scope.addItem = function() {
-        if($scope.nowUser.selected == null) {
+    $scope.addItem = function () {
+        if ($scope.nowUser.selected == null) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = "必须选择用户才能添加!";
         } else {
@@ -611,10 +611,10 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
         var url = "/box/user/group/save";
 
         var requestBody = {
-            username : $scope.nowUser.selected.username,
-            serverGroupId : $scope.serverGroupId
+            username: $scope.nowUser.selected.username,
+            serverGroupId: $scope.serverGroupId
         }
-        httpService.doPostWithJSON(url, requestBody).then(function(data) {
+        httpService.doPostWithJSON(url, requestBody).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "保存成功!";
@@ -623,18 +623,18 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
     }
 
-    $scope.delItem = function(username) {
+    $scope.delItem = function (username) {
         var url = "/box/user/group/del?"
             + "groupId=" + $scope.serverGroupId
             + "&username=" + username;
 
-        httpService.doDelete(url).then(function(data) {
+        httpService.doDelete(url).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "删除成功!";
@@ -643,7 +643,7 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
@@ -656,23 +656,23 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
-    $scope.pageChanged = function(currentPage) {
+    $scope.pageChanged = function (currentPage) {
         $scope.currentPage = currentPage;
         init();
     };
 
     /////////////////////////////////////////////////
 
-    var init = function() {
+    var init = function () {
         var url = "/box/group/user/query?"
-            + "serverGroupId="+ $scope.serverGroupId
+            + "serverGroupId=" + $scope.serverGroupId
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
 
         var queryItem = {
-            serverGroupId : serverGroupId
+            serverGroupId: serverGroupId
         }
-        httpService.doPostWithJSON(url, queryItem).then(function(data) {
+        httpService.doPostWithJSON(url, queryItem).then(function (data) {
             if (data.success) {
                 var body = data.body;
                 $scope.pageData = body.data;
@@ -681,7 +681,7 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
@@ -689,10 +689,10 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
 
     init();
 
-    $scope.createFile = function() {
+    $scope.createFile = function () {
         var url = "/box/user/group/create?username=" + username;
 
-        httpService.doPost(url).then(function(data) {
+        httpService.doPost(url).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "创建成功!";
@@ -700,7 +700,7 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
             }
-        }, function(err) {
+        }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
         });
@@ -708,9 +708,10 @@ app.controller('keyBoxUserInstanceCtrl', function ($scope, $uibModalInstance, ht
 });
 
 // 密钥管理
-app.controller('keyboxManageKeyCtrl', function($scope, $state, $uibModal, toaster, httpService) {
+app.controller('keyboxManageKeyCtrl', function ($scope, $state, $uibModal, toaster, httpService) {
     $scope.username = "";
-
+    $scope.editPrivateKey = false;
+    $scope.editPublicKey = false;
     /////////////////////////////////////////////////
 
     $scope.pageData = [];
@@ -718,53 +719,67 @@ app.controller('keyboxManageKeyCtrl', function($scope, $state, $uibModal, toaste
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
-    $scope.pageChanged = function() {
+    $scope.editKey = function () {
+        $scope.editPrivateKey = true;
+    }
+
+    $scope.editPubKey = function () {
+        $scope.editPublicKey = true;
+    }
+
+    $scope.pageChanged = function () {
         init();
     };
 
     /////////////////////////////////////////////////
 
-    var init = function() {
+    var init = function () {
         var url = "/box/key/query";
 
-        httpService.doGet(url).then(function(data) {
-            if(data.success) {
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
                 var body = data.body;
                 $scope.keyItem = body;
             } else {
                 toaster.pop("warning", data.msg);
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
         });
     }
 
     init();
 
-    $scope.doQuery = function() {
+    $scope.doQuery = function () {
         init();
     }
 
     /////////////////////////////////////////////////////////////
 
-    $scope.saveKey = function() {
+    $scope.saveKey = function () {
         var requestBody = {
-            id :  $scope.keyItem.id,
-            privateKey : $scope.keyItem.privateKey,
-            publicKey : $scope.keyItem.publicKey,
-            originalPrivateKey : $scope.keyItem.originalPrivateKey
+            id: $scope.keyItem.id,
+            privateKey: $scope.keyItem.privateKey,
+            publicKey: $scope.keyItem.publicKey,
+            originalPrivateKey: $scope.keyItem.originalPrivateKey
         }
 
         var url = "/box/key/save";
 
-        httpService.doPostWithJSON(url, requestBody).then(function(data) {
-            if(data.success) {
+        httpService.doPostWithJSON(url, requestBody).then(function (data) {
+            if (data.success) {
                 toaster.pop("success", "更新成功!");
+                $scope.editPrivateKey = false;
+                $scope.editPublicKey = false;
             } else {
                 toaster.pop("warning", data.msg);
+                $scope.editPrivateKey = false;
+                $scope.editPublicKey = false;
             }
-        }, function(err) {
+        }, function (err) {
             toaster.pop("error", err);
+            $scope.editPrivateKey = false;
+            $scope.editPublicKey = false;
         });
     }
 });
