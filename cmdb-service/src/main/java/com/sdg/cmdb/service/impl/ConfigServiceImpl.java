@@ -581,6 +581,11 @@ public class ConfigServiceImpl implements ConfigService {
             ConfigFileCopyVO copyVO = new ConfigFileCopyVO(configFileCopyDO);
             copyVO.setConfigFileGroupDO(configDao.getConfigFileGroupById(copyVO.getGroupId()));
             ServerDO serverDO = serverDao.getServerInfoById(copyVO.getServerId());
+            // 若服务器不存在则删除配置
+            if (serverDO == null) {
+                configDao.delConfigFileCopy(configFileCopyDO.getId());
+                continue;
+            }
             serverDO.setServerName(serverDO.acqServerName());
             ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverDO.getServerGroupId());
             copyVO.setServerGroupDO(serverGroupDO);
@@ -679,7 +684,7 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public void invokeUserConfig() {
         // List<ConfigFileCopyDO> list = configDao.queryConfigFileCopyByGroupName(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
-       // ansibleTaskService.doScriptByCopyByGroup(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
+        // ansibleTaskService.doScriptByCopyByGroup(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
         ansibleTaskService.doFileCopyByFileGroupName(ConfigurationFileControlService.GROUP_SHADOWSOCKS);
 
     }

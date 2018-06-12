@@ -342,7 +342,9 @@
                                             <pre  ng-show="!editPrivateKey" style="background-color: #54596a" hljs
                                                  hljs-source="keyItem.privateKey"></pre>
                                             <div class="col-md-9">
-                                                <textarea  ng-show="editPrivateKey" class="form-control" ng-model="keyItem.privateKey"
+                                                <textarea
+                                                        uib-popover-html="'填入pirvateKey（id_rsa）原文'" popover-trigger="'mouseenter'"
+                                                        ng-show="editPrivateKey" class="form-control" ng-model="keyItem.originalPrivateKey"
                                                           rows="16"></textarea>
                                             </div>
                                         </div>

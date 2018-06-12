@@ -1,6 +1,9 @@
 package com.sdg.cmdb.service;
 
 
+import com.sdg.cmdb.domain.keybox.ApplicationKeyDO;
+import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
+import com.sdg.cmdb.util.EncryptionUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -31,10 +34,19 @@ public class KeyBoxServiceTest {
     }
 
     @Test
-    public void testGetwayStatus(){
-        keyBoxService.getwayStatus("liangjian","10.173.138.25");
+    public void testGetwayStatus() {
+        keyBoxService.getwayStatus("liangjian", "10.173.138.25");
     }
 
+
+    @Test
+    public void testKey2md5() {
+        ApplicationKeyVO key = keyBoxService.getApplicationKey();
+
+        System.err.println(key);
+
+        System.err.println(EncryptionUtil.key2md5(key));
+    }
 
 
 }
