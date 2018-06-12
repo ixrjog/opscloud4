@@ -210,6 +210,19 @@ accelerate_multi_key = yes
   - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
   - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
 
+
+### 配置 Zabbix
+* 支持 Zabbix API Version : 3.0
+https://www.zabbix.com/documentation/3.0/manual/api
+* 支持 Zabbix API Version : 3.4
+https://www.zabbix.com/documentation/3.4/manual/api
+* 未知 Zabbix API Version : 4.0
+https://www.zabbix.com/documentation/4.0/manual/api
+
+* API URL
+http://${ZABBIX_HOST}/api_jsonrpc.php
+
+
 ## 基本功能
 
 ### 服务器管理
