@@ -69,45 +69,43 @@
                                 </div>
                             </div>
                         </div>
-                        <!--<div class="form-group">-->
-                            <!--<div class="col-md-8">-->
-                                <!--<label class="col-md-3 control-label">翻墙(shadowsocks)服务器</label>-->
-                                <!--<div class="col-md-9">-->
-                                    <!--<b style="color: #286090">{{userDetail.shadowsocksServer1}} :-->
-                                        <!--{{userDetail.shadowsocksPort}}-->
-                                        <!--</br>-->
-                                        <!--{{userDetail.shadowsocksServer2}} : {{userDetail.shadowsocksPort}}</b>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                        <!--</div>-->
+                        <div class="form-group">
+                            <div class="col-md-8">
+                                <label class="col-md-3 control-label">翻墙(shadowsocks)服务器端口</label>
+
+                                <div class="col-md-9">
+                                    <input type="text" class="form-control" ng-model="userDetail.shadowsocksPort" readonly>
+                                </div>
+
+                            </div>
+                        </div>
                         <div class="form-group">
                             <div class="col-md-8">
                                 <label class="col-md-3 control-label">密码(getway,shadowsocks)</label>
                                 <!--<div class="col-md-9">-->
 
-                                    <div class="input-group" style="padding-left: 15px; padding-right: 15px">
-                                        <input type="text" class="form-control" placeholder="密码" ng-model="userDetail.vPwd" ng-readonly="!contains(authPoint, 'canEdit')">
-                                        <div class="input-group-btn">
-                                            <button class="btn btn-default"
-                                                    ng-click="viewPwd()"><i class="fa fa-eye pull-right"></i></button>
-                                        </div>
+                                <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                    <input type="text" class="form-control" placeholder="密码" ng-model="userDetail.vPwd"
+                                           ng-readonly="!contains(authPoint, 'canEdit')">
+                                    <div class="input-group-btn">
+                                        <button class="btn btn-default"
+                                                ng-click="viewPwd()"><i class="fa fa-eye pull-right"></i></button>
                                     </div>
+                                </div>
 
-
-
-                                    <!--<input type="text" class="form-control" ng-model="userDetail.pwd"-->
-                                           <!--ng-readonly="!contains(authPoint, 'canEdit')">-->
+                                <!--<input type="text" class="form-control" ng-model="userDetail.pwd"-->
+                                <!--ng-readonly="!contains(authPoint, 'canEdit')">-->
                                 <!--</div>-->
                             </div>
                         </div>
                         <!--<div class="form-group">-->
-                            <!--<div class="col-md-8">-->
-                                <!--<label class="col-md-3 control-label">Terminal Getway 配置</label>-->
-                                <!--<div class="col-md-9">-->
-                                    <!--<a href="http://demo.com/pages/viewpage.action?pageId=4620339"-->
-                                       <!--class="btn btn-info btn-sm">使用说明</a>-->
-                                <!--</div>-->
-                            <!--</div>-->
+                        <!--<div class="col-md-8">-->
+                        <!--<label class="col-md-3 control-label">Terminal Getway 配置</label>-->
+                        <!--<div class="col-md-9">-->
+                        <!--<a href="http://demo.com/pages/viewpage.action?pageId=4620339"-->
+                        <!--class="btn btn-info btn-sm">使用说明</a>-->
+                        <!--</div>-->
+                        <!--</div>-->
                         <!--</div>-->
 
                         <!--平台权限-->
@@ -257,7 +255,7 @@
                                 <div class="col-md-9">
                                     <div class="col-md-6" ng-repeat="groupItem in userDetail.groupDOList">
                                         <b class="pull-left" style="color: #286090">{{groupItem.name}}</b>
-                                            <b class="pull-right">  {{groupItem.content}}</b>
+                                        <b class="pull-right"> {{groupItem.content}}</b>
                                     </div>
                                 </div>
                             </div>
@@ -283,7 +281,8 @@
                                 <button ng-click="saveUserInfo()"
                                         class="btn btn-xs"
                                         style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                    <span class="glyphicon glyphicon-ok"></span>保存</button>
+                                    <span class="glyphicon glyphicon-ok"></span>保存
+                                </button>
                                 <!--<span class="glyphicon  glyphicon-save" ng-click="saveUserInfo()"></span>-->
                             </div>
                         </div>
