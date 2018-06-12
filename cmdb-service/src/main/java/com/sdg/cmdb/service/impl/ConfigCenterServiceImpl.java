@@ -58,7 +58,6 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
         for (ConfigCenterDO configCenterDO : configList) {
             map.put(configCenterDO.getItem(), configCenterDO.getValue());
         }
-        //insert(map, itemGroup, env);
         return map;
 
     }
@@ -97,8 +96,12 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
 
     @Override
     public HashMap<String, ConfigCenterDO> getConfigCenterItemGroup(String itemGroup, String env) {
-        if (StringUtils.isEmpty(env))
+        //System.err.println(invokeEnv);
+        if (StringUtils.isEmpty(env) && !StringUtils.isEmpty(invokeEnv)) {
+            env = invokeEnv;
+        } else {
             env = DEFAULT_ENV;
+        }
         List<ConfigCenterDO> list = configCenterDao.getConfigCenterPage("", itemGroup, env, 0, 100);
         HashMap<String, ConfigCenterDO> map = new HashMap<>();
         for (ConfigCenterDO config : list)
