@@ -1,12 +1,12 @@
 /**
  * Copyright 2013 Sean Kavanagh - sean.p.kavanagh6@gmail.com
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
+ * <p>
  * http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -15,13 +15,17 @@
  */
 package com.sdg.cmdb.util;
 
+import com.sdg.cmdb.domain.keybox.ApplicationKeyDO;
+import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
+import java.io.FileInputStream;
 import java.security.MessageDigest;
 import java.security.SecureRandom;
 
@@ -128,6 +132,22 @@ public class EncryptionUtil {
 
         }
         return retVal;
+    }
+
+
+    /**
+     * 从加密的私钥中获取指纹(MD%)
+     * @param applicationKeyVO
+     * @return
+     */
+    public static String key2md5(ApplicationKeyVO applicationKeyVO) {
+        String privateKey = decrypt(applicationKeyVO.getPrivateKey());
+        String md5code = DigestUtils.md5Hex(privateKey);
+        return md5code.toUpperCase();
+    }
+
+    public static String fingerprint(String md5){
+        return "";
     }
 
 
