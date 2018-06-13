@@ -97,7 +97,61 @@ Starting ApacheDS - default...
    - LDAP登陆认证配置修改：ldapUrl, ldapUserDn, ldapPwd
    - nosql redis 配置修改：redis.host, redis.port, redis.pwd
 * 启动Tomcat 首次登录使用admin/opscloud
+* 如果启用了Nginx反向代理Tomcat(opscloud)，需要启用ws
+```$xslt
+server {
+        listen 443;
+        server_name opscloud.com;
+        ssl on;
+        ssl_certificate /usr/local/nginx/conf/ssl_key/opscloud.com.crt;
+        ssl_certificate_key /usr/local/nginx/conf/ssl_key/opscloud.com.key;
+        ssl_session_timeout 5m;
+        ssl_protocols SSLv2 SSLv3 TLSv1;
+        ssl_ciphers ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP;
+        ssl_prefer_server_ciphers on;
 
+        location = /favicon.ico {
+            root /data/www/ROOT/static ;
+        }
+
+        location ~  ^/(css|fonts|img|js|l10n|tpl|vendor)/ {
+            root /data/www/ROOT/opscloud;
+            expires 2m;
+        }
+
+        # ====keybox/getway独立部署启用此配置======
+        location ~  ^/keybox/ws {
+            proxy_set_header Host  $host;
+            proxy_set_header X-Forwarded-For  $remote_addr;
+            proxy_pass http://upstream.getway.java;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            # 限制访问，入不需要请删除
+            allow 192.168.0.0/24;
+            deny all;
+        }
+        # =====keybox/getway独立部署启用此配置=====
+        
+        location / {
+            proxy_set_header Host  $host;
+            proxy_set_header X-Forwarded-For  $remote_addr;
+            proxy_pass http://127.0.0.1:8080;
+            proxy_http_version 1.1;
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "Upgrade";
+            keepalive_timeout  180; #  连接超时时间，1分钟，具体时间可以根据请求（例如后台导入）需要的时间来设置
+            proxy_connect_timeout 180;  #   1分钟
+            proxy_read_timeout 180;  #  1分钟
+            # 限制访问，入不需要请删除
+            allow 192.168.0.0/24;
+            deny all;
+        }
+
+        access_log  /data/www/logs/opscloud/access.log  access;        
+
+}
+```
 
 ### 安装步骤6 Ansible
 * 安装
