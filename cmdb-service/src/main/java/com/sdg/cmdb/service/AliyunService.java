@@ -1,6 +1,7 @@
 package com.sdg.cmdb.service;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
+import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeRegionsResponse;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
@@ -42,6 +43,8 @@ public interface AliyunService {
     List<DescribeRegionsResponse.Region> getDescribeRegions();
 
     List<DescribeImagesResponse.Image> getDescribeImages();
+
+    List<DescribeInstanceTypesResponse.InstanceType> getDescribeInstanceTypes(String regionId);
 
     BusinessWrapper<Boolean> rsyncAliyunNetwork();
 

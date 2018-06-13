@@ -1020,11 +1020,8 @@ app.controller('setupGetwayInstanceCtrl', function ($scope, $uibModalInstance,$i
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
-                $scope.alert.type="success";
-                $scope.alert.msg="privateKey创建成功！";
-            } else {
-                $scope.alert.type="warning";
-                $scope.alert.msg="privateKey创建失败！";
+                var body = data.body;
+                $scope.taskVO.ansibleTaskDO = body.body;
             }
         }, function (err) {
             $scope.alert.type="error";
@@ -1033,7 +1030,6 @@ app.controller('setupGetwayInstanceCtrl', function ($scope, $uibModalInstance,$i
     }
 
     $scope.updateGetway = function () {
-        $scope.butRunCopyItem = true;
 
         $scope.filegroupName
         var url = "/task//cmd/doScript/updateGetway";
