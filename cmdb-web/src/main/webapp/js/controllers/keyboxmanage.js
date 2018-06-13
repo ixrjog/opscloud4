@@ -481,6 +481,10 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
             $scope.alert.msg = err;
         });
     }
+
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
 });
 
 // 服务器组
