@@ -257,9 +257,9 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     }
 
     // 复制文件完成后执行Script
-    private void doCopyScript(ConfigFileCopyDO configFileCopyDO){
+    private void doCopyScript(ConfigFileCopyDO configFileCopyDO) {
         ConfigFileCopyDoScriptDO configFileCopyDoScriptDO = configDao.getConfigFileCopyDoScriptByCopyId(configFileCopyDO.getId());
-        if(configFileCopyDoScriptDO != null){
+        if (configFileCopyDoScriptDO != null) {
             logger.info("ansible script task :" + configFileCopyDoScriptDO);
             doScriptByCopyServer(configFileCopyDoScriptDO.getId());
         }
@@ -313,7 +313,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
             List<ServerVO> serverList = cmdVO.getServerList();
 
             UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
-            if(userDO ==null){
+            if (userDO == null) {
                 userDO = new UserDO();
                 userDO.setId(0);
                 userDO.setUsername("SystemTask");
@@ -425,7 +425,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     }
 
     @Override
-    public BusinessWrapper<Boolean> scriptTaskGetwaySetLogin(){
+    public BusinessWrapper<Boolean> scriptTaskGetwaySetLogin() {
         TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY_SET_LOGIN);
         CmdVO cmdVO = new CmdVO();
         cmdVO.setTaskScriptId(taskScriptDO.getId());
@@ -536,6 +536,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     @Override
     public TableVO<List<TaskScriptVO>> getTaskScriptPage(String scriptName, int sysScript, int page, int length) {
         UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
+        if (userDO == null) return new TableVO<>(0, null);
         long size = 0;
         List<TaskScriptDO> list;
         List<TaskScriptVO> listVO = new ArrayList<TaskScriptVO>();

@@ -1,5 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
+import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -50,7 +51,21 @@ public class AliyunServiceImplTest {
 
     @Test
     public void testRsyncAliyunNetwork() {
-        System.err.println(  aliyunServiceImpl.rsyncAliyunNetwork());
+        System.err.println(aliyunServiceImpl.rsyncAliyunNetwork());
+    }
+
+
+    @Test
+    public void testDescribeInstanceTypes() {
+        List<DescribeInstanceTypesResponse.InstanceType> list = aliyunServiceImpl.getDescribeInstanceTypes(null);
+        for (DescribeInstanceTypesResponse.InstanceType type : list) {
+            System.err.println("=============================");
+            System.err.println(type.getCpuCoreCount());
+            System.err.println(type.getInstanceTypeFamily());
+            System.err.println(type.getInstanceTypeId());
+            System.err.println(type.getMemorySize());
+            System.err.println("-----------------------------");
+        }
     }
 
 }

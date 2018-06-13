@@ -197,6 +197,39 @@ public class AliyunServiceImpl implements AliyunService {
         return images;
     }
 
+    @Override
+    public List<DescribeInstanceTypesResponse.InstanceType> getDescribeInstanceTypes(String regionId) {
+        if (regionId == null) regionId = EcsServiceImpl.regionIdCnHangzhou;
+
+        List<DescribeInstanceTypesResponse> types = new ArrayList<DescribeInstanceTypesResponse>();
+        try {
+            DescribeInstanceTypesRequest describe = new DescribeInstanceTypesRequest();
+            describe.setRegionId(regionId);
+            DescribeInstanceTypesResponse response = sampleDescribeInstanceTypesResponse(describe, regionId);
+            return response.getInstanceTypes();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<DescribeInstanceTypesResponse.InstanceType>();
+        }
+
+    }
+
+    private DescribeInstanceTypesResponse sampleDescribeInstanceTypesResponse(DescribeInstanceTypesRequest describe, String regionId) {
+        IAcsClient client = acqIAcsClient(regionId);
+        try {
+            DescribeInstanceTypesResponse response
+                    = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
     /**
      * 同步阿里云网络配置，并入库
      *
@@ -212,7 +245,7 @@ public class AliyunServiceImpl implements AliyunService {
                 aliyunDao.addAliyunVpc(vpcDO);
             }
             addVpcVSwitchs(vpcDO, vpc);
-            addVpcSecurityGroups(vpcDO,vpc);
+            addVpcSecurityGroups(vpcDO, vpc);
         }
         return new BusinessWrapper<Boolean>(true);
     }
