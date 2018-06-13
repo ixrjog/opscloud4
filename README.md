@@ -87,7 +87,7 @@ Starting ApacheDS - default...
 
 ### 安装步骤5 部署
 
-安装Tomcat 并在webapps下部署 opscloud.war
+安装Tomcat 并在webapps/ROOT下部署(不要带项目路径opscloud) opscloud.war
 修改配置文件 WEB-INF/classes/server.properties
 
 * 修改相关配置内容
@@ -305,14 +305,14 @@ http://${ZABBIX_HOST}/api_jsonrpc.php
 
 ## Task
 * 批量执行命令
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG44.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG44.jpeg)
 * 批量执行脚本（opscloud上配置的Script）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG46.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG46.jpeg)
 * 脚本配置/查看
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG47.jpeg)
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG48.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG47.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG48.jpeg)
 * 查询执行历史
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG49.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG49.jpeg)
 
 
 
@@ -339,7 +339,7 @@ http://${ZABBIX_HOST}/api_jsonrpc.php
 * IP段&IP管理
 
 ### 配置管理
-* shadowsocks用户配置管理（没开放）；
+* shadowsocks用户配置管理；
 * terminal堡垒机配置管理（内部功能）
 * ansible主机文件管理（自动分组）
 
