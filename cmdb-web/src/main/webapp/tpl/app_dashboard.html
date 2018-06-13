@@ -22,7 +22,7 @@
                 <div ng-controller="dashboardCtrl">
 
 
-                    <div uib-accordion-group class="panel-default" heading="持续集成" is-open="true"
+                    <div ng-show="false" uib-accordion-group class="panel-default" heading="持续集成" is-open="true"
                          is-disabled="status.isFirstDisabled">
                         <div class="form-group col-lg-6">
 
@@ -317,10 +317,8 @@
                         </div>
                     </div>
 
-                    <div uib-accordion-group class="panel-default" heading="日志服务" is-open="true"
+                    <div ng-show="false" uib-accordion-group class="panel-default" heading="日志服务" is-open="true"
                          is-disabled="status.isFirstDisabled">
-                        <!--<b>AAAAAAAA</b>-->
-                        <!--This content is straight in the template.-->
                         <div class="form-group col-lg-8">
 
                             <div class="col-lg-6" id="lsTopProject"

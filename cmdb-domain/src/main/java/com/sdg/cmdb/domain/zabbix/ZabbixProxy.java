@@ -5,8 +5,8 @@ import com.alibaba.fastjson.JSONObject;
 import java.io.Serializable;
 
 
-public class ZabbixProxy implements Serializable {
-
+public class ZabbixProxy implements Serializable{
+    private static final long serialVersionUID = 1593459167538719668L;
     private String host;
 
     private String proxyid;

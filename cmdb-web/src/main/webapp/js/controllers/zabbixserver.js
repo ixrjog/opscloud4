@@ -683,6 +683,7 @@ app.controller('zabbixVersionInstanceCtrl', function ($scope, $uibModalInstance,
 
 
 app.controller('addHostInstanceCtrl', function ($scope, $uibModalInstance, $state, httpService, serverItem) {
+
         $scope.serverItem = serverItem;
         $scope.zabbixHost = {};
 
@@ -704,14 +705,22 @@ app.controller('addHostInstanceCtrl', function ($scope, $uibModalInstance, $stat
         }
 
 
+        var initSelectProxy = function () {
+            if ($scope.zabbixHost.proxys == null || $scope.zabbixHost.proxys.length == 0) return;
+            for (var i = 0; i < $scope.zabbixHost.proxys.length; i++) {
+                if ($scope.zabbixHost.proxys[i].selected)
+                    $scope.nowProxy.selected = $scope.zabbixHost.proxys[i];
+            }
+
+        }
+
         $scope.getHost = function () {
             var url = "/zabbixserver/host/get?serverId=" + serverItem.id;
 
             httpService.doGet(url).then(function (data) {
                 if (data.success) {
                     $scope.zabbixHost = data.body;
-                    // $scope.totalItems = body.size;
-                    // $scope.pageData = body.data;
+                    initSelectProxy();
                 } else {
                     toaster.pop("warning", data.msg);
                 }
@@ -719,7 +728,6 @@ app.controller('addHostInstanceCtrl', function ($scope, $uibModalInstance, $stat
                 toaster.pop("error", err);
             });
         }
-
 
         $scope.getHost();
 

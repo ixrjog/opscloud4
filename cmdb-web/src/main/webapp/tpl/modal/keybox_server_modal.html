@@ -17,7 +17,7 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-3" ng-show="false">
                 <label>
                     <input type="checkbox" ng-model="item.choose"><b>同时添加持续集成权限</b>
                 </label>
@@ -28,11 +28,12 @@
                         class="btn btn-xs"
                         uib-popover-html="'可勾选添加持续集成权限'" popover-trigger="'mouseenter'"
                         style="background-color: #2e6da4; color: white;">
-                    <span class="glyphicon glyphicon-plus"></span>添加</button>
+                    <span class="glyphicon glyphicon-plus"></span>添加
+                </button>
 
                 <!--<span  class="glyphicon glyphicon-plus"-->
-                       <!--uib-popover-html="'添加'" popover-trigger="'mouseenter'"-->
-                       <!--ng-click="addItem(item.choose)"></span>-->
+                <!--uib-popover-html="'添加'" popover-trigger="'mouseenter'"-->
+                <!--ng-click="addItem(item.choose)"></span>-->
             </div>
         </div>
     </form>
@@ -52,7 +53,7 @@
                     <b style="color: #286090">{{item.serverGroupDO.name}}</b>
                     <!--<b class="pull-right" style="color: #777">组</b>-->
                     </br>
-                     <!--服务器描述-->
+                    <!--服务器描述-->
                     <b style="color: #777">{{item.serverGroupDO.content}}</b>
                 </td>
                 <td>
@@ -65,12 +66,13 @@
                             class="btn btn-xs pull-right"
                             uib-popover-html="'解除授权'" popover-trigger="'mouseenter'"
                             style="background-color: red; color: white;">
-                        <span class="glyphicon glyphicon-log-out"></span>解除</button>
+                        <span class="glyphicon glyphicon-log-out"></span>解除
+                    </button>
 
                     <!--<span class="glyphicon glyphicon-log-out pull-right"-->
-                          <!--style="color: #d9534f"-->
-                          <!--uib-popover-html="'解除授权'" popover-trigger="'mouseenter'"-->
-                            <!--ng-click="delItem(item.serverGroupDO.id)">-->
+                    <!--style="color: #d9534f"-->
+                    <!--uib-popover-html="'解除授权'" popover-trigger="'mouseenter'"-->
+                    <!--ng-click="delItem(item.serverGroupDO.id)">-->
                     <!--</span>-->
                 </td>
             </tr>
@@ -87,12 +89,16 @@
         </table>
     </div>
 
-    <!--<form class="form-horizontal">-->
-        <!--<div style="text-align: center;">-->
-            <!--<button type="button" style="color: #286090" class="glyphicon glyphicon-saved" ng-click="createFile()">保存-->
-            <!--</button>-->
-        <!--</div>-->
-    <!--</form>-->
+    <div class="form-group" style="text-align:center;">
+
+        <button ng-click="closeModal()"
+                class="btn btn-xs"
+                style="margin-left: 20px; background-color: #d78700; color: white;">
+            <span class="glyphicon glyphicon-remove"></span>关闭
+        </button>
+
+
+    </div>
 
     <div ng-if="alert.type != ''">
         <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>

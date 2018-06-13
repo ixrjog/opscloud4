@@ -49,6 +49,16 @@ public class KeyBoxServiceTest {
 
         System.err.println(EncryptionUtil.decrypt(key.getPrivateKey()));
 
+        String privateKey =EncryptionUtil.decrypt(key.getPrivateKey());
+
+        //System.err.println(EncryptionUtil.md5(key.getOriginalPrivateKey()));
+        System.err.println("------------");
+        String[] ss= privateKey.split("\n");
+        for(String s:ss){
+            System.err.println(s);
+            System.err.println(s.length());
+        }
+
     }
 
     @Test

@@ -222,6 +222,18 @@ https://www.zabbix.com/documentation/4.0/manual/api
 * API URL
 http://${ZABBIX_HOST}/api_jsonrpc.php
 
+* Zabbix API配置
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG29.jpeg)
+* Zabbix API测试
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG30.jpeg)
+* 获取Zabbix模版，并启用需要的模版（配置主机监控只显示启用的模版）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG31.jpeg)
+* 主机监控管理界面（服务器表中的服务器数据）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG32.jpeg)
+* 添加主机监控，可选择已启用的模版和ZabbixProxy
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG33.jpeg)
+* 服务器组属性中可以预先配置服务器的Zabbix模版和ZabbixProxy,让添加主机监控更加快捷
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG34.jpeg)
 
 ## 基本功能
 

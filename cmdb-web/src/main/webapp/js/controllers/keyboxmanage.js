@@ -481,6 +481,10 @@ app.controller('keyBoxServerInstanceCtrl', function ($scope, $uibModalInstance, 
             $scope.alert.msg = err;
         });
     }
+
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
 });
 
 // 服务器组
@@ -771,6 +775,8 @@ app.controller('keyboxManageKeyCtrl', function ($scope, $state, $uibModal, toast
                 toaster.pop("success", "更新成功!");
                 $scope.editPrivateKey = false;
                 $scope.editPublicKey = false;
+
+                $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
                 $scope.editPrivateKey = false;

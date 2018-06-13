@@ -31,14 +31,19 @@
                             <div class="form-group">
                                 <div class="input-group">
                                     <span class="input-group-addon">使用类型</span>
-                                    <select class="form-control" ng-model="nowType" ng-options="type.code as type.name for type in userType">
+                                    <select class="form-control" ng-model="nowType" ng-options="type.useType as type.typeName for type in useType">
                                         <option value="">--请选择--</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="form-group">
-                                <button type="button" class="btn btn-default" ng-click="doQuery()">搜索</button>
-                                <button type="button" class="btn btn-info" ng-click="reSet()">重置</button>
+                                <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                        class="glyphicon glyphicon-search"></span>搜索
+                                </button>
+
+                                <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                        class="glyphicon glyphicon-repeat"></span>重置
+                                </button>
                             </div>
                         </form>
                         <div style="margin-top: 5px;">
@@ -87,16 +92,17 @@
                                     </td>
                                     <td ng-if="item.detail == null">{{item.name}}</td>
                                     <td ng-if="item.detail == null">
-                                        <b style="color: #777" ng-if="item.useType == 10">bi</b>
-                                        <b style="color: #843534" ng-if="item.useType == 1">zookeeper</b>
-                                        <b style="color: #286090" ng-if="item.useType == 2">web-service</b>
-                                        <b style="color: #ec971f" ng-if="item.useType == 3">mysql</b>
-                                        <b style="color: #286090" ng-if="item.useType == 4">other</b>
-                                        <b style="color: #777" ng-if="item.useType == 5">web-php</b>
-                                        <b style="color: #286090" ng-if="item.useType == 6">public</b>
-                                        <b style="color: #d9534f" ng-if="item.useType == 7">redis</b>
-                                        <b style="color: #449d44" ng-if="item.useType == 8">web-server</b>
-                                        <b style="color: #5bc0de" ng-if="item.useType == 9">front-end</b>
+                                        <b ng-if="item.useType == 10">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b ng-if="item.useType == 1">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: #990000" ng-if="item.useType == 2">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: #ec971f" ng-if="item.useType == 3">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b ng-if="item.useType == 4">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b ng-if="item.useType == 5">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: #286090" ng-if="item.useType == 6">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: #d9534f" ng-if="item.useType == 7">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: #449d44" ng-if="item.useType == 8">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: #5bc0de" ng-if="item.useType == 9">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        <b style="color: black" ng-if="item.useType > 9">{{item.serverGroupUseTypeDO.typeName}}</b>
                                     </td>
                                     <td ng-if="item.detail == null">
                                         <span class="badge pull-right" ng-if="item.serverCnt == 0">{{item.serverCnt}}</span>
