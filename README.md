@@ -303,7 +303,18 @@ http://${ZABBIX_HOST}/api_jsonrpc.php
 * 服务器组属性中可以预先配置服务器的Zabbix模版和ZabbixProxy,让添加主机监控更加快捷
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG34.jpeg)
 
-## 基本功能
+## Task
+* 批量执行命令
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG44.jpeg)
+* 批量执行脚本（opscloud上配置的Script）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG46.jpeg)
+* 脚本配置/查看
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG47.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG48.jpeg)
+* 查询执行历史
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG49.jpeg)
+
+
 
 ### 服务器管理
 * 服务器管理
@@ -337,50 +348,6 @@ http://${ZABBIX_HOST}/api_jsonrpc.php
 * Terminal跳板机Getway
 
 
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/cmdb-%E6%9C%8D%E5%8A%A1%E5%99%A8-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/cmdb-%E6%9C%8D%E5%8A%A1%E5%99%A8-2.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/cmdb-ECS-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/cmdb-ECS-2.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/cmdb-ECS-3.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-VM-1.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-PS-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-PS-2.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-PS-3.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-CONFIGFILE-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-CONFIGFILE-2.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-CONFIGFILE-3.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-CONFIGFILE-4.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-KEYBOX-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-KEYBOX-2.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-LOGCLEAN-1.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-LOGSERVICE-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-LOGSERVICE-2.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-LOGSERVICE-3.jpeg)
-
-
-
-
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-STATUS-CI.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-STATUS-PERF.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-TODO-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-TODO-2.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-TODO-3.jpeg)
-
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-USER-1.jpeg)
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-USER-2.jpeg)
-
-![sec](http://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/CMDB-ZABBIX-1.jpeg)
 
 
 
