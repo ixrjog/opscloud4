@@ -127,7 +127,7 @@ server {
             proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "Upgrade";
-            # 限制访问，入不需要请删除
+            # 限制访问，不做限制请删除
             allow 192.168.0.0/24;
             deny all;
         }
@@ -143,7 +143,7 @@ server {
             keepalive_timeout  180; #  连接超时时间，1分钟，具体时间可以根据请求（例如后台导入）需要的时间来设置
             proxy_connect_timeout 180;  #   1分钟
             proxy_read_timeout 180;  #  1分钟
-            # 限制访问，入不需要请删除
+            # 限制访问，不做限制请删除
             allow 192.168.0.0/24;
             deny all;
         }
@@ -263,6 +263,20 @@ accelerate_multi_key = yes
   - 批量同步（首次需要手动同步，以后服务器修改和授权，配置会自动同步）
   - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
   - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
+  
+* 配置私钥（id_rsa）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG35.jpeg)
+* KeyBox(WebShell)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG36.jpeg)
+* Getway全局服务器列表配置
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG37.jpeg)
+* Getway用户配置
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG38.jpeg)
+* Getway多服务器同步配置（需配置ansbile）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG39.jpeg)
+* Getway服务器一键初始化（需配置ansbile）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG40.jpeg)
+
 
 
 ### 配置 Zabbix
