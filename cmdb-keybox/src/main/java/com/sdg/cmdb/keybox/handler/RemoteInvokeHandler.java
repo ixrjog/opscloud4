@@ -40,6 +40,7 @@ public class RemoteInvokeHandler {
             Session session = jSch.getSession(hostSystem.getUser(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? 22 : hostSystem.getPort());
             session.setConfig("StrictHostKeyChecking", "no");
+            // password
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
             session.setServerAliveInterval(SERVER_ALIVE_INTERVAL);
             session.connect(SESSION_TIMEOUT);

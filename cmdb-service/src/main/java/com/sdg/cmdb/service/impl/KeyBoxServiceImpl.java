@@ -407,7 +407,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             ApplicationKeyDO applicationKeyDO = keyboxDao.getApplicationKey();
             applicationKeyDO.setPublicKey(applicationKeyVO.getPublicKey());
             // 加密privateKey
-            String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey());
+            String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey() );
             applicationKeyDO.setPrivateKey(privateKey);
             //System.err.println(applicationKeyVO);
             //System.err.println(applicationKeyDO);

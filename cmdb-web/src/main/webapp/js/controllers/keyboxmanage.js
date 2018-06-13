@@ -771,6 +771,8 @@ app.controller('keyboxManageKeyCtrl', function ($scope, $state, $uibModal, toast
                 toaster.pop("success", "更新成功!");
                 $scope.editPrivateKey = false;
                 $scope.editPublicKey = false;
+
+                $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
                 $scope.editPrivateKey = false;

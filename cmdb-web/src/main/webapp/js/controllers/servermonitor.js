@@ -1,7 +1,7 @@
 'use strict';
 
 app.controller('serverMonitorCtrl', function($scope, $state, $uibModal, $timeout, $localStorage, staticModel, httpService, toaster) {
-    $scope.userType = staticModel.userType;
+    $scope.userType = [];
     $scope.envType = staticModel.envType;
 
     $scope.nowType = 0;
@@ -20,6 +20,22 @@ app.controller('serverMonitorCtrl', function($scope, $state, $uibModal, $timeout
     };
 
     /////////////////////////////////////////////////
+
+    $scope.queryUseType = function () {
+        var url = "/servergroup/useType/query";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.useType =  data.body;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.queryUseType();
+
 
     var gaugeOptions = {
         chart: {

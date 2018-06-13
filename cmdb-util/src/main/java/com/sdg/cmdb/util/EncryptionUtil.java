@@ -144,6 +144,11 @@ public class EncryptionUtil {
         return md5code.toUpperCase();
     }
 
+    public static String md5(String str) {
+        String md5code = DigestUtils.md5Hex(str);
+        return md5code.toUpperCase();
+    }
+
     /**
      * 获取MD5的指纹格式
      * @param md5
