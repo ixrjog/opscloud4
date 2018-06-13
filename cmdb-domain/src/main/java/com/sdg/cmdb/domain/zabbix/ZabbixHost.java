@@ -1,6 +1,8 @@
 package com.sdg.cmdb.domain.zabbix;
 
+import com.alibaba.fastjson.annotation.JSONField;
 import com.sdg.cmdb.domain.server.ServerVO;
+import org.springframework.data.annotation.Transient;
 
 import java.io.Serializable;
 import java.util.List;
@@ -17,6 +19,7 @@ public class ZabbixHost implements Serializable {
 
     private String ip;
 
+
     public ZabbixHost() {
     }
 
@@ -29,7 +32,6 @@ public class ZabbixHost implements Serializable {
      */
     private boolean useProxy;
 
-    private ZabbixProxy proxy;
 
     private List<ZabbixProxy> proxys;
 
@@ -59,13 +61,6 @@ public class ZabbixHost implements Serializable {
         this.ip = ip;
     }
 
-    public ZabbixProxy getProxy() {
-        return proxy;
-    }
-
-    public void setProxy(ZabbixProxy proxy) {
-        this.proxy = proxy;
-    }
 
     public boolean isUseProxy() {
         return useProxy;
@@ -74,6 +69,7 @@ public class ZabbixHost implements Serializable {
     public void setUseProxy(boolean useProxy) {
         this.useProxy = useProxy;
     }
+
 
     public List<ZabbixProxy> getProxys() {
         return proxys;

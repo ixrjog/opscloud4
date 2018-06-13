@@ -444,7 +444,13 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         request.putParam("templates", acqTemplate(host.getTemplates()));
 
         if (host.isUseProxy()) {
-            request.putParam("proxy_hostid", proxyGet(host.getProxy().getHost()));
+            for (ZabbixProxy zp : host.getProxys()) {
+                if (zp.isSelected()) {
+                    request.putParam("proxy_hostid", proxyGet(zp.getHost()));
+                }
+                break;
+            }
+
         }
         JSONObject getResponse = call(request);
         int hostids = getResultId(getResponse, "hostids");
@@ -1611,7 +1617,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
             if (proxy.getHost().equalsIgnoreCase(proxyName)) {
                 proxy.setSelected(true);
                 host.setUseProxy(true);
-                host.setProxy(proxy);
+               // host.setProxy(proxy);
                 break;
             }
         }
