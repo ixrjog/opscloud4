@@ -1,0 +1,167 @@
+<div class="modal-header">
+    <h3 class="modal-title"><b style="color: #286090">ECS Template(InstanceTypes)</b></h3>
+</div>
+<div class="modal-body">
+    <div style="margin-top: 5px;">
+        <form class="form-horizontal">
+            <div class="form-group ">
+
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">RegionId</label>
+                    <div class="col-lg-8">
+                        <select class="form-control" ng-model="regronId.selected"
+                                ng-options="regronId as regronId for regronId in regronIds" required>
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <button type="button" ng-show="regronId !=null && regronId != ''" class="btn btn-info"
+                            ng-click="queryInstanceTypes()"><span
+                            class="glyphicon glyphicon-search"></span>查询InstanceTypes
+                    </button>
+                </div>
+
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">ZoneId</label>
+                    <div class="col-lg-8">
+                        <select class="form-control" ng-model="template.zoneId"
+                                ng-options="regronId as regronId for regronId in regronIds" required>
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>模版名称</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="名称"
+                               ng-model="template.name">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>实例规格</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="instanceType" readonly
+                               ng-model="template.instanceType">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>网络类型</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="网络支持的类型（经典网络/VPC）"
+                               ng-model="template.networkSupport">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">CPU</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="cpu核心数" readonly
+                               ng-model="template.cpu">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">Memory(GB)</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="网络支持的类型（经典网络/VPC）" readonly
+                               ng-model="template.memory">
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label">IO优化实例</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="IO优化实例"
+                               ng-model="template.ioOptimizedy">
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>数据盘容量</label>
+                    <div class="col-lg-8">
+                        <input type="text" class="form-control" placeholder="数据盘默认容量"
+                               ng-model="template.dataDiskSize">
+                    </div>
+                </div>
+            </div>
+
+
+            <table class="table table-hover table-bordered table-striped" ng-show="alert.msg == ''">
+                <thead>
+                <tr>
+                    <td><b style="color: #286090">instanceTypeFamily</b></td>
+                    <td><b style="color: #286090">instanceTypeId</b></td>
+                    <td><b style="color: #286090">Cpu</b></td>
+                    <td><b style="color: #286090">Memory(GB)</b></td>
+                    <td><b style="color: #286090">操作</b></td>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="type in pageData">
+                    <td>
+                        {{type.instanceTypeFamily}}
+                    </td>
+                    <td>
+                        {{type.instanceTypeId}}
+                    </td>
+                    <td>
+                        {{type.cpuCoreCount}}
+                    </td>
+                    <td>
+                        {{type.memorySize}}
+                    </td>
+                    <td>
+                        <button ng-click="addImageItem(image)"
+                                class="btn btn-xs"
+                                style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                            <span class="glyphicon glyphicon-plus"></span>添加
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="11">
+                        <ul style="margin: 0px; float: right;" uib-pagination
+                            total-items="totalItems" ng-model="currentPage"
+                            items-per-page="pageLength" max-size="10"
+                            ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
+                            next-text="&rsaquo;"></ul>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+        </form>
+    </div>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+    <!--按钮-->
+    <div class="form-group">
+
+        <div style="text-align:center;">
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+
+        </div>
+    </div>
+
+
+</div>

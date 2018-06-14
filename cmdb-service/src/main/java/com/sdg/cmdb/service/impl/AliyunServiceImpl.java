@@ -179,7 +179,7 @@ public class AliyunServiceImpl implements AliyunService {
     }
 
     @Override
-    public List<DescribeImagesResponse.Image> getDescribeImages() {
+    public List<DescribeImagesResponse.Image> getImages() {
         List<DescribeImagesResponse.Image> images = new ArrayList<DescribeImagesResponse.Image>();
         for (String regionId : acqRegionIds()) {
             try {
@@ -188,7 +188,7 @@ public class AliyunServiceImpl implements AliyunService {
                 // self：您创建的自定义镜像。
                 describe.setImageOwnerAlias("self");
                 describe.setPageSize(50);
-                DescribeImagesResponse response = sampleDescribeImagesResponse(describe, regionId);
+                DescribeImagesResponse response = getImages(describe, regionId);
                 images.addAll(response.getImages());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -197,15 +197,20 @@ public class AliyunServiceImpl implements AliyunService {
         return images;
     }
 
+    /**
+     * 查询实例规格
+     * @param regionId
+     * @return
+     */
     @Override
-    public List<DescribeInstanceTypesResponse.InstanceType> getDescribeInstanceTypes(String regionId) {
-        if (regionId == null) regionId = EcsServiceImpl.regionIdCnHangzhou;
+    public List<DescribeInstanceTypesResponse.InstanceType> getInstanceTypes(String regionId) {
+        if (StringUtils.isEmpty(regionId)) regionId = EcsServiceImpl.regionIdCnHangzhou;
 
         List<DescribeInstanceTypesResponse> types = new ArrayList<DescribeInstanceTypesResponse>();
         try {
             DescribeInstanceTypesRequest describe = new DescribeInstanceTypesRequest();
             describe.setRegionId(regionId);
-            DescribeInstanceTypesResponse response = sampleDescribeInstanceTypesResponse(describe, regionId);
+            DescribeInstanceTypesResponse response = getInstanceTypes(describe, regionId);
             return response.getInstanceTypes();
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,7 +219,9 @@ public class AliyunServiceImpl implements AliyunService {
 
     }
 
-    private DescribeInstanceTypesResponse sampleDescribeInstanceTypesResponse(DescribeInstanceTypesRequest describe, String regionId) {
+
+
+    private DescribeInstanceTypesResponse getInstanceTypes(DescribeInstanceTypesRequest describe, String regionId) {
         IAcsClient client = acqIAcsClient(regionId);
         try {
             DescribeInstanceTypesResponse response
@@ -228,6 +235,37 @@ public class AliyunServiceImpl implements AliyunService {
             return null;
         }
     }
+
+
+    @Override
+    public List<DescribeZonesResponse.Zone> getZones(String regionId) {
+        if (StringUtils.isEmpty(regionId)) regionId = EcsServiceImpl.regionIdCnHangzhou;
+        try {
+            DescribeZonesRequest describe = new DescribeZonesRequest();
+            describe.setRegionId(regionId);
+            DescribeZonesResponse response = getZones(describe, regionId);
+            return response.getZones();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<DescribeZonesResponse.Zone>();
+        }
+    }
+
+    private DescribeZonesResponse getZones(DescribeZonesRequest describe, String regionId) {
+        IAcsClient client = acqIAcsClient(regionId);
+        try {
+            DescribeZonesResponse response
+                    = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
     /**
@@ -422,7 +460,7 @@ public class AliyunServiceImpl implements AliyunService {
      * @param regionId
      * @return
      */
-    private DescribeImagesResponse sampleDescribeImagesResponse(DescribeImagesRequest describe, String regionId) {
+    private DescribeImagesResponse getImages(DescribeImagesRequest describe, String regionId) {
         IAcsClient client = acqIAcsClient(regionId);
         try {
             DescribeImagesResponse response

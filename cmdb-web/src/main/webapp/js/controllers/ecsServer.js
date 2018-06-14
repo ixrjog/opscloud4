@@ -3,7 +3,7 @@
  */
 'use strict';
 
-app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster, staticModel){
+app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster, staticModel) {
     $scope.envType = staticModel.envType;
     //登录类型
     $scope.logType = staticModel.logType;
@@ -620,6 +620,9 @@ app.controller('ecsServerInstanceCtrl', function ($scope, $uibModalInstance, htt
     }
 });
 
+/**
+ * 模版管理
+ */
 app.controller('ecsTemplateCtrl', function ($scope, $state, $uibModal, httpService, toaster, staticModel) {
 
     $scope.zoneIds = staticModel.zoneIds;
@@ -692,6 +695,49 @@ app.controller('ecsTemplateCtrl', function ($scope, $state, $uibModal, httpServi
                     return httpService;
                 },
                 template: function () {
+                    return item;
+                }
+            }
+        });
+
+        modalInstance.result.then(function () {
+            $scope.doQuery();
+        }, function () {
+            $scope.doQuery();
+        });
+    }
+
+    ///////////////////////////////////////////////////////////
+
+    $scope.addTemplate = function () {
+
+        var item = {
+            id: 0,
+            zoneId: "",
+            name: "",
+            instanceType: "",
+            networkSupport: 1,
+            cpu: 0,
+            memory: 0,
+            dataDiskSize: 0,
+            ioOptimized: "",
+            systemDiskCategory: "",
+            dataDisk1Category: ""
+        }
+        $scope.editTemplate(item);
+    }
+
+
+    $scope.editTemplate = function (item) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'ecsTemplateInfo',
+            controller: 'ecsTemplateInstanceCtrl',
+            size: 'lg',
+            resolve: {
+                httpService: function () {
+                    return httpService;
+                },
+                item: function () {
                     return item;
                 }
             }
@@ -1399,6 +1445,150 @@ app.controller('imagesInstanceCtrl', function ($scope, $uibModalInstance, $state
         }
 
         $scope.checkErr();
+
+        $scope.closeAlert = function () {
+            $scope.alert = {
+                type: "",
+                msg: ""
+            };
+        }
+
+        $scope.closeModal = function () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+
+        $scope.addImageItem = function (image) {
+
+            $scope.aliyunEcsImage.imageId = image.imageId;
+
+            if ($scope.aliyunEcsImage.imageDesc == null || $scope.aliyunEcsImage.imageDesc == "") {
+                $scope.aliyunEcsImage.imageDesc = image.imageName;
+            }
+
+            var url = "/aliyun/image/save";
+
+            httpService.doPostWithJSON(url, $scope.aliyunEcsImage).then(function (data) {
+                if (data.success) {
+                    $scope.alert = {
+                        type: "success",
+                        msg: "保存成功！"
+                    }
+                } else {
+                    $scope.alert = {
+                        type: "warning",
+                        msg: data.msg
+                    }
+                }
+            }, function (err) {
+                $scope.alert = {
+                    type: "error",
+                    msg: err
+                }
+            });
+        }
+
+    }
+);
+
+//ecsTemplateInstanceCtrl
+app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $state, $uibModal, httpService, item) {
+
+        $scope.template = item;
+
+        // ALIYUN_ECS_REGION_ID
+        $scope.regronIds = [];
+        $scope.regronId = {};
+        $scope.aliyunEcsRegionId = "";
+
+        $scope.zones = [];
+
+
+        $scope.configMap = {};
+
+        $scope.itemGroup = "ALIYUN_ECS";
+
+        /**
+         * 获取配置
+         */
+        $scope.getConfig = function () {
+            var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
+                "&env=";
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    $scope.configMap = data.body;
+                    $scope.aliyunEcsRegionId = $scope.configMap.ALIYUN_ECS_REGION_ID.value;
+
+                    $scope.regronIds = $scope.aliyunEcsRegionId.split(",");
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+        $scope.getConfig();
+
+
+        $scope.types = [];
+        $scope.pageData = [];
+        $scope.totalItems = 0;
+        $scope.currentPage = 0;
+        $scope.pageLength = 10;
+
+
+        $scope.queryInstanceTypes = function () {
+            var url = "/aliyun/api/describeInstanceTypes?regionId=" + $scope.regronId.selected;
+
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    $scope.types = data.body;
+                    $scope.totalItems = $scope.types.length;
+                    $scope.pageChanged(1);
+                    $scope.currentPage = 1;
+                    $scope.queryZones();
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+        $scope.queryZones = function () {
+            var url = "/aliyun/api/describeZones?regionId=" + $scope.regronId.selected;
+
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    $scope.zones = data.body;
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+        $scope.pageChanged = function (currentPage) {
+            $scope.pageData = [];
+            for (var i = 0; i < $scope.pageLength; i++) {
+                var index = i + (currentPage - 1) * $scope.pageLength;
+                if (index > $scope.totalItems - 1) break;
+                var item = $scope.types[i + (currentPage - 1) * $scope.pageLength];
+                $scope.pageData.push(item);
+            }
+        };
+
+
+        /////////////////////////////////////////////////
+
+
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+
 
         $scope.closeAlert = function () {
             $scope.alert = {

@@ -3,6 +3,7 @@ package com.sdg.cmdb.service;
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeRegionsResponse;
+import com.aliyuncs.ecs.model.v20140526.DescribeZonesResponse;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
@@ -42,10 +43,14 @@ public interface AliyunService {
 
     List<DescribeRegionsResponse.Region> getDescribeRegions();
 
-    List<DescribeImagesResponse.Image> getDescribeImages();
+    List<DescribeImagesResponse.Image> getImages();
 
-    List<DescribeInstanceTypesResponse.InstanceType> getDescribeInstanceTypes(String regionId);
+    List<DescribeInstanceTypesResponse.InstanceType> getInstanceTypes(String regionId);
+
+    List<DescribeZonesResponse.Zone> getZones(String regionId);
 
     BusinessWrapper<Boolean> rsyncAliyunNetwork();
+
+
 
 }

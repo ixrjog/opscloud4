@@ -145,6 +145,29 @@ public class AliyunController {
     @RequestMapping(value = "/api/describeImages", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getDescribeImages() {
-        return new HttpResult(aliyunService.getDescribeImages());
+        return new HttpResult(aliyunService.getImages());
     }
+
+    /**
+     * 查询实例类型
+     *
+     * @return
+     */
+    @RequestMapping(value = "/api/describeInstanceTypes", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getDescribeInstanceTypes(@RequestParam String regionId) {
+        return new HttpResult(aliyunService.getInstanceTypes(regionId));
+    }
+
+    /**
+     * 查询实例类型
+     *
+     * @return
+     */
+    @RequestMapping(value = "/api/describeZones", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getZones(@RequestParam String regionId) {
+        return new HttpResult(aliyunService.getZones(regionId));
+    }
+
 }
