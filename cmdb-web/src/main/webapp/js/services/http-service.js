@@ -119,9 +119,9 @@ app.factory('httpService', function($http, $q, $localStorage, $state, $websocket
 
             var url;
             if(authGroup == '') {
-                url = service.domain + "/check/auth?checkUrl=" + checkUrl;
+                url = service.domain + "/check/authV2?checkUrl=" + checkUrl;
             } else {
-                url = service.domain + "/check/auth?checkUrl=" + checkUrl + "&authGroup=" + authGroup;
+                url = service.domain + "/check/authV2?checkUrl=" + checkUrl + "&authGroup=" + authGroup;
             }
 
             var request;

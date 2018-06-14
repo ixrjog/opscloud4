@@ -98,6 +98,8 @@ public class AuthController {
         if (authGroup.equals("undefined")) {
             authGroup = "[]";
         }
+        System.err.println(authGroup);
+
         String tokenValue = headers.getFirst(token);
         BusinessWrapper<List<ResourceDO>> wrapper = authService.checkAndGetUserHasResourceAuthorize(tokenValue, checkUrl, JSON.parseArray(authGroup, String.class));
 
@@ -107,6 +109,26 @@ public class AuthController {
             return new HttpResult(wrapper.getCode(), wrapper.getMsg());
         }
     }
+
+    @RequestMapping(value = "/check/authV2", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult checkAuth(@RequestHeader HttpHeaders headers, @RequestParam String checkUrl, @RequestParam(defaultValue = "[]", required = false) String authGroup,@RequestBody String groups) {
+        if (!headers.containsKey(token)) {
+            return new HttpResult(ErrorCode.requestNoToken.getCode(), ErrorCode.requestNoToken.getMsg());
+        }
+        if (groups.equals("undefined")) {
+            groups = "[]";
+        }
+        String tokenValue = headers.getFirst(token);
+        BusinessWrapper<List<ResourceDO>> wrapper = authService.checkAndGetUserHasResourceAuthorize(tokenValue, checkUrl, JSON.parseArray(groups, String.class));
+
+        if (wrapper.isSuccess()) {
+            return new HttpResult(wrapper.getBody());
+        } else {
+            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+        }
+    }
+
 
     /**
      * 获取满足要求的资源组数据
