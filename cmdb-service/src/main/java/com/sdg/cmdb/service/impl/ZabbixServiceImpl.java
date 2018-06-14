@@ -48,8 +48,8 @@ import java.util.List;
  * Created by liangjian on 2016/12/16.
  */
 @Service
-public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
-
+public class ZabbixServiceImpl implements ZabbixService {
+    // InitializingBean
     @Resource
     private ConfigCenterService configCenterService;
 
@@ -154,7 +154,7 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         String zabbixApiUrl = configMap.get(ZabbixItemEnum.ZABBIX_API_URL.getItemKey());
         String zabbixApiUser = configMap.get(ZabbixItemEnum.ZABBIX_API_USER.getItemKey());
         String zabbixAipPasswd = configMap.get(ZabbixItemEnum.ZABBIX_API_PASSWD.getItemKey());
-
+        System.err.println(zabbixApiUrl);
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(5 * 1000).setConnectionRequestTimeout(5 * 1000)
                 .setSocketTimeout(5 * 1000).build();
@@ -247,6 +247,10 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
     }
 
     private JSONObject call(ZabbixRequest request) {
+        if(auth ==null){
+            init();
+        }
+
         if (request.getAuth() == null && !request.getMethod().equalsIgnoreCase("apiinfo.version") && !request.getMethod().equalsIgnoreCase("user.login")) {
             request.setAuth(auth);
         }
@@ -254,6 +258,8 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
             HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder.post().setUri(uri)
                     .addHeader("Content-Type", "application/json")
                     .setEntity(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON)).build();
+
+            System.err.println(httpRequest);
             CloseableHttpResponse response = httpClient.execute(httpRequest);
             //System.err.println(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON));
             HttpEntity entity = response.getEntity();
@@ -1671,8 +1677,8 @@ public class ZabbixServiceImpl implements ZabbixService, InitializingBean {
         return new BusinessWrapper<Boolean>(true);
     }
 
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        init();
-    }
+//    @Override
+//    public void afterPropertiesSet() throws Exception {
+//        init();
+//    }
 }
