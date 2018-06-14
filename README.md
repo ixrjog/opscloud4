@@ -29,6 +29,7 @@ create database opscloud character set utf8 collate utf8_bin;
 grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
 mysql -uopscloud -popscloud opscloud < ./opscloud.sql
+mysql -uopscloud -popscloud opscloud < ./auth_resources.sql
 
 # Mysql5.7 兼容性问题
 已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
