@@ -57,7 +57,7 @@ public class AliyunServiceImplTest {
 
     @Test
     public void testDescribeInstanceTypes() {
-        List<DescribeInstanceTypesResponse.InstanceType> list = aliyunServiceImpl.getDescribeInstanceTypes(null);
+        List<DescribeInstanceTypesResponse.InstanceType> list = aliyunServiceImpl.getInstanceTypes(null);
         for (DescribeInstanceTypesResponse.InstanceType type : list) {
             System.err.println("=============================");
             System.err.println(type.getCpuCoreCount());

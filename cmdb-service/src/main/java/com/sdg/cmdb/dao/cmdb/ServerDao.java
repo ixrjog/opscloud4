@@ -116,6 +116,12 @@ public interface ServerDao {
     EcsTemplateDO queryEcsTemplateById(
             @Param("id") long id);
 
+
+    int addEcsTemplate(EcsTemplateDO ecsTemplateDO);
+
+
+    int delEcsTemplate(@Param("id") long id);
+
     /**
      * 获取ECS服务器数目
      *

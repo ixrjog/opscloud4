@@ -321,9 +321,15 @@
                                                 <td ng-if="contains(authPoint, '/ecsServer/template/save')">
 
                                                     <button ng-click="create(item)"
-                                                            class="btn btn-xs pull-right"
-                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                            class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: #1e983b; color: white;">
                                                         <span class="glyphicon glyphicon-plus"></span>新建
+                                                    </button>
+
+                                                    <button ng-click="delTemplate(item.id)"
+                                                            class="btn btn-xs pull-right"
+                                                            style="background-color: red; color: white;">
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
                                                     </button>
                                                 </td>
                                             </tr>

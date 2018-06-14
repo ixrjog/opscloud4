@@ -18,23 +18,27 @@
 
                 <div class="col-md-6">
                     <button type="button" ng-show="regronId !=null && regronId != ''" class="btn btn-info"
-                            ng-click="queryInstanceTypes()"><span
+                            ng-click="doQuery()"><span
                             class="glyphicon glyphicon-search"></span>查询InstanceTypes
                     </button>
                 </div>
 
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-show="zones != null && zones.length != 0">
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label">ZoneId</label>
                     <div class="col-lg-8">
-                        <select class="form-control" ng-model="template.zoneId"
-                                ng-options="regronId as regronId for regronId in regronIds" required>
+                        <select class="form-control" ng-model="zone.selected" ng-change="zoneSelected()"
+                                ng-options="z as z.localName for z in zones" required>
                             <option value="">--请选择--</option>
                         </select>
                     </div>
                 </div>
+
+            </div>
+
+            <div class="form-group" ng-show="zone.selected != null">
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>模版名称</label>
                     <div class="col-lg-8">
@@ -44,7 +48,7 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-show="zone.selected != null">
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>实例规格</label>
                     <div class="col-lg-8">
@@ -52,16 +56,26 @@
                                ng-model="template.instanceType">
                     </div>
                 </div>
+                <!--<div class="col-md-6">-->
+                    <!--<label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>网络类型</label>-->
+                    <!--<div class="col-lg-8">-->
+                        <!--<input type="text" class="form-control" placeholder="网络支持的类型（经典网络/VPC）" readonly-->
+                               <!--ng-model="template.networkSupport">-->
+                    <!--</div>-->
+                <!--</div>-->
+
                 <div class="col-md-6">
-                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>网络类型</label>
+                    <label class="col-lg-4 control-label">IO优化实例</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" placeholder="网络支持的类型（经典网络/VPC）"
-                               ng-model="template.networkSupport">
+                        <select class="form-control" ng-model="template.ioOptimized"
+                                ng-options="io.type as io.name for io in ioList" required>
+                            <option value="">--请选择--</option>
+                        </select>
                     </div>
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-show="zone.selected != null">
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label">CPU</label>
                     <div class="col-lg-8">
@@ -78,15 +92,34 @@
                 </div>
             </div>
 
-            <div class="form-group">
+            <div class="form-group" ng-show="zone.selected != null">
                 <div class="col-md-6">
-                    <label class="col-lg-4 control-label">IO优化实例</label>
+                    <label class="col-lg-4 control-label"
+                           uib-popover-html="'磁盘类型：普通云盘cloud，高效云盘cloud_efficiency，SSD云盘cloud_ssd，本地SSD盘ephemeral_ssd'" popover-trigger="'mouseenter'"
+                    ><span style="color: #ec2121;">*</span>系统盘类型</label>
                     <div class="col-lg-8">
-                        <input type="text" class="form-control" placeholder="IO优化实例"
-                               ng-model="template.ioOptimizedy">
+                        <select class="form-control" ng-model="template.systemDiskCategory"
+                                ng-options="dc as dc for dc in zone.selected.availableDiskCategories" required>
+                            <option value="">--请选择--</option>
+                        </select>
                     </div>
                 </div>
 
+            </div>
+
+
+            <div class="form-group" ng-show="zone.selected != null">
+                <div class="col-md-6" ng-show="zone.selected != null">
+                    <label class="col-lg-4 control-label"
+                           uib-popover-html="'磁盘类型：普通云盘cloud，高效云盘cloud_efficiency，SSD云盘cloud_ssd，本地SSD盘ephemeral_ssd'" popover-trigger="'mouseenter'"
+                    ><span style="color: #ec2121;">*</span>数据盘类型</label>
+                    <div class="col-lg-8">
+                        <select class="form-control" ng-model="template.dataDisk1Category"
+                                ng-options="dc as dc for dc in zone.selected.availableDiskCategories" required>
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>数据盘容量</label>
                     <div class="col-lg-8">
@@ -122,7 +155,7 @@
                         {{type.memorySize}}
                     </td>
                     <td>
-                        <button ng-click="addImageItem(image)"
+                        <button ng-click="addTypeItem(type)"
                                 class="btn btn-xs"
                                 style="margin-left: 20px; background-color: #2e6da4; color: white;">
                             <span class="glyphicon glyphicon-plus"></span>添加
@@ -154,11 +187,19 @@
 
         <div style="text-align:center;">
 
-            <button ng-click="closeModal()"
+            <button ng-click="saveTemplate()"
                     class="btn btn-xs"
                     style="margin-left: 20px; background-color: #2e6da4; color: white;">
+                <span class="glyphicon glyphicon-plus"></span>保存
+            </button>
+
+
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #d78700; color: white;">
                 <span class="glyphicon glyphicon-remove"></span>关闭
             </button>
+
 
         </div>
     </div>

@@ -25,6 +25,36 @@
         limit #{pageStart}, #{length}
     </select>
 
+    <delete id="delEcsTemplate" parameterType="_long">
+        DELETE FROM ecs_template WHERE id = #{id}
+    </delete>
+
+    <insert id="addEcsTemplate" parameterType="EcsTemplateDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO ecs_template (
+        zoneId,
+        name,
+        instanceType,
+        networkSupport,
+        cpu,
+        memory,
+        dataDiskSize,
+        ioOptimized,
+        systemDiskCategory,
+        dataDisk1Category
+        ) VALUES (
+        #{zoneId},
+        #{name},
+        #{instanceType},
+        #{networkSupport},
+        #{cpu},
+        #{memory},
+        #{dataDiskSize},
+        #{ioOptimized},
+        #{systemDiskCategory},
+        #{dataDisk1Category}
+        );
+    </insert>
+
     <!-- 获取VM模版数目 -->
     <select id="getVmTemplateSize" resultType="_long">
         SELECT count(*) from vm_template

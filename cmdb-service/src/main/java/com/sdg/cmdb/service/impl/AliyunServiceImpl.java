@@ -1,7 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
-import com.aliyuncs.AcsRequest;
-import com.aliyuncs.AcsResponse;
+
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
@@ -10,12 +9,13 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
 import com.sdg.cmdb.dao.cmdb.AliyunDao;
+import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
-import com.sdg.cmdb.domain.server.EcsServerDO;
+import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunService;
 import com.sdg.cmdb.service.ConfigCenterService;
 import org.springframework.stereotype.Service;
@@ -34,6 +34,9 @@ public class AliyunServiceImpl implements AliyunService {
 
     @Resource
     private AliyunDao aliyunDao;
+
+    @Resource
+    private ServerDao serverDao;
 
     @Resource
     private ConfigCenterService configCenterService;
@@ -199,6 +202,7 @@ public class AliyunServiceImpl implements AliyunService {
 
     /**
      * 查询实例规格
+     *
      * @param regionId
      * @return
      */
@@ -218,7 +222,6 @@ public class AliyunServiceImpl implements AliyunService {
         }
 
     }
-
 
 
     private DescribeInstanceTypesResponse getInstanceTypes(DescribeInstanceTypesRequest describe, String regionId) {
@@ -267,7 +270,6 @@ public class AliyunServiceImpl implements AliyunService {
     }
 
 
-
     /**
      * 同步阿里云网络配置，并入库
      *
@@ -287,6 +289,28 @@ public class AliyunServiceImpl implements AliyunService {
         }
         return new BusinessWrapper<Boolean>(true);
     }
+
+
+    @Override
+    public BusinessWrapper<Boolean> saveTemplate(EcsTemplateDO ecsTemplateDO) {
+        try {
+            serverDao.addEcsTemplate(ecsTemplateDO);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delTemplate(long id) {
+        try {
+            serverDao.delEcsTemplate(id);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
 
     /**
      * 插入vpc下的所有vSwitchs

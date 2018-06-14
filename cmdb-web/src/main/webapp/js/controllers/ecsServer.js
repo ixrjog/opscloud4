@@ -716,10 +716,10 @@ app.controller('ecsTemplateCtrl', function ($scope, $state, $uibModal, httpServi
             zoneId: "",
             name: "",
             instanceType: "",
-            networkSupport: 1,
+            networkSupport: 0,
             cpu: 0,
             memory: 0,
-            dataDiskSize: 0,
+            dataDiskSize: 100,
             ioOptimized: "",
             systemDiskCategory: "",
             dataDisk1Category: ""
@@ -771,6 +771,21 @@ app.controller('ecsTemplateCtrl', function ($scope, $state, $uibModal, httpServi
             $scope.doQuery();
         }, function () {
             $scope.doQuery();
+        });
+    }
+
+
+    $scope.delTemplate = function (id) {
+        var url = "/aliyun/template/del?id=" + id;
+        httpService.doDelete(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "删除成功！");
+                $scope.doQuery();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
         });
     }
 });
@@ -1532,22 +1547,19 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
 
 
         $scope.types = [];
+        $scope.typeList = [];
         $scope.pageData = [];
         $scope.totalItems = 0;
         $scope.currentPage = 0;
         $scope.pageLength = 10;
 
 
-        $scope.queryInstanceTypes = function () {
+        var queryInstanceTypes = function () {
             var url = "/aliyun/api/describeInstanceTypes?regionId=" + $scope.regronId.selected;
 
             httpService.doGet(url).then(function (data) {
                 if (data.success) {
                     $scope.types = data.body;
-                    $scope.totalItems = $scope.types.length;
-                    $scope.pageChanged(1);
-                    $scope.currentPage = 1;
-                    $scope.queryZones();
                 } else {
                     toaster.pop("warning", data.msg);
                 }
@@ -1556,12 +1568,13 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
             });
         }
 
-        $scope.queryZones = function () {
+        // queryZones
+        $scope.doQuery = function () {
             var url = "/aliyun/api/describeZones?regionId=" + $scope.regronId.selected;
-
             httpService.doGet(url).then(function (data) {
                 if (data.success) {
                     $scope.zones = data.body;
+                    queryInstanceTypes();
                 } else {
                     toaster.pop("warning", data.msg);
                 }
@@ -1569,15 +1582,75 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
                 toaster.pop("error", err);
             });
         }
+
+
+        //$scope.zoneList = [];
+        // 当前选择的zone
+        $scope.zone = {};
+        // io优化选择
+        $scope.ioList = [];
+
+        $scope.none = {
+            type: "none",
+            name: "非I/O优化"
+        }
+
+        $scope.optimized = {
+            type: "optimized",
+            name: "I/O优化"
+        }
+
+
+        var initIoList = function () {
+            $scope.ioList = [];
+            $scope.ioList.push($scope.none);
+        }
+
 
         $scope.pageChanged = function (currentPage) {
             $scope.pageData = [];
             for (var i = 0; i < $scope.pageLength; i++) {
                 var index = i + (currentPage - 1) * $scope.pageLength;
                 if (index > $scope.totalItems - 1) break;
-                var item = $scope.types[i + (currentPage - 1) * $scope.pageLength];
+                var item = $scope.typeList[i + (currentPage - 1) * $scope.pageLength];
                 $scope.pageData.push(item);
             }
+        };
+
+        // 初始化zone数据
+        $scope.zoneSelected = function () {
+            if ($scope.zones == null || $scope.zones.length == 0) return;
+            if ($scope.zone == null || $scope.zone.zoneId == "") return;
+            initIoList();
+            if ($scope.zone.selected != null && $scope.zone.selected.availableResourceCreation != null && $scope.zone.selected.availableResourceCreation.length != 0) {
+                for (var i = 0; i < $scope.zone.selected.availableResourceCreation.length; i++) {
+                    if ($scope.zone.selected.availableResourceCreation[i] == "VSwitch") {
+                        $scope.template.networkSupport = 1;
+                    }
+                    // IoOptimized
+                    if ($scope.zone.selected.availableResourceCreation[i] == "IoOptimized") {
+                        $scope.ioList.push($scope.optimized);
+                    }
+                }
+            }
+
+            if ($scope.zone.selected.availableInstanceTypes == null) return;
+            $scope.typeList = [];
+            for (var i = 0; i < $scope.types.length; i++) {
+                var type = $scope.types[i];
+                for (var j = 0; j < $scope.zone.selected.availableInstanceTypes.length; j++) {
+                    if (type.instanceTypeId == $scope.zone.selected.availableInstanceTypes[j]) {
+                        $scope.typeList.push(type);
+                        break;
+                    }
+                }
+            }
+
+            $scope.totalItems = $scope.zone.selected.availableInstanceTypes.length;
+            $scope.currentPage = 1;
+            $scope.pageChanged(1);
+            //$scope.queryZones();
+
         };
 
 
@@ -1602,17 +1675,42 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
         }
 
 
-        $scope.addImageItem = function (image) {
+        $scope.addTypeItem = function (type) {
+            $scope.template.instanceType = type.instanceTypeId;
+            $scope.template.cpu = type.cpuCoreCount;
+            $scope.template.memory = type.memorySize;
+        }
 
-            $scope.aliyunEcsImage.imageId = image.imageId;
+        $scope.saveTemplate = function () {
 
-            if ($scope.aliyunEcsImage.imageDesc == null || $scope.aliyunEcsImage.imageDesc == "") {
-                $scope.aliyunEcsImage.imageDesc = image.imageName;
+            if ($scope.template.name ==  "") {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = "必须指定模版名称";
+                return;
             }
 
-            var url = "/aliyun/image/save";
+            if ($scope.template.ioOptimized ==  "") {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = "必须指定是否I/O优化实例";
+                return;
+            }
 
-            httpService.doPostWithJSON(url, $scope.aliyunEcsImage).then(function (data) {
+            if ($scope.template.dataDisk1Category ==  "") {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = "必须指定数据盘类型";
+                return;
+            }
+
+            if ($scope.template.systemDiskCategory ==  "") {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = "必须指定系统盘类型";
+                return;
+            }
+
+            $scope.template.zoneId = $scope.zone.selected.zoneId;
+            var url = "/aliyun/template/save";
+
+            httpService.doPostWithJSON(url, $scope.template).then(function (data) {
                 if (data.success) {
                     $scope.alert = {
                         type: "success",

@@ -8,6 +8,7 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
 import com.sdg.cmdb.domain.server.EcsServerDO;
+import com.sdg.cmdb.domain.server.EcsTemplateDO;
 
 import java.util.List;
 
@@ -50,6 +51,10 @@ public interface AliyunService {
     List<DescribeZonesResponse.Zone> getZones(String regionId);
 
     BusinessWrapper<Boolean> rsyncAliyunNetwork();
+
+    BusinessWrapper<Boolean> saveTemplate(EcsTemplateDO ecsTemplateDO);
+
+    BusinessWrapper<Boolean> delTemplate(long id);
 
 
 

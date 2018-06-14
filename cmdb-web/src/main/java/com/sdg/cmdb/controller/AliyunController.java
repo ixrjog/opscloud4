@@ -2,6 +2,7 @@ package com.sdg.cmdb.controller;
 
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.aliyun.*;
+import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -168,6 +169,24 @@ public class AliyunController {
     @ResponseBody
     public HttpResult getZones(@RequestParam String regionId) {
         return new HttpResult(aliyunService.getZones(regionId));
+    }
+
+
+    /**
+     * 保存EcsTemplate
+     *
+     * @return
+     */
+    @RequestMapping(value = "/template/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult saveTemplate(@RequestBody EcsTemplateDO ecsTemplateDO) {
+        return new HttpResult(aliyunService.saveTemplate(ecsTemplateDO));
+    }
+
+    @RequestMapping(value = "/template/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult saveTemplate(@RequestParam long id) {
+        return new HttpResult(aliyunService.delTemplate(id));
     }
 
 }
