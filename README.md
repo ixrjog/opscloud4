@@ -110,16 +110,18 @@ tomcat.util.http.parser.HttpParser.requestTargetAllow=|[],
 
 
 ### 安装步骤5 部署
+假如Tomcat安装路径为 /usr/local/tomcat
 
-安装Tomcat 并在webapps/ROOT下部署(不要带项目路径opscloud) opscloud.war
-修改配置文件 WEB-INF/classes/server.properties
+1. 删除/usr/local/tomcat/webapps/ 所有文件和目录
+2. 解压opscloud.war，并将解压文件复制到/usr/local/tomcat/webapps/ROOT/
+   注意：不要带项目路径opscloud
+3. 修改opscloud配置文件/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/server.properties
+4. 启动Tomcat：/usr/local/tomcat/bin/startup.sh  (关闭/usr/local/tomcat/bin/shutdown.sh)
 
 * 修改相关配置内容
-   - 配置文件修改路径：opsCloud/cmdb-web/env
-   - online/server.properties:
    - 管理数据库配置修改：jdbc_url, jdbc_user, jdbc_password
    - LDAP登陆认证配置修改：ldapUrl, ldapUserDn, ldapPwd
-   - nosql redis 配置修改：redis.host, redis.port, redis.pwd
+   - Redis 配置修改：redis.host, redis.port, redis.pwd
 * 启动Tomcat 首次登录使用admin/opscloud
 * 如果启用了Nginx反向代理Tomcat(opscloud)，需要启用ws
 ```$xslt
