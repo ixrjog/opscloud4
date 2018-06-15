@@ -294,7 +294,7 @@ accelerate_multi_key = yes
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
 * 常用模版（各Zone的实例规格）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG51.jpeg)
-* 配置常用模版（阿里云共有302种实例规格，每个Zone可能右60多种规格可选，我们只添加最常用的实例规格，简化ECS开通）
+* 配置常用模版（阿里云共有302种实例规格，每个Zone可能有60多种规格可选，所以只添加常用的实例规格，简化ECS开通）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
 * 配置/同步ECS镜像，VPC，安全组等信息
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG53.jpeg)
@@ -323,7 +323,7 @@ accelerate_multi_key = yes
   - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
   - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
   
-* 配置私钥（id_rsa）
+* 配置私钥id_rsa（数据库保存密后的key,非原文）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG35.jpeg)
 * KeyBox(WebShell)
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG36.jpeg)
