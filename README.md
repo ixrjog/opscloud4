@@ -277,6 +277,14 @@ accelerate_multi_key = yes
 
 
 ```
+### 配置 Aliyun(ECS）
+
+* 配置Aliyun AccessKey(登录阿里云，右上角头像菜单中找到accessKeys)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
+* 同步ECS服务器（需配置AccessKey）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG51.jpeg)
+* 配置常用模版（阿里云共有302种实例规格，每个Zone可能右60多种规格可选，我们只添加最常用的实例规格，简化ECS开通）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
 
 ### 配置 Getway(终端跳板机)
 >前提安装和配置完成ansible
