@@ -237,12 +237,10 @@
                         <div class="panel-body">
                             <form class="form-inline" role="form">
                                 <div class="form-group">
+
                                     <div class="input-group">
-                                        <span class="input-group-addon">ZoneId</span>
-                                        <select class="form-control" ng-model="queryZoneId"
-                                                ng-options="zoneId.code as zoneId.name for zoneId in zoneIds">
-                                            <option value="">--请选择--</option>
-                                        </select>
+                                        <span class="input-group-addon">区域(ZoneId)</span>
+                                        <input type="text" class="form-control" ng-model="queryZoneId" placeholder="区域(ZoneId)">
                                     </div>
                                 </div>
 

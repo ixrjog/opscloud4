@@ -278,13 +278,25 @@ accelerate_multi_key = yes
 
 ```
 ### 配置 Aliyun(ECS）
-
 * 配置Aliyun AccessKey(登录阿里云，右上角头像菜单中找到accessKeys)
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
-* 同步ECS服务器（需配置AccessKey）
+* 常用模版（各Zone的实例规格）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG51.jpeg)
 * 配置常用模版（阿里云共有302种实例规格，每个Zone可能右60多种规格可选，我们只添加最常用的实例规格，简化ECS开通）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
+* 配置/同步ECS镜像，VPC，安全组等信息
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG53.jpeg)
+* 同步ECS服务器（需配置AccessKey）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
+
+### 配置 VCSA(VMware vCenter Server)
+* 配置VCSA登录信息
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG55.jpeg)
+* 配置VCSA服务器版本信息
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG56.jpeg)
+* 同步VM服务器(vm命名规则 IP:服务器名称，例如 192.168.1.10:demo-daily)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG57.jpeg)
+
 
 ### 配置 Getway(终端跳板机)
 >前提安装和配置完成ansible

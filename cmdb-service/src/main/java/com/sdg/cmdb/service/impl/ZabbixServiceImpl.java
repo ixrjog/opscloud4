@@ -154,7 +154,7 @@ public class ZabbixServiceImpl implements ZabbixService {
         String zabbixApiUrl = configMap.get(ZabbixItemEnum.ZABBIX_API_URL.getItemKey());
         String zabbixApiUser = configMap.get(ZabbixItemEnum.ZABBIX_API_USER.getItemKey());
         String zabbixAipPasswd = configMap.get(ZabbixItemEnum.ZABBIX_API_PASSWD.getItemKey());
-        System.err.println(zabbixApiUrl);
+        //System.err.println(zabbixApiUrl);
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(5 * 1000).setConnectionRequestTimeout(5 * 1000)
                 .setSocketTimeout(5 * 1000).build();
