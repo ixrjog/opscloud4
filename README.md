@@ -1,19 +1,31 @@
 Welcome to the opsCloud wiki!
+
+# OpsCloud
+<img src="https://img.shields.io/jenkins/s/https/jenkins.qa.ubuntu.com/view/Precise/view/All%20Precise/job/precise-desktop-amd64_default.svg"></img> 
+<img src="https://img.shields.io/hexpm/l/plug.svg"></img>
+<br>
+OpsCloud是云时代的运维自动配置平台
+
 ### 开发者
 * liangjian 
 
 opsCloud开发使用交流  QQ群号:630913972
 
 
-### 版本环境
-* Centos 6.x
-* JDK 8
-* Tomcat 8.0.36
-* Gradel 3
-* Mysql5.6 或 aliyunRDS
-* Redis 3.0.3
-* LDAP : apacheDS(http://directory.apache.org)
-* Ansible 2
+### 开发环境
+* MacOS
+* JDK8
+* IDEA
+* Gradel3
+
+### 服务器部署环境
+* Centos6/7(2vCPU/内存4G）
+* JDK8
+* Tomcat8.0.36
+* Mysql5.6 或 AliyunRDS
+* Redis3.0.3
+* LDAP(apacheDS http://directory.apache.org)
+* Ansible2
 
 ### 构建
 ```$xslt
