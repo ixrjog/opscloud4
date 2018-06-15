@@ -322,7 +322,9 @@ accelerate_multi_key = yes
 * Getway多服务器同步配置（需配置ansbile）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG39.jpeg)
 * Getway服务器一键初始化（需配置ansbile）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG40.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG58.jpeg)
+* Getway界面
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG41.jpeg)
 
 
 
