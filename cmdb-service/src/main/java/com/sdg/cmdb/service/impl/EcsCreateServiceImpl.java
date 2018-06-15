@@ -118,7 +118,7 @@ public class EcsCreateServiceImpl implements EcsCreateService {
             serverVO.setSerialNumber(String.valueOf(serverSize + i));
             CreateInstanceResponse instance = createEcs(regionId, template);
             //instanceList.add(instance);
-            newServers.add(this.saveServer(instance.getInstanceId(), template));
+            newServers.add(saveServer(instance.getInstanceId(), template));
         }
         //变更配置
         if (invokeEnv.equalsIgnoreCase("online"))

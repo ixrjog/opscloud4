@@ -9,19 +9,19 @@
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label">RegionId</label>
                     <div class="col-lg-8">
-                        <select class="form-control" ng-model="regronId.selected"
+                        <select class="form-control" ng-model="regronId.selected" ng-change="doQuery()"
                                 ng-options="regronId as regronId for regronId in regronIds" required>
                             <option value="">--请选择--</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="col-md-6">
-                    <button type="button" ng-show="regronId !=null && regronId != ''" class="btn btn-info"
-                            ng-click="doQuery()"><span
-                            class="glyphicon glyphicon-search"></span>查询InstanceTypes
-                    </button>
-                </div>
+                <!--<div class="col-md-6">-->
+                    <!--<button type="button" ng-show="regronId !=null && regronId != ''" class="btn btn-info"-->
+                            <!--ng-click="doQuery()"><span-->
+                            <!--class="glyphicon glyphicon-search"></span>查询InstanceTypes-->
+                    <!--</button>-->
+                <!--</div>-->
 
             </div>
 
@@ -130,7 +130,7 @@
             </div>
 
 
-            <table class="table table-hover table-bordered table-striped" ng-show="alert.msg == ''">
+            <table class="table table-hover table-bordered table-striped" ng-show="pageData != null && pageData.length != 0">
                 <thead>
                 <tr>
                     <td><b style="color: #286090">instanceTypeFamily</b></td>
@@ -157,8 +157,8 @@
                     <td>
                         <button ng-click="addTypeItem(type)"
                                 class="btn btn-xs"
-                                style="margin-left: 20px; background-color: #2e6da4; color: white;">
-                            <span class="glyphicon glyphicon-plus"></span>添加
+                                style="margin-left: 20px; background-color: #00a8f3; color: white;">
+                            <span class="glyphicon glyphicon-plus"></span>选择
                         </button>
                     </td>
                 </tr>
@@ -187,7 +187,7 @@
 
         <div style="text-align:center;">
 
-            <button ng-click="saveTemplate()"
+            <button ng-click="saveTemplate()" ng-show="zone.selected != null"
                     class="btn btn-xs"
                     style="margin-left: 20px; background-color: #2e6da4; color: white;">
                 <span class="glyphicon glyphicon-plus"></span>保存

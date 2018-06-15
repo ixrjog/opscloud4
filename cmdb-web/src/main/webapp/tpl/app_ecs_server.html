@@ -417,6 +417,7 @@
                                             <tbody>
                                             <tr ng-repeat="vpc in vpcList">
                                                 <td>{{vpc.aliyunVpcId}}
+                                                    </br>
                                                     <b>{{vpc.vpcDesc}}</b>
                                                 </td>
                                                 <td>
@@ -452,8 +453,7 @@
                         </div>
                     </div>
                 </uib-tab>
-
-                <uib-tab index="4" heading="Aliyun配置">
+                <uib-tab index="3" heading="Aliyun配置">
                     <div class="panel panel-default" ng-controller="aliyunConfigCtrl">
                         <div class="panel-body">
                             <form class="form-horizontal">
