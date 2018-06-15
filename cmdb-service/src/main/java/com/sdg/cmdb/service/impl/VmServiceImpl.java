@@ -65,6 +65,8 @@ public class VmServiceImpl implements VmService {
         String vcsaUser = configMap.get(VcsaItemEnum.VCSA_USER.getItemKey());
         String vcsaPasswd = configMap.get(VcsaItemEnum.VCSA_PASSWD.getItemKey());
 
+        if (serviceInstance != null) return;
+
         try {
             ClientSesion session = new ClientSesion(vcsaHost, vcsaUser, vcsaPasswd);
             URL url = new URL("https", session.getHost(), "/sdk");
@@ -79,9 +81,17 @@ public class VmServiceImpl implements VmService {
             //si.currentTime();
         } catch (Exception e) {
             e.printStackTrace();
-            logger.error("vcsa 登陆失败");
+            logger.error("VCSA Sever : {} 登陆失败 ！", vcsaHost);
             serviceInstance = null;
         }
+    }
+
+    @Override
+    public AboutInfo getVersion() {
+        login();
+        AboutInfo ai = serviceInstance.getAboutInfo();
+
+        return ai;
     }
 
 
@@ -180,6 +190,7 @@ public class VmServiceImpl implements VmService {
      * @param vmServerDO
      * @return
      */
+    @Override
     public boolean updateVmServerForServer(VmServerDO vmServerDO) {
         if (vmServerDO == null) return false;
         ServerDO serverDO = serverDao.queryServerByInsideIp(vmServerDO.getInsideIp());
@@ -191,7 +202,7 @@ public class VmServiceImpl implements VmService {
         return saveVmServer(vmServerDO);
     }
 
-
+    @Override
     public boolean updateVmServerForServer(ServerDO serverDO) {
         if (serverDO == null) return false;
         VmServerDO vmServerDO = serverDao.queryVmServerByInsideIp(serverDO.getInsideIp());
@@ -418,7 +429,7 @@ public class VmServiceImpl implements VmService {
      * @return
      */
     @Override
-    public void hostSystemMemeoryConfig(PhysicalServerDO physicalServerDO,EsxiHostDO esxiHostDO) {
+    public void hostSystemMemeoryConfig(PhysicalServerDO physicalServerDO, EsxiHostDO esxiHostDO) {
         this.login();
         try {
             //获取 HostSystem

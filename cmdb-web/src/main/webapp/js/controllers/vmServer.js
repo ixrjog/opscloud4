@@ -543,6 +543,80 @@ app.controller('vmServerInstanceCtrl', function ($scope, $uibModalInstance, http
     }
 });
 
+app.controller('vcsaConfigCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster) {
+
+        $scope.configMap = {};
+
+        $scope.itemGroup = "VCSA";
+
+        /**
+         * 获取配置
+         */
+        $scope.getConfig = function () {
+            var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
+                "&env=";
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    $scope.configMap = data.body;
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+
+        /**
+         * 更新配置
+         */
+        $scope.updateConfig = function () {
+            var url = "/config/center/update";
+            httpService.doPostWithJSON(url, $scope.configMap).then(function (data) {
+                if (data.success) {
+                    toaster.pop("success", "配置保存成功!");
+                    $scope.getConfig();
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+        $scope.getConfig();
+
+
+        $scope.vcsaVersion = function () {
+            var modalInstance = $uibModal.open({
+                templateUrl: 'vcsaVersionInfo',
+                controller: 'vcsaVersionInstanceCtrl',
+                size: 'lg',
+                resolve: {
+                    httpService: function () {
+                        return httpService;
+                    }
+                }
+            })
+        };
+
+
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+
+        $scope.closeAlert = function () {
+            $scope.alert = {
+                type: "",
+                msg: ""
+            };
+        }
+
+    }
+);
+
+
 app.controller('vmTemplateCtrl', function ($scope, $state, $uibModal, httpService, toaster, staticModel) {
 
     $scope.authPoint = $state.current.data.authPoint;
@@ -581,3 +655,39 @@ app.controller('vmTemplateCtrl', function ($scope, $state, $uibModal, httpServic
     $scope.doQuery();
 
 });
+
+
+app.controller('vcsaVersionInstanceCtrl', function ($scope, $uibModalInstance, $state, httpService) {
+
+        $scope.version = "";
+
+        getVcsaVersion = function () {
+            var url = "/server/vcsa/version";
+
+            httpService.doGet(url).then(function (data) {
+                if (data.success) {
+                    var v = data.body;
+                    if (v == null) {
+                        $scope.version = "VCSA服务器API查询失败！"
+                    } else {
+                        $scope.version = "名称 : " + v.name + "\n";
+                        $scope.version += "长名称 : " + v.fullName + "\n";
+                        $scope.version += "API类型 : " + v.apiType + "\n";
+                        $scope.version += "API版本 : " + v.apiVersion + "\n";
+                        $scope.version += "操作系统 : " + v.osType;
+                    }
+                } else {
+                    toaster.pop("warning", data.msg);
+                }
+            }, function (err) {
+                toaster.pop("error", err);
+            });
+        }
+
+        getVcsaVersion();
+
+        $scope.closeModal = function () {
+            $uibModalInstance.dismiss('cancel');
+        }
+    }
+);

@@ -380,4 +380,10 @@ public class ServerController {
         return new HttpResult(serverService.status());
     }
 
+    @RequestMapping(value = "/vcsa/version", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getVcsaVersion() {
+        return new HttpResult(vmService.getVersion());
+    }
+
 }
