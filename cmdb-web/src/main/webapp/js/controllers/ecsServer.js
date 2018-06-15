@@ -957,6 +957,8 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
+    $scope.butCreatingEcs = false;
+
     /**
      * 初始化环境
      */
@@ -1017,6 +1019,8 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
      * 扩容
      */
     $scope.createServer = function () {
+        $scope.butCreatingEcs = true;
+
         var url = "/server/template/ecs/create";
 
         $scope.templateItem.serverVO.serverGroupDO = $scope.nowServerGroup.selected;
@@ -1065,12 +1069,15 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
                 $scope.pageData = body.data;
 
                 $scope.templateConfig = 0
+                $scope.butCreatingEcs = false;
             }
             else {
                 toaster.pop("warning", data.msg);
+                $scope.butCreatingEcs = false;
             }
         }, function (err) {
             toaster.pop("error", err);
+            $scope.butCreatingEcs = false;
         });
     }
 
@@ -1555,6 +1562,8 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
 
 
         var queryInstanceTypes = function () {
+            if ($scope.types != null && $scope.types.length != 0) return;
+
             var url = "/aliyun/api/describeInstanceTypes?regionId=" + $scope.regronId.selected;
 
             httpService.doGet(url).then(function (data) {
@@ -1568,6 +1577,26 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
             });
         }
 
+        var reset = function () {
+
+            $scope.template = {
+                id: 0,
+                zoneId: "",
+                name: "",
+                instanceType: "",
+                networkSupport: 0,
+                cpu: 0,
+                memory: 0,
+                dataDiskSize: 100,
+                ioOptimized: "",
+                systemDiskCategory: "",
+                dataDisk1Category: ""
+            }
+
+            $scope.pageData = [];
+
+        }
+
         // queryZones
         $scope.doQuery = function () {
             var url = "/aliyun/api/describeZones?regionId=" + $scope.regronId.selected;
@@ -1575,6 +1604,7 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
                 if (data.success) {
                     $scope.zones = data.body;
                     queryInstanceTypes();
+                    reset();
                 } else {
                     toaster.pop("warning", data.msg);
                 }
@@ -1634,6 +1664,7 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
                 }
             }
 
+            if ($scope.zone.selected == null) return;
             if ($scope.zone.selected.availableInstanceTypes == null) return;
             $scope.typeList = [];
             for (var i = 0; i < $scope.types.length; i++) {
@@ -1683,25 +1714,25 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
 
         $scope.saveTemplate = function () {
 
-            if ($scope.template.name ==  "") {
+            if ($scope.template.name == "") {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = "必须指定模版名称";
                 return;
             }
 
-            if ($scope.template.ioOptimized ==  "") {
+            if ($scope.template.ioOptimized == "") {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = "必须指定是否I/O优化实例";
                 return;
             }
 
-            if ($scope.template.dataDisk1Category ==  "") {
+            if ($scope.template.dataDisk1Category == "") {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = "必须指定数据盘类型";
                 return;
             }
 
-            if ($scope.template.systemDiskCategory ==  "") {
+            if ($scope.template.systemDiskCategory == "") {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = "必须指定系统盘类型";
                 return;

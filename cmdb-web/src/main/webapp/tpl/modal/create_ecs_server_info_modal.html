@@ -254,11 +254,12 @@
 
         <div class="form-group">
             <div style="text-align:center;">
-                <button ng-click="createServer()"
+                <button ng-click="createServer()"  ng-disabled="butCreatingEcs"
                         class="btn btn-xs"
-                        uib-popover-html="'创建ECS服务器'" popover-trigger="'mouseenter'"
-                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                    <span class="fa fa-circle-o-notch"></span>创建
+                        uib-popover-html="'开通ECS服务器'" popover-trigger="'mouseenter'"
+                        style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                    <span class="fa fa-spin fa-spinner" ng-show="butCreatingEcs"></span>
+                    <span class="fa fa-circle-o-notch" ng-show="!butCreatingEcs"></span>开通ECS
                 </button>
                 <!---->
                 <!--<b class="fa fa-circle-o-notch"-->
