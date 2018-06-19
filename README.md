@@ -13,19 +13,17 @@ opsCloud开发使用交流  QQ群号:630913972
 
 
 ### 开发环境
-* MacOS
-* JDK8
-* IDEA
-* Gradel3
+* MacOS10.13.5/JRE1.8.0_144/IntelliJ IDEA/Gradel3.1
+
 
 ### 服务器部署环境
 * Centos6/7(2vCPU/内存4G）
-* JDK8
+* JDK1.8
 * Tomcat8.0.36
-* Mysql5.6 或 AliyunRDS
+* Mysql5.6(兼容阿里云RDS）
 * Redis3.0.3
-* LDAP(apacheDS http://directory.apache.org)
-* Ansible2
+* LDAP(最新版本apacheDS http://directory.apache.org)
+* Ansible2.4
 
 ### 构建
 ```$xslt
