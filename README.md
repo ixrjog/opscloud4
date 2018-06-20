@@ -60,8 +60,20 @@ make && make install
 ```
 
 ### 安装步骤3 Java(JDK8)
+* 安装JDK8
+  下载地址 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+  CentOS可直接下载rpm包安装
+
+* 在/etc/profile中添加
 ```$xslt
-# 安装JDK8
+# JAVA 请修改为安装的的版本目录
+JAVA_HOME=/usr/local/jdk/jdk1.8.0_91
+PATH=$PATH:$JAVA_HOME/bin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin
+CLASSPATH=.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar
+export JAVA_HOME
+export PATH
+export CLASSPATH
+# JAVA
 ```
 
 ### 安装步骤4 LDAP(apacheDS)
