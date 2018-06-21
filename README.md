@@ -28,7 +28,7 @@ opsCloud开发使用交流  QQ群号:630913972
 ### 构建
 ```$xslt
 # 可选参数 -Dorg.gradle.java.home=/usr/java/jdk1.8.0_51
-gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gradle.daemon=false
+$ gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gradle.daemon=false
 ```
 
 ### 安装步骤1 数据库
@@ -38,8 +38,8 @@ gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gra
 create database opscloud character set utf8 collate utf8_bin;
 grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
-mysql -uopscloud -popscloud opscloud < ./opscloud.sql
-mysql -uopscloud -popscloud opscloud < ./auth_resources.sql
+$ mysql -uopscloud -popscloud opscloud < ./opscloud.sql
+$ mysql -uopscloud -popscloud opscloud < ./auth_resources.sql
 
 # Mysql5.7 兼容性问题
 已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
@@ -52,10 +52,10 @@ set @@global.sql_mode=‘STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_
 ### 安装步骤2 Redis
 ```$xslt
 # 安装Redis3 或使用阿里云Redis
-http://download.redis.io/releases/redis-3.2.11.tar.gz
-tar -xzvf redis-3.2.11.tar.gz
-cd redis-3.2.11
-make && make install
+$ wget http://download.redis.io/releases/redis-3.2.11.tar.gz
+$ tar -xzvf redis-3.2.11.tar.gz
+$ cd redis-3.2.11
+$ make && make install
 
 ```
 
@@ -77,11 +77,13 @@ export CLASSPATH
 ```
 
 ### 安装步骤4 LDAP(apacheDS)
+
+* 官网 http://directory.apache.org/apacheds/download/download-linux-bin.html
+* 下载安装包
+   wget http://mirrors.tuna.tsinghua.edu.cn/apache//directory/apacheds/dist/2.0.0-M24/apacheds-2.0.0-M24-64bit.bin
+
 ```$xslt
-# 官网 http://directory.apache.org/apacheds/download/download-linux-bin.html
-# 下载安装包
-wget http://mirrors.tuna.tsinghua.edu.cn/apache//directory/apacheds/dist/2.0.0-M24/apacheds-2.0.0-M24-64bit.bin
-chmod +x apacheds-2.0.0-M24-64bit.bin && ./apacheds-2.0.0-M24-64bit.bin
+$ chmod +x apacheds-2.0.0-M24-64bit.bin && ./apacheds-2.0.0-M24-64bit.bin
 Do you agree to the above license terms? [yes or no]
 yes
 Unpacking the installer...
@@ -102,11 +104,16 @@ Installing...
 id: apacheds: No such user
 Done.
 ApacheDS has been installed successfully.
+```
 
 # 启动服务
-/etc/init.d/apacheds-2.0.0-M24-default start
+```$xslt
+$ /etc/init.d/apacheds-2.0.0-M24-default start
 Starting ApacheDS - default...
 ```
+> 如果只使用admin账户可以不安装apacheDS，其他账户都会存储在LDAP中，cn=liangjian,ou=users,ou=system
+强烈推荐使用LDAP来存储和管理用户/用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Crowd ...)
+
 
 
 ### Tomcat版本问题
@@ -205,14 +212,14 @@ server {
 ### 安装步骤6 Ansible
 * 安装
 ```$xslt
-yum install epel-release -y
-yum install ansible –y
+$ yum install epel-release -y
+$ yum install ansible –y
 ```
 
 * 配置
 ```$xslt
 # 查看配置文件路径 (/etc/ansible/ansible.cfg)
-ansible --version
+$ ansible --version
 ansible 2.5.3
   config file = /etc/ansible/ansible.cfg
   configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
