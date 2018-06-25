@@ -66,7 +66,7 @@ $ make && make install
 
 * 在/etc/profile中添加
 ```$xslt
-# JAVA 请修改为安装的的版本目录
+# JAVA 请修改为安装的版本目录
 JAVA_HOME=/usr/local/jdk/jdk1.8.0_91
 PATH=$PATH:$JAVA_HOME/bin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin
 CLASSPATH=.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar
@@ -112,7 +112,7 @@ $ /etc/init.d/apacheds-2.0.0-M24-default start
 Starting ApacheDS - default...
 ```
 > 如果只使用admin账户可以不安装apacheDS，其他账户都会存储在LDAP中，cn=liangjian,ou=users,ou=system
-强烈推荐使用LDAP来存储和管理用户/用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Crowd ...)
+强烈推荐使用LDAP来存储和管理用户和用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Crowd ...)
 
 
 
@@ -125,15 +125,15 @@ RFC 3986文档规定，Url中只允许包含英文字母（a-zA-Z）、数字（
 还有一些字符当直接放在Url中的时候，可能会引起解析程序的歧义，这些字符被视为不安全字符。
 空格：Url在传输的过程，或者用户在排版的过程，或者文本处理程序在处理Url的过程，都有可能引入无关紧要的空格，或者将那些有意义的空格给去掉。
 引号以及<>：引号和尖括号通常用于在普通文本中起到分隔Url的作用
-##### 通常用于表示书签或者锚点
+#：通常用于表示书签或者锚点
 %：百分号本身用作对不安全字符进行编码时使用的特殊字符，因此本身需要编码
 |^[]`~：某一些网关或者传输代理会篡改这些字符
 对于此问题，有以下几种解决方案。
-1、切换版本到8.0.51以下
-2、修改Tomcat源码
-3、前端请求对URL编码。
-4、修改Get方法为Post方法。
-5、因是不安全字符，默认被 tomcat拦截。如果需要在URL中传输json数据，在catalina.properties中添加支持。
+* 切换版本到8.0.51以下
+* 修改Tomcat源码
+* 前端请求对URL编码。
+* 修改Get方法为Post方法。
+* 因是不安全字符，默认被 tomcat拦截。如果需要在URL中传输json数据，在catalina.properties中添加支持。
 ```aidl
 tomcat.util.http.parser.HttpParser.requestTargetAllow=|[],
 ```
