@@ -298,6 +298,11 @@ public class EcsServerDO implements Serializable {
         if (ecs.getPublicIpAddress().size() != 0) {
             this.publicIp = ecs.getPublicIpAddress().get(0);
         }
+        // 弹性IP
+        if (!StringUtils.isEmpty(ecs.getEipAddress().getIpAddress())) {
+            this.publicIp = ecs.getEipAddress().getIpAddress();
+        }
+
         this.internetMaxBandwidthOut = ecs.getInternetMaxBandwidthOut();
         this.cpu = ecs.getCpu();
         this.memory = ecs.getMemory();

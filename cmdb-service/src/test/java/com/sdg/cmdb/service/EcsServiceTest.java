@@ -117,7 +117,7 @@ public class EcsServiceTest {
 
     @Test
     public void testEcsGet() {
-        System.err.println(ecsService.ecsGet(null, "i-bp1g"));
+        System.err.println(ecsService.ecsGet(null, "i-bp16lhh4wo6rt3db54lm"));
 
     }
 
