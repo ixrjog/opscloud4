@@ -153,7 +153,7 @@ tomcat.util.http.parser.HttpParser.requestTargetAllow=|[],
    - LDAP登陆认证配置修改：ldapUrl, ldapUserDn, ldapPwd
    - Redis 配置修改：redis.host, redis.port, redis.pwd
 * 启动Tomcat 首次登录使用admin/opscloud
-* 如果启用了Nginx反向代理Tomcat(opscloud)，需要启用ws
+* 如果启用了Nginx反向代理Tomcat(opscloud)，需要配置nginx支持websocket（KeyBox）
 ```$xslt
 server {
         listen 443;
