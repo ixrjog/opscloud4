@@ -27,8 +27,9 @@ opsCloud开发使用交流  QQ群号:630913972
 
 ### 构建
 ```$xslt
-# 可选参数 -Dorg.gradle.java.home=/usr/java/jdk1.8.0_51
-$ gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gradle.daemon=false
+# 可选参数（指定jdk位置，适用多版本安装） -Dorg.gradle.java.home=/usr/java/jdk1.8.0_51
+# 可选参数（刷新gradle依赖缓存，避免依赖包同版本号更新导致编译失败） -refresh-dependencies
+$ gradle clean war -DpkgName=opscloud -Denv=online -Dorg.gradle.daemon=false
 ```
 
 ### 安装步骤1 数据库
