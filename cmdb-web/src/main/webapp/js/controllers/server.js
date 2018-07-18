@@ -17,7 +17,7 @@ app.controller('serverCtrl', function ($scope, $state, $uibModal, httpService, t
         var url = "/servergroup/useType/query";
         httpService.doGet(url).then(function (data) {
             if (data.success) {
-                $scope.useType =  data.body;
+                $scope.useType = data.body;
             } else {
                 toaster.pop("warning", data.msg);
             }
@@ -197,7 +197,7 @@ app.controller('serverPropertyCtrl', function ($scope, $state, $uibModal, httpSe
     $scope.authPoint = $state.current.data.authPoint;
 
 
-    $scope.changeServerGroupSelected = function(){
+    $scope.changeServerGroupSelected = function () {
         $scope.queryServer();
     }
 
@@ -646,7 +646,26 @@ app.controller('serverInstanceCtrl', function ($scope, $uibModalInstance, httpSe
     $scope.saveServerItem = function (insideIP, publicIP) {
         var url = "/server/save";
 
-        $scope.serverItem.serverGroupDO = $scope.nowServerGroup.selected;
+        if ($scope.nowServerGroup.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定服务器组";
+            return;
+        } else {
+            $scope.serverItem.serverGroupDO = $scope.nowServerGroup.selected;
+        }
+
+        if ($scope.serverItem.envType == -1) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定服务器环境";
+            return;
+        }
+
+        if ($scope.serverItem.loginType == -1) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定服务器登录类型";
+            return;
+        }
+
         if ($scope.nowPublicGroup.selected != null) {
             $scope.serverItem.publicIP = {
                 ipNetworkDO: $scope.nowPublicGroup.selected,
