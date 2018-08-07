@@ -143,6 +143,16 @@ public class ZabbixServiceImpl implements ZabbixService {
         return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ZABBIX.getItemKey());
     }
 
+    private void destroy() {
+        if (httpClient != null) {
+            try {
+                httpClient.close();
+            } catch (Exception e) {
+                logger.error("zabbix close httpclient error!", e);
+            }
+        }
+    }
+
 
     /**
      * 初始化
@@ -154,6 +164,8 @@ public class ZabbixServiceImpl implements ZabbixService {
         String zabbixApiUrl = configMap.get(ZabbixItemEnum.ZABBIX_API_URL.getItemKey());
         String zabbixApiUser = configMap.get(ZabbixItemEnum.ZABBIX_API_USER.getItemKey());
         String zabbixAipPasswd = configMap.get(ZabbixItemEnum.ZABBIX_API_PASSWD.getItemKey());
+
+        logger.info("Zabbix login api url : {}", zabbixApiUrl);
         //System.err.println(zabbixApiUrl);
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(5 * 1000).setConnectionRequestTimeout(5 * 1000)
@@ -169,16 +181,6 @@ public class ZabbixServiceImpl implements ZabbixService {
         }
     }
 
-    private void destroy() {
-        if (httpClient != null) {
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-                logger.error("zabbix close httpclient error!", e);
-            }
-        }
-    }
-
     /**
      * login zabbix
      *
@@ -187,25 +189,47 @@ public class ZabbixServiceImpl implements ZabbixService {
      * @return
      */
     private boolean login(String user, String password) {
-        if (checkAuth()) {
+        if (checkAuth())
             return true;
-        }
 
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder().paramEntry("user", user).paramEntry("password", password)
                 .method("user.login").build();
-        JSONObject response = call(request);
 
-        if (response == null || response.isEmpty()) return false;
-        auth = response.getString("result");
-        if (auth != null && !auth.isEmpty()) {
-            logger.info("Zabbix login success!");
-            this.auth = auth;
-            cacheZabbixService.insertZabbixAuth(auth);
-            return true;
+        logger.info("Zabbix login user : {}  passwd : {}", user, password);
+        //JSONObject response = call(request);
+        try {
+            HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder.post().setUri(uri)
+                    .addHeader("Content-Type", "application/json")
+                    .setEntity(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON)).build();
+
+            CloseableHttpResponse response = httpClient.execute(httpRequest);
+            //System.err.println(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON));
+            HttpEntity entity = response.getEntity();
+            byte[] data = EntityUtils.toByteArray(entity);
+            JSONObject jsonObject = (JSONObject) JSON.parse(data);
+
+            if (jsonObject == null || jsonObject.isEmpty()) return false;
+            auth = jsonObject.getString("result");
+            if (auth != null && !auth.isEmpty()) {
+                logger.info("Zabbix login success!");
+                this.auth = auth;
+                cacheZabbixService.insertZabbixAuth(auth);
+                return true;
+            }
+            return false;
+        } catch (IOException e) {
+            //e.printStackTrace();
+            logger.error("zabbix server 登陆失败!");
+            //throw new RuntimeException("DefaultZabbixApi call exception!", e);
+            return false;
         }
-        return false;
     }
 
+    /**
+     * 从redis获取auth，并校验auth是否过期
+     *
+     * @return
+     */
     private boolean checkAuth() {
         String auth = cacheZabbixService.getZabbixAuth();
         if (!StringUtils.isEmpty(auth)) {
@@ -217,8 +241,6 @@ public class ZabbixServiceImpl implements ZabbixService {
                     .build();
             JSONObject getResponse = call(request);
 
-            //ZabbixVersion version = new ZabbixVersion();
-            //version.setVersion(getApiVersion());
             try {
                 JSONObject result = getResponse.getJSONArray("result").getJSONObject(0);
                 String hostid = result.getString("hostid");
@@ -236,18 +258,18 @@ public class ZabbixServiceImpl implements ZabbixService {
     @Override
     public String getApiVersion() {
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("apiinfo.version").build();
-        //System.err.println(request);
         JSONObject response = call(request);
-
-//        System.err.println(request);
-//        System.err.println(response);
-
-        //System.err.println(response);
         return response.getString("result");
     }
 
+    /**
+     * 调用Zabbix API
+     *
+     * @param request
+     * @return
+     */
     private JSONObject call(ZabbixRequest request) {
-        if(auth ==null){
+        if (auth == null) {
             init();
         }
 
@@ -1623,7 +1645,7 @@ public class ZabbixServiceImpl implements ZabbixService {
             if (proxy.getHost().equalsIgnoreCase(proxyName)) {
                 proxy.setSelected(true);
                 host.setUseProxy(true);
-               // host.setProxy(proxy);
+                // host.setProxy(proxy);
                 break;
             }
         }
