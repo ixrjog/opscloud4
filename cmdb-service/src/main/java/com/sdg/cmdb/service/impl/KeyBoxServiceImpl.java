@@ -403,13 +403,17 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 
     @Override
     public BusinessWrapper<Boolean> saveApplicationKey(ApplicationKeyVO applicationKeyVO) {
+        System.err.println(applicationKeyVO.getPublicKey());
+
+
         try {
             ApplicationKeyDO applicationKeyDO = keyboxDao.getApplicationKey();
+            if (!StringUtils.isEmpty(applicationKeyVO.getOriginalPrivateKey())) {
+                // 加密privateKey
+                String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey());
+                applicationKeyDO.setPrivateKey(privateKey);
+            }
             applicationKeyDO.setPublicKey(applicationKeyVO.getPublicKey());
-            // 加密privateKey
-            String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey() );
-            applicationKeyDO.setPrivateKey(privateKey);
-            //System.err.println(applicationKeyVO);
             //System.err.println(applicationKeyDO);
             keyboxDao.updateApplicationKey(applicationKeyDO);
             return new BusinessWrapper<>(true);

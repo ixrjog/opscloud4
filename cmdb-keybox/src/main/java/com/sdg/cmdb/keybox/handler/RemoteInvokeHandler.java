@@ -35,7 +35,7 @@ public class RemoteInvokeHandler {
                     EncryptionUtil.decrypt(applicationKeyDO.getPrivateKey()).getBytes(),
                     applicationKeyDO.getPublicKey().getBytes(),
                     passphrase.getBytes());
-            System.err.println(applicationKeyDO.getSessionId());
+            //System.err.println(applicationKeyDO.getSessionId());
 
             Session session = jSch.getSession(hostSystem.getUser(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? 22 : hostSystem.getPort());
