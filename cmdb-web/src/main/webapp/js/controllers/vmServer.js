@@ -545,6 +545,7 @@ app.controller('vmServerInstanceCtrl', function ($scope, $uibModalInstance, http
 
 app.controller('vcsaConfigCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster) {
 
+    $scope.authPoint = $state.current.data.authPoint;
         $scope.configMap = {};
 
         $scope.itemGroup = "VCSA";

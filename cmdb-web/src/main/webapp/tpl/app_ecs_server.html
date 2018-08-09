@@ -451,9 +451,10 @@
                         </div>
                     </div>
                 </uib-tab>
+
                 <uib-tab index="3" heading="Aliyun配置">
                     <div class="panel panel-default" ng-controller="aliyunConfigCtrl">
-                        <div class="panel-body">
+                        <div class="panel-body" ng-if="contains(authPoint, '/aliyun/mgmt')">
                             <form class="form-horizontal">
                                 <div class="form-group col-lg-12">
                                     <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_ACCESS_KEY</label>

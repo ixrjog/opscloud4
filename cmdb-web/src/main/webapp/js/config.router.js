@@ -12,7 +12,7 @@ angular.module('app')
                 $rootScope.$stateParams = $stateParams;
 
                 $rootScope.$on('$stateChangeStart', function (event, toState) {
-                    //不是登录页，本地无授权信息，且页面需要鉴权，则跳转登录页
+                        //不是登录页，本地无授权信息，且页面需要鉴权，则跳转登录页
                         if (toState.name != 'access.signin' && ($localStorage.settings.user == null || $localStorage.settings.user.token == null) && toState.permission) {
                             $state.transitionTo("access.signin");
                             event.preventDefault();
@@ -163,7 +163,7 @@ angular.module('app')
                                     );
                                 }]
                         },
-                        authGroup: ["server", "ecsTemplate"],
+                        authGroup: ["server", "ecsTemplate", "aliyun"],
                         data: {
                             authPoint: {}
                         }
