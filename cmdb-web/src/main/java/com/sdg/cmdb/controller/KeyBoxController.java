@@ -35,8 +35,8 @@ public class KeyBoxController {
     @Resource
     private UserService userService;
 
-    @Resource
-    private ZabbixService zabbixService;
+//    @Resource
+//    private ZabbixService zabbixService;
 
     @Resource
     private UserDao userDao;
@@ -69,15 +69,8 @@ public class KeyBoxController {
     @RequestMapping(value = "/auth/add", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult doAuthKeybox(@RequestParam String username) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.authUserKeybox(username);
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userService.getUserDOByName(username);
-            //添加zabbix账户
-            zabbixService.userCreate(userDO);
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.authUserKeybox(username));
+
     }
 
     /**
@@ -89,15 +82,7 @@ public class KeyBoxController {
     @RequestMapping(value = "/auth/del", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delAuthKeybox(@RequestParam String username) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.delUserKeybox(username);
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userService.getUserDOByName(username);
-            //删除zabbix账户
-            zabbixService.userDelete(userDO);
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.delUserKeybox(username));
     }
 
     /**
@@ -110,11 +95,8 @@ public class KeyBoxController {
     @ResponseBody
     public HttpResult getUserGroupPage(@RequestBody KeyboxUserServerDO userServerDO,
                                        @RequestParam int page, @RequestParam int length) {
-        TableVO<List<KeyboxUserServerVO>> tableVO = keyBoxService.getUserServerPage(userServerDO, page, length);
-        for (KeyboxUserServerVO keyboxUserServerVO : tableVO.getData()) {
-            keyboxUserServerVO.setZabbixUsergroup(zabbixService.checkUserInUsergroup(new UserDO(keyboxUserServerVO.getUsername()), keyboxUserServerVO.getServerGroupDO()));
-        }
-        return new HttpResult(tableVO);
+
+        return new HttpResult(keyBoxService.getUserServerPage(userServerDO, page, length));
     }
 
     /**
@@ -147,23 +129,7 @@ public class KeyBoxController {
     public HttpResult saveUserGroup(@RequestBody KeyboxUserServerVO userServerVO) {
         BusinessWrapper<Boolean> wrapper = keyBoxService.saveUserGroup(userServerVO);
         //添加用户组同时更新用户授权组文件
-        keyBoxService.createUserGroupConfigFile(userServerVO.getUsername());
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userDao.getUserByName(userServerVO.getUsername());
-            // 异步变更zabbix用户组
-            schedulerManager.registerJob(() -> {
-                int userid = zabbixService.userGet(userDO);
-                if (userid == 0) {
-                    zabbixService.userCreate(userDO);
-                } else {
-                    zabbixService.userUpdate(userDO);
-                }
-            });
-
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.createUserGroupConfigFile(userServerVO.getUsername()));
     }
 
     /**
@@ -180,21 +146,7 @@ public class KeyBoxController {
         userServerDO.setServerGroupId(groupId);
         userServerDO.setUsername(username);
         BusinessWrapper<Boolean> wrapper = keyBoxService.delUserGroup(userServerDO);
-        keyBoxService.createUserGroupConfigFile(userServerDO.getUsername());
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userDao.getUserByName(userServerDO.getUsername());
-            // 异步变更zabbix用户组
-            schedulerManager.registerJob(() -> {
-                if (userServerDO.getServerGroupId() == 0) {
-                    zabbixService.userDelete(userDO);
-                } else {
-                    zabbixService.userUpdate(userDO);
-                }
-            });
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.createUserGroupConfigFile(userServerDO.getUsername()));
     }
 
     /**

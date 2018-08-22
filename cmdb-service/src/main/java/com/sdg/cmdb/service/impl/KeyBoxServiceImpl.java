@@ -85,6 +85,9 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     @Resource
     private ConfigCenterService configCenterService;
 
+    @Resource
+    private ZabbixService zabbixService;
+
 
     @Resource
     private CiUserGroupService ciUserGroupService;
@@ -105,6 +108,8 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         for (KeyboxUserServerDO userServerDOItem : userServerDOList) {
             ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(userServerDOItem.getServerGroupId());
             KeyboxUserServerVO userServerVO = new KeyboxUserServerVO(userServerDOItem, serverGroupDO);
+
+            userServerVO.setZabbixUsergroup(zabbixService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
             userServerVOList.add(userServerVO);
         }
         return new TableVO<>(size, userServerVOList);
@@ -152,6 +157,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
         userDO.setAuthed(UserDO.AuthType.authed.getCode());
         userService.updateUserAuthStatus(userDO);
+        zabbixService.userCreate(userDO);
         return wrapper;
     }
 
@@ -168,11 +174,11 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 
         delKeyFile(username);
 
-
         try {
             BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayDelAccount(userDO.getUsername());
             userDO.setAuthed(UserDO.AuthType.noAuth.getCode());
             userService.updateUserAuthStatus(userDO);
+            zabbixService.userDelete(userDO);
             return wrapper;
         } catch (Exception e) {
             return new BusinessWrapper<Boolean>(false);
@@ -227,6 +233,14 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 //                }
 //            });
             keyboxDao.delUserServer(userServerDO);
+            // 异步变更zabbix用户组
+            schedulerManager.registerJob(() -> {
+                if (userServerDO.getServerGroupId() == 0) {
+                    zabbixService.userDelete(userDO);
+                } else {
+                    zabbixService.userUpdate(userDO);
+                }
+            });
             return new BusinessWrapper<>(true);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -241,7 +255,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         HashMap<String, String> configMap = acqConifMap();
         String configFilePath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
 
-
         try {
             UserDO userDO = userService.getUserDOByName(username);
             if (userDO == null) {
@@ -255,6 +268,18 @@ public class KeyBoxServiceImpl implements KeyBoxService {
                 Getway gw = new Getway(userDO, groupDOList);
                 IOUtils.writeFile(gw.toString(), configFilePath + "/" + username + "/getway.conf");
             }
+
+            //UserDO userDO = userDao.getUserByName(userServerVO.getUsername());
+            // 异步变更zabbix用户组
+            schedulerManager.registerJob(() -> {
+                int userid = zabbixService.userGet(userDO);
+                if (userid == 0) {
+                    zabbixService.userCreate(userDO);
+                } else {
+                    zabbixService.userUpdate(userDO);
+                }
+            });
+
             return new BusinessWrapper<>(true);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
