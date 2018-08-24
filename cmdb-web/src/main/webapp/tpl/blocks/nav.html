@@ -336,6 +336,12 @@
             </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.nginxConfigFile">
+                    <span>Nginx配置管理</span>
+                </a>
+            </li>
+
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.configFile">
                     <span>文件管理</span>
                 </a>

@@ -727,6 +727,26 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.nginxConfigFile', {
+                        url: '/nginxConfigFile',
+                        templateUrl: 'tpl/app_nginx_config_file.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/nginxConfigFile.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["configFile"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
                     .state('app.configFile', {
                         url: '/configFile',
                         templateUrl: 'tpl/app_configFile.html',

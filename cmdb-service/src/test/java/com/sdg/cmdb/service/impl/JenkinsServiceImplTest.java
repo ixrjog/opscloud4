@@ -1,6 +1,7 @@
 package com.sdg.cmdb.service.impl;
 
 
+import com.offbytwo.jenkins.model.Artifact;
 import com.offbytwo.jenkins.model.Job;
 import com.sdg.cmdb.dao.cmdb.JenkinsDao;
 import com.sdg.cmdb.domain.jenkins.JenkinsProjectsDO;
@@ -13,6 +14,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.io.IOException;
 import java.net.URL;
 import java.util.*;
 
@@ -55,6 +57,31 @@ public class JenkinsServiceImplTest {
             String key = (String)entry.getKey();
             Job job = (Job)entry.getValue();
             System.err.println(job.getName());
+        }
+    }
+
+
+    @Test
+    public void testQueryJobTask() {
+        Map<String, Job> map = jenkinsService.getJobs();
+
+        Iterator iter = map.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Map.Entry) iter.next();
+            String key = (String)entry.getKey();
+            Job job = (Job)entry.getValue();
+            System.err.println(job.getName());
+            try{
+                List<Artifact>  as= job.details().getLastBuild().details().getArtifacts();
+                for(Artifact artifact :as){
+                    System.err.println( artifact.getDisplayPath());
+                    System.err.println( artifact.getFileName());
+                    System.err.println( artifact.getRelativePath());
+                }
+
+            }catch (IOException ie){
+
+            }
         }
     }
 
