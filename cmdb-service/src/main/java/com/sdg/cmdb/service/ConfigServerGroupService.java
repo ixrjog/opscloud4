@@ -78,6 +78,13 @@ public interface ConfigServerGroupService {
     boolean isManageBack(ServerGroupDO serverGroupDO, int envCode);
 
     /**
+     * 是否生成Upsteam中的check模块配置
+     * @param serverGroupDO
+     * @return
+     */
+    boolean isBuildNginxCheck(ServerGroupDO serverGroupDO);
+
+    /**
      * 获取location中的limit配置
      *
      * @param serverGroupDO
@@ -86,7 +93,7 @@ public interface ConfigServerGroupService {
     String queryNginxLocationLimitReq(ServerGroupDO serverGroupDO);
 
     /**
-     * 是否生成标准的location(www.52shangou.com中使用)
+     * 是否生成标准的location
      *
      * @param serverGroupDO
      * @return

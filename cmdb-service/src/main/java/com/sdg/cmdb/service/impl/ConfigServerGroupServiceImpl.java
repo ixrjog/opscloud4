@@ -40,6 +40,8 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String nginx_location_manage_back = "NGINX_LOCATION_MANAGE_BACK";
 
+    public static final String nginx_check = "NGINX_CHECK";
+
     public static final String nginx_location_manage_build =
             "NGINX_LOCATION_MANAGE_BUILD";
 
@@ -71,6 +73,8 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public static final String nginx_proxy_pass_tail = "NGINX_PROXY_PASS_TAIL";
 
     public static final String nginx_location_param = "NGINX_LOCATION_PARAM";
+
+    public static final String nginx_project_name = "NGINX_PROJECT_NAME";
 
     public static final String iptables_dubbo_build = "IPTABLES_DUBBO_BUILD";
 
@@ -110,7 +114,10 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     @Override
     public String queryProjectName(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, project_name);
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_project_name);
+        if (!StringUtils.isEmpty(result))
+            return result;
+        result = configService.acqConfigByServerGroupAndKey(serverGroupDO, project_name);
         if (StringUtils.isEmpty(result)) {
             return configService.acqConfigByServerGroupAndKey(serverGroupDO, tomcat_app_name);
         } else {
@@ -199,6 +206,15 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public boolean isManageBack(ServerGroupDO serverGroupDO, int envCode) {
         if (envCode != ServerDO.EnvTypeEnum.gray.getCode()) return false;
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_location_manage_back);
+        if (result != null && result.equalsIgnoreCase("true"))
+            return true;
+        // default  false
+        return false;
+    }
+
+    @Override
+    public boolean isBuildNginxCheck(ServerGroupDO serverGroupDO){
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_check);
         if (result != null && result.equalsIgnoreCase("true"))
             return true;
         // default  false

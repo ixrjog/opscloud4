@@ -109,6 +109,17 @@ public class TimeUtils {
         return now;
     }
 
+    /**
+     *  获取用于名称的当前时间
+     * @return eg: 20181110_003738
+     */
+    public static String nowDateName() {
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String now = formatter.format(new Date());
+        return now;
+    }
+
 
     /**
      * 判断时间是否过了stamp

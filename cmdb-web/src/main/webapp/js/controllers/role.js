@@ -132,7 +132,7 @@ app.controller('roleCtrl', function($scope, $uibModal, toaster, httpService) {
         });
     }
 
-    $scope.deleteItem = function(id) {
+    $scope.delItem = function(id) {
         var url = "/role/del?roleId=" + id;
 
         httpService.doDelete(url).then(function(data) {

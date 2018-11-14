@@ -35,9 +35,7 @@ import javax.annotation.Resource;
 import java.io.File;
 import java.util.*;
 
-/**
- * Created by zxxiao on 2016/10/20.
- */
+
 @Service
 public class ConfigServiceImpl implements ConfigService {
 
@@ -50,7 +48,6 @@ public class ConfigServiceImpl implements ConfigService {
     public static final String CONFIG_FILE_TOMCAT_RES = "tomcat_res_install_config.conf";
 
     public static final String ANSIBLE_HOSTS_ALL = "ansible_hosts_all";
-
 
     @Resource
     private SchedulerManager schedulerManager;

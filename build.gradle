@@ -127,6 +127,9 @@ subprojects {
         compile group: 'com.google.protobuf', name: 'protobuf-java', version: '2.5.0'
         compile group: 'com.aliyun.openservices', name: 'aliyun-log', version: '0.6.6'
 
+        // gitlab API
+        compile group: 'org.gitlab', name: 'java-gitlab-api', version: '4.1.0'
+
 
         compile group: 'com.vmware', name: 'vijava', version: '5.1'
 

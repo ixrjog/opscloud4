@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.ansibleTask.*;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.config.ConfigFileCopyDO;
+import com.sdg.cmdb.domain.copy.CopyVO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.task.CmdVO;
@@ -22,14 +23,7 @@ public interface AnsibleTaskService {
 
     String task(boolean isSudo, String hostgroupName, String cmd);
 
-    /**
-     * 文件复制模块封装
-     * @param isSudo
-     * @param hostgroupName
-     * @param configFileCopyDO
-     * @return
-     */
-    String taskCopy(boolean isSudo, String hostgroupName, ConfigFileCopyDO configFileCopyDO);
+
 
     BusinessWrapper<Boolean> cmdTask(CmdVO cmdVO);
 
@@ -45,8 +39,13 @@ public interface AnsibleTaskService {
 
     BusinessWrapper<Boolean> scriptTaskGetwaySetLogin();
 
-    String taskScript(boolean isSudo, String hostgroupName, String cmd);
+   // String taskScript(boolean isSudo, String hostgroupName, String cmd);
 
+    /**
+     * 文件复制
+     * @param id
+     * @return
+     */
     BusinessWrapper<Boolean> doFileCopy(long id);
 
     /**
@@ -74,5 +73,7 @@ public interface AnsibleTaskService {
     AnsibleVersionInfo acqAnsibleVersion();
 
     TableVO<List<AnsibleTaskVO>> getAnsibleTaskPage(String cmd, int page, int length);
+
+
 
 }

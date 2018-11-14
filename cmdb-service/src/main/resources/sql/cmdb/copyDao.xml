@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.CopyDao">
+
+
+    <!-- 获取Copy数目 -->
+    <select id="getCopySize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_copy
+        <where>
+            <if test="businessKey != null and businessKey != ''">
+                businessKey = #{businessKey}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取Copy详情 -->
+    <select id="getCopyPage" parameterType="object" resultType="CopyDO">
+        SELECT * FROM oc_copy
+        <where>
+            <if test="businessKey != null and businessKey != ''">
+                businessKey = #{businessKey}
+            </if>
+        </where>
+        ORDER BY businessKey DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getCopy" parameterType="_long" resultType="CopyDO">
+        SELECT * FROM oc_copy
+        WHERE id = #{id}
+    </select>
+
+    <!-- 获取指定业务Key的copy配置 -->
+    <select id="queryCopyByBusinessKey" parameterType="object" resultType="CopyDO">
+        SELECT * FROM oc_copy
+        WHERE businessKey = #{businessKey}
+    </select>
+
+    <!-- 新增指定Copy配置-->
+    <insert id="addCopy" parameterType="CopyDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_copy (
+        businessKey,
+        businessId,
+        srcPath,
+        destPath,
+        username,
+        usergroup,
+        doCopy,
+        doScript,
+        taskScriptId,
+        params,
+        content
+        ) VALUES (
+        #{businessKey},
+        #{businessId},
+        #{srcPath},
+        #{destPath},
+        #{username},
+        #{usergroup},
+        #{doCopy},
+        #{doScript},
+        #{taskScriptId},
+        #{params},
+        #{content}
+        );
+    </insert>
+
+    <!-- 更新指定Copy配置 -->
+    <update id="updateCopy" parameterType="CopyDO">
+        UPDATE oc_copy
+        SET
+        srcPath = #{srcPath},
+        destPath = #{destPath},
+        username = #{username},
+        usergroup = #{usergroup},
+        doCopy = #{doCopy},
+        doScript = #{doScript},
+        taskScriptId = #{taskScriptId},
+        params = #{params},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除指定Copy信息 -->
+    <delete id="delCopy" parameterType="_long">
+        DELETE FROM oc_copy WHERE id = #{id}
+    </delete>
+
+
+    <!-- 获取CopyServer详情 -->
+    <select id="queryCopyServerByCopyId" parameterType="_long" resultType="CopyServerDO">
+        SELECT * FROM oc_copy_server
+        WHERE copyId = #{copyId}
+    </select>
+
+
+    <!-- 新增指定CopyServer配置-->
+    <insert id="addCopyServer" parameterType="CopyServerDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_copy_server (
+        copyId,
+        serverId
+        ) VALUES (
+        #{copyId},
+        #{serverId}
+        );
+    </insert>
+
+    <!-- 删除指定CopyServer信息 -->
+    <delete id="delCopyServer" parameterType="_long">
+        DELETE FROM oc_copy_server WHERE id = #{id}
+    </delete>
+
+
+    <!-- 新增指定CopyLog-->
+    <insert id="addCopyLog" parameterType="CopyLogDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_copy_log (
+        copyId,
+        vhostId,
+        serverName,
+        envType,
+        serverId,
+        serverContent,
+        copyMsg,
+        copySuccess,
+        copyResult,
+        copyChanged
+        ) VALUES (
+        #{copyId},
+        #{vhostId},
+        #{serverName},
+        #{envType},
+        #{serverId},
+        #{serverContent},
+        #{copyMsg},
+        #{copySuccess},
+        #{copyResult},
+        #{copyChanged}
+        );
+    </insert>
+
+    <!-- 更新指定CopyLog配置 -->
+    <update id="updateCopyLog" parameterType="CopyLogDO">
+        UPDATE oc_copy_log
+        SET
+        doScript = #{doScript},
+        scriptSuccess = #{scriptSuccess},
+        scriptChanged = #{scriptChanged},
+        scriptStdoutPath = #{scriptStdoutPath},
+        scriptRc = #{scriptRc},
+        scriptStderr = #{scriptStderr},
+        scriptResult = #{scriptResult}
+        WHERE id = #{id}
+    </update>
+
+
+    <!-- 获取CopyLog数目 -->
+    <select id="getCopyLogSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_copy_log
+        <where>
+            <if test="serverName != null and serverName != ''">
+                serverName LIKE "%"#{serverName}"%"
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 获取CopyLog详情 -->
+    <select id="getCopyLogPage" parameterType="object" resultType="CopyLogDO">
+        SELECT * FROM oc_copy_log
+        <where>
+            <if test="serverName != null and serverName != ''">
+                serverName  LIKE "%"#{serverName}"%"
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+        </where>
+        ORDER BY serverName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="queryCopyLogByCopyId" parameterType="object" resultType="CopyLogDO">
+        SELECT * FROM oc_copy_log
+        WHERE copyId = #{copyId}
+    </select>
+
+    <!-- 删除指定CopyLog -->
+    <delete id="delCopyLog" parameterType="_long">
+        DELETE FROM oc_copy_log WHERE id = #{id}
+    </delete>
+
+</mapper>

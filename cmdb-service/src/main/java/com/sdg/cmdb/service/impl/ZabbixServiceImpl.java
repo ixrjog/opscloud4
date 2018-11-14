@@ -32,7 +32,6 @@ import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,6 +49,7 @@ import java.util.List;
 @Service
 public class ZabbixServiceImpl implements ZabbixService {
     // InitializingBean
+
     @Resource
     private ConfigCenterService configCenterService;
 
@@ -97,8 +97,6 @@ public class ZabbixServiceImpl implements ZabbixService {
     @Resource
     protected UserDao userDao;
 
-    @Resource
-    protected CiDao ciDao;
 
     @Resource
     protected CiService ciService;
@@ -701,6 +699,17 @@ public class ZabbixServiceImpl implements ZabbixService {
                 .build();
         JSONObject getResponse = call(request);
         return getResultId(getResponse, "groupid");
+    }
+
+    public void hostgroupGet2(){
+        JSONObject filter = new JSONObject();
+        //filter.put("name", new String[]{name});
+        filter.put("name", new JSONArray());
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("hostgroup.get").paramEntry("filter", filter).paramEntry("output", "extend")
+                .build();
+        JSONObject getResponse = call(request);
+        System.err.println(getResponse);
     }
 
     private boolean hostgroupCreate(ServerDO serverDO) {

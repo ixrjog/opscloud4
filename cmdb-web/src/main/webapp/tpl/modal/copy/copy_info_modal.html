@@ -1,0 +1,238 @@
+<div class="modal-header">
+    <h3 class="modal-title">配置文件同步配置</h3>
+</div>
+<div class="modal-body">
+    <form class="bs-example form-horizontal">
+
+
+        <uib-tabset>
+            <uib-tab index="0" heading="同步配置">
+                <div style="font-size:1em;">&nbsp;</div>
+
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>VHOST配置</label>
+                        <div class="col-lg-8">
+                            <ui-select ng-model="nowVhost.selected" theme="bootstrap" ng-change="initEnv()"
+                                       ng-disabled="isEdit">
+                                <ui-select-match placeholder="虚拟主机名称......">{{($select.selected.serverName
+                                    + ($select.selected.content != '' ? '<' + $select.selected.content+ '>' : ''))}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryVhost($select.search)" refresh-dalay="0"
+                                                   repeat="item in vhostList | filter: $select.search">
+                                    <div ng-bind-html="(item.serverName + (item.content  != '' ? ('<' + item.content + '>') : '') ) | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>VHOST环境</label>
+                        <div class="col-lg-8">
+                            <select class="form-control" ng-model="nowEnv.selected" ng-disabled="isEdit"
+                                    ng-options="env as env.envName for env in nowVhost.selected.envList" required>
+                                <option value="">--请选择--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>源路径</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="源路径" ng-model="nowEnv.selected.confPath"
+                               ng-disabled="true">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>目标路径</label>
+                    <div class="col-lg-10">
+                        <input type="text" class="form-control" placeholder="目标路径" ng-model="item.destPath">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">Owner</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="目标文件的权限owner" ng-model="item.username">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">Group</label>
+                        <div class="col-lg-8">
+                            <input type="text" class="form-control" placeholder="目标文件的权限group"
+                                   ng-model="item.usergroup">
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">自动同步</label>
+                        <div class="col-lg-8">
+                            <label style="margin-top:5px;">
+                                <input type="checkbox" ng-model="item.doCopy">
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">自动脚本</label>
+                        <div class="col-lg-8">
+                            <label style="margin-top:5px;">
+                                <input type="checkbox" ng-model="item.doScript">
+                            </label>
+                        </div>
+                    </div>
+
+
+                </div>
+
+                <div class="form-group" ng-show="item.doScript">
+                    <div class="col-md-12">
+                        <label class="col-lg-2 control-label">选择脚本</label>
+                        <div class="col-lg-10">
+                            <ui-select ng-model="nowScript.selected" theme="bootstrap">
+                                <ui-select-match placeholder="搜索脚本名称......">{{$select.selected.scriptName}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryScript($select.search)" refresh-dalay="0"
+                                                   repeat="script in scriptList | filter: $select.search">
+                                    <div ng-bind-html="script.scriptName | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div class="form-group" style="margin-top:30px;text-align:center;">
+
+                    <!--保存-->
+                    <button ng-click="saveItem()"
+                            class="btn btn-xs"
+                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                        <span class="glyphicon glyphicon-ok"></span>保存
+                    </button>
+
+                    <button ng-click="closeModal()"
+                            class="btn btn-xs"
+                            style="margin-left: 20px; background-color: #d78700; color: white;">
+                        <span class="glyphicon glyphicon-remove"></span>关闭
+                    </button>
+
+
+                </div>
+
+            </uib-tab>
+
+            <uib-tab index="1" heading="服务器配置" ng-show="item.id != 0">
+                <div style="font-size:1em;">&nbsp;</div>
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label">服务器组名称</label>
+                        <div class="col-lg-8">
+                            <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                                       ng-change="changeServerGroup(nowServerGroup.selected)">>
+                                <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
+                                                   repeat="item in serverGroupList | filter: $select.search">
+                                    <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-6">
+                        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器名称</label>
+                        <div class="col-lg-8">
+                            <ui-select ng-model="nowServer.selected" theme="bootstrap">
+                                <ui-select-match placeholder="搜索服务器名称......">{{($select.selected.serverName
+                                    + ($select.selected.serialNumber != '' ? ('-' +
+                                    $select.selected.serialNumber) : '') + '-(' +
+                                    $select.selected.envTypeStr + ')')}}
+                                </ui-select-match>
+                                <ui-select-choices refresh="queryServer($select.search)" refresh-dalay="0"
+                                                   repeat="item in serverList | filter: $select.search">
+                                    <div ng-bind-html="(item.serverName + (item.serialNumber != '' ? ('-' + item.serialNumber) : '') + '-(' + item.envTypeStr + ')') | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                        </div>
+
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="col-lg-2">
+                            <button ng-click="addServer()" ng-show="nowServer.selected != null"
+                                    class="btn btn-xs"
+                                    style="margin-top:5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-plus"></span>添加
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+
+                <div style="margin-top: 5px;">
+                    <table class="table table-hover table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <td>服务器</td>
+                            <td>环境</td>
+                            <td>IP</td>
+                            <td>服务器组</td>
+                            <td class="col-md-1">操作</td>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr ng-repeat="server in item.copyServerList">
+                            <td>
+                                {{server.serverDO.serverName}}<span ng-show="server.serverDO.serialNumber != ''">-{{server.serverDO.serialNumber}}</span>
+                            </td>
+                            <td>
+                                <b style="color: #777" ng-if="server.serverDO.envType == 0">保留</b>
+                                <b style="color: #5bc0de" ng-if="server.serverDO.envType == 1">dev</b>
+                                <b style="color: #449d44" ng-if="server.serverDO.envType == 2">daily</b>
+                                <b style="color: #ec971f" ng-if="server.serverDO.envType == 3">gray</b>
+                                <b style="color: #d9534f" ng-if="server.serverDO.envType == 4">prod</b>
+                                <b style="color: #5e5e5e" ng-if="server.serverDO.envType == 5">test</b>
+                                <b style="color: #286090" ng-if="server.serverDO.envType == 6">back</b>
+                            </td>
+                            <td>
+                                {{server.serverDO.insideIp}}
+                            </td>
+
+                            <td>
+                                <b style="color: #777">{{server.serverGroupDO.name}}</b>
+                            </td>
+                            <td>
+                                 <span class="glyphicon glyphicon-remove pull-right"
+                                 style="color: #d9534f"
+                                 uib-popover-html="'移除'" popover-trigger="'mouseenter'"
+                                 ng-click="delServer(server.id)">
+                                 </span>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </uib-tab>
+
+        </uib-tabset>
+
+
+    </form>
+    <div style="font-size:1em;">&nbsp;</div>
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+</div>

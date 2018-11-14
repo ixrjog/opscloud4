@@ -2,12 +2,14 @@ package com.sdg.cmdb.domain.nginx;
 
 import java.io.Serializable;
 
-public class DomainDO implements Serializable {
+public class VhostDO implements Serializable {
+    private static final long serialVersionUID = -217764746326894611L;
 
     private long id;
 
-    private String domain;
+    private String serverName;
 
+    private String serverKey;
 
     private String content;
 
@@ -16,24 +18,29 @@ public class DomainDO implements Serializable {
     private String gmtModify;
 
 
-    public DomainDO() {
+    public VhostDO(){
 
     }
 
-    public DomainDO(String domain) {
-        this.domain = domain;
+    public VhostDO(VhostVO vhostVO){
+        this.id = vhostVO.getId();
+        this.serverName = vhostVO.getServerName();
+        this.serverKey = vhostVO.getServerKey();
+        this.content = vhostVO.getContent();
     }
 
     @Override
     public String toString() {
-        return "DomainDO{" +
+        return "VhostDO{" +
                 "id=" + id +
-                ", domain='" + domain + '\'' +
+                ", serverName='" + serverName + '\'' +
+                ", serverKey='" + serverKey + '\'' +
                 ", content='" + content + '\'' +
+                ", gmtModify='" + gmtModify + '\'' +
                 ", gmtCreate='" + gmtCreate + '\'' +
-                ",  gmtModify='" + gmtModify + '\'' +
                 '}';
     }
+
 
     public long getId() {
         return id;
@@ -43,12 +50,20 @@ public class DomainDO implements Serializable {
         this.id = id;
     }
 
-    public String getDomain() {
-        return domain;
+    public String getServerName() {
+        return serverName;
     }
 
-    public void setDomain(String domain) {
-        this.domain = domain;
+    public void setServerName(String serverName) {
+        this.serverName = serverName;
+    }
+
+    public String getServerKey() {
+        return serverKey;
+    }
+
+    public void setServerKey(String serverKey) {
+        this.serverKey = serverKey;
     }
 
     public String getContent() {

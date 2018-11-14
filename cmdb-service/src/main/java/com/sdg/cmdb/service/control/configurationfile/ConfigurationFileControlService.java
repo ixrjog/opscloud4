@@ -55,20 +55,6 @@ public class ConfigurationFileControlService {
     @Resource
     private ShadowsocksService shadowsocksService;
 
-    @Resource
-    private NginxUpstreamService nginxUpstreamService;
-
-    @Resource
-    private NginxLocationManageService nginxLocationManageService;
-
-    @Resource
-    private NginxLocationKaService nginxLocationKaService;
-
-    @Resource
-    private NginxLocationSupplierService nginxLocationSupplierService;
-
-    @Resource
-    private NginxLocationService nginxLocationService;
 
     @Resource
     private IptablsZookeeperService iptablsZookeeperService;
@@ -122,14 +108,6 @@ public class ConfigurationFileControlService {
                 return "";
             case nameShadowsocks:
                 return shadowsocksService.acqConfig();
-            case nameNginxUpstream:
-                return nginxUpstreamService.acqConfig(type);
-            case nameNginxLocationManage:
-                return nginxLocationManageService.acqConfig(type);
-            case nameNginxLocationSupplier:
-                return nginxLocationSupplierService.acqConfig(type);
-            case nameNginxLocation:
-                return nginxLocationService.acqConfig(type);
             case nameIptablesDubbo:
                 return iptablsZookeeperService.acqConfig(type);
             case nameDnsmasq:

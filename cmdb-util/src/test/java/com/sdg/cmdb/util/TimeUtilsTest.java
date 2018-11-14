@@ -24,4 +24,14 @@ public class TimeUtilsTest {
         }
 
     }
+
+
+    @Test
+    public void testNowDate() {
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyyMMdd_HHmmss");
+        String now = formatter.format(new Date());
+        System.err.println(now);
+
+    }
 }

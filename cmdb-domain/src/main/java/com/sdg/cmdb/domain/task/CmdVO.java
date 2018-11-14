@@ -8,7 +8,6 @@ import java.util.List;
 public class CmdVO implements Serializable {
     private static final long serialVersionUID = 4792402825735723243L;
 
-
     private String hostGroup;
 
     private String cmd;

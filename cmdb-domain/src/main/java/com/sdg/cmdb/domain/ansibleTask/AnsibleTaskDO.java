@@ -59,6 +59,13 @@ public class AnsibleTaskDO implements Serializable {
         this.cmd = cmd;
     }
 
+    public AnsibleTaskDO(String cmd,long userId,String userName,int serverCnt,int taskType) {
+        this.cmd=cmd;
+        this.userName=userName;
+        this.serverCnt=serverCnt;
+        this.taskType=taskType;
+    }
+
     public AnsibleTaskDO() {
 
     }

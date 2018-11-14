@@ -741,7 +741,7 @@ angular.module('app')
                                     );
                                 }]
                         },
-                        authGroup: ["configFile"],
+                        authGroup: ["configFile","nginx","copy"],
                         data: {
                             authPoint: {}
                         }

@@ -30,4 +30,21 @@ public class SystemInitServiceTest {
         System.err.println(systemInitService.acqSystemInitHostConfig(serverDO));
     }
 
+    @Test
+    public void test() {
+
+        //a64@068training.com  a27@068training.com
+
+        String h="training";
+        String t=".com REJECT";
+        for(int i=0 ;i<=99;i++){
+            System.err.println("0"+i+h + t);
+        }
+
+      //  for(int i=10 ;i<=99;i++){
+      //      System.err.println(h+i + t);
+      //  }
+
+    }
+
 }

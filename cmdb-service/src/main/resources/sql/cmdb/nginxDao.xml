@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.NginxDao">
+
+    <select id="getVhostSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_nginx_vhosts
+        <where>
+            <if test="serverName != null and serverName != ''">
+                serverName like "%" #{serverName} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getVhostPage" parameterType="object" resultType="VhostDO">
+        SELECT * FROM oc_nginx_vhosts
+        <where>
+            <if test="serverName != null and serverName != ''">
+                serverName like "%" #{serverName} "%"
+            </if>
+        </where>
+        ORDER BY serverName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getVhost" parameterType="_long" resultType="VhostDO">
+        SELECT * FROM oc_nginx_vhosts WHERE id = #{id}
+    </select>
+
+
+    <delete id="delVhost" parameterType="_long">
+        DELETE FROM oc_nginx_vhosts WHERE id = #{id}
+    </delete>
+
+    <insert id="addVhost" parameterType="VhostDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_vhosts (
+        serverName,
+        serverKey,
+        content
+        ) VALUES (
+        #{serverName},
+        #{serverKey},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateVhost" parameterType="VhostDO">
+        UPDATE oc_nginx_vhosts
+        SET
+        serverName = #{serverName},
+        serverKey = #{serverKey},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+
+    <select id="queryVhostEnvByVhostId" parameterType="_long" resultType="VhostEnvDO">
+        SELECT * FROM oc_nginx_vhost_env WHERE vhostId = #{vhostId}
+    </select>
+
+    <select id="getVhostEnv" parameterType="_long" resultType="VhostEnvDO">
+        SELECT * FROM oc_nginx_vhost_env WHERE id = #{id}
+    </select>
+
+    <insert id="addVhostEnv" parameterType="VhostEnvDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_vhost_env (
+        vhostId,
+        envType,
+        confPath,
+        content
+        ) VALUES (
+        #{vhostId},
+        #{envType},
+        #{confPath},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateVhostEnv" parameterType="VhostEnvDO">
+        UPDATE oc_nginx_vhost_env
+        SET
+        confPath = #{confPath},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delVhostEnv" parameterType="_long">
+        DELETE FROM oc_nginx_vhost_env WHERE id = #{id}
+    </delete>
+
+
+    <select id="queryEnvFileByEnvId" parameterType="_long" resultType="EnvFileDO">
+        SELECT * FROM oc_nginx_env_file WHERE envId = #{envId}
+    </select>
+
+    <select id="getEnvFile" parameterType="_long" resultType="EnvFileDO">
+        SELECT * FROM oc_nginx_env_file WHERE id = #{id}
+    </select>
+
+    <insert id="addEnvFile" parameterType="EnvFileDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_env_file (
+        envId,
+        fileType,
+        filePath,
+        fileName,
+        fileKey
+        ) VALUES (
+        #{envId},
+        #{fileType},
+        #{filePath},
+        #{fileName},
+        #{fileKey}
+        );
+    </insert>
+
+    <delete id="delEnvFile" parameterType="_long">
+        DELETE FROM oc_nginx_env_file WHERE id = #{id}
+    </delete>
+
+    <update id="updateEnvFile" parameterType="EnvFileDO">
+        UPDATE oc_nginx_env_file
+        SET
+        filePath = #{filePath},
+        fileName = #{fileName}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addVhostServerGroup" parameterType="VhostServerGroupDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_vhost_servergroup (
+        vhostId,
+        serverGroupId,
+        groupName
+        ) VALUES (
+        #{vhostId},
+        #{serverGroupId},
+        #{groupName}
+        );
+    </insert>
+
+    <delete id="delVhostServerGroup" parameterType="_long">
+        DELETE FROM oc_nginx_vhost_servergroup WHERE id = #{id}
+    </delete>
+
+    <select id="queryVhostServerGroupByVhostId" parameterType="object" resultType="VhostServerGroupDO">
+        SELECT * FROM oc_nginx_vhost_servergroup
+        WHERE vhostId = #{vhostId}
+        ORDER BY groupName DESC
+    </select>
+
+</mapper>

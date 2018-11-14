@@ -162,6 +162,15 @@ public final class AuthServiceImplTest {
         System.err.println(authService.addMemberToGroup(userDO, "bamboo-trade"));
     }
 
+    @Test
+    public void testSearchBambooGroup() {
+        List<String> groups = authService.searchBambooGroup();
+        for (String group : groups) {
+            System.err.println(group);
+        }
+
+    }
+
 
     @Test
     public void testDelMemberToGroup() {
@@ -169,7 +178,7 @@ public final class AuthServiceImplTest {
         UserDO userDO = new UserDO();
         ServerGroupDO serverGroupDO = new ServerGroupDO();
         userDO.setUsername("liangjan");
-        serverGroupDO.setName("group_wmtback");
+        serverGroupDO.setName("bamboo-trade");
         //  System.err.println(authService.delMemberToGroup(userDO, serverGroupDO));
 
 
@@ -212,14 +221,7 @@ public final class AuthServiceImplTest {
         authService.delUser("zhengyan");
     }
 
-    @Test
-    public void testSearchBambooGroup() {
-        List<String> groups = authService.searchBambooGroup();
-        for (String group : groups) {
-            System.err.println(group);
-        }
 
-    }
 
     @Test
     public void testLogin() {

@@ -80,7 +80,7 @@
                 serverGroupId = #{serverGroupId}
             </if>
             <if test="serverName != null and serverName != ''">
-                AND serverName like "%" #{serverName} "%"
+                AND serverName LIKE "%" #{serverName} "%"
             </if>
             <if test="useType != 0">
                 AND useType = #{useType}

@@ -1,18 +1,17 @@
 <div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
     app.settings.asideFolded = false;
-    app.settings.asideDock = false;
-  ">
+    app.settings.asideDock = false;">
     <!-- main -->
     <div class="col">
         <!-- main header -->
         <div class="bg-light lter b-b wrapper-md">
             <div class="row">
-                <div class="col-sm-6 col-xs-12" ng-controller="ansibleVersionCtrl">
+                <div class="col-sm-6 col-xs-12">
                     <h1 class="m-n font-thin h3 text-black">Nginx配置文件管理
                         <!--<button ng-click="ansibleVersion()"-->
-                                <!--class="btn btn-xs"-->
-                                <!--style="margin-left: 5px; background-color: #00a8f3; color: white;">-->
-                            <!--<span class="icon icon-info"></span> Version-->
+                        <!--class="btn btn-xs"-->
+                        <!--style="margin-left: 5px; background-color: #00a8f3; color: white;">-->
+                        <!--<span class="icon icon-info"></span> Version-->
                         <!--</button>-->
                     </h1>
                     <small class="text-muted">自定义生成Nginx的location/upstream配置文件</small>
@@ -27,8 +26,8 @@
             <!-- / toaster directive -->
 
             <uib-tabset>
-                <uib-tab index="0" heading="主机配置文件">
-                    <div class="panel panel-default" ng-controller="ansibleHostConfigCtrl">
+                <uib-tab index="0" heading="VHOST配置">
+                    <div class="panel panel-default" ng-controller="nginxVhostCtrl">
                         <div class="panel-body">
                             <div>
                                 <form class="form-inline" role="form">
@@ -38,7 +37,7 @@
                                                 class="glyphicon glyphicon-repeat"></span>查询
                                         </button>
 
-                                        <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                        <button type="button" class="btn btn-success" ng-click="addVhost()"><span
                                                 class="glyphicon glyphicon-plus"></span>新增
                                         </button>
                                     </div>
@@ -48,69 +47,105 @@
                                 <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <td>文件组名</td>
-                                        <td class="col-md-6">配置文件</td>
-                                        <td>使用类型</td>
-                                        <td>操作</td>
+                                        <td class="col-md-3">虚拟主机</td>
+                                        <td>环境配置</td>
+                                        <td class="col-md-2">操作</td>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="item in pageData">
-                                        <td>{{item.fileGroupDO.groupName}}</td>
-                                        <td>
-                                            <b style="color: #777">{{item.filePath}}</b>
+                                        <td>{{item.serverName}}
+                                            <b class="pull-right">名称</b>
                                             </br>
-                                            <b style="color: #286090">{{item.fileName}}</b>
-                                            <b class="pull-right">{{item.fileDesc}}</b>
+                                            <b style="color: #017ebc">{{item.serverKey}}</b>
+                                            <b class="pull-right">Key</b>
+                                            </br>
+                                            {{item.content}}
                                         </td>
                                         <td>
-                                            <b style="color: #f4ca06"
-                                               ng-if="item.useType == 0 || item.useTypeDO == null">all</b>
-                                            <b ng-if="item.useType == 10">{{item.useTypeDO.typeName}}</b>
-                                            <b ng-if="item.useType == 1">{{item.useTypeDO.typeName}}</b>
-                                            <b style="color: #990000" ng-if="item.useType == 2">{{item.useTypeDO.typeName}}</b>
-                                            <b style="color: #ec971f" ng-if="item.useType == 3">{{item.useTypeDO.typeName}}</b>
-                                            <b ng-if="item.useType == 4">{{item.useType.typeName}}</b>
-                                            <b ng-if="item.useType == 5">{{item.useType.typeName}}</b>
-                                            <b style="color: #286090" ng-if="item.useType == 6">{{item.useTypeDO.typeName}}</b>
-                                            <b style="color: #d9534f" ng-if="item.useType == 7">{{item.useTypeDO.typeName}}</b>
-                                            <b style="color: #449d44" ng-if="item.useType == 8">{{item.useTypeDO.typeName}}</b>
-                                            <b style="color: #5bc0de" ng-if="item.useType == 9">{{item.useTypeDO.typeName}}</b>
-                                            <b style="color: black"
-                                               ng-if="item.useType > 9">{{item.useTypeDO.typeName}}</b>
+
+
+                                            <div style="margin-top: 5px;">
+                                                <table class="table table-hover table-bordered table-striped">
+
+                                                    <tr ng-repeat="env in item.envList">
+                                                        <td>
+                                                            <span style="color: #777" ng-if="env.envType == 0">保留</span>
+                                                            <span style="color: #5bc0de"
+                                                                  ng-if="env.envType == 1">dev</span>
+                                                            <span style="color: #449d44"
+                                                                  ng-if="env.envType == 2">daily</span>
+                                                            <span style="color: #ec971f"
+                                                                  ng-if="env.envType == 3">gray</span>
+                                                            <span style="color: #d9534f"
+                                                                  ng-if="env.envType == 4">prod</span>
+                                                            <span style="color: #5e5e5e"
+                                                                  ng-if="env.envType == 5">test</span>
+                                                            <span style="color: #286090"
+                                                                  ng-if="env.envType == 6">back</span>
+                                                        </td>
+                                                        <td>
+                                                            <div class="col-md-6" ng-repeat="file in env.envFiles">
+
+
+                                                                <b style="margin-left: 5px; color: #286090;"><i
+                                                                        class="glyphicon glyphicon-file"></i>{{file.fileKey}}</b>
+
+                                                                <button ng-click="launchFile(file.id,0)"
+                                                                        class="btn btn-xs"
+                                                                        style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                                    <span class="glyphicon glyphicon-search"></span>预览
+                                                                </button>
+                                                                <button ng-click="launchFile(file.id,1)"
+                                                                        class="btn btn-xs"
+                                                                        style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                                    <span class="glyphicon glyphicon-search"></span>本地
+                                                                </button>
+                                                                <button ng-click="buildFile(file.id)"
+                                                                        class="btn btn-xs"
+                                                                        ng-disabled="taskRunning"
+                                                                        style="margin-left: 5px; background-color: #ff8700; color: white;">
+                                                                    <i class="fa fa-spin fa-spinner"
+                                                                       ng-show="taskRunning"></i>
+                                                                    <i class="glyphicon glyphicon-save"
+                                                                       ng-show="!taskRunning"></i>保存
+                                                                </button>
+
+
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+
+
+                                                </table>
+                                            </div>
+
+
                                         </td>
                                         <td>
-                                            <button ng-click="editItem(item)"
+                                            <button ng-click="editVhost(item)"
                                                     class="btn btn-xs"
-                                                    ng-disabled="butEditDisabled"
                                                     style="margin-left: 5px; background-color: #2e6da4; color: white;">
                                                 <i class="glyphicon glyphicon-edit"></i>编辑
                                             </button>
 
-                                            <button ng-click="launchItem(item.id)"
+                                            <button ng-click="configureVhost(item)"
                                                     class="btn btn-xs"
-                                                    style="margin-left: 5px; background-color: limegreen; color: white;">
-                                                <span class="glyphicon glyphicon-search"></span>预览
+                                                    style="margin-left: 5px; background-color: #00af00; color: white;">
+                                                <i class="fa fa-bars"></i>配置
                                             </button>
 
-                                            <button ng-click="createItem(item.id)"
-                                                    class="btn btn-xs"
-                                                    ng-disabled="butSaveDisabled"
-                                                    style="margin-left: 5px; background-color: #ff8700; color: white;">
-                                                <i class="fa fa-spin fa-spinner" ng-show="butSaveSpinDisabled"></i>
-                                                <i class="glyphicon glyphicon-save" ng-show="!butSaveSpinDisabled"></i>保存
-                                            </button>
 
-                                            <button ng-click="invokeItem(item.id)" ng-show="false"
-                                                    class="btn btn-xs"
-                                                    ng-disabled="butInvokeDisabled"
-                                                    uib-popover-html="'同步配置并生效'" popover-trigger="'mouseenter'"
-                                                    style="margin-left: 5px; background-color: #ff5f87; color: white;">
-                                                <i class="fa fa-spin fa-spinner" ng-show="butInvokeSpinDisabled"></i>
-                                                <i class="icon icon-control-play" ng-show="!butInvokeSpinDisabled"></i>执行
-                                            </button>
+                                            <!--<button ng-click="invokeItem(item.id)" ng-show="false"-->
+                                            <!--class="btn btn-xs"-->
+                                            <!--ng-disabled="butInvokeDisabled"-->
+                                            <!--uib-popover-html="'同步配置并生效'" popover-trigger="'mouseenter'"-->
+                                            <!--style="margin-left: 5px; background-color: #ff5f87; color: white;">-->
+                                            <!--<i class="fa fa-spin fa-spinner" ng-show="butInvokeSpinDisabled"></i>-->
+                                            <!--<i class="icon icon-control-play" ng-show="!butInvokeSpinDisabled"></i>执行-->
+                                            <!--</button>-->
 
-                                            <button ng-click="delItem(item.id)"
+                                            <button ng-click="delVhost(item.id)"
                                                     class="btn btn-xs pull-right"
                                                     ng-disabled="butDelDisabled"
                                                     style="background-color: red; color: white;">
@@ -135,7 +170,7 @@
                     </div>
                 </uib-tab>
                 <uib-tab index="1" heading="远程同步配置">
-                    <div class="panel panel-default" ng-controller="ansibleConfigCopyCtrl">
+                    <div class="panel panel-default" ng-controller="copyCtrl">
                         <div class="panel-body">
                             <div>
                                 <form class="form-inline" role="form">
@@ -144,7 +179,7 @@
                                                 type="button" class="btn btn-success" ng-click="pageChanged()"><span
                                                 class="glyphicon glyphicon-repeat"></span>查询
                                         </button>
-                                        <button type="button" class="btn btn-success" ng-click="addItem()"><span
+                                        <button type="button" class="btn btn-success" ng-click="addCopy()"><span
                                                 class="glyphicon glyphicon-plus"></span>新增
                                         </button>
 
@@ -163,49 +198,88 @@
                                 <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                     <tr>
-                                        <td>远程服务器</td>
-                                        <td class="col-md-6">同步配置</td>
-                                        <td>owner:group</td>
-                                        <td>操作</td>
+                                        <td class="col-md-2">VHOST配置</td>
+                                        <td class="col-md-5">同步配置</td>
+                                        <td class="col-md-3">远程服务器列表</td>
+                                        <td class="col-md-2">操作</td>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="item in pageData">
                                         <td>
-                                            <b>{{item.serverDO.serverName}}</b>
+                                            {{item.vhostVO.serverName}}
                                             <b class="pull-right">名称</b>
                                             </br>
-                                            {{item.serverDO.insideIp}}
-                                            <b class="pull-right">内</b>
+                                            <b style="color: #017ebc">{{item.vhostVO.serverKey}}</b>
+                                            <b class="pull-right">Key</b>
+                                            </br>
+                                            <b style="color: #777" ng-if="item.vhostEnvDO.envType == 0">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.vhostEnvDO.envType == 1">dev</b>
+                                            <b style="color: #449d44" ng-if="item.vhostEnvDO.envType == 2">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.vhostEnvDO.envType == 3">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.vhostEnvDO.envType == 4">prod</b>
+                                            <b style="color: #5e5e5e" ng-if="item.vhostEnvDO.envType == 5">test</b>
+                                            <b style="color: #286090" ng-if="item.vhostEnvDO.envType == 6">back</b>
+                                            <b class="pull-right">环境</b>
+                                            </br>
+                                            {{item.vhostVO.content}}
                                         </td>
                                         <td>
-                                            <b style="color: #1e983b">{{item.src}}</b>
+                                            <b style="color: #286090">{{item.srcPath}}</b>
                                             <b class="pull-right">源路径</b>
                                             </br>
-                                            <b style="color: #286090">{{item.dest}}</b>
+                                            <b style="color: #286090">{{item.destPath}}</b>
                                             <b class="pull-right">目标路径</b>
+                                            </br>
+                                            <b style="color: #990000">{{item.username}}:{{item.usergroup}}</b>
+                                            <b class="pull-right">Owner:Group</b>
+                                            <span ng-show="item.doCopy">
+                                                </br>
+                                                <span class="label"
+                                                      style="background-color: #00af00; color: white">自动同步</span>
+                                                <span ng-show="item.doScript">
+                                                    <span class="label" style="background-color: #00af00; color: white">自动脚本</span>
+                                                </span>
+                                            </span>
                                         </td>
                                         <td>
-                                            <b style="color: #990000">{{item.username}}</b>:<b style="color: #990000">{{item.usergroup}}</b>
+                                            <div ng-repeat="server in item.copyServerList">
+                                                <b>{{server.serverDO.serverName}}</b><span
+                                                    ng-show="server.serverDO.serialNumber != ''">-{{server.serverDO.serialNumber}}</span>
+                                                {{server.serverDO.insideIp}}
+                                                <b class="pull-right" style="color: #777"
+                                                   ng-if="server.serverDO.envType == 0">保留</b>
+                                                <b class="pull-right" style="color: #5bc0de"
+                                                   ng-if="server.serverDO.envType == 1">dev</b>
+                                                <b class="pull-right" style="color: #449d44"
+                                                   ng-if="server.serverDO.envType == 2">daily</b>
+                                                <b class="pull-right" style="color: #ec971f"
+                                                   ng-if="server.serverDO.envType == 3">gray</b>
+                                                <b class="pull-right" style="color: #d9534f"
+                                                   ng-if="server.serverDO.envType == 4">prod</b>
+                                                <b class="pull-right" style="color: #5e5e5e"
+                                                   ng-if="server.serverDO.envType == 5">test</b>
+                                                <b class="pull-right" style="color: #286090"
+                                                   ng-if="server.serverDO.envType == 6">back</b>
+                                            </div>
                                         </td>
                                         <td>
-                                            <button ng-click="editItem(item)"
+                                            <button ng-click="editCopy(item)"
                                                     class="btn btn-xs"
-                                                    ng-disabled="butEditDisabled"
                                                     style="margin-left: 5px; background-color: #2e6da4; color: white;">
                                                 <i class="glyphicon glyphicon-edit"></i>编辑
                                             </button>
 
-                                            <button ng-click="copyItem(item.id)"
+                                            <button ng-click="doCopy(item.id)"
                                                     class="btn btn-xs"
                                                     ng-disabled="butInvokeDisabled"
                                                     uib-popover-html="'同步配置并生效'" popover-trigger="'mouseenter'"
                                                     style="margin-left: 5px; background-color: #ff5f87; color: white;">
-                                                <i class="fa fa-spin fa-spinner" ng-show="butRunCopyItem"></i>
-                                                <i class="icon icon-control-play" ng-show="!butRunCopyItem"></i>同步
+                                                <i class="fa fa-spin fa-spinner" ng-show="copyRunning"></i>
+                                                <i class="icon icon-control-play" ng-show="!copyRunning"></i>同步
                                             </button>
 
-                                            <button ng-click="delItem(item.id)"
+                                            <button ng-click="delCopy(item.id)"
                                                     class="btn btn-xs pull-right"
                                                     ng-disabled="butDelDisabled"
                                                     style="background-color: red; color: white;">
@@ -309,48 +383,126 @@
                         </div>
                     </div>
                 </uib-tab>
-
-                <uib-tab index="2" heading="Ansible参数配置">
-                    <div class="panel panel-default" ng-controller="ansibleConfigCtrl">
+                <uib-tab index="2" heading="同步日志">
+                    <div class="panel panel-default" ng-controller="copyLogCtrl">
                         <div class="panel-body">
-                            <form class="form-horizontal">
 
-
-                                <div class="form-group col-lg-12">
-                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ANSIBLE_BIN</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" placeholder="ansible命令路径"
-                                               uib-popover-html="'ansible命令路径，默认即可'"
-                                               popover-trigger="'mouseenter'"
-                                               ng-model="configMap.ANSIBLE_BIN.value">
+                            <form class="form-inline" role="form">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">名称</span>
+                                        <input type="text" class="form-control" ng-model="queryServerName" placeholder="名称">
                                     </div>
                                 </div>
 
-                                <div class="form-group col-lg-12">
-                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ANSIBLE_TASK_SCRIPTS_PATH</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control"
-                                               placeholder="脚本存放路径"
-                                               uib-popover-html="'脚本存放路径'"
-                                               popover-trigger="'mouseenter'"
-                                               ng-model="configMap.ANSIBLE_TASK_SCRIPTS_PATH.value">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">环境类型</span>
+                                        <select class="form-control" ng-model="nowEnvType"
+                                                ng-options="envItem.code as envItem.name for envItem in envType"
+                                                required>
+                                            <option value="">--请选择--</option>
+                                        </select>
                                     </div>
                                 </div>
-
-                                <!--按钮-->
-                                <div class="form-group" style="text-align:center;">
-
-
-
-                                    <button class="btn btn-xs"
-                                            style="background-color:  #2e6da4; color: white;"
-                                            ng-click="updateConfig()">保存配置
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-info" ng-click="pageChanged()"><span
+                                            class="glyphicon glyphicon-search"></span>搜索
                                     </button>
-
-
+                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                            class="glyphicon glyphicon-repeat"></span>重置
+                                    </button>
                                 </div>
-
                             </form>
+
+
+
+
+
+
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>虚拟主机</td>
+                                        <td>日志</td>
+                                        <td class="col-md-1">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>{{item.serverName}}
+                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
+                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
+                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
+                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
+                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
+                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
+                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                            </br>
+                                            <b style="color: #286090">{{item.serverContent}}</b>
+                                        </td>
+                                        <td>
+                                            <b class="label"
+                                               style="background-color: #286090; color: white;">同步</b>
+                                            <b class="label"
+                                               style="background-color: #449d44; color: white;"
+                                               ng-show="item.copySuccess">成功：{{item.copyResult}}</b>
+                                            <b class="label"
+                                               style="background-color: #ef2929; color: white;"
+                                               ng-show="!item.copySuccess">失败：{{item.copyResult}}</b>
+                                            <b class="label"
+                                               style="background-color: #449d44; color: white;"
+                                               ng-show="item.doScript">执行脚本</b>
+                                            <b class="label"
+                                               style="background-color: #ff8700; color: white;"
+                                               ng-show="!item.doScript">执行脚本条件未满足！</b>
+
+                                            <button ng-click="launchLog(0,item)"
+                                                    class="btn btn-xs"
+                                                    style="background-color: #00b3ee; color: white;">
+                                                <i class="glyphicon glyphicon-search"></i>同步日志
+                                            </button>
+
+                                            <span ng-show="item.copySuccess && item.doScript">
+                                                </br>
+                                                <b class="label"
+                                                   style="background-color: #286090; color: white;">脚本</b>
+                                                <b class="label"
+                                                   style="background-color: #449d44; color: white;"
+                                                   ng-show="item.scriptSuccess">成功：{{item.scriptResult}}</b>
+                                                <b class="label"
+                                                   style="background-color: #ef2929; color: white;"
+                                                   ng-show="!item.scriptSuccess">失败：{{item.scriptResult}}</b>
+                                                <button ng-click="launchLog(1,item)"
+                                                        class="btn btn-xs"
+                                                        style="background-color: #00b3ee; color: white;">
+                                                <i class="glyphicon glyphicon-search"></i>脚本日志
+                                                </button>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <button ng-click="delItem(item.id)"
+                                                    class="btn btn-xs pull-right"
+                                                    ng-disabled="butDelDisabled"
+                                                    style="background-color: red; color: white;">
+                                                <i class="glyphicon glyphicon-remove"></i>删除
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="10">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
                         </div>
                     </div>
                 </uib-tab>
@@ -360,20 +512,29 @@
     <!-- / main -->
 </div>
 
-
-<script type="text/ng-template" id="versionInfoModal">
-    <div ng-include="'tpl/modal/ansible_version_info_modal.html'"></div>
+<!--新增/编辑 vhost-->
+<script type="text/ng-template" id="vhostInfo">
+    <div ng-include="'tpl/modal/nginx/vhost_info_modal.html'"></div>
 </script>
 
-<script type="text/ng-template" id="configFile">
-    <div ng-include="'tpl/modal/configFile/ansible_config_file_modal.html'"></div>
+<!--配置-->
+<script type="text/ng-template" id="vhostConfigureInfo">
+    <div ng-include="'tpl/modal/nginx/vhost_configure_info_modal.html'"></div>
 </script>
 
-<!--自动同步配置文件到主机info-->
-<script type="text/ng-template" id="configCopyInfo">
-    <div ng-include="'tpl/modal/configFile/ansible_config_copy_info_modal.html'"></div>
+<!--查看copy相关日志-->
+<script type="text/ng-template" id="launchLogInfoModal">
+    <div ng-include="'tpl/modal/copy/launch_log_modal.html'"></div>
 </script>
 
-<script type="text/ng-template" id="configFileInfo">
-    <div ng-include="'tpl/modal/configFile_info_modal.html'"></div>
+<!--查看nginx配置-->
+<script type="text/ng-template" id="launchFileInfoModal">
+    <div ng-include="'tpl/modal/nginx/launch_file_info_modal.html'"></div>
 </script>
+
+
+<!--Copy配置页面-->
+<script type="text/ng-template" id="copyInfo">
+    <div ng-include="'tpl/modal/copy/copy_info_modal.html'"></div>
+</script>
+

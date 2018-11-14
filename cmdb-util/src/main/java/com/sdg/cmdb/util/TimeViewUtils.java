@@ -21,6 +21,18 @@ public class TimeViewUtils {
     private static final String ONE_MONTH_AGO = "月前";
     private static final String ONE_YEAR_AGO = "年前";
 
+
+    public static String format(String gmtDate) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
+        try {
+            Date d = format.parse(gmtDate);
+            return format(d);
+        } catch (Exception e) {
+            return gmtDate;
+        }
+
+    }
+
     public static String format(Date date) {
         long delta = new Date().getTime() - date.getTime();
         if (delta < 1L * ONE_MINUTE) {

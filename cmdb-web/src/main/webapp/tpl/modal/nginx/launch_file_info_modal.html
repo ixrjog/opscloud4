@@ -1,0 +1,58 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+
+</style>
+<div class="modal-header">
+    <!--<h3 class="modal-title">项目管理配置</h3>-->
+    <h3 class="modal-title">
+        <b style="color: #286090">Nginx配置文件</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+
+                <div class="form-group version">
+                    <label class="col-lg-1 control-label">路径</label>
+                    <div class="col-lg-11">
+                        <input type="text" class="form-control" placeholder="Script名称" ng-disabled="true"
+                               ng-model="nginxFile.path">
+                    </div>
+                </div>
+
+
+                <!--style="background-color: #777"-->
+                <div class="form-group">
+                      <div hljs hljs-source="nginxFile.file"></div>
+                </div>
+            </uib-tabset>
+        </div>
+    </form>
+
+
+    <!--按钮-->
+    <div class="form-group">
+        <div style="text-align:center;">
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #ff8700; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+        </div>
+    </div>
+
+    <div ng-if="alert.type != ''">
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    </div>
+
+
+</div>
