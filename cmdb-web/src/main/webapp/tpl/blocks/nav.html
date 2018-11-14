@@ -336,7 +336,7 @@
             </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
-                <a ui-sref="app.nginxConfigFile">
+                <a ui-sref="app.nginxConfig">
                     <span>Nginx配置管理</span>
                 </a>
             </li>
@@ -351,21 +351,7 @@
                     <span>文件组管理</span>
                 </a>
             </li>
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.configCenter')">-->
-            <!--<a ui-sref="app.configCenter">-->
-            <!--<span>系统配置中心</span>-->
-            <!--</a>-->
-            <!--</li>-->
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.dns')">-->
-            <!--<a ui-sref="app.dns">-->
-            <!--<span>DNS配置</span>-->
-            <!--</a>-->
-            <!--</li>-->
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.iptables')">-->
-            <!--<a ui-sref="app.dns">-->
-            <!--<span>IPTABLES配置</span>-->
-            <!--</a>-->
-            <!--</li>-->
+
         </ul>
     </li>
     <li class="line dk"
@@ -373,8 +359,37 @@
 
     <!-- 配置管理 -->
 
-    <!-- 工单管理 ng-if="checkMenu('app.todoConfig') || checkMenu('app.todoDaily')" -->
+    <!--Workflow-->
+    <li>
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i class="glyphicon glyphicon-retweet icon text-primary-dker"></i>
+            <span class="font-bold">工作流管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active" ng-if="checkMenu('app.teamMgmt')">
+                <a ui-sref="app.teamMgmt">
+                    <span>团队管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.workflow')">
+                <a ui-sref="app.workflow">
+                    <span>工单配置</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.todo')">
+                <a ui-sref="app.todo">
+                    <span>标准工单</span>
+                </a>
+            </li>
+        </ul>
+    </li>
 
+
+    <!-- 工单管理 ng-if="checkMenu('app.todoConfig') || checkMenu('app.todoDaily')" -->
     <li ng-if="false">
         <a href class="auto">
     <span class="pull-right text-muted">

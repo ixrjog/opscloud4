@@ -727,16 +727,16 @@ angular.module('app')
                         }
                     })
 
-                    .state('app.nginxConfigFile', {
-                        url: '/nginxConfigFile',
-                        templateUrl: 'tpl/app_nginx_config_file.html',
+                    .state('app.nginxConfig', {
+                        url: '/nginxConfig',
+                        templateUrl: 'tpl/app_nginx_config.html',
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-                                            return $ocLazyLoad.load(['js/controllers/nginxConfigFile.js']);
+                                            return $ocLazyLoad.load(['js/controllers/nginxConfig.js']);
                                         }
                                     );
                                 }]

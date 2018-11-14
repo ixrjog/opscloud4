@@ -205,6 +205,7 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
 
     $scope.doQuery();
 
+    // 生成ecs规格详情
     $scope.refreshInfo = function () {
         for (var i = 0; i < $scope.pageData.length; i++) {
             var item = $scope.pageData[i];
@@ -231,6 +232,8 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
 
             var memory = item.memory / 1024;
             if (memory >= 8) {
+                memory = "<b style='color: red'>" + memory + "GB</b><br/>";
+            }else{
                 memory = "<b style='color: green'>" + memory + "GB</b><br/>";
             }
 

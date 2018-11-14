@@ -1119,8 +1119,8 @@ app.controller('copyLogCtrl', function ($scope, $state, $uibModal, toaster, http
 
     $scope.doQuery();
 
-    $scope.delVhost = function (id) {
-        var url = "/nginx/vhost/del?id=" + id;
+    $scope.delLog = function (id) {
+        var url = "/copy/log/del?id=" + id;
         httpService.doDelete(url).then(function (data) {
             if (data.success) {
                 toaster.pop("success", "删除成功!");
@@ -1167,7 +1167,6 @@ app.controller('copyLogCtrl', function ($scope, $state, $uibModal, toaster, http
 
         }
 
-
         var modalInstance = $uibModal.open({
             templateUrl: 'launchLogInfoModal',
             controller: 'launchLogInstanceCtrl',
@@ -1186,23 +1185,6 @@ app.controller('copyLogCtrl', function ($scope, $state, $uibModal, toaster, http
         });
     }
 
-    $scope.buildFile = function (id) {
-        $scope.taskRunning = true;
-        var url = "/nginx/vhost/env/file/build?id=" + id;
-
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                $scope.taskRunning = false;
-                toaster.pop("success", "保存成功!", data.body);
-            } else {
-                $scope.taskRunning = false;
-                toaster.pop("warning", data.msg);
-            }
-        }, function (err) {
-            $scope.taskRunning = false;
-            toaster.pop("error", err);
-        });
-    }
 });
 
 /**
