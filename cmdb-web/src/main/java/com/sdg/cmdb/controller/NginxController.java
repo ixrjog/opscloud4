@@ -32,7 +32,7 @@ public class NginxController {
 
     @RequestMapping(value = "/vhost/del", method = RequestMethod.DELETE)
     @ResponseBody
-    public HttpResult saveVhost(@RequestParam long id) {
+    public HttpResult delVhost(@RequestParam long id) {
         return new HttpResult(
                 nginxService.delVhost(id)
         );
@@ -64,7 +64,7 @@ public class NginxController {
 
     @RequestMapping(value = "/vhost/env/del", method = RequestMethod.DELETE)
     @ResponseBody
-    public HttpResult saveEnv(@RequestParam long id) {
+    public HttpResult delEnv(@RequestParam long id) {
         return new HttpResult(
                 nginxService.delVhostEnv(id)
         );
@@ -73,7 +73,7 @@ public class NginxController {
 
     @RequestMapping(value = "/vhost/env/file/save", method = RequestMethod.POST)
     @ResponseBody
-    public HttpResult saveEnv(@RequestBody EnvFileDO envFileDO) {
+    public HttpResult saveEnvFile(@RequestBody EnvFileDO envFileDO) {
         return new HttpResult(
                 nginxService.saveEnvFile(envFileDO)
         );
