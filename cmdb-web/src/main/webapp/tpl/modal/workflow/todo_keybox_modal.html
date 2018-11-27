@@ -55,10 +55,11 @@
                     <b style="color: #777">{{todoDetail.detail.serverGroupDO.content}}</b>
                 </td>
                 <td>
-                    <b style="color: #449d44" ng-if="todoDetail.detail.ciAuth == false">无需授权</b>
+                    <!--<b style="color: #449d44">{{todoDetail.detail.ciAuth}}</b>-->
+                    <b style="color: #449d44" ng-if="todoDetail.detail.ciAuth == false">不申请</b>
                     <span style="color: #777" ng-if="todoDetail.detail.ciAuth == true">
-                        <b ng-show="todoDetail.detail.ciUserGroupId != 0" style="color: #286090">{{item.ciUserGroupName}}</b>
-                        <b ng-show="todoDetail.detail.ciUserGroupId == 0" style="color: red">持续集成权限组未配置</b>
+                        <b ng-show="todoDetail.detail.ciUserGroupDO.id != 0" style="color: #286090">已申请:{{todoDetail.detail.ciUserGroupDO.groupName}}</b>
+                        <b ng-show="todoDetail.detail.ciUserGroupDO.id == 0" style="color: red">持续集成权限组未配置(申请无效)</b>
                     </span>
                 </td>
                 <td ng-show="workflowTodo.todoStatus == 0">

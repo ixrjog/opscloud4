@@ -8,7 +8,6 @@ import java.io.Serializable;
 public class WorkflowTodoDO implements Serializable {
     private static final long serialVersionUID = -49987520988688704L;
 
-
     //public static final int TODO_PHASE_CREATE = 0;
     public static final int TODO_PHASE_APPlY = 0;
     //Approval

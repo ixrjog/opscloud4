@@ -45,6 +45,7 @@ public class TodoKeybox extends TodoAbs implements Serializable {
         for (WorkflowTodoDetailVO workflowTodoDetailVO : todoDetails) {
             WorkflowTodoDetailDO workflowTodoDetailDO = getTodoDetailDO(workflowTodoDetailVO);
             TodoDetailKeybox keyboxDetail = (TodoDetailKeybox) getTodoDetailVO(workflowTodoDetailDO).getDetail();
+            workflowTodoDetailDO.setName(keyboxDetail.getServerGroupDO().getName());
             if (map.containsKey(keyboxDetail.getServerGroupDO().getName())) {
                 continue;
             } else {

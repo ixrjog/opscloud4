@@ -202,13 +202,13 @@ server {
 
 ### 安装步骤6 Ansible
 * 安装
-```$xslt
+```
 $ yum install epel-release -y
 $ yum install ansible –y
 ```
 
 * 配置
-```$xslt
+```
 # 查看配置文件路径 (/etc/ansible/ansible.cfg)
 $ ansible --version
 ansible 2.5.3
@@ -219,7 +219,7 @@ ansible 2.5.3
   python version = 2.6.6 (r266:84292, Aug 18 2016, 15:13:37) [GCC 4.4.7 20120313 (Red Hat 4.4.7-17)]
 ```
 参考配置文件
-```$xslt
+```
 # config file for ansible -- http://ansible.com/
 # ==============================================
 
