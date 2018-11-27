@@ -1,0 +1,220 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black">工作流</h1>
+                    <small class="text-muted">自动处理日常事务</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md" ng-controller="workflowCtrl">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <uib-accordion>
+
+                <!--工单列表-->
+                <div class="list-group col-md-3">
+                    <div class="panel panel-default" ng-repeat="workflowGroup in workflowGroupList">
+                        <div uib-accordion-group class="panel-info" is-open="status.open">
+                            <uib-accordion-heading>{{workflowGroup.groupName}}
+                                <i class="pull-right glyphicon"
+                                   ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                            </uib-accordion-heading>
+                            <p style="color:#2ea8e5">{{workflowGroup.content}}</p>
+                            <div ng-repeat="workflow in workflowGroup.workflowList">
+                                <hr/>
+                                <p>{{workflow.title}}</p>
+                                <a ng-show="workflow.helpLink != ''" href="{{workflow.helpLink}}" style="color: green"
+                                   target="_blank"
+                                   class="icon icon-question pull-left">使用说明</a>
+                                <button ng-if="workflow.wfStatus == 0" ng-click="createTodo(workflow)"
+                                        class="btn btn-xs pull-right"
+                                        style="background-color: #2e6da4; color: white;">
+                                    申请工单
+                                </button>
+
+                                <b ng-if="workflow.todoStatus == 1" class="btn btn-xs pull-right"
+                                   style="background-color: #777; color: white;">
+                                    维护中
+                                </b>
+
+                                <b ng-if="todoItem.todoStatus == 2" class="btn btn-xs pull-right"
+                                   style="background-color: #777; color: white;">
+                                    开发中
+                                </b>
+                                </br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </uib-accordion>
+
+            <uib-tabset class="list-group col-md-9">
+                <uib-tab index="0" heading="我的工作">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form name="form" class="form-inline">
+                                <!--待办工作-->
+                                <uib-accordion>
+                                    <div class="panel panel-default">
+                                        <div uib-accordion-group class="panel-info" is-open="myJobStatusOpen">
+                                            <uib-accordion-heading>待办工作
+                                                <i class="pull-right glyphicon"
+                                                   ng-class="{'glyphicon-chevron-down': myJobStatusOpen, 'glyphicon-chevron-right': !myJobStatusOpen}"></i>
+                                            </uib-accordion-heading>
+                                            <div style="margin-top: 5px;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <td class="col-md-2">类别</td>
+                                                        <td class="col-md-6">详情</td>
+                                                        <td class="col-md-1">状态</td>
+                                                        <td>历时</td>
+                                                        <td>操作</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr ng-repeat="todoDetail in todoDetailList">
+
+                                                        <td>
+                                                            <b style="color: #286090"
+                                                               ng-show="todoDetail.todoDO.todoType == 0">运维类工单</b>
+                                                            <b style="color: #286090"
+                                                               ng-show="todoDetail.todoDO.todoType == 1">DB类工单</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #286090">{{todoDetail.todoDO.title}}</b>
+                                                            <i class="glyphicon glyphicon-search"
+                                                               ng-click="viewTodo(todoDetail)"
+                                                               popover-trigger="'mouseenter'"></i>
+
+
+                                                            <i uib-popover-html="todoDetail.initiatorUserDO.initiatorUserInfo"
+                                                               popover-trigger="'mouseenter'"
+                                                               class="icon icon-info pull-right"
+                                                               style="color: green;"></i>
+                                                            <b style="color: #286090" class="pull-right">{{todoDetail.initiatorUserDO.displayName}}</b>
+
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: green;"
+                                                               ng-show="todoDetail.todoStatus == 1">新工单</b>
+                                                            <b style="color: #00d7af;"
+                                                               ng-show="todoDetail.todoStatus == 2">完成审批</b>
+                                                        </td>
+                                                        <td>
+                                                            <b>{{todoDetail.timeView}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <span class="glyphicon glyphicon-remove"
+                                                                  uib-popover-html="'撤销工单'"
+                                                                  popover-trigger="'mouseenter'"
+                                                                  ng-click="revokeTodoDetail(todoDetail.id)">
+                                                             </span>
+
+                                                            <span class="glyphicon glyphicon-ok"
+                                                                  ng-if="contains(authPoint, '/todo/invokeTodoDetail')"
+                                                                  style="color: green; margin-left: 20px;"
+                                                                  uib-popover-html="'执行工单'"
+                                                                  popover-trigger="'mouseenter'"
+                                                                  ng-click="invokeTodoDetail(todoDetail.id)">
+                                                             </span>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </uib-accordion>
+                                <!--完成工单-->
+                                <uib-accordion>
+                                    <div class="panel panel-default">
+                                        <div uib-accordion-group class="panel-info" is-open="status.open">
+                                            <uib-accordion-heading>完成工单
+                                                <i class="pull-right glyphicon"
+                                                   ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
+                                            </uib-accordion-heading>
+                                            <div style="margin-top: 5px;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <td>类别</td>
+                                                        <td class="col-md-6">详情</td>
+                                                        <td>状态</td>
+                                                        <td>历时</td>
+                                                        <td>负责人</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr ng-repeat="todoDetail in todoDetailCompleteList">
+
+                                                        <td>
+                                                            <b style="color: #286090"
+                                                               ng-show="todoDetail.todoDO.todoType == 0">运维类工单</b>
+                                                            <b style="color: #286090"
+                                                               ng-show="todoDetail.todoDO.todoType == 1">DB类工单</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #286090">{{todoDetail.todoDO.title}}</b>
+                                                            <i class="glyphicon glyphicon-search"
+                                                               ng-click="viewTodo(todoDetail)" uib-popover-html="'工单详情'"
+                                                               popover-trigger="'mouseenter'"></i>
+                                                            <i uib-popover-html="todoDetail.initiatorUserDO.initiatorUserInfo"
+                                                               popover-trigger="'mouseenter'"
+                                                               class="icon icon-info pull-right"
+                                                               style="color: green;"></i>
+                                                            <b style="color: #286090" class="pull-right">{{todoDetail.initiatorUserDO.displayName}}</b>
+
+                                                        </td>
+                                                        <td>
+                                                            <!--<b style="color: green;"-->
+                                                            <!--ng-show="todoDetail.todoStatus == 1">新工单</b>-->
+                                                            <b style="color: green;"
+                                                               ng-show="todoDetail.todoStatus == 9">完成</b>
+                                                        </td>
+                                                        <td>
+                                                            <b>{{todoDetail.timeView}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <i uib-popover-html="todoDetail.assigneeUserDO.assigneeUserInfo"
+                                                               popover-trigger="'mouseenter'"
+                                                               class="icon icon-info pull-right"
+                                                               style="color: green;"></i>
+                                                            <b style="color: #286090" class="pull-right">{{todoDetail.assigneeUserDO.displayName}}</b>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </uib-accordion>
+                            </form>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="工单详情">
+
+                </uib-tab>
+            </uib-tabset>
+
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+
+<script type="text/ng-template" id="todoKeyboxModal">
+    <div ng-include="'tpl/modal/workflow/todo_keybox_modal.html'"></div>
+</script>

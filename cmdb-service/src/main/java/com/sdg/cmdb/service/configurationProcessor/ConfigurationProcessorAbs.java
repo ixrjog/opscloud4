@@ -5,8 +5,6 @@ import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.ConfigServerGroupService;
 import com.sdg.cmdb.service.ConfigService;
-import com.sdg.cmdb.service.impl.ConfigServerGroupServiceImpl;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.FastDateFormat;
 
 import javax.annotation.Resource;
@@ -15,7 +13,6 @@ import java.util.Date;
 import java.util.List;
 
 public abstract class ConfigurationProcessorAbs {
-
 
     @Resource
     protected ServerDao serverDao;

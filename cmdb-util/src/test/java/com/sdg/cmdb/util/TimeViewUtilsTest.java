@@ -29,7 +29,7 @@ public class TimeViewUtilsTest {
 
     @Test
     public void testEmail() {
-        // a94@004training.com
+        //b15@learning077.top
         int l = 3;
         for (int i = 0; i <=199; i++) {
             String x = "" + i;
@@ -41,7 +41,7 @@ public class TimeViewUtilsTest {
                 x = "0" + x;
             }
 
-            System.err.println("learning"+ x +".com REJECT");
+            System.err.println("keji"+ x +".top REJECT");
 
 
 

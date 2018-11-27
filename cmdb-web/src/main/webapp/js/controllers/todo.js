@@ -865,11 +865,12 @@ app.controller('todoKeyBoxInstanceCtrl', function ($scope, $uibModalInstance, $s
 app.controller('todoCiUserGroupInstanceCtrl', function ($scope, $uibModalInstance, $sce, toaster, httpService, todoItem, todoDetail) {
     $scope.todoItem = todoItem;
     $scope.todoDetail = todoDetail;
-    //$scope.todoDetail = {};
+
     $scope.initiatorUsername = "";
     $scope.assigneeUsersInfo = "";
     $scope.nowCigroup = {};
     $scope.cigroupList = [];
+
 
     $scope.doQuery = function () {
         var url = "/todo/todoDetail/query?id=" + $scope.todoDetail.id;

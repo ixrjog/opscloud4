@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.cmdb.WorkflowDao">
+
+
+    <select id="getWorkflowGroup" parameterType="object" resultType="WorkflowGroupDO">
+        SELECT * FROM oc_workflow_group
+    </select>
+
+    <select id="queryWorkflowByGroupIdAndTopics" parameterType="object" resultType="WorkflowDO">
+        SELECT * FROM oc_workflow
+        <where>
+            groupId = #{groupId}
+            <if test="topics != null and topics != ''">
+                AND topics LIKE "%" #{topics} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getWorkflowByKey" parameterType="object" resultType="WorkflowDO">
+        SELECT * FROM oc_workflow WHERE wfKey = #{wfKey}
+    </select>
+
+    <select id="getWorkflow" parameterType="object" resultType="WorkflowDO">
+        SELECT * FROM oc_workflow WHERE id = #{id}
+    </select>
+
+    <select id="getTodo" parameterType="object" resultType="WorkflowTodoDO">
+        SELECT * FROM oc_workflow_todo WHERE id = #{id}
+    </select>
+
+    <insert id="addTodo" parameterType="WorkflowTodoDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_workflow_todo(
+        wfId,
+        wfName,
+        applyUserId,
+        applyDisplayName
+        ) VALUES (
+        #{wfId},
+        #{wfName},
+        #{applyUserId},
+        #{applyDisplayName}
+        );
+    </insert>
+
+    <update id="updateTodo" parameterType="WorkflowTodoDO">
+        UPDATE oc_workflow_todo
+        SET
+        todoPhase = #{todoPhase},
+        todoStatus = #{todoStatus},
+        gmtApply = #{gmtApply}
+        WHERE id = #{id}
+    </update>
+
+
+
+
+    <select id="getTodoDetailByTodoId" parameterType="object" resultType="WorkflowTodoDetailDO">
+        SELECT * FROM oc_workflow_todo_detail WHERE todoId = #{todoId}
+    </select>
+
+    <!-- 新增todo细节 -->
+    <insert id="addTodoDetail" parameterType="WorkflowTodoDetailDO">
+        INSERT INTO oc_workflow_todo_detail(
+        todoId,
+        name,
+        detailKey,
+        detailValue,
+        content
+        ) VALUES (
+        #{todoId},
+        #{name},
+        #{detailKey},
+        #{detailValue},
+        #{content}
+        );
+    </insert>
+
+    <!-- 更新todo细节 -->
+    <update id="updateTodoDetail" parameterType="WorkflowTodoDetailDO">
+        UPDATE oc_workflow_todo_detail
+        SET
+        name = #{name},
+        detailValue = #{detailValue},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <!--删除todo细节-->
+    <delete id="delTodoDetail" parameterType="_long">
+        DELETE FROM oc_workflow_todo_detail WHERE id = #{id}
+    </delete>
+
+
+
+    <select id="getTodoUserByTodoId" parameterType="object" resultType="WorkflowTodoUserDO">
+        SELECT * FROM oc_workflow_todo_user WHERE todoId = #{todoId}
+    </select>
+
+    <insert id="addTodoUser" parameterType="WorkflowTodoUserDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_workflow_todo_user(
+        todoId,
+        assigneeType,
+        assigneeDesc,
+        userId,
+        displayName,
+        evaluation,
+        evaluationMsg
+        ) VALUES (
+        #{todoId},
+        #{assigneeType},
+        #{assigneeDesc},
+        #{userId},
+        #{displayName},
+        #{evaluation},
+        #{evaluationMsg}
+        );
+    </insert>
+
+    <delete id="delTodoUser" parameterType="_long">
+        DELETE FROM oc_workflow_todo_user WHERE id = #{id}
+    </delete>
+
+    <update id="updateTodoUser" parameterType="WorkflowTodoUserDO">
+        UPDATE oc_workflow_todo_user
+        SET
+        evaluation = #{evaluation},
+        evaluationMsg = #{evaluationMsg}
+        WHERE id = #{id}
+    </update>
+
+
+</mapper>

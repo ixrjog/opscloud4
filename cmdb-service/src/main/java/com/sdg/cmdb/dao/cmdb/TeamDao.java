@@ -19,7 +19,7 @@ public interface TeamDao {
             @Param("teamName") String teamName,
             @Param("teamType") int teamType,
             @Param("teamleaderUsername") String teamleaderUsername,
-            @Param("pageStart") long pageStart, @Param("length") int length);
+            @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
 
     int updateTeam(TeamDO teamDO);
 

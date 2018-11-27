@@ -12,7 +12,7 @@ public class TeamVO extends TeamDO implements Serializable {
 
     private List<TeamuserVO> teamusers;
 
-    public TeamVO(TeamDO teamDO,List<TeamuserVO> teamusers) {
+    public TeamVO(TeamDO teamDO, UserDO leader, List<TeamuserVO> teamusers) {
         setId(teamDO.getId());
         setTeamName(teamDO.getTeamName());
         setContent(teamDO.getContent());
@@ -21,6 +21,8 @@ public class TeamVO extends TeamDO implements Serializable {
         setTeamleaderUsername(teamDO.getTeamleaderUsername());
         setGmtCreate(teamDO.getGmtCreate());
         setGmtModify(teamDO.getGmtModify());
+        this.leader = leader;
+        this.teamusers = teamusers;
     }
 
     public TeamVO() {

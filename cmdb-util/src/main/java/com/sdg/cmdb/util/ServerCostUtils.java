@@ -4,10 +4,8 @@ package com.sdg.cmdb.util;
  * Created by liangjian on 2017/2/23.
  */
 
-import com.sdg.cmdb.domain.server.EcsServerDO;
+
 import com.sdg.cmdb.domain.server.ServerCostVO;
-import com.sdg.cmdb.domain.server.ServerDO;
-import com.sdg.cmdb.domain.server.VmServerDO;
 
 /**
  * 服务器成本计算

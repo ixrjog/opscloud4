@@ -12,6 +12,8 @@ public interface TeamService {
 
     TableVO<List<TeamVO>> getTeamPage(String teamName, String teamleaderUsername, int teamType, int page, int length);
 
+    TeamVO getTeam(long id);
+
     BusinessWrapper<Boolean> saveTeam(TeamDO teamDO);
 
     BusinessWrapper<Boolean> delTeam(long id);

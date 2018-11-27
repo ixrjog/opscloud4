@@ -2,7 +2,6 @@ package com.sdg.cmdb.util;
 
 
 import com.sdg.cmdb.domain.ansibleTask.AnsibleTaskServerDO;
-import com.sdg.cmdb.domain.copy.CopyLogDO;
 import org.apache.commons.exec.*;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.slf4j.Logger;

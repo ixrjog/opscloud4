@@ -70,25 +70,6 @@
         DELETE FROM oc_workflow_team WHERE id = #{id}
     </delete>
 
-
-    <!-- 获取Team详情 -->
-    <select id="getTeamPage" parameterType="object" resultType="TeamDO">
-        SELECT * FROM oc_workflow_team
-        <where>
-            <if test="teamName != null and teamName != ''">
-                teamName LIKE "%" #{teamName} "%"
-            </if>
-            <if test="teamType != -1">
-                AND teamType = #{teamType}
-            </if>
-            <if test="teamleaderUsername != null and teamleaderUsername != ''">
-                AND teamleaderUsername LIKE "%" #{teamleaderUsername} "%"
-            </if>
-        </where>
-        ORDER BY teamName,teamType DESC
-        LIMIT #{pageStart}, #{pageLength}
-    </select>
-
     <!-- 获取TeamById详情 -->
     <select id="getTeam" parameterType="object" resultType="TeamDO">
         SELECT * FROM oc_workflow_team WHERE id = #{id}

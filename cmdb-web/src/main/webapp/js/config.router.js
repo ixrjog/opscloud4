@@ -1030,6 +1030,46 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.workflow', {
+                        url: '/team',
+                        templateUrl: 'tpl/app_workflow.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/workflow.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["workflow"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.teamMgmt', {
+                        url: '/team',
+                        templateUrl: 'tpl/app_team_mgmt.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/team.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["team"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+                    
                     .state('app.todoConfig', {
                         url: '/todoConfig',
                         templateUrl: 'tpl/app_todoConfig.html',

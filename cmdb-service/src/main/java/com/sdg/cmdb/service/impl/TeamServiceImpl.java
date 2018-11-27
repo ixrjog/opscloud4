@@ -11,6 +11,7 @@ import com.sdg.cmdb.domain.workflow.TeamuserDO;
 import com.sdg.cmdb.domain.workflow.TeamuserVO;
 import com.sdg.cmdb.service.TeamService;
 import org.springframework.stereotype.Service;
+
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -29,12 +30,19 @@ public class TeamServiceImpl implements TeamService {
         long size = teamDao.getTeamSize(teamName, teamType, teamleaderUsername);
         List<TeamDO> list = teamDao.getTeamPage(teamName, teamType, teamleaderUsername, page * length, length);
         List<TeamVO> voList = new ArrayList<>();
-        for (TeamDO teamDO : list) {
-            TeamVO teamVO = new TeamVO(teamDO, getTeamuserByTeamId(teamDO.getId()));
-            voList.add(teamVO);
-        }
+        for (TeamDO teamDO : list)
+            voList.add(getTeam(teamDO.getId()));
         return new TableVO<>(size, voList);
     }
+
+    @Override
+    public TeamVO getTeam(long id) {
+        TeamDO teamDO = teamDao.getTeam(id);
+        UserDO leader = userDao.getUserById(teamDO.getTeamleaderUserId());
+        TeamVO teamVO = new TeamVO(teamDO, leader, getTeamuserByTeamId(teamDO.getId()));
+        return teamVO;
+    }
+
 
     /**
      * 获取team成员信息

@@ -11,7 +11,7 @@ import javax.annotation.Resource;
 
 @Controller
 @RequestMapping("/team")
-public class TeamrController {
+public class TeamController {
 
     @Resource
     private TeamService teamService;
@@ -36,6 +36,16 @@ public class TeamrController {
         return new HttpResult(
                 teamService.getTeamPage(teamName, teamleaderUsername,
                         teamType, page, length)
+        );
+    }
+
+
+    @RequestMapping(value = "/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getTeam(
+            @RequestParam long id) {
+        return new HttpResult(
+                teamService.getTeam(id)
         );
     }
 
