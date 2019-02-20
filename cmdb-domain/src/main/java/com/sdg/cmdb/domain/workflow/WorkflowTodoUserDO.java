@@ -13,10 +13,10 @@ public class WorkflowTodoUserDO implements Serializable {
     private int assigneeType;
 
     public enum AssigneeTypeEnum {
-
-        teamleader(0, "teamleader"),
-        deptLeader(1, "deptLeader"),
-        operation(2, "operation");
+        qc(0, "qc"),
+        teamleader(1, "teamleader"),
+        deptLeader(2, "deptLeader"),
+        ops(3, "ops");
         private int code;
         private String desc;
 
@@ -53,6 +53,39 @@ public class WorkflowTodoUserDO implements Serializable {
      * approve/disapprove/refuse/delegate
      */
     private int evaluation;
+
+    public enum EvaluationTypeEnum {
+        empty(0,"empty"),
+        approve(1, "approve"),
+        disapprove(2, "disapprove"),
+        refuse(3, "refuse"),
+        delegate(4, "delegate");
+        private int code;
+        private String desc;
+
+        EvaluationTypeEnum(int code, String desc) {
+            this.code = code;
+            this.desc = desc;
+        }
+
+        public int getCode() {
+            return code;
+        }
+
+        public String getDesc() {
+            return desc;
+        }
+
+        public static String getEvaluationTypeName(int code) {
+            for (EvaluationTypeEnum evaluationTypeEnum : EvaluationTypeEnum.values()) {
+                if (evaluationTypeEnum.getCode() == code) {
+                    return evaluationTypeEnum.getDesc();
+                }
+            }
+            return "undefined";
+        }
+    }
+
 
     private String evaluationMsg;
 

@@ -10,6 +10,8 @@ import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
 import com.sdg.cmdb.util.SessionUtils;
+import com.sdg.cmdb.util.TimeUtils;
+import com.sdg.cmdb.util.TimeViewUtils;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.StringUtils;
 
@@ -22,7 +24,7 @@ import java.util.List;
 public abstract class TodoAbs implements InitializingBean {
 
     @Resource
-    private UserDao userDao;
+    protected UserDao userDao;
 
     @Resource
     private WorkflowDao workflowDao;
@@ -30,58 +32,152 @@ public abstract class TodoAbs implements InitializingBean {
     abstract public String getKey();
 
     /**
-     * 新建todo
+     * 审批审核
+     *
+     * @param todoId
      * @return
      */
-    public WorkflowTodoVO createTodo(){
-        WorkflowTodoDO workflowTodoDO = buildWorkflowTodo();
-        workflowDao.addTodo(workflowTodoDO);
-        long todoId= workflowTodoDO.getId();
-        WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(),workflowTodoDO,getWorkflowTodoDetailVOList(todoId),getTodoUserMap(todoId));
-        return workflowTodoVO;
+    public boolean approvalTodo(long todoId) {
+        WorkflowTodoVO todoVO = getTodo(todoId);
+        WorkflowDO workflowDO = todoVO.getWorkflowDO();
+        // 工单状态
+        int todoPhase = todoVO.getTodoPhase();
+        switch (todoPhase) {
+            // TODO 申请状态直接跳过
+            case WorkflowTodoDO.TODO_PHASE_APPlY:
+                return false;
+            // TODO 质量审批
+            case WorkflowTodoDO.TODO_PHASE_QA_APPROVAL:
+                if(workflowDO.isQaApproval()){
+
+                }
+                break;
+        }
+
+        return true;
+
     }
 
 
     /**
-     * 申请todo (提交)
-     * @param todoId
+     * 新建todo
+     *
      * @return
      */
-    abstract boolean applyTodo(long todoId);
+    public WorkflowTodoVO createTodo() {
+        WorkflowTodoDO workflowTodoDO = buildWorkflowTodo();
+        workflowDao.addTodo(workflowTodoDO);
+        long todoId = workflowTodoDO.getId();
+        WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(), workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
+        return workflowTodoVO;
+    }
 
     abstract public WorkflowTodoVO saveTodo(WorkflowTodoVO workflowTodoVO);
 
+    // abstract boolean saveTodo(long todoId);
+
+    abstract public boolean invokeTodo(long todoId);
+
+
+    /**
+     * 查询一个Todo
+     *
+     * @param todoId
+     * @return
+     */
     public WorkflowTodoVO getTodo(long todoId) {
         WorkflowTodoDO workflowTodoDO = workflowDao.getTodo(todoId);
-        WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(),workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
+        WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(), workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
+        workflowTodoVO.setApplyViewTime(TimeViewUtils.format(workflowTodoVO.getGmtApply()));
         return workflowTodoVO;
     }
+
 
     abstract protected WorkflowTodoDetailVO getTodoDetailVO(WorkflowTodoDetailDO workflowTodoDetailDO);
 
     /**
-     * 删除工单细节
+     * 校验审批 内部调用
+     *
+     * @param todoVO
      * @return
      */
-    public WorkflowTodoVO delTodoDetail(long todoId,long detailId){
-        try{
-            workflowDao.delTodoDetail(detailId);
-        }catch (Exception e){
-            e.printStackTrace();
+    protected boolean checkApproval(WorkflowTodoVO todoVO) {
+        WorkflowDO workflowDO = todoVO.getWorkflowDO();
+        HashMap<String, WorkflowTodoUserDO> userMap = todoVO.getTodoUserList();
+        // check approval 是否需要审批
+        if (!workflowDO.isApproval()) return true;
+        // check qaApproval QA审批
+        if (workflowDO.isQaApproval())
+            if (!checkApprovalByUser(userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.qc.getDesc())))
+                return false;
+        // check tlApproval TL审批
+        if (workflowDO.isTlApproval())
+            if (!checkApprovalByUser(userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.teamleader.getDesc())))
+                return false;
+        // check dlApproval DL审批
+        if (workflowDO.isDlApproval())
+            if (!checkApprovalByUser(userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.deptLeader.getDesc())))
+                return false;
+        // check opsAudit OPS审核
+        if (workflowDO.isOpsAudit())
+            if (!checkApprovalByUser(userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.ops.getDesc())))
+                return false;
+        return true;
+    }
+
+    private boolean checkApprovalByUser(WorkflowTodoUserDO todoUserDO) {
+        return todoUserDO.getEvaluation() == WorkflowTodoUserDO.EvaluationTypeEnum.approve.getCode();
+    }
+
+    private boolean checkTodoPhase(WorkflowTodoDO todoDO) {
+        if (todoDO.getTodoPhase() == WorkflowTodoDO.TODO_PHASE_APPlY)
+            return true;
+        return false;
+    }
+
+    private boolean checkTodoPhase(long todoId) {
+        return checkTodoPhase(workflowDao.getTodo(todoId));
+    }
+
+    /**
+     * 删除工单细节
+     *
+     * @return
+     */
+    public WorkflowTodoVO delTodoDetail(long todoId, long detailId) {
+        if (checkTodoPhase(todoId)) {
+            try {
+                workflowDao.delTodoDetail(detailId);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
         return getTodo(todoId);
     }
 
-    public WorkflowTodoVO  applyTodo(WorkflowDO workflowDO,WorkflowTodoDO workflowTodoDO){
+    /**
+     * 申请
+     *
+     * @param workflowDO
+     * @param workflowTodoDO
+     * @return
+     */
+    public WorkflowTodoVO applyTodo(WorkflowDO workflowDO, WorkflowTodoDO workflowTodoDO) {
         // 是否审批
-        if(workflowDO.isApproval()){
-            workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_TL_APPROVAL);
-        }else{
+        if (workflowDO.isApproval()) {
+            if (workflowDO.isQaApproval())
+                workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_QA_APPROVAL);
+            if (workflowDO.isTlApproval())
+                workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_TL_APPROVAL);
+            if (workflowDO.isDlApproval())
+                workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_DL_APPROVAL);
+        } else {
             workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_AUDITING);
         }
-        try{
+        try {
+            workflowTodoDO.setGmtApply(TimeUtils.nowDate());
             workflowDao.updateTodo(workflowTodoDO);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return getTodo(workflowTodoDO.getId());
@@ -89,10 +185,11 @@ public abstract class TodoAbs implements InitializingBean {
 
     /**
      * 取工作流细节详情
+     *
      * @param todoId
      * @return
      */
-    private List<WorkflowTodoDetailVO> getWorkflowTodoDetailVOList(long todoId){
+    private List<WorkflowTodoDetailVO> getWorkflowTodoDetailVOList(long todoId) {
         List<WorkflowTodoDetailDO> doList = getTodoDetails(todoId);
 
         List<WorkflowTodoDetailVO> voList = new ArrayList<>();
@@ -104,17 +201,17 @@ public abstract class TodoAbs implements InitializingBean {
         return voList;
     }
 
-    private HashMap<String,WorkflowTodoUserDO> getTodoUserMap(long todoId){
+    private HashMap<String, WorkflowTodoUserDO> getTodoUserMap(long todoId) {
         List<WorkflowTodoUserDO> list = getTodoUserList(todoId);
-        HashMap<String,WorkflowTodoUserDO> map = new HashMap<String,WorkflowTodoUserDO>();
-        for(WorkflowTodoUserDO workflowTodoUserDO:list){
-            map.put(workflowTodoUserDO.getAssigneeDesc(),workflowTodoUserDO);
+        HashMap<String, WorkflowTodoUserDO> map = new HashMap<String, WorkflowTodoUserDO>();
+        for (WorkflowTodoUserDO workflowTodoUserDO : list) {
+            map.put(workflowTodoUserDO.getAssigneeDesc(), workflowTodoUserDO);
         }
         return map;
     }
 
-    private List<WorkflowTodoUserDO> getTodoUserList(long todoId){
-        return  workflowDao.getTodoUserByTodoId(todoId);
+    private List<WorkflowTodoUserDO> getTodoUserList(long todoId) {
+        return workflowDao.getTodoUserByTodoId(todoId);
     }
 
 
@@ -125,8 +222,8 @@ public abstract class TodoAbs implements InitializingBean {
      */
     private UserDO getApplyUser() {
         String username = SessionUtils.getUsername();
-        if(StringUtils.isEmpty(username))
-            username= "admin";
+        if (StringUtils.isEmpty(username))
+            username = "admin";
         return userDao.getUserByName(username);
     }
 
@@ -145,19 +242,31 @@ public abstract class TodoAbs implements InitializingBean {
     }
 
     protected boolean saveTodoDetail(WorkflowTodoDetailDO workflowTodoDetailDO) {
-        try {
-            if (workflowTodoDetailDO.getId() == 0) {
-                workflowDao.addTodoDetail(workflowTodoDetailDO);
-            } else {
-                workflowDao.updateTodoDetail(workflowTodoDetailDO);
+        if (checkTodoPhase(workflowTodoDetailDO.getTodoId())) {
+            try {
+                if (workflowTodoDetailDO.getId() == 0) {
+                    workflowDao.addTodoDetail(workflowTodoDetailDO);
+                } else {
+                    workflowDao.updateTodoDetail(workflowTodoDetailDO);
+                }
+                return true;
+            } catch (Exception e) {
+                e.printStackTrace();
+                return false;
             }
+        }
+        return false;
+    }
+
+    protected boolean updateTodo(WorkflowTodoVO workflowTodoVO) {
+        try {
+            WorkflowTodoDO workflowTodoDO = new WorkflowTodoDO(workflowTodoVO);
+            workflowDao.updateTodo(workflowTodoDO);
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
-
-
     }
 
     @Override

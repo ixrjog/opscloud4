@@ -31,8 +31,7 @@ public class WorkflowTodoVO extends WorkflowTodoDO implements Serializable {
                 ", todoStatus=" + getTodoStatus() +
                 ", gmtApply='" + getGmtApply() + '\'' +
                 ", applyViewTime='" + applyViewTime + '\'' +
-
-
+                ", content='" + getContent() + '\'' +
                 ", gmtModify='" + getGmtModify() + '\'' +
                 ", gmtCreate='" + getGmtCreate() + '\'' +
                 '}';
@@ -48,6 +47,7 @@ public class WorkflowTodoVO extends WorkflowTodoDO implements Serializable {
         setTodoPhase(workflowTodoDO.getTodoPhase());
         setTodoStatus(workflowTodoDO.getTodoStatus());
         setGmtApply(workflowTodoDO.getGmtApply());
+        setContent(workflowTodoDO.getContent());
         this.todoDetails = todoDetails;
         this.todoUserList = todoUserList;
     }

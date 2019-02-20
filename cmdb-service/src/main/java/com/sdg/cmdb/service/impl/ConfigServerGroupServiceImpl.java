@@ -97,6 +97,9 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String ZABBIX_PROXY = "ZABBIX_PROXY";
 
+    // ANSIBLE 分组配置（分组数量）
+    public static final String ANSIBLE_SUBGROUP = "ANSIBLE_SUBGROUP";
+
     @Resource
     protected ServerDao serverDao;
 
@@ -213,7 +216,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     }
 
     @Override
-    public boolean isBuildNginxCheck(ServerGroupDO serverGroupDO){
+    public boolean isBuildNginxCheck(ServerGroupDO serverGroupDO) {
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_check);
         if (result != null && result.equalsIgnoreCase("true"))
             return true;
@@ -417,4 +420,15 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     }
 
 
+    @Override
+    public int queryAnsibleSubgroup(ServerGroupDO serverGroupDO) {
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, ANSIBLE_SUBGROUP);
+        try {
+            if (!StringUtils.isEmpty(result))
+                return Integer.valueOf(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 2;
+    }
 }

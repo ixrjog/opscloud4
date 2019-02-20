@@ -4,12 +4,15 @@ import com.sdg.cmdb.dao.cmdb.TeamDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.workflow.TeamDO;
 import com.sdg.cmdb.domain.workflow.TeamVO;
 import com.sdg.cmdb.domain.workflow.TeamuserDO;
 import com.sdg.cmdb.domain.workflow.TeamuserVO;
+import com.sdg.cmdb.service.AuthService;
 import com.sdg.cmdb.service.TeamService;
+import com.sdg.cmdb.util.SessionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,6 +27,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Resource
     private UserDao userDao;
+
+    @Resource
+    private AuthService authService;
 
     @Override
     public TableVO<List<TeamVO>> getTeamPage(String teamName, String teamleaderUsername, int teamType, int page, int length) {
@@ -93,6 +99,8 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public BusinessWrapper<Boolean> saveTeamuser(TeamuserDO teamuserDO) {
+        if(! checkAuth(teamuserDO)) return new BusinessWrapper<Boolean>(true);
+
         try {
             if (teamuserDO.getId() == 0) {
                 teamDao.addTeamuser(teamuserDO);
@@ -107,12 +115,31 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public BusinessWrapper<Boolean> delTeamuser(long id) {
+        if(! checkAuth(id)) return new BusinessWrapper<Boolean>(true);
         try {
             teamDao.delTeamuser(id);
             return new BusinessWrapper<Boolean>(true);
         } catch (Exception e) {
             return new BusinessWrapper<Boolean>(false);
         }
+    }
+
+    private boolean checkAuth(long teamuserId) {
+        TeamuserDO teamuserDO = teamDao.geteamuser(teamuserId);
+        return checkAuth(teamuserDO);
+    }
+
+    private boolean checkAuth(TeamuserDO teamuserDO) {
+        // 判断是否为管理员操作
+        String sessionUsername = SessionUtils.getUsername();
+        if (authService.isRole(sessionUsername, RoleDO.roleAdmin)) return true;
+        // 判断是否为TL操作
+        long teamId = teamuserDO.getTeamId();
+        TeamDO teamDO = teamDao.getTeam(teamId);
+        long userId = teamDO.getTeamleaderUserId();
+        UserDO userDO = userDao.getUserByName(sessionUsername);
+        if (userDO.getId() == userId) return true;
+        return false;
     }
 
 

@@ -33,6 +33,7 @@ public interface TeamDao {
     List<TeamuserDO> queryTeamuserByTeamId(
             @Param("teamId") long teamId);
 
+    TeamuserDO geteamuser(@Param("id") long id);
 
     int addTeamuser(TeamuserDO teamuserDO);
 

@@ -331,7 +331,7 @@ accelerate_multi_key = yes
   - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
   - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
   
-* 配置私钥id_rsa（数据库保存密后的key,非原文）
+* 配置私钥id_rsa（加密后的私钥,非原文）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG35.jpeg)
 * KeyBox(WebShell)
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG36.jpeg)

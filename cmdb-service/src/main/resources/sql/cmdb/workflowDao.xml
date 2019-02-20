@@ -22,7 +22,14 @@
     </select>
 
     <select id="getWorkflow" parameterType="object" resultType="WorkflowDO">
-        SELECT * FROM oc_workflow WHERE id = #{id}
+        SELECT * FROM oc_workflow
+    </select>
+
+    <!--todoPhase 工单状态（工单状态 0:发起人状态  1:团队领导状态  2:部门领导状态  3:审核操作状态  4:执行完成 ）-->
+    <!--todoStatus 类型  0:正常 1:拒绝回退 2:拒绝 3:正常完成 4:错误-->
+    <select id="queryTodoByApplyUserId" parameterType="object" resultType="WorkflowTodoDO">
+        SELECT * FROM oc_workflow_todo
+        WHERE applyUserId = #{applyUserId} AND todoStatus = 0 AND todoPhase != 4
     </select>
 
     <select id="getTodo" parameterType="object" resultType="WorkflowTodoDO">
@@ -34,26 +41,30 @@
         wfId,
         wfName,
         applyUserId,
-        applyDisplayName
+        applyDisplayName,
+        content
         ) VALUES (
         #{wfId},
         #{wfName},
         #{applyUserId},
-        #{applyDisplayName}
+        #{applyDisplayName},
+        #{content}
         );
     </insert>
 
     <update id="updateTodo" parameterType="WorkflowTodoDO">
         UPDATE oc_workflow_todo
         SET
+        content = #{content},
         todoPhase = #{todoPhase},
         todoStatus = #{todoStatus},
         gmtApply = #{gmtApply}
         WHERE id = #{id}
     </update>
 
-
-
+    <delete id="delTodo" parameterType="_long">
+        DELETE FROM oc_workflow_todo WHERE id = #{id}
+    </delete>
 
     <select id="getTodoDetailByTodoId" parameterType="object" resultType="WorkflowTodoDetailDO">
         SELECT * FROM oc_workflow_todo_detail WHERE todoId = #{todoId}

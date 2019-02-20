@@ -81,6 +81,10 @@
         SELECT * FROM oc_workflow_teamuser WHERE teamId = #{teamId}
     </select>
 
+    <select id="getTeamuser" parameterType="_long" resultType="TeamuserDO">
+        SELECT * FROM oc_workflow_teamuser WHERE id = #{id}
+    </select>
+
     <!-- 新增Teamuser -->
     <insert id="addTeamuser" parameterType="TeamuserDO" useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">

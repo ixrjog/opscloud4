@@ -205,4 +205,11 @@ public interface ConfigServerGroupService {
 
     String queryZabbixProxy(ServerGroupDO serverGroupDO);
 
+    /**
+     * 取分组配置
+     * @param serverGroupDO
+     * @return
+     */
+    int queryAnsibleSubgroup(ServerGroupDO serverGroupDO);
+
 }

@@ -28,8 +28,8 @@ public class AnsibleHostServiceImpl implements AnsibleHostService {
     @Resource
     private ServerGroupDao serverGroupDao;
 
-    @Resource
-    private ConfigDao configDao;
+//    @Resource
+//    private ConfigDao configDao;
 
     @Resource
     private ConfigServerGroupService configServerGroupService;
@@ -85,6 +85,7 @@ public class AnsibleHostServiceImpl implements AnsibleHostService {
         return serverMap;
     }
 
+
     /**
      * prod继续分组
      *
@@ -93,23 +94,66 @@ public class AnsibleHostServiceImpl implements AnsibleHostService {
      */
     private void groupingProd(ServerGroupDO serverGroupDO, Map<String, List<ServerDO>> serverMap) {
         String prodGroupName = serverGroupDO.getName().replace("group_", "") + "-" + ServerDO.EnvTypeEnum.prod.getDesc();
+        //groupingProd(serverMap, prodGroupName);
         if (!serverMap.containsKey(prodGroupName)) return;
-        List<ServerDO> servers = serverMap.get(prodGroupName);
-        // 数量少于1台则不分组
-        if (servers.size() <= 1) return;
-        List<ServerDO> prod1 = new ArrayList<ServerDO>();
-        List<ServerDO> prod2 = new ArrayList<ServerDO>();
-        int boundary = servers.size() + 1;
-        for (ServerDO serverDO : servers) {
-            if (Integer.valueOf(serverDO.getSerialNumber()) * 2 <= boundary) {
-                prod1.add(serverDO);
-            } else {
-                prod2.add(serverDO);
-            }
-        }
-        serverMap.put(prodGroupName + "-" + 1, prod1);
-        serverMap.put(prodGroupName + "-" + 2, prod2);
         groupingProd(serverMap, prodGroupName);
+        List<ServerDO> servers = new ArrayList<>();
+        servers.addAll(serverMap.get(prodGroupName));
+
+        // TODO 数量少于1台则不分组
+        if (servers.size() <= 1) return;
+        // TODO 服务器数量少于分组数量也只分2组
+        int subgroup = configServerGroupService.queryAnsibleSubgroup(serverGroupDO);
+        if (subgroup > servers.size())
+            subgroup = 2;
+        // 每组平均服务器数量
+        int subCnt = servers.size() / subgroup;
+        for (int i = 1; i <= subgroup; i++) {
+            // 余数
+            int remainder = servers.size() % (subgroup - i + 1);
+            //System.err.println("size:" + servers.size() + "  subCnt:" + subCnt + "  remainder :" + remainder);
+            List<ServerDO> subGroupServers = new ArrayList<>();
+            if (remainder > 0) {
+                subGroupServers = acqSubgroup(subCnt + 1, servers);
+            } else {
+                subGroupServers = acqSubgroup(subCnt, servers);
+            }
+            serverMap.put(prodGroupName + "-" + i, subGroupServers);
+        }
+
+        groupingProd(serverMap, prodGroupName);
+
+//        List<ServerDO> prod1 = new ArrayList<ServerDO>();
+//        List<ServerDO> prod2 = new ArrayList<ServerDO>();
+//        int boundary = servers.size() + 1;
+//        for (ServerDO serverDO : servers) {
+//            if (Integer.valueOf(serverDO.getSerialNumber()) * 2 <= boundary) {
+//                prod1.add(serverDO);
+//            } else {
+//                prod2.add(serverDO);
+//            }
+//        }
+//        serverMap.put(prodGroupName + "-" + 1, prod1);
+//        serverMap.put(prodGroupName + "-" + 2, prod2);
+//        groupingProd(serverMap, prodGroupName);
+    }
+
+
+    /**
+     * 取子组
+     *
+     * @param subCnt     数量
+     * @param serverList 服务器列表
+     * @return
+     */
+    private List<ServerDO> acqSubgroup(int subCnt, List<ServerDO> serverList) {
+        serverList.sort(Comparator.naturalOrder());
+        List<ServerDO> subGroup = new ArrayList<>();
+        for (int i = 0; i < subCnt; i++) {
+            subGroup.add(serverList.get(0));
+            serverList.remove(0);
+        }
+        return subGroup;
     }
 
     /**
@@ -186,10 +230,10 @@ public class AnsibleHostServiceImpl implements AnsibleHostService {
     @Override
     public String acqHostsCfgByUseType(int useType) {
         List<ServerGroupDO> serverGroups = new ArrayList<>();
-        if(useType == 0){
-            serverGroups =  serverGroupDao.queryServerGroup();
-        }else{
-            serverGroups =   serverGroupDao.queryServerGroupByUseType(useType);
+        if (useType == 0) {
+            serverGroups = serverGroupDao.queryServerGroup();
+        } else {
+            serverGroups = serverGroupDao.queryServerGroupByUseType(useType);
         }
         return buildCfgByServerGroup(serverGroups, useType);
     }

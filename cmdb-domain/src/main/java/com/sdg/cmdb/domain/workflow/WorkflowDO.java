@@ -65,7 +65,25 @@ public class WorkflowDO implements Serializable {
     /**
      * 是否 审批
      */
-    private boolean approval;
+    private boolean approval = false;
+
+    /**
+     * 质量审批
+     */
+    private boolean qaApproval = false;
+
+    /**
+     * tl审批
+     */
+    private boolean tlApproval = false;
+
+    private boolean dlApproval = false;
+
+    /**
+     * 审核
+     */
+    private boolean opsAudit = false;
+
 
     private String gmtCreate;
 
@@ -157,6 +175,38 @@ public class WorkflowDO implements Serializable {
 
     public void setApproval(boolean approval) {
         this.approval = approval;
+    }
+
+    public boolean isQaApproval() {
+        return qaApproval;
+    }
+
+    public void setQaApproval(boolean qaApproval) {
+        this.qaApproval = qaApproval;
+    }
+
+    public boolean isTlApproval() {
+        return tlApproval;
+    }
+
+    public void setTlApproval(boolean tlApproval) {
+        this.tlApproval = tlApproval;
+    }
+
+    public boolean isDlApproval() {
+        return dlApproval;
+    }
+
+    public void setDlApproval(boolean dlApproval) {
+        this.dlApproval = dlApproval;
+    }
+
+    public boolean isOpsAudit() {
+        return opsAudit;
+    }
+
+    public void setOpsAudit(boolean opsAudit) {
+        this.opsAudit = opsAudit;
     }
 
     public String getGmtCreate() {

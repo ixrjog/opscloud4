@@ -1,11 +1,13 @@
 package com.sdg.cmdb.domain.server;
 
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
 
 /**
  * Created by zxxiao on 16/9/6.
  */
-public class ServerDO implements Serializable {
+public class ServerDO implements Serializable, Comparable<ServerDO> {
     private static final long serialVersionUID = -8455519494554601001L;
     //物理服务器
     //public static final int serverTypePs = 0;
@@ -251,6 +253,7 @@ public class ServerDO implements Serializable {
 
     /**
      * 带列号
+     *
      * @return
      */
     public String acqServerName() {
@@ -263,11 +266,12 @@ public class ServerDO implements Serializable {
 
     /**
      * 不带列号
+     *
      * @return
      */
     public String acqHostname() {
         if (this.envType == ServerDO.EnvTypeEnum.prod.getCode()) {
-            return serverName ;
+            return serverName;
         } else {
             return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType);
         }
@@ -364,5 +368,18 @@ public class ServerDO implements Serializable {
             }
             return "undefined";
         }
+    }
+
+
+    @Override
+    public int compareTo(ServerDO serverDO) {
+        //自定义比较方法，如果认为此实体本身大则返回1，否则返回-1
+        try {
+            if (Integer.valueOf(this.serialNumber) >= Integer.valueOf(serverDO.getSerialNumber()))
+                return 1;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 }

@@ -23,6 +23,9 @@ public interface WorkflowDao {
 
     List<WorkflowTodoDetailDO> getTodoDetailByTodoId(@Param("todoId") long todoId);
 
+    // 工作流查询 workflowTodo
+    List<WorkflowTodoDO> queryTodoByApplyUserId(@Param("applyUserId") long  applyUserId);
+
 
     WorkflowTodoDO getTodo(@Param("id") long id);
 
@@ -46,8 +49,6 @@ public interface WorkflowDao {
     int delTodoUser(@Param("id") long id);
 
     int updateTodoUser(WorkflowTodoUserDO workflowTodoUserDO);
-
-
 
 
 }
