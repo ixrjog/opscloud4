@@ -1,7 +1,6 @@
 package com.sdg.cmdb.domain.logService;
 
 import com.sdg.cmdb.domain.auth.UserDO;
-import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceQuery;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceQueryCfg;
 
 import java.io.Serializable;

@@ -51,16 +51,6 @@ public class AliyunLogManageServiceImplTest {
         System.err.println("MachineGroup:" +  mg.toString() + "\n");
     }
 
-    @Test
-    public void testSaveServerGroupCfg() {
-       ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupByName("group_member");
 
-        LogServiceServerGroupCfgVO cfgVO = new LogServiceServerGroupCfgVO(serverGroupDO);
-
-        cfgVO.setProject("collect-web-service-logs");
-        cfgVO.setLogstore("logstore_apps");
-
-        System.err.println(aliyunLogManageServiceImpl.saveServerGroupCfg(cfgVO));
-    }
 
 }

@@ -1,6 +1,8 @@
 package com.sdg.cmdb.service;
 
 import com.sdg.cmdb.dao.cmdb.CiDao;
+import com.sdg.cmdb.domain.ci.BuildNotifyDO;
+import com.sdg.cmdb.domain.ci.CiBuildDO;
 import com.sdg.cmdb.domain.ci.CiDeployStatisticsDO;
 import com.sdg.cmdb.service.impl.DingtalkServiceImpl;
 import org.apache.commons.lang.text.StrSubstitutor;
@@ -25,17 +27,16 @@ public class DingtalkServiceTest {
     @Resource
     private DingtalkServiceImpl dingtalkServiceImpl;
 
-    @Test
-    public void testSendCiDeployMsg() {
-        try {
-            CiDeployStatisticsDO ciDeployStatisticsDO = ciDao.getCiDeployStatisticsById(375);
-            System.err.println(ciDeployStatisticsDO);
-            dingtalkServiceImpl.sendCiDeployMsg(ciDeployStatisticsDO);
-        } catch (Exception e) {
-            e.printStackTrace();
-            System.err.println("发生错误！");
-        }
+    @Resource
+    private DingtalkService dingtalkService;
 
+
+    //notifyCi(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO)
+    @Test
+    public void testNotifyCi() {
+        CiBuildDO ciBuildDO = ciDao.getBuild(58);
+        BuildNotifyDO buildNotifyDO = ciDao.getBuildNotify(266);
+        dingtalkService.notifyCi(ciBuildDO, buildNotifyDO);
     }
 
     @Test
@@ -45,7 +46,7 @@ public class DingtalkServiceTest {
         valuesMap.put("str2", "bbbbb");
         String templateString =
                 "> str1: ${str1}\n" +
-                "> str2: ${str2}\n" ;
+                        "> str2: ${str2}\n";
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String resolvedString = sub.replace(templateString);
         System.err.println(resolvedString);

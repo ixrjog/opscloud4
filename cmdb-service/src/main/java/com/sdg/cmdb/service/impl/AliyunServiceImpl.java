@@ -1,7 +1,7 @@
 package com.sdg.cmdb.service.impl;
 
-import com.aliyuncs.AcsRequest;
-import com.aliyuncs.AcsResponse;
+
+import com.alibaba.fastjson.JSON;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
@@ -9,13 +9,17 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesRequest;
+import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesResponse;
 import com.sdg.cmdb.dao.cmdb.AliyunDao;
+import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
 import com.sdg.cmdb.domain.server.EcsServerDO;
+import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunService;
 import com.sdg.cmdb.service.ConfigCenterService;
 import org.springframework.stereotype.Service;
@@ -34,6 +38,9 @@ public class AliyunServiceImpl implements AliyunService {
 
     @Resource
     private AliyunDao aliyunDao;
+
+    @Resource
+    private ServerDao serverDao;
 
     @Resource
     private ConfigCenterService configCenterService;
@@ -125,8 +132,11 @@ public class AliyunServiceImpl implements AliyunService {
     public List<AliyunVswitchVO> queryAliyunVswitch(long vpcId, String queryDesc) {
         List<AliyunVswitchDO> list = aliyunDao.queryAliyunVswitch(vpcId, queryDesc);
         List<AliyunVswitchVO> listVO = new ArrayList<>();
-        for (AliyunVswitchDO aliyunVswitchDO : list)
-            listVO.add(new AliyunVswitchVO(aliyunVswitchDO));
+        for (AliyunVswitchDO aliyunVswitchDO : list) {
+            AliyunVswitchVO aliyunVswitchVO = new AliyunVswitchVO(aliyunVswitchDO);
+            aliyunVswitchVO.setvSwitch(getVSwitchAttributes(EcsServiceImpl.regionIdCnHangzhou,aliyunVswitchDO.getVswitchId()));
+            listVO.add(aliyunVswitchVO);
+        }
         return listVO;
     }
 
@@ -179,7 +189,7 @@ public class AliyunServiceImpl implements AliyunService {
     }
 
     @Override
-    public List<DescribeImagesResponse.Image> getDescribeImages() {
+    public List<DescribeImagesResponse.Image> getImages() {
         List<DescribeImagesResponse.Image> images = new ArrayList<DescribeImagesResponse.Image>();
         for (String regionId : acqRegionIds()) {
             try {
@@ -188,7 +198,7 @@ public class AliyunServiceImpl implements AliyunService {
                 // self：您创建的自定义镜像。
                 describe.setImageOwnerAlias("self");
                 describe.setPageSize(50);
-                DescribeImagesResponse response = sampleDescribeImagesResponse(describe, regionId);
+                DescribeImagesResponse response = getImages(describe, regionId);
                 images.addAll(response.getImages());
             } catch (Exception e) {
                 e.printStackTrace();
@@ -197,15 +207,21 @@ public class AliyunServiceImpl implements AliyunService {
         return images;
     }
 
+    /**
+     * 查询实例规格
+     *
+     * @param regionId
+     * @return
+     */
     @Override
-    public List<DescribeInstanceTypesResponse.InstanceType> getDescribeInstanceTypes(String regionId) {
-        if (regionId == null) regionId = EcsServiceImpl.regionIdCnHangzhou;
+    public List<DescribeInstanceTypesResponse.InstanceType> getInstanceTypes(String regionId) {
+        if (StringUtils.isEmpty(regionId)) regionId = EcsServiceImpl.regionIdCnHangzhou;
 
         List<DescribeInstanceTypesResponse> types = new ArrayList<DescribeInstanceTypesResponse>();
         try {
             DescribeInstanceTypesRequest describe = new DescribeInstanceTypesRequest();
             describe.setRegionId(regionId);
-            DescribeInstanceTypesResponse response = sampleDescribeInstanceTypesResponse(describe, regionId);
+            DescribeInstanceTypesResponse response = getInstanceTypes(describe, regionId);
             return response.getInstanceTypes();
         } catch (Exception e) {
             e.printStackTrace();
@@ -214,10 +230,41 @@ public class AliyunServiceImpl implements AliyunService {
 
     }
 
-    private DescribeInstanceTypesResponse sampleDescribeInstanceTypesResponse(DescribeInstanceTypesRequest describe, String regionId) {
+
+    private DescribeInstanceTypesResponse getInstanceTypes(DescribeInstanceTypesRequest describe, String regionId) {
         IAcsClient client = acqIAcsClient(regionId);
         try {
             DescribeInstanceTypesResponse response
+                    = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    @Override
+    public List<DescribeZonesResponse.Zone> getZones(String regionId) {
+        if (StringUtils.isEmpty(regionId)) regionId = EcsServiceImpl.regionIdCnHangzhou;
+        try {
+            DescribeZonesRequest describe = new DescribeZonesRequest();
+            describe.setRegionId(regionId);
+            DescribeZonesResponse response = getZones(describe, regionId);
+            return response.getZones();
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new ArrayList<DescribeZonesResponse.Zone>();
+        }
+    }
+
+    private DescribeZonesResponse getZones(DescribeZonesRequest describe, String regionId) {
+        IAcsClient client = acqIAcsClient(regionId);
+        try {
+            DescribeZonesResponse response
                     = client.getAcsResponse(describe);
             return response;
         } catch (ServerException e) {
@@ -249,6 +296,28 @@ public class AliyunServiceImpl implements AliyunService {
         }
         return new BusinessWrapper<Boolean>(true);
     }
+
+
+    @Override
+    public BusinessWrapper<Boolean> saveTemplate(EcsTemplateDO ecsTemplateDO) {
+        try {
+            serverDao.addEcsTemplate(ecsTemplateDO);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delTemplate(long id) {
+        try {
+            serverDao.delEcsTemplate(id);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
 
     /**
      * 插入vpc下的所有vSwitchs
@@ -422,10 +491,34 @@ public class AliyunServiceImpl implements AliyunService {
      * @param regionId
      * @return
      */
-    private DescribeImagesResponse sampleDescribeImagesResponse(DescribeImagesRequest describe, String regionId) {
+    private DescribeImagesResponse getImages(DescribeImagesRequest describe, String regionId) {
         IAcsClient client = acqIAcsClient(regionId);
         try {
             DescribeImagesResponse response
+                    = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public DescribeVSwitchAttributesResponse getVSwitchAttributes(String regionId, String vSwitchId) {
+        DescribeVSwitchAttributesRequest describe = new DescribeVSwitchAttributesRequest();
+        describe.setRegionId(regionId);
+        describe.setVSwitchId(vSwitchId);
+        DescribeVSwitchAttributesResponse response = getVSwitch(regionId,describe);
+        return response;
+    }
+
+    private DescribeVSwitchAttributesResponse getVSwitch(String regionId,DescribeVSwitchAttributesRequest describe) {
+        IAcsClient client = acqIAcsClient(regionId);
+        try {
+            DescribeVSwitchAttributesResponse response
                     = client.getAcsResponse(describe);
             return response;
         } catch (ServerException e) {

@@ -33,6 +33,8 @@ public interface EcsCreateService {
     HttpResult create(String regionId, CreateEcsVO template);
 
 
+
+
     boolean queryImages(String regionId, String imageName);
 
     /**

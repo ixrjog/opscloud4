@@ -23,9 +23,12 @@ public class RoleDO implements Serializable {
      */
     public static final String roleAdmin = "admin";
 
-
-
+    /**
+     * DevOps
+     */
     public static final String roleDevOps = "devOps";
+
+    public static final String roleDeptLeader ="deptLeader";
 
     public static final String roleDevelopFt = "devFt";
     public static final String roleDevelopAndroid = "devAndroid";

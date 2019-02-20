@@ -2,6 +2,7 @@ package com.sdg.cmdb.domain.zabbix;
 
 import java.io.Serializable;
 
+
 public class ZabbixTemplateVO extends ZabbixTemplateDO implements Serializable {
     private static final long serialVersionUID = 5700598289324296705L;
 

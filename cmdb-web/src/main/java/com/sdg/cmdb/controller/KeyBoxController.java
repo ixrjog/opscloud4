@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerVO;
@@ -33,10 +34,10 @@ public class KeyBoxController {
     private AuthService authService;
 
     @Resource
-    private UserService userService;
+    private LdapService ldapService;
 
-    @Resource
-    private ZabbixService zabbixService;
+//    @Resource
+//    private ZabbixService zabbixService;
 
     @Resource
     private UserDao userDao;
@@ -69,15 +70,8 @@ public class KeyBoxController {
     @RequestMapping(value = "/auth/add", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult doAuthKeybox(@RequestParam String username) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.authUserKeybox(username);
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userService.getUserDOByName(username);
-            //添加zabbix账户
-            zabbixService.userCreate(userDO);
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.authUserKeybox(username));
+
     }
 
     /**
@@ -89,15 +83,7 @@ public class KeyBoxController {
     @RequestMapping(value = "/auth/del", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delAuthKeybox(@RequestParam String username) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.delUserKeybox(username);
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userService.getUserDOByName(username);
-            //删除zabbix账户
-            zabbixService.userDelete(userDO);
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.delUserKeybox(username));
     }
 
     /**
@@ -110,31 +96,10 @@ public class KeyBoxController {
     @ResponseBody
     public HttpResult getUserGroupPage(@RequestBody KeyboxUserServerDO userServerDO,
                                        @RequestParam int page, @RequestParam int length) {
-        TableVO<List<KeyboxUserServerVO>> tableVO = keyBoxService.getUserServerPage(userServerDO, page, length);
-        for (KeyboxUserServerVO keyboxUserServerVO : tableVO.getData()) {
-            keyboxUserServerVO.setZabbixUsergroup(zabbixService.checkUserInUsergroup(new UserDO(keyboxUserServerVO.getUsername()), keyboxUserServerVO.getServerGroupDO()));
-        }
-        return new HttpResult(tableVO);
+
+        return new HttpResult(keyBoxService.getUserServerPage(userServerDO, page, length));
     }
 
-    /**
-     * 查看用户的Getway主机配置文件
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/user/getway/launch", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult launchUserGetway(@RequestParam String username) {
-        BusinessWrapper<String> wrapper = keyBoxService.launchUserGetway(username);
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-
-
-    }
 
     /**
      * 添加新的堡垒机用户服务器组
@@ -145,26 +110,9 @@ public class KeyBoxController {
     @RequestMapping(value = "/user/group/save", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult saveUserGroup(@RequestBody KeyboxUserServerVO userServerVO) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.saveUserGroup(userServerVO);
-        //添加用户组同时更新用户授权组文件
-        keyBoxService.createUserGroupConfigFile(userServerVO.getUsername());
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userDao.getUserByName(userServerVO.getUsername());
-            // 异步变更zabbix用户组
-            schedulerManager.registerJob(() -> {
-                int userid = zabbixService.userGet(userDO);
-                if (userid == 0) {
-                    zabbixService.userCreate(userDO);
-                } else {
-                    zabbixService.userUpdate(userDO);
-                }
-            });
-
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(keyBoxService.saveUserGroup(userServerVO));
     }
+
 
     /**
      * 删除用户服务器组
@@ -180,69 +128,9 @@ public class KeyBoxController {
         userServerDO.setServerGroupId(groupId);
         userServerDO.setUsername(username);
         BusinessWrapper<Boolean> wrapper = keyBoxService.delUserGroup(userServerDO);
-        keyBoxService.createUserGroupConfigFile(userServerDO.getUsername());
-        if (wrapper.isSuccess()) {
-            UserDO userDO = userDao.getUserByName(userServerDO.getUsername());
-            // 异步变更zabbix用户组
-            schedulerManager.registerJob(() -> {
-                if (userServerDO.getServerGroupId() == 0) {
-                    zabbixService.userDelete(userDO);
-                } else {
-                    zabbixService.userUpdate(userDO);
-                }
-            });
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
+        return new HttpResult(wrapper);
     }
 
-    /**
-     * 创建指定用户的配置文件
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/user/group/create", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createUserGroupConfigFile(String username) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.createUserGroupConfigFile(username);
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-    }
-
-    /**
-     * 创建所有用户的配置文件
-     *
-     * @return
-     */
-    @RequestMapping(value = "/user/group/createAll", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createAllUserGroupConfigFile() {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.createAllUserGroupConfigFile();
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-    }
-
-
-    /**
-     * 创建全局配置文件
-     *
-     * @return
-     */
-    @RequestMapping(value = "/user/group/global/create", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createUserGroupGlobalConfigFile() {
-        configService.buildGetwayHost();
-
-        return new HttpResult(true);
-    }
 
     /**
      * 查询被授权的堡垒机服务器列表
@@ -308,13 +196,30 @@ public class KeyBoxController {
     /**
      * 保存用户
      *
-     * @param userDO
+     * @param userVO
      * @return
      */
     @RequestMapping(value = "/user/save", method = RequestMethod.POST)
     @ResponseBody
-    public HttpResult createUser(@RequestBody UserDO userDO) {
-        BusinessWrapper<Boolean> wrapper = authService.addUser(userDO);
+    public HttpResult saveUser(@RequestBody UserVO userVO) {
+        BusinessWrapper<Boolean> wrapper = authService.addUser(userVO);
+        if (wrapper.isSuccess()) {
+            return new HttpResult(wrapper.getBody());
+        } else {
+            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+        }
+    }
+
+    /**
+     * 用户自己修改个人详情
+     *
+     * @param userVO
+     * @return
+     */
+    @RequestMapping(value = "/user/saveDetail", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult updateUserDetail(@RequestBody UserVO userVO) {
+        BusinessWrapper<Boolean> wrapper = ldapService.updateUser(userVO);
         if (wrapper.isSuccess()) {
             return new HttpResult(wrapper.getBody());
         } else {

@@ -104,13 +104,6 @@ public interface UserService {
     boolean saveUserLeave(UserLeaveDO userLeaveDO);
 
     /**
-     * 插入ldap分组信息
-     * @param userVO
-     */
-    void invokeLdapGroups(UserVO userVO);
-
-
-    /**
      * 查询员工的手机号
      * @param
      * @return

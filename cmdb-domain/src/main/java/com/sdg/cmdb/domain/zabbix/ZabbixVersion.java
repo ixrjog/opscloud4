@@ -1,44 +1,28 @@
 package com.sdg.cmdb.domain.zabbix;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * 用于校验ZabbixAPI配置是否生效
  */
+@Data
 public class ZabbixVersion implements Serializable {
 
-    private String version;
+    private static final long serialVersionUID = 1656665563968452434L;
 
+    private String version;
     // "name": "Zabbix server"
     private String name;
-
-    //  "hostid": "10160",
     private String hostid;
 
-
-
-    public String getVersion() {
-        return version;
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 
-    public void setVersion(String version) {
-        this.version = version;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getHostid() {
-        return hostid;
-    }
-
-    public void setHostid(String hostid) {
-        this.hostid = hostid;
-    }
 
 }

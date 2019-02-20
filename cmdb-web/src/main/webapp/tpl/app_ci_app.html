@@ -1,0 +1,193 @@
+<div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
+    app.settings.asideFolded = false;
+    app.settings.asideDock = false;
+  ">
+    <!-- main -->
+    <div class="col">
+        <!-- main header -->
+        <div class="bg-light lter b-b wrapper-md">
+            <div class="row">
+                <div class="col-sm-6 col-xs-12">
+                    <h1 class="m-n font-thin h3 text-black"></h1>
+                    <small class="text-muted">应用构建</small>
+                </div>
+            </div>
+        </div>
+        <!-- / main header -->
+        <div class="wrapper-md" ng-controller="ciAppCtrl">
+            <!-- toaster directive -->
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+            <!-- / toaster directive -->
+            <uib-accordion>
+                <!--工单列表-->
+                <div class="list-group col-md-3">
+
+                    <!--关键字搜索-->
+
+                    <div uib-accordion-group class="panel-info" is-open=true>
+                        <uib-accordion-heading>应用列表</uib-accordion-heading>
+                        <form class="form-inline" role="form">
+                            <div class="input-group">
+                                <span class="input-group-addon">应用</span>
+                                <input type="text" class="form-control" ng-model="queryName" placeholder="名称">
+                            </div>
+                            <button type="button" class="btn btn-info" ng-click="queryMyCiApp(queryName)"><span
+                                    class="glyphicon glyphicon-search"></span>搜索
+                            </button>
+                            <button type="button" class="btn btn-success" ng-click="addApp()"><span
+                                    class="glyphicon glyphicon-plus"></span>新建
+                            </button>
+                        </form>
+                        <!--<p style="color:#2ea8e5">{{workflowGroup.content}}</p>-->
+                        <div ng-repeat="ciApp in ciAppList">
+                            <hr/>
+                            <button type="button" class="btn btn-default"
+                                    style="background-color: {{ciApp.btn.background}}"
+                                    uib-popover-html="ciApp.content"
+                                    popover-trigger="'mouseenter'"
+                                    ng-click="setCiApp(ciApp)"><span style="color: {{ciApp.btn.color}}"
+                                                                     class="fa fa-dropbox">{{ciApp.appName}}</span>
+                            </button>
+                            <button type="button" class="btn btn-xs pull-right"
+                                    ng-show="ciApp.click"
+                                    style="background-color: #2b669a ; margin-top:5px;"
+                                    ng-click="editApp(ciApp)">
+                                <span style="color: white" class="icon icon-settings">配置</span>
+                            </button>
+                            <b></b>
+                        </div>
+                    </div>
+
+                </div>
+            </uib-accordion>
+
+            <uib-tabset class="list-group col-md-9">
+                <uib-tab index="0" heading="构建分支">
+                    <div class="panel panel-default">
+                        <div class="panel-body">
+                            <form name="form" class="form-inline">
+                                <div class="input-group">
+                                    <span class="input-group-addon">当前应用</span>
+                                    <input type="text" class="form-control" ng-model="nowCiApp.projectName" readonly>
+                                </div>
+                                <button type="button" class="btn btn-success" ng-show="nowCiApp.projectName != ''"
+                                        ng-click="addJob()"><span
+                                        class="icon icon-puzzle"></span>新建构建
+                                </button>
+                                <hr/>
+
+                                <uib-accordion>
+                                    <div class="panel">
+                                        <div uib-accordion-group class="panel-info" style="box-shadow: 0 0 5px #ddd;padding: 10px;" is-open=true>
+                                            <uib-accordion-heading>任务列表</uib-accordion-heading>
+                                            <div style="margin-top: 5px;">
+                                                <table class="table table-striped">
+                                                    <thead>
+                                                    <tr>
+                                                        <td class="col-md-2">持续集成任务名称</td>
+                                                        <td class="col-md-1">环境</td>
+                                                        <td>分支</td>
+                                                        <td>操作</td>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                    <tr ng-repeat="ciJob in ciJobList">
+                                                        <td>
+                                                            <b style="color: #286090">{{ciJob.jobName}}</b>
+                                                        </td>
+                                                        <td>
+                                                            <b style="color: #777" ng-if="ciJob.envType == 0">保留</b>
+                                                            <b style="color: #5bc0de" ng-if="ciJob.envType == 1">dev</b>
+                                                            <b style="color: #449d44" ng-if="ciJob.envType == 2">daily</b>
+                                                            <b style="color: #ec971f" ng-if="ciJob.envType == 3">gray</b>
+                                                            <b style="color: #d9534f" ng-if="ciJob.envType == 4">prod</b>
+                                                            <b style="color: #5e5e5e" ng-if="ciJob.envType == 5">test</b>
+                                                            <b style="color: #286090" ng-if="ciJob.envType == 6">back</b>
+                                                        </td>
+                                                        <td>
+                                                            <div ng-show="ciJob.branch != ''">
+                                                                <i class="fa fa-code-fork"></i>
+                                                                <b style="color: #777777">{{ciJob.branch}}</b>
+                                                            </div>
+                                                            <b ng-show="ciJob.branch == ''" style="color: #777777">手动选择</b>
+                                                        </td>
+                                                        <td>
+
+                                                            <button class="btn btn-xs"
+                                                                    style="margin-right: 5px; background-color: #20a03f; color: white;"
+                                                                    ng-click="buildJob(ciJob)">
+                                                                <span class="icon icon-control-play"></span>构建
+                                                            </button>
+
+                                                            <button class="btn btn-xs"
+                                                                    style="margin-right: 5px; background-color: #ff5f87; color: white;"
+                                                                    ng-click="deployJob(ciJob)">
+                                                                <span class="icon icon-cloud-upload"></span>部署
+                                                            </button>
+
+                                                            <button class="btn btn-xs"
+                                                                    style="margin-right: 5px; background-color: #2e6da4; color: white;"
+                                                                    ng-click="editJob(ciJob)">
+                                                                <span class="glyphicon glyphicon-edit"></span>编辑
+                                                            </button>
+
+                                                            <button class="btn btn-xs"
+                                                                    style="margin-right: 5px; background-color: #c9302c; color: white;"
+                                                                    ng-click="createJob(ciJob.id)"
+                                                                    uib-popover-html="'创建持续集成任务'"
+                                                                    popover-trigger="'mouseenter'">
+                                                                <span class="glyphicon glyphicon-plus"></span>创建
+                                                            </button>
+
+
+                                                            <button class="btn btn-xs"
+                                                                    style="margin-right: 5px; background-color: #ff8700; color: white;"
+                                                                    ng-click="delJob(ciJob.id)"
+                                                                    uib-popover-html="'删除持续集成应用任务'"
+                                                                    popover-trigger="'mouseenter'">
+                                                                <i class="fa fa-spin fa-spinner" ng-show="btnTodoClick"></i>
+                                                                <span class="glyphicon glyphicon-remove"></span>删除
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </uib-accordion>
+
+
+
+
+                            </form>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="1" heading="流水线">
+
+                </uib-tab>
+            </uib-tabset>
+
+        </div>
+    </div>
+    <!-- / main -->
+</div>
+
+
+<script type="text/ng-template" id="ciAppModal">
+    <div ng-include="'tpl/modal/ci/ci_app_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="ciJobModal">
+    <div ng-include="'tpl/modal/ci/ci_job_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="ciBuildModal">
+    <div ng-include="'tpl/modal/ci/ci_build_modal.html'"></div>
+</script>
+
+<script type="text/ng-template" id="ciDeployModal">
+    <div ng-include="'tpl/modal/ci/ci_deploy_modal.html'"></div>
+</script>

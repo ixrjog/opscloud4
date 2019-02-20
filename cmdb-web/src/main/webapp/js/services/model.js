@@ -632,6 +632,70 @@ app.factory("staticModel", function () {
                 code: 1,
                 name: "public"
             }
+        ],
+        aliyunMqMessageType: [
+            {
+                code: 0,
+                name: "普通消息"
+            },
+            {
+                code: 1,
+                name: "分区顺序消息"
+            },
+            {
+                code: 2,
+                name: "全局顺序消息"
+            },
+            {
+                code: 4,
+                name: "事务消息"
+            },
+            {
+                code: 5,
+                name: "定时/延时消息"
+            }
+        ],
+        rollbackType: [
+            {
+                code: 0,
+                name: "按构件包回滚"
+            },
+            {
+                code: 1,
+                name: "自动Tag回滚"
+            }
+        ],
+        ciType: [
+            {
+                code: 0,
+                name: "构建部署拆分"
+            },
+            {
+                code: 1,
+                name: "流水线(简单模式)"
+            }
+        ],
+        appType: [
+            {
+                code: 0,
+                name: "gradle(jar)"
+            },
+            {
+                code: 1,
+                name: "gradle(war)"
+            },
+            {
+                code: 2,
+                name: "maven(jar)"
+            },
+            {
+                code: 3,
+                name: "maven(war)"
+            },
+            {
+                code: 4,
+                name: "python"
+            }
         ]
     }
 

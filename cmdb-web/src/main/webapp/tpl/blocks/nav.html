@@ -1,17 +1,20 @@
 <ul class="nav">
     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-        <span>导航菜单</span>
+        <span style="color:white">MENU</span>
     </li>
 
 
     <li ui-sref-active="active">
         <a ui-sref="app.dashboard">
-            <i class="glyphicon glyphicon-stats icon text-info-dker"></i>
+            <i>
+                <embed src="img/simpleicons/dashboard.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">首页</span>
         </a>
     </li>
-
-    <!-- 服务器管理 -->
+    
 
     <li ng-if="checkMenu('app.servergroup') || checkMenu('app.server') || checkMenu('app.property') || checkMenu('app.serverTemplate')">
         <a href class="auto">
@@ -19,8 +22,12 @@
         <i class="fa fa-fw fa-angle-right text"></i>
         <i class="fa fa-fw fa-angle-down text-active"></i>
       </span>
-            <i class="glyphicon glyphicon-menu-hamburger icon text-primary-dker"></i>
-            <span class="font-bold">服务器管理</span>
+            <i>
+                <embed src="img/simpleicons/server.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
+            <span class="font-bold" style="color:#87EC00">服务器管理</span>
         </a>
         <ul class="nav nav-sub dk">
             <li class="nav-sub-header">
@@ -49,9 +56,9 @@
                 </a>
             </li>
             <!--<li ui-sref-active="active" ng-if="checkMenu('app.physicalServer')">-->
-                <!--<a ui-sref="app.physicalServer">-->
-                    <!--<span>物理服务器</span>-->
-                <!--</a>-->
+            <!--<a ui-sref="app.physicalServer">-->
+            <!--<span>物理服务器</span>-->
+            <!--</a>-->
             <!--</li>-->
             <li ui-sref-active="active" ng-if="checkMenu('app.property')">
                 <a ui-sref="app.property">
@@ -64,14 +71,19 @@
     <!-- 服务器管理 -->
 
     <!-- 持续集成  checkMenu('app.ci') -->
-    <li ng-if="false">
+
+    <li ng-if="checkMenu('app.ci')">
         <a href class="auto">
       <span class="pull-right text-muted">
         <i class="fa fa-fw fa-angle-right text"></i>
         <i class="fa fa-fw fa-angle-down text-active"></i>
       </span>
-            <i class="glyphicon glyphicon-menu-hamburger icon text-primary-dker"></i>
-            <span class="font-bold">持续集成</span>
+            <i>
+                <embed src="img/simpleicons/devops.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
+            <span class="font-bold" style="color:#1ED760">持续集成</span>
         </a>
         <ul class="nav nav-sub dk">
             <li class="nav-sub-header">
@@ -79,45 +91,27 @@
                     <span>持续集成</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.webHooks')">
-                <a ui-sref="app.webHooks">
-                    <span>WebHooks</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.gitlab')">
+                <a ui-sref="app.gitlab">
+                    <embed src="img/simpleicons/git.svg" width="15" height="15"
+                           type="image/svg+xml"
+                           pluginspage="img/simpleicons/"></embed>
+                    <b>Git仓库</b>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsJobs')">
-                <a ui-sref="app.jenkinsJobs">
-                    <span>build任务管理</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.ciApp')">
+                <a ui-sref="app.ciApp">
+                    <span style="color: #8ec165" class="fa fa-adn">应用管理</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsJobBuilds')">
-                <a ui-sref="app.jenkinsJobBuilds">
-                    <span>build任务详情</span>
-                </a>
-            </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsFt')">
-                <a ui-sref="app.jenkinsFt">
-                    <span>前端持续集成</span>
-                </a>
-            </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsAndroid')">
-                <a ui-sref="app.jenkinsAndroid">
-                    <span>Android持续集成</span>
-                </a>
-            </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsIos')">
-                <a ui-sref="app.jenkinsIos">
-                    <span>iOS持续集成</span>
-                </a>
-            </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.jenkinsTest')">
-                <a ui-sref="app.jenkinsTest">
-                    <span>自动化测试管理</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.ciTemplate')">
+                <a ui-sref="app.ciTemplate">
+                    <!--fa-stack-overflow-->
+                    <span style="color: #31b0d5" class="fa fa-codepen">任务模版</span>
                 </a>
             </li>
         </ul>
     </li>
-    <!-- 持续集成 -->
-
 
     <!-- 监控管理 -->
 
@@ -127,7 +121,11 @@
         <i class="fa fa-fw fa-angle-right text"></i>
         <i class="fa fa-fw fa-angle-down text-active"></i>
       </span>
-            <i class="glyphicon glyphicon-eye-open icon text-primary-dker"></i>
+            <i>
+                <embed src="img/simpleicons/zabbix.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">服务器监控</span>
         </a>
         <ul class="nav nav-sub dk">
@@ -152,40 +150,6 @@
 
     <!-- 监控管理 -->
 
-    <!-- 项目管理  ng-if="checkMenu('app.projectManagement') || checkMenu('app.projectHeartbeat')"-->
-
-    <li ng-if="false">
-        <a href class="auto">
-      <span class="pull-right text-muted">
-        <i class="fa fa-fw fa-angle-right text"></i>
-        <i class="fa fa-fw fa-angle-down text-active"></i>
-      </span>
-            <i class="glyphicon glyphicon-eye-open icon text-primary-dker"></i>
-            <span class="font-bold">项目管理</span>
-        </a>
-        <ul class="nav nav-sub dk">
-            <li class="nav-sub-header">
-                <a href>
-                    <span>项目生命周期管理</span>
-                </a>
-            </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.projectManagement')">
-                <a ui-sref="app.projectManagement">
-                    <span>线上生命周期管理</span>
-                </a>
-            </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.projectHeartbeat')">
-                <a ui-sref="app.projectHeartbeat">
-                    <span>线上生命周期</span>
-                </a>
-            </li>
-        </ul>
-    </li>
-    <li ng-if="false" class="line dk"
-        ng-if="checkMenu('app.projectManagement') || checkMenu('app.projectHeartbeat')"></li>
-
-    <!-- 项目管理 -->
-
     <!-- 任务管理 -->
 
     <li ng-if="checkMenu('app.logcleanup') || checkMenu('app.servertask')">
@@ -194,8 +158,12 @@
         <i class="fa fa-fw fa-angle-right text"></i>
         <i class="fa fa-fw fa-angle-down text-active"></i>
       </span>
-            <i class="glyphicon glyphicon-music icon text-primary-dker"></i>
-            <span class="font-bold">任务管理</span>
+            <i >
+                <embed src="img/simpleicons/ansible-circle.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
+            <span style="color:white" class="font-bold" style="color:#E10098">任务管理</span>
         </a>
         <ul class="nav nav-sub dk">
             <li class="nav-sub-header">
@@ -275,7 +243,11 @@
         <i class="fa fa-fw fa-angle-right text"></i>
         <i class="fa fa-fw fa-angle-down text-active"></i>
       </span>
-            <i class="glyphicon glyphicon-cog icon text-primary-dker"></i>
+            <i>
+                <embed src="img/simpleicons/ip.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">IP管理</span>
         </a>
         <ul class="nav nav-sub dk">
@@ -300,6 +272,71 @@
 
     <!-- IP管理 -->
 
+    <!--MQ管理-->
+
+    <li ng-if="checkMenu('app.aliyunMq')">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i>
+                <embed src="img/simpleicons/mq.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
+            <span class="font-bold">阿里云MQ管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active" ng-if="checkMenu('app.aliyunMqMgmt')">
+                <a ui-sref="app.aliyunMqMgmt">
+                    <span>MQ配置</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.aliyunMqStatus')">
+                <a ui-sref="app.aliyunMqStatus">
+                    <span>MQ详情</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!--MQ管理-->
+
+    <!--RAM管理-->
+
+    <li ng-if="checkMenu('app.aliyunRam')">
+        <a href class="auto">
+    <span class="pull-right text-muted">
+    <i class="fa fa-fw fa-angle-right text"></i>
+    <i class="fa fa-fw fa-angle-down text-active"></i>
+    </span>
+            <i>
+                <embed src="img/simpleicons/ram.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
+            <span class="font-bold">阿里云RAM管理</span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active" ng-if="checkMenu('app.aliyunRamPolicy')">
+                <a ui-sref="app.aliyunRamPolicy">
+                    <span>策略管理</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="nav nav-sub dk">
+            <li ui-sref-active="active" ng-if="checkMenu('app.aliyunRamUser')">
+                <a ui-sref="app.aliyunRamUser">
+                    <span>用户管理</span>
+                </a>
+            </li>
+        </ul>
+    </li>
+
+    <!--RAM管理-->
+
+
     <!-- 配置管理 -->
 
     <li ng-if="checkMenu('app.configFile') || checkMenu('app.configFileGroup') || checkMenu('app.configCenter')">
@@ -308,7 +345,11 @@
         <i class="fa fa-fw fa-angle-right text"></i>
         <i class="fa fa-fw fa-angle-down text-active"></i>
       </span>
-            <i class="glyphicon glyphicon-book icon text-primary-dker"></i>
+            <i>
+                <embed src="img/simpleicons/config.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">配置管理</span>
         </a>
         <ul class="nav nav-sub dk">
@@ -319,11 +360,12 @@
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.ansibleConfigFile">
-                    <span>Ansibles主机文件</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" height="15px" width="70" viewBox="0 0 815.5 119.9"><path d="M55 30.8l22.2 54.89-33.55-26.45L55 30.8zm39.5 67.59L60.3 16c-1-2.4-2.9-3.6-5.3-3.6s-4.5 1.2-5.4 3.6L12 106.3h12.85l14.86-37.21L84.1 104.9c1.8 1.5 3.1 2.1 4.7 2.1 3.4 0 6.3-2.5 6.3-6.1 0-.6-.2-1.51-.6-2.51m677.6 9.51c-26 0-41.6-9.51-41.6-28.61 0-9.1 5.2-17.74 15.2-21.79-8.1-5.02-12.3-12.1-12.3-20 0-17.3 13.6-25.5 39-25.5 8.5 0 20.5 1 30.5 3.2l-1.4 10.3c-10.6-1.6-20.5-2.6-30.1-2.6-16.5 0-25.3 4.5-25.3 15.2 0 8.5 8.1 15.22 18.9 15.22h21.8c3 0 5.4 2.37 5.4 5.3 0 3.07-2.4 5.44-5.4 5.44h-23.5c-12.3 0-20.1 6.03-20.1 15.23 0 13.5 12.7 17.6 28.6 17.6 8.7 0 20.4-1.1 29.9-3.4l1.8 10.21c-9.1 2.5-20.9 4.2-31.4 4.2m-143.5-1.5c-3.5 0-6.3-3-6.3-6.3V13.4H635v81.59h50.5v11.41h-56.9zm-91.3-42.2h-31.5v31.59h31.5c10.7 0 17.3-6.7 17.3-16.1 0-8.8-6.8-15.49-17.3-15.49M531.2 24h-25.4v29.73h25.4c10.1 0 17.5-6.43 17.5-15.33 0-8.8-6.4-14.4-17.5-14.4m6.2 82.4h-37.9c-3.7 0-6.5-2.8-6.5-6.3V19.7c0-3.4 2.8-6.3 6.5-6.3h31.4c19.2 0 30.7 9.3 30.7 24 0 8-4.8 15.35-12 19.68 10.7 3.21 18 12.01 18 22.61 0 14.8-12.4 26.71-30.2 26.71m-120.8-93h12.7v93h-12.7v-93zm-94.5 94.5c-12.3 0-25.1-2.5-37.1-7l2.9-10.01c11 3.5 23 6 34.2 6 15.5 0 23.6-5.5 23.6-13.2 0-6.9-6.3-10.4-27.9-20.47-21.7-10.05-30.2-16.42-30.2-29.02 0-15.8 12.3-22.2 35.5-22.2 9.6 0 24.4 1.9 32.9 4.5l-1.9 10.3c-9.4-2.2-21.1-3.8-30.7-3.8-16.4 0-23.1 3.1-23.1 10.8 0 7.5 4.9 10.7 27.8 21.19 24.2 11.03 30.3 16.6 30.3 28 0 16.7-15.9 24.91-36.3 24.91m-101.6-.8c-1.7 0-3.5-.5-4.7-2.1l-53.9-69.8v71.2h-12.3V18.7c0-3.5 2.9-6.3 6.3-6.3 1.9 0 3.6.6 4.9 2.2l53.7 69.69V13.4h12.3v87.5c0 3.6-3 6.2-6.3 6.2"/></svg>
+                    <!--<span>Ansibles主机文件</span>-->
                 </a>
             </li>
 
-            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+            <li ng-show="false" ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.getwayConfigFile">
                     <span>Getway配置管理</span>
                 </a>
@@ -331,7 +373,28 @@
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.shadowsocksConfigFile">
-                    <span>SS配置管理</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="15px" viewBox="0 0 150 163">
+                        <path fill="#1a7dc0" d="M139.7 19l-24 100.8s-37-10.5-50.5-15l44-53.6-61 48.2L7.5 86zm-74.2 97.3l15.4 5L65 145z"/>
+                    </svg>
+                    <b>SHADOWSOCKS</b>
+                </a>
+            </li>
+
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.nginxConfig">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" height="15px" width="50" viewBox="0 0 125 34"><path d="M26.526 5a2.5 2.5 0 0 0-2.463 2.535v13.028L9.27 5.768A2.5 2.5 0 0 0 5 7.535v19.067a2.5 2.5 0 1 0 5 0v-13.03l14.795 14.797a2.5 2.5 0 0 0 4.268-1.768V7.535A2.5 2.5 0 0 0 26.526 5zm36.94.03C62.16 5.046 60.983 6.252 61 7.56v6.516h5V7.56c.017-1.33-1.2-2.547-2.53-2.53zm8.054.02a2.5 2.5 0 0 0-2.537 2.534V26.65a2.5 2.5 0 0 0 4.267 1.768l14.795-14.8v13.033a2.5 2.5 0 1 0 5 0V7.585a2.5 2.5 0 0 0-4.27-1.767L73.984 20.612V7.584A2.5 2.5 0 0 0 71.52 5.05zm26.918.003a2.5 2.5 0 0 0-1.735 4.295l7.778 7.748-7.755 7.728a2.5 2.5 0 1 0 3.53 3.542l7.767-7.74 7.767 7.74a2.5 2.5 0 1 0 3.53-3.542l-7.757-7.728 7.777-7.748a2.5 2.5 0 0 0-1.734-4.295 2.5 2.5 0 0 0-1.795.754l-7.788 7.762-7.79-7.763a2.5 2.5 0 0 0-1.794-.754zM38.14 5.06l-.687 1.282-5.312 9.656-.687 1.22.688 1.218 5.313 9.344.72 1.28H52.078l.688-1.405 3.97-8 1.78-3.625h-4.03l-10.158.03c-1.32-.018-2.535 1.18-2.535 2.5 0 1.322 1.215 2.52 2.535 2.5l6.125-.03-1.5 3.03h-7.875l-3.906-6.874 3.938-7.125h8.377l1.953 4.01h5.03L53.3 6.466 52.61 5.06H38.14zM61 16.083v10.465c-.016 1.31 1.16 2.515 2.47 2.53 1.33.018 2.547-1.2 2.53-2.53V16.082h-5z"/></svg>
+                </a>
+            </li>
+
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.dnsConfig">
+                    <span>DNS配置管理</span>
+                </a>
+            </li>
+
+            <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
+                <a ui-sref="app.configPlaybook">
+                    <span>自动Playbook</span>
                 </a>
             </li>
 
@@ -345,21 +408,7 @@
                     <span>文件组管理</span>
                 </a>
             </li>
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.configCenter')">-->
-            <!--<a ui-sref="app.configCenter">-->
-            <!--<span>系统配置中心</span>-->
-            <!--</a>-->
-            <!--</li>-->
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.dns')">-->
-            <!--<a ui-sref="app.dns">-->
-            <!--<span>DNS配置</span>-->
-            <!--</a>-->
-            <!--</li>-->
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.iptables')">-->
-            <!--<a ui-sref="app.dns">-->
-            <!--<span>IPTABLES配置</span>-->
-            <!--</a>-->
-            <!--</li>-->
+
         </ul>
     </li>
     <li class="line dk"
@@ -367,54 +416,52 @@
 
     <!-- 配置管理 -->
 
-    <!-- 工单管理 ng-if="checkMenu('app.todoConfig') || checkMenu('app.todoDaily')" -->
-
-    <li ng-if="false">
+    <!--Workflow-->
+    <li>
         <a href class="auto">
     <span class="pull-right text-muted">
     <i class="fa fa-fw fa-angle-right text"></i>
     <i class="fa fa-fw fa-angle-down text-active"></i>
     </span>
-            <i class="glyphicon glyphicon-retweet icon text-primary-dker"></i>
-            <span class="font-bold">我的工单</span>
+            <i>
+                <embed src="img/simpleicons/workflow.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
+            <span class="font-bold">工作流管理</span>
         </a>
         <ul class="nav nav-sub dk">
-            <li class="nav-sub-header">
-                <a href>
-                    <span>工单管理</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.workflow')">
+                <a ui-sref="app.workflow">
+                    <span>工作流</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.todoConfig')">
-                <a ui-sref="app.todoConfig">
-                    <span>工单配置</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.workflowMgmt')">
+                <a ui-sref="app.workflowMgmt">
+                    <span>工作流管理</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.todo')">
-                <a ui-sref="app.todo">
-                    <span>标准工单</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.teamMgmt')">
+                <a ui-sref="app.teamMgmt">
+                    <span>团队管理</span>
                 </a>
             </li>
-            <!--<li ui-sref-active="active" ng-if="checkMenu('app.todoDaily')">-->
-            <!--<a ui-sref="app.todoDaily">-->
-            <!--<span>其它工单</span>-->
-            <!--</a>-->
-            <!--</li>-->
         </ul>
     </li>
 
-    <li ng-if="false" class="line dk" ng-if="checkMenu('app.todoConfig') || checkMenu('app.todoDaily')"></li>
-
-    <!-- 工单管理 -->
-
     <!-- 日志服务  ng-if="checkMenu('app.logService')"-->
 
-    <li ng-if="false">
+    <li ng-if="true">
         <a href class="auto">
     <span class="pull-right text-muted">
     <i class="fa fa-fw fa-angle-right text"></i>
     <i class="fa fa-fw fa-angle-down text-active"></i>
     </span>
-            <i class="glyphicon glyphicon-th-large icon text-primary-dker"></i>
+            <i>
+                <embed src="img/simpleicons/logservice.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">日志服务</span>
         </a>
         <ul class="nav nav-sub dk">
@@ -423,8 +470,8 @@
                     <span>日志服务</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.logService')">
-                <a ui-sref="app.logService">
+            <li ui-sref-active="active" ng-if="checkMenu('app.logserviceNginx')">
+                <a ui-sref="app.logserviceNginx">
                     <span>Nginx日志</span>
                 </a>
             </li>
@@ -433,8 +480,8 @@
                     <span>业务日志</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.javaLogServiceManage')">
-                <a ui-sref="app.javaLogServiceManage">
+            <li ui-sref-active="active" ng-if="checkMenu('app.logserviceManage')">
+                <a ui-sref="app.logserviceManage">
                     <span>业务日志配置</span>
                 </a>
             </li>
@@ -454,7 +501,11 @@
     <i class="fa fa-fw fa-angle-right text"></i>
     <i class="fa fa-fw fa-angle-down text-active"></i>
     </span>
-            <i class="glyphicon glyphicon-th-large icon text-primary-dker"></i>
+            <i>
+                <embed src="img/simpleicons/keybox.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">堡垒机</span>
         </a>
         <ul class="nav nav-sub dk">
@@ -502,6 +553,11 @@
                     <span>用户管理</span>
                 </a>
             </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.ldapGroups')">
+                <a ui-sref="app.ldapGroups">
+                    <span>用户组管理</span>
+                </a>
+            </li>
             <!--<li ui-sref-active="active" ng-if="checkMenu('app.usersLeave')">-->
             <!--<a ui-sref="app.usersLeave">-->
             <!--<span>离职用户管理</span>-->
@@ -538,7 +594,11 @@
     </li>
     <li ui-sref-active="active" ng-if="checkMenu('app.userDetail')">
         <a ui-sref="app.userDetail">
-            <i class="glyphicon glyphicon-th icon text-info-dker"></i>
+            <i>
+                <embed src="img/simpleicons/invision.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">个人详情</span>
         </a>
     </li>
@@ -562,7 +622,11 @@
     <i class="fa fa-fw fa-angle-right text"></i>
     <i class="fa fa-fw fa-angle-down text-active"></i>
     </span>
-            <i class="glyphicon glyphicon-flash icon text-primary-dker"></i>
+            <i>
+                <embed src="img/simpleicons/power.svg" width="15" height="15"
+                       type="image/svg+xml"
+                       pluginspage="img/simpleicons/"></embed>
+            </i>
             <span class="font-bold">权限管理</span>
         </a>
         <ul class="nav nav-sub dk">

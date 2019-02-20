@@ -865,11 +865,12 @@ app.controller('todoKeyBoxInstanceCtrl', function ($scope, $uibModalInstance, $s
 app.controller('todoCiUserGroupInstanceCtrl', function ($scope, $uibModalInstance, $sce, toaster, httpService, todoItem, todoDetail) {
     $scope.todoItem = todoItem;
     $scope.todoDetail = todoDetail;
-    //$scope.todoDetail = {};
+
     $scope.initiatorUsername = "";
     $scope.assigneeUsersInfo = "";
     $scope.nowCigroup = {};
     $scope.cigroupList = [];
+
 
     $scope.doQuery = function () {
         var url = "/todo/todoDetail/query?id=" + $scope.todoDetail.id;
@@ -1521,7 +1522,7 @@ app.controller('todoNewProjectInstanceCtrl', function ($scope, $uibModalInstance
 
 
     $scope.queryStashProject = function (queryParam) {
-        var url = "/todo/todoNewProject/stash/project/query?page=0&length=10&name=" + queryParam;
+        var url = "/todo/todoNewProject/jumpserver/project/query?page=0&length=10&name=" + queryParam;
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
@@ -1547,7 +1548,7 @@ app.controller('todoNewProjectInstanceCtrl', function ($scope, $uibModalInstance
 
         if ($scope.nowStashProject.selected != null) return;
 
-        var url = "/todo/todoNewProject/stash/project/get?id=" + $scope.nowStashRepository.selected.project_id;
+        var url = "/todo/todoNewProject/jumpserver/project/get?id=" + $scope.nowStashRepository.selected.project_id;
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 var body = data.body;
@@ -1568,7 +1569,7 @@ app.controller('todoNewProjectInstanceCtrl', function ($scope, $uibModalInstance
     $scope.queryStashRepository = function (queryParam) {
 
         // ($scope.nowServerGroup.selected == null ? -1 : $scope.nowServerGroup.selected.id)
-        var url = "/todo/todoNewProject/stash/repository/query?page=0&length=10" +
+        var url = "/todo/todoNewProject/jumpserver/repository/query?page=0&length=10" +
             "&id=" + ($scope.nowStashProject.selected == null ? -1 : $scope.nowStashProject.selected.id) +
             "&name=" + queryParam;
 
@@ -2466,7 +2467,7 @@ app.controller('todoScmInstanceCtrl', function ($scope, $uibModalInstance, $uibM
     }
 
     $scope.queryStashProject = function (queryParam) {
-        var url = "/todo/todoNewProject/stash/project/query?page=0&length=10&name=" + queryParam;
+        var url = "/todo/todoNewProject/jumpserver/project/query?page=0&length=10&name=" + queryParam;
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
@@ -2488,7 +2489,7 @@ app.controller('todoScmInstanceCtrl', function ($scope, $uibModalInstance, $uibM
     $scope.getStashProject = function () {
         if ($scope.nowStashRepository.selected == null) return;
         if ($scope.nowStashProject.selected != null) return;
-        var url = "/todo/todoNewProject/stash/project/get?id=" + $scope.nowStashRepository.selected.project_id;
+        var url = "/todo/todoNewProject/jumpserver/project/get?id=" + $scope.nowStashRepository.selected.project_id;
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 var body = data.body;
@@ -2529,7 +2530,7 @@ app.controller('todoScmInstanceCtrl', function ($scope, $uibModalInstance, $uibM
     $scope.queryStashRepository = function (queryParam) {
 
         // ($scope.nowServerGroup.selected == null ? -1 : $scope.nowServerGroup.selected.id)
-        var url = "/todo/todoNewProject/stash/repository/query?page=0&length=10" +
+        var url = "/todo/todoNewProject/jumpserver/repository/query?page=0&length=10" +
             "&id=" + ($scope.nowStashProject.selected == null ? -1 : $scope.nowStashProject.selected.id) +
             "&name=" + queryParam;
 

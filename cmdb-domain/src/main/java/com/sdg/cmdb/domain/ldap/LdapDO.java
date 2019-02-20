@@ -1,7 +1,5 @@
 package com.sdg.cmdb.domain.ldap;
 
-import com.sdg.cmdb.domain.configCenter.itemEnum.LdapItemEnum;
-
 import java.io.Serializable;
 import java.util.HashMap;
 
@@ -38,19 +36,6 @@ public class LdapDO implements Serializable {
         this.password = password;
     }
 
-    public LdapDO(HashMap<String, String> configMap, String ldapType) {
-        this.ldapType = ldapType;
-        if (ldapType.equalsIgnoreCase(LdapTypeEnum.cmdb.getDesc())) {
-            this.url = configMap.get(LdapItemEnum.LDAP_URL.getItemKey());
-            this.userDn = configMap.get(LdapItemEnum.LDAP_BIND_DN.getItemKey());
-            this.password = configMap.get(LdapItemEnum.LDAP_PASSWD.getItemKey());
-        }
-        if (ldapType.equalsIgnoreCase(LdapTypeEnum.mail.getDesc())) {
-            this.url = configMap.get(LdapItemEnum.LDAP_MAIL_URL.getItemKey());
-            this.userDn = configMap.get(LdapItemEnum.LDAP_MAIL_BIND_DN.getItemKey());
-            this.password = configMap.get(LdapItemEnum.LDAP_MAIL_PASSWD.getItemKey());
-        }
-    }
 
     public String getUrl() {
         return url;

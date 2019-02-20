@@ -17,11 +17,15 @@ package com.sdg.cmdb.util;
 
 
 import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
+import com.sdg.cmdb.util.base64.BASE64EncoderUtil;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+
+
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 import java.security.MessageDigest;
@@ -134,7 +138,8 @@ public class EncryptionUtil {
 
 
     /**
-     * 从加密的私钥中获取指纹(MD%)
+     * 从加密的私钥中获取指纹(MD5)
+     *
      * @param applicationKeyVO
      * @return
      */
@@ -150,23 +155,53 @@ public class EncryptionUtil {
     }
 
     /**
-     * 获取MD5的指纹格式
+     * 获取MD5的指纹格式 d3:4d:0f:da:0c:c8:67:a8:e6:cb:ac:29:c8:1e:d3:ff
+     *
      * @param md5
      * @return
      */
-    public static String fingerprint(String md5){
-        String r= "";
-        for (int i = 0; i < md5.length(); i=i+2) {
+    public static String fingerprint(String md5) {
+        String r = "";
+        for (int i = 0; i < md5.length(); i = i + 2) {
             char c1 = md5.charAt(i);
-            char c2 = md5.charAt(i+1);
-            r+=c1;
-            r+=c2;
-            if(i+2<md5.length()){
-                r+=":";
+            char c2 = md5.charAt(i + 1);
+            r += c1;
+            r += c2;
+            if (i + 2 < md5.length()) {
+                r += ":";
             }
         }
         return r;
     }
+
+    /**
+     * BASE64加密 用于生成SS Qcode
+     *
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    public static String encryptBASE64(byte[] key) throws Exception {
+        return (new BASE64EncoderUtil()).encodeBuffer(key);
+    }
+
+    /**
+     * SS Qcode
+     * @param key
+     * @return
+     * @throws Exception
+     */
+    public static String getSsQcode(String key) throws Exception {
+        //String para = "aes-256-cfb:123456@hk-ss1.ops.yangege.cn:22407";
+        String qcode = encryptBASE64(key.getBytes());
+        qcode = "ss://" + qcode.replaceAll("[\\s*\t\n\r]", "");
+        return qcode;
+    }
+
+
+
+
+
 
 
 }

@@ -4,6 +4,7 @@ import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.todo.TodoDetailDO;
 import com.sdg.cmdb.domain.todo.TodoKeyboxDetailDO;
+import com.sdg.cmdb.domain.workflow.detail.TodoDetailKeybox;
 
 import java.io.Serializable;
 
@@ -49,6 +50,16 @@ public class KeyboxUserServerVO implements Serializable {
     public KeyboxUserServerVO() {
     }
 
+    /**
+     * workflow专用
+     * @param username
+     * @param keybox
+     */
+    public KeyboxUserServerVO(String username, TodoDetailKeybox keybox ) {
+        this.serverGroupId = keybox.getServerGroupDO().getId();
+        this.ciChoose = keybox.isCiAuth();
+        this.username = username;
+    }
 
     public KeyboxUserServerVO(String username, TodoKeyboxDetailDO todoKeyboxDetailDO) {
         this.serverGroupId = todoKeyboxDetailDO.getServerGroupId();

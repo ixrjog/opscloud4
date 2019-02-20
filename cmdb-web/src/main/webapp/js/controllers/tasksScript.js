@@ -191,6 +191,12 @@ app.controller('scriptInstanceCtrl', function ($scope, $uibModalInstance, $uibMo
 
     }
 
+    $scope.editorOptions = {
+        lineWrapping : true,
+        lineNumbers: true,
+        readOnly: 'nocursor'
+    };
+
     $scope.closeModal = function () {
         $uibModalInstance.dismiss('cancel');
     }

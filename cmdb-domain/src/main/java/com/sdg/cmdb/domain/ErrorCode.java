@@ -75,6 +75,9 @@ public enum ErrorCode {
 
     usernameIsNull("0044", "用户名不存在!"),
 
+    createTopicError("0050","创建Topic错误!"),
+    createEmpowerError("0051","Topic授权错误!"),
+
     serverFailure("9999", "系统错误");
 
     private String code;

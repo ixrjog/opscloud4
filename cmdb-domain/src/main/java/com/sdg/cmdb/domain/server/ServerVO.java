@@ -318,13 +318,22 @@ public class ServerVO implements Serializable {
         this.serverGroupUseTypeDO = serverGroupUseTypeDO;
     }
 
+//    public String acqServerName() {
+//        if (this.envType == ServerDO.EnvTypeEnum.prod.getCode()) {
+//            return serverName;
+//        } else {
+//            return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType);
+//        }
+//    }
+
     public String acqServerName() {
         if (this.envType == ServerDO.EnvTypeEnum.prod.getCode()) {
-            return serverName;
+            return serverName + "-" + serialNumber;
         } else {
-            return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType);
+            return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType) + "-" + serialNumber;
         }
     }
+
 
     @Override
     public String toString() {

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -124,11 +125,13 @@ public class AliyunLogManageServiceImpl implements AliyunLogManageService {
         MachineGroup machineGroup = getMachineGroup(project, groupName);
         if (machineGroup == null) return new MachineGroupVO();
         List<ServerDO> serverList = new ArrayList<>();
+
         for (String ip : machineGroup.GetMachineList()) {
             ServerDO serverDO = serverDao.queryServerByInsideIp(ip);
             if (serverDO != null)
                 serverList.add(serverDO);
         }
+        serverList.sort(Comparator.naturalOrder());
         MachineGroupVO machineGroupVO = new MachineGroupVO(machineGroup, serverList);
         return machineGroupVO;
     }

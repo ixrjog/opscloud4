@@ -513,11 +513,11 @@ app.controller('configFileInstanceCtrl', function ($scope, $uibModalInstance, ht
             return;
         }
 
-        if ($scope.item.fileType == 1 && ($scope.item.invokeCmd == null || $scope.item.invokeCmd == '')) {
-            $scope.alert.type = 'warning';
-            $scope.alert.msg = "必须指定执行命令";
-            return;
-        }
+        // if ($scope.item.fileType == 1 && ($scope.item.invokeCmd == null || $scope.item.invokeCmd == '')) {
+        //     $scope.alert.type = 'warning';
+        //     $scope.alert.msg = "必须指定执行命令";
+        //     return;
+        // }
 
         $scope.item.params = JSON.stringify($scope.paramList);
         httpService.doPostWithJSON(url, $scope.item).then(function (data) {

@@ -6,8 +6,6 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
 import com.sdg.cmdb.service.ConfigCenterService;
 import com.sdg.cmdb.service.ConfigService;
 import org.apache.commons.lang.StringUtils;
@@ -180,10 +178,10 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
         try {
             for (String key : map.keySet()) {
                 ConfigCenterDO configCenterDO = map.get(key);
-                if (configCenterDO.getItemGroup().equalsIgnoreCase(ConfigCenterItemGroupEnum.GETWAY.getItemKey())) {
-                    if (configCenterDO.getItem().equalsIgnoreCase(GetwayItemEnum.GETWAY_HOST_CONF_FILE.getItemKey()))
-                        saveGetwayConfig(configCenterDO);
-                }
+//                if (configCenterDO.getItemGroup().equalsIgnoreCase(ConfigCenterItemGroupEnum.GETWAY.getItemKey())) {
+//                    if (configCenterDO.getItem().equalsIgnoreCase(GetwayItemEnum.GETWAY_HOST_CONF_FILE.getItemKey()))
+//                        saveGetwayConfig(configCenterDO);
+//                }
                 updateCache(configCenterDO);
                 if (!saveConfigCenterDO(configCenterDO))
                     return new BusinessWrapper<>(ErrorCode.serverFailure);
@@ -209,5 +207,8 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
             return new BusinessWrapper<>(ErrorCode.serverFailure);
         }
     }
+
+
+
 
 }

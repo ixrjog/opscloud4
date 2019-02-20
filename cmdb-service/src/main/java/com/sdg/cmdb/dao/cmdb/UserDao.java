@@ -4,15 +4,11 @@ import com.sdg.cmdb.domain.auth.CiUserDO;
 import com.sdg.cmdb.domain.auth.CiUserGroupDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserLeaveDO;
-import com.sdg.cmdb.domain.systems.SystemDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-/**
- * Created by zxxiao on 2016/11/22.
- */
 @Component
 public interface UserDao {
 

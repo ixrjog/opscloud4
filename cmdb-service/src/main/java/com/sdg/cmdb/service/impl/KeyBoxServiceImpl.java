@@ -9,9 +9,6 @@ import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
-import com.sdg.cmdb.domain.config.ConfigFileDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
 import com.sdg.cmdb.domain.ip.IPDetailDO;
 import com.sdg.cmdb.domain.ip.IPDetailVO;
 import com.sdg.cmdb.domain.keybox.*;
@@ -20,7 +17,6 @@ import com.sdg.cmdb.domain.keybox.keyboxStatus.KeyboxStatusVO;
 import com.sdg.cmdb.domain.keybox.keyboxStatus.KeyboxUserVO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.template.getway.Getway;
 import com.sdg.cmdb.util.EncryptionUtil;
 import com.sdg.cmdb.util.IOUtils;
 import com.sdg.cmdb.util.SessionUtils;
@@ -80,21 +76,18 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     private AuthService authService;
 
     @Resource
-    private AnsibleTaskService ansibleTaskService;
+    private ConfigCenterService configCenterService;
 
     @Resource
-    private ConfigCenterService configCenterService;
+    private   ZabbixServerService zabbixServerService;
+
+    @Resource
+    private ZabbixService zabbixService;
 
 
     @Resource
     private CiUserGroupService ciUserGroupService;
 
-    private HashMap<String, String> configMap;
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey());
-    }
 
 
     @Override
@@ -105,24 +98,11 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         for (KeyboxUserServerDO userServerDOItem : userServerDOList) {
             ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(userServerDOItem.getServerGroupId());
             KeyboxUserServerVO userServerVO = new KeyboxUserServerVO(userServerDOItem, serverGroupDO);
+
+            userServerVO.setZabbixUsergroup(zabbixServerService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
             userServerVOList.add(userServerVO);
         }
         return new TableVO<>(size, userServerVOList);
-    }
-
-    @Override
-    public BusinessWrapper<String> launchUserGetway(String username) {
-
-        HashMap<String, String> configMap = acqConifMap();
-        String getwayUserConfPath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
-
-        try {
-            String value = IOUtils.readFile(getwayUserConfPath + "/" + username + "/getway.conf");
-            return new BusinessWrapper<>(value);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure.getCode(), "文件不存在!");
-        }
     }
 
     @Override
@@ -149,10 +129,11 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             return new BusinessWrapper<>(ErrorCode.userPwdNotInput);
         }
 
-        BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
+       // BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
         userDO.setAuthed(UserDO.AuthType.authed.getCode());
         userService.updateUserAuthStatus(userDO);
-        return wrapper;
+        zabbixService.userCreate(userDO);
+        return null;
     }
 
     @Override
@@ -166,14 +147,12 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             userDO.setUsername(username);
         }
 
-        delKeyFile(username);
-
-
         try {
-            BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayDelAccount(userDO.getUsername());
+            //BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayDelAccount(userDO.getUsername());
             userDO.setAuthed(UserDO.AuthType.noAuth.getCode());
             userService.updateUserAuthStatus(userDO);
-            return wrapper;
+            zabbixService.userDelete(userDO);
+            return null;
         } catch (Exception e) {
             return new BusinessWrapper<Boolean>(false);
         }
@@ -227,6 +206,14 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 //                }
 //            });
             keyboxDao.delUserServer(userServerDO);
+            // 异步变更zabbix用户组
+            schedulerManager.registerJob(() -> {
+                if (userServerDO.getServerGroupId() == 0) {
+                    zabbixService.userDelete(userDO);
+                } else {
+                    zabbixService.userUpdate(userDO);
+                }
+            });
             return new BusinessWrapper<>(true);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -234,55 +221,8 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         }
     }
 
-    @Override
-    public BusinessWrapper<Boolean> createUserGroupConfigFile(String username) {
-        coreLogger.info(SessionUtils.getUsername() + " create user :" + username + " getway config file!");
-
-        HashMap<String, String> configMap = acqConifMap();
-        String configFilePath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
 
 
-        try {
-            UserDO userDO = userService.getUserDOByName(username);
-            if (userDO == null) {
-                return new BusinessWrapper<>(ErrorCode.userNotExist);
-            }
-
-            List<ServerGroupDO> groupDOList = keyboxDao.getGroupListByUsername(username);
-            if (groupDOList == null || groupDOList.size() == 0) {
-                IOUtils.delFile(configFilePath + "/" + username + "/getway.conf");
-            } else {
-                Getway gw = new Getway(userDO, groupDOList);
-                IOUtils.writeFile(gw.toString(), configFilePath + "/" + username + "/getway.conf");
-            }
-            return new BusinessWrapper<>(true);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure);
-        }
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> createAllUserGroupConfigFile() {
-        coreLogger.info("create all user getway config file!");
-        HashMap<String, String> configMap = acqConifMap();
-        String configFilePath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
-
-        try {
-            List<UserDO> users = userDao.getAllUser();
-            if (users == null || users.size() == 0) return new BusinessWrapper<>(ErrorCode.serverFailure);
-            for (UserDO userDO : users) {
-                List<ServerGroupDO> groupDOList = keyboxDao.getGroupListByUsername(userDO.getUsername());
-                if (groupDOList == null || groupDOList.size() == 0) continue;
-                Getway gw = new Getway(userDO, groupDOList);
-                IOUtils.writeFile(gw.toString(), configFilePath + "/" + userDO.getUsername() + "/getway.conf");
-            }
-            return new BusinessWrapper<>(true);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure);
-        }
-    }
 
 
     @Override
@@ -375,20 +315,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         return new TableVO<>(size, voList);
     }
 
-    /**
-     * 删除key file
-     *
-     * @param username
-     */
-    private void delKeyFile(String username) {
 
-        HashMap<String, String> configMap = acqConifMap();
-        String keyPath = configMap.get(GetwayItemEnum.GETWAY_KEY_PATH.getItemKey());
-        String keyFile = configMap.get(GetwayItemEnum.GETWAY_KEY_FILE.getItemKey());
-
-        String path = keyPath + username + keyFile;
-        IOUtils.delFile(path);
-    }
 
     @Override
     public ApplicationKeyVO getApplicationKey() {
@@ -403,13 +330,17 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 
     @Override
     public BusinessWrapper<Boolean> saveApplicationKey(ApplicationKeyVO applicationKeyVO) {
+        System.err.println(applicationKeyVO.getPublicKey());
+
+
         try {
             ApplicationKeyDO applicationKeyDO = keyboxDao.getApplicationKey();
+            if (!StringUtils.isEmpty(applicationKeyVO.getOriginalPrivateKey())) {
+                // 加密privateKey
+                String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey());
+                applicationKeyDO.setPrivateKey(privateKey);
+            }
             applicationKeyDO.setPublicKey(applicationKeyVO.getPublicKey());
-            // 加密privateKey
-            String privateKey = EncryptionUtil.encrypt(applicationKeyVO.getOriginalPrivateKey() );
-            applicationKeyDO.setPrivateKey(privateKey);
-            //System.err.println(applicationKeyVO);
             //System.err.println(applicationKeyDO);
             keyboxDao.updateApplicationKey(applicationKeyDO);
             return new BusinessWrapper<>(true);

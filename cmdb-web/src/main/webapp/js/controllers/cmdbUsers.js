@@ -4,6 +4,7 @@
 
 // 用户
 app.controller('usersCtrl', function ($scope, $state, $uibModal, toaster, httpService) {
+    $scope.authPoint = $state.current.data.authPoint;
     $scope.username = "";
 
     /////////////////////////////////////////////////
@@ -174,6 +175,12 @@ app.controller('usersCtrl', function ($scope, $state, $uibModal, toaster, httpSe
                 }
             }
         });
+
+        modalInstance.result.then(function () {
+            $scope.doQuery();
+        }, function () {
+            $scope.doQuery();
+        });
     }
 
     ///////////////////////////////////////////////////////
@@ -341,9 +348,9 @@ app.controller('userLdapInstanceCtrl', function ($scope, $uibModalInstance, toas
     }
 
     // 加入Ldap用户组
-    $scope.addUserGroup = function (username, groupname) {
-        var url = "/cmdb/ldapGroup/add?username=" + username
-            + "&groupname=" + groupname;
+    $scope.addUserGroup = function (group) {
+        var url = "/cmdb/ldapGroup/add?username=" + $scope.userItem.username
+            + "&groupname=" + group.name;
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
@@ -356,9 +363,9 @@ app.controller('userLdapInstanceCtrl', function ($scope, $uibModalInstance, toas
     }
 
     // 移除Ldap用户组
-    $scope.delUserGroup = function (username, groupname) {
-        var url = "/cmdb/ldapGroup/del?username=" + username
-            + "&groupname=" + groupname;
+    $scope.delUserGroup = function (group) {
+        var url = "/cmdb/ldapGroup/del?username=" + $scope.userItem.username
+            + "&groupname=" + group.name;
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {

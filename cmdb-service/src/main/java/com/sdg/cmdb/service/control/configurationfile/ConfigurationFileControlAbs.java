@@ -41,7 +41,6 @@ public abstract class ConfigurationFileControlAbs {
     protected ConfigService configService;
 
 
-
     //文件头信息
     //protected String headInfo;
 
@@ -107,7 +106,7 @@ public abstract class ConfigurationFileControlAbs {
     }
 
 
-    protected String buildLocation(int envCode){
+    protected String buildLocation(int envCode) {
         String result = "";
         List<String> projects = new ArrayList<String>();
         //ServerDO.EnvTypeEnum.daily.getCode();
@@ -115,11 +114,9 @@ public abstract class ConfigurationFileControlAbs {
         for (ServerGroupDO serverGroupDO : listServerGroupDO) {
             List<ServerDO> listServerDO = acqServerByGroup(serverGroupDO, envCode);
             // 无服务器
-            if (listServerDO.size() == 0) {
-                //判断 isGrayEqProd
-                if (!configServerGroupService.isGrayEqProd(serverGroupDO))
-                    continue;
-            }
+            if (listServerDO.size() == 0)
+                continue;
+
             // NGINX_LOCATION_MANAGE_BUILD = false
             if (!isBuildLocation(serverGroupDO)) continue;
             String l = buildLocation(serverGroupDO, envCode, projects);
@@ -131,9 +128,10 @@ public abstract class ConfigurationFileControlAbs {
 
     /**
      * 是否构建location
+     *
      * @return
      */
-    protected  boolean isBuildLocation(ServerGroupDO serverGroupDO){
+    protected boolean isBuildLocation(ServerGroupDO serverGroupDO) {
         return false;
     }
 
@@ -163,7 +161,6 @@ public abstract class ConfigurationFileControlAbs {
         projects.add(serverGroupDO.getName());
         return result;
     }
-
 
 
     protected List<ServerGroupDO> getServerGroup(int envType) {

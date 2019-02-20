@@ -363,6 +363,14 @@ public interface ConfigDao {
             @Param("configFileDO") ConfigFileDO configFileDO,
             @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
 
+
+    /**
+     * 查询所有配置
+     *
+     * @return
+     */
+    List<ConfigFileDO> getConfigFile();
+
     /**
      * 获取指定id的文件
      *
@@ -414,50 +422,16 @@ public interface ConfigDao {
 
     List<ConfigFileDO> queryConfigFileByGroupId(@Param("fileGroupId") long fileGroupId);
 
+    int addConfigFilePlaybook(ConfigFilePlaybookDO configFilePlaybookDO);
 
-    int addConfigFileCopy(ConfigFileCopyDO configFileCopyDO);
+    int updateConfigFilePlaybook(ConfigFilePlaybookDO configFilePlaybookDO);
 
-    int delConfigFileCopy(@Param("id") long id);
+    int delConfigFilePlaybook(@Param("id") long id);
 
-    ConfigFileCopyDO getConfigFileCopy(@Param("id") long id);
+    List<ConfigFilePlaybookDO> getConfigFilePlaybookPage();
 
-    int updateConfigFileCopy(ConfigFileCopyDO configFileCopyDO);
+    ConfigFilePlaybookDO getConfigFilePlaybook(@Param("id") long id);
 
-    List<ConfigFileCopyDO> queryConfigFileCopyByGroupId(@Param("groupId") long groupId);
-
-    List<ConfigFileCopyDO> queryConfigFileCopyByGroupName(@Param("groupName") String groupName);
-
-
-    int addConfigFileCopyDoScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO);
-
-    int updateConfigFileCopyDoScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO);
-
-
-    /**
-     * 查询指定条件的属性组数目
-     *
-     * @param groupName
-     * @return
-     */
-    long getConfigFileCopyDoScriptSize(@Param("groupName") String groupName);
-
-    /**
-     * 查询指定条件的属性组分页数据
-     *
-     * @param groupName
-     * @param pageStart
-     * @param pageLength
-     * @return
-     */
-    List<ConfigFileCopyDoScriptDO> getConfigFileCopyDoScriptPage(
-            @Param("groupName") String groupName, @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
-
-    ConfigFileCopyDoScriptDO getConfigFileCopyDoScript(
-            @Param("id") long id);
-
-    ConfigFileCopyDoScriptDO getConfigFileCopyDoScriptByCopyId(
-            @Param("copyId") long copyId);
-
-   long delConfigFileCopyDoScript( @Param("id") long id);
+    List<ConfigFilePlaybookDO> queryConfigFilePlaybookByFileId(@Param("fileId") long fileId);
 
 }

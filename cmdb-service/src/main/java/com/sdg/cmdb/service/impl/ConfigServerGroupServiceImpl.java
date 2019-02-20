@@ -22,11 +22,9 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String tomcat_app_name = "TOMCAT_APP_NAME_OPT";
 
-    public static final String tomcat_serverxml_webappspath = "TOMCAT_SERVERXML_WEBAPPSPATH_OPT";
+    public static final String http_check_url = "NGINX_CHECK_URL";
 
-    public static final String http_status = "HTTP_STATUS_OPT";
-
-    public static final String tomcat_http_port = "TOMCAT_HTTP_PORT_OPT";
+    public static final String NGINX_UPSTREAM_PORT ="NGINX_UPSTREAM_PORT";
 
     public static final String project_name = "PROJECT_NAME";
 
@@ -40,17 +38,8 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String nginx_location_manage_back = "NGINX_LOCATION_MANAGE_BACK";
 
-    public static final String nginx_location_manage_build =
-            "NGINX_LOCATION_MANAGE_BUILD";
+    public static final String nginx_check = "NGINX_CHECK";
 
-    public static final String nginx_location_supplier_build =
-            "NGINX_LOCATION_SUPPLIER_BUILD";
-
-
-    public static final String nginx_location_ka_build =
-            "NGINX_LOCATION_KA_BUILD";
-
-    public static final String nginx_upstream_gray_is_prod = "NGINX_UPSTREAM_GRAY_IS_PROD";
 
     /**
      * down 表示单前的server暂时不参与负载;backup 备用服务器, 其它所有的非backup机器down或者忙的时候，请求backup机器。所以这台机器压力会最轻。
@@ -71,6 +60,8 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public static final String nginx_proxy_pass_tail = "NGINX_PROXY_PASS_TAIL";
 
     public static final String nginx_location_param = "NGINX_LOCATION_PARAM";
+
+    public static final String nginx_project_name = "NGINX_PROJECT_NAME";
 
     public static final String iptables_dubbo_build = "IPTABLES_DUBBO_BUILD";
 
@@ -93,6 +84,13 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String ZABBIX_PROXY = "ZABBIX_PROXY";
 
+    public static final String ZABBIX_HOST_MONITOR_PUBLIC_IP = "ZABBIX_HOST_MONITOR_PUBLIC_IP";
+
+    public static final String ZABBIX_HOST_MACROS = "ZABBIX_HOST_MACROS";
+
+    // ANSIBLE 分组配置（分组数量）
+    public static final String ANSIBLE_SUBGROUP = "ANSIBLE_SUBGROUP";
+
     @Resource
     protected ServerDao serverDao;
 
@@ -110,7 +108,10 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     @Override
     public String queryProjectName(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, project_name);
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_project_name);
+        if (!StringUtils.isEmpty(result))
+            return result;
+        result = configService.acqConfigByServerGroupAndKey(serverGroupDO, project_name);
         if (StringUtils.isEmpty(result)) {
             return configService.acqConfigByServerGroupAndKey(serverGroupDO, tomcat_app_name);
         } else {
@@ -133,9 +134,19 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public String queryNginxUrl(ServerGroupDO serverGroupDO) {
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_url_alias);
         if (result == null || result.isEmpty()) {
-            return "~ ^/" + queryProjectName(serverGroupDO);
+            return queryProjectName(serverGroupDO);
         } else {
-            return "/" + result;
+            return result;
+        }
+    }
+
+    @Override
+    public String getNginxLocation(ServerGroupDO serverGroupDO) {
+        String nginxUrl = queryNginxUrl(serverGroupDO);
+        if (nginxUrl.equals("/")) {
+            return nginxUrl;
+        } else {
+            return "~ ^/" + nginxUrl + "/";
         }
     }
 
@@ -169,28 +180,22 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     }
 
     @Override
-    public String queryTomcatHttpPort(ServerGroupDO serverGroupDO) {
-        return configService.acqConfigByServerGroupAndKey(serverGroupDO, tomcat_http_port);
+    public  String queryUpstreamPort(ServerGroupDO serverGroupDO){
+        String port = configService.acqConfigByServerGroupAndKey(serverGroupDO, NGINX_UPSTREAM_PORT);
+        if(StringUtils.isEmpty(port))
+            return "8080";
+        return port;
     }
 
-    @Override
-    public String queryTomcatWebappsPath(ServerGroupDO serverGroupDO) {
-        return configService.acqConfigByServerGroupAndKey(serverGroupDO, tomcat_serverxml_webappspath);
-    }
 
 
     @Override
-    public String queryHttpStatus(ServerGroupDO serverGroupDO) {
-        String httpStatus = configService.acqConfigByServerGroupAndKey(serverGroupDO, http_status);
-        if (httpStatus.indexOf("/") != -1) {
-            return httpStatus;
+    public String queryHttpCheck(ServerGroupDO serverGroupDO) {
+        String httpCheck = configService.acqConfigByServerGroupAndKey(serverGroupDO, http_check_url);
+        if (httpCheck.indexOf("/") == 0) {
+            return httpCheck;
         } else {
-            String tomcatWebappsPath = queryTomcatWebappsPath(serverGroupDO);
-            if (tomcatWebappsPath.equals("ROOT")) {
-                return httpStatus;
-            } else {
-                return tomcatWebappsPath + "/" + httpStatus;
-            }
+            return "/" + httpCheck;
         }
     }
 
@@ -199,6 +204,15 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public boolean isManageBack(ServerGroupDO serverGroupDO, int envCode) {
         if (envCode != ServerDO.EnvTypeEnum.gray.getCode()) return false;
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_location_manage_back);
+        if (result != null && result.equalsIgnoreCase("true"))
+            return true;
+        // default  false
+        return false;
+    }
+
+    @Override
+    public boolean isBuildNginxCheck(ServerGroupDO serverGroupDO) {
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_check);
         if (result != null && result.equalsIgnoreCase("true"))
             return true;
         // default  false
@@ -222,17 +236,6 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, ConfigServerGroupServiceImpl.nginx_location_build);
         if (result != null && result.equalsIgnoreCase("false")) return false;
         return true;
-    }
-
-    @Override
-    public boolean isGrayEqProd(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_upstream_gray_is_prod
-        );
-        if (result != null && result.equalsIgnoreCase("true"))
-            return true;
-
-        // default  false
-        return false;
     }
 
     @Override
@@ -295,35 +298,6 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
         return configService.saveConfigServerGroupValue(serverGroupDO, java_install_version, version);
     }
 
-
-    @Override
-    public boolean isBuildManageLocation(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_location_manage_build);
-        if (result != null && result.equalsIgnoreCase("true"))
-            return true;
-        // default  false
-        return false;
-    }
-
-    @Override
-    public boolean isBuildSupplierLocation(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_location_supplier_build);
-        if (result != null && result.equalsIgnoreCase("true"))
-            return true;
-        // default  false
-        return false;
-    }
-
-    @Override
-    public boolean isBuildKaLocation(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_location_ka_build);
-        if (result != null && result.equalsIgnoreCase("true"))
-            return true;
-        // default  false
-        return false;
-    }
-
-
     @Override
     public String queryDiskSysVolume(ServerDO serverDO) {
         return configService.acqConfigByServerAndKey(serverDO, zabbix_disk_sys_volume);
@@ -361,6 +335,24 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public String queryNginxUpstreamWeight(ServerDO serverDO) {
         String result = configService.acqConfigByServerAndKey(serverDO, nginx_upstream_weight);
         return result;
+    }
+
+    // public static final String ZABBIX_HOST_MONITOR_PUBLIC_IP = "ZABBIX_HOST_MONITOR_PUBLIC_IP";
+    @Override
+    public String queryZabbixMonitorIp(ServerDO serverDO){
+        String result = configService.acqConfigByServerAndKey(serverDO,ZABBIX_HOST_MONITOR_PUBLIC_IP);
+        if(!StringUtils.isEmpty(result) && result.equalsIgnoreCase("true"))
+            return serverDO.getPublicIp();
+        return serverDO.getInsideIp();
+    }
+
+    @Override
+    public  String queryZabbixMacros(ServerDO serverDO){
+        ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverDO.getServerGroupId());
+        String macros = configService.acqConfigByServerGroupAndKey(serverGroupDO, ZABBIX_HOST_MACROS);
+        if(macros == null)
+            return "";
+        return macros;
     }
 
     //public static final String nginx_upstream_fail_timeout = "NGINX_UPSTREAM_FAIL_TIMEOUT";
@@ -401,4 +393,15 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     }
 
 
+    @Override
+    public int queryAnsibleSubgroup(ServerGroupDO serverGroupDO) {
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, ANSIBLE_SUBGROUP);
+        try {
+            if (!StringUtils.isEmpty(result))
+                return Integer.valueOf(result);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 2;
+    }
 }

@@ -6,7 +6,7 @@
 
 app.controller('zabbixServerCtrl', function ($scope, $state, $uibModal, httpService, toaster, staticModel) {
     $scope.authPoint = $state.current.data.authPoint;
-    $scope.userType = staticModel.userType;
+    $scope.userType = [];
     $scope.envType = staticModel.envType;
     //登录类型
     $scope.logType = staticModel.logType;
@@ -16,6 +16,21 @@ app.controller('zabbixServerCtrl', function ($scope, $state, $uibModal, httpServ
     $scope.zabbixStatus = staticModel.zabbixStatus;
     //主机监控
     $scope.zabbixMonitor = staticModel.zabbixMonitor;
+
+    $scope.queryUseType = function () {
+        var url = "/servergroup/useType/query";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.useType = data.body;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.queryUseType();
 
     $scope.refresh = function () {
         var url = "/zabbixserver/refresh";
@@ -566,48 +581,7 @@ app.controller('zabbixTemplateCtrl', function ($scope, $state, $uibModal, httpSe
     }
 });
 
-app.controller('zabbixConfigCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster) {
-
-        $scope.configMap = {};
-
-        $scope.itemGroup = "ZABBIX";
-
-        /**
-         * 获取配置
-         */
-        $scope.getConfig = function () {
-            var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
-                "&env=";
-            httpService.doGet(url).then(function (data) {
-                if (data.success) {
-                    $scope.configMap = data.body;
-                } else {
-                    toaster.pop("warning", data.msg);
-                }
-            }, function (err) {
-                toaster.pop("error", err);
-            });
-        }
-
-
-        /**
-         * 更新配置
-         */
-        $scope.updateConfig = function () {
-            var url = "/config/center/update";
-            httpService.doPostWithJSON(url, $scope.configMap).then(function (data) {
-                if (data.success) {
-                    toaster.pop("success", "配置保存成功!");
-                    $scope.getConfig();
-                } else {
-                    toaster.pop("warning", data.msg);
-                }
-            }, function (err) {
-                toaster.pop("error", err);
-            });
-        }
-
-        $scope.getConfig();
+app.controller('zabbixVersionCtrl', function ($scope, $state, $uibModal, httpService, toaster, staticModel) {
 
         $scope.zabbixVersion = function () {
             var modalInstance = $uibModal.open({
@@ -622,18 +596,6 @@ app.controller('zabbixConfigCtrl', function ($scope, $state, $uibModal, $sce, ht
             })
         };
 
-
-        $scope.alert = {
-            type: "",
-            msg: ""
-        };
-
-        $scope.closeAlert = function () {
-            $scope.alert = {
-                type: "",
-                msg: ""
-            };
-        }
 
     }
 );
@@ -678,6 +640,19 @@ app.controller('zabbixVersionInstanceCtrl', function ($scope, $uibModalInstance,
         $scope.closeModal = function () {
             $uibModalInstance.dismiss('cancel');
         }
+
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+
+        $scope.closeAlert = function () {
+            $scope.alert = {
+                type: "",
+                msg: ""
+            };
+        }
+
     }
 );
 

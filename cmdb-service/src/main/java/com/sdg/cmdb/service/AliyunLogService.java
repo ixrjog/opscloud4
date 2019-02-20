@@ -27,16 +27,14 @@ public interface AliyunLogService {
      * @return
      * @throws LogException
      */
-    LogServiceVO queryLog(LogServiceQuery logServiceQuery) throws LogException;
+    LogServiceVO queryLog(LogserviceQueryAbs logServiceQuery) throws LogException;
 
 
     TableVO<List<LogHistogramsVO>> getLogHistogramsPage(long logServiceId, int page, int length);
 
-    Object queryNginxLog(LogHistogramsVO logHistogramsVO) throws LogException;
+    TableVO<List<LogFormatNginx>> queryNginxLog(LogHistogramsVO logHistogramsVO) throws LogException;
 
-    TableVO<List<LogFormatKa>> queryKaLog(LogHistogramsVO logHistogramsVO) throws LogException;
-
-    TableVO<List<LogFormatWww>> queryWwwLog(LogHistogramsVO logHistogramsVO) throws LogException;
+    TableVO<List<LogFormatNginx>> queryWwwLog(LogHistogramsVO logHistogramsVO) throws LogException;
 
     //查询日志详情
     TableVO<List<LogFormatDefault>> queryDefaultLog(LogHistogramsVO logHistogramsVO) throws LogException;

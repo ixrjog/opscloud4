@@ -1,12 +1,12 @@
 package com.sdg.cmdb.service;
 
+
 import com.sdg.cmdb.domain.BusinessWrapper;
-import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
-import com.sdg.cmdb.domain.server.ServerGroupVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by zxxiao on 16/9/1.
@@ -23,6 +23,8 @@ public interface ServerGroupService {
      * @return
      */
     TableVO<List<ServerGroupVO>> queryServerGroupPage(int page, int length, String name, int useType);
+
+    TableVO<List<ServerGroupVO>> queryUnauthServerGroupPage(int page, int length, String name, int useType);
 
     /**
      * 查询项目管理服务器组分页信息
@@ -131,4 +133,15 @@ public interface ServerGroupService {
 
 
     BusinessWrapper<Boolean> delServerGroupUseType(long id);
+
+    /**
+     * 分组查询
+     * @param groupId
+     * @return
+     */
+    List<HostPattern> getHostPattern(long groupId);
+
+    Map<String, List<ServerDO>> getHostPatternMap(long groupId);
+
+    ServerGroupUseTypeDO getUseType(int useType);
 }

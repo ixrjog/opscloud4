@@ -1,24 +1,35 @@
 Welcome to the opsCloud wiki!
+
+# OpsCloud
+<img src="https://img.shields.io/jenkins/s/https/jenkins.qa.ubuntu.com/view/Precise/view/All%20Precise/job/precise-desktop-amd64_default.svg"></img> 
+<img src="https://img.shields.io/hexpm/l/plug.svg"></img>
+<br>
+OpsCloud是云时代的运维自动配置平台
+
 ### 开发者
 * liangjian 
 
 opsCloud开发使用交流  QQ群号:630913972
 
 
-### 版本环境
-* Centos 6.x
-* JDK 8
-* Tomcat 8.0.36
-* Gradel 3
-* Mysql5.6 或 aliyunRDS
-* Redis 3.0.3
-* LDAP : apacheDS(http://directory.apache.org)
-* Ansible 2
+### 开发环境
+* MacOS10.13.5/JRE1.8.0_144/IntelliJ IDEA/Gradel3.1
+
+
+### 服务器部署环境
+* Centos6/7(2vCPU/内存4G）
+* JDK1.8
+* Tomcat8.0.36
+* Mysql5.6(兼容阿里云RDS）
+* Redis3.0.3
+* LDAP(最新版本apacheDS http://directory.apache.org)
+* Ansible2.4
 
 ### 构建
 ```$xslt
-# 可选参数 -Dorg.gradle.java.home=/usr/java/jdk1.8.0_51
-gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gradle.daemon=false
+# 可选参数（指定jdk位置，适用多版本安装） -Dorg.gradle.java.home=/usr/java/jdk1.8.0_51
+# 可选参数（刷新gradle依赖缓存，避免依赖包同版本号更新导致编译失败） -refresh-dependencies
+$ gradle clean war -DpkgName=opscloud -Denv=online -Dorg.gradle.daemon=false
 ```
 
 ### 安装步骤1 数据库
@@ -28,7 +39,8 @@ gradle clean war -DpkgName=opscloud -Denv=online -refresh-dependencies -Dorg.gra
 create database opscloud character set utf8 collate utf8_bin;
 grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
-mysql -uopscloud -popscloud opscloud < ./opscloud.sql
+$ mysql -uopscloud -popscloud opscloud < ./opscloud.sql
+$ mysql -uopscloud -popscloud opscloud < ./auth_resources.sql
 
 # Mysql5.7 兼容性问题
 已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
@@ -41,24 +53,38 @@ set @@global.sql_mode=‘STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_
 ### 安装步骤2 Redis
 ```$xslt
 # 安装Redis3 或使用阿里云Redis
-http://download.redis.io/releases/redis-3.2.11.tar.gz
-tar -xzvf redis-3.2.11.tar.gz
-cd redis-3.2.11
-make && make install
+$ wget http://download.redis.io/releases/redis-3.2.11.tar.gz
+$ tar -xzvf redis-3.2.11.tar.gz
+$ cd redis-3.2.11
+$ make && make install
 
 ```
 
 ### 安装步骤3 Java(JDK8)
+* 安装JDK8
+  下载地址 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
+  CentOS可直接下载rpm包安装
+
+* 在/etc/profile中添加
 ```$xslt
-# 安装JDK8
+# JAVA 请修改为安装的版本目录
+JAVA_HOME=/usr/local/jdk/jdk1.8.0_91
+PATH=$PATH:$JAVA_HOME/bin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin
+CLASSPATH=.:$JAVA_HOME/lib/tools.jar:$JAVA_HOME/lib/dt.jar
+export JAVA_HOME
+export PATH
+export CLASSPATH
+# JAVA
 ```
 
 ### 安装步骤4 LDAP(apacheDS)
+
+* 官网 http://directory.apache.org/apacheds/download/download-linux-bin.html
+* 下载安装包
+   wget http://mirrors.tuna.tsinghua.edu.cn/apache//directory/apacheds/dist/2.0.0-M24/apacheds-2.0.0-M24-64bit.bin
+
 ```$xslt
-# 官网 http://directory.apache.org/apacheds/download/download-linux-bin.html
-# 下载安装包
-wget http://mirrors.tuna.tsinghua.edu.cn/apache//directory/apacheds/dist/2.0.0-M24/apacheds-2.0.0-M24-64bit.bin
-chmod +x apacheds-2.0.0-M24-64bit.bin && ./apacheds-2.0.0-M24-64bit.bin
+$ chmod +x apacheds-2.0.0-M24-64bit.bin && ./apacheds-2.0.0-M24-64bit.bin
 Do you agree to the above license terms? [yes or no]
 yes
 Unpacking the installer...
@@ -79,25 +105,46 @@ Installing...
 id: apacheds: No such user
 Done.
 ApacheDS has been installed successfully.
-
-# 启动服务
-/etc/init.d/apacheds-2.0.0-M24-default start
-Starting ApacheDS - default...
 ```
 
-### 安装步骤5 部署
+# 启动服务
+```$xslt
+$ /etc/init.d/apacheds-2.0.0-M24-default start
+Starting ApacheDS - default...
+```
+> 如果只使用admin账户可以不安装apacheDS，其他账户都会存储在LDAP中，cn=liangjian,ou=users,ou=system
+强烈推荐使用LDAP来存储和管理用户和用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Crowd ...)
 
-安装Tomcat 并在webapps/ROOT下部署(不要带项目路径opscloud) opscloud.war
-修改配置文件 WEB-INF/classes/server.properties
+
+
+### Tomcat版本问题
+推荐使用Tomcat 8.0.36(更高版本会导致权限校验接口访问400错误)
+
+Tomcat8.0.39添加了RFC 3986这个规范。
+RFC 3986文档对Url的编解码问题做出了详细的建议，指出了哪些字符需要被编码才不会引起Url语义的转变，以及对为什么这些字符需要编码做出了相应的解释。
+RFC 3986文档规定，Url中只允许包含英文字母（a-zA-Z）、数字（0-9）、-_.~4个特殊字符以及所有保留字符（! * ' ( ) ; : @ & = + $ , / ? # [ ]）。
+还有一些字符当直接放在Url中的时候，可能会引起解析程序的歧义，这些字符被视为不安全字符。
+空格：Url在传输的过程，或者用户在排版的过程，或者文本处理程序在处理Url的过程，都有可能引入无关紧要的空格，或者将那些有意义的空格给去掉。
+引号以及<>：引号和尖括号通常用于在普通文本中起到分隔Url的作用
+
+```
+
+
+### 安装步骤5 部署
+假如Tomcat安装路径为 /usr/local/tomcat
+
+1. 删除/usr/local/tomcat/webapps/ 所有文件和目录
+2. 解压opscloud.war，并将解压文件复制到/usr/local/tomcat/webapps/ROOT/
+   注意：不要带项目路径opscloud
+3. 修改opscloud配置文件/usr/local/tomcat/webapps/ROOT/WEB-INF/classes/server.properties
+4. 启动Tomcat：/usr/local/tomcat/bin/startup.sh  (关闭/usr/local/tomcat/bin/shutdown.sh)
 
 * 修改相关配置内容
-   - 配置文件修改路径：opsCloud/cmdb-web/env
-   - online/server.properties:
    - 管理数据库配置修改：jdbc_url, jdbc_user, jdbc_password
    - LDAP登陆认证配置修改：ldapUrl, ldapUserDn, ldapPwd
-   - nosql redis 配置修改：redis.host, redis.port, redis.pwd
+   - Redis 配置修改：redis.host, redis.port, redis.pwd
 * 启动Tomcat 首次登录使用admin/opscloud
-* 如果启用了Nginx反向代理Tomcat(opscloud)，需要启用ws
+* 如果启用了Nginx反向代理Tomcat(opscloud)，需要配置nginx支持websocket（KeyBox）
 ```$xslt
 server {
         listen 443;
@@ -155,15 +202,15 @@ server {
 
 ### 安装步骤6 Ansible
 * 安装
-```$xslt
-yum install epel-release -y
-yum install ansible –y
+```
+$ yum install epel-release -y
+$ yum install ansible –y
 ```
 
 * 配置
-```$xslt
+```
 # 查看配置文件路径 (/etc/ansible/ansible.cfg)
-ansible --version
+$ ansible --version
 ansible 2.5.3
   config file = /etc/ansible/ansible.cfg
   configured module search path = [u'/root/.ansible/plugins/modules', u'/usr/share/ansible/plugins/modules']
@@ -172,7 +219,7 @@ ansible 2.5.3
   python version = 2.6.6 (r266:84292, Aug 18 2016, 15:13:37) [GCC 4.4.7 20120313 (Red Hat 4.4.7-17)]
 ```
 参考配置文件
-```$xslt
+```
 # config file for ansible -- http://ansible.com/
 # ==============================================
 
@@ -250,6 +297,26 @@ accelerate_multi_key = yes
 
 
 ```
+### 配置 Aliyun(ECS）
+* 配置Aliyun AccessKey(登录阿里云，右上角头像菜单中找到accessKeys)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
+* 常用模版（各Zone的实例规格）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG51.jpeg)
+* 配置常用模版（阿里云共有302种实例规格，每个Zone可能有60多种规格可选，所以只添加常用的实例规格，简化ECS开通）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
+* 配置/同步ECS镜像，VPC，安全组等信息
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG53.jpeg)
+* 同步ECS服务器（需配置AccessKey）
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
+
+### 配置 VCSA(VMware vCenter Server)
+* 配置VCSA登录信息
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG55.jpeg)
+* 配置VCSA服务器版本信息
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG56.jpeg)
+* 同步VM服务器(vm命名规则 IP:服务器名称，例如 192.168.1.10:demo-daily)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG57.jpeg)
+
 
 ### 配置 Getway(终端跳板机)
 >前提安装和配置完成ansible
@@ -264,7 +331,7 @@ accelerate_multi_key = yes
   - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
   - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
   
-* 配置私钥（id_rsa）
+* 配置私钥id_rsa（加密后的私钥,非原文）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG35.jpeg)
 * KeyBox(WebShell)
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG36.jpeg)
@@ -275,7 +342,9 @@ accelerate_multi_key = yes
 * Getway多服务器同步配置（需配置ansbile）
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG39.jpeg)
 * Getway服务器一键初始化（需配置ansbile）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG40.jpeg)
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG58.jpeg)
+* Getway界面
+![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG41.jpeg)
 
 
 

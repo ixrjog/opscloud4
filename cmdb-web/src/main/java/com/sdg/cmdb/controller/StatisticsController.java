@@ -21,26 +21,13 @@ import javax.annotation.Resource;
 public class StatisticsController {
 
     @Resource
-    private CiService ciService;
-
-    @Resource
-    private ServerService serverService;
-
-    @Resource
     private ServerCostService serverCostService;
 
     @Resource
     private ServerPerfService serverPerfService;
 
 
-    @RequestMapping(value = "/deploy/page", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult queryDeployPage(@RequestParam String project, @RequestParam int status,
-                                      @RequestParam int deployType, @RequestParam int rollback,
-                                      @RequestParam int errorCode,
-                                      @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(ciService.getCiDeployStatisticsPage(project, status, deployType, rollback, errorCode, page, length));
-    }
+
 
     @RequestMapping(value = "/servercost/page", method = RequestMethod.GET)
     @ResponseBody
@@ -87,30 +74,5 @@ public class StatisticsController {
         return new HttpResult(serverPerfService.taskRun());
     }
 
-    /**
-     * 获取指定条件的服务器列表分页数据
-     *
-     * @param serverGroupId
-     * @param serverName
-     * @param envType
-     * @param queryIp
-     * @param page
-     * @param length
-     * @return
-     */
-    @RequestMapping(value = "/server/deploy/version/page", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult queryServerDeployVersionPage(@RequestParam long serverGroupId, @RequestParam String serverName,
-                                                   @RequestParam int envType, @RequestParam String queryIp,
-                                      @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(ciService.getServerPage(serverGroupId, serverName, envType, queryIp, page, length));
-    }
-
-
-    @RequestMapping(value = "/ci/status", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult status() {
-        return new HttpResult(ciService.ciStatus());
-    }
 
 }

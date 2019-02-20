@@ -19,8 +19,8 @@ import java.util.Random;
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class ConfigurationFileControlTest {
 
-    @Resource
-    private AnsibleHostService ansibleHostService;
+//    @Resource
+//    private AnsibleHostService ansibleHostService;
 
     @Resource
     private InterfaceCIService interfaceCIService;
@@ -31,29 +31,11 @@ public class ConfigurationFileControlTest {
     @Resource
     private ConfigurationFileControlService configurationFileControlService;
 
-    @Resource
-    private ShadowsocksService shadowsocksService;
 
     @Resource
     private GetwayService getwayService;
 
-    @Resource
-    private NginxUpstreamService nginxUpstreamService;
 
-    @Resource
-    private NginxLocationService nginxLocationService;
-
-    @Resource
-    private NginxLocationManageService nginxLocationManageService;
-
-    @Resource
-    private IptablsZookeeperService iptablsZookeeperService;
-
-    @Resource
-    private  NginxLocationKaService  nginxLocationKaService;
-
-    @Resource
-    private  NginxLocationSupplierService nginxLocationSupplierService;
 
     @Test
     public void testConfigurationFileControlService() {
@@ -67,26 +49,7 @@ public class ConfigurationFileControlTest {
 
     }
 
-    @Test
-    public void testShadowsocksService() {
-        //// TODO 生成翻墙配置
-        String result = shadowsocksService.acqConfig();
-        System.err.println(result);
-    }
 
-    @Test
-    public void testAnsibleHostService() {
-        //// TODO ansible 只分2组列表
-        String result =  ansibleHostService.acqHostsAllCfg();
-        System.err.println(result);
-    }
-
-    @Test
-    public void testAnsibleHostService2() {
-        //// TODO ansible 全局列表
-         String result =  ansibleHostService.acqHostsCfgByUseType(1);
-         System.err.println(result);
-    }
 
     @Test
     public void testInterfaceCIService() {
@@ -109,47 +72,7 @@ public class ConfigurationFileControlTest {
         System.err.println(result);
     }
 
-    @Test
-    public void testNginxUpstreamServiceDaily() {
-        //// TODO ngin-upstream（daily）配置
-        String result = nginxUpstreamService.acqConfig(ServerDO.EnvTypeEnum.daily.getCode());
-        System.err.println(result);
-    }
 
-    @Test
-    public void testNginxUpstreamServiceGray() {
-        //// TODO ngin-upstream（gray）配置
-        String result = nginxUpstreamService.acqConfig(ServerDO.EnvTypeEnum.gray.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testNginxUpstreamServiceProd() {
-        //// TODO ngin-upstream（prod）配置
-        String result = nginxUpstreamService.acqConfig(ServerDO.EnvTypeEnum.prod.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testNginxLocationManageServiceDaily() {
-        //// TODO ngin-manage-upstream（daily）配置
-        String result = nginxLocationManageService.acqConfig(ServerDO.EnvTypeEnum.daily.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testNginxLocationManageServiceGray() {
-        //// TODO ngin-manage-upstream（gray）配置
-        String result = nginxLocationManageService.acqConfig(ServerDO.EnvTypeEnum.gray.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testNginxLocationManageServiceProd() {
-        //// TODO ngin-manage-upstream（prod）配置
-        String result = nginxLocationManageService.acqConfig(ServerDO.EnvTypeEnum.prod.getCode());
-        System.err.println(result);
-    }
 
     @Test
     public void testNginxLocationKaServiceDaily() {
@@ -173,56 +96,9 @@ public class ConfigurationFileControlTest {
     }
 
 
-    @Test
-    public void testNginxLocationServiceDaily() {
-        //// TODO ngin-location（daily）配置
-        String result = nginxLocationService.acqConfig(ServerDO.EnvTypeEnum.daily.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testNginxLocationServiceGray() {
-        //// TODO ngin-location（gray）配置
-        String result = nginxLocationService.acqConfig(ServerDO.EnvTypeEnum.gray.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testNginxLocationServiceProd() {
-        //// TODO ngin-location（prod）配置
-        String result = nginxLocationService.acqConfig(ServerDO.EnvTypeEnum.prod.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testIptablsZookeeperServiceGray() {
-        //// TODO dubbo-iptables（gray）配置
-        String result = iptablsZookeeperService.acqConfig(ServerDO.EnvTypeEnum.gray.getCode());
-        System.err.println(result);
-    }
-
-    @Test
-    public void testIptablsZookeeperServiceProd() {
-        //// TODO dubbo-iptables（prod）配置
-        String result = iptablsZookeeperService.acqConfig(ServerDO.EnvTypeEnum.prod.getCode());
-        System.err.println(result);
-    }
 
 
-    @Test
-    public void testNginxLocationSupplierServiceProd() {
-        //// TODO ngin-supplier-location（prod）配置
-        String result = nginxLocationSupplierService.acqConfig(ServerDO.EnvTypeEnum.prod.getCode());
-        System.err.println(result);
-    }
 
-
-    @Test
-    public void testNginxLocationSupplierServiceGray() {
-        //// TODO ngin-supplier-location（gray）配置
-        String result = nginxLocationSupplierService.acqConfig(ServerDO.EnvTypeEnum.gray.getCode());
-        System.err.println(result);
-    }
 
     @Test
     public void testNginxLocationSupplierServiceDaily() {

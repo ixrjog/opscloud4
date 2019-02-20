@@ -21,144 +21,134 @@
             <!-- / toaster directive -->
             <uib-tabset>
                 <uib-tab index="0" heading="服务器组">
-                <div ng-controller="serverGroupCtrl">
-                    <div class="panel panel-default">
-                        <div class="panel-body">
-                            <form class="form-inline" role="form">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">名称</span>
-                                        <input type="text" class="form-control" ng-model="queryName"
-                                               placeholder="名称">
+                    <div ng-controller="serverGroupCtrl">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">名称</span>
+                                            <input type="text" class="form-control" ng-model="queryName"
+                                                   placeholder="名称">
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">使用类型</span>
-                                        <select class="form-control" ng-model="nowType"
-                                                ng-options="type.useType as type.typeName for type in useType">
-                                            <option value="">--请选择--</option>
-                                        </select>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">使用类型</span>
+                                            <select class="form-control" ng-model="nowType"
+                                                    ng-options="type.useType as type.typeName for type in useType">
+                                                <option value="">--请选择--</option>
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-info" ng-click="doQuery()"><span
-                                            class="glyphicon glyphicon-search"></span>搜索
-                                    </button>
-                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
-                                            class="glyphicon glyphicon-repeat"></span>重置
-                                    </button>
-                                    <button type="button" class="btn btn-success" ng-click="addServerGroup()"
-                                            ng-if="contains(authPoint, '/servergroup/update')"><span
-                                            class="glyphicon glyphicon-plus"></span>新增
-                                    </button>
-                                </div>
-                            </form>
-                            <div style="margin-top: 5px;">
-                                <table class="table table-hover table-bordered table-striped">
-                                    <thead>
-                                    <tr>
-                                        <td>服务器组</td>
-                                        <td>使用类型</td>
-                                        <td class="col-md-1">服务器数量</td>
-                                        <td class="col-md-1">授权数量</td>
-                                        <td ng-if="contains(authPoint, '/servergroup/update')">操作
-                                        </td>
-                                    </tr>
-                                    </thead>
-                                    <tbody>
-                                    <tr ng-repeat="item in pageData">
-                                        <td>
-                                            <b style="color: #286090" class="pull-left">{{item.name}}</b>
-                                            <b style="color: #777" class="pull-right">{{item.content}}</b>
-                                        </td>
-                                        <td>
-                                            <b ng-if="item.useType == 10">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b ng-if="item.useType == 1">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: #990000" ng-if="item.useType == 2">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: #ec971f" ng-if="item.useType == 3">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b ng-if="item.useType == 4">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b ng-if="item.useType == 5">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: #286090" ng-if="item.useType == 6">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: #d9534f" ng-if="item.useType == 7">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: #449d44" ng-if="item.useType == 8">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: #5bc0de" ng-if="item.useType == 9">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                            <b style="color: black" ng-if="item.useType > 9">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                        </td>
-                                        <td>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                        <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                                class="glyphicon glyphicon-repeat"></span>重置
+                                        </button>
+                                        <button type="button" class="btn btn-success" ng-click="addServerGroup()"
+                                                ng-if="contains(authPoint, '/servergroup/update')"><span
+                                                class="glyphicon glyphicon-plus"></span>新增
+                                        </button>
+                                    </div>
+                                </form>
+                                <div style="margin-top: 5px;">
+                                    <table class="table table-hover table-bordered table-striped">
+                                        <thead>
+                                        <tr>
+                                            <td>服务器组</td>
+                                            <td>使用类型</td>
+                                            <td class="col-md-1">服务器数量</td>
+                                            <td class="col-md-1">授权数量</td>
+                                            <td ng-if="contains(authPoint, '/servergroup/update')">操作
+                                            </td>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr ng-repeat="item in pageData">
+                                            <td>
+                                                <b style="color: #286090" class="pull-left">{{item.name}}</b>
+                                                <b style="color: #777" class="pull-right">{{item.content}}</b>
+                                            </td>
+                                            <td>
+                                                <b style="color:{{item.serverGroupUseTypeDO.color}} ">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                            </td>
+                                            <td>
                                                 <span class="badge"
                                                       ng-if="item.serverCnt == 0">{{item.serverCnt}}</span>
-                                            <span class="badge bg-success"
-                                                  ng-if="item.serverCnt > 0 && item.serverCnt < 10">{{item.serverCnt}}</span>
-                                            <span class="badge bg-info" ng-if="item.serverCnt >= 10">{{item.serverCnt}}</span>
-                                        </td>
-                                        <td>
-                                            <span class="badge pull-right" ng-if="item.keyboxCnt == 0">{{item.keyboxCnt}}</span>
-                                            <span class="badge pull-right bg-success"
-                                                  ng-if="item.keyboxCnt > 0 && item.keyboxCnt < 10">{{item.keyboxCnt}}</span>
-                                            <span class="badge pull-right bg-info" ng-if="item.keyboxCnt >= 10">{{item.keyboxCnt}}</span>
-                                        </td>
-                                        <td ng-if="contains(authPoint, '/servergroup/update')">
+                                                <span class="badge bg-success"
+                                                      ng-if="item.serverCnt > 0 && item.serverCnt < 10">{{item.serverCnt}}</span>
+                                                <span class="badge bg-info" ng-if="item.serverCnt >= 10">{{item.serverCnt}}</span>
+                                            </td>
+                                            <td>
+                                                <span class="badge pull-right" ng-if="item.keyboxCnt == 0">{{item.keyboxCnt}}</span>
+                                                <span class="badge pull-right bg-success"
+                                                      ng-if="item.keyboxCnt > 0 && item.keyboxCnt < 10">{{item.keyboxCnt}}</span>
+                                                <span class="badge pull-right bg-info" ng-if="item.keyboxCnt >= 10">{{item.keyboxCnt}}</span>
+                                            </td>
+                                            <td ng-if="contains(authPoint, '/servergroup/update')">
 
-                                            <button ng-click="editServerGroup(item)"
-                                                    class="btn btn-xs"
-                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                <span class="glyphicon glyphicon-edit"></span>编辑
-                                            </button>
+                                                <button ng-click="editServerGroup(item)"
+                                                        class="btn btn-xs"
+                                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                    <span class="glyphicon glyphicon-edit"></span>编辑
+                                                </button>
 
-                                            <button ng-click="serverList(item)"
-                                                    ng-if="item.serverCnt != 0"
-                                                    class="btn btn-xs" uib-popover-html="'查看服务器信息'"
-                                                    popover-trigger="'mouseenter'"
-                                                    style="margin-left: 5px; background-color: #ff8700; color: white;">
-                                                <span class="glyphicon glyphicon-search"></span>Server
-                                            </button>
+                                                <button ng-click="serverList(item)"
+                                                        ng-if="item.serverCnt != 0"
+                                                        class="btn btn-xs" uib-popover-html="'查看服务器信息'"
+                                                        popover-trigger="'mouseenter'"
+                                                        style="margin-left: 5px; background-color: #ff8700; color: white;">
+                                                    <span class="glyphicon glyphicon-search"></span>Server
+                                                </button>
 
-                                            <button ng-click="ipnetworkList(item)"
-                                                    class="btn btn-xs" uib-popover-html="'IP组信息'"
-                                                    popover-trigger="'mouseenter'"
-                                                    style="margin-left: 5px; background-color: #00a8f3; color: white;">
-                                                <span class="glyphicon glyphicon-th-list"></span>IP组
-                                            </button>
+                                                <button ng-click="ipnetworkList(item)"
+                                                        class="btn btn-xs" uib-popover-html="'IP组信息'"
+                                                        popover-trigger="'mouseenter'"
+                                                        style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                                    <span class="glyphicon glyphicon-th-list"></span>IP组
+                                                </button>
 
-                                            <button ng-click="groupPropertyList(item.id)"
-                                                    ng-if="item.groupDOList.length != 0"
-                                                    class="btn btn-xs" uib-popover-html="'服务器组属性'"
-                                                    popover-trigger="'mouseenter'"
-                                                    style="margin-left: 5px; background-color: #ff5f87; color: white;">
-                                                <span class="glyphicon glyphicon-th"></span>属性
-                                            </button>
+                                                <button ng-click="groupPropertyList(item.id)"
+                                                        ng-if="item.groupDOList.length != 0"
+                                                        class="btn btn-xs" uib-popover-html="'服务器组属性'"
+                                                        popover-trigger="'mouseenter'"
+                                                        style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                                                    <span class="glyphicon glyphicon-th"></span>属性
+                                                </button>
 
-                                            <button ng-click="delServerGroup(item)"
-                                                    ng-if="contains(authPoint, '/servergroup/del')"
-                                                    class="btn btn-xs pull-right"
-                                                    style="background-color: red; color: white;">
-                                                <span class="glyphicon glyphicon-remove"></span>删除
-                                            </button>
+                                                <button ng-click="delServerGroup(item)"
+                                                        ng-if="contains(authPoint, '/servergroup/del')"
+                                                        class="btn btn-xs pull-right"
+                                                        style="background-color: red; color: white;">
+                                                    <span class="glyphicon glyphicon-remove"></span>删除
+                                                </button>
 
 
-                                            <!--<span class="glyphicon glyphicon-trash pull-right"-->
-                                            <!--ng-if="contains(authPoint, '/servergroup/del')"-->
-                                            <!--style="margin-left: 20px;" ng-click="delServerGroup(item)"></span>-->
-                                        </td>
-                                    </tr>
-                                    </tbody>
-                                    <tfoot>
-                                    <tr>
-                                        <td colspan="6">
-                                            <ul style="margin: 0px; float: right;" uib-pagination
-                                                total-items="totalItems" ng-model="currentPage"
-                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
-                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
-                                        </td>
-                                    </tr>
-                                    </tfoot>
-                                </table>
+                                                <!--<span class="glyphicon glyphicon-trash pull-right"-->
+                                                <!--ng-if="contains(authPoint, '/servergroup/del')"-->
+                                                <!--style="margin-left: 20px;" ng-click="delServerGroup(item)"></span>-->
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                        <tfoot>
+                                        <tr>
+                                            <td colspan="6">
+                                                <ul style="margin: 0px; float: right;" uib-pagination
+                                                    total-items="totalItems" ng-model="currentPage"
+                                                    items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                                    previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+                                            </td>
+                                        </tr>
+                                        </tfoot>
+                                    </table>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-            </uib-tab>
+                </uib-tab>
                 <uib-tab index="1" heading="服务器组类型">
                     <div ng-controller="serverGroupUseTypeCtrl">
                         <div class="panel panel-default">
@@ -190,18 +180,23 @@
                                         <tr>
                                             <td class="col-md-1">类型值</td>
                                             <td class="col-md-2">类型名称</td>
+                                            <td class="col-md-1">颜色值</td>
                                             <td>说明</td>
-                                            <td class="col-md-2" ng-if="contains(authPoint, '/servergroup/useType/save')">操作
+                                            <td class="col-md-2"
+                                                ng-if="contains(authPoint, '/servergroup/useType/save')">操作
                                             </td>
                                         </tr>
                                         </thead>
                                         <tbody>
                                         <tr ng-repeat="item in pageData">
                                             <td>
-                                               {{item.useType}}
+                                                {{item.useType}}
                                             </td>
                                             <td>
-                                                <b style="color: #286090" class="pull-left">{{item.typeName}}</b>
+                                                <b style="color: {{item.color}}">{{item.typeName}}</b>
+                                            </td>
+                                            <td>
+                                                <b style="color: {{item.color}}">{{item.color}}</b>
                                             </td>
                                             <td>
                                                 {{item.content}}
@@ -350,14 +345,14 @@
                                                                     <span class="glyphicon glyphicon-save"></span>保存
                                                                 </button>
 
-                                                                <button ng-if="contains(authPoint, '/servergroup/propertygroup/launch')"
-                                                                        ng-click="launchPropertyGroup(item.serverGroupDO.id, key)"
-                                                                        class="btn btn-xs"
-                                                                        uib-popover-html="'查看本地'"
-                                                                        popover-trigger="'mouseenter'"
-                                                                        style="margin-left: 5px; background-color: #ff5f87; color: white;">
-                                                                    <span class="fa fa-file-text-o"></span>查看
-                                                                </button>
+                                                                <!--<button ng-if="contains(authPoint, '/servergroup/propertygroup/launch')"-->
+                                                                <!--ng-click="launchPropertyGroup(item.serverGroupDO.id, key)"-->
+                                                                <!--class="btn btn-xs"-->
+                                                                <!--uib-popover-html="'查看本地'"-->
+                                                                <!--popover-trigger="'mouseenter'"-->
+                                                                <!--style="margin-left: 5px; background-color: #ff5f87; color: white;">-->
+                                                                <!--<span class="fa fa-file-text-o"></span>查看-->
+                                                                <!--</button>-->
                                                             </div>
 
                                                             <div class="col-md-2">
@@ -369,8 +364,8 @@
                                                                 </button>
 
                                                                 <!--<span ng-if="contains(authPoint, '/config/propertygroup/del')"-->
-                                                                      <!--class="glyphicon glyphicon-trash pull-right"-->
-                                                                      <!--ng-click="delItem(item.serverGroupDO.id, value.id)">-->
+                                                                <!--class="glyphicon glyphicon-trash pull-right"-->
+                                                                <!--ng-click="delItem(item.serverGroupDO.id, value.id)">-->
                                                                 <!--</span>-->
                                                             </div>
                                                         </div>
@@ -396,6 +391,138 @@
                         </div>
                     </div>
                 </uib-tab>
+                <uib-tab index="3" heading="服务器组(测试视图)" ng-show="false">
+                    <div ng-controller="serverGroupCtrl">
+                        <div class="panel panel-default">
+                            <div class="panel-body">
+                                <form class="form-inline" role="form">
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">名称</span>
+                                            <input type="text" class="form-control" ng-model="queryName"
+                                                   placeholder="名称">
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <span class="input-group-addon">使用类型</span>
+                                            <select class="form-control" ng-model="nowType"
+                                                    ng-options="type.useType as type.typeName for type in useType">
+                                                <option value="">--请选择--</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-info" ng-click="doQuery()"><span
+                                                class="glyphicon glyphicon-search"></span>搜索
+                                        </button>
+                                        <button type="button" class="btn btn-info" ng-click="reSet()"><span
+                                                class="glyphicon glyphicon-repeat"></span>重置
+                                        </button>
+                                        <button type="button" class="btn btn-success" ng-click="addServerGroup()"
+                                                ng-if="contains(authPoint, '/servergroup/update')"><span
+                                                class="glyphicon glyphicon-plus"></span>新增
+                                        </button>
+                                    </div>
+                                </form>
+
+                                <form class="form-inline" role="form">
+                                    <form class="form-group">
+                                        <div class="col-md-3" style="margin-top: 15px;" ng-repeat="item in pageData">
+                                            <div style="box-shadow: 0 0 5px #ddd;padding: 10px">
+                                                <table class="table table-hover table-bordered table-striped">
+                                                    <tbody>
+                                                    <tr>
+                                                         <span ng-click="editServerGroup(item)"
+                                                               style="background-color: #286090; color: white;"
+                                                               uib-popover-html="item.content"
+                                                               popover-trigger="'mouseenter'"
+                                                               class="label">{{item.name}}</span>
+                                                        <span ng-if="item.useType == 0"
+                                                              style="background-color: #737373; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 1"
+                                                              style="background-color: #ff5f87; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 2"
+                                                              style="background-color: #990000; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 3"
+                                                              style="background-color: #ec971f; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 4"
+                                                              style="background-color: #8ec165; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 5"
+                                                              style="background-color: #8278c2; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 6"
+                                                              style="background-color: #286090; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 7"
+                                                              style="background-color: #d9534f; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType == 8"
+                                                              style="background-color: #449d44; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                        <span ng-if="item.useType >= 9"
+                                                              style="background-color: #5bc0de; color: white;"
+                                                              class="label pull-right">{{item.serverGroupUseTypeDO.typeName}}</span>
+                                                    </tr>
+                                                    <tr>
+                                                        </br>
+                                                        </br>
+                                                        <span ng-click="serverList(item)" class="fa fa-desktop"
+                                                              uib-popover-html="'服务器数量'"
+                                                              popover-trigger="'mouseenter'">
+                                                         <i class="badge"
+                                                            ng-if="item.serverCnt == 0">{{item.serverCnt}}</i>
+                                                         <i class="badge bg-success"
+                                                            ng-if="item.serverCnt > 0 && item.serverCnt < 10">{{item.serverCnt}}</i>
+                                                         <i class="badge bg-info" ng-if="item.serverCnt >= 10">{{item.serverCnt}}</i>
+                                                        </span>
+                                                        <span style="margin-left: 5px;" class="icon icon-user"
+                                                              uib-popover-html="'授权用户数'" popover-trigger="'mouseenter'">
+                                                          <i class="badge"
+                                                             style="background-color: limegreen; color: white;">{{item.keyboxCnt}}</i>
+                                                        </span>
+                                                    </tr>
+                                                    <tr>
+                                                        <button uib-popover-html="'删除服务器组'"
+                                                                popover-trigger="'mouseenter'"
+                                                                ng-click="delServerGroup(item)"
+                                                                ng-if="contains(authPoint, '/servergroup/del')"
+                                                                class="glyphicon glyphicon-remove pull-right">
+                                                        </button>
+                                                        <button uib-popover-html="'编辑服务器组'"
+                                                                popover-trigger="'mouseenter'"
+                                                                ng-click="editServerGroup(item)"
+                                                                class="glyphicon glyphicon-edit pull-right">
+                                                        </button>
+                                                    </tr>
+                                                    </tbody>
+                                                </table>
+
+                                            </div>
+                                        </div>
+                                    </form>
+                                </form>
+
+                                <div style="margin-top: 15px;"></div>
+
+                                <form class="form-inline" role="form">
+                                    <ul style="margin: 0px; float: right;" uib-pagination
+                                        total-items="totalItems" ng-model="currentPage"
+                                        items-per-page="pageLength" max-size="10" ng-change="pageChanged()"
+                                        previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
+
+                                </form>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
             </uib-tabset>
         </div>
     </div>
@@ -404,13 +531,13 @@
 
 <!--服务器组属性组信息-->
 <script type="text/ng-template" id="servergpg">
-    <div ng-include="'tpl/modal/servergpg_info_modal.html'"></div>
+    <div ng-include="'tpl/modal/serverGroup/servergpg_info_modal.html'"></div>
 </script>
 <script type="text/ng-template" id="eidtInfo">
-    <div ng-include="'tpl/modal/servergroup_info_modal.html'"></div>
+    <div ng-include="'tpl/modal/serverGroup/servergroup_info_modal.html'"></div>
 </script>
 <script type="text/ng-template" id="serverList">
-    <div ng-include="'tpl/modal/serverlist_modal.html'"></div>
+    <div ng-include="'tpl/modal/server/serverlist_modal.html'"></div>
 </script>
 <script type="text/ng-template" id="ipnetworkList">
     <div ng-include="'tpl/modal/ipnetwork_modal.html'"></div>
@@ -418,15 +545,15 @@
 
 <!--服务器组&属性组信息-->
 <script type="text/ng-template" id="servergpsInfo">
-    <div ng-include="'tpl/modal/servergpg_modal.html'"></div>
+    <div ng-include="'tpl/modal/serverGroup/servergpg_modal.html'"></div>
 </script>
 
 <!--预览配置-->
 <script type="text/ng-template" id="propertyLaunch">
-    <div ng-include="'tpl/modal/property_launch_modal.html'"></div>
+    <div ng-include="'tpl/modal/serverGroup/property_launch_modal.html'"></div>
 </script>
 
 <script type="text/ng-template" id="servergpgUseType">
-    <div ng-include="'tpl/modal/servergroup_useType_info_modal.html'"></div>
+    <div ng-include="'tpl/modal/serverGroup/servergroup_useType_info_modal.html'"></div>
 </script>
 

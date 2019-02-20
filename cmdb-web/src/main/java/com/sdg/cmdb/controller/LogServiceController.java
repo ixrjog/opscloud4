@@ -4,10 +4,9 @@ package com.sdg.cmdb.controller;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.logService.LogFormatDefault;
-import com.sdg.cmdb.domain.logService.LogFormatKa;
 import com.sdg.cmdb.domain.logService.LogHistogramsVO;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceDefaultQuery;
-import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceKaQuery;
+import com.sdg.cmdb.domain.logService.logServiceQuery.LogserviceNginxQuery;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceServerGroupCfgVO;
 import com.sdg.cmdb.service.AliyunLogManageService;
 import com.sdg.cmdb.service.AliyunLogService;
@@ -56,14 +55,14 @@ public class LogServiceController {
     /**
      * 查询nginx日志视图
      *
-     * @param logServiceKaQuery
+     * @param logserviceNginxQuery
      * @return
      */
     @RequestMapping(value = "/nginx/query", method = RequestMethod.POST)
     @ResponseBody
-    public HttpResult saveServer(@RequestBody LogServiceKaQuery logServiceKaQuery) {
+    public HttpResult saveServer(@RequestBody LogserviceNginxQuery logserviceNginxQuery) {
         try {
-            return new HttpResult(aliyunLogService.queryLog(logServiceKaQuery));
+            return new HttpResult(aliyunLogService.queryLog(logserviceNginxQuery),true);
         } catch (Exception e) {
             return new HttpResult(null);
         }
@@ -78,7 +77,7 @@ public class LogServiceController {
     @ResponseBody
     public HttpResult nginxViewlog(@RequestBody LogHistogramsVO logHistogramsVO) {
         try {
-            return new HttpResult(aliyunLogService.queryNginxLog(logHistogramsVO));
+            return new HttpResult(aliyunLogService.queryNginxLog(logHistogramsVO),true);
         } catch (Exception e) {
             return new HttpResult(null);
         }

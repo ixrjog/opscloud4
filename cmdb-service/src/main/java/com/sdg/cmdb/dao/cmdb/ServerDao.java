@@ -116,6 +116,12 @@ public interface ServerDao {
     EcsTemplateDO queryEcsTemplateById(
             @Param("id") long id);
 
+
+    int addEcsTemplate(EcsTemplateDO ecsTemplateDO);
+
+
+    int delEcsTemplate(@Param("id") long id);
+
     /**
      * 获取ECS服务器数目
      *
@@ -175,6 +181,20 @@ public interface ServerDao {
             @Param("serverName") String serverName,
             @Param("queryIp") String queryIp,
             @Param("status") int status,
+            @Param("pageStart") long pageStart, @Param("length") int length);
+
+
+    long getEcsRenewSize(
+            @Param("serverName") String serverName,
+            @Param("queryIp") String queryIp,
+            @Param("status") int status,
+            @Param("expiredTime") String expiredTime);
+
+    List<EcsServerDO> getEcsRenewPage(
+            @Param("serverName") String serverName,
+            @Param("queryIp") String queryIp,
+            @Param("status") int status,
+            @Param("expiredTime") String expiredTime,
             @Param("pageStart") long pageStart, @Param("length") int length);
 
 

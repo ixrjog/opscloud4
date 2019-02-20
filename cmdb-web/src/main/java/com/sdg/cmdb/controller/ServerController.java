@@ -4,6 +4,7 @@ import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.aliyun.AliyunRenewInstances;
 import com.sdg.cmdb.domain.esxi.HostDatastoreInfoVO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
@@ -44,6 +45,19 @@ public class ServerController {
 
     @Resource
     private ServerPerfService serverPerfService;
+
+
+    /**
+     * 查询默认登录用户
+     *
+     * @return
+     */
+    @RequestMapping(value = "/getLoginUser", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getLoginUser() {
+        return new HttpResult(serverService.getLoginUser());
+    }
+
 
     /**
      * 获取指定条件的服务器列表分页数据
@@ -164,6 +178,33 @@ public class ServerController {
         return new HttpResult(ecsService.getEcsServerPage(serverName, queryIp, status, page, length));
     }
 
+    /**
+     * 查询续费实例
+     *
+     * @param serverName
+     * @param queryIp
+     * @param status
+     * @param page
+     * @param length
+     * @return
+     */
+    @RequestMapping(value = "/ecsRenewPage", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryEcsRenewPage(@RequestParam String serverName, @RequestParam String queryIp, @RequestParam int status, @RequestParam int day,
+                                        @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(ecsService.getEcsRenewPage(serverName, queryIp, status, day, page, length));
+    }
+
+    @RequestMapping(value = "/ecsRenew", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult ecsRenew(@RequestBody AliyunRenewInstances aliyunRenewInstances) {
+        BusinessWrapper<Boolean> wrapper = ecsService.renewInstances(aliyunRenewInstances);
+        if (wrapper.isSuccess()) {
+            return new HttpResult(wrapper.getBody());
+        } else {
+            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+        }
+    }
 
     @RequestMapping(value = "/ecsRefresh", method = RequestMethod.GET)
     @ResponseBody
@@ -378,6 +419,12 @@ public class ServerController {
     @ResponseBody
     public HttpResult statusLogService() {
         return new HttpResult(serverService.status());
+    }
+
+    @RequestMapping(value = "/vcsa/version", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getVcsaVersion() {
+        return new HttpResult(vmService.getVersion());
     }
 
 }

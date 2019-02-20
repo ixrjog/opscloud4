@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.esxi.EsxiHostDO;
 import com.sdg.cmdb.domain.esxi.HostDatastoreInfoVO;
 import com.sdg.cmdb.domain.server.*;
+import com.vmware.vim25.AboutInfo;
 import com.vmware.vim25.mo.ServiceInstance;
 
 import java.util.List;
@@ -109,5 +110,7 @@ public interface VmService {
      * @return
      */
     List<EsxiHostDO> getEsxiHost();
+
+    AboutInfo getVersion();
 
 }

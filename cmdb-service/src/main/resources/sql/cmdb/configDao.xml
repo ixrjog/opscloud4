@@ -404,6 +404,10 @@
         limit #{pageStart}, #{pageLength}
     </select>
 
+    <select id="getConfigFile" resultType="ConfigFileDO">
+        SELECT * FROM oc_config_file
+    </select>
+
     <select id="queryConfigFileByGroupId" parameterType="_long" resultType="ConfigFileDO">
         SELECT * FROM oc_config_file
         WHERE fileGroupId = #{fileGroupId}
@@ -436,106 +440,56 @@
         WHERE fileGroupId = #{fileGroupId}
     </select>
 
-    <select id="queryConfigFileCopyByGroupId" parameterType="_long" resultType="ConfigFileCopyDO">
-        SELECT * FROM oc_config_file_copy
-        WHERE groupId = #{groupId}
-    </select>
 
-    <select id="queryConfigFileCopyByGroupName" parameterType="object" resultType="ConfigFileCopyDO">
-        SELECT * FROM oc_config_file_copy
-        WHERE groupName = #{groupName}
-    </select>
-
-    <select id="getConfigFileCopy" parameterType="_long" resultType="ConfigFileCopyDO">
-        SELECT * FROM oc_config_file_copy
-        WHERE id = #{id}
-    </select>
-
-
-    <delete id="delConfigFileCopy" parameterType="_long">
-        DELETE FROM oc_config_file_copy WHERE id = #{id}
-    </delete>
-
-    <insert id="addConfigFileCopy" parameterType="ConfigFileGroupDO">
-        INSERT INTO oc_config_file_copy (
-        groupId,
-        groupName,
-        serverId,
+    <insert id="addConfigFilePlaybook" parameterType="ConfigFilePlaybookDO">
+        INSERT INTO oc_config_file_playbook (
+        fileId,
+        fileName,
+        serverGroupId,
+        serverGroupName,
+        hostPattern,
         src,
         dest,
         username,
-        usergroup
+        usergroup,
+        playbookId
         ) VALUES (
-        #{groupId},
-        #{groupName},
-        #{serverId},
+        #{fileId},
+        #{fileName},
+        #{serverGroupId},
+        #{serverGroupName},
+        #{hostPattern},
         #{src},
         #{dest},
         #{username},
-        #{usergroup}
+        #{usergroup},
+        #{playbookId}
         );
     </insert>
 
-    <update id="updateConfigFileCopy" parameterType="ConfigFileGroupDO">
-        UPDATE oc_config_file_copy
+    <update id="updateConfigFilePlaybook" parameterType="ConfigFilePlaybookDO">
+        UPDATE oc_config_file_playbook
         SET
-        serverId = #{serverId},
-        src = #{src},
         dest = #{dest},
-        username = #{username},
-        usergroup= #{usergroup}
+        playbookId = #{playbookId}
         WHERE id = #{id}
     </update>
 
-
-    <insert id="addConfigFileCopyDoScript" parameterType="ConfigFileCopyDoScriptDO">
-        INSERT INTO oc_config_file_copy_do_script (
-        copyId,
-        taskScriptId,
-        params,
-        groupName
-        ) VALUES (
-        #{copyId},
-        #{taskScriptId},
-        #{params},
-        #{groupName}
-        );
-    </insert>
-
-    <update id="updateConfigFileCopyDoScript" parameterType="ConfigFileCopyDoScriptDO">
-        UPDATE oc_config_file_copy_do_script
-        SET
-        copyId = #{copyId},
-        taskScriptId = #{taskScriptId},
-        params = #{params},
-        groupName = #{groupName}
-        WHERE id = #{id}
-    </update>
-
-
-    <select id="getConfigFileCopyDoScriptPage" parameterType="object" resultType="ConfigFileCopyDoScriptDO">
-        SELECT * FROM oc_config_file_copy_do_script
-        WHERE groupName = #{groupName}
-        limit #{pageStart}, #{pageLength}
-    </select>
-
-    <select id="getConfigFileCopyDoScriptSize" parameterType="string" resultType="_long">
-        SELECT count(*) FROM oc_config_file_copy_do_script
-        WHERE groupName = #{groupName}
-    </select>
-
-    <select id="getConfigFileCopyDoScript" parameterType="_long" resultType="ConfigFileCopyDoScriptDO">
-        SELECT * FROM oc_config_file_copy_do_script
-        WHERE id = id
-    </select>
-
-    <select id="getConfigFileCopyDoScriptByCopyId" parameterType="_long" resultType="ConfigFileCopyDoScriptDO">
-        SELECT * FROM oc_config_file_copy_do_script
-        WHERE copyId = copyId
-    </select>
-
-    <delete id="delConfigFileCopyDoScript" parameterType="_long">
-        DELETE FROM oc_config_file_copy_do_script WHERE id = #{id}
+    <delete id="delConfigFilePlaybook" parameterType="_long">
+        DELETE FROM oc_config_file_playbook WHERE id = #{id}
     </delete>
+
+    <select id="getConfigFilePlaybookPage" resultType="ConfigFilePlaybookDO">
+        SELECT * FROM oc_config_file_playbook
+    </select>
+
+
+    <select id="getConfigFilePlaybook" resultType="ConfigFilePlaybookDO">
+        SELECT * FROM oc_config_file_playbook WHERE id = #{id}
+    </select>
+
+    <select id="queryConfigFilePlaybookByFileId" resultType="ConfigFilePlaybookDO">
+        SELECT * FROM oc_config_file_playbook WHERE fileId = #{fileId}
+    </select>
 
 </mapper>

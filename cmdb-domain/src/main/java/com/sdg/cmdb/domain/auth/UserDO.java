@@ -1,11 +1,15 @@
 package com.sdg.cmdb.domain.auth;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by zxxiao on 16/9/19.
  */
+@Data
 public class UserDO implements Serializable {
     private static final long serialVersionUID = 3444096336277588871L;
 
@@ -58,6 +62,8 @@ public class UserDO implements Serializable {
      */
     private long servers;
 
+    private int sPort;
+
     private String gmtCreate;
 
     private String gmtModify;
@@ -76,153 +82,9 @@ public class UserDO implements Serializable {
         this.token = token;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getId() {
-        return this.id;
-    }
-
-    public String getMail() {
-        return mail;
-    }
-
-    public void setMail(String mail) {
-        this.mail = mail;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getToken() {
-        return token;
-    }
-
-    public void setToken(String token) {
-        this.token = token;
-    }
-
-    public String getMobile() {
-        return mobile;
-    }
-
-    public void setMobile(String mobile) {
-        this.mobile = mobile;
-    }
-
-    public String getPwd() {
-        return pwd;
-    }
-
-    public void setPwd(String pwd) {
-        this.pwd = pwd;
-    }
-
-    public String getRsaKey() {
-        return rsaKey;
-    }
-
-    public void setRsaKey(String rsaKey) {
-        this.rsaKey = rsaKey;
-    }
-
-    public int getAuthed() {
-        return authed;
-    }
-
-    public void setAuthed(int authed) {
-        this.authed = authed;
-    }
-
-    public int getZabbixAuthed() {
-        return zabbixAuthed;
-    }
-
-    public void setZabbixAuthed(int zabbixAuthed) {
-        this.zabbixAuthed = zabbixAuthed;
-    }
-
-    public int getInvalid() {
-        return invalid;
-    }
-
-    public void setInvalid(int invalid) {
-        this.invalid = invalid;
-    }
-
-    public List<ResourceDO> getResourceDOList() {
-        return resourceDOList;
-    }
-
-    public void setResourceDOList(List<ResourceDO> resourceDOList) {
-        this.resourceDOList = resourceDOList;
-    }
-
-    public long getRoleId() {
-        return roleId;
-    }
-
-    public void setRoleId(long roleId) {
-        this.roleId = roleId;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
-
-    public long getServers() {
-        return servers;
-    }
-
-    public void setServers(long servers) {
-        this.servers = servers;
-    }
-
     @Override
     public String toString() {
-        return "UserDO{" +
-                "mail='" + mail + '\'' +
-                ", displayName='" + displayName + '\'' +
-                ", username='" + username + '\'' +
-                ", token='" + token + '\'' +
-                ", mobile='" + mobile + '\'' +
-                ", pwd='" + pwd + '\'' +
-                ", rsaKey='" + rsaKey + '\'' +
-                ", authed=" + authed +
-                ", zabbixAuthed=" + zabbixAuthed +
-                ", invalid=" + invalid +
-                ", resourceDOList=" + resourceDOList +
-                ", roleId=" + roleId +
-                ", servers=" + servers +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 
 

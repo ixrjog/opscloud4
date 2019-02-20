@@ -7,8 +7,10 @@ import com.sdg.cmdb.domain.auth.CiUserGroupVO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserLeaveVO;
 import com.sdg.cmdb.domain.scm.ScmPermissionsVO;
+import com.sdg.cmdb.domain.zabbix.response.ZabbixResponseUser;
 import com.sdg.cmdb.service.*;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -26,14 +28,19 @@ public class UserController {
     @Resource
     private AuthService authService;
 
+
     @Resource
-    private GitService gitService;
+    private LdapService ldapService;
+
 
     @Resource
     private CiUserGroupService ciUserGroupService;
 
     @Resource
     private ZabbixService zabbixService;
+
+    @Resource
+    private ZabbixServerService zabbixServerService;
 
     /**
      * 获取指定条件的用户集合
@@ -77,7 +84,9 @@ public class UserController {
 
         TableVO<List<UserLeaveVO>> tableVO = userService.getUserLeavePage(username, page, length);
         for (UserLeaveVO userLeaveVO : tableVO.getData()) {
-            userLeaveVO.setZabbix(zabbixService.userGet(new UserDO(userLeaveVO.getUsername())));
+            ZabbixResponseUser zabbixUser = zabbixServerService.getUser(new UserDO(userLeaveVO.getUsername()));
+            if (zabbixUser != null && !StringUtils.isEmpty(zabbixUser.getUserid()))
+                userLeaveVO.setZabbix(1);
         }
 
         return new HttpResult(userService.getUserLeavePage(username, page, length));
@@ -147,7 +156,7 @@ public class UserController {
     @RequestMapping(value = "/cmdb/ldapGroup/remove", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delMember2Group(@RequestParam String username) {
-        return new HttpResult(authService.removeMember2Group(username));
+        return new HttpResult(ldapService.removeMember(username));
     }
 
 
@@ -160,7 +169,7 @@ public class UserController {
     @RequestMapping(value = "/cmdb/ldap/remove", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delLdapUser(@RequestParam String username) {
-        return new HttpResult(authService.unbindUser(username));
+        return new HttpResult(ldapService.unbindUser(username));
     }
 
 
@@ -178,30 +187,6 @@ public class UserController {
 
 
     /**
-     * 关闭用户邮箱
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/cmdb/mailLdap/close", method = RequestMethod.DELETE)
-    @ResponseBody
-    public HttpResult closeUserMail(@RequestParam String username) {
-        return new HttpResult(authService.closeMailAccount(username));
-    }
-
-    /**
-     * 激活用户邮箱
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/cmdb/mailLdap/active", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult activeUserMail(@RequestParam String username) {
-        return new HttpResult(authService.activeMailAccount(username));
-    }
-
-    /**
      * 添加用户权限
      *
      * @param username
@@ -210,7 +195,7 @@ public class UserController {
     @RequestMapping(value = "/cmdb/ldapGroup/add", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult addLdapGroup(@RequestParam String username, @RequestParam String groupname) {
-        return new HttpResult(authService.addLdapGroup(username, groupname));
+        return new HttpResult(ldapService.addLdapGroup(username, groupname));
     }
 
     /**
@@ -222,7 +207,7 @@ public class UserController {
     @RequestMapping(value = "/cmdb/ldapGroup/del", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult delLdapGroup(@RequestParam String username, @RequestParam String groupname) {
-        return new HttpResult(authService.delLdapGroup(username, groupname));
+        return new HttpResult(ldapService.delLdapGroup(username, groupname));
     }
 
 
@@ -253,16 +238,6 @@ public class UserController {
         return new HttpResult(ciUserGroupService.getCiUserGroupPage(groupName, envType, page, length));
     }
 
-    /**
-     * 更新数据
-     *
-     * @return
-     */
-    @RequestMapping(value = "/ci/usergroup/refresh", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getCiUsergroupRefresh() {
-        return new HttpResult(ciUserGroupService.groupsRefresh());
-    }
 
     /**
      * 删除持续集成用户组
@@ -303,7 +278,6 @@ public class UserController {
         return new HttpResult(ciUserGroupService.getCiUser(username));
     }
 
-
     /**
      * 添加用户的持续集成权限组
      *
@@ -317,13 +291,11 @@ public class UserController {
         return new HttpResult(ciUserGroupService.userAddGroup(userId, usergroupId));
     }
 
-
     @RequestMapping(value = "/cmdb/ci/users/delGroup", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delCmdbCiUser(@RequestParam long ciuserId) {
         return new HttpResult(ciUserGroupService.userDelGroup(ciuserId));
     }
-
 
     /**
      * 保存指定的ciUserGroupItem
@@ -343,7 +315,6 @@ public class UserController {
         }
     }
 
-
     /**
      * 更新数据
      *
@@ -354,7 +325,6 @@ public class UserController {
     public HttpResult getCiUsersRefresh() {
         return new HttpResult(ciUserGroupService.usersRefresh());
     }
-
 
     /**
      * 批量填充用户手机号
@@ -379,47 +349,4 @@ public class UserController {
     }
 
 
-    /**
-     * 获取指定条件的SCM权限组集合
-     *
-     * @param groupName
-     * @param scmProject
-     * @param page
-     * @param length
-     * @return
-     */
-    @RequestMapping(value = "/scm/permissions/page", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getScmPermissionsPage(@RequestParam String groupName, @RequestParam String scmProject, @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(gitService.queryScmPermissionsPage(groupName, scmProject, page, length));
-    }
-
-    @RequestMapping(value = "/scm/permissions/get", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getScmPermissionsGet(@RequestParam String scmProject) {
-        return new HttpResult(gitService.getScmPermissions(scmProject));
-    }
-
-    /**
-     * 刷新SCM权限组集合
-     *
-     * @return
-     */
-    @RequestMapping(value = "/scm/permissions/refresh", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getScmPermissionsPage() {
-        return new HttpResult(gitService.scmPermissionsRefresh());
-    }
-
-
-    /**
-     * 刷新SCM权限组集合
-     *
-     * @return
-     */
-    @RequestMapping(value = "/scm/permissions/save", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult getScmPermissionsSave(@RequestBody ScmPermissionsVO scmPermissionsVO) {
-        return new HttpResult(gitService.savePermissions(scmPermissionsVO));
-    }
 }

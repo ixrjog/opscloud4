@@ -39,7 +39,13 @@ public interface ServerGroupDao {
             @Param("name") String name, @Param("useType") int useType);
 
 
+
+    long queryUnauthServerGroupSize( @Param("name") String name, @Param("useType") int useType);
+    List<ServerGroupDO> queryUnauthServerGroupPage(@Param("start") long start, @Param("length") int length,
+            @Param("name") String name, @Param("useType") int useType);
+
     long queryProjectServerGroupSize( @Param("name") String name, @Param("useType") int useType);
+
 
     List<ServerGroupDO> queryLogServiceServerGroupPage(@Param("start") long start,
                                                        @Param("length") int length,

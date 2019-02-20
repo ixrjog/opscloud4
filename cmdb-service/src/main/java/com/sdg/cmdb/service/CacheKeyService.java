@@ -10,12 +10,9 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class CacheKeyService {
 
-    private static final String perfKey = "Def";
 
     @Resource
     private RedisTemplate redisTemplate;
-
-    public static final String PROJECT_TASK_LOCK_KEY = "CacheKeyService:ProjectTaskLockKey:Status";
 
     /**
      * 用于单任务锁
@@ -55,6 +52,10 @@ public class CacheKeyService {
         redisTemplate.opsForValue().set(key, value);
     }
 
+    public void set(String key, Object obj) {
+
+        redisTemplate.opsForSet().add(key,obj);
+    }
     /**
      * 缓存N分钟
      *
@@ -66,9 +67,16 @@ public class CacheKeyService {
         redisTemplate.opsForValue().set(key, value, minutes, TimeUnit.MINUTES);
     }
 
+    public void del(String key) {
+        redisTemplate.delete(key);
+    }
+
+
+
     /**
      * 插入指定key-value    有效期20分钟
      */
+
     private void demoInsertForTime() {
         redisTemplate.opsForValue().set("key", "value", 20, TimeUnit.MINUTES);
     }

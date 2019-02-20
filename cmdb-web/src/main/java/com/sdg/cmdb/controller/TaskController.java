@@ -4,6 +4,7 @@ import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.task.CmdVO;
+import com.sdg.cmdb.domain.task.DoPlaybook;
 import com.sdg.cmdb.service.AnsibleTaskService;
 import com.sdg.cmdb.service.LogCleanupService;
 import com.sdg.cmdb.service.ServerTaskService;
@@ -155,28 +156,10 @@ public class TaskController {
         return new HttpResult(ansibleTaskService.scriptTask(cmdVO));
     }
 
-    @RequestMapping(value = "/cmd/copySever/doScript", method = RequestMethod.GET)
+    @RequestMapping(value = "/cmd/doPlaybook", method = RequestMethod.POST)
     @ResponseBody
-    public HttpResult postDoScript(@RequestParam long id) {
-        return new HttpResult(ansibleTaskService.doScriptByCopyServer(id));
-    }
-
-    @RequestMapping(value = "/cmd/copySever/doScriptByGroup", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult postDoScript(@RequestParam String groupName) {
-        return new HttpResult(ansibleTaskService.doScriptByCopyByGroup(groupName));
-    }
-
-    @RequestMapping(value = "/cmd/doScript/updateGetway", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult doUpdateGetway() {
-        return new HttpResult(ansibleTaskService.scriptTaskUpdateGetway());
-    }
-
-    @RequestMapping(value = "/cmd/doScript/getwaySetLogin", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult doGetwaySetLogin() {
-        return new HttpResult(ansibleTaskService.scriptTaskGetwaySetLogin());
+    public HttpResult doPlaybook(@RequestBody DoPlaybook doPlaybook) {
+        return new HttpResult(ansibleTaskService.playbookTask(doPlaybook));
     }
 
 
@@ -186,22 +169,14 @@ public class TaskController {
         return new HttpResult(ansibleTaskService.taskQuery(taskId));
     }
 
-
-    @RequestMapping(value = "/copy/doFileCopy", method = RequestMethod.GET)
+    /**
+     * 查询PlaybookTask
+     */
+    @RequestMapping(value = "/playbook/get", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult doFileCopy(@RequestParam long id) {
-        return new HttpResult(ansibleTaskService.doFileCopy(id));
+    public HttpResult getPlaybookTaskVO(@RequestParam long id) {
+        return new HttpResult(ansibleTaskService.getPlaybookTask(id));
     }
-
-
-    @RequestMapping(value = "/copy/doFileCopyAll", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult doFileCopyAll(@RequestParam String groupName) {
-        return new HttpResult(ansibleTaskService.doFileCopyByFileGroupName(groupName));
-    }
-
-
-
 
     /**
      * ansible 脚本详情页
@@ -221,6 +196,19 @@ public class TaskController {
         return new HttpResult(ansibleTaskService.getTaskScriptPage(scriptName, sysScript, page, length));
     }
 
+    @RequestMapping(value = "/script/getPlaybook", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getTaskScriptPlaybook() {
+        return new HttpResult(ansibleTaskService.getTaskScriptPlaybook());
+    }
+
+    @RequestMapping(value = "/script/queryPlaybook", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryPlaybook(@RequestParam String playbookName) {
+        return new HttpResult(ansibleTaskService.queryPlaybook(playbookName));
+    }
+
+
     @RequestMapping(value = "/script/save", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult postDoCmd(@RequestBody TaskScriptDO taskScriptDO) {
@@ -232,6 +220,12 @@ public class TaskController {
     @ResponseBody
     public HttpResult getAnsibleVersion() {
         return new HttpResult(ansibleTaskService.acqAnsibleVersion());
+    }
+
+    @RequestMapping(value = "/ansible/playbook/version", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getAnsiblePlaybookVersion() {
+        return new HttpResult(ansibleTaskService.acqAnsiblePlaybookVersion());
     }
 
 

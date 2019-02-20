@@ -2,7 +2,6 @@ package com.sdg.cmdb.controller;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
-import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
 import com.sdg.cmdb.service.ConfigService;
@@ -30,7 +29,7 @@ public class ServerGroupController {
     private ConfigService configService;
 
     /**
-     * 查询服务器组的分页数据
+     * 查询服务器组的分页数据(用户已授权的服务器组)
      *
      * @param page
      * @param length
@@ -44,6 +43,23 @@ public class ServerGroupController {
                                          @RequestParam String name, @RequestParam int useType) {
         return new HttpResult(serverGroupService.queryServerGroupPage(page, length, name, useType));
     }
+
+    /**
+     * 查询服务器组的分页数据(可查询所有的服务器组，用于工作流申请)
+     * @param page
+     * @param length
+     * @param name
+     * @param useType
+     * @return
+     */
+    @RequestMapping(value = "/query/unauthPage", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryUnauthServerGroupPage(@RequestParam int page, @RequestParam int length,
+                                         @RequestParam String name, @RequestParam int useType) {
+        return new HttpResult(serverGroupService.queryUnauthServerGroupPage(page, length, name, useType));
+    }
+
+
 
     /**
      * 按服务器组名称查询
@@ -172,23 +188,23 @@ public class ServerGroupController {
         return new HttpResult(configService.getGroupPropertyPageByGroupId(groupId, page, length));
     }
 
-    /**
-     * 生成指定服务器组&属性组的属性配置文件
-     *
-     * @param serverGroupId
-     * @param propertyGroupId
-     * @return
-     */
-    @RequestMapping(value = "/propertygroup/create", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createServerGroupPropertyGroup(@RequestParam long serverGroupId, @RequestParam long propertyGroupId) {
-        BusinessWrapper<String> wrapper = configService.createServerPropertyFile(serverGroupId, propertyGroupId);
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-    }
+//    /**
+//     * 生成指定服务器组&属性组的属性配置文件
+//     *
+//     * @param serverGroupId
+//     * @param propertyGroupId
+//     * @return
+//     */
+//    @RequestMapping(value = "/propertygroup/create", method = RequestMethod.POST)
+//    @ResponseBody
+//    public HttpResult createServerGroupPropertyGroup(@RequestParam long serverGroupId, @RequestParam long propertyGroupId) {
+//        BusinessWrapper<String> wrapper = configService.createServerPropertyFile(serverGroupId, propertyGroupId);
+//        if (wrapper.isSuccess()) {
+//            return new HttpResult(wrapper.getBody());
+//        } else {
+//            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+//        }
+//    }
 
     /**
      * 预览指定服务器组&属性组的属性配置文件
@@ -200,28 +216,26 @@ public class ServerGroupController {
     @RequestMapping(value = "/propertygroup/preview", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult previewServerGroupPropertyGroup(@RequestParam long serverGroupId, @RequestParam long propertyGroupId) {
-        String fileContent = configService.previewServerPropertyFile(serverGroupId, propertyGroupId);
-
-        return new HttpResult(fileContent);
+        return new HttpResult(configService.previewServerPropertyFile(serverGroupId, propertyGroupId));
     }
 
-    /**
-     * 加载指定服务器组&属性组的本地属性配置文件
-     *
-     * @param serverGroupId
-     * @param propertyGroupId
-     * @return
-     */
-    @RequestMapping(value = "/propertygroup/launch", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult launchServerGroupPropertyGroup(@RequestParam long serverGroupId, @RequestParam long propertyGroupId) {
-        BusinessWrapper<String> wrapper = configService.launchServerPropertyFile(serverGroupId, propertyGroupId);
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-    }
+//    /**
+//     * 加载指定服务器组&属性组的本地属性配置文件
+//     *
+//     * @param serverGroupId
+//     * @param propertyGroupId
+//     * @return
+//     */
+//    @RequestMapping(value = "/propertygroup/launch", method = RequestMethod.GET)
+//    @ResponseBody
+//    public HttpResult launchServerGroupPropertyGroup(@RequestParam long serverGroupId, @RequestParam long propertyGroupId) {
+//        BusinessWrapper<String> wrapper = configService.launchServerPropertyFile(serverGroupId, propertyGroupId);
+//        if (wrapper.isSuccess()) {
+//            return new HttpResult(wrapper.getBody());
+//        } else {
+//            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+//        }
+//    }
 
     /**
      * 查询指定服务器组的服务器集合
@@ -253,6 +267,7 @@ public class ServerGroupController {
 
     /**
      * 查询服务器组使用属性列表
+     *
      * @return
      */
     @RequestMapping(value = "/useType/query", method = RequestMethod.GET)
@@ -273,5 +288,17 @@ public class ServerGroupController {
     public HttpResult getServerGroupUseTypePage(@RequestParam long id) {
         return new HttpResult(serverGroupService.delServerGroupUseType(id));
     }
+
+    /**
+     * 查询服务器分组信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/hostPattern/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getHostPatter(@RequestParam long serverGroupId) {
+        return new HttpResult(serverGroupService.getHostPattern(serverGroupId),true);
+    }
+
 
 }

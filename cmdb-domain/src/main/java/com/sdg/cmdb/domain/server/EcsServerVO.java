@@ -1,19 +1,21 @@
 package com.sdg.cmdb.domain.server;
 
-import com.sdg.cmdb.domain.aliyun.AliyunVO;
+
+
+import lombok.Data;
 
 import java.io.Serializable;
 
 /**
  * Created by liangjian on 2017/6/6.
  */
+@Data
 public class EcsServerVO extends EcsServerDO implements Serializable {
     private static final long serialVersionUID = 5610868520720405528L;
 
     public EcsServerVO() {
 
     }
-
 
     public EcsServerVO(EcsServerDO ecsServerDO, ServerDO serverDO) {
         this.envType = serverDO.getEnvType();
@@ -45,6 +47,8 @@ public class EcsServerVO extends EcsServerDO implements Serializable {
         setArea(ecsServerDO.getArea());
         setFinance(ecsServerDO.isFinance());
         setStatus(ecsServerDO.getStatus());
+        setExpiredTime(ecsServerDO.getExpiredTime());
+        setInstanceChargeType(ecsServerDO.getInstanceChargeType());
         setIoOptimized(ecsServerDO.isIoOptimized());
         setCreationTime(ecsServerDO.getCreationTime());
     }
@@ -67,75 +71,9 @@ public class EcsServerVO extends EcsServerDO implements Serializable {
 
     private String serialNumber;
 
-    public EcsPropertyDO getNetworkTypePropertyDO() {
-        return networkTypePropertyDO;
-    }
+    /**
+     * 过期天数
+     */
+    private long expiredDay;
 
-    public void setNetworkTypePropertyDO(EcsPropertyDO networkTypePropertyDO) {
-        this.networkTypePropertyDO = networkTypePropertyDO;
-    }
-
-    public EcsPropertyDO getImagePropertyDO() {
-        return imagePropertyDO;
-    }
-
-    public void setImagePropertyDO(EcsPropertyDO imagePropertyDO) {
-        this.imagePropertyDO = imagePropertyDO;
-    }
-
-    public EcsPropertyDO getVpcPropertyDO() {
-        return vpcPropertyDO;
-    }
-
-    public void setVpcPropertyDO(EcsPropertyDO vpcPropertyDO) {
-        this.vpcPropertyDO = vpcPropertyDO;
-    }
-
-    public EcsPropertyDO getVswitchPropertyDO() {
-        return vswitchPropertyDO;
-    }
-
-    public void setVswitchPropertyDO(EcsPropertyDO vswitchPropertyDO) {
-        this.vswitchPropertyDO = vswitchPropertyDO;
-    }
-
-    public EcsPropertyDO getSecurityGroupPropertyDO() {
-        return securityGroupPropertyDO;
-    }
-
-    public void setSecurityGroupPropertyDO(EcsPropertyDO securityGroupPropertyDO) {
-        this.securityGroupPropertyDO = securityGroupPropertyDO;
-    }
-
-    public int getEnvType() {
-        return envType;
-    }
-
-    public void setEnvType(int envType) {
-        this.envType = envType;
-    }
-
-    public int getServerType() {
-        return serverType;
-    }
-
-    public void setServerType(int serverType) {
-        this.serverType = serverType;
-    }
-
-    public int getUseType() {
-        return useType;
-    }
-
-    public void setUseType(int useType) {
-        this.useType = useType;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
 }

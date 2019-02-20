@@ -23,27 +23,27 @@ app.controller('jenkinsJobBuildsCtrl', function ($scope, $state, $uibModal, $sce
 
 
     // 生成参数
-    $scope.refreshParamsInfo = function () {
-
-        if ($scope.pageData.length == 0) return;
-
-        for (var i = 0; i < $scope.pageData.length; i++) {
-            var info = '<b style="color: #286090">执行参数</b>';
-            info += '<hr style="margin-bottom: 2px; margin-top: 2px" />';
-            var item = $scope.pageData[i];
-            //var params = $scope.pageData[i].paramList;
-            if (item.paramList.length == 0) return;
-            for (var j = 0; j < item.paramList.length; j++) {
-                var param = item.paramList[j];
-                info +=  '<b style="color: red">' + param.paramName + "</b>:" ;
-                info +=  '<b style="color: green">' + param.paramValue + "</b> <br/>" ;
-            }
-            item.paramsInfo = $sce.trustAsHtml(
-                info
-            );
-        }
-
-    }
+    // $scope.refreshParamsInfo = function () {
+    //
+    //     if ($scope.pageData.length == 0) return;
+    //
+    //     for (var i = 0; i < $scope.pageData.length; i++) {
+    //         var info = '<b style="color: #286090">执行参数</b>';
+    //         info += '<hr style="margin-bottom: 2px; margin-top: 2px" />';
+    //         var item = $scope.pageData[i];
+    //         //var params = $scope.pageData[i].paramList;
+    //         if (item.paramList.length == 0) return;
+    //         for (var j = 0; j < item.paramList.length; j++) {
+    //             var param = item.paramList[j];
+    //             info +=  '<b style="color: red">' + param.paramName + "</b>:" ;
+    //             info +=  '<b style="color: green">' + param.paramValue + "</b> <br/>" ;
+    //         }
+    //         item.paramsInfo = $sce.trustAsHtml(
+    //             info
+    //         );
+    //     }
+    //
+    // }
 
     /////////////////////////////////////////////////
 

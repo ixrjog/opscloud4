@@ -47,8 +47,6 @@ public class DingTalkHandler {
             notifyMap.put(content.getWebHook(), notifyList);
         }
         notifyList.add(content.getMsg());
-
-
         HttpClient httpclient = HttpClients.createDefault();
         HttpPost httppost = new HttpPost(content.getWebHook());
         //System.err.println(content.getWebHook());

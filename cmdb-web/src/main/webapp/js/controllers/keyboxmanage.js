@@ -790,5 +790,139 @@ app.controller('keyboxManageKeyCtrl', function ($scope, $state, $uibModal, toast
     }
 });
 
+// Jumpserver管理
+app.controller('jumpserverCtrl', function ($scope, $state, $uibModal, toaster, httpService) {
+
+    $scope.btnSyncAssets = false;
+    $scope.btnSyncUsers = false;
+
+    $scope.jumpserver = {};
+
+    $scope.systemuserList = [];
+    $scope.nowSystemuser = {};
+
+    $scope.adminuserList = [];
+    $scope.nowAdminuser = {};
+
+    var getJumpserver = function () {
+        var url = "/jumpserver/get"
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.jumpserver = data.body;
+                if ($scope.jumpserver == null) return;
+                if ($scope.jumpserver.assetsAdminuserDO != null) {
+                    $scope.nowAdminuser.selected = $scope.jumpserver.assetsAdminuserDO;
+                }
+                if ($scope.jumpserver.assetsSystemuserDO != null) {
+                    $scope.nowSystemuser.selected = $scope.jumpserver.assetsSystemuserDO;
+                }
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    getJumpserver();
+
+    $scope.querySystemuser = function (queryName) {
+        var url = "/jumpserver/assetsSystemuser/query?name=" + (queryName == null ? "" : queryName);
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.systemuserList = data.body;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.queryAdminuser = function (queryName) {
+        var url = "/jumpserver/assetsAdminuser/query?name=" + (queryName == null ? "" : queryName);
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.adminuserList = data.body;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.saveAdminuser = function () {
+        if ($scope.nowAdminuser.selected == null) return;
+        var url = "/jumpserver/assetsAdminuser/save?id=" + $scope.nowAdminuser.selected.id;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "保存管理账户成功！");
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.saveSystemuser = function () {
+        if ($scope.nowSystemuser.selected == null) return;
+        var url = "/jumpserver/assetsSystemuser/save?id=" + $scope.nowSystemuser.selected.id;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "保存系统账户成功！");
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.syncAssets = function () {
+        var url = "/jumpserver/assets/sync";
+        $scope.btnSyncAssets = true;
+
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "资产同步成功！");
+                $scope.btnSyncAssets = false;
+            } else {
+                toaster.pop("warning", data.msg);
+                $scope.btnSyncAssets = false;
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+            $scope.btnSyncAssets = false;
+        });
+    }
+
+    $scope.syncUsers = function () {
+        var url = "/jumpserver/users/sync";
+        $scope.btnSyncUsers = true;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "用户同步成功！");
+                $scope.btnSyncUsers = false;
+            } else {
+                toaster.pop("warning", data.msg);
+                $scope.btnSyncUsers = false;
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+            $scope.btnSyncUsers = false;
+        });
+    }
+
+});
+
 
 

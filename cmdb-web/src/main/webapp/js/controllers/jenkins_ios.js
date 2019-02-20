@@ -230,6 +230,7 @@ app.controller('jenkinsIosCtrl', function ($scope, $state, $uibModal, $sce, $tim
 
 app.controller('jenkinsJobInstanceCtrl', function ($scope, $uibModalInstance, toaster, staticModel, httpService, jobEnvType, buildType, jobItem) {
     $scope.jobItem = jobItem;
+    $scope.nowBranch = "";
     $scope.jobEnvType = jobEnvType;
     $scope.buildType = buildType;
     $scope.paramList = [];

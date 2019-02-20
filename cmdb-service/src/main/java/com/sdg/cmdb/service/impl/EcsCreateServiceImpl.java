@@ -1,5 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
@@ -113,12 +114,17 @@ public class EcsCreateServiceImpl implements EcsCreateService {
         int serverSize = servers.size();
 
         List<EcsServerDO> newServers = new ArrayList<EcsServerDO>();
+        List<CreateInstanceResponse> instanceList = new ArrayList<>();
         //开通ECS & 保存服务器信息（server & ecsServer）
         for (int i = 1; i <= template.getCnt(); i++) {
-            serverVO.setSerialNumber(String.valueOf(serverSize + i));
+            //serverVO.setSerialNumber(String.valueOf(serverSize + i));
+            template.getServerVO().setSerialNumber(String.valueOf(serverSize + i));
             CreateInstanceResponse instance = createEcs(regionId, template);
-            //instanceList.add(instance);
-            newServers.add(this.saveServer(instance.getInstanceId(), template));
+            instanceList.add(instance);
+            // newServers.add(saveServer(instance.getInstanceId(), template));
+        }
+        for (CreateInstanceResponse instance : instanceList) {
+            newServers.add(saveServer(instance.getInstanceId(), template));
         }
         //变更配置
         if (invokeEnv.equalsIgnoreCase("online"))
@@ -152,11 +158,16 @@ public class EcsCreateServiceImpl implements EcsCreateService {
     private EcsServerDO saveServer(String instanceId, CreateEcsVO template) {
         try {
             ServerVO serverVO = template.getServerVO();
-            EcsServerDO ecsServerDO = ecsService.ecsGet(null, instanceId);
+            // TODO 用于查询新录入服务器SerialNumber
+            List<ServerDO> servers = serverDao.getServersByGroupIdAndEnvType(serverVO.getServerGroupDO().getId(), template.getServerVO().getEnvType());
+
+            // EcsServerDO ecsServerDO = ecsService.ecsGet(null, instanceId);
+            EcsServerDO ecsServerDO = ecsGet(instanceId);
             if (StringUtils.isEmpty(ecsServerDO.getInsideIp())) return ecsServerDO;
             IPDetailVO insideIP = serverVO.getInsideIP();
             insideIP.setIp(ecsServerDO.getInsideIp());
             serverVO.setInsideIP(insideIP);
+            serverVO.setSerialNumber(String.valueOf(servers.size() + 1));
             IPDetailVO publicIP = serverVO.getPublicIP();
             publicIP.setIp(ecsServerDO.getPublicIp());
             serverVO.setPublicIP(publicIP);
@@ -170,18 +181,28 @@ public class EcsCreateServiceImpl implements EcsCreateService {
     }
 
 
+    private EcsServerDO ecsGet(String instanceId) {
+        for (int i = 1; i <= 5; i++) {
+            try {
+                Thread.sleep(1000);
+                EcsServerDO ecsServerDO = ecsService.ecsGet(null, instanceId);
+                if (!StringUtils.isEmpty(ecsServerDO.getInsideIp()))
+                    return ecsServerDO;
+            } catch (Exception e) {
+            }
+        }
+        return new EcsServerDO();
+    }
+
+
     @Override
     public CreateInstanceResponse createEcs(String regionId, CreateEcsVO template) {
         if (regionId == null) regionId = EcsServiceImpl.regionIdCnHangzhou;
 
         ServerVO serverVO = template.getServerVO();
-
         AliyunVO aliyunVO = aliyunService.getAliyun(template);
-
         HashMap<String, String> configMap = acqConifMap();
-        //String imageId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_IMAGE_ID.getItemKey());
         String securityGroupId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_SECURITY_GROUP_ID.getItemKey());
-        //String vSwitchId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_VSWITCH_ID.getItemKey());
 
         CreateInstanceRequest create = new CreateInstanceRequest();
         // 实例所属的可用区编号，空表示由系统选择，默认值：空。
@@ -222,9 +243,15 @@ public class EcsCreateServiceImpl implements EcsCreateService {
          ephemeral_ssd - 本地 SSD 盘
          */
         create.setSystemDiskCategory(template.getEcsTemplateDO().getSystemDiskCategory());
+        // TODO 设置系统盘大小 必须超过40
+        if (template.getSystemDiskSize() > 40)
+            create.setSystemDiskSize(template.getSystemDiskSize());
 
-        if (template.getEcsTemplateDO().getDataDiskSize() > 0) {
-            create.setDataDisk1Category(template.getEcsTemplateDO().getDataDisk1Category());
+        if (template.getDataDiskSize() > 0) {
+            CreateInstanceRequest.DataDisk dataDisk = new CreateInstanceRequest.DataDisk();
+            dataDisk.setCategory(template.getEcsTemplateDO().getDataDisk1Category());
+            dataDisk.setSize(template.getDataDiskSize());
+
             /**
              * 数据盘n的磁盘大小（n从1开始编号）。 以GB为单位，取值范围为：
              cloud：5 ~ 2000
@@ -232,7 +259,10 @@ public class EcsCreateServiceImpl implements EcsCreateService {
              cloud_ssd：20 ~ 32768
              ephemeral_ssd：5 ~ 800
              */
-            create.setDataDisk1Size(template.getEcsTemplateDO().getDataDiskSize());
+            List<CreateInstanceRequest.DataDisk> dataDiskList = new ArrayList<>();
+            dataDiskList.add(dataDisk);
+            create.setDataDisks(dataDiskList);
+
         }
         CreateInstanceResponse instance = sampleCreateInstanceResponse(regionId, create);
 
@@ -367,7 +397,8 @@ public class EcsCreateServiceImpl implements EcsCreateService {
             e.printStackTrace();
             return null;
         } catch (ClientException e) {
-            e.printStackTrace();
+            //  e.printStackTrace();
+            logger.info("查询ECS服务器公网IP失败（会重试），失败原因可能服务器未启动！");
             return null;
         }
     }
@@ -406,12 +437,14 @@ public class EcsCreateServiceImpl implements EcsCreateService {
      * @return
      */
     private boolean isAllocateIp(String instanceId) {
-        DescribeInstancesResponse.Instance instance = ecsService.query(null, instanceId);
-        if (instance.getStatus().getStringValue().equalsIgnoreCase(DescribeInstancesResponse.Instance.Status.STOPPED.getStringValue()))
-            return true;
-        if (instance.getStatus().getStringValue().equalsIgnoreCase(DescribeInstancesResponse.Instance.Status.RUNNING.getStringValue()))
-            return true;
-        return false;
+//        DescribeInstancesResponse.Instance instance = ecsService.query(null, instanceId);
+//        DescribeInstancesResponse.Instance.
+//        if (instance.getStatus().equalsIgnoreCase(DescribeInstancesResponse.Instance.Status.STOPPED.getStringValue()))
+//            return true;
+//        if (instance.getStatus().equalsIgnoreCase(DescribeInstancesResponse.Instance.Status.RUNNING.getStringValue()))
+//            return true;
+//        return false;
+        return true;
     }
 
 

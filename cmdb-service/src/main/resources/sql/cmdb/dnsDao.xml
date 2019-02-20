@@ -6,77 +6,56 @@
 
     <!-- 获取ECS模版数目 -->
     <select id="getDnsmasqSize" parameterType="object" resultType="_long">
-        SELECT count(*) from dns_dnsmasq
+        SELECT count(*) from oc_dns_dnsmasq
         <where>
-            dnsGroupId = #{dnsGroupId}
-            AND itemType = #{itemType}
-            <if test="queryItemValue != null and queryItemValue != ''">
-                AND itemValue LIKE "%"#{queryItemValue}"%"
+            <if test="dnsItem != null and dnsItem != ''">
+                dnsItem LIKE "%"#{dnsItem}"%"
             </if>
         </where>
     </select>
 
     <!-- 获取获取ECS模版详情 -->
     <select id="getDnsmasqPage" parameterType="object" resultType="DnsmasqDO">
-        SELECT * FROM dns_dnsmasq
+        SELECT * FROM oc_dns_dnsmasq
         <where>
-            dnsGroupId = #{dnsGroupId}
-            AND itemType = #{itemType}
-            <if test="queryItemValue != null and queryItemValue != ''">
-                AND itemValue LIKE "%"#{queryItemValue}"%"
+            <if test="dnsItem != null and dnsItem != ''">
+                dnsItem LIKE "%"#{dnsItem}"%"
             </if>
         </where>
-        ORDER BY itemValue DESC
+        ORDER BY dnsItem
         limit #{pageStart}, #{length}
     </select>
 
     <!-- 查询dnsmasq配置 -->
-    <select id="queryDnsmasqByGroupIdAndItemType" parameterType="object" resultType="DnsmasqDO">
-        SELECT * FROM dns_dnsmasq
-        WHERE dnsGroupId = #{dnsGroupId}
-        AND itemType = #{itemType}
-    </select>
-
-    <!-- 查询dnsmasq配置 -->
-    <select id="queryDnsmasqByGroupIdAndItemAndItemValue" parameterType="object" resultType="DnsmasqDO">
-        SELECT * FROM dns_dnsmasq
-        WHERE dnsGroupId = #{dnsGroupId}
-        AND item = #{item}
-        AND itemValue = #{itemValue}
+    <select id="queryAllDnsmasq" parameterType="object" resultType="DnsmasqDO">
+        SELECT * FROM oc_dns_dnsmasq
+        ORDER BY dnsItem
+        limit 500
     </select>
 
     <!-- 新增指定dnsmasq配置-->
     <insert id="addDnsmasq" parameterType="DnsmasqDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        INSERT INTO dns_dnsmasq (
-        dnsGroupId,
-        itemType,
-        item,
-        itemValue,
+        INSERT INTO oc_dns_dnsmasq (
+        dnsItem,
         content
         ) VALUES (
-        #{dnsGroupId},
-        #{itemType},
-        #{item},
-        #{itemValue},
+        #{dnsItem},
         #{content}
         );
     </insert>
 
     <!-- 更新指定dnsmasq配置 -->
     <update id="updateDnsmasq" parameterType="DnsmasqDO">
-        UPDATE dns_dnsmasq
+        UPDATE oc_dns_dnsmasq
         SET
-        dnsGroupId = #{dnsGroupId},
-        itemType = #{itemType},
-        item = #{item},
-        itemValue = #{itemValue},
+        dnsItem = #{dnsItem},
         content = #{content}
         WHERE id = #{id}
     </update>
 
     <!-- 删除指定dnsmasq信息 -->
     <delete id="delDnsmasq" parameterType="_long">
-        DELETE FROM dns_dnsmasq WHERE id = #{id}
+        DELETE FROM oc_dns_dnsmasq WHERE id = #{id}
     </delete>
 
 </mapper>

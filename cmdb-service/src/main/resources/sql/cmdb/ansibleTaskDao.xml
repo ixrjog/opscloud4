@@ -3,7 +3,7 @@
 <mapper namespace="com.sdg.cmdb.dao.cmdb.AnsibleTaskDao">
 
     <insert id="addAnsibleTask" parameterType="AnsibleTaskDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        INSERT INTO oc_ansible_tasks(
+        INSERT INTO oc_ansible_task(
         userId,
         userName,
         serverCnt,
@@ -24,18 +24,18 @@
 
 
     <select id="getAnsibleTask" parameterType="_long" resultType="AnsibleTaskDO">
-        SELECT * FROM oc_ansible_tasks WHERE id = #{id}
+        SELECT * FROM oc_ansible_task WHERE id = #{id}
     </select>
 
     <update id="updateAnsibleTask" parameterType="AnsibleTaskDO">
-        UPDATE oc_ansible_tasks
+        UPDATE oc_ansible_task
         SET finalized= #{finalized}
         WHERE id = #{id}
     </update>
 
     <insert id="addAnsibleTaskServer" parameterType="AnsibleTaskServerDO" useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">
-        INSERT INTO oc_ansible_tasks_server(
+        INSERT INTO oc_ansible_task_server(
         ansibleTaskId,
         serverId,
         ip,
@@ -55,12 +55,12 @@
     </insert>
 
     <select id="cntAnsibleTaskServerByTaskId" parameterType="_long" resultType="_int">
-        SELECT COUNT(*) FROM oc_ansible_tasks_server
+        SELECT COUNT(*) FROM oc_ansible_task_server
         WHERE ansibleTaskId = #{ansibleTaskId}
     </select>
 
     <select id="queryAnsibleTaskServerByTaskId" parameterType="_long" resultType="AnsibleTaskServerDO">
-        SELECT * FROM oc_ansible_tasks_server WHERE ansibleTaskId = #{ansibleTaskId}
+        SELECT * FROM oc_ansible_task_server WHERE ansibleTaskId = #{ansibleTaskId}
     </select>
 
     <select id="queryTaskScriptPage" parameterType="object" resultType="TaskScriptDO">
@@ -121,7 +121,6 @@
         </where>
     </select>
 
-
     <update id="updateTaskScript" parameterType="TaskScriptDO">
         UPDATE oc_task_script
         SET scriptName= #{scriptName},
@@ -163,8 +162,24 @@
         WHERE scriptName = #{scriptName}
     </select>
 
+    <select id="getTaskScriptByPlaybook" resultType="TaskScriptDO">
+        SELECT * from oc_task_script
+        <where>
+            scriptName LIKE "%" '.yml'
+            <if test="playbookName != null and playbookName != ''">
+                AND scriptName like "%" #{playbookName} "%"
+            </if>
+        </where>
+        limit 20
+    </select>
+
+    <select id="queryScriptByPlaybook" resultType="TaskScriptDO">
+        SELECT * from oc_task_script
+        WHERE       scriptName LIKE "%" '.yml'
+    </select>
+
     <select id="queryAnsibleTaskPage" parameterType="object" resultType="AnsibleTaskDO">
-        SELECT * FROM oc_ansible_tasks
+        SELECT * FROM oc_ansible_task
         <where>
             <if test="cmd != null and cmd != ''">
                 AND cmd like "%" #{cmd} "%"
@@ -175,12 +190,123 @@
     </select>
 
     <select id="getAnsibleTaskSize" parameterType="object" resultType="_long">
-        SELECT COUNT(*) from oc_ansible_tasks
+        SELECT COUNT(*) from oc_ansible_task
         <where>
             <if test="cmd != null and cmd != ''">
                 AND cmd like "%" #{cmd} "%"
             </if>
         </where>
     </select>
+
+    <insert id="addPlaybookLog" parameterType="PlaybookLogDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_playbook_log(
+        playbookId,
+        playbookName,
+        doType,
+        userId,
+        displayName
+        ) VALUES (
+        #{playbookId},
+        #{playbookName},
+        #{doType},
+        #{userId},
+        #{displayName}
+        )
+    </insert>
+
+    <update id="updatePlaybookLog" parameterType="PlaybookLogDO">
+        UPDATE oc_playbook_log
+        SET complete = #{complete},
+        logPath = #{logPath},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delPlaybookLog" parameterType="_long">
+        DELETE FROM oc_playbook_log WHERE id = #{id}
+    </delete>
+
+    <select id="getPlaybookLog" parameterType="object" resultType="PlaybookLogDO">
+        SELECT * FROM oc_playbook_log WHERE id = #{id}
+    </select>
+
+
+    <select id="queryPlaybookLogPage" parameterType="object" resultType="PlaybookLogDO">
+        SELECT * FROM oc_playbook_log
+        <where>
+            <if test="playbookName != null and playbookName != ''">
+                playbookName like "%" #{playbookName} "%"
+            </if>
+            <if test="displayName != null and displayName != ''">
+                AND displayName like "%" #{displayName} "%"
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getPlaybookLogSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) from oc_playbook_log
+        <where>
+            <if test="playbookName != null and playbookName != ''">
+                playbookName like "%" #{playbookName} "%"
+            </if>
+            <if test="displayName != null and displayName != ''">
+                AND displayName like "%" #{displayName} "%"
+            </if>
+        </where>
+    </select>
+
+    <insert id="addPlaybookTask" parameterType="PlaybookTaskDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_playbook_task(
+        userId,
+        displayName,
+        extraVars,
+        complete
+        ) VALUES (
+        #{userId},
+        #{displayName},
+        #{extraVars},
+        #{complete}
+        )
+    </insert>
+
+    <update id="updatePlaybookTask" parameterType="PlaybookTaskDO">
+        UPDATE oc_playbook_task
+        SET complete = #{complete}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getPlaybookTask" parameterType="_long" resultType="PlaybookTaskDO">
+        SELECT * FROM oc_playbook_task WHERE id = #{id}
+    </select>
+
+
+    <insert id="addPlaybookTaskHost" parameterType="PlaybookTaskHostDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_playbook_task_host(
+        playbookTaskId,
+        serverGroupId,
+        hostPattern,
+        complete,
+        logId
+        ) VALUES (
+        #{playbookTaskId},
+        #{serverGroupId},
+        #{hostPattern},
+        #{complete},
+        #{logId}
+        )
+    </insert>
+
+    <update id="updatePlaybookTaskHost" parameterType="PlaybookTaskHostDO">
+        UPDATE oc_playbook_task_host
+        SET complete = #{complete}
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryPlaybookTaskHost" parameterType="_long" resultType="PlaybookTaskHostDO">
+        SELECT * FROM oc_playbook_task_host WHERE playbookTaskId = #{playbookTaskId}
+    </select>
+
 
 </mapper>

@@ -6,6 +6,7 @@ import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.zabbix.ZabbixHost;
 import com.sdg.cmdb.service.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class ZabbixServerController {
     @Resource
     private ZabbixService zabbixService;
 
+    @Autowired
+    private ZabbixServerService zabbixServerService;
+
     @Resource
     private UserDao userDao;
 
@@ -31,14 +35,14 @@ public class ZabbixServerController {
     @RequestMapping(value = "/version", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getVersion(@RequestParam String zabbixServerName) {
-        return new HttpResult(zabbixService.getZabbixVersion(zabbixServerName));
+        return new HttpResult(zabbixServerService.getZabbixVersion(zabbixServerName));
     }
 
 
     @RequestMapping(value = "/host/get", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getVersion(@RequestParam long serverId) {
-        return new HttpResult(zabbixService.getHost(serverId));
+        return new HttpResult(zabbixServerService.getZabbixHost(serverId));
     }
 
     @RequestMapping(value = "/host/save", method = RequestMethod.POST)
@@ -53,14 +57,6 @@ public class ZabbixServerController {
                                         @RequestParam int page, @RequestParam int length) {
         return new HttpResult(zabbixService.getTemplatePage(templateName, enabled, page, length));
     }
-
-
-//    @RequestMapping(value = "/template/get", method = RequestMethod.GET)
-//    @ResponseBody
-//    public HttpResult queryTemplateGet(@RequestParam long serverGroupId) {
-//        return new HttpResult(zabbixService.getTemplates(serverGroupId));
-//    }
-
 
     @RequestMapping(value = "/template/set", method = RequestMethod.GET)
     @ResponseBody
@@ -85,12 +81,6 @@ public class ZabbixServerController {
     public HttpResult queryProxy() {
         return new HttpResult(zabbixService.queryProxy());
     }
-
-//    @RequestMapping(value = "/proxy/get", method = RequestMethod.GET)
-//    @ResponseBody
-//    public HttpResult queryProxy(@RequestParam long serverGroupId) {
-//        return new HttpResult(zabbixService.getProxy(serverGroupId));
-//    }
 
     /**
      * 获取指定条件的服务器列表分页数据
@@ -121,11 +111,6 @@ public class ZabbixServerController {
         return new HttpResult(zabbixService.refresh());
     }
 
-    @RequestMapping(value = "/addMonitor", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult addMonitor(@RequestParam long serverId) {
-        return new HttpResult(zabbixService.addMonitor(serverId));
-    }
 
     @RequestMapping(value = "/delMonitor", method = RequestMethod.GET)
     @ResponseBody

@@ -1,0 +1,54 @@
+<style>
+    .build-params .popover {
+        max-width: 400px !important;
+    }
+</style>
+<div class="modal-header">
+    <h3 class="modal-title">
+        <b style="color: #286090">日志</b>
+    </h3>
+</div>
+<div class="modal-body">
+
+    <form class="bs-example form-horizontal">
+
+        <div class="wrapper-md">
+            <toaster-container
+                    toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
+
+            <uib-tabset>
+
+                <div class="form-group" ng-show="log.path != ''">
+                    <label class="col-lg-1 control-label">路径</label>
+                    <div class="col-lg-11">
+                        <input type="text" class="form-control" placeholder="日志路径" ng-disabled="true"
+                               ng-model="log.path">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="label" ng-show="log.success"
+                           style="margin-left: 20px; background-color: #00af00; color: white;">执行成功：{{log.result}}</label>
+                    <label class="label" ng-show="!log.success"
+                           style="margin-left: 20px; background-color: #ef2929; color: white;">执行失败：{{log.result}}</label>
+                </div>
+
+                <div class="form-group">
+                      <div hljs hljs-source="log.msg"></div>
+                </div>
+            </uib-tabset>
+        </div>
+    </form>
+
+
+    <!--按钮-->
+    <div class="form-group">
+        <div style="text-align:center;">
+            <button ng-click="closeModal()"
+                    class="btn btn-xs"
+                    style="margin-left: 20px; background-color: #ff8700; color: white;">
+                <span class="glyphicon glyphicon-remove"></span>关闭
+            </button>
+        </div>
+    </div>
+</div>

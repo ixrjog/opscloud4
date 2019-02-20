@@ -5,6 +5,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeDisksResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.aliyun.AliyunRenewInstances;
 import com.sdg.cmdb.domain.server.*;
 
 import java.util.List;
@@ -26,6 +27,19 @@ public interface EcsService {
      * @return
      */
     TableVO<List<EcsServerVO>> getEcsServerPage(String serverName, String queryIp, int status, int page, int length);
+
+
+    /**
+     * 查询待续费ECS实例
+     * @param serverName
+     * @param queryIp
+     * @param day
+     * @param status
+     * @param page
+     * @param length
+     * @return
+     */
+    TableVO<List<EcsServerVO>> getEcsRenewPage(String serverName, String queryIp,int day, int status, int page, int length);
 
     /**
      * 查询ecs状态
@@ -188,4 +202,12 @@ public interface EcsService {
     boolean delEcsProperty(ServerDO serverDO);
 
     void invokeEcsServerVO(EcsServerVO ecsServerVO);
+
+    /**
+     * 实例续费接口
+     * @param aliyunRenewInstances
+     * @return
+     */
+    BusinessWrapper<Boolean> renewInstances(AliyunRenewInstances aliyunRenewInstances);
+
 }

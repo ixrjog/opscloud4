@@ -3,8 +3,7 @@ package com.sdg.cmdb.keybox.handler;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 
 import java.io.*;
 import java.util.Map;
@@ -13,9 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * Created by zxxiao on 2016/12/1.
  */
+@Slf4j
 public class ConnectionSession {
-
-    private static final Logger logger = LoggerFactory.getLogger(ConnectionSession.class);
 
     /**
      * remote input stream
@@ -74,7 +72,7 @@ public class ConnectionSession {
                     }
                 }
             } catch (Exception ex) {
-                logger.error(ex.toString(), ex);
+                log.error(ex.toString(), ex);
             }
         }).start();
 
@@ -92,7 +90,7 @@ public class ConnectionSession {
                     }
                 }
             } catch (Exception e) {
-                logger.error(e.getMessage(), e);
+                log.error(e.getMessage(), e);
             }
         }).start();
     }

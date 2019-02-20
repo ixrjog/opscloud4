@@ -1,13 +1,15 @@
 package com.sdg.cmdb.service;
 
+import com.offbytwo.jenkins.helper.JenkinsVersion;
+import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.Job;
+import com.offbytwo.jenkins.model.JobWithDetails;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.gitlab.GitlabWebHooksDO;
 import com.sdg.cmdb.domain.gitlab.RefsVO;
 import com.sdg.cmdb.domain.jenkins.*;
-import com.sdg.cmdb.domain.server.ServerVO;
-import org.springframework.web.bind.annotation.RequestParam;
+
 
 import java.util.HashMap;
 import java.util.List;
@@ -15,118 +17,37 @@ import java.util.Map;
 
 public interface JenkinsService {
 
+    Map<String, Job> getJobs();
 
-    String acqJenkinsHost();
 
-    BusinessWrapper<Boolean> jobNotes(JobNoteVO jobNoteVO);
+    // TODO 新版本
 
-    void dingtalkNotes(JobNoteDO jobNoteDO, JenkinsJobBuildDO jobBuildDO);
+    Job getJob(String jobName);
 
-    /**
-     * 执行jenkins job
-     *
-     * @param webHooks
-     * @param params
-     * @param envType
-     * @return
-     */
-    boolean buildFtJob(GitlabWebHooksDO webHooks, HashMap<String, String> params, int envType);
+    JobWithDetails build(Job job, HashMap<String, String> paramList);
 
     /**
-     * 创建job
-     *
+     * 按模版更新Job
      * @param jobName
-     * @param envType
+     * @param templateName
      * @return
      */
-    boolean createFtJob(String jobName, int envType);
+    boolean updateJob(String jobName, String templateName);
 
-    boolean createIosJob(String jobName);
-
-    boolean createAndroidJob(String jobName);
-
-    boolean createTestJob(JenkinsJobDO jenkinsJobDO);
-
-    public Map<String, Job> getJobs();
-
-    TableVO<List<GitlabWebHooksDO>> getWebHooksPage(String projectName, String repositoryName, int webHooksType, int triggerBuild, int page, int length);
+    JenkinsVersion version();
 
 
-    TableVO<List<JenkinsJobVO>> queryJobsPage(String jobName, int jobEnvType, int buildType, int page, int length);
+    JobWithDetails getJobDetails(String jobName) ;
 
+    String  getJobXml(String jobName);
 
-    BusinessWrapper<Boolean> buildJob(long id);
-
-    BusinessWrapper<Boolean> createJob(long id);
+    boolean createJobByTemplate(String jobName, String templateName);
 
     /**
-     * ios构建需要选择分支
-     *
-     * @param id
-     * @param mbranch
-     * @param buildType
+     * 计算job配置文件Hash(MD%)
+     * @param jobName
      * @return
      */
-    BusinessWrapper<Boolean> buildJob(long id, String mbranch, String buildType);
+    String  getJobXmlMd5(String jobName);
 
-
-    RefsVO queryJobRefs(long id);
-
-    RefsVO changeJobRefs(long id,String ref,int type);
-
-    RefsVO updateJobRefs(long id);
-
-    /**
-     * 任务详情重新build
-     *
-     * @param id
-     * @return
-     */
-    BusinessWrapper<Boolean> rebuildJob(long id);
-
-    /**
-     * 官网发布
-     * @param id
-     * @return
-     */
-    BusinessWrapper<Boolean> appLink(long id);
-
-    List<JobParamDO> queryJobParams(long jobId);
-
-    BusinessWrapper<Boolean> delJobParams(long id);
-
-    BusinessWrapper<Boolean> addJobParams(JobParamDO jobParamDO);
-
-    BusinessWrapper<Boolean> updateJobParams(JobParamDO jobParamDO);
-
-    JenkinsJobDO saveJob(JenkinsJobVO jenkinsJobVO);
-
-    BusinessWrapper<Boolean> delJob(long id);
-
-    TableVO<List<JenkinsJobBuildVO>> queryJobBuildsPage(String jobName, int buildNumber, int page, int length);
-
-    JenkinsJobBuildVO queryJobBuilds(long id);
-
-
-    TableVO<List<JenkinsProjectsVO>> getProjectsPage(String projectName, String content, int buildType, int page, int length);
-
-    JenkinsProjectsDO saveProject(JenkinsProjectsDO jenkinsProjectsDO);
-
-    BusinessWrapper<Boolean> delProject(long id);
-
-    BusinessWrapper<Boolean> saveProjectParam(BaseParamDO baseParamDO);
-
-    BusinessWrapper<Boolean> delProjectParam(long id);
-
-    List<BaseParamDO> queryProjectParams(long id);
-
-    BusinessWrapper<Boolean> saveProjectsEnv(JenkinsProjectsEnvDO jenkinsProjectsEnvDO);
-
-    List<JenkinsProjectsEnvVO> queryProjectsEnv(long id);
-
-    BusinessWrapper<Boolean> delProjectsEnv(long id,long projectId,int envType);
-
-    BusinessWrapper<Boolean> saveProjectsEnvParams(JenkinsProjectsEnvVO jenkinsProjectsEnvVO);
-
-    BusinessWrapper<Boolean> saveProjectJob(long id);
 }

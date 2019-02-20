@@ -44,7 +44,7 @@ public class RepositoryDO implements Serializable {
      */
     public enum RepoTypeEnum {
         gitlab(0, "gitlab"),
-        stash(1, "stash");
+        stash(1, "jumpserver");
 
         private int code;
         private String desc;
