@@ -11,6 +11,14 @@ public interface WorkflowService {
 
     List<WorkflowGroupVO> queryWorkflowGroup(String topics);
 
+<<<<<<< HEAD
+=======
+    /**
+     * 创建工作流
+     * @param wfKey
+     * @return
+     */
+>>>>>>> develop
     WorkflowTodoVO createTodo(String wfKey);
 
     WorkflowTodoVO saveTodo(WorkflowTodoVO workflowTodoVO);
@@ -32,16 +40,41 @@ public interface WorkflowService {
 
 
     /**
+<<<<<<< HEAD
      * 审批工单
+=======
+     * 审批同意
+>>>>>>> develop
      * @param todoId
      * @return
      */
     BusinessWrapper<Boolean> approvalTodo(long todoId);
 
+<<<<<<< HEAD
+=======
+    /**
+     * 不批准
+     * @param todoId
+     * @return
+     */
+    BusinessWrapper<Boolean> disapproveTodo(long todoId);
+
+
+>>>>>>> develop
 
     WorkflowTodoVO delTodoDetail(long todoId,long detailId);
 
     /**
+<<<<<<< HEAD
+=======
+     * 测试用
+     * @param todoId
+     * @return
+     */
+    WorkflowTodoVO getTodo(long todoId);
+
+    /**
+>>>>>>> develop
      * 申请
      * @param todoId
      * @return
@@ -54,4 +87,13 @@ public interface WorkflowService {
      */
     List<WorkflowTodoVO> queryMyTodo();
 
+<<<<<<< HEAD
+=======
+    /**
+     * 查询完成工作
+     * @return
+     */
+    List<WorkflowTodoVO> queryMyCompleteTodo();
+
+>>>>>>> develop
 }

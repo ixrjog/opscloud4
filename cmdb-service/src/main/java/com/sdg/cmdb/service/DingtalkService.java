@@ -1,9 +1,11 @@
 package com.sdg.cmdb.service;
 
+import com.sdg.cmdb.domain.aliyunMQ.AliyunMqGroupVO;
+import com.sdg.cmdb.domain.ci.BuildArtifactDO;
+import com.sdg.cmdb.domain.ci.BuildNotifyDO;
+import com.sdg.cmdb.domain.ci.CiBuildDO;
 import com.sdg.cmdb.domain.ci.CiDeployStatisticsDO;
-import com.sdg.cmdb.domain.jenkins.BuildArtifactDO;
 import com.sdg.cmdb.domain.jenkins.JenkinsJobBuildDO;
-import com.sdg.cmdb.domain.jenkins.JobNoteDO;
 import com.sdg.cmdb.domain.jenkins.JobNoteVO;
 
 import java.util.HashMap;
@@ -16,35 +18,19 @@ public interface DingtalkService {
 
 
     /**
-     * 部署消息通知-钉钉群
-     *
-     * @param ciDeployStatisticsDO
+     * 持续集成通知
+     * @param ciBuildDO
+     * @param buildNotifyDO
      * @throws Exception
      */
-    boolean sendCiDeployMsg(CiDeployStatisticsDO ciDeployStatisticsDO) throws Exception;
-
+    void notifyCi(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO);
 
     /**
-     * 前端部署消息通知-钉钉群
-     *
-     * @param jobBuildDO
-     * @param jobNoteVO
-     * @return
-     * @throws Exception
+     * 持续集成部署通知
+     * @param ciBuildDO
+     * @param buildNotifyDO
      */
-    boolean sendFtBuildMsg(int envType,HashMap<String, String> params,JenkinsJobBuildDO jobBuildDO, JobNoteVO jobNoteVO) throws Exception;
+    void notifyDeploy(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO);
 
-
-    /**
-     * android部署消息通知-钉钉群
-     *
-     * @param jobBuildDO
-     * @param jobNoteVO
-     * @return
-     * @throws Exception
-     */
-    boolean sendAndroidBuildMsg(List<BuildArtifactDO> artifacts, HashMap<String, String> params, JenkinsJobBuildDO jobBuildDO, JobNoteVO jobNoteVO) throws Exception;
-
-
-    boolean sendIosBuildMsg(List<BuildArtifactDO> artifacts, HashMap<String, String> params, JenkinsJobBuildDO jobBuildDO, JobNoteVO jobNoteVO) throws Exception;
+    void notifyMQAlarm(AliyunMqGroupVO aliyunMqGroupVO);
 }

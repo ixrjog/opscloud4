@@ -75,12 +75,33 @@ public class WorkflowController {
     @ResponseBody
     public HttpResult approvalTodo(@RequestParam long id) {
         return new HttpResult(
+<<<<<<< HEAD
                 workflowService.invokeTodo(id)
+=======
+                workflowService.approvalTodo(id)
+        );
+    }
+
+    /**
+     * 审批/审核工单(不批准)
+     * @param id
+     * @return
+     */
+    @RequestMapping(value = "/todo/disapprove", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult disapproveTodo(@RequestParam long id) {
+        return new HttpResult(
+                workflowService.disapproveTodo(id)
+>>>>>>> develop
         );
     }
 
 
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     @RequestMapping(value = "/todo/detail/del", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delTodoDetail(@RequestParam long todoId, @RequestParam long detailId) {
@@ -89,6 +110,14 @@ public class WorkflowController {
         );
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * 提交申请
+     * @param todoId
+     * @return
+     */
+>>>>>>> develop
     @RequestMapping(value = "/todo/apply", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult applyTodo(@RequestParam long todoId) {
@@ -97,9 +126,14 @@ public class WorkflowController {
         );
     }
 
+<<<<<<< HEAD
 
     /**
      * 查询我的工作流
+=======
+    /**
+     * 查询我的工作流（待办）
+>>>>>>> develop
      *
      * @return
      */
@@ -111,5 +145,20 @@ public class WorkflowController {
         );
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * 查询我的工作流（完成）
+     * @return
+     */
+    @RequestMapping(value = "/todo/queryComplete", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryMyCompleteTodo() {
+        return new HttpResult(
+                workflowService.queryMyCompleteTodo()
+        );
+    }
+
+>>>>>>> develop
 
 }

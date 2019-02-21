@@ -115,4 +115,10 @@ public interface ServerService {
      */
     ServerStatusVO status();
 
+    /**
+     * 获取默认登录用户
+     * @return
+     */
+    String getLoginUser();
+
 }

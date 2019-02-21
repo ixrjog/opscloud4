@@ -792,19 +792,7 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
         });
     }
 
-    $scope.statusCi = function () {
 
-        var url = "/statistics/ci/status";
-
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                $scope.ciStatusVO = data.body;
-                $scope.refreshCiDeployInfo();
-                $scope.initCiTopProjectData();
-                $scope.initCiTopUserData();
-            }
-        });
-    }
 
     $scope.statusServer = function () {
 
@@ -822,11 +810,9 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
 
     var init = function () {
         $scope.statusLogService();
-        $scope.statusCi();
         $scope.statusKeybox();
         $scope.statusServer();
     }
-
     init();
 
 

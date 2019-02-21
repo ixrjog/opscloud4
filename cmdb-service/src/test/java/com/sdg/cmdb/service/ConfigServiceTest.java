@@ -90,9 +90,6 @@ public class ConfigServiceTest {
 
 
 
-    @Test
-    public void testBuildGetwayHost(){
-        configService.buildGetwayHost();
-    }
+
 
 }

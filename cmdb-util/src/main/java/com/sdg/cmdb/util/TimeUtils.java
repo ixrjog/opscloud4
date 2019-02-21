@@ -109,8 +109,22 @@ public class TimeUtils {
         return now;
     }
 
+<<<<<<< HEAD
     /**
      *  获取用于名称的当前时间
+=======
+    public static String gmtNowDate() {
+        long time = new Date().getTime();
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String now = formatter.format(time - TimeUtils.hourTime * 8);
+        return now;
+    }
+
+    /**
+     * 获取用于名称的当前时间
+     *
+>>>>>>> develop
      * @return eg: 20181110_003738
      */
     public static String nowDateName() {
@@ -163,5 +177,41 @@ public class TimeUtils {
         Date date = new Date(lt);
         res = simpleDateFormat.format(date);
         return res;
+    }
+
+    /**
+     * 计算到期天数
+     *
+     * @param expiredTime "yyyy-MM-dd HH:mm:ss"
+     * @return
+     */
+    public static long expiredDay(String expiredTime) {
+        try {
+            long et = dateToStamp(expiredTime);
+            Date d = new Date();
+            return (et - d.getTime()) / TimeUtils.dayTime;
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
+    /**
+     * 计算未来时间
+     *
+     * @param day 往后几天
+     * @return "yyyy-MM-dd HH:mm:ss"
+     */
+    public static String futureTime(int day) {
+        long now = new Date().getTime();
+        now = now + dayTime * day;
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(now);
+    }
+
+    public static long futureTimeStamp(int day) {
+        long now = new Date().getTime();
+        now += dayTime * day;
+        return now;
     }
 }

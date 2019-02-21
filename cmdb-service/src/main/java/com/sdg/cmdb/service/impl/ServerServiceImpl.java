@@ -13,10 +13,12 @@ import com.sdg.cmdb.domain.server.serverStatus.ServerEnvTypeVO;
 import com.sdg.cmdb.domain.server.serverStatus.ServerStatusVO;
 import com.sdg.cmdb.domain.server.serverStatus.ServerTypeVO;
 import com.sdg.cmdb.service.*;
+import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.TimeUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.support.TransactionTemplate;
@@ -64,6 +66,11 @@ public class ServerServiceImpl implements ServerService {
     @Resource
     private KeyBoxService keyBoxService;
 
+    @Resource
+    private CacheKeyService cacheKeyService;
+
+    public static final String DEFAULT_LOGIN_USER = "root";
+
     @Override
     public TableVO<List<ServerVO>> getServerPage(long serverGroupId, String serverName, int useType, int envType, String queryIp, int page, int length) {
         List<Long> groupFilter = authService.getUserGroupIds(SessionUtils.getUsername());
@@ -84,7 +91,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public ServerVO acqServerVO(ServerDO serverDO){
+    public ServerVO acqServerVO(ServerDO serverDO) {
         ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(serverDO.getServerGroupId());
         IPDetailVO publicIP = ipService.getIPDetail(new IPDetailDO(serverDO.getPublicIpId()));
         IPDetailVO insideIP = ipService.getIPDetail(new IPDetailDO(serverDO.getInsideIpId()));
@@ -103,6 +110,8 @@ public class ServerServiceImpl implements ServerService {
             IPDetailVO publicIP = ipService.getIPDetail(new IPDetailDO(serverDO.getPublicIpId()));
             IPDetailVO insideIP = ipService.getIPDetail(new IPDetailDO(serverDO.getInsideIpId()));
             ServerVO serverVO = new ServerVO(serverDO, serverGroupDO, publicIP, insideIP);
+            ServerGroupUseTypeDO userTypeDO = serverGropuDao.getServerGroupUseTypeByUseType(serverGroupDO.getUseType());
+            serverVO.setServerGroupUseTypeDO(userTypeDO);
             voList.add(serverVO);
         }
         return new TableVO<>(size, voList);
@@ -189,10 +198,13 @@ public class ServerServiceImpl implements ServerService {
 
                     if (serverDO.getServerType() == ServerDO.ServerTypeEnum.ecs.getCode())
                         ecsService.updateEcsServerForServer(serverDO);
-
+                    // TODO 保存最后登录名
+                    if (!StringUtils.isEmpty(serverVO.getLoginUser()))
+                        cacheKeyService.set(this.LOGIN_USER_KEY, serverVO.getLoginUser());
                     return true;
                 } catch (Exception e) {
                     logger.error(e.getMessage(), e);
+                    e.printStackTrace();
                     status.setRollbackOnly();
                     return false;
                 }
@@ -316,5 +328,15 @@ public class ServerServiceImpl implements ServerService {
         return statusVO;
     }
 
+
+    public static final String LOGIN_USER_KEY = "ServerServiceImpl:LoginUser";
+
+    @Override
+    public String getLoginUser() {
+        String loginUser = cacheKeyService.getKeyByString(LOGIN_USER_KEY);
+        if (StringUtils.isEmpty(loginUser))
+            return DEFAULT_LOGIN_USER;
+        return loginUser;
+    }
 
 }

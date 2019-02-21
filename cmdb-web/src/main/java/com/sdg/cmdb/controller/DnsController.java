@@ -3,11 +3,7 @@ package com.sdg.cmdb.controller;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.dns.DnsmasqDO;
-import com.sdg.cmdb.domain.server.ServerVO;
-import com.sdg.cmdb.service.ConfigService;
 import com.sdg.cmdb.service.DnsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,16 +16,20 @@ import javax.annotation.Resource;
 @RequestMapping("/dns")
 public class DnsController {
 
-    private static final Logger logger = LoggerFactory.getLogger(DnsController.class);
-
     @Resource
     private DnsService dnsService;
 
     @RequestMapping(value = "/dnsmasq/page", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getDnsmasqPage(@RequestParam long dnsGroupId, @RequestParam int itemType, @RequestParam String queryItemValue,
+    public HttpResult getDnsmasqPage(@RequestParam String dnsItem,
                                      @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(dnsService.getDnsmasqPage(dnsGroupId, itemType, queryItemValue, page, length));
+        return new HttpResult(dnsService.getDnsmasqPage(dnsItem, page, length));
+    }
+
+    @RequestMapping(value = "/dnsmasq/getConf", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getDnsmasqConf() {
+        return new HttpResult(dnsService.getDnsmasqConf());
     }
 
     /**
@@ -41,9 +41,6 @@ public class DnsController {
     @RequestMapping(value = "/dnsmasq/save", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult saveServer(@RequestBody DnsmasqDO dnsmasqDO) {
-        if (dnsmasqDO.getItemType() != DnsmasqDO.ItemTypeEnum.system.getCode())
-            dnsmasqDO.setItem(DnsmasqDO.ItemTypeEnum.getItemTypeName(dnsmasqDO.getItemType()));
-
         BusinessWrapper<Boolean> wrapper = dnsService.saveDnsmasq(dnsmasqDO);
         if (wrapper.isSuccess()) {
             return new HttpResult(wrapper.getBody());
@@ -52,9 +49,15 @@ public class DnsController {
         }
     }
 
+    @RequestMapping(value = "/dnsmasq/build", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult buildDnsmasqConf() {
+        return new HttpResult(dnsService.buildDnsmasqConf());
+    }
+
     @RequestMapping(value = "/dnsmasq/del", method = RequestMethod.DELETE)
     @ResponseBody
-    public HttpResult getDnsmasqPage(@RequestParam long id) {
+    public HttpResult delDnsmasq(@RequestParam long id) {
         return new HttpResult(dnsService.delDnsmasq(id));
     }
 

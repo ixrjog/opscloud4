@@ -66,11 +66,19 @@
         vhostId,
         envType,
         confPath,
+<<<<<<< HEAD
+=======
+        autoBuild,
+>>>>>>> develop
         content
         ) VALUES (
         #{vhostId},
         #{envType},
         #{confPath},
+<<<<<<< HEAD
+=======
+        #{autoBuild},
+>>>>>>> develop
         #{content}
         );
     </insert>
@@ -79,6 +87,10 @@
         UPDATE oc_nginx_vhost_env
         SET
         confPath = #{confPath},
+<<<<<<< HEAD
+=======
+        autoBuild = #{autoBuild},
+>>>>>>> develop
         content = #{content}
         WHERE id = #{id}
     </update>
@@ -146,4 +158,60 @@
         ORDER BY groupName DESC
     </select>
 
+<<<<<<< HEAD
+=======
+
+    <insert id="addPlaybook" parameterType="NginxPlaybookDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_playbook (
+        vhostId,
+        serverKey,
+        serverGroupId,
+        serverGroupName,
+        hostPattern,
+        src,
+        dest,
+        username,
+        usergroup,
+        playbookId
+        ) VALUES (
+        #{vhostId},
+        #{serverKey},
+        #{serverGroupId},
+        #{serverGroupName},
+        #{hostPattern},
+        #{src},
+        #{dest},
+        #{username},
+        #{usergroup},
+        #{playbookId}
+        );
+    </insert>
+
+    <update id="updatePlaybook" parameterType="NginxPlaybookDO">
+        UPDATE oc_nginx_playbook
+        SET
+        serverGroupId = #{serverGroupId},
+        serverGroupName = #{serverGroupName},
+        hostPattern = #{hostPattern},
+        src = #{src},
+        dest = #{dest},
+        username = #{username},
+        usergroup = #{usergroup},
+        playbookId = #{playbookId}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delPlaybook" parameterType="_long">
+        DELETE FROM oc_nginx_playbook WHERE id = #{id}
+    </delete>
+
+    <select id="queryPlaybookPage" parameterType="object" resultType="NginxPlaybookDO">
+        SELECT * FROM oc_nginx_playbook LIMIT 20
+    </select>
+
+    <select id="getPlaybook" parameterType="object" resultType="NginxPlaybookDO">
+        SELECT * FROM oc_nginx_playbook WHERE id = #{id}
+    </select>
+
+>>>>>>> develop
 </mapper>

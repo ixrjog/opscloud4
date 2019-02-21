@@ -225,6 +225,75 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.gitlab', {
+                        url: '/gitlab',
+                        templateUrl: 'tpl/app_gitlab.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/gitlab.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["gitlab"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.ciApp', {
+                        url: '/ciApp',
+                        templateUrl: 'tpl/app_ci_app.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load([
+                                                'js/controllers/ciApp.js',
+                                                'vendor/libs/highchart/highcharts.js'
+                                            ]);
+                                        }
+                                    )
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/exporting.js'
+                                            ]);
+                                        })
+                                        ;
+                                }]
+                        },
+                        authGroup: ["ciApp"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.ciTemplate', {
+                        url: '/ciTemplate',
+                        templateUrl: 'tpl/app_ci_template.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/ciTemplate.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["ciTemplate"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
 
                     .state('app.webHooks', {
                         url: '/webHooks',
@@ -239,104 +308,6 @@ angular.module('app')
                                         }
                                     );
                                 }]
-                        }
-                    })
-
-                    .state('app.jenkinsJobs', {
-                        url: '/jenkinsJobs',
-                        templateUrl: 'tpl/app_jenkinsJobs.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/jenkinsJobs.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["jenkins"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
-                    .state('app.jenkinsJobBuilds', {
-                        url: '/jenkinsJobBuilds',
-                        templateUrl: 'tpl/app_jenkinsJobBuilds.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/jenkinsJobBuilds.js']);
-                                        }
-                                    );
-                                }]
-                        }
-                    })
-
-                    .state('app.jenkinsFt', {
-                        url: '/jenkinsFt',
-                        templateUrl: 'tpl/app_jenkins_ft.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/jenkins_ft.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["jenkins"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
-                    .state('app.jenkinsAndroid', {
-                        url: '/jenkinsAndroid',
-                        templateUrl: 'tpl/app_jenkins_android.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/jenkins_android.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["jenkins"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
-                    .state('app.jenkinsIos', {
-                        url: '/jenkinsIos',
-                        templateUrl: 'tpl/app_jenkins_ios.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load([
-                                                'js/controllers/jenkins_ios.js'
-                                            ]);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["jenkins"],
-                        data: {
-                            authPoint: {}
                         }
                     })
 
@@ -381,47 +352,6 @@ angular.module('app')
                             authPoint: {}
                         }
                     })
-
-                    .state('app.projectManagement', {
-                        url: '/projectManagement',
-                        templateUrl: 'tpl/app_projectManagement.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/projectManagement.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["projectManagement"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
-                    .state('app.projectHeartbeat', {
-                        url: '/projectHeartbeat',
-                        templateUrl: 'tpl/app_projectHeartbeat.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/projectHeartbeat.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["projectHeartbeat"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
 
                     .state('app.servermonitor', {
                         url: '/servermonitor',
@@ -477,6 +407,7 @@ angular.module('app')
                         }
                     })
 
+
                     .state('app.taskScript', {
                         url: '/taskScript',
                         templateUrl: 'tpl/app_taskScript.html',
@@ -487,7 +418,8 @@ angular.module('app')
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
                                             return $ocLazyLoad.load([
-                                                'js/controllers/tasksScript.js'
+                                                'js/controllers/tasksScript.js',
+                                                'vendor/libs/codemirror/codemirror.js'
                                             ]);
                                         }
                                     );
@@ -730,6 +662,7 @@ angular.module('app')
                     .state('app.nginxConfig', {
                         url: '/nginxConfig',
                         templateUrl: 'tpl/app_nginx_config.html',
+<<<<<<< HEAD
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
@@ -742,6 +675,68 @@ angular.module('app')
                                 }]
                         },
                         authGroup: ["configFile","nginx","copy"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.configFile', {
+                        url: '/configFile',
+                        templateUrl: 'tpl/app_configFile.html',
+=======
+>>>>>>> develop
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/nginxConfig.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["configFile", "nginx", "copy"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.dnsConfig', {
+                        url: '/dnsConfig',
+                        templateUrl: 'tpl/app_dns_config.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/dnsConfig.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["configFile", "dns"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.configPlaybook', {
+                        url: '/configPlaybook',
+                        templateUrl: 'tpl/app_config_playbook.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/configPlaybook.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["configFile", "nginx", "copy"],
                         data: {
                             authPoint: {}
                         }
@@ -806,45 +801,6 @@ angular.module('app')
                         }
                     })
 
-                    .state('app.dns', {
-                        url: '/dns',
-                        templateUrl: 'tpl/app_dns.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/dns.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["dns"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
-                    .state('app.iptables', {
-                        url: '/iptables',
-                        templateUrl: 'tpl/app_iptables.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/iptables.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["iptables"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
 
                     .state('app.resource', {
                         url: '/resource',
@@ -923,6 +879,31 @@ angular.module('app')
                                         }
                                     );
                                 }]
+                        },
+                        authGroup: ["user", "ldapGroups"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+
+                    .state('app.ldapGroups', {
+                        url: '/ldapGroups',
+                        templateUrl: 'tpl/app_ldap_groups.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/ldapGroups.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["user", "ldapGroups"],
+                        data: {
+                            authPoint: {}
                         }
                     })
 
@@ -1030,8 +1011,123 @@ angular.module('app')
                         }
                     })
 
+<<<<<<< HEAD
                     .state('app.workflow', {
                         url: '/team',
+                        templateUrl: 'tpl/app_workflow.html',
+=======
+                    .state('app.aliyunMqMgmt', {
+                        url: '/aliyunMqMgmt',
+                        templateUrl: 'tpl/app_aliyun_mq_mgmt.html',
+>>>>>>> develop
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+<<<<<<< HEAD
+                                            return $ocLazyLoad.load(['js/controllers/workflow.js']);
+=======
+                                            return $ocLazyLoad.load(['js/controllers/aliyunMqMgmt.js']);
+>>>>>>> develop
+                                        }
+                                    );
+                                }]
+                        },
+<<<<<<< HEAD
+                        authGroup: ["workflow"],
+=======
+                        authGroup: ["aliyunMq"],
+>>>>>>> develop
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+<<<<<<< HEAD
+                    .state('app.teamMgmt', {
+                        url: '/team',
+                        templateUrl: 'tpl/app_team_mgmt.html',
+=======
+                    .state('app.aliyunMqStatus', {
+                        url: '/aliyunMqStatus',
+                        templateUrl: 'tpl/app_aliyun_mq_status.html',
+>>>>>>> develop
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+<<<<<<< HEAD
+                                            return $ocLazyLoad.load(['js/controllers/team.js']);
+=======
+                                            return $ocLazyLoad.load(['js/controllers/aliyunMqStatus.js']);
+>>>>>>> develop
+                                        }
+                                    );
+                                }]
+                        },
+<<<<<<< HEAD
+                        authGroup: ["team"],
+=======
+                        authGroup: ["aliyunMq"],
+>>>>>>> develop
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+<<<<<<< HEAD
+                    
+                    .state('app.todoConfig', {
+                        url: '/todoConfig',
+                        templateUrl: 'tpl/app_todoConfig.html',
+=======
+
+                    .state('app.aliyunRamPolicy', {
+                        url: '/aliyunRamPolicy',
+                        templateUrl: 'tpl/app_aliyun_ram_policy.html',
+>>>>>>> develop
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/aliyunRamPolicy.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["aliyunRam"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.aliyunRamUser', {
+                        url: '/aliyunRamUser',
+                        templateUrl: 'tpl/app_aliyun_ram_user.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/aliyunRamUser.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["aliyunRam"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.workflow', {
+                        url: '/workflow',
                         templateUrl: 'tpl/app_workflow.html',
                         permission: true,
                         resolve: {
@@ -1069,71 +1165,17 @@ angular.module('app')
                             authPoint: {}
                         }
                     })
-                    
-                    .state('app.todoConfig', {
-                        url: '/todoConfig',
-                        templateUrl: 'tpl/app_todoConfig.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/todoConfig.js']);
-                                        }
-                                    );
-                                }]
-                        }
-                    })
-                    .state('app.todo', {
-                        url: '/todo',
-                        templateUrl: 'tpl/app_todo.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/todo.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["todo"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-                    .state('app.todoDaily', {
-                        url: '/todoDaily',
-                        templateUrl: 'tpl/app_todoDaily.html',
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/todoDaily.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["todo"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
 
-                    .state('app.logService', {
-                        url: '/logService',
-                        templateUrl: 'tpl/app_logService.html',
+                    .state('app.logserviceNginx', {
+                        url: '/logserviceNginx',
+                        templateUrl: 'tpl/app_logservice_nginx.html',
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-                                            return $ocLazyLoad.load(['js/controllers/logService.js']);
+                                            return $ocLazyLoad.load(['js/controllers/logserviceNginx.js']);
                                         }
                                     );
                                 }]
@@ -1156,16 +1198,16 @@ angular.module('app')
                         }
                     })
 
-                    .state('app.javaLogServiceManage', {
-                        url: '/javaLogServiceMange',
-                        templateUrl: 'tpl/app_java_logService_manage.html',
+                    .state('app.logserviceManage', {
+                        url: '/logserviceMange',
+                        templateUrl: 'tpl/app_logservice_manage.html',
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-                                            return $ocLazyLoad.load(['js/controllers/javaLogServiceManage.js']);
+                                            return $ocLazyLoad.load(['js/controllers/logserviceManage.js']);
                                         }
                                     );
                                 }]
@@ -1242,20 +1284,7 @@ angular.module('app')
                                 }]
                         }
                     })
-                    .state('access.todo', {
-                        url: '/todo',
-                        templateUrl: 'tpl/page_todo.html',
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/accessTodo.js']);
-                                        }
-                                    );
-                                }]
-                        }
-                    })
+
 
                     .state('access.artifacts', {
                         url: '/artifacts',
@@ -1266,6 +1295,36 @@ angular.module('app')
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
                                             return $ocLazyLoad.load(['js/controllers/accessArtifacts.js']);
+                                        }
+                                    );
+                                }]
+                        }
+                    })
+
+                    .state('access.ciJob', {
+                        url: '/ciJob',
+                        templateUrl: 'tpl/page_ci_job.html',
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/accessCiJob.js']);
+                                        }
+                                    );
+                                }]
+                        }
+                    })
+
+                    .state('access.ciJobDeploy', {
+                        url: '/ciJobDeploy',
+                        templateUrl: 'tpl/page_ci_job_deploy.html',
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/accessCiJobDeploy.js']);
                                         }
                                     );
                                 }]

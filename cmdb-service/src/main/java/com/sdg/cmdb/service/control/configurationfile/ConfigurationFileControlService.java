@@ -3,8 +3,11 @@ package com.sdg.cmdb.service.control.configurationfile;
 import com.sdg.cmdb.dao.cmdb.ConfigDao;
 import com.sdg.cmdb.domain.config.ConfigFileDO;
 import com.sdg.cmdb.domain.config.ConfigFileGroupDO;
+import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
+import com.sdg.cmdb.service.configurationProcessor.ShadowsocksFileProcessorService;
 import com.sdg.cmdb.util.IOUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,23 +28,14 @@ public class ConfigurationFileControlService {
 
     public final static String nameShadowsocks = "shadowsocks";
 
-    public final static String nameNginxUpstream = "nginxUpstream";
 
-    public final static String nameNginxLocationManage = "nginxLocationManage";
 
     public final static String nameNginxLocationSupplier = "nginxLocationSupplier";
 
-    public final static String nameNginxLocationKa = "nginxLocationKa";
-
-    public final static String nameNginxLocation = "nginxLocation";
-
-    public final static String nameIptablesDubbo = "iptablesDubbo";
-
-    public final static String nameDnsmasq = "dnsmasq";
 
 
     @Resource
-    private AnsibleHostService ansibleHostService;
+    private AnsibleFileProcessorService ansibleFileProcessorService;
 
     @Resource
     private InterfaceCIService interfaceCIService;
@@ -49,6 +43,7 @@ public class ConfigurationFileControlService {
     @Resource
     private TomcatInstallConfigService tomcatInstallConfigService;
 
+<<<<<<< HEAD
     @Resource
     private GetwayService getwayService;
 
@@ -58,12 +53,15 @@ public class ConfigurationFileControlService {
 
     @Resource
     private IptablsZookeeperService iptablsZookeeperService;
+=======
+    @Autowired
+    private ShadowsocksFileProcessorService shadowsocksFileProcessorService;
+>>>>>>> develop
 
     @Resource
     private ConfigDao configDao;
 
-    @Resource
-    private DnsmasqService dnsmasqService;
+
 
 
     public static final String GROUP_ANSIBLE = "filegroup_ansible";
@@ -75,16 +73,13 @@ public class ConfigurationFileControlService {
 
     public String build(ConfigFileDO configFileDO) {
         ConfigFileGroupDO configFileGroupDO = configDao.getConfigFileGroupById(configFileDO.getFileGroupId());
-        System.err.println(configFileGroupDO);
+        //System.err.println(configFileGroupDO);
 
         if (configFileGroupDO.getGroupName().equalsIgnoreCase(GROUP_ANSIBLE))
-            return ansibleHostService.acqHostsCfgByUseType(configFileDO.getUseType());
-
-        if (configFileGroupDO.getGroupName().equalsIgnoreCase(GROUP_GETWAY))
-            return getwayService.acqHostConfig();
+            return ansibleFileProcessorService.getConfig(configFileDO.getUseType(),true);
 
         if (configFileGroupDO.getGroupName().equalsIgnoreCase(GROUP_SHADOWSOCKS))
-            return shadowsocksService.acqConfig();
+            return shadowsocksFileProcessorService.getConfig();
 
         return "";
     }
@@ -98,7 +93,6 @@ public class ConfigurationFileControlService {
     public String build(String name, int type) {
         switch (name) {
             case nameAnsible:
-                // return ansibleService.acqConfig(type);
                 return "";
             case nameInterfaceCI:
                 return interfaceCIService.acqConfig();
@@ -106,12 +100,15 @@ public class ConfigurationFileControlService {
                 return tomcatInstallConfigService.acqConfig();
             case nameGetway:
                 return "";
+<<<<<<< HEAD
             case nameShadowsocks:
                 return shadowsocksService.acqConfig();
             case nameIptablesDubbo:
                 return iptablsZookeeperService.acqConfig(type);
             case nameDnsmasq:
                 return dnsmasqService.acqConfig(type);
+=======
+>>>>>>> develop
         }
         return new String();
     }

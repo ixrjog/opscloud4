@@ -7,6 +7,7 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.config.ConfigFileCopyDO;
+<<<<<<< HEAD
 import com.sdg.cmdb.domain.config.ConfigFileCopyDoScriptDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AnsibleItemEnum;
@@ -14,12 +15,16 @@ import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
 import com.sdg.cmdb.domain.copy.CopyDO;
 import com.sdg.cmdb.domain.copy.CopyServerVO;
 import com.sdg.cmdb.domain.copy.CopyVO;
+=======
+>>>>>>> develop
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerVO;
 import com.sdg.cmdb.domain.task.CmdVO;
+import com.sdg.cmdb.domain.task.DoPlaybook;
+import com.sdg.cmdb.domain.task.PlaybookHostPattern;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.service.control.configurationfile.ConfigurationFileControlService;
+import com.sdg.cmdb.util.BeanCopierUtils;
 import com.sdg.cmdb.util.CmdUtils;
 import com.sdg.cmdb.util.IOUtils;
 import com.sdg.cmdb.util.SessionUtils;
@@ -29,6 +34,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +51,19 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
+
+    @Value("#{cmdb['ansible.bin']}")
+    private String ansibleBin;
+
+    @Value("#{cmdb['ansible.playbook.bin']}")
+    private String ansiblePlaybookBin;
+
+    @Value("#{cmdb['ansible.scripts.path']}")
+    private String ansibleScriptsPath;
+
+    // ansible.logs.path=/data/www/logs
+    @Value("#{cmdb['ansible.logs.path']}")
+    private String ansibleLogsPath;
 
     private static final Logger logger = LoggerFactory.getLogger(AnsibleTaskServiceImpl.class);
     private static final Logger coreLogger = LoggerFactory.getLogger("coreLogger");
@@ -76,6 +95,12 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     @Resource
     private AuthService authService;
 
+<<<<<<< HEAD
+=======
+    @Autowired
+    private ConfigServerGroupService configServerGroupService;
+
+>>>>>>> develop
     @Resource
     private SchedulerManager schedulerManager;
 
@@ -87,8 +112,11 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
     public static final String GETWAY_SET_LOGIN = "getway_set_login";
 
+<<<<<<< HEAD
     private HashMap<String, String> ansibleConfigMap;
 
+=======
+>>>>>>> develop
     private HashMap<String, String> getwayConfigMap;
 
 
@@ -100,10 +128,8 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
     @Override
     public String task(boolean isSudo, String hostgroupName, String cmd) {
-        String ansible_bin = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_BIN.getItemKey());
-        //String ansible_hosts_path = configMap.get(AnsibleItemEnum.ANSIBLE_ALL_HOSTS_PATH.getItemKey());
         String ansible_hosts_path = configService.getAnsibleHostsAllPath();
-        CommandLine c = new CommandLine(ansible_bin);
+        CommandLine c = new CommandLine(ansibleBin);
         c.addArgument(hostgroupName);
         // 调试日志
         //c.addArgument("-vvv -i " +ansible_hosts_path + " -sudo -a '" +cmd + "'",false);
@@ -123,15 +149,18 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         return rt;
     }
 
+<<<<<<< HEAD
 
     private String taskCopy(boolean isSudo, String hostgroupName, ConfigFileCopyDO configFileCopyDO) {
+=======
+>>>>>>> develop
 
-        String ansible_bin = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_BIN.getItemKey());
+    private String taskCopy(boolean isSudo, String hostgroupName, ConfigFileCopyDO configFileCopyDO) {
         String ansible_hosts_path = configService.getAnsibleHostsAllPath();
         //String ansible_bin = "/usr/local/Cellar/ansible/2.4.3.0/libexec/bin/ansible";
         //String ansible_hosts_path = configMap.get(AnsibleItemEnum.ANSIBLE_HOSTS_PATH.getItemKey());
         //String ansible_hosts_path = configMap.get(AnsibleItemEnum.ANSIBLE_ALL_HOSTS_PATH.getItemKey());
-        CommandLine c = new CommandLine(ansible_bin);
+        CommandLine c = new CommandLine(ansibleBin);
         c.addArgument(hostgroupName);
         c.addArgument("-i");
         c.addArgument(ansible_hosts_path);
@@ -152,13 +181,17 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     }
 
 
+<<<<<<< HEAD
 
 
     private String taskScript(boolean isSudo, String hostgroupName, String cmd) {
         String ansible_bin = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_BIN.getItemKey());
+=======
+    private String taskScript(boolean isSudo, String hostgroupName, String cmd) {
+>>>>>>> develop
         String ansible_hosts_path = configService.getAnsibleHostsAllPath();
 
-        CommandLine c = new CommandLine(ansible_bin);
+        CommandLine c = new CommandLine(ansibleBin);
         c.addArgument(hostgroupName);
         // 调试日志
         //c.addArgument("-vvv -i " +ansible_hosts_path + " -sudo -a '" +cmd + "'",false);
@@ -212,6 +245,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         }
     }
 
+<<<<<<< HEAD
 
 
     @Override
@@ -349,6 +383,8 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         cmdVO.setServerList(servers);
         return this.scriptTask(cmdVO);
     }
+=======
+>>>>>>> develop
 
     @Override
     public BusinessWrapper<Boolean> taskQuery(long taskId) {
@@ -377,73 +413,12 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
     @Override
     public String taskLogCleanup(ServerDO serverDO, int history) {
-        String ansible_logcleanup_invoke = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_LOGCLEANUP_INVOKE.getItemKey());
-
-        CommandLine c = new CommandLine(ansible_logcleanup_invoke);
+        CommandLine c = new CommandLine("");
         c.addArgument("-servername=" + serverDO.acqServerName());
         c.addArgument("-ip=" + serverDO.getInsideIp());
         c.addArgument("-history=" + history);
         String rt = CmdUtils.run(c);
         return rt;
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> taskGetwayAddAccount(String username, String pwd) {
-        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY_ACCOUNT);
-        CmdVO cmdVO = new CmdVO();
-        cmdVO.setTaskScriptId(taskScriptDO.getId());
-
-        List<ServerVO> servers = acqGetwayServers();
-        if (servers.size() == 0)
-            return new BusinessWrapper<>(false);
-
-        cmdVO.setServerList(servers);
-
-        String getway_key_path = getwayConfigMap.get(GetwayItemEnum.GETWAY_KEY_PATH.getItemKey());
-        String getway_user_conf_path = getwayConfigMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
-
-        String params = "-u=" + username + " -p=" + pwd + " -kp=" + getway_key_path + " -up=" + getway_user_conf_path;
-
-        cmdVO.setParams(params);
-
-        return this.scriptTask(cmdVO);
-    }
-
-    private List<ServerVO> acqGetwayServers() {
-        // 查询getway服务器
-        // 先查询copy服务器配置
-        List<ConfigFileCopyDO> copys = configDao.queryConfigFileCopyByGroupName(ConfigurationFileControlService.GROUP_GETWAY);
-        List<ServerVO> servers = new ArrayList<>();
-        if (copys.size() != 0) {
-            for (ConfigFileCopyDO configFileCopyDO : copys) {
-                ServerDO serverDO = serverDao.getServerInfoById(configFileCopyDO.getServerId());
-                servers.add(serverService.acqServerVO(serverDO));
-            }
-        } else {
-            ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupByName(GROUP_GETWAY);
-            if (serverGroupDO != null) {
-                List<ServerDO> serverList = serverDao.acqServersByGroupId(serverGroupDO.getId());
-                if (serverList.size() != 0) {
-                    for (ServerDO serverDO : serverList)
-                        servers.add(serverService.acqServerVO(serverDO));
-                }
-            }
-        }
-        return servers;
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> taskGetwayDelAccount(String username) {
-        List<ServerVO> servers = acqGetwayServers();
-        if (servers.size() == 0)
-            return new BusinessWrapper<>(false);
-        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY_ACCOUNT);
-        CmdVO cmdVO = new CmdVO();
-        cmdVO.setTaskScriptId(taskScriptDO.getId());
-        cmdVO.setServerList(servers);
-        String params = "-d=" + username;
-        cmdVO.setParams(params);
-        return this.scriptTask(cmdVO);
     }
 
 
@@ -472,6 +447,16 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
             listVO.add(taskScriptVO);
         }
         return new TableVO<>(size, listVO);
+    }
+
+    @Override
+    public List<TaskScriptDO> getTaskScriptPlaybook() {
+        return ansibleTaskDao.getTaskScriptByPlaybook();
+    }
+
+    @Override
+    public List<TaskScriptDO> queryPlaybook(String playbookName) {
+        return ansibleTaskDao.queryScriptByPlaybook(playbookName);
     }
 
 
@@ -526,36 +511,37 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
 
     private String acqScriptPath(TaskScriptDO taskScriptDO) {
-        String scriptsPath = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_TASK_SCRIPTS_PATH.getItemKey());
-        String scriptFile = scriptsPath + "/" + taskScriptDO.getUsername() + "/id_" + taskScriptDO.getId();
+
+        String scriptFile = ansibleScriptsPath + "/" + taskScriptDO.getUsername() + "/id_" + taskScriptDO.getId();
         return scriptFile;
     }
 
     @Override
     public AnsibleVersionInfo acqAnsibleVersion() {
+        return acqVersion(ansibleBin, "ansible");
+    }
 
+    @Override
+    public AnsibleVersionInfo acqAnsiblePlaybookVersion() {
+        return acqVersion(ansiblePlaybookBin, "ansible-playbook");
+    }
+
+    private AnsibleVersionInfo acqVersion(String bin, String name) {
         try {
-
-            String ansible_bin = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_BIN.getItemKey());
-
-            String ansible_task_script_path = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_TASK_SCRIPTS_PATH.getItemKey());
-            CommandLine c = new CommandLine(ansible_bin);
+            CommandLine c = new CommandLine(bin);
             c.addArgument("--version");
             // 空格添加引号
             //c.addArgument(cmd, true);
             logger.info("ansible task :" + c.toString());
-
             String versionInfo = CmdUtils.run(c);
-
             AnsibleVersionInfo info = new AnsibleVersionInfo();
             info.setVersionInfo(versionInfo);
             String[] infoLine = versionInfo.split("\n");
-
             String v = infoLine[0];
-            String version = v.replace("ansible ", "");
+            String version = v.replace(name + " ", "");
             info.setVersion(version);
-            info.setAnsibleBinPath(ansible_bin);
-            info.setAnsibleTaskScriptPath(ansible_task_script_path);
+            info.setAnsibleBinPath(bin);
+            info.setAnsibleTaskScriptPath(ansibleScriptsPath);
             return info;
         } catch (Exception e) {
             e.printStackTrace();
@@ -585,10 +571,13 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     }
 
 
+<<<<<<< HEAD
 
 
 
 
+=======
+>>>>>>> develop
     @Override
     public BusinessWrapper<Boolean> scriptTask(CmdVO cmdVO) {
         try {
@@ -651,24 +640,124 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         }
     }
 
+<<<<<<< HEAD
 
 
 
 
+=======
+    @Override
+    public PlaybookTaskDO playbookTask(DoPlaybook doPlaybook) {
+        String username = SessionUtils.getUsername();
+        UserDO userDO = userDao.getUserByName(username);
+        PlaybookTaskDO playbookTaskDO = new PlaybookTaskDO(doPlaybook, userDO);
+        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScript(doPlaybook.getTaskScriptId());
+        String playbookPath = getPlaybookPath(taskScriptDO);
 
-    /**
-     * 初始化
-     *
-     * @return
-     */
-    private void init() {
-        ansibleConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.ANSIBLE.getItemKey(), "dev");
-        getwayConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey(), ConfigCenterServiceImpl.DEFAULT_ENV);
+        // TODO 插入任务记录
+        ansibleTaskDao.addPlaybookTask(playbookTaskDO);
+        schedulerManager.registerJob(() -> {
+            for (PlaybookHostPattern hostPattern : doPlaybook.getPlaybookServerGroupList()) {
+                // TODO 插入PlaybookLog
+                PlaybookLogDO playbookLogDO = new PlaybookLogDO(taskScriptDO, userDO);
+                ansibleTaskDao.addPlaybookLog(playbookLogDO);
+                // TODO 插入TaskHost
+                PlaybookTaskHostDO playbookTaskHostDO = new PlaybookTaskHostDO(playbookTaskDO.getId(), hostPattern, playbookLogDO.getId());
+                ansibleTaskDao.addPlaybookTaskHost(playbookTaskHostDO);
+                String extraVars = "hosts=" + hostPattern.getHostPatternSelected();
+                if (!StringUtils.isEmpty(doPlaybook.getExtraVars())) {
+                    extraVars += " " + doPlaybook.getExtraVars();
+                }
+                playbook(true, hostPattern.getHostPatternSelected(), playbookPath, extraVars, playbookLogDO);
+                // TODO 更新TaskHost状态
+                playbookTaskHostDO.setComplete(true);
+                ansibleTaskDao.updatePlaybookTaskHost(playbookTaskHostDO);
+            }
+            playbookTaskDO.setComplete(true);
+            ansibleTaskDao.updatePlaybookTask(playbookTaskDO);
+        });
+
+        return playbookTaskDO;
     }
 
     @Override
+    public PlaybookTaskVO getPlaybookTask(long id) {
+        PlaybookTaskDO playbookTaskDO = ansibleTaskDao.getPlaybookTask(id);
+        PlaybookTaskVO playbookTaskVO = BeanCopierUtils.copyProperties(playbookTaskDO, PlaybookTaskVO.class);
+        // TODO 任务没完成直接返回
+        if (!playbookTaskVO.isComplete())
+            return playbookTaskVO;
+        List<PlaybookTaskHostDO> taskHostDOList = ansibleTaskDao.queryPlaybookTaskHost(playbookTaskVO.getId());
+        List<PlaybookTaskHostVO> taskHostList = new ArrayList<>();
+        for (PlaybookTaskHostDO playbookTaskHostDO : taskHostDOList) {
+            PlaybookLogVO playbookLogVO = configService.getPlaybookLog(playbookTaskHostDO.getLogId());
+            PlaybookTaskHostVO playbookTaskHostVO = BeanCopierUtils.copyProperties(playbookTaskHostDO, PlaybookTaskHostVO.class);
+            playbookTaskHostVO.setPlaybookLogVO(playbookLogVO);
+            taskHostList.add(playbookTaskHostVO);
+        }
+        playbookTaskVO.setTaskHostList(taskHostList);
+        return playbookTaskVO;
+    }
+>>>>>>> develop
+
+    /**
+     * 执行 Playbook
+     *
+     * @param isSudo
+     * @param hostPattern 分组
+     * @param playbook    playbook 完整路径+文件名
+     * @param extraVars   外部变量 参考 -e "hosts=ss-prod src=/data/www/data/shadowsocks/ dest=/data/www/data/shadowsocks/"
+     * @return
+     */
+    @Override
+    public TaskResult doPlaybook(boolean isSudo, String hostPattern, String playbook, String extraVars) {
+        String ansible_hosts_path = configService.getAnsibleHostsAllPath();
+        CommandLine c = new CommandLine(ansiblePlaybookBin);
+        //c.addArgument(hostPattern);
+        c.addArgument("-i");
+        c.addArgument(ansible_hosts_path);
+        if (isSudo)
+            c.addArgument("-sudo");
+        c.addArgument(playbook);
+        if (!StringUtils.isEmpty(extraVars)) {
+            c.addArgument("-e");
+            c.addArgument(extraVars, false);
+        }
+        // System.err.println(c.toString());
+        logger.info("Ansible Playbook :" + c.toString());
+        String rt = CmdUtils.run(c);
+        return new TaskResult(ansiblePlaybookBin, c.toString(), rt);
+    }
+
+    @Override
+    public void playbook(boolean isSudo, String hostPattern, String playbook, String extraVars, PlaybookLogDO playbookLogDO) {
+        TaskResult tr = doPlaybook(isSudo, hostPattern, playbook, extraVars);
+        String logPath = getPlaybookLogPath(playbookLogDO);
+        playbookLogDO.setLogPath(logPath);
+        playbookLogDO.setComplete(true);
+        playbookLogDO.setContent(tr.toString());
+        IOUtils.writeFile(tr.getResult(), logPath);
+        ansibleTaskDao.updatePlaybookLog(playbookLogDO);
+    }
+
+    private String getPlaybookLogPath(PlaybookLogDO playbookLogDO) {
+        String logPath = ansibleLogsPath + "/configPlaybook/id_" + playbookLogDO.getId() + "_" + playbookLogDO.getPlaybookName();
+        return logPath;
+    }
+
+    @Override
+    public String getPlaybookPath(TaskScriptDO taskScriptDO) {
+        String playbookPath = ansibleScriptsPath;
+        playbookPath += "/" + taskScriptDO.getUsername();
+        playbookPath += "/id_" + taskScriptDO.getId();
+        return playbookPath;
+    }
+
+
+
+    @Override
     public void afterPropertiesSet() throws Exception {
-        init();
+
     }
 
 }

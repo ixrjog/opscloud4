@@ -2,9 +2,12 @@ package com.sdg.cmdb.service;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.ansibleTask.PlaybookLogDO;
+import com.sdg.cmdb.domain.ansibleTask.PlaybookLogVO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.config.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
+import com.sdg.cmdb.domain.ldap.LdapGroupVO;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
@@ -123,7 +126,7 @@ public interface ConfigService {
      * @param propertyGroupId
      * @return
      */
-    BusinessWrapper<String> createServerPropertyFile(long serverGroupId, long propertyGroupId);
+   // BusinessWrapper<String> createServerPropertyFile(long serverGroupId, long propertyGroupId);
 
     /**
      * 预览指定服务器组&属性组的配置文件
@@ -132,7 +135,7 @@ public interface ConfigService {
      * @param propertyGroupId
      * @return
      */
-    String previewServerPropertyFile(long serverGroupId, long propertyGroupId);
+    List<PreviewConfig> previewServerPropertyFile(long serverGroupId, long propertyGroupId);
 
     /**
      * 加载指定服务器组&属性组的本地属性配置文件
@@ -141,13 +144,7 @@ public interface ConfigService {
      * @param propertyGroupId
      * @return
      */
-    BusinessWrapper<String> launchServerPropertyFile(long serverGroupId, long propertyGroupId);
-
-
-    /**
-     * 创建getway_host.conf文件
-     */
-    void buildGetwayHost();
+  //  BusinessWrapper<String> launchServerPropertyFile(long serverGroupId, long propertyGroupId);
 
     /**
      * 获取文件组
@@ -185,18 +182,8 @@ public interface ConfigService {
      */
     TableVO<List<ConfigFileVO>> getConfigFilePage(ConfigFileDO configFileDO, int page, int length);
 
+    List<ConfigFileDO> getConfigFile();
 
-    BusinessWrapper<Boolean> saveFileCopy(ConfigFileCopyVO configFileCopyVO);
-
-    TableVO<List<ConfigFileCopyDoScriptVO>> getFileCopyScriptPage(String groupName ,int page, int length);
-
-    BusinessWrapper<Boolean>  saveFileCopyScript(ConfigFileCopyDoScriptDO configFileCopyDoScriptDO);
-
-
-
-    List<ConfigFileCopyVO> queryFileCopy(String groupName);
-
-    BusinessWrapper<Boolean> delFileCopy(long id);
 
     /**
      * 保存 or 更新文件信息
@@ -231,12 +218,6 @@ public interface ConfigService {
      */
     List<ConfigFileDO> queryFilePath(long fileGroupid);
 
-
-    /**
-     * 查询Getway配置的用户目录
-     * @return
-     */
-    String getGetwayPath();
 
     /**
      * 创建 or 更新指定名称的文件
@@ -334,6 +315,7 @@ public interface ConfigService {
 
     /**
      * 保存Getway主机配置文件
+     *
      * @param file
      * @return
      */
@@ -341,9 +323,27 @@ public interface ConfigService {
 
     /**
      * 获取ansible所有主机列表文件
+     *
      * @return
      */
     String getAnsibleHostsAllPath();
+
+
+    BusinessWrapper<Boolean> saveFilePlaybook(ConfigFilePlaybookDO configFilePlaybookDO);
+
+    List<ConfigFilePlaybookVO> getFilePlaybookPage();
+
+    BusinessWrapper<Boolean> delFilePlaybook(long id);
+
+    PlaybookLogVO doPlaybook(long id, int doType);
+
+    PlaybookLogVO getPlaybookLog(long logId);
+
+    PlaybookLogVO getPlaybookLog(PlaybookLogDO playbookLogDO);
+
+    TableVO<List<PlaybookLogVO>> getPlaybookLogPage(String playbookName, String username, int page, int length);
+
+    BusinessWrapper<Boolean> delPlaybookLog(long id);
 
 
 }

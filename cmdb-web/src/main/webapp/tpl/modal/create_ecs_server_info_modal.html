@@ -1,9 +1,10 @@
 <div class="modal-header">
-    <h3 class="modal-title">ECS新建</h3>
+    <h3 class="modal-title"><b style="color: #286090">开通ECS</b></h3>
 </div>
 <div class="modal-body">
     <div style="margin-top: 5px;" ng-show="templateConfig == 1">
         <table class="table table-hover table-bordered table-striped">
+            <h4 class="modal-title">ECS模版</h4>
             <thead>
             <tr>
                 <td>区域ID</td>
@@ -12,7 +13,6 @@
                 <td>网络类型</td>
                 <td>cpu</td>
                 <td>memory</td>
-                <td>容量(GB)</td>
                 <td>IO优化实例</td>
                 <td>系统盘类型</td>
                 <td>数据盘类型</td>
@@ -31,10 +31,10 @@
                 </td>
                 <td>{{template.cpu}}</td>
                 <td>
-                    <span ng-if="item.memory < 8">{{template.memory}}GB</span>
+                    <span ng-if="template.memory < 8">{{template.memory}}GB</span>
                     <b style="color: #449d44" ng-if="template.memory >= 8">{{template.memory}}GB</b>
                 </td>
-                <td>{{template.dataDiskSize}}</td>
+                <!--<td>{{template.dataDiskSize}}</td>-->
                 <td>
                     <b style="color: #449d44" ng-if="template.ioOptimized == 'optimized'">是</b>
                     <span ng-if="template.ioOptimized == 'none'">否</span>
@@ -57,12 +57,14 @@
         </table>
     </div>
 
-    <form class="bs-example form-horizontal" ng-show="templateConfig == 1">
+    <form class="bs-example form-horizontal" ng-show="templateConfig == 1"
+          style="box-shadow: 0 0 5px #ddd;padding: 10px;">
         <div class="form-group">
             <div class="col-md-6">
                 <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器组名称</label>
                 <div class="col-lg-8">
-                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap" ng-change="changeServerGroup(nowServerGroup.selected)">
+                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                               ng-change="changeServerGroup(nowServerGroup.selected)">
                         <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
                         <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
                                            repeat="item in serverGroupList | filter: $select.search">
@@ -165,12 +167,22 @@
 
         <div class="form-group">
             <div class="col-md-6">
+                <label class="col-lg-4 control-label">系统盘(GB)</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="系统盘容量（输入0则按阿里云默认40G创建）"
+                           ng-model="templateItem.systemDiskSize">
+                </div>
+            </div>
+            <div class="col-md-6">
                 <label class="col-lg-4 control-label">数据盘(GB)</label>
                 <div class="col-lg-8">
                     <input type="text" class="form-control" placeholder="数据盘容量（输入0不创建数据盘）"
                            ng-model="templateItem.dataDiskSize">
                 </div>
             </div>
+        </div>
+
+        <div class="form-group">
             <div class="col-md-6">
                 <label class="col-lg-4 control-label">服务器数量</label>
                 <div class="col-lg-8">
@@ -194,7 +206,17 @@
                         </label>
                     </div>
                 </div>
+            </div>
 
+
+            <div class="col-md-6" ng-show="templateItem.chargeType == 'PrePaid'">
+                <label class="col-lg-4 control-label">包月时长</label>
+                <div class="col-lg-8">
+
+                    <input type="text" class="form-control" placeholder="包月可选1-9,12,24,36"
+                           ng-model="templateItem.period">
+
+                </div>
             </div>
         </div>
 
@@ -237,6 +259,17 @@
                     </ui-select>
                 </div>
             </div>
+
+            <div class="col-md-6" style="margin-top:5px;"
+                 ng-show="nowVswitch.selected != null && nowVswitch.selected.vSwitch != null">
+                <span class="label" style="color: white; background-color: #00a8f3 ;">
+                    网段:{{nowVswitch.selected.vSwitch.cidrBlock}}/可用IP:{{nowVswitch.selected.vSwitch.availableIpAddressCount}}
+                </span>
+            </div>
+
+        </div>
+
+        <div class="form-group" ng-show="nowNetwork.selected == 'vpc'">
             <div class="col-md-6">
                 <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>安全组</label>
                 <div class="col-lg-8">
@@ -252,6 +285,7 @@
             </div>
         </div>
 
+<<<<<<< HEAD
         <div class="form-group">
             <div style="text-align:center;">
                 <button ng-click="createServer()"  ng-disabled="butCreatingEcs"
@@ -267,7 +301,10 @@
                 <!--</b>-->
             </div>
         </div>
+=======
+>>>>>>> develop
     </form>
+
     <div style="margin-top: 5px;" ng-show="templateConfig == 0">
         <table class="table table-hover table-bordered table-striped">
             <thead>
@@ -325,7 +362,28 @@
             </tfoot>
         </table>
     </div>
+
+    <div class="form-group" style="margin-top: 5px;">
+        <div style="text-align:center;">
+
+            <button ng-click="createServer()" ng-disabled="butCreatingEcs" ng-show="templateConfig == 1"
+                    class="btn btn-xs"
+                    uib-popover-html="'开通ECS服务器'" popover-trigger="'mouseenter'"
+                    style="margin-left: 5px; background-color: #ff5f87; color: white;">
+                <span class="fa fa-spin fa-spinner" ng-show="butCreatingEcs"></span>
+                <span class="fa fa-circle-o-notch" ng-show="!butCreatingEcs"></span>开通ECS
+            </button>
+
+            <button class="btn btn-xs"
+                    style="background-color: #ff8700; color: white;"
+                    ng-click="closeModal()">关闭
+            </button>
+
+
+        </div>
+    </div>
+
     <div ng-if="alert.type != ''">
-    <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
     </div>
 </div>

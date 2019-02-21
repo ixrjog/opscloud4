@@ -43,6 +43,14 @@ public interface ConfigServerGroupService {
     String queryNginxUrl(ServerGroupDO serverGroupDO);
 
     /**
+     * 查询服务器组属性 location
+     * 例如 location ~ ^/sdop/ 中的 ~ ^/sdop/
+     * @param serverGroupDO
+     * @return
+     */
+    String getNginxLocation(ServerGroupDO serverGroupDO);
+
+    /**
      * 获取proxy_pass中的配置
      *
      * @param serverGroupDO
@@ -55,9 +63,11 @@ public interface ConfigServerGroupService {
 
     String queryTomcatAppName(ServerGroupDO serverGroupDO);
 
-    String queryTomcatHttpPort(ServerGroupDO serverGroupDO);
+    String queryUpstreamPort(ServerGroupDO serverGroupDO);
 
-    String queryTomcatWebappsPath(ServerGroupDO serverGroupDO);
+
+
+
 
     /**
      * 取check页面路径
@@ -65,7 +75,7 @@ public interface ConfigServerGroupService {
      * @param serverGroupDO
      * @return
      */
-    String queryHttpStatus(ServerGroupDO serverGroupDO);
+    String queryHttpCheck(ServerGroupDO serverGroupDO);
 
     /**
      * 判断是否为manage后台back环境
@@ -79,6 +89,7 @@ public interface ConfigServerGroupService {
 
     /**
      * 是否生成Upsteam中的check模块配置
+<<<<<<< HEAD
      * @param serverGroupDO
      * @return
      */
@@ -86,6 +97,20 @@ public interface ConfigServerGroupService {
 
     /**
      * 获取location中的limit配置
+     *
+=======
+>>>>>>> develop
+     * @param serverGroupDO
+     * @return
+     */
+    boolean isBuildNginxCheck(ServerGroupDO serverGroupDO);
+
+    /**
+<<<<<<< HEAD
+     * 是否生成标准的location
+=======
+     * 获取location中的limit配置
+>>>>>>> develop
      *
      * @param serverGroupDO
      * @return
@@ -99,14 +124,6 @@ public interface ConfigServerGroupService {
      * @return
      */
     boolean isbuildLocation(ServerGroupDO serverGroupDO);
-
-    /**
-     * 判断upstream中gray是否和prod一致
-     *
-     * @param serverGroupDO
-     * @return
-     */
-    boolean isGrayEqProd(ServerGroupDO serverGroupDO);
 
 
     boolean isBuildNginxUpstream(ServerGroupDO serverGroupDO);
@@ -126,32 +143,6 @@ public interface ConfigServerGroupService {
     boolean saveJavaInstallVersion(ServerGroupDO serverGroupDO, String version);
 
     /**
-     * 是否生成manage的标准location
-     *
-     * @param serverGroupDO
-     * @return
-     */
-    boolean isBuildManageLocation(ServerGroupDO serverGroupDO);
-
-
-    /**
-     * 是否生成供应商（caihaohuo.cn）的标准location
-     *
-     * @param serverGroupDO
-     * @return
-     */
-    boolean isBuildSupplierLocation(ServerGroupDO serverGroupDO);
-
-    /**
-     * 是否生成ka的标准location
-     *
-     * @param serverGroupDO
-     * @return
-     */
-    boolean isBuildKaLocation(ServerGroupDO serverGroupDO);
-
-
-    /**
      * 获取系统盘vol
      *
      * @param serverDO
@@ -161,7 +152,6 @@ public interface ConfigServerGroupService {
 
 
     String queryDiskDataVolume(ServerDO serverDO);
-
 
     /**
      * 判断upstream中gray是否和prod一致
@@ -206,6 +196,23 @@ public interface ConfigServerGroupService {
     String queryZabbixProxy(ServerGroupDO serverGroupDO);
 
     /**
+<<<<<<< HEAD
+=======
+     * MONITOR_IP
+     * @param serverDO
+     * @return MONITOR_IP
+     */
+    String queryZabbixMonitorIp(ServerDO serverDO);
+
+    /**
+     * 此接口查询服务器组属性 ZABBIX.MONITOR_IP
+     * @param serverDO
+     * @return ZABBIX_MACROS
+     */
+    String queryZabbixMacros(ServerDO serverDO);
+
+    /**
+>>>>>>> develop
      * 取分组配置
      * @param serverGroupDO
      * @return

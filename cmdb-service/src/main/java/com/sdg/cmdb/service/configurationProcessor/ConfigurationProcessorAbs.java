@@ -49,6 +49,15 @@ public abstract class ConfigurationProcessorAbs {
         return headInfo;
     }
 
+<<<<<<< HEAD
+=======
+    protected String acqHostLine(ServerDO serverDO) {
+        configServerGroupService.invokeGetwayIp(serverDO);
+        return serverDO.getInsideIp() + " ansible_ssh_user=" + serverDO.getLoginUser() + " # " + serverDO.getSerialNumber() + "\n";
+    }
+
+
+>>>>>>> develop
     /**
      * 取所有的webservice组信息
      */
@@ -91,4 +100,9 @@ public abstract class ConfigurationProcessorAbs {
         List<ServerGroupDO> list = acqServerGroupByWebservice();
         return list;
     }
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> develop
 }

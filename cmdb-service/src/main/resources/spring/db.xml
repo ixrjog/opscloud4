@@ -57,12 +57,12 @@
 
 
 
-    <!--stash db config -->
+    <!--Jumpserver db config -->
 
-    <bean name="stashDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
-        <property name="url" value="${stash_jdbc_url}" />
-        <property name="username" value="${stash_jdbc_user}" />
-        <property name="password" value="${stash_jdbc_password}" />
+    <bean name="jumpserverDataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init" destroy-method="close">
+        <property name="url" value="${jumpserver_jdbc_url}" />
+        <property name="username" value="${jumpserver_jdbc_user}" />
+        <property name="password" value="${jumpserver_jdbc_password}" />
         <property name="testOnBorrow" value="true" />
         <property name="validationQuery" value="select 1" />
         <property name="defaultAutoCommit" value="false" />
@@ -80,26 +80,26 @@
         <!--</property>-->
     </bean>
 
-    <bean id="stashTransactionManager"
+    <bean id="jumpserverTransactionManager"
           class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-        <property name="dataSource" ref="stashDataSource" />
+        <property name="dataSource" ref="jumpserverDataSource" />
     </bean>
 
-    <bean id="stashTransactionTemplate"
+    <bean id="jumpserverTransactionTemplate"
           class="org.springframework.transaction.support.TransactionTemplate">
-        <property name="transactionManager" ref="stashTransactionManager" />
+        <property name="transactionManager" ref="jumpserverTransactionManager" />
     </bean>
 
-    <bean id="stashSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-        <property name="dataSource" ref="stashDataSource" />
-        <property name="mapperLocations" value="classpath:sql/stash/*.xml" />
+    <bean id="jumpserverSqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="jumpserverDataSource" />
+        <property name="mapperLocations" value="classpath:sql/jumpserver/*.xml" />
         <property name="typeAliasesPackage" value="com.sdg.cmdb.domain"/>
     </bean>
 
-    <bean id="stashMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="sqlSessionFactoryBeanName" value="stashSqlSessionFactory"/>
-        <property name="basePackage" value="com.sdg.cmdb.dao.stash" />
+    <bean id="jumpserverMapperScanner" class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="sqlSessionFactoryBeanName" value="jumpserverSqlSessionFactory"/>
+        <property name="basePackage" value="com.sdg.cmdb.dao.jumpserver" />
     </bean>
 
-    <!--stash db config -->
+    <!--jumpserver db config -->
 </beans>

@@ -5,11 +5,10 @@ import com.sdg.cmdb.domain.keybox.WSResult;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.ZabbixHistoryService;
 import com.sdg.cmdb.util.schedule.BaseJob;
-import com.sdg.cmdb.util.schedule.SchedulerManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.stereotype.Service;
+
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.stereotype.Component;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 
@@ -24,12 +23,9 @@ import java.util.concurrent.locks.ReentrantLock;
 /**
  * Created by zxxiao on 2017/4/12.
  */
-@Service
-public class ServerGroupSubTask implements BaseJob, InitializingBean {
-
-    private static final Logger logger = LoggerFactory.getLogger(ServerGroupSubTask.class);
-
-    private static final String taskCorn = "0/15 * * * * ?";
+@Component
+@Slf4j
+public class ServerGroupSubTask implements BaseJob {
 
     /**
      * 订阅此服务器组的前端session集合
@@ -46,12 +42,10 @@ public class ServerGroupSubTask implements BaseJob, InitializingBean {
     private ReentrantLock lock = new ReentrantLock();
 
     @Resource
-    private SchedulerManager schedulerManager;
-
-    @Resource
     private ZabbixHistoryService zabbixHistoryService;
 
     @Override
+    @Scheduled(cron = "0/15 * * * * ?")
     public void execute() {
         for(ServerGroupDO serverGroupDO : serverGroupDOMap.values()) {
             List<Map<String, Object>> serverList = zabbixHistoryService.queryHistory(serverGroupDO);
@@ -61,7 +55,7 @@ public class ServerGroupSubTask implements BaseJob, InitializingBean {
                 try {
                     doWriteToSession(session, wsResult);
                 } catch (IOException e) {
-                    logger.error(e.getMessage(), e);
+                    log.error(e.getMessage(), e);
                 }
             }
         }
@@ -136,10 +130,5 @@ public class ServerGroupSubTask implements BaseJob, InitializingBean {
         synchronized (session) {
             session.sendMessage(new TextMessage(JSON.toJSONString(wsResult)));
         }
-    }
-
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        schedulerManager.registerJob(this, taskCorn, this.getClass().getName());
     }
 }

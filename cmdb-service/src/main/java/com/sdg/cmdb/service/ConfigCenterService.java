@@ -2,6 +2,7 @@ package com.sdg.cmdb.service;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.config.ConfigFilePlaybookDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
 
 import java.util.HashMap;
@@ -68,5 +69,8 @@ public interface ConfigCenterService {
     BusinessWrapper<Boolean> updateConfigCenter(HashMap<String,ConfigCenterDO> map);
 
     BusinessWrapper<Boolean> delConfigCenter(long id);
+
+
+
 
 }

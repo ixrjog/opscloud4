@@ -14,13 +14,7 @@ import javax.annotation.Resource;
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class DnsmasqServiceTest {
 
-    @Resource
-    private DnsmasqService dnsmasqService;
 
-    @Test
-    public void test() {
-      System.err.println(dnsmasqService.acqConfig(1));
-    }
 
 
 

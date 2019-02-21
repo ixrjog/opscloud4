@@ -9,6 +9,10 @@ import java.io.Serializable;
 public class TodoDetailKeybox extends TodoDetailAbs implements Serializable{
 
     private static final long serialVersionUID = 1964828516800144159L;
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     private ServerGroupDO serverGroupDO;
 
     private CiUserGroupDO ciUserGroupDO;

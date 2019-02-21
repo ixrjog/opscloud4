@@ -567,6 +567,8 @@ app.controller('serverInstanceCtrl', function ($scope, $uibModalInstance, httpSe
     $scope.serverType = serverType;
 
     $scope.serverItem = serverItem;
+    // 保存按钮
+    $scope.btnSaveing = false;
 
     $scope.alert = {
         type: "",
@@ -582,6 +584,10 @@ app.controller('serverInstanceCtrl', function ($scope, $uibModalInstance, httpSe
 
     $scope.insideip = "";
     $scope.publicip = "";
+
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
 
     /**
      * 初始化环境
@@ -678,18 +684,22 @@ app.controller('serverInstanceCtrl', function ($scope, $uibModalInstance, httpSe
                 ip: insideIP
             };
         }
+        $scope.btnSaveing = true;
 
         httpService.doPostWithJSON(url, $scope.serverItem).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "保存成功!";
+                $scope.btnSaveing = false;
             } else {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
+                $scope.btnSaveing = false;
             }
         }, function (err) {
             $scope.alert.type = 'danger';
             $scope.alert.msg = err;
+            $scope.btnSaveing = false;
         });
     }
 

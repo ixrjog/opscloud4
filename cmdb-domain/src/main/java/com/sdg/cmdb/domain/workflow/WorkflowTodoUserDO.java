@@ -1,5 +1,11 @@
 package com.sdg.cmdb.domain.workflow;
 
+<<<<<<< HEAD
+=======
+import com.sdg.cmdb.domain.auth.UserDO;
+import org.apache.commons.lang3.StringUtils;
+
+>>>>>>> develop
 import java.io.Serializable;
 
 public class WorkflowTodoUserDO implements Serializable {
@@ -7,6 +13,11 @@ public class WorkflowTodoUserDO implements Serializable {
     private static final long serialVersionUID = 2349909897311211918L;
     private long id;
 
+<<<<<<< HEAD
+=======
+    private long todoId;
+
+>>>>>>> develop
     /**
      * 代理类型 0:teamleader 1:deptLeader 2:ops
      */
@@ -47,15 +58,27 @@ public class WorkflowTodoUserDO implements Serializable {
 
     private long userId;
 
+<<<<<<< HEAD
+=======
+    private String username;
+
+>>>>>>> develop
     private String displayName;
 
     /**
      * approve/disapprove/refuse/delegate
      */
+<<<<<<< HEAD
     private int evaluation;
 
     public enum EvaluationTypeEnum {
         empty(0,"empty"),
+=======
+    private int evaluation = 0;
+
+    public enum EvaluationTypeEnum {
+        empty(0, "empty"),
+>>>>>>> develop
         approve(1, "approve"),
         disapprove(2, "disapprove"),
         refuse(3, "refuse"),
@@ -93,6 +116,25 @@ public class WorkflowTodoUserDO implements Serializable {
 
     private String gmtModify;
 
+<<<<<<< HEAD
+=======
+    public WorkflowTodoUserDO() {
+
+    }
+
+    public WorkflowTodoUserDO(long todoId, UserDO userDO, int assigneeType) {
+        this.todoId = todoId;
+        this.userId = userDO.getId();
+        this.username = userDO.getUsername();
+        if (!StringUtils.isEmpty(userDO.getDisplayName()))
+            this.displayName = userDO.getDisplayName();
+        this.assigneeType = assigneeType;
+        this.assigneeDesc = AssigneeTypeEnum.getAssigneeTypeName(assigneeType);
+    }
+
+
+
+>>>>>>> develop
     public long getId() {
         return id;
     }
@@ -101,6 +143,17 @@ public class WorkflowTodoUserDO implements Serializable {
         this.id = id;
     }
 
+<<<<<<< HEAD
+=======
+    public long getTodoId() {
+        return todoId;
+    }
+
+    public void setTodoId(long todoId) {
+        this.todoId = todoId;
+    }
+
+>>>>>>> develop
     public int getAssigneeType() {
         return assigneeType;
     }
@@ -125,6 +178,17 @@ public class WorkflowTodoUserDO implements Serializable {
         this.userId = userId;
     }
 
+<<<<<<< HEAD
+=======
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+>>>>>>> develop
     public String getDisplayName() {
         return displayName;
     }

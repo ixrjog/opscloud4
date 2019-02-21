@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerVO;
@@ -33,7 +34,7 @@ public class KeyBoxController {
     private AuthService authService;
 
     @Resource
-    private UserService userService;
+    private LdapService ldapService;
 
 //    @Resource
 //    private ZabbixService zabbixService;
@@ -95,6 +96,7 @@ public class KeyBoxController {
     @ResponseBody
     public HttpResult getUserGroupPage(@RequestBody KeyboxUserServerDO userServerDO,
                                        @RequestParam int page, @RequestParam int length) {
+<<<<<<< HEAD
 
         return new HttpResult(keyBoxService.getUserServerPage(userServerDO, page, length));
     }
@@ -115,8 +117,12 @@ public class KeyBoxController {
             return new HttpResult(wrapper.getCode(), wrapper.getMsg());
         }
 
+=======
+>>>>>>> develop
 
+        return new HttpResult(keyBoxService.getUserServerPage(userServerDO, page, length));
     }
+
 
     /**
      * 添加新的堡垒机用户服务器组
@@ -127,10 +133,15 @@ public class KeyBoxController {
     @RequestMapping(value = "/user/group/save", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult saveUserGroup(@RequestBody KeyboxUserServerVO userServerVO) {
+<<<<<<< HEAD
         BusinessWrapper<Boolean> wrapper = keyBoxService.saveUserGroup(userServerVO);
         //添加用户组同时更新用户授权组文件
         return new HttpResult(keyBoxService.createUserGroupConfigFile(userServerVO.getUsername()));
+=======
+        return new HttpResult(keyBoxService.saveUserGroup(userServerVO));
+>>>>>>> develop
     }
+
 
     /**
      * 删除用户服务器组
@@ -146,6 +157,7 @@ public class KeyBoxController {
         userServerDO.setServerGroupId(groupId);
         userServerDO.setUsername(username);
         BusinessWrapper<Boolean> wrapper = keyBoxService.delUserGroup(userServerDO);
+<<<<<<< HEAD
         return new HttpResult(keyBoxService.createUserGroupConfigFile(userServerDO.getUsername()));
     }
 
@@ -180,21 +192,11 @@ public class KeyBoxController {
         } else {
             return new HttpResult(wrapper.getCode(), wrapper.getMsg());
         }
+=======
+        return new HttpResult(wrapper);
+>>>>>>> develop
     }
 
-
-    /**
-     * 创建全局配置文件
-     *
-     * @return
-     */
-    @RequestMapping(value = "/user/group/global/create", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createUserGroupGlobalConfigFile() {
-        configService.buildGetwayHost();
-
-        return new HttpResult(true);
-    }
 
     /**
      * 查询被授权的堡垒机服务器列表
@@ -260,13 +262,30 @@ public class KeyBoxController {
     /**
      * 保存用户
      *
-     * @param userDO
+     * @param userVO
      * @return
      */
     @RequestMapping(value = "/user/save", method = RequestMethod.POST)
     @ResponseBody
-    public HttpResult createUser(@RequestBody UserDO userDO) {
-        BusinessWrapper<Boolean> wrapper = authService.addUser(userDO);
+    public HttpResult saveUser(@RequestBody UserVO userVO) {
+        BusinessWrapper<Boolean> wrapper = authService.addUser(userVO);
+        if (wrapper.isSuccess()) {
+            return new HttpResult(wrapper.getBody());
+        } else {
+            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+        }
+    }
+
+    /**
+     * 用户自己修改个人详情
+     *
+     * @param userVO
+     * @return
+     */
+    @RequestMapping(value = "/user/saveDetail", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult updateUserDetail(@RequestBody UserVO userVO) {
+        BusinessWrapper<Boolean> wrapper = ldapService.updateUser(userVO);
         if (wrapper.isSuccess()) {
             return new HttpResult(wrapper.getBody());
         } else {

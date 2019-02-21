@@ -1,11 +1,18 @@
 package com.sdg.cmdb.util;
 
+import org.apache.commons.codec.digest.DigestUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import javax.crypto.Cipher;
+import javax.crypto.SecretKey;
+import javax.crypto.SecretKeyFactory;
+import javax.crypto.spec.DESKeySpec;
+import java.security.SecureRandom;
+import java.util.Base64;
+
 
 /**
  * Created by zxxiao on 2016/11/8.
@@ -13,7 +20,6 @@ import javax.annotation.Resource;
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class EncryptionUtilTest {
-
 
 
     @Test
@@ -62,10 +68,48 @@ public class EncryptionUtilTest {
     @Test
     public void testdecrypt() {
         String pwd = "Yzb0133Cfgy+rju6twlAZER8IG66j39gIpQwJi1mrh7YzBlRO49wA9fwus5KRzDaOOhqinis42k/QacpPjV6z02ck9CFhGQo9hv5aRjjmj+" +
-
                 "aMv2shyB4n7khDcosZjdJcSIA95mwD1mJiopXX7Hz";
-          String result = EncryptionUtil.decrypt(pwd);
+        String result = EncryptionUtil.decrypt(pwd);
 
         System.err.println(result);
     }
+
+    @Test
+    public void testSs() {
+        String key = "aes-256-cfb:SuqrDR3CMVGRNF2Wv2i3@hk-ss1.ops.yangege.cn:22407";
+        try {
+            String qcode = EncryptionUtil.getSsQcode(key);
+            System.err.println(qcode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Test
+    public void testFingerprint() {
+        String sss = "a  b  c d";
+        String[] ss = sss.split(" +");
+        System.err.println(ss.length);
+        for (String s : ss)
+            System.err.println(s);
+
+    }
+
+
+    @Test
+    public void test2() {
+        String id_rsa_pub = "eyJhbGciOiJIUzI1NiJ9.InNzaC1yc2EgQUFBQUIzTnphQzF5YzJFQUFBQUJJd0FBQVFFQXM1VkdNelVmL2JRYmtGM2E4V2M5NjVUWS9oQmZNZGdyNCtOczhISWZaWjFORUl5a1hEZ3BtbDNnQzhkQm1FbUJ1K3Bkekw5MndaVFFFT2E3bTkzdXNiYlhUUzZoZTZIMkphRzNlcDRwbGlTYmluNEUyUzBxQUlQZm10bzI0ajJYOGZjTlBwSW82YmtlSUs0TjM4NHRtMXluaFdialhraVgzMHAyNjBwSGJFUEtNdmhWVVlhdzdXSnFDS2tOMTVVZEtQakE4Q2c5S3lYdTFQMUorNnJzeUYzVk9QK1JsNXczMHB2K083andmSEJrZCtRVWlha2YrYUV0NGZUZVRyTyt5c3c0RWR1UDZTY2d0MnpoRWpjbEgzdE5NbEt2TGZEc2R4Tk0xTUhQdVcxVTBORlV3Y01UT2xpWGNKSmJ2OXdaV3dnSUM3TERSUVFoZzNyeCtCVEQwUT09IGxpYW5namlhbkA1MXhpYW5xdS5uZXQi.sh20VPQSBmGSjfSey-ZYc5YISuVdlqi7BkOh3rXzccY";
+        String id = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtVLKSMBSDxFBApa+1fmcGG0OHizL6kPfrFY7KMScoILNrhf5y2GoV5WxSSSd73c56YYd5HbfK3CFIjwZ54swDhKEiGkSDA7FOlriv1TTyvhknkDSsnsABibPKtRkP9XT3EzznolwikqWCbANTu1XiIR6EaX5r+rL54mtwE2xqOEKdkbU9wkkd41dEIMcwqcgazzTb3hrUunVFF5JrZXukCkLRRDGtYcXKA4vFOILpqLZiTMW7hPto3F9NGdBIy7ZphD2QUEuVmFgnwpCUb2ps0Ud3uLqdIF+folEHC4rqDBB2Nqgx/vbIB94U3bIJED9zkfOtubC5eUq7IFPrZvPb";
+
+        String secretKey = "2vym+ky!997d5kkcc64mnz06y1mmui3lut#(^wd=%s_qj$1%x";
+        try {
+            System.err.println( EncryptionUtil.encryptBASE64(id_rsa_pub.getBytes()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
 }

@@ -146,7 +146,7 @@ public class CmdUtils {
             head = head.replace(">>","");
 
             String[] results = head.split("\\|");
-            taskDO.setIp(results[0]);
+            //taskDO.setIp(results[0]);
             taskDO.setResult(results[1]);
             taskDO.setReturncode(results[2]);
             taskDO.setMsg(msg);
@@ -170,7 +170,7 @@ public class CmdUtils {
             head = head.replace("{","");
 
             String[] results = head.split("\\|");
-            taskDO.setIp(results[0]);
+            //taskDO.setIp(results[0]);
             taskDO.setResult(results[1]);
             //taskDO.setReturncode(results[2]);
             taskDO.setMsg(msg);

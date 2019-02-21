@@ -2,6 +2,8 @@ package com.sdg.cmdb.service.impl;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
+import com.sdg.cmdb.dao.cmdb.ServerDao;
+import com.sdg.cmdb.domain.server.EcsServerDO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -18,6 +20,11 @@ public class AliyunServiceImplTest {
 
     @Resource
     private AliyunServiceImpl aliyunServiceImpl;
+
+    @Resource
+    private ServerDao serverDao;
+
+
 
 
     @Test

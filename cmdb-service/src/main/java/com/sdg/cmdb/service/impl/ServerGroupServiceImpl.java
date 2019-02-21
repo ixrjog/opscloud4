@@ -1,5 +1,8 @@
 package com.sdg.cmdb.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.sdg.cmdb.dao.cmdb.KeyboxDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
@@ -7,20 +10,18 @@ import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
-import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
-import com.sdg.cmdb.domain.server.ServerGroupVO;
 import com.sdg.cmdb.service.*;
+import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
 import com.sdg.cmdb.util.SessionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by zxxiao on 16/9/1.
@@ -51,6 +52,9 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     @Resource
     private ServerDao serverDao;
 
+    @Autowired
+    private AnsibleFileProcessorService ansibleService;
+
     @Resource
     private UserDao userDao;
 
@@ -66,22 +70,23 @@ public class ServerGroupServiceImpl implements ServerGroupService {
         return new TableVO<>(size, groupVOList);
     }
 
+    @Override
+    public TableVO<List<ServerGroupVO>> queryUnauthServerGroupPage(int page, int length, String name, int useType){
+
+        long size = serverGroupDao.queryUnauthServerGroupSize( name, useType);
+        List<ServerGroupDO> list = serverGroupDao.queryUnauthServerGroupPage( page * length, length, name, useType);
+
+        List<ServerGroupVO> groupVOList = acqServerGroupVOList(list);
+
+        return new TableVO<>(size, groupVOList);
+    }
+
 
     @Override
     public TableVO<List<ServerGroupVO>> queryProjectServerGroupPage(int page, int length, String name, int useType) {
         long size = serverGroupDao.queryProjectServerGroupSize(name, useType);
         List<ServerGroupDO> list = serverGroupDao.queryProjectServerGroupPage(page * length, length, name, useType);
-
         List<ServerGroupVO> groupVOList = acqServerGroupVOList(list);
-//        for (ServerGroupDO groupDO : list) {
-//            ServerGroupVO groupVO = new ServerGroupVO(groupDO, configService.getPropertyGroupByGroupId(groupDO.getId()));
-//            //设置服务器组的服务器数量
-//            groupVO.setServerCnt(serverDao.getServersByGroupId(groupDO.getId()));
-//            //设置服务器组的堡垒机用户数量
-//            groupVO.setKeyboxCnt(keyboxDao.getServerGroupSize(groupDO.getId()));
-//            groupVOList.add(groupVO);
-//        }
-
         return new TableVO<>(size, groupVOList);
     }
 
@@ -234,7 +239,6 @@ public class ServerGroupServiceImpl implements ServerGroupService {
         return new BusinessWrapper<Boolean>(true);
     }
 
-
     @Override
     public BusinessWrapper<Boolean> delServerGroupUseType(long id) {
         try {
@@ -246,8 +250,34 @@ public class ServerGroupServiceImpl implements ServerGroupService {
         }
     }
 
+    /**
+     * 要修复循环引用导致json中出现$ref
+     *
+     * @param groupId
+     * @return
+     */
+    @Override
+    public List<HostPattern> getHostPattern(long groupId) {
+        ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(groupId);
+        Map<String, List<ServerDO>> map = ansibleService.grouping(serverGroupDO, true);
+        List<HostPattern> hostPatterns = new ArrayList<>();
+        for (String key : map.keySet()) {
+            List<ServerDO> servers = map.get(key);
+            servers.sort(Comparator.naturalOrder());
+            hostPatterns.add(new HostPattern(key, servers));
+        }
+        return hostPatterns;
+    }
 
-    private ServerGroupUseTypeDO getUseType(int useType) {
+    @Override
+    public Map<String, List<ServerDO>> getHostPatternMap(long groupId) {
+        ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(groupId);
+        Map<String, List<ServerDO>> map = ansibleService.grouping(serverGroupDO, true);
+        return map;
+    }
+
+
+    public ServerGroupUseTypeDO getUseType(int useType) {
         ServerGroupUseTypeDO useTypeDO = serverGroupDao.getServerGroupUseTypeByUseType(useType);
         if (useTypeDO == null)
             return new ServerGroupUseTypeDO();

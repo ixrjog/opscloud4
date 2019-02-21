@@ -34,7 +34,7 @@ app.controller('ansibleVersionCtrl', function ($scope, $state, $uibModal, $parse
 
 });
 
-app.controller('serverTaskCmdCtrl', function ($scope, $state, $uibModal, $parse, $sce, $interval, $localStorage, httpService, toaster) {
+app.controller('taskCmdCtrl', function ($scope, $state, $uibModal, $parse, $sce, $interval, $localStorage, httpService, toaster) {
     $scope.authPoint = $state.current.data.authPoint;
     // 执行命令后的返回
     //$scope.taskResult = {};
@@ -68,7 +68,7 @@ app.controller('serverTaskCmdCtrl', function ($scope, $state, $uibModal, $parse,
         };
     }
 
-    // 60秒刷新1次待办工单
+
     var timer1 = $interval(function () {
 
         if ($scope.taskVO.ansibleTaskDO == null) return;
@@ -326,7 +326,7 @@ app.controller('serverTaskCmdCtrl', function ($scope, $state, $uibModal, $parse,
 
 });
 
-app.controller('serverTaskScriptCtrl', function ($scope, $state, $uibModal, $parse, $sce, $interval, $localStorage, httpService, toaster) {
+app.controller('taskScriptCtrl', function ($scope, $state, $uibModal, $parse, $sce, $interval, $localStorage, httpService, toaster) {
     $scope.authPoint = $state.current.data.authPoint;
     // 执行命令后的返回
     //$scope.taskResult = {};
@@ -628,6 +628,218 @@ app.controller('serverTaskScriptCtrl', function ($scope, $state, $uibModal, $par
             if (data.success) {
                 var body = data.body;
                 $scope.taskScriptList = body.data;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.viewScript = function () {
+        if ($scope.nowTaskScript.selected == null) return;
+
+        var modalInstance = $uibModal.open({
+            templateUrl: 'scriptInfoModal',
+            controller: 'scriptInstanceCtrl',
+            size: 'lg',
+            resolve: {
+                httpService: function () {
+                    return httpService;
+                },
+                sysScriptType: function () {
+                    return null;
+                },
+                scriptType: function () {
+                    return null;
+                },
+                isView: function () {
+                    return true;
+                },
+                scriptItem: function () {
+                    return $scope.nowTaskScript.selected;
+                }
+            }
+        });
+    }
+
+
+});
+
+app.controller('taskPlaybookCtrl', function ($scope, $state, $uibModal, $parse, $sce, $interval, $localStorage, httpService, toaster) {
+    $scope.authPoint = $state.current.data.authPoint;
+
+    $scope.taskPlaybook = {};
+
+    // 按钮状态
+    $scope.btnDoScript = false;
+
+
+    $scope.extraVars = "";
+    $scope.nowServerGroup = {};
+    $scope.serverGroupList = [];
+    $scope.task = {};
+
+    $scope.taskScriptList = [];
+    $scope.nowTaskScript = {};
+
+    $scope.alert = {
+        type: "",
+        msg: ""
+    };
+
+    $scope.closeAlert = function () {
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+    }
+
+    // 60秒刷新1次待办工单
+    var timer1 = $interval(function () {
+
+        if ($scope.taskPlaybook == null || $scope.taskPlaybook.id == null) return;
+
+        if ($scope.taskPlaybook.complete == false || $scope.taskPlaybook.taskHostList == null) {
+            $scope.getPlaybookTask();
+        }
+    }, 3000);
+
+    $scope.getPlaybookTask = function () {
+        var url = "/task/playbook/get?id=" + $scope.taskPlaybook.id;
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.taskPlaybook = data.body;
+                $scope.btnDoScript = false;
+            }
+        });
+    }
+
+    /**
+     * 关闭任务详情
+     * @param serverId
+     */
+    $scope.closeTaskHost = function (id) {
+
+        if ($scope.taskPlaybook.taskHostList == null || $scope.taskPlaybook.taskHostList.length == 0) return;
+        for (var i = 0; i < $scope.taskPlaybook.taskHostList.length; i++) {
+            if (id == $scope.taskPlaybook.taskHostList[i].id) {
+                $scope.taskPlaybook.taskHostList[i].closed = true;
+                break;
+            }
+        }
+    }
+
+    ////////////////////////////////////////////////////////////////////
+
+
+    $scope.playbookServerGroupList = [];
+
+    /**
+     * 添加服务器组
+     */
+    $scope.addServerGroup = function () {
+        if ($scope.nowServerGroup.selected == null) return;
+        for (var i = 0; i < $scope.playbookServerGroupList.length; i++) {
+            var item = $scope.playbookServerGroupList[i];
+            if (item.name == $scope.nowServerGroup.selected.name) {
+                toaster.pop("warning", "重复添加服务器组");
+                return;
+            }
+        }
+
+        var serverGroup = $scope.nowServerGroup.selected;
+        var url = "/servergroup/hostPattern/get?serverGroupId=" + serverGroup.id;
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                serverGroup.choose = true;
+                serverGroup.hostPattern = data.body;
+                $scope.playbookServerGroupList.push(serverGroup);
+                toaster.pop("success", "添加成功！");
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+
+
+    }
+
+    /////////////////////////////////////////////////
+
+
+    $scope.nowServerGroup = {};
+    $scope.serverGroupList = [];
+
+    /////////////////////////////////////////////////////////////////////
+
+    $scope.doPlaybook = function () {
+
+        if ($scope.nowTaskScript.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定Playbook!";
+            return;
+        } else {
+            $scope.alert.type = '';
+        }
+
+        // 选中的服务器组
+        var playbookServerGroupList = [];
+        for (var i = 0; i < $scope.playbookServerGroupList.length; i++) {
+            var item = $scope.playbookServerGroupList[i];
+            if (item.choose == true && item.hostPatternSelected != null) {
+                var playbookHostPattern = {
+                    choose: item.choose,
+                    hostPatternSelected: item.hostPatternSelected.hostPattern
+                }
+                playbookServerGroupList.push(playbookHostPattern);
+            }
+        }
+
+        $scope.btnDoScript = true;
+
+        var url = "/task/cmd/doPlaybook";
+
+        var doPlaybook = {
+            taskScriptId: $scope.nowTaskScript.selected.id,
+            extraVars: $scope.extraVars,
+            playbookServerGroupList: playbookServerGroupList
+        }
+        httpService.doPostWithJSON(url, doPlaybook).then(function (data) {
+            if (data.success) {
+                $scope.taskPlaybook = data.body;
+            }
+        }, function (err) {
+            $scope.alert.type = 'error';
+            $scope.alert.msg = err;
+        });
+    }
+
+
+    $scope.queryServerGroup = function (queryParam) {
+        var url = "/servergroup/query/page?page=0&length=10&name=" + queryParam + "&useType=0";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.serverGroupList = body.data;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    /////////////////////////////////////////////////
+
+    $scope.queryTaskScript = function (queryParam) {
+        var url = "/task/script/queryPlaybook?playbookName=" + queryParam;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.taskScriptList = data.body;
             } else {
                 toaster.pop("warning", data.msg);
             }

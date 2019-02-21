@@ -29,7 +29,7 @@
             <uib-tabset>
 
                 <uib-tab index="0" heading="Task Cmd">
-                    <div class="panel panel-default" ng-controller="serverTaskCmdCtrl">
+                    <div class="panel panel-default" ng-controller="taskCmdCtrl">
                         <div class="panel-body">
 
 
@@ -57,11 +57,11 @@
 
                             <!--<p style="background-color:#2e6da4;color: white">服务器列表:</p>-->
 
-                            <div class="panel panel-info">
-                                <div class="panel-heading">服务器列表</div>
-                                <div class="form-group">
-
-                                    <!--<form class="form-inline" role="form" style="background-color: #2e6da4">-->
+                            <div class="panel"
+                                 style="border-color:#ff8700;color:#31708f;background-color:white; box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                <div class="panel-heading" style="background-color: #f0ad4e; color:white;"><b>服务器列表</b>
+                                </div>
+                                <div class="form-group" style="margin-top: 5px;">
                                     <div class="col-lg-1">
                                         <input type="checkbox" ng-model="allChoose" ng-click="chooseAllItem()"><b
                                             style="color: #b92c28"> all</b>
@@ -139,12 +139,22 @@
                                     <span ng-if="taskVO.taskServerList != null" class="label">
                                               <i class="fa fa-spin fa-spinner"
                                                  ng-show="taskVO.ansibleTaskDO.finalized ==false"></i>
+<<<<<<< HEAD
                                               <b style="color: #00a8f3" ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
+=======
+                                              <b style="color: #00a8f3"
+                                                 ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
+>>>>>>> develop
                                         <!--<i ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</i>-->
                                               <i uib-popover-html="'执行指令'"
                                                  popover-trigger="'mouseenter'"> <b style="color: #00a8f3"> Command:`{{taskVO.ansibleTaskDO.cmd}}`</b></i>
                                               <i uib-popover-html="'服务器数量'"
+<<<<<<< HEAD
                                                  popover-trigger="'mouseenter'" class="label"> <b style="color: #00a8f3"> ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</b></i>
+=======
+                                                 popover-trigger="'mouseenter'" class="label"> <b
+                                                      style="color: #00a8f3"> ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</b></i>
+>>>>>>> develop
 
                                         <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
                                             style="color: #00a8f3"> 所有结果</b>
@@ -214,7 +224,7 @@
                     </div>
                 </uib-tab>
                 <uib-tab index="1" heading="Task Script">
-                    <div class="panel panel-default" ng-controller="serverTaskScriptCtrl">
+                    <div class="panel panel-default" ng-controller="taskScriptCtrl">
                         <div class="panel-body">
 
 
@@ -415,6 +425,8 @@
                                                     <div hljs hljs-source="taskServer.msg"></div>
                                                     <!--<pre style="background-color: #777" hljs-->
                                                     <!--hljs-source="taskServer.msg"></pre>-->
+<<<<<<< HEAD
+=======
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -433,7 +445,180 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab index="2" heading="Task 查询">
+                <uib-tab index="2" heading="Task Playbook">
+                    <div class="panel panel-default" ng-controller="taskPlaybookCtrl">
+                        <div class="panel-body">
+
+
+                            <div class="form-group col-md-12">
+                                <div class="col-md-6">
+                                    <label class="col-lg-2 control-label" style="margin-top: 5px;"><span
+                                            style="color: #ec2121;">*</span>服务器组</label>
+                                    <div class="col-lg-5">
+                                        <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryServerGroup($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in serverGroupList | filter: $select.search">
+                                                <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+                                    <div class="col-lg-2">
+                                        <button ng-click="addServerGroup()" class="btn btn-xs"
+                                                style="margin-top: 5px; background-color: limegreen; color: white;"
+                                                uib-popover-html="'添加'" popover-trigger="'mouseenter'">
+                                            <span class="glyphicon glyphicon-plus"></span>添加
+                                        </button>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div style="font-size:1em;">&nbsp;</div>
+
+                            <div class="panel"
+                                 style="border-color:#c9302c;color:#31708f;background-color:white; box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                <div class="panel-heading" style="background-color: #ef2929; color:white;"><b>服务器组列表</b>
+                                </div>
+                                <table class="table" style="margin-top: 5px;">
+                                    <thead>
+                                    <tr>
+                                        <td class="col-md-1">选择</td>
+                                        <td class="col-md-2">服务器组</td>
+                                        <td class="col-md-3">HostPattern(用于`hosts`变量)</td>
+                                        <td class="col-md-6">服务器列表</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="serverGroup in playbookServerGroupList">
+                                        <td>
+                                            <input type="checkbox" ng-model="serverGroup.choose">
+                                        </td>
+                                        <td>
+                                            <span class="label"
+                                                  style="margin-top: 5px; background-color: #00a8f3; color: white;">{{serverGroup.name}}</span>
+                                        </td>
+                                        <td>
+                                            <select class="form-control"
+                                                    ng-model="serverGroup.hostPatternSelected"
+                                                    ng-options="hp as hp.hostPattern for hp in serverGroup.hostPattern"
+                                                    required>
+                                                <option value="">--请选择--</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <div class="col-md-6"
+                                                 ng-repeat="server in serverGroup.hostPatternSelected.servers">
+                                                <b style="margin-left: 5px; color: #286090">
+                                                    {{server.serverName}}-{{server.serialNumber}}({{server.insideIp}})</b>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    </tfoot>
+                                </table>
+                                <!--<div class="panel-footer">Panel footer</div>-->
+                            </div>
+
+
+                            <div class="form-group col-md-12">
+
+
+                                <div class="col-md-4">
+                                    <label class="col-lg-2 control-label" style="margin-top: 5px;"><span
+                                            style="color: #ec2121;">*</span>Playbook</label>
+                                    <div class="col-lg-8">
+                                        <!--ng-change="changeServerGroup()"-->
+                                        <ui-select ng-model="nowTaskScript.selected" theme="bootstrap">
+                                            <ui-select-match placeholder="搜索Playbook名称......">
+                                                {{$select.selected.scriptName }}
+                                            </ui-select-match>
+                                            <ui-select-choices refresh="queryTaskScript($select.search)"
+                                                               refresh-dalay="0"
+                                                               repeat="item in taskScriptList | filter: $select.search">
+                                                <div ng-bind-html="item.scriptName | highlight: $select.search"></div>
+                                            </ui-select-choices>
+                                        </ui-select>
+                                    </div>
+
+                                    <div class="col-lg-2">
+                                        <button ng-click="viewScript()"
+                                                class="btn"
+                                                style="margin-left: 5px; background-color: #00a8f3; color: white;">
+                                            <span class="glyphicon glyphicon-search"></span>查看
+                                        </button>
+                                    </div>
+                                </div>
+
+
+                                <div class="col-md-6">
+                                    <label class="col-lg-1 control-label" style="margin-top: 5px;">参数</label>
+                                    <div class="col-lg-11">
+                                        <input type="text" class="form-control" placeholder="script参数"
+                                               ng-model="extraVars">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-2">
+                                    <button class="btn"
+                                            style="background-color: #c9302c; color: white;"
+                                            ng-click="doPlaybook()" ng-disabled="btnDoScript">
+                                        <i class="fa fa-play"></i>执行
+                                    </button>
+                                </div>
+                            </div>
+
+
+
+
+                            <div style="font-size:0.5em;">&nbsp;</div>
+                            <div class="panel"
+                                 style="border-color:#20a03f;color:#31708f;background-color:white; box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                <div class="panel-heading" style="background-color:  #2ed556; color:white;"><b>执行结果</b>
+                                    <span class="label" style="background-color: #2b669a"
+                                          ng-show="taskPlaybook.complete == false">
+                                        <i class="fa fa-spin fa-spinner"></i><b>指令执行中...</b>
+                                    </span>
+                                </div>
+                                <div class="form-group">
+                                    <form class="form-inline" role="form" ng-if="taskPlaybook.complete">
+                                        <table class="table" style="margin-top: 5px;">
+                                            <tbody>
+                                            <tr ng-repeat="host in taskPlaybook.taskHostList">
+                                                <td class="col-md-12"
+                                                    ng-show="host.closed ==null || host.closed ==false">
+                                                    <div class="panel-heading" style="background-color: #2e6da4">
+                                                        <span class="label label-info">{{host.hostPattern}}</span>
+                                                        <button ng-click="closeTaskHost(host.id)"
+                                                                class="btn btn-xs pull-right"
+                                                                style="margin-left: 20px; background-color: #ff8700; color: white;">
+                                                            <span class="glyphicon glyphicon-remove"></span>关闭
+                                                        </button>
+                                                    </div>
+                                                    <div hljs hljs-source="host.playbookLogVO.playbookLog"></div>
+>>>>>>> develop
+                                                </td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+
+                                    </form>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div ng-if="alert.type != ''">
+                                    <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="3" heading="Task 查询">
                     <div class="panel panel-default" ng-controller="serverTaskCtrl">
                         <div class="panel-body">
                             <form class="form-inline" role="form">

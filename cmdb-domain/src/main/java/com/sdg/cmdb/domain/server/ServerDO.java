@@ -1,62 +1,45 @@
 package com.sdg.cmdb.domain.server;
 
+<<<<<<< HEAD
 import org.springframework.util.StringUtils;
+=======
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+>>>>>>> develop
 
 import java.io.Serializable;
 
 /**
  * Created by zxxiao on 16/9/6.
  */
+<<<<<<< HEAD
+=======
+@Data
+>>>>>>> develop
 public class ServerDO implements Serializable, Comparable<ServerDO> {
     private static final long serialVersionUID = -8455519494554601001L;
-    //物理服务器
-    //public static final int serverTypePs = 0;
-    //虚拟机
-    //public static final int serverTypeVm = 1;
-    // aliyun ECS
-    //public static final int serverTypeEcs = 2;
 
     private long id;
-
     private long serverGroupId;
-
     private int loginType;
-
     private String loginUser;
-
     private int envType;
-
     private String publicIp;
-
     private long publicIpId;
-
     private String insideIp;
-
     private long insideIpId;
-
     private int serverType;
-
     private String serverName;
-
     private String area;
-
     private int useType;
-
     private String serialNumber;
-
     private String ciGroup;
-
     private String content;
-
     private int zabbixStatus;
-
     private int zabbixMonitor;
-
     // 扩展字段 tomcatVersion
     private String extTomcatVersion;
-
     private String gmtModify;
-
     private String gmtCreate;
 
     public ServerDO() {
@@ -83,173 +66,6 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
         this.gmtModify = serverVO.getGmtModify();
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getServerGroupId() {
-        return serverGroupId;
-    }
-
-    public void setServerGroupId(long serverGroupId) {
-        this.serverGroupId = serverGroupId;
-    }
-
-    public int getLoginType() {
-        return loginType;
-    }
-
-    public void setLoginType(int loginType) {
-        this.loginType = loginType;
-    }
-
-    public String getLoginUser() {
-        return loginUser;
-    }
-
-    public void setLoginUser(String loginUser) {
-        this.loginUser = loginUser;
-    }
-
-    public int getEnvType() {
-        return envType;
-    }
-
-    public void setEnvType(int envType) {
-        this.envType = envType;
-    }
-
-    public String getPublicIp() {
-        return publicIp;
-    }
-
-    public void setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-    }
-
-    public long getPublicIpId() {
-        return publicIpId;
-    }
-
-    public void setPublicIpId(long publicIpId) {
-        this.publicIpId = publicIpId;
-    }
-
-    public String getInsideIp() {
-        return insideIp;
-    }
-
-    public void setInsideIp(String insideIp) {
-        this.insideIp = insideIp;
-    }
-
-    public long getInsideIpId() {
-        return insideIpId;
-    }
-
-    public void setInsideIpId(long insideIpId) {
-        this.insideIpId = insideIpId;
-    }
-
-    public int getServerType() {
-        return serverType;
-    }
-
-    public void setServerType(int serverType) {
-        this.serverType = serverType;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public int getUseType() {
-        return useType;
-    }
-
-    public void setUseType(int useType) {
-        this.useType = useType;
-    }
-
-    public String getSerialNumber() {
-        return serialNumber;
-    }
-
-    public void setSerialNumber(String serialNumber) {
-        this.serialNumber = serialNumber;
-    }
-
-    public String getCiGroup() {
-        return ciGroup;
-    }
-
-    public void setCiGroup(String ciGroup) {
-        this.ciGroup = ciGroup;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public int getZabbixStatus() {
-        return zabbixStatus;
-    }
-
-    public void setZabbixStatus(int zabbixStatus) {
-        this.zabbixStatus = zabbixStatus;
-    }
-
-    public int getZabbixMonitor() {
-        return zabbixMonitor;
-    }
-
-    public void setZabbixMonitor(int zabbixMonitor) {
-        this.zabbixMonitor = zabbixMonitor;
-    }
-
-    public String getExtTomcatVersion() {
-        return extTomcatVersion;
-    }
-
-    public void setExtTomcatVersion(String extTomcatVersion) {
-        this.extTomcatVersion = extTomcatVersion;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
 
     /**
      * 带列号
@@ -263,6 +79,29 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
             return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType) + "-" + serialNumber;
         }
     }
+
+//    @Override public boolean equals(Object o) {
+//        if (o == this)
+//            return true;
+//        if (!(o instanceof ServerDO))
+//            return false;
+//        ServerDO s = (ServerDO)o;
+//        return s.id == id
+//                && s.serverName == serverName
+//                && s.insideIp== s.insideIp
+//                && s.serialNumber== s.serialNumber
+//                && s.envType== s.envType;
+//    }
+//
+//    @Override
+//    public int hashCode() {
+//        final int prime = 31;//为什么是31？因为这个数需要是质数 31是经验验证的一个能够很好地减小哈希碰撞的质数
+//        int result =1;
+//        result = prime * result + (int) id ;
+//        result = prime * result + ((id == 0) ? 0 : serverName.hashCode());
+//        return result;
+//    }
+
 
     /**
      * 不带列号
@@ -279,28 +118,7 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
 
     @Override
     public String toString() {
-        return "ServerDO{" +
-                "id=" + id +
-                ", serverGroupId=" + serverGroupId +
-                ", loginType=" + loginType +
-                ", loginUser='" + loginUser + '\'' +
-                ", envType=" + envType +
-                ", publicIp='" + publicIp + '\'' +
-                ", publicIpId=" + publicIpId +
-                ", insideIp='" + insideIp + '\'' +
-                ", insideIpId=" + insideIpId +
-                ", serverType=" + serverType +
-                ", serverName='" + serverName + '\'' +
-                ", area='" + area + '\'' +
-                ", useType=" + useType +
-                ", serialNumber='" + serialNumber + '\'' +
-                ", ciGroup='" + ciGroup + '\'' +
-                ", content='" + content + '\'' +
-                ", zabbixStatus=" + zabbixStatus +
-                ", zabbixMonitor=" + zabbixMonitor +
-                ", gmtModify='" + gmtModify + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                '}';
+     return JSON.toJSONString(this);
     }
 
     public enum EnvTypeEnum {
@@ -375,7 +193,13 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
     public int compareTo(ServerDO serverDO) {
         //自定义比较方法，如果认为此实体本身大则返回1，否则返回-1
         try {
+<<<<<<< HEAD
             if (Integer.valueOf(this.serialNumber) >= Integer.valueOf(serverDO.getSerialNumber()))
+=======
+            if (Integer.valueOf(this.serialNumber) == Integer.valueOf(serverDO.getSerialNumber()))
+                return 0;
+            if (Integer.valueOf(this.serialNumber) > Integer.valueOf(serverDO.getSerialNumber()))
+>>>>>>> develop
                 return 1;
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,13 +1,25 @@
 package com.sdg.cmdb.service.impl;
 
+<<<<<<< HEAD
+=======
+import com.sdg.cmdb.dao.cmdb.TeamDao;
+>>>>>>> develop
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.dao.cmdb.WorkflowDao;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
+<<<<<<< HEAD
+=======
+import com.sdg.cmdb.domain.auth.RoleDO;
+>>>>>>> develop
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.workflow.*;
 import com.sdg.cmdb.factory.workflow.TodoAbs;
 import com.sdg.cmdb.factory.workflow.WorkflowTodoFactory;
+<<<<<<< HEAD
+=======
+import com.sdg.cmdb.service.AuthService;
+>>>>>>> develop
 import com.sdg.cmdb.service.WorkflowService;
 import com.sdg.cmdb.util.SessionUtils;
 import org.slf4j.Logger;
@@ -31,6 +43,16 @@ public class WorkflowServiceImpl implements WorkflowService {
     @Autowired
     private UserDao userDao;
 
+<<<<<<< HEAD
+=======
+    @Autowired
+    private TeamDao teamDao;
+
+    @Autowired
+    private AuthService authService;
+
+
+>>>>>>> develop
     //private WorkflowTodoFactory workflowTodoFactory;
 
     @Override
@@ -103,6 +125,21 @@ public class WorkflowServiceImpl implements WorkflowService {
         return new BusinessWrapper<Boolean>(todoAbs.approvalTodo(todoId));
     }
 
+<<<<<<< HEAD
+=======
+    /**
+     * 不批准
+     * @param todoId
+     * @return
+     */
+    @Override
+    public BusinessWrapper<Boolean> disapproveTodo(long todoId){
+        TodoAbs todoAbs = WorkflowTodoFactory.getByKey(getWorkflowKey(todoId));
+        return new BusinessWrapper<Boolean>(todoAbs.disapproveTodo(todoId));
+    }
+
+
+>>>>>>> develop
     private String getWorkflowKey(long todoId) {
         WorkflowTodoDO workflowTodoDO = workflowDao.getTodo(todoId);
         WorkflowDO workflowDO = workflowDao.getWorkflow(workflowTodoDO.getWfId());
@@ -118,6 +155,18 @@ public class WorkflowServiceImpl implements WorkflowService {
         return todoAbs.delTodoDetail(todoId, detailId);
     }
 
+<<<<<<< HEAD
+=======
+
+    @Override
+    public WorkflowTodoVO getTodo(long todoId) {
+        WorkflowTodoDO workflowTodoDO = workflowDao.getTodo(todoId);
+        WorkflowDO workflowDO = workflowDao.getWorkflow(workflowTodoDO.getWfId());
+        TodoAbs todoAbs = WorkflowTodoFactory.getByKey(workflowDO.getWfKey());
+        return todoAbs.getTodo(todoId);
+    }
+
+>>>>>>> develop
     /**
      * 申请
      *
@@ -138,10 +187,66 @@ public class WorkflowServiceImpl implements WorkflowService {
         UserDO userDO = userDao.getUserByName(username);
         HashMap<Long, WorkflowTodoDO> todoMap = new HashMap<>();
         List<WorkflowTodoDO> todos = workflowDao.queryTodoByApplyUserId(userDO.getId());
+<<<<<<< HEAD
         todoMap = todo2map(todos, todoMap);
         return toVO(todos);
     }
 
+=======
+        // TODO 去重
+        todoInMap(todos, todoMap);
+        // TODO 如果用户是TL则插入team成员的待审批工单
+        gueryTlTodo(userDO, todoMap);
+        // TODO 按角色插入待审批工单
+        gueryRoleTodo(userDO, todoMap);
+        List<WorkflowTodoDO> myTodos = new ArrayList<>();
+        for (long todoId : todoMap.keySet()) {
+            myTodos.add(todoMap.get(todoId));
+        }
+        return toVO(myTodos);
+    }
+
+    @Override
+    public List<WorkflowTodoVO> queryMyCompleteTodo() {
+        String username = SessionUtils.getUsername();
+        UserDO userDO = userDao.getUserByName(username);
+        List<WorkflowTodoDO> todos = workflowDao.queryTodoByApplyUserIdAndTodoPhase(userDO.getId(), WorkflowTodoDO.TODO_PHASE_COMPLETE);
+        return toVO(todos);
+    }
+
+    /**
+     * 查询TL待审批工作流
+     *
+     * @param userDO
+     * @param todoMap
+     */
+    private void gueryTlTodo(UserDO userDO, HashMap<Long, WorkflowTodoDO> todoMap) {
+        queryTeamuserTodo(userDO.getId(), todoMap);
+    }
+
+    private void queryTeamuserTodo(long teamleaderUserId, HashMap<Long, WorkflowTodoDO> todoMap) {
+        TeamDO teamDO = teamDao.queryTeamByLeaderUserId(teamleaderUserId);
+        if (teamDO == null) return;
+        List<TeamuserDO> teamusers = teamDao.queryTeamuserByTeamId(teamDO.getId());
+        for (TeamuserDO teamuser : teamusers) {
+            List<WorkflowTodoDO> todos = workflowDao.queryTodoByApplyUserIdAndTodoPhase(teamuser.getUserId(), WorkflowTodoDO.TODO_PHASE_TL_APPROVAL);
+            todoInMap(todos, todoMap);
+        }
+    }
+
+    // 查询角色工作流（deptLeader,ops）
+    private void gueryRoleTodo(UserDO userDO, HashMap<Long, WorkflowTodoDO> todoMap) {
+        if (authService.isRole(userDO.getUsername(), RoleDO.roleDeptLeader)) {
+            List<WorkflowTodoDO> todos = workflowDao.queryTodoByTodoPhase(WorkflowTodoDO.TODO_PHASE_DL_APPROVAL);
+            todoInMap(todos, todoMap);
+        }
+        if (authService.isRole(userDO.getUsername(), RoleDO.roleDevOps)) {
+            List<WorkflowTodoDO> todos = workflowDao.queryTodoByTodoPhase(WorkflowTodoDO.TODO_PHASE_AUDITING);
+            todoInMap(todos, todoMap);
+        }
+    }
+
+>>>>>>> develop
     private List<WorkflowTodoVO> toVO(List<WorkflowTodoDO> todos) {
         List<WorkflowTodoVO> voList = new ArrayList<>();
         for (WorkflowTodoDO workflowTodoDO : todos) {
@@ -160,10 +265,16 @@ public class WorkflowServiceImpl implements WorkflowService {
      * @param todoMap
      * @return
      */
+<<<<<<< HEAD
     private HashMap<Long, WorkflowTodoDO> todo2map(List<WorkflowTodoDO> todos, HashMap<Long, WorkflowTodoDO> todoMap) {
         for (WorkflowTodoDO todo : todos)
             todoMap.put(todo.getId(), todo);
         return todoMap;
+=======
+    private void todoInMap(List<WorkflowTodoDO> todos, HashMap<Long, WorkflowTodoDO> todoMap) {
+        for (WorkflowTodoDO todo : todos)
+            todoMap.put(todo.getId(), todo);
+>>>>>>> develop
     }
 
 

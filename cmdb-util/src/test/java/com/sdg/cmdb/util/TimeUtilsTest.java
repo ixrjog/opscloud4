@@ -34,4 +34,21 @@ public class TimeUtilsTest {
         System.err.println(now);
 
     }
+<<<<<<< HEAD
+=======
+
+    @Test
+    public void test2(){
+        int day =30;
+        long now = new Date().getTime();
+        System.err.println(now);
+        //System.err.println(dayTime * day);
+        //now = now + dayTime * day;
+        System.err.println(now);
+        SimpleDateFormat formatter;
+        formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        System.err.println(formatter.format(now + 24*3600*1000)) ;
+    }
+
+>>>>>>> develop
 }

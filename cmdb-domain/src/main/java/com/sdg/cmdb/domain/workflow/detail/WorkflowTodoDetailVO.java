@@ -28,6 +28,10 @@ public class WorkflowTodoDetailVO<T> extends WorkflowTodoDetailDO implements Ser
         setTodoId(workflowTodoDetailDO.getTodoId());
         setName(workflowTodoDetailDO.getName());
         setDetailKey(workflowTodoDetailDO.getDetailKey());
+<<<<<<< HEAD
+=======
+        setDetailStatus(workflowTodoDetailDO.getDetailStatus());
+>>>>>>> develop
         setContent(workflowTodoDetailDO.getContent());
     }
 

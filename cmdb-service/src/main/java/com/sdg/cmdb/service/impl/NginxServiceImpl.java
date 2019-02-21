@@ -1,5 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
+<<<<<<< HEAD
 import com.sdg.cmdb.dao.cmdb.NginxDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
@@ -10,6 +11,31 @@ import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.NginxService;
 import com.sdg.cmdb.service.configurationProcessor.NginxFileProcessorService;
 import com.sdg.cmdb.util.IOUtils;
+=======
+import com.sdg.cmdb.dao.cmdb.AnsibleTaskDao;
+import com.sdg.cmdb.dao.cmdb.NginxDao;
+import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
+import com.sdg.cmdb.dao.cmdb.UserDao;
+import com.sdg.cmdb.domain.BusinessWrapper;
+import com.sdg.cmdb.domain.ErrorCode;
+import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.ansibleTask.PlaybookLogDO;
+import com.sdg.cmdb.domain.ansibleTask.PlaybookLogVO;
+import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
+import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.config.ConfigFilePlaybookDO;
+import com.sdg.cmdb.domain.config.ConfigFilePlaybookVO;
+import com.sdg.cmdb.domain.nginx.*;
+import com.sdg.cmdb.domain.server.HostPattern;
+import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.service.AnsibleTaskService;
+import com.sdg.cmdb.service.NginxService;
+import com.sdg.cmdb.service.ServerGroupService;
+import com.sdg.cmdb.service.configurationProcessor.NginxFileProcessorService;
+import com.sdg.cmdb.util.IOUtils;
+import com.sdg.cmdb.util.SessionUtils;
+import com.sdg.cmdb.util.schedule.SchedulerManager;
+>>>>>>> develop
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -23,14 +49,36 @@ public class NginxServiceImpl implements NginxService {
 
     @Resource
     private NginxDao nginxDao;
+<<<<<<< HEAD
 
 
     @Resource
     private ServerGroupDao serverGroupDao;
+=======
+    @Resource
+    private ServerGroupDao serverGroupDao;
+    @Resource
+    private AnsibleTaskDao ansibleTaskDao;
+>>>>>>> develop
 
     @Resource
     private NginxFileProcessorService nginxFileProcessorService;
 
+<<<<<<< HEAD
+=======
+    @Resource
+    private ServerGroupService serverGroupService;
+
+    @Resource
+    private UserDao userDao;
+
+    @Resource
+    private AnsibleTaskService ansibleTaskService;
+
+    @Resource
+    private SchedulerManager schedulerManager;
+
+>>>>>>> develop
     private static final Logger logger = LoggerFactory.getLogger(NginxServiceImpl.class);
 
     @Override
@@ -38,6 +86,7 @@ public class NginxServiceImpl implements NginxService {
 
         long size = nginxDao.getVhostSize(serverName);
         List<VhostDO> list = nginxDao.getVhostPage(serverName, page * length, length);
+<<<<<<< HEAD
 
         List<VhostVO> voList = new ArrayList<>();
 
@@ -48,6 +97,11 @@ public class NginxServiceImpl implements NginxService {
             voList.add(vhostVO);
         }
 
+=======
+        List<VhostVO> voList = new ArrayList<>();
+        for (VhostDO vhostDO : list)
+            voList.add(getVhostVO(vhostDO));
+>>>>>>> develop
         return new TableVO<>(size, voList);
     }
 
@@ -59,6 +113,7 @@ public class NginxServiceImpl implements NginxService {
             if (vhostDO == null)
                 return new BusinessWrapper<Boolean>(false);
 
+<<<<<<< HEAD
             List<VhostEnvDO> envs = nginxDao.queryVhostEnvByVhostId(id);
             for (VhostEnvDO envDO : envs) {
                 delEnvFileByEnvId(envDO.getId());
@@ -66,6 +121,15 @@ public class NginxServiceImpl implements NginxService {
 
             List<VhostServerGroupDO> groups= nginxDao.queryVhostServerGroupByVhostId(id);
             for(VhostServerGroupDO group:groups)
+=======
+            List<VhostEnvDO> vhostEnvList = nginxDao.queryVhostEnvByVhostId(id);
+            for (VhostEnvDO envDO : vhostEnvList)
+                delEnvFileByEnvId(envDO.getId());
+
+
+            List<VhostServerGroupDO> groups = nginxDao.queryVhostServerGroupByVhostId(id);
+            for (VhostServerGroupDO group : groups)
+>>>>>>> develop
                 delServerGroup(group.getId());
 
             nginxDao.delVhost(id);
@@ -80,6 +144,7 @@ public class NginxServiceImpl implements NginxService {
     @Override
     public VhostVO getVhost(long id) {
         VhostDO vhostDO = nginxDao.getVhost(id);
+<<<<<<< HEAD
         VhostVO vhostVO = new VhostVO(vhostDO);
         invokeVhostVO(vhostVO);
         return vhostVO;
@@ -98,6 +163,26 @@ public class NginxServiceImpl implements NginxService {
             }
             vhostVO.setEnvList(envs);
         }
+=======
+        return getVhostVO(vhostDO);
+
+    }
+
+    private VhostVO getVhostVO(VhostDO vhostDO) {
+        List<VhostEnvVO> envVOList = new ArrayList<>();
+        List<VhostEnvDO> envList = nginxDao.queryVhostEnvByVhostId(vhostDO.getId());
+        for (VhostEnvDO vhostEnvDO : envList) {
+            envVOList.add(getVhostEnvVO(vhostEnvDO));
+        }
+        VhostVO vhostVO = new VhostVO(vhostDO, envVOList);
+        return vhostVO;
+    }
+
+    private VhostEnvVO getVhostEnvVO(VhostEnvDO vhostEnvDO) {
+        List<EnvFileDO> envFiles = nginxDao.queryEnvFileByEnvId(vhostEnvDO.getId());
+        VhostEnvVO vhostEnvVO = new VhostEnvVO(vhostEnvDO, envFiles);
+        return vhostEnvVO;
+>>>>>>> develop
     }
 
 
@@ -140,9 +225,14 @@ public class NginxServiceImpl implements NginxService {
     private boolean delEnvFileByEnvId(long envId) {
         try {
             List<EnvFileDO> envFiles = nginxDao.queryEnvFileByEnvId(envId);
+<<<<<<< HEAD
             for (EnvFileDO envFileDO : envFiles) {
                 nginxDao.delEnvFile(envFileDO.getEnvId());
             }
+=======
+            for (EnvFileDO envFileDO : envFiles)
+                nginxDao.delEnvFile(envFileDO.getId());
+>>>>>>> develop
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -150,6 +240,10 @@ public class NginxServiceImpl implements NginxService {
         }
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     @Override
     public BusinessWrapper<Boolean> saveEnvFile(EnvFileDO envFileDO) {
         try {
@@ -195,6 +289,23 @@ public class NginxServiceImpl implements NginxService {
     }
 
     @Override
+<<<<<<< HEAD
+=======
+    public BusinessWrapper<Boolean> buildEnvFile(long envFileId, boolean auto) {
+        if (!auto)
+            return buildEnvFile(envFileId);
+        EnvFileDO envFileDO = nginxDao.getEnvFile(envFileId);
+        if (envFileDO == null) return new BusinessWrapper<Boolean>(false);
+        if (envFileDO.getFileType() == EnvFileDO.FileTypeEnum.location.getCode())
+            return buildEnvFile(envFileId);
+        VhostEnvDO vhostEnvDO = nginxDao.getVhostEnv(envFileDO.getEnvId());
+        if (vhostEnvDO.isAutoBuild())
+            return buildEnvFile(envFileId);
+        return new BusinessWrapper<Boolean>(true);
+    }
+
+    @Override
+>>>>>>> develop
     public BusinessWrapper<Boolean> addServerGroup(long vhostId, long serverGroupId) {
         try {
             ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverGroupId);
@@ -298,4 +409,83 @@ public class NginxServiceImpl implements NginxService {
         }
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    public List<NginxPlaybookVO> getPlaybookPage() {
+        List<NginxPlaybookDO> playbookList = nginxDao.queryPlaybookPage();
+        List<NginxPlaybookVO> voList = new ArrayList<>();
+        for (NginxPlaybookDO nginxPlaybookDO : playbookList)
+            voList.add(getNginxPlaybookVO(nginxPlaybookDO));
+        return voList;
+    }
+
+    private NginxPlaybookVO getNginxPlaybookVO(NginxPlaybookDO nginxPlaybookDO) {
+        VhostVO vhostVO = getVhost(nginxPlaybookDO.getVhostId());
+        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScript(nginxPlaybookDO.getPlaybookId());
+        List<HostPattern> hostPattern = serverGroupService.getHostPattern(nginxPlaybookDO.getServerGroupId());
+        NginxPlaybookVO nginxPlaybookVO = new NginxPlaybookVO(nginxPlaybookDO, vhostVO, taskScriptDO);
+        nginxPlaybookVO.setGroupHostPattern(hostPattern);
+        return nginxPlaybookVO;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> savePlaybook(NginxPlaybookDO nginxPlaybookDO) {
+        try {
+            if (nginxPlaybookDO.getId() == 0) {
+                nginxDao.addPlaybook(nginxPlaybookDO);
+            } else {
+                nginxDao.updatePlaybook(nginxPlaybookDO);
+            }
+            return new BusinessWrapper<Boolean>(true);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+
+    /**
+     * @param id
+     * @param doType 0 系统 1 人工
+     * @return
+     */
+    @Override
+    public PlaybookLogVO doPlaybook(long id, int doType) {
+        NginxPlaybookDO nginxPlaybookDO = nginxDao.getPlaybook(id);
+
+        NginxPlaybookVO nginxPlaybookVO = getNginxPlaybookVO(nginxPlaybookDO);
+        String playbookPath = ansibleTaskService.getPlaybookPath(nginxPlaybookVO.getTaskScriptDO());
+        String extraVars = "hosts=" + nginxPlaybookVO.getHostPattern() + " src=" + nginxPlaybookVO.getSrc() + " dest=" + nginxPlaybookVO.getDest();
+        PlaybookLogDO pl;
+        if (doType == 0) {
+            pl = new PlaybookLogDO(nginxPlaybookVO);
+        } else {
+            UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
+            pl = new PlaybookLogDO(nginxPlaybookVO, userDO);
+        }
+        ansibleTaskDao.addPlaybookLog(pl);
+        schedulerManager.registerJob(() -> {
+            ansibleTaskService.playbook(true, nginxPlaybookVO.getHostPattern(), playbookPath, extraVars, pl);
+        });
+        return new PlaybookLogVO(pl);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delPlaybook(long id) {
+        NginxPlaybookDO nginxPlaybookDO = nginxDao.getPlaybook(id);
+        if(nginxPlaybookDO == null ) return new BusinessWrapper<Boolean>(false);
+        try{
+            nginxDao.delPlaybook(id);
+            return new BusinessWrapper<Boolean>(true);
+        }catch (Exception e){
+            e.printStackTrace();
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+
+
+>>>>>>> develop
 }

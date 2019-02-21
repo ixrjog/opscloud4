@@ -10,7 +10,7 @@ import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.zabbix.ZabbixHost;
 import com.sdg.cmdb.domain.zabbix.ZabbixProxy;
 import com.sdg.cmdb.domain.zabbix.ZabbixTemplateVO;
-import com.sdg.cmdb.domain.zabbix.ZabbixVersion;
+
 
 import java.util.List;
 
@@ -21,27 +21,11 @@ import java.util.List;
 public interface ZabbixService {
 
     /**
-     * 获取API版本
-     *
-     * @return
-     */
-    String getApiVersion();
-
-
-    /**
      * 刷新数据
      *
      * @return
      */
     BusinessWrapper<Boolean> refresh();
-
-    /**
-     * 添加主机监控
-     *
-     * @param serverId
-     * @return
-     */
-    BusinessWrapper<Boolean> addMonitor(long serverId);
 
     /**
      * 删除主机监控
@@ -62,6 +46,7 @@ public interface ZabbixService {
 
     /**
      * 禁止主机监控
+     * 韩国太阳公公官方发奋图强有区区 i 为坎坎坷坷王环恍恍惚惚己饥己溺你        *
      *
      * @param serverId
      * @return
@@ -138,33 +123,12 @@ public interface ZabbixService {
     BusinessWrapper<Boolean> checkUser();
 
     /**
-     * 获取用户id
-     */
-    int userGet(UserDO userDO);
-
-    /**
      * 添加告警动作
      *
      * @param serverGroupDO
      * @return
      */
-    int actionCreate(ServerGroupDO serverGroupDO);
-
-    /**
-     * 添加用户组（权限为只读）
-     *
-     * @param serverGroupDO
-     * @return
-     */
-    int usergroupCreate(ServerGroupDO serverGroupDO);
-
-    /**
-     * 查询主机监控状态
-     *
-     * @param serverDO
-     * @return
-     */
-    int hostGetStatus(ServerDO serverDO);
+    String actionCreate(ServerGroupDO serverGroupDO);
 
     JSONObject historyGet(ServerDO serverDO, String itemName, String itemKey, int historyType, int limit);
 
@@ -178,17 +142,6 @@ public interface ZabbixService {
      */
     boolean hostExists(ServerDO serverDO);
 
-    ZabbixVersion getZabbixVersion(String zabbixServerName);
-
-    /**
-     * 判断用户是否在用户组中（服务器组和用户组会转换名称  group_test --> users_test)
-     *
-     * @param userDO
-     * @param serverGroupDO
-     * @return
-     */
-    int checkUserInUsergroup(UserDO userDO, ServerGroupDO serverGroupDO);
-
 
     /**
      * 查询zabbix模版详情页
@@ -201,12 +154,7 @@ public interface ZabbixService {
      */
     TableVO<List<ZabbixTemplateVO>> getTemplatePage(String templateName, int enabled, int page, int length);
 
-
-    ZabbixHost getHost(long serverId);
-
-
-    BusinessWrapper<Boolean>  saveHost(ZabbixHost host);
-
+    BusinessWrapper<Boolean> saveHost(ZabbixHost host);
 
     BusinessWrapper<Boolean> setTemplate(long id);
 
@@ -215,7 +163,6 @@ public interface ZabbixService {
     BusinessWrapper<Boolean> rsyncTemplate();
 
     List<ZabbixProxy> queryProxy();
-
 
 
 }

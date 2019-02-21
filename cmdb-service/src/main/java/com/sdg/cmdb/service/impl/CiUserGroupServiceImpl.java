@@ -6,12 +6,8 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.LdapItemEnum;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
-import com.sdg.cmdb.service.AuthService;
-import com.sdg.cmdb.service.CiUserGroupService;
-import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.service.UserService;
+import com.sdg.cmdb.service.*;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -30,10 +26,12 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
     private UserDao userDao;
 
     @Resource
-    private UserService userService;
+    private LdapService ldapService;
 
     @Resource
     private ServerGroupDao serverGroupDao;
+
+
 
     @Resource
     private ConfigCenterService configCenterService;
@@ -44,10 +42,10 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
 
     private HashMap<String, String> configMap;
 
-    private HashMap<String, String> acqConfigMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.LDAP.getItemKey());
-    }
+//    private HashMap<String, String> acqConfigMap() {
+//        if (configMap != null) return configMap;
+//        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.LDAP.getItemKey());
+//    }
 
     @Override
     public TableVO<List<CiUserGroupVO>> getCiUserGroupPage(String groupName, int envType, int page, int length) {
@@ -69,31 +67,7 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
         return new TableVO<>(size, listVO);
     }
 
-    @Override
-    public BusinessWrapper<Boolean> groupsRefresh() {
-        HashMap<String, String> configMap = acqConfigMap();
-        // bamboo-
-        String groupFilter = configMap.get(LdapItemEnum.LDAP_GROUP_FILTER.getItemKey());
-        // group_
-        String groupPrefix = configMap.get(LdapItemEnum.LDAP_GROUP_PREFIX.getItemKey());
 
-        // 获取所有的组名称
-        List<String> groups = authService.searchBambooGroup();
-
-        for (String bambooGroupName : groups) {
-            String serverGroupName = bambooGroupName.replace(groupFilter, groupPrefix);
-            ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupByName(serverGroupName);
-            CiUserGroupDO ciUserGroupDO;
-            if (serverGroupDO != null) {
-                ciUserGroupDO = new CiUserGroupDO(bambooGroupName, serverGroupDO, 0);
-            } else {
-                ciUserGroupDO = new CiUserGroupDO(bambooGroupName, 0);
-            }
-            saveCiUserGroup(ciUserGroupDO);
-        }
-
-        return new BusinessWrapper<>(true);
-    }
 
     @Override
     public BusinessWrapper<Boolean> delCigroup(long id) {
@@ -151,7 +125,6 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
 
         for (UserDO userDO : list) {
             UserVO userVO = new UserVO(userDO);
-            userVO.setCiUsers(getCiUserDO(userDO.getId()));
             listVO.add(userVO);
         }
         return new TableVO<>(size, listVO);
@@ -161,7 +134,6 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
     public UserVO getCiUser(String username) {
         UserDO userDO = userDao.getUserByName(username);
         UserVO userVO = new UserVO(userDO);
-        userVO.setCiUsers(getCiUserDO(userDO.getId()));
         return userVO;
     }
 
@@ -191,28 +163,12 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
         List<UserDO> users = userDao.getAllUser();
         for (UserDO userDO : users) {
             UserVO userVO = new UserVO(userDO);
-            userVO.setLdapGroups(authService.searchLdapGroup(userVO.getUsername()));
-            userService.invokeLdapGroups(userVO);
-            invokeUser(userVO);
+            userVO.setLdapGroups(ldapService.searchUserLdapGroup(userVO.getUsername()));
         }
         return new BusinessWrapper<>(true);
     }
 
-    private void invokeUser(UserVO userVO) {
-        List<LdapGroupVO> bambooLdapGroups = userVO.getBambooLdapGroups();
-        if (bambooLdapGroups == null) {
-            System.err.println("user null:" + userVO.getUsername());
-            return;
-        }
 
-        for (LdapGroupVO ldapGroupVO : bambooLdapGroups) {
-            CiUserGroupDO ciUserGroupDO = userDao.getCiUserGroupByNameAndEnvType(ldapGroupVO.getName(), 0);
-            if (ciUserGroupDO == null) continue;
-            CiUserDO ciUserDO = new CiUserDO(userVO.getId(), ciUserGroupDO.getId());
-            addCiUser(ciUserDO);
-        }
-
-    }
 
 
     private boolean addCiUser(CiUserDO ciUserDO) {
@@ -273,7 +229,7 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
         CiUserDO ciUserDO = new CiUserDO(userId, usergroupId);
         try {
             // 持续集成权限组
-            authService.addMemberToGroup(userDO, ciUserGroupDO.getGroupName());
+            ldapService.addMemberToGroup(userDO, ciUserGroupDO.getGroupName());
             userDao.addCiUser(ciUserDO);
             return new BusinessWrapper<>(true);
         } catch (Exception e) {
@@ -289,7 +245,7 @@ public class CiUserGroupServiceImpl implements CiUserGroupService {
             //ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(ciUserGroupDO.getServerGroupId());
             UserDO userDO = userDao.getUserById(ciUserDO.getUserId());
             // 持续集成权限组
-            authService.delMemberToGroup(userDO, ciUserGroupDO.getGroupName());
+            ldapService.delMemberToGroup(userDO, ciUserGroupDO.getGroupName());
             userDao.delCiUser(ciuserId);
             return new BusinessWrapper<>(true);
         } catch (Exception e) {

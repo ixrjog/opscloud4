@@ -11,7 +11,8 @@
         mobile,
         pwd,
         rsaKey,
-        authed
+        authed,
+        sPort
         ) VALUES (
         #{username},
         #{displayName},
@@ -19,7 +20,8 @@
         #{mobile},
         #{pwd},
         #{rsaKey},
-        #{authed}
+        #{authed},
+        #{sPort}
         ) on duplicate key update
         displayName = #{displayName},
         mail = #{mail},
@@ -39,7 +41,7 @@
 
     <!-- 获取指定用户名的数目 -->
     <select id="getUserSize" parameterType="string" resultType="_long">
-        SELECT count(*) FROM cmdb_user WHERE username LIKE "%" #{username} "%"
+        SELECT count(*) FROM cmdb_user WHERE username LIKE "%" #{username} "%" AND userType = 0
     </select>
 
     <!-- 获取指定用户名的分页数据 -->
@@ -48,7 +50,7 @@
           a0.*,
           sum(if(a1.username IS NOT NULL, 1, 0)) AS servers
         FROM cmdb_user a0 LEFT JOIN keybox_user_server a1 ON a0.username = a1.username
-        WHERE a0.username LIKE "%" #{username} "%"
+        WHERE a0.username LIKE "%" #{username} "%" AND a0.userType = 0
         GROUP BY a0.username
         ORDER BY servers DESC
         limit #{pageStart}, #{pageLength}
@@ -158,7 +160,7 @@
 
     <!-- 查询所有用户 -->
     <select id="getAllUser" resultType="UserDO">
-        SELECT * FROM cmdb_user ;
+        SELECT * FROM cmdb_user WHERE userType = 0;
     </select>
 
     <!-- 按用户名查询显示名 -->

@@ -8,7 +8,7 @@ import javax.annotation.Resource;
  * 抽象任务描述，用于在当前上下文下创建合适的调度任务
  * Created by zxxiao on 2017/6/28.
  */
-@Service
+//@Service
 public class AbstractTask {
 
     @Resource

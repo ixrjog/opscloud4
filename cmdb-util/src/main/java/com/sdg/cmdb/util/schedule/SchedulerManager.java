@@ -21,7 +21,7 @@ public class SchedulerManager implements DisposableBean {
     @Resource
     private Scheduler cloudstackScheduler;
 
-    private ExecutorService executors = Executors.newFixedThreadPool(10);
+    private ExecutorService executors = Executors.newFixedThreadPool(20);
 
     public void registerJob(BaseJob baseJob, String cron, String name) {
         name += "-job";

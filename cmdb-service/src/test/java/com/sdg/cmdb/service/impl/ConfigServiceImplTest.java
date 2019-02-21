@@ -26,7 +26,7 @@ public class ConfigServiceImplTest {
         userDO.setDisplayName("白衣");
         userDO.setMail("by@qq.com");
 
-        keyBoxService.createUserGroupConfigFile(userDO.getUsername());
+
     }
 
 }

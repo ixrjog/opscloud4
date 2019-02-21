@@ -42,6 +42,34 @@
         limit #{start}, #{length}
     </select>
 
+    <!-- 查询服务器组数量 -->
+    <select id="queryUnauthServerGroupSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) FROM oc_server_group
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE "%" #{name} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+        </where>
+    </select>
+
+    <!-- 查询分页服务器组信息 -->
+    <select id="queryUnauthServerGroupPage" parameterType="object" resultType="ServerGroupDO">
+        SELECT * FROM oc_server_group
+        <where>
+            <if test="name != null and name != ''">
+                name LIKE "%" #{name} "%"
+            </if>
+            <if test="useType != 0">
+                AND useType = #{useType}
+            </if>
+        </where>
+        ORDER BY name DESC
+        limit #{start}, #{length}
+    </select>
+
     <!-- 更新服务器组信息 -->
     <update id="updateServerGroupInfo" parameterType="ServerGroupDO">
         UPDATE oc_server_group
@@ -208,7 +236,7 @@
                 typeName LIKE "%" #{typeName} "%"
             </if>
         </where>
-        ORDER BY typeName DESC
+        ORDER BY useType
         limit #{start}, #{length}
     </select>
 
@@ -227,10 +255,12 @@
         INSERT INTO oc_server_group_useType(
         useType,
         typeName,
+        color,
         content
         ) VALUES (
         #{useType},
         #{typeName},
+        #{color},
         #{content}
         )
     </insert>
@@ -240,6 +270,7 @@
         UPDATE oc_server_group_useType
         SET useType = #{useType},
         typeName = #{typeName},
+        color = #{color},
         content = #{content}
         WHERE id = #{id}
     </update>

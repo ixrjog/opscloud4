@@ -1,6 +1,9 @@
 'use strict';
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> develop
 app.controller('nginxVhostCtrl', function ($scope, $state, $uibModal, toaster, httpService, staticModel) {
 
     $scope.envType = staticModel.envType;
@@ -432,6 +435,7 @@ app.controller('vhostConfigureInfoInstanceCtrl', function ($scope, $uibModalInst
     }
 });
 
+<<<<<<< HEAD
 /**
  * 查看配置文件
  */
@@ -507,6 +511,34 @@ app.controller('copyCtrl', function ($scope, $state, $uibModal, toaster, $interv
                 var body = data.body;
                 $scope.pageData = body.data;
                 $scope.totalItems = body.size;
+=======
+// 主配置页面
+app.controller('playbookCtrl', function ($scope, $state, $uibModal, toaster, $interval, httpService) {
+
+    $scope.playbookList = [];
+
+
+    var initHostPattern = function () {
+        if ($scope.playbookList.length == 0) return;
+
+        for (var i = 0; i < $scope.playbookList.length; i++) {
+            var playbook = $scope.playbookList[i];
+            for (var j = 0; j < playbook.groupHostPattern.length; j++) {
+                if (playbook.hostPattern == playbook.groupHostPattern[j].hostPattern) {
+                    playbook.servers = playbook.groupHostPattern[j].servers;
+                    break;
+                }
+            }
+        }
+    }
+
+    $scope.queryPlaybook = function () {
+        var url = "/nginx/playbook/page";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.playbookList = data.body;
+                initHostPattern();
+>>>>>>> develop
             } else {
                 toaster.pop("warning", data.msg);
             }
@@ -515,6 +547,7 @@ app.controller('copyCtrl', function ($scope, $state, $uibModal, toaster, $interv
         });
     }
 
+<<<<<<< HEAD
     queryCopy();
 
     $scope.pageChanged = function () {
@@ -567,21 +600,71 @@ app.controller('copyCtrl', function ($scope, $state, $uibModal, toaster, $interv
         var modalInstance = $uibModal.open({
             templateUrl: 'copyInfo',
             controller: 'copyInstanceCtrl',
+=======
+    $scope.queryPlaybook();
+
+    $scope.addPlaybook = function () {
+        var body = {
+            id: 0,
+            vhostId: 0,
+            serverKey: "",
+            serverGroupId: 0,
+            serverGroupName: "",
+            hostPattern: "",
+            src: "",
+            dest: "",
+            username: "root",
+            usergroup: "root",
+            playbookId: 0
+        }
+        doSavePlaybook(body);
+    }
+
+    $scope.editPlaybook = function (item) {
+        var body = {
+            id: item.id,
+            fileName: item.fileName,
+            useType: item.useType,
+            envType: item.envType,
+            fileDesc: item.fileDesc,
+            filePath: item.filePath,
+            fileType: item.fileType,
+            fileGroupId: item.fileGroupId,
+            fileGroup: item.fileGroupDO,
+            invokeCmd: item.invokeCmd,
+            params: item.params,
+            paramList: item.params
+        }
+
+        doSavePlaybook(body);
+    }
+
+    var doSavePlaybook = function (playbook) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'nginxPlaybookModal',
+            controller: 'playbookInstanceCtrl',
+>>>>>>> develop
             size: 'lg',
             resolve: {
                 httpService: function () {
                     return httpService;
                 },
+<<<<<<< HEAD
                 envType: function () {
                     return $scope.envType;
                 },
                 item: function () {
                     return item;
+=======
+                playbook: function () {
+                    return playbook;
+>>>>>>> develop
                 }
             }
         });
 
         modalInstance.result.then(function () {
+<<<<<<< HEAD
             queryCopy();
         }, function () {
             queryCopy();
@@ -594,6 +677,20 @@ app.controller('copyCtrl', function ($scope, $state, $uibModal, toaster, $interv
             if (data.success) {
                 toaster.pop("success", "删除成功!");
                 queryCopy();
+=======
+            $scope.queryPlaybook();
+        }, function () {
+            $scope.queryPlaybook();
+        });
+    }
+
+    $scope.delPlaybook = function (id) {
+        var url = "/nginx/playbook/del?id=" + id;
+        httpService.doDelete(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "删除成功!");
+                $scope.queryPlaybook();
+>>>>>>> develop
             } else {
                 toaster.pop("warning", data.msg);
             }
@@ -602,6 +699,7 @@ app.controller('copyCtrl', function ($scope, $state, $uibModal, toaster, $interv
         });
     }
 
+<<<<<<< HEAD
     $scope.doCopy = function (id) {
         $scope.copyRunning = true;
         var url = "/copy/doCopy?copyId=" + id;
@@ -767,10 +865,201 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
 
     $scope.item = item;
     $scope.envType = envType;
+=======
+    /**
+     * 执行
+     * @param id
+     */
+    $scope.doPlaybook = function (id) {
+
+        var url = "/nginx/playbook/do?id=" + id;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                // butInvokeRunning(false);
+                $scope.playbookLog = data.body;
+                toaster.pop("success", "执行成功!", data.body);
+            } else {
+                // butInvokeRunning(false);
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            butInvokeRunning(false);
+            toaster.pop("error", err);
+        });
+    }
+
+    var getPlaybookLog = function () {
+        var url = "/config/filePlaybook/getLog?id=" + $scope.playbookLog.id;
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.playbookLog = data.body;
+            } else {
+                // butInvokeRunning(false);
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    var timerQueryLog = $interval(function () {
+        if ($scope.playbookLog == null || $scope.playbookLog.complete == null) return;
+        if ($scope.playbookLog.complete == false) {
+            getPlaybookLog();
+        }
+    }, 2000);
+
+
+    $scope.createItem = function (id) {
+        butSaveRunning(true);
+        var url = "/config/file/create?id=" + id;
+
+        httpService.doPost(url).then(function (data) {
+            if (data.success) {
+                butSaveRunning(false);
+                toaster.pop("success", "创建成功!");
+            } else {
+                butSaveRunning(false);
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            butSaveRunning(false);
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.invokeItem = function (id) {
+        butInvokeRunning(true);
+        var url = "/config/file/invoke?id=" + id;
+
+        httpService.doPost(url).then(function (data) {
+            if (data.success) {
+                butInvokeRunning(false);
+                toaster.pop("success", "执行成功!", data.body);
+            } else {
+                butInvokeRunning(false);
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            butInvokeRunning(false);
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.launchItem = function (id) {
+        var url = "/config/file/launch?id=" + id;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'configFileInfo',
+                    controller: 'configFileInfoInstanceCtrl',
+                    size: 'lg',
+                    resolve: {
+                        item: function () {
+                            return data.body;
+                        }
+                    }
+                });
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+});
+
+// Playbook日志查询
+app.controller('playbookLogCtrl', function ($scope, $state, $uibModal, toaster, httpService) {
+
+
+    $scope.playbookName = "playbook-nginx.yml";
+    $scope.username = "";
+
+    $scope.reSet = function () {
+        $scope.playbookName = "";
+        $scope.queryUsername = "";
+    }
+
+    /////////////////////////////////////////////////
+
+    $scope.pageData = [];
+    $scope.totalItems = 0;
+    $scope.currentPage = 0;
+    $scope.pageLength = 10;
+
+    $scope.pageChanged = function () {
+        doQuery();
+    };
+
+    /////////////////////////////////////////////////
+
+    var doQuery = function () {
+        var url = "/config/filePlaybook/queryLogPage?"
+            + "playbookName=" + ($scope.playbookName == null ? "" : $scope.playbookName)
+            + "&username=" + ($scope.username == null ? "" : $scope.username)
+            + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
+            + "&length=" + $scope.pageLength;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.totalItems = body.size;
+                $scope.pageData = body.data;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    doQuery();
+
+    $scope.delItem = function (id) {
+        var url = "/config/filePlaybook/del?id=" + id;
+        httpService.doDelete(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "删除成功!");
+                $scope.queryPlaybook();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.viewLog = function (playbookLog) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'playbookLogInfoModal',
+            controller: 'playbookLogInfoInstanceCtrl',
+            size: 'lg',
+            resolve: {
+                httpService: function () {
+                    return httpService;
+                },
+                playbookLog: function () {
+                    return playbookLog;
+                }
+            }
+        });
+    }
+
+});
+
+// 新增/编辑Playbook
+app.controller('playbookInstanceCtrl', function ($scope, $uibModalInstance, httpService, playbook) {
+
+    $scope.item = playbook;
+>>>>>>> develop
 
     $scope.nowServerGroup = {};
     $scope.serverGroupList = [];
 
+<<<<<<< HEAD
     $scope.nowServer = {};
     $scope.serverList = [];
 
@@ -790,11 +1079,36 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         var url = "/nginx/vhost/page?"
             + "serverName=" + $scope.queryServerName
             + "&page=0&length=20";
+=======
+    $scope.nowVhost = {};
+    $scope.vhostList = [];
+
+    $scope.configFileList = [];
+
+    $scope.nowConfigFile = {};
+
+    $scope.hostPatternList = {};
+    $scope.nowHostPattern = {};
+
+    $scope.filePathList = [];
+
+    $scope.playbookList = [];
+
+    $scope.nowPlaybook = {};
+
+    $scope.queryServerGroup = function (queryParam) {
+        var url = "/servergroup/query/page?page=0&length=10&name=" + queryParam + "&useType=0";
+>>>>>>> develop
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 var body = data.body;
+<<<<<<< HEAD
                 $scope.vhostList = body.data;
+=======
+                $scope.serverGroupList = body.data;
+                //$scope.queryHostPattern();
+>>>>>>> develop
             } else {
                 toaster.pop("warning", data.msg);
             }
@@ -803,6 +1117,7 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         });
     }
 
+<<<<<<< HEAD
     $scope.initEnv = function () {
         if ($scope.nowVhost.selected.envList == null || $scope.nowVhost.selected.envList.length == 0)
             return;
@@ -876,6 +1191,18 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
                 var body = data.body;
                 $scope.serverGroupList = body.data;
                 $scope.queryServer("");
+=======
+
+    $scope.queryVhost = function (queryParam) {
+        var url = "/nginx/vhost/page?"
+            + "serverName=" + queryParam
+            + "&page=0"
+            + "&length=10";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.vhostList = body.data;
             } else {
                 toaster.pop("warning", data.msg);
             }
@@ -884,6 +1211,23 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         });
     }
 
+    var queryPlaybook = function () {
+        var url = "/task/script/getPlaybook";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.playbookList = data.body;
+                ;
+>>>>>>> develop
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+<<<<<<< HEAD
     $scope.queryServer = function (queryServer) {
         var url = "/server/page?"
             + "serverGroupId=" + ($scope.nowServerGroup.selected == null ? -1 : $scope.nowServerGroup.selected.id)
@@ -898,6 +1242,23 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
             if (data.success) {
                 var body = data.body;
                 $scope.serverList = body.data;
+=======
+    queryPlaybook();
+
+    $scope.changeServerGroup = function () {
+        queryHostPattern();
+    }
+
+    var queryHostPattern = function () {
+        if ($scope.nowServerGroup.selected == null) return;
+
+        var url = "/servergroup/hostPattern/get?"
+            + "serverGroupId=" + $scope.nowServerGroup.selected.id;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.hostPatternList = data.body;
+>>>>>>> develop
             } else {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
@@ -908,6 +1269,10 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         });
     }
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
     $scope.alert = {
         type: "",
         msg: ""
@@ -920,6 +1285,7 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         };
     }
 
+<<<<<<< HEAD
     $scope.saveItem = function () {
         var url = "/copy/save";
 
@@ -968,12 +1334,66 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
             } else {
                 $scope.item.taskScriptId = $scope.nowScript.selected.id;
             }
+=======
+
+    $scope.saveItem = function () {
+        var url = "/nginx/playbook/save";
+
+        if ($scope.nowServerGroup.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定服务器组";
+            return;
+        } else {
+            $scope.item.serverGroupId = $scope.nowServerGroup.selected.id;
+            $scope.item.serverGroupName = $scope.nowServerGroup.selected.name;
+        }
+
+        if ($scope.nowHostPattern.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定HostPattern";
+            return;
+        } else {
+            $scope.item.hostPattern = $scope.nowHostPattern.selected.hostPattern;
+        }
+
+        if ($scope.nowVhost.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定配置文件";
+            return;
+        } else {
+            $scope.item.vhostId = $scope.nowVhost.selected.id;
+            $scope.item.serverKey = $scope.nowVhost.selected.serverKey;
+        }
+
+        if ($scope.item.src == null || $scope.item.src == '') {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定源路径";
+            return;
+        }
+
+        if ($scope.item.dest == null || $scope.item.dest == '') {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定目标路径";
+            return;
+        }
+
+        if ($scope.nowPlaybook.selected == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "必须指定Playbook";
+            return;
+        } else {
+            $scope.item.playbookId = $scope.nowPlaybook.selected.id;
+>>>>>>> develop
         }
 
         httpService.doPostWithJSON(url, $scope.item).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
                 $scope.alert.msg = "保存成功！";
+<<<<<<< HEAD
+=======
+
+>>>>>>> develop
                 $scope.item = {
                     fileType: $scope.item.fileType
                 };
@@ -987,6 +1407,7 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         });
     }
 
+<<<<<<< HEAD
 
     $scope.queryScript = function () {
         var url = "/task/script/page?"
@@ -1064,10 +1485,21 @@ app.controller('copyInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         });
     }
 
+=======
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
+});
+
+app.controller('playbookLogInfoInstanceCtrl', function ($scope, $uibModalInstance, $uibModal, $sce, staticModel, toaster, httpService, playbookLog) {
+
+    $scope.playbookLog = playbookLog;
+>>>>>>> develop
 
     $scope.closeModal = function () {
         $uibModalInstance.dismiss('cancel');
     }
+<<<<<<< HEAD
 });
 
 /**
@@ -1185,6 +1617,58 @@ app.controller('copyLogCtrl', function ($scope, $state, $uibModal, toaster, http
         });
     }
 
+=======
+
+
+});
+
+/**
+ * 查看配置文件
+ */
+app.controller('launchFileInstanceCtrl', function ($scope, $uibModalInstance, $uibModal, $sce, staticModel, toaster, httpService, id, type) {
+
+    $scope.envFileId = id
+    $scope.type = type;
+
+    $scope.nginxFile = {};
+
+
+    $scope.getNginxFile = function () {
+        var url = "/nginx/vhost/env/file/launch?id=" + $scope.envFileId + "&type=" + $scope.type;
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.nginxFile = body;
+            } else {
+                $scope.alert.type = "warning";
+                $scope.alert.msg = data.msg;
+            }
+        }, function (err) {
+            $scope.alert.type = "error";
+            $scope.alert.msg = err;
+        });
+    }
+
+    $scope.getNginxFile();
+
+    $scope.alert = {
+        type: "",
+        msg: ""
+    };
+
+    $scope.closeAlert = function () {
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+    }
+
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
+
+
+>>>>>>> develop
 });
 
 /**

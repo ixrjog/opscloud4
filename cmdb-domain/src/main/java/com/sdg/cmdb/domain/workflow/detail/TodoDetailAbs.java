@@ -7,6 +7,7 @@ import java.io.Serializable;
 public abstract class TodoDetailAbs implements Serializable {
     private static final long serialVersionUID = 2780803471467844414L;
 
+<<<<<<< HEAD
 
     /**
      * 处理状态 0 未处理，1 处理完成  2 ERR
@@ -23,6 +24,10 @@ public abstract class TodoDetailAbs implements Serializable {
         this.status = status;
     }
 
+=======
+    private String content;
+
+>>>>>>> develop
     public String getContent() {
         return content;
     }

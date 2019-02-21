@@ -1,9 +1,12 @@
 package com.sdg.cmdb.domain.logService.logServiceQuery;
 
 import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
 public class LogServiceServerGroupCfgVO extends LogServiceServerGroupCfgDO implements Serializable {
     private static final long serialVersionUID = 573733901286113356L;
 
@@ -11,33 +14,17 @@ public class LogServiceServerGroupCfgVO extends LogServiceServerGroupCfgDO imple
 
     private ServerGroupDO serverGroupDO;
 
-
-    public boolean isAuthed() {
-        return authed;
-    }
-
-    public ServerGroupDO getServerGroupDO() {
-        return serverGroupDO;
-    }
-
-    public void setServerGroupDO(ServerGroupDO serverGroupDO) {
-        this.serverGroupDO = serverGroupDO;
-    }
-
-    public void setAuthed(boolean authed) {
-        this.authed = authed;
-    }
-
+    private ServerGroupUseTypeDO serverGroupUseTypeDO;
 
     public LogServiceServerGroupCfgVO(){
 
     }
-    public LogServiceServerGroupCfgVO(ServerGroupDO serverGroupDO) {
+    public LogServiceServerGroupCfgVO(ServerGroupDO serverGroupDO,ServerGroupUseTypeDO useType) {
         this.serverGroupDO = serverGroupDO;
-
+        this.serverGroupUseTypeDO =useType;
     }
 
-    public LogServiceServerGroupCfgVO(ServerGroupDO serverGroupDO, LogServiceServerGroupCfgDO logServiceServerGroupCfgDO, boolean authed) {
+    public LogServiceServerGroupCfgVO(ServerGroupDO serverGroupDO, LogServiceServerGroupCfgDO logServiceServerGroupCfgDO, boolean authed,ServerGroupUseTypeDO useType) {
         this.authed = authed;
         this.serverGroupDO = serverGroupDO;
         setId(logServiceServerGroupCfgDO.getId());
@@ -48,6 +35,7 @@ public class LogServiceServerGroupCfgVO extends LogServiceServerGroupCfgDO imple
         setTopic(logServiceServerGroupCfgDO.getTopic());
         setGmtCreate(logServiceServerGroupCfgDO.getGmtCreate());
         setGmtModify(logServiceServerGroupCfgDO.getGmtModify());
+        this.serverGroupUseTypeDO =useType;
     }
 
 }

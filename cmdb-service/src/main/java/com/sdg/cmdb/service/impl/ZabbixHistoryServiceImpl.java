@@ -16,6 +16,7 @@ import com.sdg.cmdb.domain.zabbix.ZabbixResult;
 import com.sdg.cmdb.service.ConfigCenterService;
 
 import com.sdg.cmdb.service.ZabbixHistoryService;
+import com.sdg.cmdb.service.ZabbixServerService;
 import com.sdg.cmdb.service.ZabbixService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,6 +37,8 @@ public class ZabbixHistoryServiceImpl implements ZabbixHistoryService {
 
     private static final Logger logger = LoggerFactory.getLogger(ZabbixHistoryServiceImpl.class);
 
+    @Resource
+    private ZabbixServerService zabbixServerService;
 
     @Resource
     private ZabbixService zabbixService;
@@ -509,7 +512,7 @@ public class ZabbixHistoryServiceImpl implements ZabbixHistoryService {
             // 主机未监控
             if (!zabbixService.hostExists(serverDO)) continue;
             // 主机监控被禁用
-            if (zabbixService.hostGetStatus(serverDO) == ZabbixServiceImpl.hostStatusDisable) continue;
+            if (zabbixServerService.getHost(serverDO).getStatus().equalsIgnoreCase( ZabbixServiceImpl.hostStatusDisable +"")) continue;
 
             Map<String, Object> server = new HashMap<>();
             server.put("serverId", serverDO.getId());

@@ -1,8 +1,8 @@
 package com.sdg.cmdb.dao.cmdb;
 
-import com.sdg.cmdb.domain.ci.CiDeployStatisticsDO;
+
 import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
-import com.sdg.cmdb.domain.server.ServerDO;
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 

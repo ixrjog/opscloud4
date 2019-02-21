@@ -1,5 +1,7 @@
 package com.sdg.cmdb.domain.aliyun;
 
+import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesResponse;
+
 import java.io.Serializable;
 
 /**
@@ -13,6 +15,8 @@ public class AliyunVswitchVO implements Serializable {
     private long vpcId;
 
     private String vswitchDesc;
+
+    private DescribeVSwitchAttributesResponse vSwitch;
 
     public AliyunVswitchVO() {
     }
@@ -45,6 +49,14 @@ public class AliyunVswitchVO implements Serializable {
 
     public void setVswitchDesc(String vswitchDesc) {
         this.vswitchDesc = vswitchDesc;
+    }
+
+    public DescribeVSwitchAttributesResponse getvSwitch() {
+        return vSwitch;
+    }
+
+    public void setvSwitch(DescribeVSwitchAttributesResponse vSwitch) {
+        this.vSwitch = vSwitch;
     }
 
     @Override

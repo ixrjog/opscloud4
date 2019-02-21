@@ -1,25 +1,23 @@
 package com.sdg.cmdb.domain.server;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * Created by zxxiao on 16/9/1.
  */
+@Data
 public class ServerGroupDO implements Serializable {
     private static final long serialVersionUID = 552642567540413587L;
 
     private long id;
-
     private String name;
-
     private String content;
-
     private String ipNetwork;
-
     private int useType;
-
     private String gmtCreate;
-
     private String gmtModify;
 
     public ServerGroupDO() {
@@ -39,77 +37,13 @@ public class ServerGroupDO implements Serializable {
         this.name = name;
     }
 
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getIpNetwork() {
-        return ipNetwork;
-    }
-
-    public void setIpNetwork(String ipNetwork) {
-        this.ipNetwork = ipNetwork;
-    }
-
-    public int getUseType() {
-        return useType;
-    }
-
-    public void setUseType(int useType) {
-        this.useType = useType;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
-
     public String acqShortName() {
         return name.replace("group_", "");
     }
 
     @Override
     public String toString() {
-        return "ServerGroupDO{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", content='" + content + '\'' +
-                ", ipNetwork='" + ipNetwork + '\'' +
-                ", useType='" + useType + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 
     public enum UseTypeEnum {

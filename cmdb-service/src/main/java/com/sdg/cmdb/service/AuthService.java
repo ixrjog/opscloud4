@@ -142,11 +142,14 @@ public interface AuthService {
 
     /**
      * 判断用户是否是某个角色
+     *
      * @param username
      * @param roleName
      * @return
      */
-    boolean isRole(String username,String roleName);
+    boolean isRole(String username, String roleName);
+
+
     /**
      * 新增 || 更新角色信息
      *
@@ -221,6 +224,13 @@ public interface AuthService {
      */
     BusinessWrapper<Boolean> userRoleBind(long roleId, String username);
 
+    /**
+     * opscloud 绑定用户到某个角色
+     *
+     * @param roleName
+     * @param username
+     * @return
+     */
     BusinessWrapper<Boolean> userRoleBind(String roleName, String username);
 
     /**
@@ -258,13 +268,6 @@ public interface AuthService {
      */
     List<Long> getUserRoleIds(String username);
 
-    /**
-     * 获取指定用户名的对象
-     *
-     * @param username
-     * @return
-     */
-    UserDO getUserByName(String username);
 
     /**
      * 获取拥有指定角色的用户集合
@@ -275,14 +278,20 @@ public interface AuthService {
     List<UserDO> getUsersByRole(long roleId);
 
     /**
+     * 获取拥有指定角色的用户集合
+     *
+     * @param roleName
+     * @return
+     */
+    List<UserVO> getUsersByRole(String roleName);
+
+    /**
      * 删除离职用户
      *
      * @param username
      */
     BusinessWrapper<Boolean> delUser(String username);
 
-
-    BusinessWrapper<Boolean> unbindUser(String username);
 
     /**
      * 重置token
@@ -294,156 +303,12 @@ public interface AuthService {
     BusinessWrapper<Boolean> resetToken(String username);
 
     /**
-     * 校验用户是否在group
-     *
-     * @param userDO
-     * @param serverGroupDO
-     * @return
-     */
-    boolean checkUserInLdapGroup(UserDO userDO, ServerGroupDO serverGroupDO);
-
-    /**
-     * group内增加member
-     *
-     * @param userDO
-     * @param serverGroupDO
-     * @return
-     */
-    boolean addMemberToGroup(UserDO userDO, ServerGroupDO serverGroupDO);
-
-
-    boolean addMemberToGroup(UserDO userDO, String groupName);
-
-    /**
-     * group内删除member
-     *
-     * @param userDO
-     * @param serverGroupDO
-     * @return
-     */
-    boolean delMemberToGroup(UserDO userDO, ServerGroupDO serverGroupDO);
-
-    boolean delMemberToGroup(UserDO userDO, String groupName);
-
-    /**
-     * 移除group中的用户
-     *
-     * @param username
-     * @param groupName
-     * @return
-     */
-    boolean removeMember2Group(String username, String groupName);
-
-    /**
-     * 移除用户的所有组
-     *
-     * @param username
-     * @return
-     */
-    BusinessWrapper<Boolean> removeMember2Group(String username);
-
-    /**
      * 添加一个堡垒机用户
      *
-     * @param userDO
+     * @param userVO
      * @return
      */
-    BusinessWrapper<Boolean> addUser(UserDO userDO);
-
-    /**
-     * 查询用户所有的bamboo组
-     *
-     * @param username
-     * @return
-     */
-    List<String> searchBambooGroupFilter(String username);
-
-    /**
-     * 查询用户的所有ldap组
-     *
-     * @param username
-     * @return
-     */
-    List<String> searchLdapGroup(String username);
-
-    /**
-     * 判断用户是否在jira用户组
-     *
-     * @param username
-     * @return
-     */
-    boolean isJiraUsers(String username);
-
-    /**
-     * 判断用户是否在confluence-users
-     *
-     * @param username
-     * @return
-     */
-    boolean isConfluenceUsers(String username);
-
-    /**
-     * 判断用户是否是LDAP组成员
-     *
-     * @param username
-     * @param groupName
-     * @return
-     */
-    boolean isGroupMember(String username, String groupName);
-
-    boolean setMailUserAccountStatus(UserDO userDO, String status);
-
-    /**
-     * 关闭邮箱
-     *
-     * @param username
-     * @return
-     */
-    BusinessWrapper<Boolean> closeMailAccount(String username);
-
-    /**
-     * 激活邮箱
-     *
-     * @param username
-     * @return
-     */
-    BusinessWrapper<Boolean> activeMailAccount(String username);
-
-
-    BusinessWrapper<Boolean> addLdapGroup(String username, String groupname);
-
-    BusinessWrapper<Boolean> delLdapGroup(String username, String groupname);
-
-    /**
-     * 判断用户是否绑定
-     *
-     * @param username
-     * @return
-     */
-    boolean checkUserInLdap(String username);
-
-    /**
-     * 查询邮件ldap账户状态
-     *
-     * @param mail
-     * @return
-     */
-    String getMailAccountStatus(String mail);
-
-    /**
-     * 此函数报废
-     *
-     * @param username
-     * @return
-     */
-    String getAccountLocked(String username);
-
-    /**
-     * 查询所有的bamboo用户组
-     *
-     * @return
-     */
-    List<String> searchBambooGroup();
+    BusinessWrapper<Boolean> addUser(UserVO userVO);
 
     /**
      * 按角色名称查询所有用户(工单系统使用)

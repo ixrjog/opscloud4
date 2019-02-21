@@ -3,10 +3,14 @@ package com.sdg.cmdb.controller;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
+<<<<<<< HEAD
 import com.sdg.cmdb.domain.nginx.EnvFileDO;
 import com.sdg.cmdb.domain.nginx.NginxFile;
 import com.sdg.cmdb.domain.nginx.VhostEnvDO;
 import com.sdg.cmdb.domain.nginx.VhostVO;
+=======
+import com.sdg.cmdb.domain.nginx.*;
+>>>>>>> develop
 import com.sdg.cmdb.service.NginxService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -159,4 +163,40 @@ public class NginxController {
     }
 
 
+<<<<<<< HEAD
+=======
+    @RequestMapping(value = "/playbook/page", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryPlaybookPage() {
+        return new HttpResult(
+                nginxService.getPlaybookPage(),true
+        );
+    }
+
+    @RequestMapping(value = "/playbook/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult savePlaybook(@RequestBody NginxPlaybookDO nginxPlaybookDO) {
+        return new HttpResult(
+                nginxService.savePlaybook(nginxPlaybookDO)
+        );
+    }
+
+    @RequestMapping(value = "/playbook/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult savePlaybook(@RequestParam long id) {
+        return new HttpResult(
+                nginxService.delPlaybook(id)
+        );
+    }
+
+    @RequestMapping(value = "/playbook/do", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult doPlaybook(@RequestParam long id) {
+        return new HttpResult(
+                nginxService.doPlaybook(id,1)
+        );
+    }
+
+
+>>>>>>> develop
 }

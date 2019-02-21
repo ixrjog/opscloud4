@@ -13,9 +13,13 @@ import java.util.List;
 public interface DnsService {
 
 
-    TableVO<List<DnsmasqDO>> getDnsmasqPage(long dnsGroupId, int itemType, String queryItemValue, long pageStart, int length);
+    TableVO<List<DnsmasqDO>> getDnsmasqPage(String dnsItem, long pageStart, int length);
+
+    String getDnsmasqConf();
 
     BusinessWrapper<Boolean> saveDnsmasq(DnsmasqDO dnsmasqDO);
+
+    BusinessWrapper<Boolean> buildDnsmasqConf();
 
     BusinessWrapper<Boolean> delDnsmasq(long id);
 

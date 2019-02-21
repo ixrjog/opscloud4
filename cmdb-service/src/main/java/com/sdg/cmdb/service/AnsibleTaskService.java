@@ -9,6 +9,7 @@ import com.sdg.cmdb.domain.copy.CopyVO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.task.CmdVO;
+import com.sdg.cmdb.domain.task.DoPlaybook;
 import com.sdg.cmdb.plugin.chain.TaskItem;
 
 import java.util.List;
@@ -23,12 +24,16 @@ public interface AnsibleTaskService {
 
     String task(boolean isSudo, String hostgroupName, String cmd);
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> develop
     BusinessWrapper<Boolean> cmdTask(CmdVO cmdVO);
 
     BusinessWrapper<Boolean> scriptTask(CmdVO cmdVO);
 
+<<<<<<< HEAD
 
     BusinessWrapper<Boolean> doScriptByCopyServer(long id);
 
@@ -48,32 +53,43 @@ public interface AnsibleTaskService {
      */
     BusinessWrapper<Boolean> doFileCopy(long id);
 
+=======
+>>>>>>> develop
     /**
-     * 按文件组
-     * @param groupName
+     * 对外Playbook执行接口
+     * @param doPlaybook
      * @return
      */
-    BusinessWrapper<Boolean> doFileCopyByFileGroupName(String groupName);
+    PlaybookTaskDO playbookTask(DoPlaybook doPlaybook);
+
+    PlaybookTaskVO getPlaybookTask(long id);
 
     BusinessWrapper<Boolean> taskQuery(long taskId);
 
     String taskLogCleanup(ServerDO serverDO, int history);
 
-
-
-    BusinessWrapper<Boolean>  taskGetwayAddAccount(String username, String pwd);
-
-    BusinessWrapper<Boolean>  taskGetwayDelAccount(String username);
-
-
     TableVO<List<TaskScriptVO>> getTaskScriptPage(String scriptName, int sysScript, int page, int length);
+
+    List<TaskScriptDO> getTaskScriptPlaybook();
+
+    List<TaskScriptDO> queryPlaybook(String playbookName);
 
     TaskScriptDO saveTaskScript(TaskScriptDO taskScriptDO);
 
     AnsibleVersionInfo acqAnsibleVersion();
 
+    AnsibleVersionInfo acqAnsiblePlaybookVersion();
+
     TableVO<List<AnsibleTaskVO>> getAnsibleTaskPage(String cmd, int page, int length);
 
+<<<<<<< HEAD
 
+=======
+    TaskResult doPlaybook(boolean isSudo, String hostPattern, String playbook, String extraVars);
+
+    void playbook(boolean isSudo, String hostPattern, String playbook, String extraVars,PlaybookLogDO playbookLogDO);
+
+    String getPlaybookPath(TaskScriptDO taskScriptDO);
+>>>>>>> develop
 
 }

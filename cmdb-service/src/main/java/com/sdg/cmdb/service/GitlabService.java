@@ -2,18 +2,45 @@ package com.sdg.cmdb.service;
 
 
 import com.sdg.cmdb.domain.BusinessWrapper;
-import com.sdg.cmdb.domain.gitlab.GitlabWebHooksVO;
+
+import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.gitlab.GitlabProjectVO;
+import com.sdg.cmdb.domain.gitlab.v1.GitlabWebHooks;
+import org.gitlab.api.models.GitlabBranch;
+import org.gitlab.api.models.GitlabCommit;
+import org.gitlab.api.models.GitlabVersion;
+
+import java.util.List;
 
 public interface GitlabService {
 
-    BusinessWrapper<Boolean> webHooks(GitlabWebHooksVO webHooks);
+    TableVO<List<GitlabProjectVO>> getProjectPage(String name, String username, int page, int length);
 
+    List<GitlabBranch> getProjectBranchs(int projectId);
+
+    GitlabBranch getProjectBranch(int projectId,String branch);
+
+    GitlabVersion getVersion();
+
+    BusinessWrapper<Boolean> webHooksV1(GitlabWebHooks webHooks);
 
     /**
-     * tag 没有commit提交信息，无法获取email
+     * 持续集成中获取当前分支的Commit变更信息 最新的
      *
-     * @param webHooks
+     * @param projectName
+     * @param commitHash
      * @return
      */
-    String acqEmailByWebHooks(GitlabWebHooksVO webHooks);
+    List<GitlabCommit> getProjectCommit2(String projectName, String commitHash);
+
+    List<GitlabCommit>  getChanges(long jobId, String jobName,String branch);
+
+
+    //List<GitlabCommit> getProjectChanges(String projectName, String branch, String commitHash);
+
+
+    // 新版本
+    boolean updateProjcets();
+
+
 }

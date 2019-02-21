@@ -9,9 +9,6 @@ import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
-import com.sdg.cmdb.domain.config.ConfigFileDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
 import com.sdg.cmdb.domain.ip.IPDetailDO;
 import com.sdg.cmdb.domain.ip.IPDetailVO;
 import com.sdg.cmdb.domain.keybox.*;
@@ -20,7 +17,6 @@ import com.sdg.cmdb.domain.keybox.keyboxStatus.KeyboxStatusVO;
 import com.sdg.cmdb.domain.keybox.keyboxStatus.KeyboxUserVO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.template.getway.Getway;
 import com.sdg.cmdb.util.EncryptionUtil;
 import com.sdg.cmdb.util.IOUtils;
 import com.sdg.cmdb.util.SessionUtils;
@@ -80,10 +76,13 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     private AuthService authService;
 
     @Resource
-    private AnsibleTaskService ansibleTaskService;
+    private ConfigCenterService configCenterService;
 
     @Resource
-    private ConfigCenterService configCenterService;
+    private   ZabbixServerService zabbixServerService;
+
+    @Resource
+    private ZabbixService zabbixService;
 
     @Resource
     private ZabbixService zabbixService;
@@ -92,12 +91,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     @Resource
     private CiUserGroupService ciUserGroupService;
 
-    private HashMap<String, String> configMap;
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey());
-    }
 
 
     @Override
@@ -109,25 +102,14 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(userServerDOItem.getServerGroupId());
             KeyboxUserServerVO userServerVO = new KeyboxUserServerVO(userServerDOItem, serverGroupDO);
 
+<<<<<<< HEAD
             userServerVO.setZabbixUsergroup(zabbixService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
+=======
+            userServerVO.setZabbixUsergroup(zabbixServerService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
+>>>>>>> develop
             userServerVOList.add(userServerVO);
         }
         return new TableVO<>(size, userServerVOList);
-    }
-
-    @Override
-    public BusinessWrapper<String> launchUserGetway(String username) {
-
-        HashMap<String, String> configMap = acqConifMap();
-        String getwayUserConfPath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
-
-        try {
-            String value = IOUtils.readFile(getwayUserConfPath + "/" + username + "/getway.conf");
-            return new BusinessWrapper<>(value);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure.getCode(), "文件不存在!");
-        }
     }
 
     @Override
@@ -154,11 +136,15 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             return new BusinessWrapper<>(ErrorCode.userPwdNotInput);
         }
 
-        BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
+       // BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
         userDO.setAuthed(UserDO.AuthType.authed.getCode());
         userService.updateUserAuthStatus(userDO);
         zabbixService.userCreate(userDO);
+<<<<<<< HEAD
         return wrapper;
+=======
+        return null;
+>>>>>>> develop
     }
 
     @Override
@@ -172,14 +158,21 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             userDO.setUsername(username);
         }
 
+<<<<<<< HEAD
         delKeyFile(username);
 
+=======
+>>>>>>> develop
         try {
-            BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayDelAccount(userDO.getUsername());
+            //BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayDelAccount(userDO.getUsername());
             userDO.setAuthed(UserDO.AuthType.noAuth.getCode());
             userService.updateUserAuthStatus(userDO);
             zabbixService.userDelete(userDO);
+<<<<<<< HEAD
             return wrapper;
+=======
+            return null;
+>>>>>>> develop
         } catch (Exception e) {
             return new BusinessWrapper<Boolean>(false);
         }
@@ -248,13 +241,9 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         }
     }
 
-    @Override
-    public BusinessWrapper<Boolean> createUserGroupConfigFile(String username) {
-        coreLogger.info(SessionUtils.getUsername() + " create user :" + username + " getway config file!");
 
-        HashMap<String, String> configMap = acqConifMap();
-        String configFilePath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
 
+<<<<<<< HEAD
         try {
             UserDO userDO = userService.getUserDOByName(username);
             if (userDO == null) {
@@ -308,6 +297,8 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             return new BusinessWrapper<>(ErrorCode.serverFailure);
         }
     }
+=======
+>>>>>>> develop
 
 
     @Override
@@ -400,20 +391,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         return new TableVO<>(size, voList);
     }
 
-    /**
-     * 删除key file
-     *
-     * @param username
-     */
-    private void delKeyFile(String username) {
 
-        HashMap<String, String> configMap = acqConifMap();
-        String keyPath = configMap.get(GetwayItemEnum.GETWAY_KEY_PATH.getItemKey());
-        String keyFile = configMap.get(GetwayItemEnum.GETWAY_KEY_FILE.getItemKey());
-
-        String path = keyPath + username + keyFile;
-        IOUtils.delFile(path);
-    }
 
     @Override
     public ApplicationKeyVO getApplicationKey() {

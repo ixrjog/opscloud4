@@ -1,6 +1,10 @@
 package com.sdg.cmdb.service.impl;
 
 
+<<<<<<< HEAD
+=======
+import com.alibaba.fastjson.JSON;
+>>>>>>> develop
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
@@ -8,6 +12,8 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
+import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesRequest;
+import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesResponse;
 import com.sdg.cmdb.dao.cmdb.AliyunDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
@@ -15,6 +21,10 @@ import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
+<<<<<<< HEAD
+=======
+import com.sdg.cmdb.domain.server.EcsServerDO;
+>>>>>>> develop
 import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunService;
 import com.sdg.cmdb.service.ConfigCenterService;
@@ -128,8 +138,11 @@ public class AliyunServiceImpl implements AliyunService {
     public List<AliyunVswitchVO> queryAliyunVswitch(long vpcId, String queryDesc) {
         List<AliyunVswitchDO> list = aliyunDao.queryAliyunVswitch(vpcId, queryDesc);
         List<AliyunVswitchVO> listVO = new ArrayList<>();
-        for (AliyunVswitchDO aliyunVswitchDO : list)
-            listVO.add(new AliyunVswitchVO(aliyunVswitchDO));
+        for (AliyunVswitchDO aliyunVswitchDO : list) {
+            AliyunVswitchVO aliyunVswitchVO = new AliyunVswitchVO(aliyunVswitchDO);
+            aliyunVswitchVO.setvSwitch(getVSwitchAttributes(EcsServiceImpl.regionIdCnHangzhou,aliyunVswitchDO.getVswitchId()));
+            listVO.add(aliyunVswitchVO);
+        }
         return listVO;
     }
 
@@ -488,6 +501,30 @@ public class AliyunServiceImpl implements AliyunService {
         IAcsClient client = acqIAcsClient(regionId);
         try {
             DescribeImagesResponse response
+                    = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+
+    public DescribeVSwitchAttributesResponse getVSwitchAttributes(String regionId, String vSwitchId) {
+        DescribeVSwitchAttributesRequest describe = new DescribeVSwitchAttributesRequest();
+        describe.setRegionId(regionId);
+        describe.setVSwitchId(vSwitchId);
+        DescribeVSwitchAttributesResponse response = getVSwitch(regionId,describe);
+        return response;
+    }
+
+    private DescribeVSwitchAttributesResponse getVSwitch(String regionId,DescribeVSwitchAttributesRequest describe) {
+        IAcsClient client = acqIAcsClient(regionId);
+        try {
+            DescribeVSwitchAttributesResponse response
                     = client.getAcsResponse(describe);
             return response;
         } catch (ServerException e) {

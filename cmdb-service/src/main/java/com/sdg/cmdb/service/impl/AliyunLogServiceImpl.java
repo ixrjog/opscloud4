@@ -21,20 +21,16 @@ import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.logService.*;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
-import com.sdg.cmdb.domain.logService.*;
 import com.sdg.cmdb.domain.logService.logServiceQuery.*;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
-import com.sdg.cmdb.domain.server.ServerGroupVO;
-import com.sdg.cmdb.service.AliyunLogService;
-import com.sdg.cmdb.service.AuthService;
-import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.service.KeyBoxService;
+import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
+import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.TimeViewUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.ibatis.annotations.Param;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -65,8 +61,8 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     @Resource
     private KeyBoxService keyBoxService;
 
-    @Resource
-    private AuthService authService;
+    @Autowired
+    private ServerGroupService serverGroupService;
 
     @Resource
     private ServerGroupDao serverGroupDao;
@@ -93,66 +89,36 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     }
 
 
-//    @Override
-//    public LogServiceVO queryNginxLog(LogServiceKaQuery logServiceKaQuery) throws LogException {
-//        return queryLog(logServiceKaQuery);
-//    }
-//
-//    @Override
-//    public LogServiceVO queryJavaLog(LogServiceDefaultQuery logServiceDefaultQuery) throws LogException {
-//        return queryLog(logServiceDefaultQuery);
-//    }
-
-
     @Override
-    public LogServiceVO queryLog(LogServiceQuery logServiceQuery) throws LogException {
+    public LogServiceVO queryLog(LogserviceQueryAbs logserviceQuery) throws LogException {
 
         try {
-            //String date = logServiceQuery.acqQueryBeginDate();
-            long queryFrom = TimeUtils.dateToStamp(logServiceQuery.acqQueryBeginDate());
+            long queryFrom = TimeUtils.dateToStamp(logserviceQuery.acqQueryBeginDate());
             int from = (int) (queryFrom / 1000);
-            long queryTo = TimeUtils.dateToStamp(logServiceQuery.acqQueryEndDate());
+            long queryTo = TimeUtils.dateToStamp(logserviceQuery.acqQueryEndDate());
             int to = (int) (queryTo / 1000);
-
-            LogServiceQueryCfg cfg = logServiceQuery.acqLogServiceQueryCfg();
-            String query = acqQuery(logServiceQuery);
-            System.err.println("query='" + query +"'");
-
+            LogServiceQueryCfg cfg = logserviceQuery.acqLogServiceQueryCfg();
+            String query = acqQuery(logserviceQuery);
             if (from > to) return new LogServiceVO();
-
             String project = cfg.acqProject();
             String logstore = cfg.acqLogstore();
             String topic = cfg.acqTopic();
-
             GetHistogramsResponse res = queryHistograms(project, logstore, topic, from, to, query);
-            // ArrayList<Histogram> histograms
-
-            //System.out.println("Total count of logs is " + res.GetTotalCount());
             UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
             LogServiceDO logServiceDO = new LogServiceDO(cfg, userDO, query, from, to);
             logServiceDO.setTotalCount((int) res.GetTotalCount());
             logServiceDao.addLogService(logServiceDO);
             long logServiceId = logServiceDO.getId();
-            //List<LogHistogramsVO> histogramsVOList = new ArrayList<>();
-
             int histogramsCnt = 0;
             for (Histogram ht : res.GetHistograms()) {
                 if (ht.GetCount() == 0l) continue;
-                //System.out.printf("from %d, to %d, count %d.\n", ht.GetFrom(), ht.GetTo(), ht.GetCount());
-                //queryKaLog(project, logstore, topic, query, ht);
                 LogHistogramsDO logHistogramsDO = new LogHistogramsDO(ht, logServiceId);
                 logServiceDao.addLogHistograms(logHistogramsDO);
-
-                //String gmtFrom = TimeUtils.stampSecToDate(String.valueOf(logHistogramsDO.getTimeFrom()));
-                //String gmtTo = TimeUtils.stampSecToDate(String.valueOf(logHistogramsDO.getTimeTo()));
-                //histogramsVOList.add(new LogHistogramsVO(logHistogramsDO, gmtFrom, gmtTo));
                 histogramsCnt++;
             }
             String logServiceGmtFrom = TimeUtils.stampSecToDate(String.valueOf(logServiceDO.getTimeFrom()));
             String logServiceGmtTo = TimeUtils.stampSecToDate(String.valueOf(logServiceDO.getTimeTo()));
-
             LogServiceVO logServiceVO = new LogServiceVO(logServiceDO, logServiceGmtFrom, logServiceGmtTo);
-
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:m:s");
                 Date createDate = format.parse(logServiceDO.getGmtCreate());
@@ -160,7 +126,7 @@ public class AliyunLogServiceImpl implements AliyunLogService {
             } catch (Exception e) {
             }
             logServiceVO.setHistogramsCnt(histogramsCnt);
-            invokeLogServicePath(logServiceVO, logServiceQuery);
+            invokeLogServicePath(logServiceVO, logserviceQuery);
             return logServiceVO;
 
         } catch (Exception e) {
@@ -205,7 +171,7 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     }
 
 
-    private void invokeLogServicePath(LogServiceVO logServiceVO, LogServiceQuery logServiceQuery) {
+    private void invokeLogServicePath(LogServiceVO logServiceVO, LogserviceQueryAbs logServiceQuery) {
         // 非java类查询
         if (logServiceQuery.acqQueryType() != 1) return;
         // 无查询结果，可能是误查
@@ -221,10 +187,10 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     }
 
 
-    private String acqQuery(LogServiceQuery query) {
+    private String acqQuery(LogserviceQueryAbs query) {
         switch (query.acqQueryType()) {
             case 0:
-                return acqQuery((LogServiceKaQuery) query);
+                return acqQuery((LogserviceNginxQuery) query);
             case 1:
                 return acqQuery((LogServiceDefaultQuery) query);
             default:
@@ -259,31 +225,45 @@ public class AliyunLogServiceImpl implements AliyunLogService {
         return query;
     }
 
-    // nginx日志查询
-    private String acqQuery(LogServiceKaQuery kaQuery) {
+    /**
+     *     private String request_time;
+     private String http_x_forwarded_for;
+     private String upstream_addr;
+     private String uri;
+     private String upstream_response_time;
+     private String status;
+     * @param q
+     * @return
+     */
+    private String acqQuery(LogserviceNginxQuery q) {
         String query = "";
-        if (!StringUtils.isEmpty(kaQuery.getArgs())) {
-            query += "args = " + kaQuery.getArgs();
+        if (!StringUtils.isEmpty(q.getLogServiceCfg().getLogPath())) {
+            query += LogServiceDefaultQuery.TAG_PATH_KEY + ":" + q.getLogServiceCfg().getLogPath();
         }
-        if (!StringUtils.isEmpty(kaQuery.getUri())) {
+
+        if (!StringUtils.isEmpty(q.getHttp_x_forwarded_for())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
-            query += "uri = " + kaQuery.getUri();
+            query += "http_x_forwarded_for = " + q.getHttp_x_forwarded_for();
         }
-        if (!StringUtils.isEmpty(kaQuery.getMobile())) {
+        if (!StringUtils.isEmpty(q.getUpstream_addr())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
-            query += "mobile = " + kaQuery.getMobile();
+            query += "upstream_addr = " + q.getUpstream_addr();
         }
-        if (!StringUtils.isEmpty(kaQuery.getStatus())) {
+        if (!StringUtils.isEmpty( q.getUpstream_response_time())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
-            query += "status = " + kaQuery.getStatus();
+            query += "upstream_response_time = " + q.getUpstream_response_time();
         }
-        if (!StringUtils.isEmpty(kaQuery.getSourceIp())) {
+        if (!StringUtils.isEmpty(q.getStatus())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
-            query += "sourceIp = " + kaQuery.getSourceIp();
+            query += "status = " +q.getStatus();
         }
-        if (!StringUtils.isEmpty(kaQuery.getRequestTime())) {
+        if (!StringUtils.isEmpty(q.getUri())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
-            query += "requestTime >= " + kaQuery.getRequestTime();
+            query += "uri = " + q.getUri();
+        }
+        if (!StringUtils.isEmpty(q.getRequest_time())) {
+            query += (StringUtils.isEmpty(query)) ? "" : " and ";
+            query += "request_time >= " + q.getRequest_time();
         }
         return query;
     }
@@ -361,21 +341,13 @@ public class AliyunLogServiceImpl implements AliyunLogService {
 
     @Override
     public TableVO<List<LogFormatDefault>> queryDefaultLog(LogHistogramsVO logHistogramsVO) throws LogException {
-
         LogServiceDO logServiceDO = logServiceDao.queryLogServiceById(logHistogramsVO.getLogServiceId());
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupByName(logServiceDO.getTopic());
-
         ArrayList<QueriedLog> logs = queryLog(logHistogramsVO, logServiceDO);
         List<LogFormatDefault> list = new ArrayList<>();
         HashMap<String, Long> map = new HashMap<>();
 
         for (QueriedLog queriedLog : logs) {
-            // System.err.println(queriedLog.GetLogItem().ToJsonString());
-            // System.err.println("source:"+queriedLog.GetSource());
-
-            //JSONObject jsStr = JSONObject.parseObject(queriedLog.GetLogItem().ToJsonString());
-            //System.err.println(jsStr);
-            //LogFormatDefault lf = (LogFormatDefault) JSONObject.toJavaObject(jsStr, LogFormatDefault.class);
             LogFormatDefault lf = new LogFormatDefault();
 
             lf.setSource(queriedLog.GetSource());
@@ -385,7 +357,6 @@ public class AliyunLogServiceImpl implements AliyunLogService {
             try {
                 lf.setGmtLogtime(TimeUtils.stampSecToDate(String.valueOf(queriedLog.mLogItem.GetTime())));
             } catch (Exception e) {
-
             }
             for (LogContent content : queriedLog.mLogItem.GetLogContents()) {
                 if (content.GetKey().equalsIgnoreCase(LogServiceDefaultQuery.TAG_PATH_KEY)) {
@@ -394,10 +365,6 @@ public class AliyunLogServiceImpl implements AliyunLogService {
                 }
                 if (content.GetKey().equalsIgnoreCase(LogServiceDefaultQuery.CONTENT_KEY))
                     lf.setContent(content.GetValue());
-                // __tag__:__hostname__
-                //JSONObject jsStr2 = JSONObject.parseObject(queriedLog.GetLogItem().ToJsonString());
-                //LogFormatKaDO lfKa = (LogFormatKaDO) JSONObject.toJavaObject(jsStr,LogFormatKaDO.class);
-                //System.err.println("KEY=\'" + content.GetKey() + "\' ; VALUE=\'" + content.GetValue() + "\'");
             }
 
             list.add(lf);
@@ -409,43 +376,26 @@ public class AliyunLogServiceImpl implements AliyunLogService {
 
 
     @Override
-    public TableVO<List<LogFormatKa>> queryKaLog(LogHistogramsVO logHistogramsVO) throws LogException {
+    public TableVO<List<LogFormatNginx>> queryWwwLog(LogHistogramsVO logHistogramsVO) throws LogException {
         LogServiceDO logServiceDO = logServiceDao.queryLogServiceById(logHistogramsVO.getLogServiceId());
         ArrayList<QueriedLog> logs = queryLog(logHistogramsVO, logServiceDO);
-        List<LogFormatKa> list = new ArrayList<>();
+        List<LogFormatNginx> list = new ArrayList<>();
+        // TODO 缓存服务器信息
+        HashMap<String, ServerDO> serverMap = new HashMap<String, ServerDO>();
         for (QueriedLog queriedLog : logs) {
             JSONObject jsStr = JSONObject.parseObject(queriedLog.GetLogItem().ToJsonString());
-            LogFormatKa lfKa = (LogFormatKa) JSONObject.toJavaObject(jsStr, LogFormatKa.class);
-            if (!StringUtils.isEmpty(lfKa.getUpstreamAddr())) {
-                String ip = lfKa.getUpstreamAddr().split(":")[0];
-                ServerDO serverDO = serverDao.queryServerByInsideIp(ip);
-                if (serverDO != null)
-                    lfKa.setServerDO(serverDO);
+            LogFormatNginx lf = (LogFormatNginx) JSONObject.toJavaObject(jsStr, LogFormatNginx.class);
+            if (!StringUtils.isEmpty(lf.getUpstream_addr())) {
+                String ip = lf.getUpstream_addr().split(":")[0];
+                if (!serverMap.containsKey(ip))
+                    serverMap.put(ip, serverDao.queryServerByInsideIp(ip));
+                lf.setServerDO(serverMap.get(ip));
             }
-            try {
-                lfKa.setGmtLogtime(TimeUtils.stampSecToDate(String.valueOf(queriedLog.mLogItem.GetTime())));
-            } catch (Exception e) {
-
-            }
-            list.add(lfKa);
-        }
-        return new TableVO<>(list.size(), list);
-    }
-
-    @Override
-    public TableVO<List<LogFormatWww>> queryWwwLog(LogHistogramsVO logHistogramsVO) throws LogException {
-        LogServiceDO logServiceDO = logServiceDao.queryLogServiceById(logHistogramsVO.getLogServiceId());
-        ArrayList<QueriedLog> logs = queryLog(logHistogramsVO, logServiceDO);
-        List<LogFormatWww> list = new ArrayList<>();
-        for (QueriedLog queriedLog : logs) {
-            JSONObject jsStr = JSONObject.parseObject(queriedLog.GetLogItem().ToJsonString());
-            LogFormatWww lf = (LogFormatWww) JSONObject.toJavaObject(jsStr, LogFormatWww.class);
-            if (!StringUtils.isEmpty(lf.getUpstreamAddr())) {
-                String ip = lf.getUpstreamAddr().split(":")[0];
-                ServerDO serverDO = serverDao.queryServerByInsideIp(ip);
-                if (serverDO != null)
-                    lf.setServerDO(serverDO);
-            }
+            lf.setSource(jsStr.getString("__source__"));
+            lf.setHostname(jsStr.getString("__tag__:__hostname__"));
+            lf.setPath(jsStr.getString("__tag__:__path__"));
+            lf.setReceive_time(jsStr.getString("__tag__:__receive_time__"));
+            lf.setTopic(jsStr.getString("__topic__"));
             try {
                 lf.setGmtLogtime(TimeUtils.stampSecToDate(String.valueOf(queriedLog.mLogItem.GetTime())));
             } catch (Exception e) {
@@ -457,15 +407,12 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     }
 
     @Override
-    public Object queryNginxLog(LogHistogramsVO logHistogramsVO) throws LogException {
+    public TableVO<List<LogFormatNginx>> queryNginxLog(LogHistogramsVO logHistogramsVO) throws LogException {
         LogServiceDO logServiceDO = logServiceDao.queryLogServiceById(logHistogramsVO.getLogServiceId());
-        if (logServiceDO.getLogstore().equalsIgnoreCase("www")) {
+        if (logServiceDO.getLogstore().equalsIgnoreCase("default")) {
             return queryWwwLog(logHistogramsVO);
         }
-        if (logServiceDO.getLogstore().equalsIgnoreCase("ka-www") || logServiceDO.getLogstore().equalsIgnoreCase("ka-gray")) {
-            return queryKaLog(logHistogramsVO);
-        }
-        return new Object();
+        return null;
     }
 
 
@@ -549,33 +496,28 @@ public class AliyunLogServiceImpl implements AliyunLogService {
 
     private LogServiceServerGroupCfgVO getLogServiceServerGroupCfg(ServerGroupDO serverGroupDO) {
         LogServiceServerGroupCfgDO logServiceServerGroupCfgDO = logServiceDao.queryLogServiceServerGroupCfg(serverGroupDO.getId());
+
+        ServerGroupUseTypeDO useType = serverGroupService.getUseType(serverGroupDO.getUseType());
+
         if (logServiceServerGroupCfgDO == null)
-            return new LogServiceServerGroupCfgVO(serverGroupDO);
+            return new LogServiceServerGroupCfgVO(serverGroupDO, useType);
         KeyboxUserServerDO userServerDO = new KeyboxUserServerDO(SessionUtils.getUsername(), serverGroupDO.getId());
         boolean authed = false;
         long size = keyBoxService.getUserServerSize(userServerDO);
         if (size > 0)
             authed = true;
-        return new LogServiceServerGroupCfgVO(serverGroupDO, logServiceServerGroupCfgDO, authed);
+        return new LogServiceServerGroupCfgVO(serverGroupDO, logServiceServerGroupCfgDO, authed, useType);
     }
 
     @Override
     public TableVO<List<LogServiceServerGroupCfgVO>> queryServerGroupPage(int page, int length, String name, boolean isUsername, int useType) {
-        List<String> filterGroups = authService.getUserGroup(SessionUtils.getUsername());
-
-
-        // List<ServerGroupDO> list = serverGroupDao.queryServerGroupPage(filterGroups, page * length, length, name, ServerGroupDO.UseTypeEnum.webservice.getCode());
-
         String username = (isUsername ? SessionUtils.getUsername() : "");
         long size = serverGroupDao.queryLogServiceServerGroupSize(name, username, useType);
         List<ServerGroupDO> list = serverGroupDao.queryLogServiceServerGroupPage(page * length, length, name, username, useType);
-
-
         List<LogServiceServerGroupCfgVO> voList = new ArrayList<>();
         for (ServerGroupDO serverGroupDO : list) {
             voList.add(getLogServiceServerGroupCfg(serverGroupDO));
         }
-
         return new TableVO<>(size, voList);
 
     }

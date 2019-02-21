@@ -1,8 +1,9 @@
 package com.sdg.cmdb.plugin.chain;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
+
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,9 +11,8 @@ import java.util.List;
 /**
  * 任务执行链路
  */
+@Slf4j
 public class TaskChain {
-
-    private static final Logger logger = LoggerFactory.getLogger(TaskChain.class);
 
     /**
      * 执行链路名称
@@ -46,10 +46,10 @@ public class TaskChain {
             BusinessWrapper<String> result = item.runTask();
             callback.doNotify(result);
             if (!result.isSuccess()) {
-                logger.warn("run task={} failure, result={}", item.getTaskName(), result.getMsg());
+                log.warn("run task={} failure, result={}", item.getTaskName(), result.getMsg());
                 break;
             } else {
-                logger.info("run task={} success, result={}", item.getTaskName(), result.getBody());
+                log.info("run task={} success, result={}", item.getTaskName(), result.getBody());
             }
         }
     }

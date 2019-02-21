@@ -1,5 +1,10 @@
 package com.sdg.cmdb.domain.workflow;
 
+<<<<<<< HEAD
+=======
+import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.auth.UserVO;
+>>>>>>> develop
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
 
 import java.io.Serializable;
@@ -17,6 +22,18 @@ public class WorkflowTodoVO extends WorkflowTodoDO implements Serializable {
 
     private HashMap<String, WorkflowTodoUserDO> todoUserList;
 
+<<<<<<< HEAD
+=======
+    // 质量保证用户列表
+    private List<UserVO> qaUserList;
+
+    // 部门经理用户列表
+    private List<UserVO> dlUserList;
+
+    // 运维工程师用户列表
+    private List<UserVO> opsUserList;
+
+>>>>>>> develop
     private WorkflowDO workflowDO;
 
     @Override
@@ -50,6 +67,10 @@ public class WorkflowTodoVO extends WorkflowTodoDO implements Serializable {
         setContent(workflowTodoDO.getContent());
         this.todoDetails = todoDetails;
         this.todoUserList = todoUserList;
+<<<<<<< HEAD
+=======
+        setNotice(workflowTodoDO.getNotice());
+>>>>>>> develop
     }
 
     public WorkflowTodoVO() {
@@ -87,5 +108,31 @@ public class WorkflowTodoVO extends WorkflowTodoDO implements Serializable {
         this.todoDetails = todoDetails;
     }
 
+<<<<<<< HEAD
 
+=======
+    public List<UserVO> getQaUserList() {
+        return qaUserList;
+    }
+
+    public void setQaUserList(List<UserVO> qaUserList) {
+        this.qaUserList = qaUserList;
+    }
+
+    public List<UserVO> getDlUserList() {
+        return dlUserList;
+    }
+
+    public void setDlUserList(List<UserVO> dlUserList) {
+        this.dlUserList = dlUserList;
+    }
+
+    public List<UserVO> getOpsUserList() {
+        return opsUserList;
+    }
+
+    public void setOpsUserList(List<UserVO> opsUserList) {
+        this.opsUserList = opsUserList;
+    }
+>>>>>>> develop
 }

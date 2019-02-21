@@ -37,6 +37,10 @@
         networkSupport,
         cpu,
         memory,
+<<<<<<< HEAD
+=======
+        systemDiskSize,
+>>>>>>> develop
         dataDiskSize,
         ioOptimized,
         systemDiskCategory,
@@ -48,6 +52,10 @@
         #{networkSupport},
         #{cpu},
         #{memory},
+<<<<<<< HEAD
+=======
+        #{systemDiskSize},
+>>>>>>> develop
         #{dataDiskSize},
         #{ioOptimized},
         #{systemDiskCategory},
@@ -126,7 +134,7 @@
                 </foreach>
             </if>
         </where>
-        ORDER BY serverName DESC,gmtCreate DESC
+        ORDER BY serverName DESC,serialNumber,gmtCreate DESC
         limit #{pageStart}, #{length}
     </select>
 
@@ -286,6 +294,43 @@
         limit #{pageStart}, #{length}
     </select>
 
+
+    <select id="getEcsRenewPage" parameterType="object" resultType="EcsServerDO">
+        SELECT * FROM oc_ecs_server
+        <where>
+            instanceChargeType = "PrePaid"
+            AND expiredTime <![CDATA[<=]]> DATE_FORMAT(#{expiredTime},'%Y-%m-%d %H:%i:%s')
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+        </where>
+        ORDER BY expiredTime ,serverName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getEcsRenewSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_ecs_server
+        <where>
+            instanceChargeType = "PrePaid"
+            AND expiredTime <![CDATA[<=]]> DATE_FORMAT(#{expiredTime},'%Y-%m-%d %H:%i:%s')
+            <if test="serverName != null and serverName != ''">
+                AND serverName like "%" #{serverName} "%"
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
+            </if>
+            <if test="status != -1">
+                AND status = #{status}
+            </if>
+        </where>
+    </select>
+
     <select id="getEcsServerByFinance" parameterType="_boolean" resultType="EcsServerDO">
         SELECT * FROM oc_ecs_server
         WHERE finance = #{finance}
@@ -440,7 +485,11 @@
         regionId,
         finance,
         internetChargeType,
-        status
+        instanceChargeType,
+        status,
+        expiredTime,
+        instanceType,
+        instanceTypeFamily
         ) VALUES (
         #{creationTime},
         #{deviceAvailable},
@@ -460,7 +509,11 @@
         #{regionId},
         #{finance},
         #{internetChargeType},
-        #{status}
+        #{instanceChargeType},
+        #{status},
+        #{expiredTime},
+        #{instanceType},
+        #{instanceTypeFamily}
         );
     </insert>
 
@@ -484,7 +537,11 @@
         area = #{area},
         regionId = #{regionId},
         internetChargeType = #{internetChargeType},
-        status = #{status}
+        instanceChargeType = #{instanceChargeType},
+        status = #{status},
+        expiredTime = #{expiredTime},
+        instanceType = #{instanceType},
+        instanceTypeFamily = #{instanceTypeFamily}
         WHERE id = #{id}
     </update>
 

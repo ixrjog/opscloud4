@@ -22,8 +22,6 @@ import java.util.Map;
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class AnsibleHostServiceTest {
 
-    @Resource
-    private AnsibleHostService ansibleHostService;
 
     @Resource
     protected ServerDao serverDao;
@@ -51,6 +49,7 @@ public class AnsibleHostServiceTest {
     }
 
 
+<<<<<<< HEAD
     @Test
     public void testAcqHostCfg() {
       System.err.println(ansibleHostService.acqHostsCfgByUseType(ServerGroupDO.UseTypeEnum.webservice.getCode()));
@@ -72,4 +71,19 @@ public class AnsibleHostServiceTest {
         System.err.println(Integer.valueOf(x));
     }
 
+=======
+
+
+    @Test
+    public void testSubgroup() {
+        int i = 10/3;
+        int j = 10%3;
+        System.err.println(i);
+        System.err.println(j);
+
+        String x = "";
+        System.err.println(Integer.valueOf(x));
+    }
+
+>>>>>>> develop
 }

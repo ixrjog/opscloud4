@@ -66,14 +66,6 @@
     </select>
 
 
-
-
-
-
-
-
-
-
     <!-- 获取资源组数目 -->
     <select id="getResourceGroupSize" parameterType="string" resultType="_long">
         SELECT count(*) FROM new_auth_rgroup

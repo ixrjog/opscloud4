@@ -25,7 +25,7 @@ public class ExplainServiceImplTest {
     @Test
     public void testdoScanRepoAndTransRemote() {
         ExplainInfo explainInfo = new ExplainInfo();
-        explainInfo.setRepo("http://explain@stash.net/scm/cmdb/cmdb.git");
+        explainInfo.setRepo("http://explain@jumpserver.net/scm/cmdb/cmdb.git");
         explainInfo.setScanPath(JSON.toJSONString(Arrays.asList("cmdb/cmdb-service/src/main/resources/sql")));
         explainInfo.setNotifyEmails(JSON.toJSONString(Arrays.asList("xiaozhenxing@net")));
 

@@ -14,7 +14,7 @@ app.controller('serverGroupCtrl', function ($scope, $state, $uibModal, $timeout,
     $scope.pageData = [];
     $scope.totalItems = 0;
     $scope.currentPage = 0;
-    $scope.pageLength = 10;
+    $scope.pageLength = 28;
 
     $scope.pageChanged = function () {
         $scope.doQuery();
@@ -431,7 +431,7 @@ app.controller('serverGroupUseTypeCtrl', function ($scope, $state, $uibModal, $t
 
     $scope.doQuery = function () {
 
-        var url = "/servergroup//useType/page?"
+        var url = "/servergroup/useType/page?"
             + "typeName=" + $scope.queryName
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1) + "&"
             + "&length=" + $scope.pageLength;
@@ -1013,7 +1013,7 @@ app.controller('serverGroupPropertyCtrl', function ($scope, $state, $uibModal, h
                         httpService: function () {
                             return httpService;
                         },
-                        propertyInfo: function () {
+                        propertyConfigList: function () {
                             return data.body;
                         }
                     }
@@ -1042,33 +1042,7 @@ app.controller('serverGroupPropertyCtrl', function ($scope, $state, $uibModal, h
         });
     }
 
-    $scope.launchPropertyGroup = function (serverGroupId, propertyGroupId) {
-        var url = "/servergroup/propertygroup/launch?"
-            + "serverGroupId=" + serverGroupId
-            + "&propertyGroupId=" + propertyGroupId;
 
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                var modalInstance = $uibModal.open({
-                    templateUrl: 'propertyLaunch',
-                    controller: 'propertyLaunchInstanceCtrl',
-                    size: 'lg',
-                    resolve: {
-                        httpService: function () {
-                            return httpService;
-                        },
-                        propertyInfo: function () {
-                            return data.body;
-                        }
-                    }
-                });
-            } else {
-                toaster.pop("warning", data.msg);
-            }
-        }, function (err) {
-            toaster.pop("error", err);
-        });
-    }
 
 });
 
@@ -1213,21 +1187,22 @@ app.controller('servergpsInfoInstanceCtrl', function ($scope, $uibModalInstance,
 
 });
 
-app.controller('propertyLaunchInstanceCtrl', function ($scope, $uibModalInstance, $compile, $parse, httpService, propertyInfo) {
-    $scope.propertyInfo = propertyInfo;
+app.controller('propertyLaunchInstanceCtrl', function ($scope, $uibModalInstance, $compile, $parse, httpService, propertyConfigList) {
 
-    $scope.toPrettyJSON = function (objStr, tabWidth) {
-        try {
-            var obj = $parse(objStr)({});
-        } catch (e) {
-            // eat $parse error
-            return objStr;
-        }
+    $scope.configList = propertyConfigList;
 
-        return JSON.stringify(obj, null, Number(tabWidth));
-    };
+    // $scope.toPrettyJSON = function (objStr, tabWidth) {
+    //     try {
+    //         var obj = $parse(objStr)({});
+    //     } catch (e) {
+    //         // eat $parse error
+    //         return objStr;
+    //     }
+    //
+    //     return JSON.stringify(obj, null, Number(tabWidth));
+    // };
 
-    // $scope.propertyInfo = $sce.trustAsHtml($scope.propertyInfo.replace(/(\r\n|\n|\r)/gm, "<br />"));
+
 });
 
 
@@ -1249,13 +1224,15 @@ app.controller('useTypeInstanceCtrl', function ($scope, $uibModalInstance, $comp
     $scope.saveUseType = function () {
         var url = "/servergroup/useType/save";
 
-        if ($scope.useTypeItem.useType == null || $scope.useTypeItem.useType == 0) {
+        if ($scope.useTypeItem.useType == null || $scope.useTypeItem.useType < 0) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = "必须指定类型值!";
+            return ;
         }
         if ($scope.useTypeItem.typeName == null || $scope.useTypeItem.typeName  == "") {
             $scope.alert.type = 'warning';
             $scope.alert.msg = "必须指定类型名称!";
+            return ;
         }
 
         httpService.doPostWithJSON(url, $scope.useTypeItem ).then(function (data) {

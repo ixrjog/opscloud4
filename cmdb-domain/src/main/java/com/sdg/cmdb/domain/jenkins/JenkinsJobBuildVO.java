@@ -1,5 +1,6 @@
 package com.sdg.cmdb.domain.jenkins;
 
+import com.sdg.cmdb.domain.ci.BuildArtifactDO;
 import com.sdg.cmdb.domain.gitlab.GitlabWebHooksDO;
 
 import java.io.Serializable;

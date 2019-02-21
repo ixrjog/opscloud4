@@ -262,8 +262,8 @@ app.controller('jenkinsJobInstanceCtrl', function ($scope, $uibModalInstance, to
     $scope.buildType = buildType;
     $scope.paramList = [];
     $scope.nowParam = {};
-    //ssh://git@stash.51xianqu.net:7999/kamt/kamembertest.git
-    $scope.repositoryUrl = "ssh://git@stash.51xianqu.net:7999/";
+    //ssh://git@jumpserver.51xianqu.net:7999/kamt/kamembertest.git
+    $scope.repositoryUrl = "ssh://git@jumpserver.51xianqu.net:7999/";
 
     $scope.nowBuildTools = {};
     //$scope.buildTool = "";
@@ -523,7 +523,7 @@ app.controller('jenkinsJobInstanceCtrl', function ($scope, $uibModalInstance, to
     }
 
     $scope.queryStashProject = function (queryParam) {
-        var url = "/todo/todoNewProject/stash/project/query?page=0&length=10&name=" + queryParam;
+        var url = "/todo/todoNewProject/jumpserver/project/query?page=0&length=10&name=" + queryParam;
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 var body = data.body;
@@ -549,7 +549,7 @@ app.controller('jenkinsJobInstanceCtrl', function ($scope, $uibModalInstance, to
     $scope.getStashProject = function () {
         if ($scope.nowStashRepository.selected == null) return;
         if ($scope.nowStashProject.selected != null) return;
-        var url = "/todo/todoNewProject/stash/project/get?id=" + $scope.nowStashRepository.selected.project_id;
+        var url = "/todo/todoNewProject/jumpserver/project/get?id=" + $scope.nowStashRepository.selected.project_id;
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 var body = data.body;
@@ -598,7 +598,7 @@ app.controller('jenkinsJobInstanceCtrl', function ($scope, $uibModalInstance, to
     $scope.queryStashRepository = function (queryParam) {
 
         // ($scope.nowServerGroup.selected == null ? -1 : $scope.nowServerGroup.selected.id)
-        var url = "/todo/todoNewProject/stash/repository/query?page=0&length=10" +
+        var url = "/todo/todoNewProject/jumpserver/repository/query?page=0&length=10" +
             "&id=" + ($scope.nowStashProject.selected == null ? -1 : $scope.nowStashProject.selected.id) +
             "&name=" + queryParam;
 

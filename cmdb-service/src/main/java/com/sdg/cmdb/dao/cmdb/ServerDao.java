@@ -184,6 +184,20 @@ public interface ServerDao {
             @Param("pageStart") long pageStart, @Param("length") int length);
 
 
+    long getEcsRenewSize(
+            @Param("serverName") String serverName,
+            @Param("queryIp") String queryIp,
+            @Param("status") int status,
+            @Param("expiredTime") String expiredTime);
+
+    List<EcsServerDO> getEcsRenewPage(
+            @Param("serverName") String serverName,
+            @Param("queryIp") String queryIp,
+            @Param("status") int status,
+            @Param("expiredTime") String expiredTime,
+            @Param("pageStart") long pageStart, @Param("length") int length);
+
+
     /**
      * 按finance（是否金融云）查询ECS服务器
      * @param finance

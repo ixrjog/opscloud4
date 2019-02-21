@@ -1,5 +1,6 @@
 package com.sdg.cmdb.dao.cmdb;
 
+import com.sdg.cmdb.domain.gitlab.GitlabProjectDO;
 import com.sdg.cmdb.domain.gitlab.GitlabWebHooksCommitsDO;
 import com.sdg.cmdb.domain.gitlab.GitlabWebHooksDO;
 import org.apache.ibatis.annotations.Param;
@@ -37,5 +38,24 @@ public interface GitlabDao {
 
     List<GitlabWebHooksCommitsDO> queryCommitsByCommit(@Param("commitsId") String commitsId);
 
+    int addGitlabProject(GitlabProjectDO gitlabProjectDO);
+
+    int updateGitlabProject(GitlabProjectDO gitlabProjectDO);
+
+    GitlabProjectDO getGitlabProjectByProjectId(@Param("projectId") int projectId);
+
+    GitlabProjectDO getGitlabProjectByName(@Param("name") String name);
+
+
+    long getGitlabProjectSize(
+            @Param("name") String name,
+            @Param("username") String username);
+
+    List<GitlabProjectDO> getGitlabProjectPage(
+            @Param("name") String name,
+            @Param("username") String username,
+            @Param("pageStart") long pageStart, @Param("length") int length);
+
+    // List<GitlabProjectDO> queryGitlabProject(GitlabProjectDO gitlabProjectDO);
 
 }

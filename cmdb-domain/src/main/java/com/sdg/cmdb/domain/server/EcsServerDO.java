@@ -1,6 +1,8 @@
 package com.sdg.cmdb.domain.server;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import lombok.Data;
 import org.springframework.util.StringUtils;
 
 import java.io.Serializable;
@@ -12,6 +14,7 @@ import java.util.Date;
 /**
  * Created by liangjian on 2016/11/14.
  */
+@Data
 public class EcsServerDO implements Serializable {
 
     private static final long serialVersionUID = -7988865367153517454L;
@@ -80,6 +83,11 @@ public class EcsServerDO implements Serializable {
 
     private int dataDiskSize;
 
+    /**
+     * 过期时间。按照ISO8601标准表示，并需要使用UTC时间，格式为yyyy-MM-ddTHH:mm:ssZ。
+     */
+    private String expiredTime;
+
     private String gmtModify;
 
     private String gmtCreate;
@@ -91,213 +99,37 @@ public class EcsServerDO implements Serializable {
      */
     private String internetChargeType;
 
+    /**
+     * 实例的计费方式。可能值：
+     * PrePaid：预付费（包年包月 ）
+     * PostPaid：按量付费
+     */
+    private String instanceChargeType;
 
-    public long getId() {
-        return id;
-    }
+    private String instanceType;
+    private String instanceTypeFamily;
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(long serverId) {
-        this.serverId = serverId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getCreationTime() {
-        return creationTime;
-    }
-
-    public void setCreationTime(String creationTime) {
-        this.creationTime = creationTime;
-    }
-
-    public boolean isDeviceAvailable() {
-        return deviceAvailable;
-    }
-
-    public void setDeviceAvailable(boolean deviceAvailable) {
-        this.deviceAvailable = deviceAvailable;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public void setServerName(String serverName) {
-        this.serverName = serverName;
-    }
-
-    public String getInsideIp() {
-        return insideIp;
-    }
-
-    public void setInsideIp(String insideIp) {
-        this.insideIp = insideIp;
-    }
-
-    public String getPublicIp() {
-        return publicIp;
-    }
-
-    public void setPublicIp(String publicIp) {
-        this.publicIp = publicIp;
-    }
-
-    public int getInternetMaxBandwidthOut() {
-        return internetMaxBandwidthOut;
-    }
-
-    public void setInternetMaxBandwidthOut(int internetMaxBandwidthOut) {
-        this.internetMaxBandwidthOut = internetMaxBandwidthOut;
-    }
-
-    public String getInstanceId() {
-        return instanceId;
-    }
-
-    public void setInstanceId(String instanceId) {
-        this.instanceId = instanceId;
-    }
-
-    public String getArea() {
-        return area;
-    }
-
-    public void setArea(String area) {
-        this.area = area;
-    }
-
-    public String getRegionId() {
-        return regionId;
-    }
-
-    public void setRegionId(String regionId) {
-        this.regionId = regionId;
-    }
-
-    public boolean isFinance() {
-        return finance;
-    }
-
-    public void setFinance(boolean finance) {
-        this.finance = finance;
-    }
-
-    public boolean isIoOptimized() {
-        return ioOptimized;
-    }
-
-    public void setIoOptimized(boolean ioOptimized) {
-        this.ioOptimized = ioOptimized;
-    }
-
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
-    }
-
-    public int getCpu() {
-        return cpu;
-    }
-
-    public void setCpu(int cpu) {
-        this.cpu = cpu;
-    }
-
-    public int getMemory() {
-        return memory;
-    }
-
-    public String getSystemDiskCategory() {
-        return systemDiskCategory;
-    }
-
-    public void setSystemDiskCategory(String systemDiskCategory) {
-        this.systemDiskCategory = systemDiskCategory;
-    }
-
-    public int getSystemDiskSize() {
-        return systemDiskSize;
-    }
-
-    public void setSystemDiskSize(int systemDiskSize) {
-        this.systemDiskSize = systemDiskSize;
-    }
-
-    public String getDataDiskCategory() {
-        return dataDiskCategory;
-    }
-
-    public void setDataDiskCategory(String dataDiskCategory) {
-        this.dataDiskCategory = dataDiskCategory;
-    }
-
-    public int getDataDiskSize() {
-        return dataDiskSize;
-    }
-
-    public void setDataDiskSize(int dataDiskSize) {
-        this.dataDiskSize = dataDiskSize;
-    }
-
-    public void setMemory(int memory) {
-        this.memory = memory;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getInternetChargeType() {
-        return internetChargeType;
-    }
-
-    public void setInternetChargeType(String internetChargeType) {
-        this.internetChargeType = internetChargeType;
-    }
-
-    public EcsServerDO(DescribeInstancesResponse.Instance ecs) {
-
-        if (ecs.getCreationTime() != null)
-            this.creationTime = acqCreationTime(ecs.getCreationTime());
-        this.deviceAvailable = ecs.getDeviceAvailable();
-        this.serverName = ecs.getInstanceName();
-        if (ecs.getInstanceNetworkType().equals("vpc")) {
-            this.insideIp = ecs.getVpcAttributes().getPrivateIpAddress().get(0);
+    public EcsServerDO(DescribeInstancesResponse.Instance instance) {
+        if (!StringUtils.isEmpty(instance.getCreationTime()))
+            this.creationTime = acqGmtTime(instance.getCreationTime());
+        this.instanceChargeType = instance.getInstanceChargeType();
+        if (instance.getInstanceChargeType().equalsIgnoreCase("PrePaid") && !StringUtils.isEmpty(instance.getExpiredTime()))
+            this.expiredTime = acqGmtTime(instance.getExpiredTime());
+        this.deviceAvailable = instance.getDeviceAvailable();
+        this.serverName = instance.getInstanceName();
+        if (instance.getInstanceNetworkType().equals("vpc")) {
+            this.insideIp = instance.getVpcAttributes().getPrivateIpAddress().get(0);
         } else {
-            this.insideIp = ecs.getInnerIpAddress().get(0);
+            this.insideIp = instance.getInnerIpAddress().get(0);
         }
-        if (ecs.getPublicIpAddress().size() != 0) {
-            this.publicIp = ecs.getPublicIpAddress().get(0);
+        if (instance.getPublicIpAddress().size() != 0) {
+            this.publicIp = instance.getPublicIpAddress().get(0);
         }
+        // 弹性IP
+        if (!StringUtils.isEmpty(instance.getEipAddress().getIpAddress())) {
+            this.publicIp = instance.getEipAddress().getIpAddress();
+        }
+<<<<<<< HEAD
         // 弹性IP
         if (!StringUtils.isEmpty(ecs.getEipAddress().getIpAddress())) {
             this.publicIp = ecs.getEipAddress().getIpAddress();
@@ -311,13 +143,25 @@ public class EcsServerDO implements Serializable {
         this.area = ecs.getZoneId();
         this.regionId = ecs.getRegionId();
         this.internetChargeType = ecs.getInstanceChargeType();
+=======
+        this.internetMaxBandwidthOut = instance.getInternetMaxBandwidthOut();
+        this.cpu = instance.getCpu();
+        this.memory = instance.getMemory();
+        this.ioOptimized = instance.getIoOptimized();
+        this.instanceId = instance.getInstanceId();
+        this.area = instance.getZoneId();
+        this.regionId = instance.getRegionId();
+        this.internetChargeType = instance.getInternetChargeType();
+        this.instanceType = instance.getInstanceType();
+        this.instanceTypeFamily = instance.getInstanceTypeFamily();
+>>>>>>> develop
     }
 
     //转换时间
-    private String acqCreationTime(String createTime) {
+    private String acqGmtTime(String time) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
         try {
-            Date date = format.parse(createTime);
+            Date date = format.parse(time);
             SimpleDateFormat fmt;
             fmt = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
             return fmt.format(date);
@@ -347,30 +191,7 @@ public class EcsServerDO implements Serializable {
 
     @Override
     public String toString() {
-        return "EcsServerDO{" +
-                "id=" + id +
-                ", creationTime='" + creationTime + '\'' +
-                ", deviceAvailable=" + deviceAvailable +
-                ", serverName='" + serverName + '\'' +
-                ", serverId='" + serverId + '\'' +
-                ", insideIp='" + insideIp + '\'' +
-                ", publicIp='" + publicIp + '\'' +
-                ", internetMaxBandwidthOut=" + internetMaxBandwidthOut +
-                ", cpu=" + cpu +
-                ", memory=" + memory +
-                ", systemDiskCategory='" + systemDiskCategory + '\'' +
-                ", systemDiskSize=" + systemDiskSize +
-                ", dataDiskCategory='" + dataDiskCategory + '\'' +
-                ", dataDiskSize=" + dataDiskSize +
-                ", ioOptimized=" + ioOptimized +
-                ", instanceId='" + instanceId + '\'' +
-                ", area='" + area + '\'' +
-                ", regionId='" + regionId + '\'' +
-                ", internetChargeType='" + internetChargeType + '\'' +
-                ", status='" + status + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 
 

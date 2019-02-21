@@ -23,6 +23,8 @@ public class EcsTemplateDO implements Serializable {
 
     private int memory;
 
+    private int systemDiskSize;
+
     private int dataDiskSize;
 
     private String ioOptimized;
@@ -116,6 +118,14 @@ public class EcsTemplateDO implements Serializable {
 
     public void setMemory(int memory) {
         this.memory = memory;
+    }
+
+    public int getSystemDiskSize() {
+        return systemDiskSize;
+    }
+
+    public void setSystemDiskSize(int systemDiskSize) {
+        this.systemDiskSize = systemDiskSize;
     }
 
     public int getDataDiskSize() {

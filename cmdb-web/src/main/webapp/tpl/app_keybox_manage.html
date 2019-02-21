@@ -198,8 +198,7 @@
                                                                     <span class="glyphicon glyphicon-remove"></span>关闭
                                                                 </button>
                                                             </div>
-                                                            <pre style="background-color: #777" hljs
-                                                                 hljs-source="taskServer.msg"></pre>
+                                                            <div hljs hljs-source="taskServer.msg"></div>
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -336,11 +335,12 @@
                                         <!--</div>-->
                                     <!--</div>-->
 
+                                    <!--style="background-color: #54596a"-->
                                     <div class="form-group">
                                         <div class="col-md-8">
                                             <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>加密的私钥(rsa)</label>
-                                            <pre  ng-show="!editPrivateKey" style="background-color: #54596a" hljs
-                                                 hljs-source="keyItem.privateKey"></pre>
+                                            <div  ng-show="!editPrivateKey" hljs
+                                                 hljs-source="keyItem.privateKey"></div>
                                             <div class="col-md-9">
                                                 <textarea
                                                         uib-popover-html="'填入pirvateKey（id_rsa）原文'" popover-trigger="'mouseenter'"
@@ -374,8 +374,13 @@
                                     <div class="form-group">
                                         <div class="col-md-8">
                                             <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>公钥(public key)</label>
+<<<<<<< HEAD
                                             <pre ng-show="!editPublicKey" style="background-color: #54596a" hljs
                                                  hljs-source="keyItem.publicKey"></pre>
+=======
+                                            <div ng-show="!editPublicKey" hljs
+                                                 hljs-source="keyItem.publicKey"></div>
+>>>>>>> develop
                                             <div class="col-md-9">
                                                 <textarea ng-show="editPublicKey" class="form-control" ng-model="keyItem.publicKey"
                                                           rows="5"></textarea>
@@ -395,6 +400,87 @@
                                             <span class="glyphicon glyphicon-ok"></span>保存公钥</button>
                                     </div>
 
+
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="3" heading="Jumpserver管理">
+                    <div ng-controller="jumpserverCtrl">
+                        <div class="panel">
+                            <div class="panel-body">
+                                <div class="form-horizontal">
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label">Jumpserver Host</label>
+                                            <div class="col-md-9">
+                                                <input type="text" class="form-control" ng-model="jumpserver.host" readonly>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>管理账户</label>
+                                            <div class="col-md-4">
+                                                <ui-select ng-model="nowAdminuser.selected" theme="bootstrap">
+                                                    <ui-select-match placeholder="搜索管理账户名称......">{{$select.selected.username}}</ui-select-match>
+                                                    <ui-select-choices refresh="queryAdminuser($select.search)" refresh-dalay="0"
+                                                                       repeat="item in adminuserList | filter: $select.search">
+                                                        <div ng-bind-html="item.username | highlight: $select.search"></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-sm btn-info" ng-click="saveAdminuser()"><span
+                                                        class="glyphicon glyphicon-ok"></span>保存
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>系统账户</label>
+                                            <div class="col-md-4">
+                                                <ui-select ng-model="nowSystemuser.selected" theme="bootstrap">
+                                                    <ui-select-match placeholder="搜索系统账户名称......">{{$select.selected.username}}</ui-select-match>
+                                                    <ui-select-choices refresh="querySystemuser($select.search)" refresh-dalay="0"
+                                                                       repeat="item in systemuserList | filter: $select.search">
+                                                        <div ng-bind-html="item.username | highlight: $select.search"></div>
+                                                    </ui-select-choices>
+                                                </ui-select>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-sm btn-info" ng-click="saveSystemuser()"><span
+                                                        class="glyphicon glyphicon-ok"></span>保存
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="col-md-8">
+                                            <label class="col-md-3 control-label">数据同步</label>
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-success" ng-click="syncAssets()">
+                                                    <i class="fa fa-spin fa-spinner" ng-show="btnSyncAssets"></i>
+                                                    <i class="icon icon-control-play" ng-show="!btnSyncAssets"></i>同步资产
+                                                </button>
+                                            </div>
+
+                                            <div class="col-md-2">
+                                                <button type="button" class="btn btn-success" ng-click="syncUsers()">
+                                                    <i class="fa fa-spin fa-spinner" ng-show="btnSyncUsers"></i>
+                                                    <i class="icon icon-control-play" ng-show="!btnSyncUsers"></i>同步用户
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
 
 
                                 </div>

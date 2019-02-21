@@ -223,69 +223,6 @@ public class ConfigController {
         }
     }
 
-
-    /**
-     * 保存服务器同步配置
-     *
-     * @param configFileCopyVO
-     * @return
-     */
-    @RequestMapping(value = "/fileCopy/save", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult saveFileCopy(@RequestBody ConfigFileCopyVO configFileCopyVO) {
-        return new HttpResult(configService.saveFileCopy(configFileCopyVO));
-    }
-
-
-    /**
-     * 保存服务器同步后远程执行Script配置
-     *
-     * @param configFileCopyDoScriptDO
-     * @return
-     */
-    @RequestMapping(value = "/fileCopy/script/save", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult saveFileCopyScript(@RequestBody ConfigFileCopyDoScriptDO configFileCopyDoScriptDO) {
-        return new HttpResult(configService.saveFileCopyScript(configFileCopyDoScriptDO));
-    }
-
-    /**
-     * 保存服务器同步后远程执行Script详情页
-     *
-     * @param groupName
-     * @return
-     */
-    @RequestMapping(value = "/fileCopy/script/query", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getFileCopyScriptPage(@RequestParam String groupName, @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(configService.getFileCopyScriptPage(groupName, page, length));
-    }
-
-
-    /**
-     * 查询服务器同步配置
-     *
-     * @param groupName
-     * @return
-     */
-    @RequestMapping(value = "/fileCopy/query", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult queryFileCopy(@RequestParam String groupName) {
-        return new HttpResult(configService.queryFileCopy(groupName));
-    }
-
-    /**
-     * 删除服务器同步配置
-     *
-     * @param id
-     * @return
-     */
-    @RequestMapping(value = "/fileCopy/del", method = RequestMethod.DELETE)
-    @ResponseBody
-    public HttpResult queryFileCopy(@RequestParam long id) {
-        return new HttpResult(configService.delFileCopy(id));
-    }
-
     /**
      * 获取文件分页数据
      *
@@ -296,9 +233,16 @@ public class ConfigController {
      */
     @RequestMapping(value = "/file/query", method = RequestMethod.POST)
     @ResponseBody
-    public HttpResult getFile(@RequestBody ConfigFileDO configFileDO, @RequestParam int page, @RequestParam int length) {
+    public HttpResult queryFile(@RequestBody ConfigFileDO configFileDO, @RequestParam int page, @RequestParam int length) {
         TableVO<List<ConfigFileVO>> tableVO = configService.getConfigFilePage(configFileDO, page, length);
         return new HttpResult(tableVO);
+    }
+
+
+    @RequestMapping(value = "/file/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getFile() {
+        return new HttpResult(configService.getConfigFile());
     }
 
     /**
@@ -362,17 +306,6 @@ public class ConfigController {
     @ResponseBody
     public HttpResult queryFilePath(@RequestParam long fileGroupId) {
         return new HttpResult(configService.queryFilePath(fileGroupId));
-    }
-
-    /**
-     * 查询Getway配置的用户目录
-     *
-     * @return
-     */
-    @RequestMapping(value = "/file/getGetwayPath", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult queryFilePath() {
-        return new HttpResult(configService.getGetwayPath());
     }
 
 
@@ -505,7 +438,6 @@ public class ConfigController {
     }
 
 
-
     /**
      * 创建privateKey
      *
@@ -515,6 +447,68 @@ public class ConfigController {
     @ResponseBody
     public HttpResult queryFilePath(@RequestParam String keyPath) {
         return new HttpResult(keyBoxService.saveKey(keyPath));
+    }
+
+
+    /**
+     * @param configFilePlaybookDO
+     * @return
+     */
+    @RequestMapping(value = "/filePlaybook/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult saveFilePlaybook(@RequestBody ConfigFilePlaybookDO configFilePlaybookDO) {
+        BusinessWrapper<Boolean> wrapper = configService.saveFilePlaybook(configFilePlaybookDO);
+        if (wrapper.isSuccess()) {
+            return new HttpResult(wrapper.getBody());
+        } else {
+            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+        }
+    }
+
+
+    /**
+     * @return
+     */
+    @RequestMapping(value = "/filePlaybook/page", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getFilePlaybookPage() {
+        return new HttpResult(configService.getFilePlaybookPage(),true);
+    }
+
+    /**
+     * @return
+     */
+    @RequestMapping(value = "/filePlaybook/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delFilePlaybook(@RequestParam long id) {
+        return new HttpResult(configService.delFilePlaybook(id));
+    }
+
+
+    @RequestMapping(value = "/filePlaybook/do", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult doPlaybook(@RequestParam long id) {
+        return new HttpResult(configService.doPlaybook(id, 1));
+    }
+
+
+    @RequestMapping(value = "/filePlaybook/getLog", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getPlaybookLog(@RequestParam long id) {
+        return new HttpResult(configService.getPlaybookLog(id));
+    }
+
+    @RequestMapping(value = "/filePlaybook/queryLogPage", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getPlaybookLogPage(@RequestParam String playbookName, @RequestParam String username, @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(
+                configService.getPlaybookLogPage(playbookName, username, page, length));
+    }
+
+    @RequestMapping(value = "/filePlaybook/delLog", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delPlaybookLog(@RequestParam long id) {
+        return new HttpResult(configService.delPlaybookLog(id));
     }
 
 }

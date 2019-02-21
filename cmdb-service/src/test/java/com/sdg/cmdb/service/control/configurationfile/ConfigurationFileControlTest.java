@@ -19,8 +19,8 @@ import java.util.Random;
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class ConfigurationFileControlTest {
 
-    @Resource
-    private AnsibleHostService ansibleHostService;
+//    @Resource
+//    private AnsibleHostService ansibleHostService;
 
     @Resource
     private InterfaceCIService interfaceCIService;
@@ -31,8 +31,6 @@ public class ConfigurationFileControlTest {
     @Resource
     private ConfigurationFileControlService configurationFileControlService;
 
-    @Resource
-    private ShadowsocksService shadowsocksService;
 
     @Resource
     private GetwayService getwayService;
@@ -51,26 +49,7 @@ public class ConfigurationFileControlTest {
 
     }
 
-    @Test
-    public void testShadowsocksService() {
-        //// TODO 生成翻墙配置
-        String result = shadowsocksService.acqConfig();
-        System.err.println(result);
-    }
 
-    @Test
-    public void testAnsibleHostService() {
-        //// TODO ansible 只分2组列表
-        String result =  ansibleHostService.acqHostsAllCfg();
-        System.err.println(result);
-    }
-
-    @Test
-    public void testAnsibleHostService2() {
-        //// TODO ansible 全局列表
-         String result =  ansibleHostService.acqHostsCfgByUseType(1);
-         System.err.println(result);
-    }
 
     @Test
     public void testInterfaceCIService() {

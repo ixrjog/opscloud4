@@ -1,9 +1,13 @@
 package com.sdg.cmdb.domain.zabbix;
 
+import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.sdg.cmdb.domain.zabbix.response.ZabbixResponseTemplate;
+import lombok.Data;
 
 import java.io.Serializable;
 
+@Data
 public class ZabbixTemplateDO implements Serializable {
     private static final long serialVersionUID = 2360429032287281955L;
 
@@ -24,20 +28,10 @@ public class ZabbixTemplateDO implements Serializable {
 
     @Override
     public String toString() {
-        return "ZabbixTemplateDO{" +
-                "id=" + id +
-                ", templateName='" + templateName + '\'' +
-                ", templateid='" + templateid + '\'' +
-                ", enabled='" + enabled + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                '}';
+       return JSON.toJSONString(this);
     }
 
-    public ZabbixTemplateDO() {
-
-    }
-
+    public ZabbixTemplateDO() { }
 
     public ZabbixTemplateDO(String templateName) {
         this.templateName = templateName;
@@ -64,59 +58,14 @@ public class ZabbixTemplateDO implements Serializable {
         }
     }
 
-    public long getId() {
-        return id;
+    public ZabbixTemplateDO(ZabbixResponseTemplate template, int enabled) {
+        try {
+            this.templateName = template.getName();
+            this.templateid = template.getTemplateid();
+            this.enabled = enabled;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getTemplateName() {
-        return templateName;
-    }
-
-    public void setTemplateName(String templateName) {
-        this.templateName = templateName;
-    }
-
-    public String getTemplateid() {
-        return templateid;
-    }
-
-    public void setTemplateid(String templateid) {
-        this.templateid = templateid;
-    }
-
-    public int getEnabled() {
-        return enabled;
-    }
-
-    public void setEnabled(int enabled) {
-        this.enabled = enabled;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
-
-    public boolean isChoose() {
-        return choose;
-    }
-
-    public void setChoose(boolean choose) {
-        this.choose = choose;
-    }
 }

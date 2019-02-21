@@ -25,8 +25,6 @@ public interface KeyBoxService {
     TableVO<List<KeyboxUserServerVO>> getUserServerPage(KeyboxUserServerDO userServerDO, int page, int length);
 
 
-    BusinessWrapper<String> launchUserGetway(String username);
-
     /**
      * 获取满足条件的数目
      * @param userServerDO
@@ -61,19 +59,6 @@ public interface KeyBoxService {
      * @return
      */
     BusinessWrapper<Boolean> delUserGroup(KeyboxUserServerDO userServerDO);
-
-    /**
-     * 创建指定用户的配置文件
-     * @param username
-     * @return
-     */
-    BusinessWrapper<Boolean> createUserGroupConfigFile(String username);
-
-    /**
-     * 创建所有用户的配置文件
-     * @return
-     */
-    BusinessWrapper<Boolean> createAllUserGroupConfigFile();
 
     /**
      * 查询被授权的堡垒机服务器列表

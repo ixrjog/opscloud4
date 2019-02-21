@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.sdg.cmdb.dao.jumpserver.JumpserverDao">
+
+    <select id="getAssetsAssetByIp" parameterType="object" resultType="AssetsAssetDO">
+        SELECT * FROM assets_asset WHERE ip = #{ip}
+        limit 1
+    </select>
+
+    <insert id="addAssetsAsset" parameterType="AssetsAssetDO">
+        INSERT INTO assets_asset (
+        id,
+        ip,
+        hostname,
+        port,
+        is_active,
+        platform,
+        admin_user_id,
+        created_by,
+        comment,
+        protocol,
+        org_id
+        ) VALUES (
+        #{id},
+        #{ip},
+        #{hostname},
+        #{port},
+        #{is_active},
+        #{platform},
+        #{admin_user_id},
+        #{created_by},
+        #{comment},
+        #{protocol},
+        #{org_id}
+        );
+    </insert>
+
+    <update id="updateAssetsAsset" parameterType="AliyunMqGroupDO">
+        UPDATE assets_asset
+        SET hostname = #{hostname},
+        port = #{port},
+        admin_user_id = #{admin_user_id}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addAssetsNode" parameterType="AssetsNodeDO">
+        INSERT INTO assets_node (
+        id,
+        `key`,
+        value,
+        child_mark,
+        date_create,
+        org_id
+        ) VALUES (
+        #{id},
+        #{key},
+        #{value},
+        #{child_mark},
+        #{date_create},
+        #{org_id}
+        );
+    </insert>
+
+    <select id="getAssetsNodeByValue" parameterType="object" resultType="AssetsNodeDO">
+        SELECT * FROM assets_node WHERE value = #{value}
+        limit 1
+    </select>
+
+    <select id="countAssetsNode" resultType="_int">
+        SELECT COUNT(*) FROM assets_node
+    </select>
+
+    <insert id="addAssetsAssetNodes" parameterType="AssetsAssetNodesDO">
+        INSERT INTO assets_asset_nodes (
+        asset_id,
+        node_id
+        ) VALUES (
+        #{asset_id},
+        #{node_id}
+        );
+    </insert>
+
+    <select id="getUsersUsergroupByName" parameterType="object" resultType="UsersUsergroupDO">
+        SELECT * FROM users_usergroup WHERE name = #{name}
+        limit 1
+    </select>
+
+    <insert id="addUsersUsergroup" parameterType="UsersUsergroupDO">
+        INSERT INTO users_usergroup (
+        id,
+        name,
+        comment,
+        date_created,
+        created_by,
+        org_id
+        ) VALUES (
+        #{id},
+        #{name},
+        #{comment},
+        #{date_created},
+        #{created_by},
+        #{org_id}
+        );
+    </insert>
+
+    <select id="getPermsAssetpermissionByName" parameterType="object" resultType="PermsAssetpermissionDO">
+        SELECT * FROM perms_assetpermission WHERE name = #{name}
+        limit 1
+    </select>
+
+    <insert id="addPermsAssetpermission" parameterType="PermsAssetpermissionDO">
+        INSERT INTO perms_assetpermission (
+        id,
+        name,
+        is_active,
+        date_expired,
+        created_by,
+        date_created,
+        comment,
+        date_start,
+        org_id
+        ) VALUES (
+        #{id},
+        #{name},
+        #{is_active},
+        #{date_expired},
+        #{created_by},
+        #{date_created},
+        #{comment},
+        #{date_start},
+        #{org_id}
+        );
+    </insert>
+
+
+    <select id="getPermsAssetpermissionUserGroups" parameterType="PermsAssetpermissionUserGroupsDO" resultType="PermsAssetpermissionUserGroupsDO">
+        SELECT * FROM perms_assetpermission_user_groups
+        WHERE assetpermission_id = #{assetpermission_id} AND usergroup_id = #{usergroup_id}
+    </select>
+
+    <insert id="addPermsAssetpermissionUserGroups" parameterType="PermsAssetpermissionDO">
+        INSERT INTO perms_assetpermission_user_groups (
+        assetpermission_id,
+        usergroup_id
+        ) VALUES (
+        #{assetpermission_id},
+        #{usergroup_id}
+        );
+    </insert>
+
+    <select id="getPermsAssetpermissionNodes" parameterType="PermsAssetpermissionNodesDO" resultType="PermsAssetpermissionNodesDO">
+        SELECT * FROM perms_assetpermission_nodes
+        WHERE assetpermission_id = #{assetpermission_id} AND node_id = #{node_id}
+    </select>
+
+    <insert id="addPermsAssetpermissionNodes" parameterType="PermsAssetpermissionNodesDO">
+        INSERT INTO perms_assetpermission_nodes (
+        assetpermission_id,
+        node_id
+        ) VALUES (
+        #{assetpermission_id},
+        #{node_id}
+        );
+    </insert>
+
+    <select id="getPermsAssetpermissionSystemUsers" parameterType="PermsAssetpermissionSystemUsersDO" resultType="PermsAssetpermissionSystemUsersDO">
+        SELECT * FROM perms_assetpermission_system_users
+        WHERE assetpermission_id = #{assetpermission_id} AND systemuser_id = #{systemuser_id}
+    </select>
+
+    <insert id="addPermsAssetpermissionSystemUsers" parameterType="PermsAssetpermissionSystemUsersDO">
+        INSERT INTO perms_assetpermission_system_users (
+        assetpermission_id,
+        systemuser_id
+        ) VALUES (
+        #{assetpermission_id},
+        #{systemuser_id}
+        );
+    </insert>
+
+    <select id="getUsersUserByUsername" parameterType="object" resultType="UsersUserDO">
+        SELECT * FROM users_user
+        WHERE username = #{username}
+    </select>
+
+    <insert id="addUsersUser" parameterType="UsersUserDO">
+        INSERT INTO users_user (
+        password,
+        first_name,
+        last_name,
+        is_active,
+        date_joined,
+        id,
+        username,
+        name,
+        email,
+        role,
+        wechat,
+        phone,
+        _private_key,
+        _public_key,
+        comment,
+        is_first_login,
+        date_expired,
+        created_by,
+        otp_level,
+        source,
+        date_password_last_updated
+        ) VALUES (
+        #{password},
+        #{first_name},
+        #{last_name},
+        #{is_active},
+        #{date_joined},
+        #{id},
+        #{username},
+        #{name},
+        #{email},
+        #{role},
+        #{wechat},
+        #{phone},
+        #{_private_key},
+        #{_public_key},
+        #{comment},
+        #{is_first_login},
+        #{date_expired},
+        #{created_by},
+        #{otp_level},
+        #{source},
+        #{date_password_last_updated}
+        );
+    </insert>
+
+
+    <select id="getUsersUserGroups" parameterType="UsersUserGroupsDO" resultType="UsersUserGroupsDO">
+        SELECT * FROM users_user_groups
+        WHERE user_id = #{user_id} AND usergroup_id = #{usergroup_id}
+    </select>
+
+    <insert id="addUsersUserGroups" parameterType="UsersUserGroupsDO">
+        INSERT INTO users_user_groups (
+        user_id,
+        usergroup_id
+        ) VALUES (
+        #{user_id},
+        #{usergroup_id}
+        );
+    </insert>
+
+    <select id="queryAssetsAdminuser" parameterType="object" resultType="AssetsAdminuserDO">
+        SELECT * FROM assets_adminuser
+        WHERE name LIKE "%" #{name} "%" OR username LIKE "%" #{name} "%"
+    </select>
+
+    <select id="getAssetsAdminuser" parameterType="object" resultType="AssetsAdminuserDO">
+        SELECT * FROM assets_adminuser WHERE id = #{id}
+    </select>
+
+    <select id="queryAssetsSystemuser" parameterType="object" resultType="AssetsSystemuserDO">
+        SELECT * FROM assets_systemuser
+        WHERE name LIKE "%" #{name} "%" OR username LIKE "%" #{name} "%"
+    </select>
+
+    <select id="getAssetsSystemuser" parameterType="object" resultType="AssetsSystemuserDO">
+        SELECT * FROM assets_systemuser WHERE id = #{id}
+    </select>
+
+</mapper>

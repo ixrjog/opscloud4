@@ -1,22 +1,27 @@
 package com.sdg.cmdb.service.impl;
 
+import com.sdg.cmdb.dao.cmdb.CiDao;
 import com.sdg.cmdb.dao.cmdb.GitlabDao;
+import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.JenkinsItemEnum;
-import com.sdg.cmdb.domain.gitlab.CommitsVO;
-import com.sdg.cmdb.domain.gitlab.GitlabWebHooksCommitsDO;
-import com.sdg.cmdb.domain.gitlab.GitlabWebHooksDO;
-import com.sdg.cmdb.domain.gitlab.GitlabWebHooksVO;
-import com.sdg.cmdb.service.ConfigCenterService;
+import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.auth.UserVO;
+import com.sdg.cmdb.domain.ci.CiAppDO;
+import com.sdg.cmdb.domain.ci.CiJobDO;
+import com.sdg.cmdb.domain.gitlab.GitlabProjectDO;
+import com.sdg.cmdb.domain.gitlab.GitlabProjectVO;
+import com.sdg.cmdb.domain.gitlab.v1.GitlabWebHooks;
+import com.sdg.cmdb.plugin.gitlab.GitlabFactory;
 import com.sdg.cmdb.service.GitlabService;
-import com.sdg.cmdb.service.JenkinsService;
-import org.apache.commons.lang.StringUtils;
-import org.springframework.beans.factory.annotation.Value;
+
+import org.gitlab.api.Pagination;
+import org.gitlab.api.models.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
-import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,223 +29,176 @@ import java.util.List;
 @Service
 public class GitlabServiceImpl implements GitlabService {
 
-    // 分支类型
-    private static final String GIT_TAG_PREFIX = "refs/tags/";
-    private static final String GIT_HEADER_PREFIX = "refs/heads/";
 
-    private static final String GIT_COMMIT_NULL ="0000000000000000000000000000000000000000";
 
+    @Autowired
+    private GitlabFactory gitlabFactory;
 
     @Resource
     private GitlabDao gitlabDao;
 
     @Resource
-    private JenkinsService jenkinsService;
-
-
+    private CiDao ciDao;
 
     @Resource
-    private ConfigCenterService configCenterService;
+    private UserDao userDao;
 
-    private HashMap<String, String> configMap;
-
-    @Value("#{cmdb['invoke.env']}")
-    private String invokeEnv;
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.JENKINS.getItemKey());
-    }
-
-    /**
-     * Git WehHooks接口（支持动态&静态路径部署）
-     * @param webHooks
-     * @return
-     */
-    @Override
-    public BusinessWrapper<Boolean> webHooks(GitlabWebHooksVO webHooks) {
-        String email = acqEmailByWebHooks(webHooks);
-        GitlabWebHooksDO webHooksDO = new GitlabWebHooksDO(webHooks, acqProjectName(webHooks), GitlabWebHooksDO.HooksTypeEnum.ft.getCode(), email);
-        // 插入触发code
-        invokeFtBuild(webHooksDO);
-        List<CommitsVO> commits = webHooks.getCommits();
+    public GitlabVersion getVersion() {
         try {
-            gitlabDao.addWebHooks(webHooksDO);
-            if (commits != null) {
-                for (CommitsVO commitsVO : commits) {
-                    GitlabWebHooksCommitsDO commitsDO = new GitlabWebHooksCommitsDO(commitsVO, webHooksDO.getId());
-                    gitlabDao.addCommits(commitsDO);
-                }
-            }
-            // 执行构建
-            if (webHooksDO.getTriggerBuild() == GitlabWebHooksDO.TriggerTypeEnum.trigger.getCode()) {
-                boolean result = jenkinsService.buildFtJob(webHooksDO, acqParams(webHooksDO), acqFtEnvType(webHooksDO));
-            }
-            return new BusinessWrapper<Boolean>(true);
+            return gitlabFactory.getApi().getVersion();
         } catch (Exception e) {
-            e.printStackTrace();
-            return new BusinessWrapper<Boolean>(false);
+            return new GitlabVersion();
         }
-    }
-
-    private String acqEmailByCommit(String commit) {
-        List<GitlabWebHooksCommitsDO> list = gitlabDao.queryCommitsByCommit(commit);
-        for (GitlabWebHooksCommitsDO commitsDO : list) {
-            if (!StringUtils.isEmpty(commitsDO.getAutherEmail()))
-                return commitsDO.getAutherEmail();
-        }
-        return "";
     }
 
     @Override
-    public String acqEmailByWebHooks(GitlabWebHooksVO webHooks) {
-        String email = webHooks.acqEmail();
-        if (StringUtils.isEmpty(email))
-            return acqEmailByCommit(webHooks.getAfter());
-        return email;
+    public TableVO<List<GitlabProjectVO>> getProjectPage(String name, String username, int page, int length) {
+        long size = gitlabDao.getGitlabProjectSize(name, username);
+        List<GitlabProjectDO> list = gitlabDao.getGitlabProjectPage(name, username, page * length, length);
+        List<GitlabProjectVO> voList = new ArrayList<>();
+        for (GitlabProjectDO gitlabProjectDO : list) {
+            voList.add(getGitlabProjectVO(gitlabProjectDO));
+
+        }
+        return new TableVO<>(size, voList);
+    }
+
+    @Override
+    public List<GitlabBranch> getProjectBranchs(int projectId) {
+        List<GitlabBranch> branchs = gitlabFactory.getApi().getBranches(projectId);
+        return branchs;
+    }
+
+    @Override
+    public GitlabBranch getProjectBranch(int projectId, String branch) {
+        List<GitlabBranch> branchs = getProjectBranchs(projectId);
+        for (GitlabBranch gitlabBranch : branchs)
+            if (gitlabBranch.getName().equals(branch))
+                return gitlabBranch;
+        return null;
+    }
+
+    private GitlabProjectVO getGitlabProjectVO(GitlabProjectDO gitlabProjectDO) {
+        List<GitlabTag> tags = gitlabFactory.getApi().getTags(gitlabProjectDO.getProjectId());
+        List<GitlabBranch> branchs = gitlabFactory.getApi().getBranches(gitlabProjectDO.getProjectId());
+        UserDO userDO = userDao.getUserByName(gitlabProjectDO.getOwnerUsername());
+        if (userDO == null)
+            userDO = new UserDO(gitlabProjectDO.getOwnerUsername());
+        GitlabProjectVO gitlabProjectVO = new GitlabProjectVO(gitlabProjectDO, new UserVO(userDO, true), branchs, tags);
+        return gitlabProjectVO;
     }
 
 
     /**
-     * 插入前端是否构建code
+     * 从Gitlab更新所有Project
      *
      * @return
      */
-    private void invokeFtBuild(GitlabWebHooksDO webHooksDO) {
-        if(webHooksDO.getCommitAfter().equalsIgnoreCase(GIT_COMMIT_NULL)){
-            // 空提交则跳过更新
-            webHooksDO.setTriggerBuild(GitlabWebHooksDO.TriggerTypeEnum.skip.getCode());
-            return ;
+    @Override
+    public boolean updateProjcets() {
+        List<GitlabProject> projects = gitlabFactory.getApi().getAllProjects();
+        for (GitlabProject project : projects) {
+            if (!saveProject(project))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean saveProject(GitlabProject project) {
+        GitlabProjectDO gitlabProjectDO = gitlabDao.getGitlabProjectByProjectId(project.getId());
+        try {
+            if (gitlabProjectDO == null) {
+                gitlabDao.addGitlabProject(new GitlabProjectDO(project));
+            } else {
+                gitlabDao.updateGitlabProject(new GitlabProjectDO(project));
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
         }
 
-        int ftEnvType = acqFtEnvType(webHooksDO);
-        int trigger = GitlabWebHooksDO.TriggerTypeEnum.trigger.getCode();
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> webHooksV1(GitlabWebHooks webHooks) {
+        return new BusinessWrapper<Boolean>(true);
+    }
+
+
+    @Override
+    public List<GitlabCommit> getProjectCommit2(String projectName, String commitHash) {
+        GitlabProjectDO gitlabProjectDO = gitlabDao.getGitlabProjectByName(projectName);
+        List<GitlabCommit> list = new ArrayList<>();
         try {
-            if (ftEnvType == GitlabWebHooksVO.EnvTypeEnum.tag.getCode()) {
-                webHooksDO.setTriggerBuild(trigger);
-                return;
+            HashMap<String, GitlabCommit> commitMap = new HashMap<>();
+            GitlabCommit commit = getCommit(gitlabProjectDO.getProjectId(), commitHash);
+            if (!isMerge(commit)) {
+                commitMap.put(commit.getId(), commit);
             }
-            if (ftEnvType == GitlabWebHooksVO.EnvTypeEnum.header.getCode()) {
-                HashMap<String, String> configMap = acqConifMap();
-                String ftBuildBranchs = configMap.get(JenkinsItemEnum.JENKINS_FT_BUILD_BRANCH.getItemKey());
-                String[] bs = ftBuildBranchs.split(",");
-                String branch = acqBranch(webHooksDO);
-                for (String b : bs) {
-                    if (branch.equalsIgnoreCase(b)) {
-                        webHooksDO.setTriggerBuild(trigger);
-                        break;
-                    }
+            for (String parentCommitHash : commit.getParentIds()) {
+                GitlabCommit parentCommit = getCommit(gitlabProjectDO.getProjectId(), parentCommitHash);
+                if (!isMerge(parentCommit))
+                    commitMap.put(parentCommit.getId(), parentCommit);
+            }
+            for (String key : commitMap.keySet())
+                list.add(commitMap.get(key));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    @Override
+    public List<GitlabCommit> getChanges(long jobId, String jobName, String branch) {
+        String startCommit = ciDao.queryNotifyStartedByJobName(jobName);
+        String finalizeCommit = ciDao.queryNotifyFinalizedByJobName(jobName);
+        Pagination pagination = new Pagination();
+        pagination.setPage(0);
+        pagination.setPerPage(100);
+        CiJobDO ciJobDO = ciDao.getCiJob(jobId);
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        GitlabProjectDO gitlabProjectDO = gitlabDao.getGitlabProjectByName(ciAppDO.getProjectName());
+        boolean first = true;
+        List<GitlabCommit> list = new ArrayList<>();
+        String endCommit = finalizeCommit;
+
+        try {
+
+            List<GitlabCommit> commits = gitlabFactory.getApi().getCommits(gitlabProjectDO.getProjectId(), pagination, branch);
+            for (GitlabCommit commit : commits) {
+                if (first && commit.getId().equals(finalizeCommit)) {
+                    endCommit = startCommit;
                 }
+                if (commit.getId().equals(endCommit)) {
+                    break;
+                } else {
+                    list.add(commit);
+                }
+                first = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        return list;
     }
 
-
-    /**
-     * 获取构建参数
-     * mbranch   分支名称
-     * deployPath   部署路径
-     *
-     * @param webHooks
-     * @return
-     */
-    private HashMap<String, String> acqParams(GitlabWebHooksDO webHooks) {
-        HashMap<String, String> params = new HashMap<>();
-        params.put("mbranch", acqBranch(webHooks));
-        params.put("deployPath", acqFtDeployPath(webHooks));
-        // 项目名
-        params.put("project", webHooks.getProjectName());
-        // 仓库名
-        params.put("repo", webHooks.getRepositoryName());
-        return params;
-    }
-
-    /**
-     * 通过ref判断环境类型
-     * refs/heads/master
-     * refs/tags/1.0.0
-     *
-     * @param webHooks
-     * @return
-     */
-    private int acqFtEnvType(GitlabWebHooksDO webHooks) {
-        String ref = webHooks.getRef();
-        if (ref.indexOf(GIT_TAG_PREFIX) != -1)
-            return GitlabWebHooksVO.EnvTypeEnum.tag.getCode();
-        if (ref.indexOf(GIT_HEADER_PREFIX) != -1)
-            return GitlabWebHooksVO.EnvTypeEnum.header.getCode();
-        return GitlabWebHooksVO.EnvTypeEnum.err.getCode();
-    }
-
-
-    private String acqProjectName(GitlabWebHooksVO webHooks) {
-        if (!StringUtils.isEmpty(webHooks.getProjectName())) return webHooks.getProjectName();
-        if (StringUtils.isEmpty(webHooks.getRepositoryHomepage()))
-            return "";
+    private GitlabCommit getCommit(int projectId, String commitHash) {
         try {
-            URL url = new URL(webHooks.getRepositoryHomepage());
-            String path = url.getPath();
-            String s[] = path.split("/");
-            String projectName = s[1];
-            return projectName;
+            GitlabCommit commit = gitlabFactory.getApi().getCommit(projectId, commitHash);
+            return commit;
         } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return "";
     }
 
-
-    /**
-     * 获取部署路径
-     * prod
-     * http://cdn.52shangou.com/one/distribution/1.0.4/build/statement/index.js
-     * one/distribution/1.0.4
-     * <p>
-     * daily
-     * http://cdndaily.52shangou.com/one/distribution_branch/dev/build/statement/index.js
-     * one/distribution_branch/dev
-     *
-     * @param webHooks
-     * @return
-     */
-    private String acqFtDeployPath(GitlabWebHooksDO webHooks) {
-        String projectName = webHooks.getProjectName();
-
-        if (StringUtils.isEmpty(projectName)) return "";
-        String repo = webHooks.getRepositoryName();
-
-        if (StringUtils.isEmpty(repo)) return "";
-        String branch = acqBranch(webHooks);
-
-        if (StringUtils.isEmpty(branch)) return "";
-
-        int buildType = acqFtEnvType(webHooks);
-        if (buildType == GitlabWebHooksVO.EnvTypeEnum.err.getCode()) return "";
-
-        HashMap<String, String> configMap = acqConifMap();
-        String ossBucketFtOnline = configMap.get(JenkinsItemEnum.JENKINS_OSS_BUCKET_FT_ONLINE.getItemKey());
-        if (buildType == GitlabWebHooksVO.EnvTypeEnum.tag.getCode()) {
-            //System.err.println("deployPath=" + projectName + "/" + repo + "/" + branch);
-            return ossBucketFtOnline + "/" + projectName + "/" + repo + "/" + branch;
+    private boolean isMerge(GitlabCommit commit) {
+        if (commit == null) return true;
+        if (commit.getMessage().indexOf("Merge branch", 0) == 0) {
+            return true;
+        } else {
+            return false;
         }
-
-        if (buildType == GitlabWebHooksVO.EnvTypeEnum.header.getCode()) {
-            //System.err.println("deployPath=" + projectName + "/" + repo + "_branch/" + branch);
-            return projectName + "/" + repo + "_branch/" + branch;
-        }
-        return "";
-    }
-
-    private String acqBranch(GitlabWebHooksDO webHooks) {
-        String ref = webHooks.getRef();
-        int buildType = acqFtEnvType(webHooks);
-        if (buildType == GitlabWebHooksVO.EnvTypeEnum.tag.getCode())
-            return ref.replace(GIT_TAG_PREFIX, "");
-        if (buildType == GitlabWebHooksVO.EnvTypeEnum.header.getCode())
-            return ref.replace(GIT_HEADER_PREFIX, "");
-        return "";
     }
 
 

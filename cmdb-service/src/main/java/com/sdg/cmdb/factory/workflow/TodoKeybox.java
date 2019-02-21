@@ -6,10 +6,14 @@ import com.google.gson.GsonBuilder;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerVO;
+<<<<<<< HEAD
 import com.sdg.cmdb.domain.todo.TodoKeyboxDetailDO;
 import com.sdg.cmdb.domain.workflow.WorkflowTodoDO;
 import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailAbs;
+=======
+import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
+>>>>>>> develop
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailKeybox;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
@@ -18,6 +22,10 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.io.Serializable;
+<<<<<<< HEAD
+=======
+import java.lang.reflect.Type;
+>>>>>>> develop
 import java.util.HashMap;
 import java.util.List;
 
@@ -52,6 +60,10 @@ public class TodoKeybox extends TodoAbs implements Serializable {
         List<WorkflowTodoDetailVO> todoDetails = workflowTodoVO.getTodoDetails();
         // 去重
         HashMap<String, WorkflowTodoDetailDO> map = new HashMap<>();
+<<<<<<< HEAD
+=======
+        String notice = "服务器组：";
+>>>>>>> develop
         for (WorkflowTodoDetailVO workflowTodoDetailVO : todoDetails) {
             WorkflowTodoDetailDO workflowTodoDetailDO = getTodoDetailDO(workflowTodoDetailVO);
             TodoDetailKeybox keyboxDetail = (TodoDetailKeybox) getTodoDetailVO(workflowTodoDetailDO).getDetail();
@@ -61,29 +73,54 @@ public class TodoKeybox extends TodoAbs implements Serializable {
             } else {
                 if (!saveTodoDetail(workflowTodoDetailDO)) return workflowTodoVO;
                 map.put(keyboxDetail.getServerGroupDO().getName(), workflowTodoDetailDO);
+<<<<<<< HEAD
             }
         }
+=======
+                notice += workflowTodoDetailVO.getName() + ";";
+            }
+        }
+        workflowTodoVO.setNotice(notice);
+        saveTodoUser(workflowTodoVO);
+>>>>>>> develop
         updateTodo(workflowTodoVO);
         return getTodo(workflowTodoVO.getId());
+    }
+
+<<<<<<< HEAD
+    protected WorkflowTodoDetailVO getTodoDetailVO(WorkflowTodoDetailDO todoDetailDO) {
+        // 对象转json
+        Gson gson = new GsonBuilder().create();
+        TodoDetailKeybox keyboxDetail = gson.fromJson(todoDetailDO.getDetailValue(), TodoDetailKeybox.class);
+=======
+    @Override
+    protected Type getType() {
+        return TodoDetailKeybox.class;
     }
 
     protected WorkflowTodoDetailVO getTodoDetailVO(WorkflowTodoDetailDO todoDetailDO) {
         // 对象转json
         Gson gson = new GsonBuilder().create();
-        TodoDetailKeybox keyboxDetail = gson.fromJson(todoDetailDO.getDetailValue(), TodoDetailKeybox.class);
+        TodoDetailKeybox keyboxDetail = gson.fromJson(todoDetailDO.getDetailValue(), getType());
+>>>>>>> develop
         return new WorkflowTodoDetailVO(keyboxDetail, todoDetailDO);
     }
 
 
     private WorkflowTodoDetailDO getTodoDetailDO(WorkflowTodoDetailVO workflowTodoDetailVO) {
         Gson gson = new GsonBuilder().create();
+<<<<<<< HEAD
         TodoDetailKeybox keyboxDetail = gson.fromJson(JSON.toJSONString(workflowTodoDetailVO.getDetail()), TodoDetailKeybox.class);
+=======
+        TodoDetailKeybox keyboxDetail = gson.fromJson(JSON.toJSONString(workflowTodoDetailVO.getDetail()), getType());
+>>>>>>> develop
 
         // TodoDetailKeybox keyboxDetail = (TodoDetailKeybox) workflowTodoDetailVO.getDetail();
         WorkflowTodoDetailDO workflowTodoDetailDO = new WorkflowTodoDetailDO(workflowTodoDetailVO, keyboxDetail.toString());
         return workflowTodoDetailDO;
     }
 
+<<<<<<< HEAD
     /**
      * 执行工单
      *
@@ -112,6 +149,11 @@ public class TodoKeybox extends TodoAbs implements Serializable {
 
 
     private boolean invokeTodoDetails(WorkflowTodoVO todoVO) {
+=======
+
+    @Override
+    protected boolean invokeTodoDetails(WorkflowTodoVO todoVO) {
+>>>>>>> develop
         List<WorkflowTodoDetailVO> todoDetails = todoVO.getTodoDetails();
         UserDO userDO = userDao.getUserById(todoVO.getApplyUserId());
         boolean result = true;
@@ -119,11 +161,28 @@ public class TodoKeybox extends TodoAbs implements Serializable {
             TodoDetailKeybox keybox = (TodoDetailKeybox) workflowTodoDetailVO.getDetail();
             KeyboxUserServerVO keyboxVO = new KeyboxUserServerVO(userDO.getUsername(), keybox);
             BusinessWrapper<Boolean> businessWrapper = keyBoxService.saveUserGroup(keyboxVO);
+<<<<<<< HEAD
             if (!businessWrapper.isSuccess())
                 result = false;
+=======
+            if (businessWrapper.isSuccess()) {
+                workflowTodoDetailVO.setDetailStatus(WorkflowTodoDetailDO.STATUS_COMPLETE);
+            } else {
+                workflowTodoDetailVO.setDetailStatus(WorkflowTodoDetailDO.STATUS_ERR);
+                result = false;
+            }
+            saveTodoDetail(workflowTodoDetailVO);
+>>>>>>> develop
         }
         return result;
     }
 
+<<<<<<< HEAD
+=======
+    @Override
+    protected void createTodoDetails(long todoId, List<WorkflowTodoDetailVO> detailList) {
+    }
+
+>>>>>>> develop
 
 }

@@ -14,9 +14,6 @@ public interface CiUserGroupService {
 
     TableVO<List<CiUserGroupVO>> getCiUserGroupPage(String groupName, int envType, int page, int length);
 
-
-    BusinessWrapper<Boolean> groupsRefresh();
-
     BusinessWrapper<Boolean> delCigroup(long id);
 
     /**

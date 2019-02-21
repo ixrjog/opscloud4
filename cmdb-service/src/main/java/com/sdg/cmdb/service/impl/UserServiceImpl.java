@@ -6,17 +6,12 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.*;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.ShadowsocksItemEnum;
 import com.sdg.cmdb.domain.ldap.LdapDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.ssh.SshKey;
 import com.sdg.cmdb.plugin.ldap.LDAPFactory;
-import com.sdg.cmdb.service.AuthService;
-import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.service.ServerGroupService;
-import com.sdg.cmdb.service.UserService;
-import com.sdg.cmdb.util.IOUtils;
+import com.sdg.cmdb.service.*;
+import com.sdg.cmdb.service.configurationProcessor.ShadowsocksFileProcessorService;
 import com.sdg.cmdb.util.SessionUtils;
 
 
@@ -30,7 +25,6 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -41,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final static String API_AUTH_KEY="02a966823690516ebee262e541404454";
+    private final static String API_AUTH_KEY = "02a966823690516ebee262e541404454";
 
     @Resource
     private UserDao userDao;
@@ -56,40 +50,28 @@ public class UserServiceImpl implements UserService {
     private AuthDao authDao;
 
     @Resource
+    private LdapService ldapService;
+
+    @Resource
+    protected ShadowsocksFileProcessorService ssService;
+
+    @Resource
     private ConfigCenterService configCenterService;
 
     @Resource
     private LDAPFactory ldapFactory;
 
-    private HashMap<String, String> getwayConfigMap;
-
-    private HashMap<String, String> acqGetwayConifMap() {
-        if (getwayConfigMap != null) return getwayConfigMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey());
-    }
-
-    private HashMap<String, String> shadowsocksConfigMap;
-
-    private HashMap<String, String> acqShadowsocksConifMap() {
-        if (shadowsocksConfigMap != null) return getwayConfigMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.SHADOWSOCKS.getItemKey());
-    }
-
-    private HashMap<String, String> ldapConfigMap;
-
-    private HashMap<String, String> acqConifMap() {
-        if (ldapConfigMap != null) return ldapConfigMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.LDAP.getItemKey());
-    }
+//    private HashMap<String, String> getwayConfigMap;
+//
+//    private HashMap<String, String> acqGetwayConifMap() {
+//        if (getwayConfigMap != null) return getwayConfigMap;
+//        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey());
+//    }
 
     private LdapTemplate acqLdapTemplate(String ldapType) {
-        HashMap<String, String> configMap = acqConifMap();
+
         if (ldapType.equalsIgnoreCase(LdapDO.LdapTypeEnum.cmdb.getDesc()))
-            return ldapFactory.buildLdapTemplate(new LdapDO(configMap, ldapType));
-
-        if (ldapType.equalsIgnoreCase(LdapDO.LdapTypeEnum.mail.getDesc()))
-            return ldapFactory.buildLdapTemplate(new LdapDO(configMap, ldapType));
-
+            return ldapFactory.buildLdapTemplate();
         return null;
     }
 
@@ -101,13 +83,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public TableVO<List<UserVO>> getSafeUserPage(String username, int page, int length){
+    public TableVO<List<UserVO>> getSafeUserPage(String username, int page, int length) {
         long size = userDao.getUserSize(username);
         List<UserDO> list = userDao.getUserPage(username, page * length, length);
         List<UserVO> listVO = new ArrayList<>();
         for (UserDO userDO : list) {
             boolean safe = true;
-            UserVO userVO = new UserVO(userDO,safe);
+            UserVO userVO = new UserVO(userDO, safe);
             listVO.add(userVO);
         }
         return new TableVO<>(size, listVO);
@@ -122,12 +104,9 @@ public class UserServiceImpl implements UserService {
 
         for (UserDO userDO : list) {
             UserVO userVO = new UserVO(userDO);
-            if (authService.checkUserInLdap(userVO.getUsername()))
+            if (ldapService.checkUserInLdap(userVO.getUsername()))
                 userVO.setLdap(1);
-            userVO.setLdapGroups(authService.searchLdapGroup(userVO.getUsername()));
-            invokeLdapGroups(userVO);
-            if (!StringUtils.isEmpty(userVO.getMail()))
-                userVO.setMailAccountStatus(authService.getMailAccountStatus(userVO.getMail()));
+            userVO.setLdapGroups(ldapService.searchUserLdapGroup(userVO.getUsername()));
             // 加入角色信息
             userVO.setRoleDOList(getUserRoles(userVO.getUsername()));
             listVO.add(userVO);
@@ -136,9 +115,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public  TableVO<List<UserVO>> getCmdbApiUserPage(String authKey,String username, int page, int length){
-        if(!authKey.equals(API_AUTH_KEY))
-            return new TableVO(0,ErrorCode.authenticationFailure);
+    public TableVO<List<UserVO>> getCmdbApiUserPage(String authKey, String username, int page, int length) {
+        if (!authKey.equals(API_AUTH_KEY))
+            return new TableVO(0, ErrorCode.authenticationFailure);
 
         long size = userDao.getUserSize(username);
         List<UserDO> list = userDao.getUserPage(username, page * length, length);
@@ -146,12 +125,6 @@ public class UserServiceImpl implements UserService {
 
         for (UserDO userDO : list) {
             UserVO userVO = new UserVO(userDO);
-           //if (authService.checkUserInLdap(userVO.getUsername()))
-           //     userVO.setLdap(1);
-           // userVO.setLdapGroups(authService.searchLdapGroup(userVO.getUsername()));
-           // invokeLdapGroups(userVO);
-            if (!StringUtils.isEmpty(userVO.getMail()))
-                userVO.setMailAccountStatus(authService.getMailAccountStatus(userVO.getMail()));
             // 加入角色信息
             userVO.setRoleDOList(getUserRoles(userVO.getUsername()));
             userVO.setPwd("");
@@ -180,10 +153,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public BusinessWrapper<UserVO> getUserVOByName(String username) {
-        HashMap<String, String> configMap = acqShadowsocksConifMap();
-        String shadowsocksServer1 = configMap.get(ShadowsocksItemEnum.SHADOWSOCKS_SERVER_1.getItemKey());
-        String shadowsocksServer2 = configMap.get(ShadowsocksItemEnum.SHADOWSOCKS_SERVER_2.getItemKey());
-
         UserDO userDO = userDao.getUserByName(username);
         if (userDO == null) {
             return new BusinessWrapper<>(ErrorCode.userNotExist);
@@ -191,13 +160,27 @@ public class UserServiceImpl implements UserService {
 
         List<ServerGroupDO> groupDOList = serverGroupService.getServerGroupsByUsername(username);
         UserVO userVO = new UserVO(userDO, groupDOList);
-        userVO.setShadowsocksServer1(shadowsocksServer1);
-        userVO.setShadowsocksServer2(shadowsocksServer2);
-        if (authService.checkUserInLdap(userVO.getUsername()))
+        if (ldapService.checkUserInLdap(userVO.getUsername()))
             userVO.setLdap(1);
-        userVO.setLdapGroups(authService.searchLdapGroup(userVO.getUsername()));
-        invokeLdapGroups(userVO);
+        userVO.setLdapGroups(ldapService.searchUserLdapGroup(userVO.getUsername()));
+        userVO.setSsList(ssService.getSsByUser(userDO));
+       invokeSshKey(userVO,userDO);
+        //EncryptionUtil.fingerprint()
         return new BusinessWrapper<>(userVO);
+    }
+
+    private void invokeSshKey(UserVO userVO,UserDO userDO){
+        if (!StringUtils.isEmpty(userDO.getRsaKey())) {
+            String key = userDO.getRsaKey();
+            String[] keys = key.split(" +");
+            SshKey sshKey;
+            if (keys.length == 3) {
+                sshKey = new SshKey(key, keys[2]);
+            } else {
+                sshKey = new SshKey(key);
+            }
+            userVO.setSshKey(sshKey);
+        }
     }
 
 
@@ -205,50 +188,46 @@ public class UserServiceImpl implements UserService {
     public TableVO<UserVO> getCmdbUser(String username) {
         UserDO userDO = userDao.getUserByName(username);
         UserVO userVO = new UserVO(userDO);
-        if (authService.checkUserInLdap(userVO.getUsername()))
+        if (ldapService.checkUserInLdap(userVO.getUsername()))
             userVO.setLdap(1);
-        userVO.setLdapGroups(authService.searchLdapGroup(userVO.getUsername()));
-        invokeLdapGroups(userVO);
-        //ddd
-        if (!StringUtils.isEmpty(userVO.getMail()))
-            userVO.setMailAccountStatus(authService.getMailAccountStatus(userVO.getMail()));
+        userVO.setLdapGroups(ldapService.searchUserLdapGroup(userVO.getUsername()));
         return new TableVO<>(1, userVO);
     }
 
 
-    public void invokeLdapGroups(UserVO userVO) {
-        if (userVO.getLdapGroups().size() == 0) return;
-        List<LdapGroupVO> bambooLdapGroups = new ArrayList<LdapGroupVO>();
-        List<LdapGroupVO> otherLdapGroups = new ArrayList<LdapGroupVO>();
-
-        UserLdapGroupVO userLdapGroupVO = new UserLdapGroupVO();
-        boolean check;
-        for (String name : userVO.getLdapGroups()) {
-            check = false;
-            for (LdapGroupVO.LdapGroupTypeEnum type : LdapGroupVO.LdapGroupTypeEnum.values()) {
-                if (name.indexOf(type.getDesc()) >= 0) {
-
-                    check = true;
-                    LdapGroupVO ldapGroupVO = new LdapGroupVO(name, type.getCode());
-                    if (type.getCode() == LdapGroupVO.LdapGroupTypeEnum.bamboo.getCode()) {
-                        bambooLdapGroups.add(ldapGroupVO);
-                    } else {
-                        userLdapGroupVO.setLdapGroup(ldapGroupVO);
-                        otherLdapGroups.add(ldapGroupVO);
-                    }
-                    break;
-                }
-            }
-            if (!check) {
-                otherLdapGroups.add(new LdapGroupVO(name, -1));
-            }
-
-        }
-        userVO.setBambooLdapGroups(bambooLdapGroups);
-        userVO.setOtherLdapGroups(otherLdapGroups);
-        //用于子菜单
-        userVO.setUserLdapGroupVO(userLdapGroupVO);
-    }
+//    public void invokeLdapGroups(UserVO userVO) {
+//        if (userVO.getLdapGroups().size() == 0) return;
+//        List<LdapGroup> bambooLdapGroups = new ArrayList<LdapGroup>();
+//        List<LdapGroup> otherLdapGroups = new ArrayList<LdapGroup>();
+//
+//        UserLdapGroupVO userLdapGroupVO = new UserLdapGroupVO();
+//        boolean check;
+//        for (String name : userVO.getLdapGroups()) {
+//            check = false;
+//            for (LdapGroup.LdapGroupTypeEnum type : LdapGroup.LdapGroupTypeEnum.values()) {
+//                if (name.indexOf(type.getDesc()) >= 0) {
+//
+//                    check = true;
+//                    LdapGroup ldapGroupVO = new LdapGroup(name, type.getCode());
+//                    if (type.getCode() == LdapGroup.LdapGroupTypeEnum.bamboo.getCode()) {
+//                        bambooLdapGroups.add(ldapGroupVO);
+//                    } else {
+//                        userLdapGroupVO.setLdapGroup(ldapGroupVO);
+//                        otherLdapGroups.add(ldapGroupVO);
+//                    }
+//                    break;
+//                }
+//            }
+//            if (!check) {
+//                otherLdapGroups.add(new LdapGroup(name, -1));
+//            }
+//
+//        }
+//        userVO.setBambooLdapGroups(bambooLdapGroups);
+//        userVO.setOtherLdapGroups(otherLdapGroups);
+//        //用于子菜单
+//        userVO.setUserLdapGroupVO(userLdapGroupVO);
+//    }
 
 
     @Override
@@ -259,11 +238,9 @@ public class UserServiceImpl implements UserService {
 
         for (UserLeaveDO userLeaveDO : list) {
             UserLeaveVO userLeaveVO = new UserLeaveVO(userLeaveDO);
-            if (authService.checkUserInLdap(userLeaveVO.getUsername()))
+            if (ldapService.checkUserInLdap(userLeaveVO.getUsername()))
                 userLeaveVO.setLdap(1);
-            userLeaveVO.setLdapGroups(authService.searchLdapGroup(userLeaveVO.getUsername()));
-            if (!StringUtils.isEmpty(userLeaveVO.getMail()))
-                userLeaveVO.setMailAccountStatus(authService.getMailAccountStatus(userLeaveVO.getMail()));
+            userLeaveVO.setLdapGroups(ldapService.searchLdapGroup(userLeaveVO.getUsername()));
             listVO.add(userLeaveVO);
         }
 
@@ -303,14 +280,14 @@ public class UserServiceImpl implements UserService {
     public BusinessWrapper<Boolean> saveUserInfo(UserDO userDO) {
         if (userDO.getUsername().equals(SessionUtils.getUsername())) {
             userDao.updateUser(userDO);
-            createKeyFile(userDO.getUsername(), userDO.getRsaKey());
+            //createKeyFile(userDO.getUsername(), userDO.getRsaKey());
 
             return new BusinessWrapper<>(true);
         } else {
             BusinessWrapper<Boolean> checkWrapper = authService.checkUserHasResourceAuthorize(SessionUtils.getToken(), Permissions.canEditUserInfo);
             if (checkWrapper.isSuccess()) {
                 userDao.updateUser(userDO);
-                createKeyFile(userDO.getUsername(), userDO.getRsaKey());
+                //createKeyFile(userDO.getUsername(), userDO.getRsaKey());
 
                 return new BusinessWrapper<>(true);
             } else {
@@ -342,21 +319,21 @@ public class UserServiceImpl implements UserService {
     }
 
 
-    /**
-     * 创建key file
-     *
-     * @param username
-     * @param rsaKey
-     */
-    private void createKeyFile(String username, String rsaKey) {
-        HashMap<String, String> configMap = acqGetwayConifMap();
-        String keyPath = configMap.get(GetwayItemEnum.GETWAY_KEY_PATH.getItemKey());
-        String keyFile = configMap.get(GetwayItemEnum.GETWAY_KEY_FILE.getItemKey());
-
-        String path = keyPath + "/"+username + keyFile;
-
-        IOUtils.writeFile(rsaKey, path);
-    }
+//    /**
+//     * 创建key file
+//     *
+//     * @param username
+//     * @param rsaKey
+//     */
+//    private void createKeyFile(String username, String rsaKey) {
+//        HashMap<String, String> configMap = acqGetwayConifMap();
+//        String keyPath = configMap.get(GetwayItemEnum.GETWAY_KEY_PATH.getItemKey());
+//        String keyFile = configMap.get(GetwayItemEnum.GETWAY_KEY_FILE.getItemKey());
+//
+//        String path = keyPath + "/" + username + keyFile;
+//
+//        IOUtils.writeFile(rsaKey, path);
+//    }
 
 
     @Override

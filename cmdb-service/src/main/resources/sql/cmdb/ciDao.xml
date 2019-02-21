@@ -2,179 +2,628 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.sdg.cmdb.dao.cmdb.CiDao">
 
-    <!-- 获取服务器数目 -->
-    <select id="getCiDeployStatisticsSize" parameterType="object" resultType="_long">
-        SELECT count(*) from ci_deploy_statistics
+
+    <!--统计部署次数-->
+    <!--<select id="getCiDeployedCnt" resultType="_int">-->
+    <!--SELECT COUNT(*) AS cnt FROM ci_deploy_statistics;-->
+    <!--</select>-->
+
+    <!--统计项目总数-->
+    <!--<select id="getCiProjectCnt" resultType="_int">-->
+    <!--SELECT COUNT( DISTINCT projectName ) AS cnt-->
+    <!--FROM ci_deploy_statistics;-->
+    <!--</select>-->
+
+    <!--<select id="statusCiDeployProject" resultType="CiProjectVO">-->
+    <!--SELECT projectName, COUNT(*) AS cnt-->
+    <!--FROM ci_deploy_statistics-->
+    <!--WHERE env = "back" OR env = "production"-->
+    <!--GROUP BY projectName-->
+    <!--ORDER BY cnt DESC-->
+    <!--limit 20;-->
+    <!--</select>-->
+
+    <!--<select id="statusCiDeployUser" resultType="CiDeployUserVO">-->
+    <!--SELECT bambooManualBuildTriggerReasonUserName AS username, COUNT(*) AS cnt-->
+    <!--FROM ci_deploy_statistics-->
+    <!--GROUP BY username-->
+    <!--ORDER BY cnt DESC-->
+    <!--limit 20;-->
+    <!--</select>-->
+
+    <!--<select id="statusCiRepo" resultType="CiRepoVO">-->
+    <!--SELECT bambooDeployProject AS repo, COUNT(*) AS cnt-->
+    <!--FROM ci_deploy_statistics-->
+    <!--GROUP BY repo-->
+    <!--ORDER BY cnt DESC-->
+    <!--limit 20;-->
+    <!--</select>-->
+
+    <!--<select id="statusCiDeploy" resultType="CiDeployVO">-->
+    <!--SELECT projectName ,-->
+    <!--groupName,-->
+    <!--bambooDeployVersion AS version,-->
+    <!--bambooManualBuildTriggerReasonUserName AS username,-->
+    <!--gmtCreate,-->
+    <!--gmtModify-->
+    <!--FROM ci_deploy_statistics-->
+    <!--ORDER BY gmtCreate DESC-->
+    <!--limit 14-->
+    <!--</select>-->
+
+
+    <!--新版本-->
+
+    <!--取当前用户授权的ciApp-->
+    <select id="getCiAppByAuthUserId" parameterType="object" resultType="CiAppDO">
+        SELECT * FROM oc_ci_app
         <where>
+            <if test="userId != 0">
+                id IN ( SELECT appId FROM oc_ci_app_auth WHERE userId = #{userId} )
+            </if>
             <if test="projectName != null and projectName != ''">
                 AND projectName like "%" #{projectName} "%"
             </if>
-            <if test="status != -1">
-                AND status = #{status}
-            </if>
-            <if test="deployType != -1">
-                AND deployType = #{deployType}
-            </if>
-            <if test="bambooDeployRollback != -1">
-                AND bambooDeployRollback = #{bambooDeployRollback}
-            </if>
-            <if test="errorCode != -1">
-                AND errorCode = #{errorCode}
-            </if>
         </where>
-        ORDER BY gmtCreate DESC
-        limit 0,100
-        <!--  select * from ci_deploy_statistics  Order By gmtCreate Desc limit 0,100 -->
+        ORDER BY projectName
     </select>
 
-    <!-- 获取服务器详情 -->
-    <select id="getCiDeployStatisticsPage" parameterType="object" resultType="CiDeployStatisticsDO">
-        SELECT * FROM ci_deploy_statistics
+    <select id="checkCiAppAuth" parameterType="object" resultType="_int">
+        SELECT count(*) FROM oc_ci_app_auth WHERE userId = #{userId} AND appId = #{appId}
+    </select>
+
+
+    <insert id="addCiApp" parameterType="CiAppDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_app(
+        appName,
+        projectName,
+        serverGroupId,
+        serverGroupName,
+        sshUrl,
+        webUrl,
+        projectId,
+        appType,
+        ciType,
+        userId,
+        authBranch,
+        content
+        ) VALUES (
+        #{appName},
+        #{projectName},
+        #{serverGroupId},
+        #{serverGroupName},
+        #{sshUrl},
+        #{webUrl},
+        #{projectId},
+        #{appType},
+        #{ciType},
+        #{userId},
+        #{authBranch},
+        #{content}
+        )
+    </insert>
+
+    <update id="updateCiApp" parameterType="CiAppDO">
+        UPDATE oc_ci_app
+        SET
+        appName = #{appName},
+        projectName = #{projectName},
+        serverGroupId = #{serverGroupId},
+        serverGroupName = #{serverGroupName},
+        appType = #{appType},
+        ciType = #{ciType},
+        authBranch = #{authBranch},
+        dingtalkId = #{dingtalkId},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getCiApp" parameterType="_long" resultType="CiAppDO">
+        SELECT * FROM oc_ci_app WHERE id = #{id}
+    </select>
+
+    <insert id="addCiJob" parameterType="CiJobDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_job(
+        name,
+        appId,
+        branch,
+        hostPattern,
+        envType,
+        ciType,
+        jobName,
+        jobTemplate,
+        jobVersion,
+        deployJobName,
+        deployJobTemplate,
+        deployJobVersion,
+        content
+        ) VALUES (
+        #{name},
+        #{appId},
+        #{branch},
+        #{hostPattern},
+        #{envType},
+        #{ciType},
+        #{jobName},
+        #{jobTemplate},
+        #{jobVersion},
+        #{deployJobName},
+        #{deployJobTemplate},
+        #{deployJobVersion},
+        #{content}
+        )
+    </insert>
+
+    <update id="updateCiJob" parameterType="CiJobDO">
+        UPDATE oc_ci_job
+        SET
+        name = #{name},
+        content = #{content},
+        ciType = #{ciType},
+        branch = #{branch},
+        hostPattern = #{hostPattern},
+        envType = #{envType},
+        jobTemplate = #{jobTemplate},
+        jobVersion = #{jobVersion},
+        deployJobName = #{deployJobName},
+        deployJobTemplate = #{deployJobTemplate},
+        deployJobVersion = #{deployJobVersion},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getCiJobByAppId" parameterType="_long" resultType="CiJobDO">
+        SELECT * FROM oc_ci_job WHERE appId = #{appId}
+    </select>
+
+    <select id="getCiJobByJobName" parameterType="object" resultType="CiJobDO">
+        SELECT * FROM oc_ci_job WHERE jobName = #{jobName}
+    </select>
+
+    <select id="queryCiJobByJobTemplate" parameterType="object" resultType="CiJobDO">
+        SELECT * FROM oc_ci_job
+        WHERE jobTemplate = #{jobTemplate}
+    </select>
+
+    <select id="queryCiJobByDeployJobTemplate" parameterType="object" resultType="CiJobDO">
+        SELECT * FROM oc_ci_job
+        WHERE deployJobTemplate = #{deployJobTemplate}
+    </select>
+
+    <select id="getCiJob" parameterType="_long" resultType="CiJobDO">
+        SELECT * FROM oc_ci_job WHERE id = #{id}
+    </select>
+
+    <select id="queryJobParamByJobId" parameterType="_long" resultType="CiJobParamDO">
+        SELECT * FROM oc_ci_job_parameter WHERE jobId = #{jobId}
+    </select>
+
+    <select id="getJobParam" parameterType="_long" resultType="CiJobParamDO">
+        SELECT * FROM oc_ci_job_parameter WHERE id = #{id}
+    </select>
+
+    <insert id="addJobParam" parameterType="CiJobParamDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_job_parameter (
+        jobId,
+        paramName,
+        paramValue,
+        content
+        ) VALUES (
+        #{jobId},
+        #{paramName},
+        #{paramValue},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateJobParam" parameterType="CiJobParamDO">
+        UPDATE oc_ci_job_parameter
+        SET paramName = #{paramName},
+        paramValue = #{paramValue},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delJobParam" parameterType="_long">
+        DELETE FROM oc_ci_job_parameter WHERE id = #{id}
+    </delete>
+
+    <insert id="addTemplate" parameterType="CiTemplateDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_job_template (
+        name,
+        version,
+        appType,
+        ciType,
+        rollbackType,
+        envType,
+        md5,
+        content
+        ) VALUES (
+        #{name},
+        #{version},
+        #{appType},
+        #{ciType},
+        #{rollbackType},
+        #{envType},
+        #{md5},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateTemplate" parameterType="CiTemplateDO">
+        UPDATE oc_ci_job_template
+        SET name = #{name},
+        version = #{version},
+        ciType = #{ciType},
+        rollbackType = #{rollbackType},
+        envType = #{envType},
+        md5 = #{md5},
+        content = #{content}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delTemplate" parameterType="_long">
+        DELETE FROM oc_ci_job_template WHERE id = #{id}
+    </delete>
+
+    <select id="getTemplateSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_ci_job_template
         <where>
-            <if test="projectName != null and projectName != ''">
-                AND projectName like "%" #{projectName} "%"
+            <if test="name != null and name != ''">
+                name like "%" #{name} "%"
             </if>
-            <if test="status != -1">
-                AND status = #{status}
+            <if test="appType != -1">
+                AND appType = #{appType}
             </if>
-            <if test="deployType != -1">
-                AND deployType = #{deployType}
-            </if>
-            <if test="bambooDeployRollback != -1">
-                AND bambooDeployRollback = #{bambooDeployRollback}
-            </if>
-            <if test="errorCode != -1">
-                AND errorCode = #{errorCode}
+            <if test="ciType != -1">
+                AND ciType = #{ciType}
             </if>
         </where>
+    </select>
+
+    <select id="getTemplatePage" parameterType="object" resultType="CiTemplateDO">
+        SELECT * FROM oc_ci_job_template
+        <where>
+            <if test="name != null and name != ''">
+                name like "%" #{name} "%"
+            </if>
+            <if test="appType != -1">
+                AND appType = #{appType}
+            </if>
+            <if test="ciType != -1">
+                AND ciType = #{ciType}
+            </if>
+        </where>
+        ORDER BY name DESC
+        limit #{pageStart}, #{pageLength}
+    </select>
+
+    <select id="getTemplate" parameterType="object" resultType="CiTemplateDO">
+        SELECT * FROM oc_ci_job_template WHERE id = #{id}
+    </select>
+
+    <select id="getTemplateByName" parameterType="object" resultType="CiTemplateDO">
+        SELECT * FROM oc_ci_job_template WHERE name = #{name}
+    </select>
+
+    <insert id="addBuild" parameterType="CiBuildDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_build (
+        jobId,
+        jobName,
+        parameters,
+        displayName,
+        mail,
+        mobile,
+        buildNumber,
+        versionName,
+        versionDesc
+        ) VALUES (
+        #{jobId},
+        #{jobName},
+        #{parameters},
+        #{displayName},
+        #{mail},
+        #{mobile},
+        #{buildNumber},
+        #{versionName},
+        #{versionDesc}
+        );
+    </insert>
+
+    <update id="updateBuild" parameterType="CiBuildDO">
+        UPDATE oc_ci_build
+        SET buildNumber = #{buildNumber},
+        buildPhase = #{buildPhase},
+        buildStatus = #{buildStatus},
+        versionName = #{versionName}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getBuild" parameterType="_long" resultType="CiBuildDO">
+        SELECT * FROM oc_ci_build WHERE id = #{id}
+    </select>
+
+    <!--查询队列-->
+    <select id="getBuildByQueue" parameterType="object" resultType="CiBuildDO">
+        SELECT * FROM oc_ci_build
+        WHERE jobName = #{jobName} AND buildNumber = -1
+        ORDER BY gmtCreate
+        limit 1
+    </select>
+
+    <select id="getBuildByUnique" parameterType="object" resultType="CiBuildDO">
+        SELECT * FROM oc_ci_build
+        WHERE jobName = #{jobName} AND buildNumber = #{buildNumber}
+        ORDER BY gmtCreate
+        limit 1
+    </select>
+
+    <delete id="delBuild" parameterType="_long">
+        DELETE FROM oc_ci_build WHERE id = #{id}
+    </delete>
+
+    <select id="getBuildSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_ci_build
+        WHERE jobId = #{jobId} AND jobName = #{jobName}
+    </select>
+
+    <select id="getBuildPage" parameterType="object" resultType="CiBuildDO">
+        SELECT * FROM oc_ci_build
+        WHERE jobId = #{jobId} AND jobName = #{jobName}
         ORDER BY gmtCreate DESC
         limit #{pageStart}, #{pageLength}
     </select>
 
-    <!-- 创建统计信息 -->
-    <insert id="addCiDeployStatistics" parameterType="CiDeployStatisticsDO">
-        INSERT INTO ci_deploy_statistics(
-        projectName,
-        groupName,
-        env,
-        status,
-        deployId,
-        bambooDeployVersion,
-        bambooBuildNumber,
-        bambooDeployProject,
-        bambooDeployRollback,
-        bambooManualBuildTriggerReasonUserName,
-        errorCode,
-        branchName,
-        deployType
+    <insert id="addBuildNotify" parameterType="BuildNotifyDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_build_notify (
+        buildId,
+        jobName,
+        jobUrl,
+        buildFullUrl,
+        buildNumber,
+        buildPhase,
+        buildStatus,
+        buildUrl,
+        scmUrl,
+        scmBranch,
+        scmCommit,
+        dingtalk
         ) VALUES (
-        #{projectName},
-        #{groupName},
-        #{env},
-        #{status},
-        #{deployId},
-        #{bambooDeployVersion},
-        #{bambooBuildNumber},
-        #{bambooDeployProject},
-        #{bambooDeployRollback},
-        #{bambooManualBuildTriggerReasonUserName},
-        #{errorCode},
-        #{branchName},
-        #{deployType}
-        )
+        #{buildId},
+        #{jobName},
+        #{jobUrl},
+        #{buildFullUrl},
+        #{buildNumber},
+        #{buildPhase},
+        #{buildStatus},
+        #{buildUrl},
+        #{scmUrl},
+        #{scmBranch},
+        #{scmCommit},
+        #{dingtalk}
+        );
     </insert>
 
-    <!-- 获取指定deployId的统计信息 -->
-    <select id="getCiDeployStatisticsByDeployId" parameterType="_long" resultType="CiDeployStatisticsDO">
-        SELECT * FROM ci_deploy_statistics WHERE deployId = #{deployId}
-    </select>
-
-    <!-- 按id查询 -->
-    <select id="getCiDeployStatisticsById" parameterType="_long" resultType="CiDeployStatisticsDO">
-        SELECT * FROM ci_deploy_statistics WHERE id = #{id}
-    </select>
-
-
-    <!-- 更新状态 -->
-    <update id="updateCiDeployStatistics" parameterType="CiDeployStatisticsDO">
-        UPDATE ci_deploy_statistics
-        SET
-        status = #{status},
-        errorCode = #{errorCode}
+    <update id="updateBuildNotify" parameterType="BuildNotifyDO">
+        UPDATE oc_ci_build_notify
+        SET dingtalk = #{dingtalk},
+        buildPhase = #{buildPhase},
+        buildStatus = #{buildStatus}
         WHERE id = #{id}
     </update>
 
-    <!-- 创建统计信息 -->
-    <insert id="addCiDeployServerVersion" parameterType="CiDeployServerVersionDO">
-        INSERT INTO ci_deploy_server_version(
+    <delete id="delBuildNotify" parameterType="_long">
+        DELETE FROM oc_ci_build_notify WHERE id = #{id}
+    </delete>
+
+    <select id="queryBuildNotifyByBuildId" parameterType="object" resultType="BuildNotifyDO">
+        SELECT * FROM oc_ci_build_notify
+        WHERE buildId = #{buildId}
+    </select>
+
+    <select id="queryNotifyStartedByJobName" parameterType="object" resultType="string">
+        SELECT scmCommit FROM oc_ci_build_notify
+        WHERE  jobName = #{jobName} AND buildPhase = 'STARTED'
+        ORDER BY gmtCreate DESC
+        limit 1
+    </select>
+
+    <select id="queryNotifyFinalizedByJobName" parameterType="object" resultType="string">
+        SELECT scmCommit FROM oc_ci_build_notify
+        WHERE jobName = #{jobName} AND buildPhase = 'FINALIZED' AND buildStatus = 'SUCCESS'
+        ORDER BY gmtCreate DESC
+        limit 1
+    </select>
+
+    <select id="getBuildNotifyByUnique" parameterType="BuildNotifyDO" resultType="BuildNotifyDO">
+        SELECT * FROM oc_ci_build_notify
+        WHERE jobName = #{jobName} AND buildNumber = #{buildNumber} AND buildPhase = #{buildPhase}
+    </select>
+
+    <select id="getBuildNotify" parameterType="_long" resultType="BuildNotifyDO">
+        SELECT * FROM oc_ci_build_notify
+        WHERE id = #{id}
+    </select>
+
+    <insert id="addBuildArtifact" parameterType="BuildArtifactDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_ci_build_artifact (
+        buildId,
+        artifactName,
+        archiveUrl,
+        ossPath,
+        artifactSize
+        ) VALUES (
+        #{buildId},
+        #{artifactName},
+        #{archiveUrl},
+        #{ossPath},
+        #{artifactSize}
+        );
+    </insert>
+
+    <select id="queryBuildArtifactByJobName" parameterType="object" resultType="BuildArtifactDO">
+        SELECT * FROM oc_ci_build_artifact AS artifact WHERE
+        buildId IN ( SELECT id FROM oc_ci_build
+        <where>
+            jobName = #{jobName}
+            <if test="buildNumber > 0">
+                AND buildNumber = #{buildNumber}
+            </if>
+        </where>
+        )
+        AND artifact.ossPath is not NULL
+        ORDER BY gmtCreate DESC
+        limit 20
+    </select>
+
+    <select id="checkBuildArtifactByUnique" parameterType="BuildArtifactDO" resultType="_int">
+        SELECT COUNT(id) FROM oc_ci_build_artifact
+        WHERE buildId = #{buildId} AND artifactName = #{artifactName} AND archiveUrl = #{archiveUrl}
+        limit 1
+    </select>
+
+    <select id="queryBuildArtifactByOssPath" parameterType="object" resultType="BuildArtifactDO">
+        SELECT * FROM oc_ci_build_artifact
+        WHERE ossPath = #{ossPath}
+    </select>
+
+
+    <select id="getBuildArtifact" parameterType="_long" resultType="BuildArtifactDO">
+        SELECT * FROM oc_ci_build_artifact WHERE id = #{id}
+    </select>
+
+    <select id="queryBuildArtifactByBuildId" parameterType="_long" resultType="BuildArtifactDO">
+        SELECT * FROM oc_ci_build_artifact
+        WHERE buildId = #{buildId}
+    </select>
+
+
+    <delete id="delBuildArtifact" parameterType="_long">
+        DELETE FROM oc_ci_build_artifact WHERE id = #{id}
+    </delete>
+
+
+    <update id="updateDeploy" parameterType="CiDeployDO">
+        UPDATE oc_ci_deploy
+        SET ciHistoryId = #{ciHistoryId}
+        <where>
+            <if test="id != 0">
+                id = #{id}
+            </if>
+            <if test="serverId != 0">
+                AND serverId = #{serverId}
+            </if>
+        </where>
+    </update>
+
+    <select id="getDeployByServerId" parameterType="_long" resultType="CiDeployDO">
+        SELECT * FROM oc_ci_deploy
+        WHERE serverId = #{serverId}
+    </select>
+
+
+    <insert id="addDeploy" parameterType="CiDeployDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ci_deploy(
         serverId,
-        ciDeployStatisticsId
+        ciHistoryId
         ) VALUES (
         #{serverId},
-        #{ciDeployStatisticsId}
+        #{ciHistoryId}
         )
     </insert>
 
-    <!-- 更新状态 -->
-    <update id="updateCiDeployServerVersion" parameterType="CiDeployServerVersionDO">
-        UPDATE ci_deploy_server_version
-        SET
-        ciDeployStatisticsId = #{ciDeployStatisticsId}
-        WHERE serverId = #{serverId}
+    <insert id="addDeployHistory" parameterType="CiDeployHistoryDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_ci_deploy_history(
+        buildId,
+        serverId,
+        groupName,
+        username,
+        displayName,
+        branch,
+        tag,
+        projectName,
+        versionName,
+        versionDesc,
+        buildNumber,
+        zabbixStatus,
+        rollback,
+        serialNumber,
+        serverName,
+        insideIp
+        ) VALUES (
+        #{buildId},
+        #{serverId},
+        #{groupName},
+        #{username},
+        #{displayName},
+        #{branch},
+        #{tag},
+        #{projectName},
+        #{versionName},
+        #{versionDesc},
+        #{buildNumber},
+        #{zabbixStatus},
+        #{rollback},
+        #{serialNumber},
+        #{serverName},
+        #{insideIp}
+        )
+    </insert>
+
+    <update id="updateDeployHistory" parameterType="CiDeployHistoryDO">
+        UPDATE oc_ci_deploy_history
+        SET buildStatus = #{buildStatus},
+            buildPhase = #{buildPhase},
+            buildNumber = #{buildNumber},
+            zabbixStatus = #{zabbixStatus},
+            versionName = #{versionName},
+            versionDesc = #{versionDesc}
+        WHERE id = #{id}
     </update>
 
-    <select id="getCiDeployServerVersionByServerId" parameterType="_long" resultType="CiDeployServerVersionDO">
-        SELECT * FROM ci_deploy_server_version WHERE serverId = #{serverId}
+    <select id="getDeployHistoryByUnique" parameterType="object" resultType="CiDeployHistoryDO">
+        SELECT * FROM oc_ci_deploy_history
+        WHERE serverId = #{serverId} AND buildId = #{buildId}
     </select>
 
-
-    <!--统计部署次数-->
-    <select id="getCiDeployedCnt" resultType="_int">
-        SELECT COUNT(*) AS cnt FROM ci_deploy_statistics;
+    <select id="getDeployHistory" parameterType="_long" resultType="CiDeployHistoryDO">
+        SELECT * FROM oc_ci_deploy_history
+        WHERE id = #{id}
     </select>
 
-    <!--统计项目总数-->
-    <select id="getCiProjectCnt" resultType="_int">
-        SELECT COUNT( DISTINCT projectName ) AS cnt
-        FROM ci_deploy_statistics;
+    <select id="queryDeployHistoryByServerId" parameterType="_long" resultType="CiDeployHistoryDO">
+        SELECT * FROM oc_ci_deploy_history
+        WHERE serverId = #{serverId}
     </select>
 
-    <select id="statusCiDeployProject" resultType="CiProjectVO">
-        SELECT projectName, COUNT(*) AS cnt
-        FROM ci_deploy_statistics
-        WHERE env = "back" OR env = "production"
-        GROUP BY projectName
-        ORDER BY cnt DESC
-        limit 20;
+    <select id="queryDeployHistoryByBuildId" parameterType="_long" resultType="CiDeployHistoryDO">
+        SELECT * FROM oc_ci_deploy_history
+        WHERE buildId = #{buildId}
     </select>
 
-    <select id="statusCiDeployUser" resultType="CiDeployUserVO">
-        SELECT bambooManualBuildTriggerReasonUserName AS username, COUNT(*) AS cnt
-        FROM ci_deploy_statistics
-        GROUP BY username
-        ORDER BY cnt DESC
-        limit 20;
+    <insert id="addCiBuildCommit" parameterType="CiBuildCommitDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_ci_build_commit(
+        buildId,
+        commit,
+        message
+        ) VALUES (
+        #{buildId},
+        #{commit},
+        #{message}
+        )
+    </insert>
+
+    <select id="queryCiBuildCommitByBuildId" parameterType="object" resultType="CiBuildCommitDO">
+        SELECT * FROM oc_ci_build_commit
+        WHERE buildId = #{buildId}
     </select>
 
-    <select id="statusCiRepo" resultType="CiRepoVO">
-        SELECT bambooDeployProject AS repo, COUNT(*) AS cnt
-        FROM ci_deploy_statistics
-        GROUP BY repo
-        ORDER BY cnt DESC
-        limit 20;
-    </select>
-
-    <select id="statusCiDeploy" resultType="CiDeployVO">
-        SELECT projectName ,
-               groupName,
-               bambooDeployVersion AS version,
-               bambooManualBuildTriggerReasonUserName AS username,
-               gmtCreate,
-               gmtModify
-        FROM ci_deploy_statistics
-        ORDER BY gmtCreate DESC
-        limit 14
-    </select>
+    <delete id="delCiBuildCommit" parameterType="_long">
+        DELETE FROM oc_ci_build_commit WHERE id = #{id}
+    </delete>
 
 
 </mapper>
