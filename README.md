@@ -30,8 +30,9 @@ OpsCloud是云时代的运维自动配置平台
 * Redis3.0.3
 * LDAP(最新版本apacheDS http://directory.apache.org)
 * Ansible2.4
-# Jumpserver 1.4.6-2 GPLv2(Mysql表结构兼容即可)
-# Gitlab API v4
+* Jumpserver 1.4.6-2 GPLv2(Mysql表结构兼容即可)
+* Gitlab API v4
+* Zabbix 4.x(API4.0)
 
 ### 构建
 ```$xslt
