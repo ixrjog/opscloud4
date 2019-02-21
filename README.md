@@ -6,15 +6,21 @@ Welcome to the opsCloud wiki!
 <br>
 OpsCloud是云时代的运维自动配置平台
 
-### 开发者
-* liangjian 
-
-opsCloud开发使用交流  QQ群号:630913972
+### 最新版本说明
+* 增强了LDAP管理（用户管理，组管理）
+* AnsilbePlaybook支持
+* Jenkins灵活管理，按模版创建Job,参数化build，模版更新批量同步Job
+* Gitlab管理（API v4）
+* Zabbix可同步模版/宏
+* Nginx配置管理优化
+* ECS批量续费
+* 阿里云RAM子账户管理
+* 工作流支持
+* 阿里云MQ管理（需要购买铂金版，铂金版才支持API）
 
 
 ### 开发环境
 * MacOS10.13.5/JRE1.8.0_144/IntelliJ IDEA/Gradel3.1
-
 
 ### 服务器部署环境
 * Centos6/7(2vCPU/内存4G）
@@ -24,6 +30,8 @@ opsCloud开发使用交流  QQ群号:630913972
 * Redis3.0.3
 * LDAP(最新版本apacheDS http://directory.apache.org)
 * Ansible2.4
+# Jumpserver 1.4.6-2 GPLv2(Mysql表结构兼容即可)
+# Gitlab API v4
 
 ### 构建
 ```$xslt
@@ -39,8 +47,9 @@ $ gradle clean war -DpkgName=opscloud -Denv=online -Dorg.gradle.daemon=false
 create database opscloud character set utf8 collate utf8_bin;
 grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
-$ mysql -uopscloud -popscloud opscloud < ./opscloud.sql
-$ mysql -uopscloud -popscloud opscloud < ./auth_resources.sql
+$ mysql -f -uopscloud -popscloud opscloud < ./opscloud-db/opscloud.sql
+# 如果没有则导入
+$ mysql -uopscloud -popscloud opscloud < ./opscloud-db/auth_resources.sql
 
 # Mysql5.7 兼容性问题
 已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
@@ -294,9 +303,96 @@ accelerate_multi_key = yes
 
 [selinux]
 
-
-
 ```
+
+
+### opscloud配置文件
+配置文件路径 WEB-INF/classes/server.properties
+```
+jdbc_url=jdbc:mysql://{MYSQL-IP}/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+jdbc_user=opscloud
+jdbc_password={MYSQL-PASSWORD}
+
+# 启用Jumpserver支持
+jumpserver_jdbc_url=jdbc:mysql://{JUMPSERVER-MYSQL-IP}:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+jumpserver_jdbc_user=jumpserver
+jumpserver_jdbc_password={JUMPSERVER-MYSQL-PASSWORD}
+jumpserver.host=http://jumpserver.ops.cn
+
+#ldap配置，建议使用apacheDS,用户dn:cn=user1,ou=users,ou=system
+ldap.url=ldap://{LDAP-IP}:10389
+ldap.base.dn=ou=system
+# 管理员账户，用户账户管理
+ldap.manager.dn=uid=admin,ou=system
+# 密码
+ldap.manager.passwd=secret
+ldap.group.dn=ou=groups
+ldap.user.dn=ou=users
+ldap.user.id=cn
+ldap.user.object=inetorgperson
+ldap.group.object=groupOfUniqueNames
+ldap.group.member=uniqueMember
+
+
+# 配置文件环境: dev=开发环境，online=线上环境
+invoke.env=dev
+
+# redis配置
+redis.host=opscloud.redis.test
+redis.port=16379
+# 没有密码可留空
+redis.pwd=
+
+# 邮箱配置，通知中心使用
+email.host=smtp.exmail.qq.com
+email.user=ops@ops.com
+email.passwd=PASSWORD
+
+# 是否开启定时任务，集群部署使用
+task.open=false
+
+# 超级管理员密码
+admin.passwd=opscloud
+
+# 外部url
+external.url=https://oc.ops.cn
+
+# key临时目录
+keystore.filePath=/data/www/keystore/
+
+# ansible配置
+ansible.bin=/usr/local/Cellar/ansible/2.4.3.0/bin/ansible
+ansible.playbook.bin=/usr/local/Cellar/ansible/2.4.3.0/bin/ansible-playbook
+ansible.scripts.path=/data/www/data/scrips
+# configPlaybook: ${ansible.logs.path}/configPlaybook
+# copyLog: ${ansible.logs.path}/copyLogs
+ansible.logs.path=/data/www/logs
+
+# ss服务列表 域名:说明 多服务器用,分割 例如  ss-1.a.com:说明1,ss-2.a.com:说明2
+ss.servers=hk-ss1.ops.cn:hongkong,us-w-ss2.ops.cn:usa-west
+
+# gitlab配置(必须支持v4版本的API)
+gitlab.url=http://gitlab.ops.cn:80
+gitlab.token={GITLAB-TOKEN}
+
+# jenkins配置
+jenkins.url=http://ci.ops.cn
+jenkins.user=admin
+# jenkins登陆password或Token(推荐)
+jenkins.token={JENKINS-TOKEN}
+
+# dns.public.conf
+# 用户读取头部全局配置文件
+dns.public.conf=/data/www/data/dnsmasq/dnsmasq-public.conf
+# 写入的配置文件
+dns.conf=/data/www/data/dnsmasq/dnsmasq.conf
+
+# zabbix配置
+zabbix.url=http://zabbix.ops.yangege.cn/api_jsonrpc.php
+zabbix.user=zabbix
+zabbix.passwd=${ZABBIX-PASSWORD}
+```
+
 ### 配置 Aliyun(ECS）
 * 配置Aliyun AccessKey(登录阿里云，右上角头像菜单中找到accessKeys)
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
@@ -412,9 +508,6 @@ http://${ZABBIX_HOST}/api_jsonrpc.php
 * terminal堡垒机配置管理（内部功能）
 * ansible主机文件管理（自动分组）
 
-### 跳板机（不支持操作审计）
-* Web版跳板机KeyBox（支持多服务器同时操作）
-* Terminal跳板机Getway
 
 
 
