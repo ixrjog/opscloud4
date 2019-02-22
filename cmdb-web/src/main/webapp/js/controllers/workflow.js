@@ -8,14 +8,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
         $scope.authPoint = $state.current.data.authPoint;
         $scope.workflowGroupList = [];
 
-<<<<<<< HEAD
-        $scope.queryTopics = "";
-
-        $scope.myTodoList = [];
-        //$scope.todoDetailList = [];
-        //$scope.todoDetailCompleteList = [];
-        //$scope.myJobStatusOpen = true;
-=======
         $scope.workflowOpen = true;
         $scope.myJobStatusOpen = true;
 
@@ -69,27 +61,19 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                 }
             }
         }
->>>>>>> develop
 
         $scope.queryMyTodo = function () {
             var url = "/workflow/todo/query";
             httpService.doGet(url).then(function (data) {
                 if (data.success) {
                     $scope.myTodoList = data.body;
-<<<<<<< HEAD
-                    // $scope.refreshInitiatorUserInfo();
-=======
                     initTodo();
->>>>>>> develop
                 }
             });
         }
 
         $scope.queryMyTodo();
 
-<<<<<<< HEAD
-        // 30秒刷新1次待办工单
-=======
         $scope.queryMyCompleteTodo = function () {
             var url = "/workflow/todo/queryComplete";
             httpService.doGet(url).then(function (data) {
@@ -105,13 +89,10 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
         /**
          * 30秒刷新1次待办工作流
          */
->>>>>>> develop
         var timer1 = $interval(function () {
             $scope.queryMyTodo();
         }, 30000);
 
-<<<<<<< HEAD
-=======
         /**
          * 60秒刷新1次已完成工作流
          */
@@ -119,7 +100,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
             $scope.queryMyCompleteTodo();
         }, 60000);
 
->>>>>>> develop
         //
         // $scope.queryCompleteJob = function () {
         //     var url = "/todo/queryCompleteJob";
@@ -148,26 +128,18 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
          * 创建Todo
          */
         $scope.createTodo = function (workflow) {
-<<<<<<< HEAD
-=======
             $scope.btnCreateTodo = true;
->>>>>>> develop
             var url = "/workflow/todo/create?wfKey=" + workflow.wfKey;
 
             httpService.doGet(url).then(function (data) {
                 if (data.success) {
-<<<<<<< HEAD
-=======
                     // $scope.btnCreateTodo = false;
->>>>>>> develop
                     var workflowTodo = data.body;
                     switch (workflow.wfKey) {
                         case "KEYBOX":
                             ////TODO 堡垒机权限申请
                             $scope.viewTodoKeybox(workflowTodo, 0);
                             break;
-<<<<<<< HEAD
-=======
                         case "RAM":
                             ////TODO 阿里云RAM权限申请
                             $scope.viewTodoAliyunRAM(workflowTodo, 0);
@@ -180,15 +152,11 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                             ////TODO 阿里云RAMPolicy权限申请
                             $scope.viewTodoAliyunRAMPolicy(workflowTodo, 0);
                             break;
->>>>>>> develop
                         default:
                         //
                     }
                 }
-<<<<<<< HEAD
-=======
                 $scope.btnCreateTodo = false;
->>>>>>> develop
             })
 
         }
@@ -199,8 +167,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                     ////TODO 堡垒机权限申请
                     $scope.viewTodoKeybox(todo, 0);
                     break;
-<<<<<<< HEAD
-=======
                 case "RAM":
                     ////TODO 阿里云RAM权限申请
                     $scope.viewTodoAliyunRAM(todo, 0);
@@ -213,7 +179,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                     ////TODO 阿里云RAMPolicy权限申请
                     $scope.viewTodoAliyunRAMPolicy(todo, 0);
                     break;
->>>>>>> develop
                 default:
                 //
             }
@@ -226,8 +191,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                     ////TODO 堡垒机权限申请
                     $scope.viewTodoKeybox(todo, 1);
                     break;
-<<<<<<< HEAD
-=======
                 case "RAM":
                     ////TODO 阿里云RAM权限申请
                     $scope.viewTodoAliyunRAM(todo, 1);
@@ -240,7 +203,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                     ////TODO 阿里云RAMPolicy权限申请
                     $scope.viewTodoAliyunRAMPolicy(todo, 1);
                     break;
->>>>>>> develop
                 default:
                 //
             }
@@ -248,11 +210,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
 
 
         $scope.viewTodoKeybox = function (workflowTodo, type) {
-<<<<<<< HEAD
-            var modalInstance = $uibModal.open({
-                templateUrl: 'todoKeyboxModal',
-                controller: 'todoKeyboxInstanceCtrl',
-=======
             viewTodo("todoKeyboxModal", "todoKeyboxInstanceCtrl", "lg", workflowTodo, type);
         }
 
@@ -273,18 +230,14 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
             var modalInstance = $uibModal.open({
                 templateUrl: templateUrl,
                 controller: controller,
->>>>>>> develop
                 size: 'lg',
                 resolve: {
                     httpService: function () {
                         return httpService;
                     },
-<<<<<<< HEAD
-=======
                     user: function () {
                         return $scope.app.settings.user;
                     },
->>>>>>> develop
                     workflowTodo: function () {
                         return workflowTodo;
                     },
@@ -293,15 +246,12 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                     }
                 }
             });
-<<<<<<< HEAD
-=======
 
             modalInstance.result.then(function () {
                 $scope.queryMyTodo();
             }, function () {
                 $scope.queryMyTodo();
             });
->>>>>>> develop
         }
 
 
@@ -349,21 +299,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
             }
         }
 
-<<<<<<< HEAD
-        // $scope.queryMyJob();
-        // $scope.queryCompleteJob();
-
-        // 60秒刷新1次待办工单
-        // var timer1 = $interval(function () {
-        //     $scope.queryMyJob();
-        // }, 30000);
-
-        // 60秒刷新1次待办工单
-        // var timer2 = $interval(function () {
-        //     $scope.queryCompleteJob();
-        // }, 60000);
-=======
->>>>>>> develop
 
         // 生成发起人信息
         $scope.refreshInitiatorUserInfo = function () {
@@ -409,48 +344,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
 
         $scope.queryWorkflowGroup();
 
-<<<<<<< HEAD
-        $scope.submitTodo = function (todoItem) {
-            switch (todoItem.id) {
-                case 1:
-                    ////TODO 堡垒机权限申请
-                    $scope.submitTodoKeyBox(todoItem);
-                    break;
-                case 2:
-                    ////TODO 持续集成权限申请
-                    $scope.submitTodoCiUserGroup(todoItem);
-                    break;
-                case 3:
-                    ////TODO 平台权限申请
-                    $scope.submitSystemAuth(todoItem);
-                    break;
-                case 4:
-                    ////TODO VPN权限申请
-                    $scope.submitTodoVpn(todoItem);
-                    break;
-                case 5:
-                    ////TODO 新项目申请
-                    $scope.submitTodoNewProject(todoItem);
-                    break;
-                case 6:
-                    ////TODO 持续集成权限申请(前端)
-                    $scope.submitTodoCmdbRole(todoItem);
-                    break;
-                case 7:
-                    ////TODO SCM权限申请
-                    $scope.submitTodoScm(todoItem);
-                    break;
-                case 8:
-                    ////TODO Tomcat(JDK)版本变更
-                    $scope.submitTodoTomcatVersion(todoItem);
-                    break;
-                default:
-                //
-
-            }
-        }
-
-=======
         /**
          * 申请todo
          */
@@ -476,48 +369,25 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
             });
 
         }
->>>>>>> develop
 
         //////////////////////////////////////////////////////
 
         // 撤销工单
         $scope.revokeTodo = function (id) {
-<<<<<<< HEAD
-=======
             $scope.btnTodoClick = true;
->>>>>>> develop
             var url = "/workflow/todo/revoke?id=" + id;
             httpService.doDelete(url).then(function (data) {
                 if (data.success) {
                     toaster.pop("success", "撤销成功!");
                     $scope.queryMyTodo();
-<<<<<<< HEAD
-                } else {
-                    toaster.pop("warning", "撤销失败!");
-=======
                     $scope.btnTodoClick = false;
                 } else {
                     toaster.pop("warning", "撤销失败!");
                     $scope.btnTodoClick = false;
->>>>>>> develop
                 }
             }, function (err) {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = err;
-<<<<<<< HEAD
-            });
-        }
-
-        // 执行工单
-        $scope.invokeTodoDetail = function (id) {
-            var url = "/todo/invokeTodoDetail?id=" + id;
-            httpService.doGet(url).then(function (data) {
-                if (data.success) {
-                    toaster.pop("success", "执行成功!");
-                    $scope.queryMyJob();
-                } else {
-                    toaster.pop("warning", "执行失败!");
-=======
                 $scope.btnTodoClick = false;
             });
         }
@@ -534,13 +404,10 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                 } else {
                     toaster.pop("warning", "审批/审核失败!");
                     $scope.btnTodoClick = false;
->>>>>>> develop
                 }
             }, function (err) {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = err;
-<<<<<<< HEAD
-=======
                 $scope.btnTodoClick = false;
             });
         }
@@ -562,7 +429,6 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = err;
                 $scope.btnTodoClick = false;
->>>>>>> develop
             });
         }
     }
@@ -570,23 +436,13 @@ app.controller('workflowCtrl', function ($scope, $uibModal, $state, $sce, $inter
 
 
 /**
-<<<<<<< HEAD
- * Todo keybox（申请页面）
- */
-app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $sce, toaster, httpService, workflowTodo, type) {
-=======
  * TODO keybox（申请页面）
  */
 app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $sce, toaster, httpService, user, workflowTodo, type) {
->>>>>>> develop
     //$scope.workflow = workflow;
     // type 0 编辑 / 1 查看/审批
     $scope.type = type;
 
-<<<<<<< HEAD
-    $scope.workflowTodo = workflowTodo;
-
-=======
     $scope.btnSaveing = false;
 
     // TODO 可以取到当前用户信息
@@ -595,28 +451,12 @@ app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $s
     $scope.workflowTodo = workflowTodo;
     $scope.nowDeptLeader = {};
     $scope.nowOps = {};
->>>>>>> develop
 
     $scope.initiatorUsername = "";
     $scope.assigneeUsersInfo = "";
     $scope.nowServerGroup = {};
     $scope.serverGroupList = [];
 
-<<<<<<< HEAD
-
-    // $scope.doCreate = function () {
-    //     var url = "/workflow/todo/create?wfKey=" + $scope.workflow.wfKey;
-    //     httpService.doGet(url).then(function (data) {
-    //         if (data.success) {
-    //             $scope.workflowTodo = data.body;
-    //         } else {
-    //             toaster.pop("warning", data.msg);
-    //         }
-    //     }, function (err) {
-    //         toaster.pop("error", err);
-    //     });
-    // }
-=======
     // 初始化审批选中状态
     var init = function () {
         // 设置deptLeader选中
@@ -647,7 +487,6 @@ app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $s
     }
 
     init();
->>>>>>> develop
 
     // 生成负责人信息
     $scope.refreshAssigneeUsersInfo = function () {
@@ -684,42 +523,12 @@ app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $s
         );
     }
 
-<<<<<<< HEAD
-    // var init = function () {
-    //     if ($scope.type == 0) $scope.doCreate();
-    //     // if (todoDetail != null) {
-    //     //     $scope.refreshAssigneeUsersInfo();
-    //     //     return;
-    //     // }
-    //     //
-    //     // var url = "/todo/establish?todoId=" + $scope.todoItem.id;
-    //     // httpService.doGet(url).then(function (data) {
-    //     //     if (data.success) {
-    //     //         $scope.todoDetail = data.body;
-    //     //         $scope.initiatorUsername = $scope.todoDetail.initiatorUsername;
-    //     //         $scope.refreshAssigneeUsersInfo();
-    //     //     } else {
-    //     //         toaster.pop("warning", data.msg);
-    //     //     }
-    //     // }, function (err) {
-    //     //     toaster.pop("error", err);
-    //     // });
-    //
-    // }
-    //
-    // // 创建工单（复用）
-    // init();
-
-    $scope.queryServerGroup = function (queryParam) {
-        var url = "/servergroup/query/page?page=0&length=10&name=" + queryParam + "&useType=0";
-=======
     /**
      * 未授权的
      * @param queryParam
      */
     $scope.queryServerGroup = function (queryParam) {
         var url = "/servergroup/query/unauthPage?page=0&length=10&name=" + queryParam + "&useType=0";
->>>>>>> develop
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
@@ -778,10 +587,7 @@ app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $s
         httpService.doPostWithJSON(url, requestBody).then(function (data) {
             if (data.success) {
                 $scope.workflowTodo = data.body;
-<<<<<<< HEAD
-=======
                 init();
->>>>>>> develop
             } else {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
@@ -810,29 +616,6 @@ app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $s
         });
     }
 
-<<<<<<< HEAD
-    /**
-     * 申请todo
-     */
-    $scope.applyTodo = function () {
-        if ($scope.workflowTodo.todoDetails == null || $scope.workflowTodo.todoDetails.length == 0) {
-            $scope.alert.type = 'warning';
-            $scope.alert.msg = "工作流未填写内容!";
-            return;
-        }
-
-        var url = "/workflow/todo/apply?todoId=" + $scope.workflowTodo.id;
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                $scope.alert.type = 'success';
-                $scope.alert.msg = "提交成功!";
-                $scope.workflowTodo = data.body;
-                // 工单状态（工单状态 0:发起人状态  1:团队领导状态  2:部分领导状态  3:审核操作状态  4:执行完成 ）
-                $scope.type = $scope.workflowTodo.todoPhase;
-            } else {
-                $scope.alert.type = 'warning';
-                $scope.alert.msg = data.msg;
-=======
     $scope.closeModal = function () {
         $uibModalInstance.dismiss('cancel');
     }
@@ -879,17 +662,10 @@ app.controller('todoKeyboxInstanceCtrl', function ($scope, $uibModalInstance, $s
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
                 $scope.btnSaveing = false;
->>>>>>> develop
             }
         }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
-<<<<<<< HEAD
-        });
-
-    }
-
-=======
             $scope.btnSaveing = false;
         });
     }
@@ -977,17 +753,12 @@ app.controller('todoAliyunRamInstanceCtrl', function ($scope, $uibModalInstance,
 
 
     /////////////////////////////////////////////////
->>>>>>> develop
     $scope.closeModal = function () {
         $uibModalInstance.dismiss('cancel');
     }
 
 
     /////////////////////////////////////////////////
-<<<<<<< HEAD
-
-    $scope.saveTodo = function () {
-=======
     $scope.saveTodo = function () {
         doSave();
     }
@@ -1017,7 +788,6 @@ app.controller('todoAliyunRamInstanceCtrl', function ($scope, $uibModalInstance,
 
         $scope.btnSaveing = true;
 
->>>>>>> develop
         var url = "/workflow/todo/save";
 
         var requestBody = $scope.workflowTodo;
@@ -1025,36 +795,16 @@ app.controller('todoAliyunRamInstanceCtrl', function ($scope, $uibModalInstance,
         httpService.doPostWithJSON(url, requestBody).then(function (data) {
             if (data.success) {
                 $scope.workflowTodo = data.body;
-<<<<<<< HEAD
-            } else {
-                $scope.alert.type = 'warning';
-                $scope.alert.msg = data.msg;
-=======
                 init();
                 $scope.btnSaveing = false;
             } else {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
                 $scope.btnSaveing = false;
->>>>>>> develop
             }
         }, function (err) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = err;
-<<<<<<< HEAD
-        });
-    }
-
-    /////////////////////////////////////////////////
-    $scope.userList = [];
-
-    $scope.queryUser = function (queryParam) {
-        var url = "/users?username=" + queryParam + "&page=0&length=10";
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                var body = data.body;
-                $scope.userList = body.data;
-=======
             $scope.btnSaveing = false;
         });
     }
@@ -1295,7 +1045,6 @@ app.controller('todoAliyunRamPolicyInstanceCtrl', function ($scope, $uibModalIns
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 $scope.ramPolicyList = data.body;
->>>>>>> develop
             } else {
                 toaster.pop("warning", data.msg);
             }
@@ -1304,8 +1053,6 @@ app.controller('todoAliyunRamPolicyInstanceCtrl', function ($scope, $uibModalIns
         });
     }
 
-<<<<<<< HEAD
-=======
     //    $scope.user = user;
     //    $scope.ramUser = {};
 
@@ -1419,5 +1166,4 @@ app.controller('todoAliyunRamPolicyInstanceCtrl', function ($scope, $uibModalIns
         });
     }
 
->>>>>>> develop
 });

@@ -3,23 +3,15 @@ package com.sdg.cmdb.service.gitlabTest;
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.GitlabAPIException;
 import org.gitlab.api.models.*;
-<<<<<<< HEAD
-import org.junit.Before;
-=======
->>>>>>> develop
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import static org.junit.Assert.*;
-<<<<<<< HEAD
-import org.junit.Test;
-=======
 
 import org.junit.Test;
 
->>>>>>> develop
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
@@ -27,21 +19,13 @@ import java.util.List;
 import java.util.UUID;
 
 
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class GitlabAPITest {
     static GitlabAPI api;
 
-<<<<<<< HEAD
-    private static final String TEST_URL = "http://" + System.getProperty("10.10.10.10", "10.10.10.10") + ":" + System.getProperty("80", "80");
-=======
     //private static final String TEST_URL = "http://" + System.getProperty("10.10.10.10", "10.10.10.10") + ":" + System.getProperty("80", "80");
     private static final String TEST_URL = "http://gitlab.ops.yangege.cn:80";
->>>>>>> develop
     String rand = createRandomString();
 
     @BeforeClass
@@ -57,20 +41,11 @@ public class GitlabAPITest {
             final String message = e.getMessage();
             if (!message.equals("{\"message\":\"401 Unauthorized\"}")) {
                 throw new AssertionError("Expected an unauthorized message", e);
-<<<<<<< HEAD
-            } else if(e.getResponseCode() != 401) {
-=======
             } else if (e.getResponseCode() != 401) {
->>>>>>> develop
                 throw new AssertionError("Expected 401 code", e);
             }
         }
     }
-<<<<<<< HEAD
-    @Test
-    public void testAllProjects() throws IOException {
-        api.getProjects();
-=======
 
     @Test
     public void testAllProjects() throws IOException {
@@ -133,7 +108,6 @@ public class GitlabAPITest {
         }
 
 
->>>>>>> develop
     }
 
     @Test
@@ -200,24 +174,6 @@ public class GitlabAPITest {
 
     @Test
     public void testGetProject() throws IOException {
-<<<<<<< HEAD
-      List<GitlabProject> list = api.getAllProjects();
-      for(GitlabProject project:list){
-          System.err.println(project.getName());
-         //GitlabUser gu= new GitlabUser();
-         // api.addProjectMember(project,)
-
-      }
-    }
-
-    @Test
-    public  void  testGitlabAccess() throws IOException {
-     // api.addProjectMember()
-    }
-
-
-
-=======
         List<GitlabProject> list = api.getAllProjects();
         for (GitlabProject project : list) {
             System.err.println("projectName:"+project.getName());
@@ -234,7 +190,6 @@ public class GitlabAPITest {
     }
 
 
->>>>>>> develop
     @Test
     public void testGetGroupByPath() throws IOException {
         // Given

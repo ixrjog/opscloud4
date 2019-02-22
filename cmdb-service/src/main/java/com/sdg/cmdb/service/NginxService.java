@@ -2,13 +2,9 @@ package com.sdg.cmdb.service;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.nginx.*;
-=======
 import com.sdg.cmdb.domain.ansibleTask.PlaybookLogVO;
 import com.sdg.cmdb.domain.nginx.*;
 import com.sdg.cmdb.service.configurationProcessor.NginxFileProcessorService;
->>>>>>> develop
 
 import java.util.List;
 
@@ -45,19 +41,13 @@ public interface NginxService {
     BusinessWrapper<NginxFile> launchEnvFile(long envFileId, int type);
 
     /**
-<<<<<<< HEAD
-     * 生产配置文件
-=======
      * build配置文件(强制)
->>>>>>> develop
      *
      * @param envFileId
      * @return
      */
     BusinessWrapper<Boolean> buildEnvFile(long envFileId);
 
-<<<<<<< HEAD
-=======
     /**
      * 判断 autoBuild 是否自动构建
      * @param envFileId
@@ -66,14 +56,11 @@ public interface NginxService {
      */
     BusinessWrapper<Boolean> buildEnvFile(long envFileId,boolean auto);
 
->>>>>>> develop
     BusinessWrapper<Boolean> addServerGroup(long vhostId, long serverGroupId);
 
     BusinessWrapper<Boolean> delServerGroup(long id);
 
     List<VhostServerGroupVO> queryServerGroup(long vhostId);
-<<<<<<< HEAD
-=======
 
 
     List<NginxPlaybookVO> getPlaybookPage();
@@ -83,5 +70,4 @@ public interface NginxService {
     PlaybookLogVO doPlaybook(long id, int doType);
 
     BusinessWrapper<Boolean>  delPlaybook(long id);
->>>>>>> develop
 }

@@ -21,13 +21,10 @@ public class WorkflowServiceIpmlTest {
         System.err.println(workflowServiceImpl.createTodo("KEYBOX"));
     }
 
-<<<<<<< HEAD
-=======
     @Test
     public void testTodoPhase(){
         for(int i=2; i<=5; i++)
             System.err.println(i);
     }
 
->>>>>>> develop
 }

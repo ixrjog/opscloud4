@@ -8,11 +8,8 @@
            class="icon icon-info" style="color: green;"></i>
     </div>
 </div>
-<<<<<<< HEAD
-=======
 
 
->>>>>>> develop
 <div class="modal-body">
     <form class="form-horizontal" style="padding: 10px;">
         <div class="form-group" ng-show="type == 0">
@@ -40,21 +37,13 @@
             </div>
         </div>
 
-<<<<<<< HEAD
-        <div>
-=======
         <div class="form-group">
->>>>>>> develop
             <table class="table table-hover table-bordered table-striped">
                 <thead>
                 <tr>
                     <td>服务器组</td>
                     <td class="col-md-3">持续集成组</td>
-<<<<<<< HEAD
-                    <td class="col-md-2" ng-show="workflowTodo.todoStatus == 0">操作</td>
-=======
                     <td class="col-md-2" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0 && type ==0">操作</td>
->>>>>>> develop
                 </tr>
                 </thead>
                 <tbody>
@@ -74,11 +63,7 @@
                         <b ng-show="todoDetail.detail.ciUserGroupDO.id == 0" style="color: red">申请无效:组未配置</b>
                     </span>
                     </td>
-<<<<<<< HEAD
-                    <td ng-show="workflowTodo.todoStatus == 0">
-=======
                     <td ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0 && type == 0">
->>>>>>> develop
                         <button ng-click="delItem(todoDetail.id)" class="btn btn-xs"
                                 style="background-color: #d9534f; color: white;"
                                 uib-popover-html="'移除'" popover-trigger="'mouseenter'">
@@ -115,24 +100,11 @@
     <div class="form-group">
         <div style="text-align:center;">
             <!--icon-paper-plane-->
-<<<<<<< HEAD
-            <button class="btn btn-xs" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoDetails !=0"
-                    style="margin-right: 25px; background-color: #2e6da4; color: white;"
-                    ng-click="applyTodo()">
-                <span class="icon icon-paper-plane"></span>申请
-            </button>
-
-            <button class="btn btn-xs" ng-show="workflowTodo.todoStatus == 0"
-                    style="margin-right: 25px; background-color: green; color: white;"
-                    ng-click="saveTodo()">
-                <span class="glyphicon glyphicon-save"></span>暂存
-=======
             <button class="btn btn-xs" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
                     style="margin-right: 25px; background-color: green; color: white;"
                     ng-click="saveTodo()">
                 <i class="fa fa-spin fa-spinner" ng-show="btnSaveing"></i>
                 <i class="glyphicon glyphicon-ok" ng-show="!btnSaveing"></i>保存
->>>>>>> develop
             </button>
 
 

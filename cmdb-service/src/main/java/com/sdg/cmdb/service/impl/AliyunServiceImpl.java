@@ -1,10 +1,7 @@
 package com.sdg.cmdb.service.impl;
 
 
-<<<<<<< HEAD
-=======
 import com.alibaba.fastjson.JSON;
->>>>>>> develop
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
@@ -21,10 +18,7 @@ import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
-<<<<<<< HEAD
-=======
 import com.sdg.cmdb.domain.server.EcsServerDO;
->>>>>>> develop
 import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunService;
 import com.sdg.cmdb.service.ConfigCenterService;

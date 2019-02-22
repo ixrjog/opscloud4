@@ -1,14 +1,7 @@
 package com.sdg.cmdb.dao.cmdb;
 
 
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.nginx.EnvFileDO;
-import com.sdg.cmdb.domain.nginx.VhostDO;
-import com.sdg.cmdb.domain.nginx.VhostEnvDO;
-import com.sdg.cmdb.domain.nginx.VhostServerGroupDO;
-=======
 import com.sdg.cmdb.domain.nginx.*;
->>>>>>> develop
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -76,8 +69,6 @@ public interface NginxDao {
 
     int delVhostServerGroup(@Param("id") long id);
 
-<<<<<<< HEAD
-=======
     List<NginxPlaybookDO> queryPlaybookPage();
 
     NginxPlaybookDO getPlaybook(@Param("id") long id);
@@ -89,5 +80,4 @@ public interface NginxDao {
     int delPlaybook(@Param("id") long id);
 
 
->>>>>>> develop
 }

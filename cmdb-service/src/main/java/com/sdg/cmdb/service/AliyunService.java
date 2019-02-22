@@ -4,10 +4,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeRegionsResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeZonesResponse;
-<<<<<<< HEAD
-=======
 import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesResponse;
->>>>>>> develop
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
@@ -61,11 +58,8 @@ public interface AliyunService {
     BusinessWrapper<Boolean> delTemplate(long id);
 
 
-<<<<<<< HEAD
-=======
     DescribeVSwitchAttributesResponse getVSwitchAttributes(String regionId, String vSwitchId);
 
 
->>>>>>> develop
 
 }

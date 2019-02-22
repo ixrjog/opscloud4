@@ -22,16 +22,6 @@
     </select>
 
     <select id="getWorkflow" parameterType="object" resultType="WorkflowDO">
-<<<<<<< HEAD
-        SELECT * FROM oc_workflow
-    </select>
-
-    <!--todoPhase 工单状态（工单状态 0:发起人状态  1:团队领导状态  2:部门领导状态  3:审核操作状态  4:执行完成 ）-->
-    <!--todoStatus 类型  0:正常 1:拒绝回退 2:拒绝 3:正常完成 4:错误-->
-    <select id="queryTodoByApplyUserId" parameterType="object" resultType="WorkflowTodoDO">
-        SELECT * FROM oc_workflow_todo
-        WHERE applyUserId = #{applyUserId} AND todoStatus = 0 AND todoPhase != 4
-=======
         SELECT * FROM oc_workflow WHERE id = #{id}
     </select>
 
@@ -53,7 +43,6 @@
         SELECT * FROM oc_workflow_todo
         WHERE todoStatus = 0 AND todoPhase = #{todoPhase}
         ORDER BY gmtCreate DESC
->>>>>>> develop
     </select>
 
     <select id="getTodo" parameterType="object" resultType="WorkflowTodoDO">
@@ -80,10 +69,7 @@
         UPDATE oc_workflow_todo
         SET
         content = #{content},
-<<<<<<< HEAD
-=======
         notice = #{notice},
->>>>>>> develop
         todoPhase = #{todoPhase},
         todoStatus = #{todoStatus},
         gmtApply = #{gmtApply}
@@ -121,10 +107,7 @@
         SET
         name = #{name},
         detailValue = #{detailValue},
-<<<<<<< HEAD
-=======
         detailStatus = #{detailStatus},
->>>>>>> develop
         content = #{content}
         WHERE id = #{id}
     </update>
@@ -140,25 +123,19 @@
         SELECT * FROM oc_workflow_todo_user WHERE todoId = #{todoId}
     </select>
 
-<<<<<<< HEAD
-=======
 
     <select id="getTodoUserByTodoIdAndAssigneeType" parameterType="object" resultType="WorkflowTodoUserDO">
         SELECT * FROM oc_workflow_todo_user
         WHERE todoId = #{todoId} AND assigneeType = #{assigneeType}
     </select>
 
->>>>>>> develop
     <insert id="addTodoUser" parameterType="WorkflowTodoUserDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         INSERT INTO oc_workflow_todo_user(
         todoId,
         assigneeType,
         assigneeDesc,
         userId,
-<<<<<<< HEAD
-=======
         username,
->>>>>>> develop
         displayName,
         evaluation,
         evaluationMsg
@@ -167,10 +144,7 @@
         #{assigneeType},
         #{assigneeDesc},
         #{userId},
-<<<<<<< HEAD
-=======
         #{username},
->>>>>>> develop
         #{displayName},
         #{evaluation},
         #{evaluationMsg}
@@ -184,12 +158,9 @@
     <update id="updateTodoUser" parameterType="WorkflowTodoUserDO">
         UPDATE oc_workflow_todo_user
         SET
-<<<<<<< HEAD
-=======
         userId = #{userId},
         username = #{username},
         displayName = #{displayName},
->>>>>>> develop
         evaluation = #{evaluation},
         evaluationMsg = #{evaluationMsg}
         WHERE id = #{id}

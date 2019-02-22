@@ -2,10 +2,6 @@
  * Created by liangjian on 2017/8/29.
  */
 'use strict';
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster, staticModel) {
     $scope.envType = staticModel.envType;
     //登录类型
@@ -236,11 +232,7 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
             var memory = item.memory / 1024;
             if (memory >= 8) {
                 memory = "<b style='color: red'>" + memory + "GB</b><br/>";
-<<<<<<< HEAD
-            }else{
-=======
             } else {
->>>>>>> develop
                 memory = "<b style='color: green'>" + memory + "GB</b><br/>";
             }
 
@@ -1124,49 +1116,6 @@ app.controller('ecsTemplateCtrl', function ($scope, $state, $uibModal, httpServi
 
     ///////////////////////////////////////////////////////////
 
-    $scope.addTemplate = function () {
-
-        var item = {
-            id: 0,
-            zoneId: "",
-            name: "",
-            instanceType: "",
-            networkSupport: 0,
-            cpu: 0,
-            memory: 0,
-            dataDiskSize: 100,
-            ioOptimized: "",
-            systemDiskCategory: "",
-            dataDisk1Category: ""
-        }
-        $scope.editTemplate(item);
-    }
-
-
-    $scope.editTemplate = function (item) {
-        var modalInstance = $uibModal.open({
-            templateUrl: 'ecsTemplateInfo',
-            controller: 'ecsTemplateInstanceCtrl',
-            size: 'lg',
-            resolve: {
-                httpService: function () {
-                    return httpService;
-                },
-                item: function () {
-                    return item;
-                }
-            }
-        });
-
-        modalInstance.result.then(function () {
-            $scope.doQuery();
-        }, function () {
-            $scope.doQuery();
-        });
-    }
-
-    ///////////////////////////////////////////////////////////
-
     $scope.create = function (item) {
         var modalInstance = $uibModal.open({
             templateUrl: 'createEcsInstance',
@@ -1377,11 +1326,8 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
 
     $scope.butCreatingEcs = false;
 
-<<<<<<< HEAD
-=======
     //$scope.loginUser = "";
 
->>>>>>> develop
     /**
      * 初始化环境
      */
@@ -2032,12 +1978,8 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
                 networkSupport: 0,
                 cpu: 0,
                 memory: 0,
-<<<<<<< HEAD
-                dataDiskSize: 100,
-=======
                 systemDiskSize: 100,
                 dataDiskSize: 0,
->>>>>>> develop
                 ioOptimized: "",
                 systemDiskCategory: "",
                 dataDisk1Category: ""
@@ -2212,8 +2154,6 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
         }
 
     }
-<<<<<<< HEAD
-=======
 );
 
 app.controller('renewEcsInstanceCtrl', function ($scope, $uibModalInstance, $state, $uibModal, httpService, ecsInstances) {
@@ -2293,5 +2233,4 @@ app.controller('renewEcsInstanceCtrl', function ($scope, $uibModalInstance, $sta
         }
 
     }
->>>>>>> develop
 );

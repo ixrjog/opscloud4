@@ -2,60 +2,34 @@ package com.sdg.cmdb.service.gitlabTest;
 
 import org.gitlab.api.GitlabAPI;
 import org.junit.AssumptionViolatedException;
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
 import java.io.IOException;
 
 /**
  * Token holder for integration tests.
  * <ul>
-<<<<<<< HEAD
- *    <li>By throwing an {@link AssumptionViolatedException} when the host is not reachable,
- *   provoke skipping of tests.</li>
- *   <li>GitLab is strict about creating too much sessions for username/password.
- *   If you create too many sessions, you will receive HTTP/429 (Retry Later).</li>
-=======
  * <li>By throwing an {@link AssumptionViolatedException} when the host is not reachable,
  * provoke skipping of tests.</li>
  * <li>GitLab is strict about creating too much sessions for username/password.
  * If you create too many sessions, you will receive HTTP/429 (Retry Later).</li>
->>>>>>> develop
  * </ul>
  */
 public class APIForIntegrationTestingHolder {
 
-<<<<<<< HEAD
-    private static final String TEST_URL = "http://" + System.getProperty("docker.host.address", "10.10.10.10") + ":" + System.getProperty("gitlab.port", "80");
-
-=======
     // private static final String TEST_URL = "http://" + System.getProperty("docker.host.address", "10.10.10.10") + ":" + System.getProperty("gitlab.port", "80");
     private static final String TEST_URL = "http://gitlab.ops.yangege.cn:80";
->>>>>>> develop
     public static APIForIntegrationTestingHolder INSTANCE = new APIForIntegrationTestingHolder();
 
     private Object api;
 
-<<<<<<< HEAD
-    private APIForIntegrationTestingHolder(){
-        api = GitlabAPI.connect(TEST_URL, "aaaaa");
-=======
     private APIForIntegrationTestingHolder() {
         api = GitlabAPI.connect(TEST_URL, "uYbFQS-tyvBG_8uSLZtL");
->>>>>>> develop
     }
 
     public GitlabAPI getApi() {
         if (api instanceof IOException) {
-<<<<<<< HEAD
-            throw new AssumptionViolatedException("GITLAB not running on '" + TEST_URL + "', skipping...", (IOException)api);
-        }
-        return (GitlabAPI)api;
-=======
             throw new AssumptionViolatedException("GITLAB not running on '" + TEST_URL + "', skipping...", (IOException) api);
         }
         return (GitlabAPI) api;
->>>>>>> develop
     }
 }

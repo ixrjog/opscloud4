@@ -39,16 +39,6 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     public static final String nginx_location_manage_back = "NGINX_LOCATION_MANAGE_BACK";
 
     public static final String nginx_check = "NGINX_CHECK";
-<<<<<<< HEAD
-
-    public static final String nginx_location_manage_build =
-            "NGINX_LOCATION_MANAGE_BUILD";
-
-    public static final String nginx_location_supplier_build =
-            "NGINX_LOCATION_SUPPLIER_BUILD";
-
-=======
->>>>>>> develop
 
 
     /**
@@ -94,13 +84,10 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String ZABBIX_PROXY = "ZABBIX_PROXY";
 
-<<<<<<< HEAD
-=======
     public static final String ZABBIX_HOST_MONITOR_PUBLIC_IP = "ZABBIX_HOST_MONITOR_PUBLIC_IP";
 
     public static final String ZABBIX_HOST_MACROS = "ZABBIX_HOST_MACROS";
 
->>>>>>> develop
     // ANSIBLE 分组配置（分组数量）
     public static final String ANSIBLE_SUBGROUP = "ANSIBLE_SUBGROUP";
 

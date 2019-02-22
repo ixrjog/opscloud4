@@ -3,14 +3,7 @@ package com.sdg.cmdb.controller;
 
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.nginx.EnvFileDO;
-import com.sdg.cmdb.domain.nginx.NginxFile;
-import com.sdg.cmdb.domain.nginx.VhostEnvDO;
-import com.sdg.cmdb.domain.nginx.VhostVO;
-=======
 import com.sdg.cmdb.domain.nginx.*;
->>>>>>> develop
 import com.sdg.cmdb.service.NginxService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -163,8 +156,6 @@ public class NginxController {
     }
 
 
-<<<<<<< HEAD
-=======
     @RequestMapping(value = "/playbook/page", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult queryPlaybookPage() {
@@ -198,5 +189,4 @@ public class NginxController {
     }
 
 
->>>>>>> develop
 }

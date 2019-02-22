@@ -48,15 +48,12 @@ public class ConfigServiceImpl implements ConfigService {
 
     public static final String ANSIBLE_HOSTS_ALL = "ansible_hosts_all";
 
-<<<<<<< HEAD
-=======
     static public final String FILEGROUP_SS = "filegroup_ss";
 
     @Value("#{cmdb['ansible.scripts.path']}")
     private String ansibleScriptsPath;
 
 
->>>>>>> develop
     @Resource
     private SchedulerManager schedulerManager;
 

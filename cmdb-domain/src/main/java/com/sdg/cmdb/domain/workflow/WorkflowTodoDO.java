@@ -30,11 +30,7 @@ public class WorkflowTodoDO implements Serializable {
 
     public static final int TODO_PHASE_COMPLETE = 5;
     /**
-<<<<<<< HEAD
-     * 工单阶段（工单执行阶段 0:发起人状态   1:QA状态  2:团队领导状态  23:部门领导状态  4:审核操作状态  5:执行完成 ）
-=======
      * 工单阶段（工单执行阶段 0:发起人状态   1:QA状态  2:团队领导状态  3:部门领导状态  4:审核操作状态  5:执行完成 ）
->>>>>>> develop
      */
     private int todoPhase = 0;
 
@@ -57,14 +53,11 @@ public class WorkflowTodoDO implements Serializable {
     private String content;
 
     /**
-<<<<<<< HEAD
-=======
      * 邮件通知中的工作流信息
      */
     private String notice;
 
     /**
->>>>>>> develop
      * 发起时间
      */
     private String gmtApply;
@@ -112,10 +105,7 @@ public class WorkflowTodoDO implements Serializable {
         this.todoPhase = workflowTodoVO.getTodoPhase();
         this.todoStatus = workflowTodoVO.getTodoStatus();
         this.content = workflowTodoVO.getContent();
-<<<<<<< HEAD
-=======
         this.notice = workflowTodoVO.getNotice();
->>>>>>> develop
         this.gmtApply = workflowTodoVO.getGmtApply();
         this.content = workflowTodoVO.getContent();
     }
@@ -177,8 +167,6 @@ public class WorkflowTodoDO implements Serializable {
         this.todoStatus = todoStatus;
     }
 
-<<<<<<< HEAD
-=======
     public String getNotice() {
         return notice;
     }
@@ -187,7 +175,6 @@ public class WorkflowTodoDO implements Serializable {
         this.notice = notice;
     }
 
->>>>>>> develop
     public String getContent() {
         return content;
     }

@@ -75,12 +75,9 @@
         SELECT * FROM oc_workflow_team WHERE id = #{id}
     </select>
 
-<<<<<<< HEAD
-=======
     <select id="queryTeamByLeaderUserId" parameterType="_long" resultType="TeamDO">
         SELECT * FROM oc_workflow_team WHERE teamleaderUserId = #{teamleaderUserId} LIMIT 1
     </select>
->>>>>>> develop
 
     <!-- 获取Teamuser列表 -->
     <select id="queryTeamuserByTeamId" parameterType="object" resultType="TeamuserDO">
@@ -91,14 +88,11 @@
         SELECT * FROM oc_workflow_teamuser WHERE id = #{id}
     </select>
 
-<<<<<<< HEAD
-=======
     <select id="queryTeamuserByUserId" parameterType="_long" resultType="TeamuserDO">
         SELECT * FROM oc_workflow_teamuser
         WHERE userId = #{userId} LIMIT 1
     </select>
 
->>>>>>> develop
     <!-- 新增Teamuser -->
     <insert id="addTeamuser" parameterType="TeamuserDO" useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">

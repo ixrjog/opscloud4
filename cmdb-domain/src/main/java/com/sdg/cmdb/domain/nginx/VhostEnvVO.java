@@ -18,10 +18,7 @@ public class VhostEnvVO extends VhostEnvDO implements Serializable {
         setVhostId(vhostEnvDO.getVhostId());
         setEnvType(vhostEnvDO.getEnvType());
         setConfPath(vhostEnvDO.getConfPath());
-<<<<<<< HEAD
-=======
         setAutoBuild(vhostEnvDO.isAutoBuild());
->>>>>>> develop
         setContent(vhostEnvDO.getContent());
         setGmtCreate(vhostEnvDO.getGmtCreate());
         setGmtModify(vhostEnvDO.getGmtModify());

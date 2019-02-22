@@ -1,10 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
 
-<<<<<<< HEAD
-import org.junit.Test;
-import org.junit.runner.RunWith;
-=======
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
@@ -14,7 +10,6 @@ import com.sdg.cmdb.domain.server.ServerGroupDO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
->>>>>>> develop
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
@@ -27,14 +22,6 @@ public class ZabbixServiceImplTest {
 
 
     @Resource
-<<<<<<< HEAD
-    private ZabbixServiceImpl zabbixServiceImpl;
-
-    @Test
-    public void test() {
-        zabbixServiceImpl.hostgroupGet2();
-    }
-=======
     private UserDao userDao;
 
     @Autowired
@@ -62,5 +49,4 @@ public class ZabbixServiceImplTest {
 
 
 
->>>>>>> develop
 }

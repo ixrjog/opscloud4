@@ -109,10 +109,6 @@ public class TimeUtils {
         return now;
     }
 
-<<<<<<< HEAD
-    /**
-     *  获取用于名称的当前时间
-=======
     public static String gmtNowDate() {
         long time = new Date().getTime();
         SimpleDateFormat formatter;
@@ -124,7 +120,6 @@ public class TimeUtils {
     /**
      * 获取用于名称的当前时间
      *
->>>>>>> develop
      * @return eg: 20181110_003738
      */
     public static String nowDateName() {

@@ -23,11 +23,6 @@ public interface WorkflowDao {
 
     List<WorkflowTodoDetailDO> getTodoDetailByTodoId(@Param("todoId") long todoId);
 
-<<<<<<< HEAD
-    // 工作流查询 workflowTodo
-    List<WorkflowTodoDO> queryTodoByApplyUserId(@Param("applyUserId") long  applyUserId);
-
-=======
     /**
      * 工作流查询 workflowTodo
      */
@@ -42,7 +37,6 @@ public interface WorkflowDao {
     List<WorkflowTodoDO> queryTodoByApplyUserIdAndTodoPhase(@Param("applyUserId") long applyUserId, @Param("todoPhase") int todoPhase);
 
     List<WorkflowTodoDO> queryTodoByTodoPhase(@Param("todoPhase") int todoPhase);
->>>>>>> develop
 
     WorkflowTodoDO getTodo(@Param("id") long id);
 
@@ -61,11 +55,8 @@ public interface WorkflowDao {
 
     List<WorkflowTodoUserDO> getTodoUserByTodoId(@Param("todoId") long todoId);
 
-<<<<<<< HEAD
-=======
     WorkflowTodoUserDO getTodoUserByTodoIdAndAssigneeType(@Param("todoId") long todoId, @Param("assigneeType") int assigneeType);
 
->>>>>>> develop
     int addTodoUser(WorkflowTodoUserDO workflowTodoUserDO);
 
     int delTodoUser(@Param("id") long id);

@@ -37,10 +37,7 @@
         networkSupport,
         cpu,
         memory,
-<<<<<<< HEAD
-=======
         systemDiskSize,
->>>>>>> develop
         dataDiskSize,
         ioOptimized,
         systemDiskCategory,
@@ -52,10 +49,7 @@
         #{networkSupport},
         #{cpu},
         #{memory},
-<<<<<<< HEAD
-=======
         #{systemDiskSize},
->>>>>>> develop
         #{dataDiskSize},
         #{ioOptimized},
         #{systemDiskCategory},

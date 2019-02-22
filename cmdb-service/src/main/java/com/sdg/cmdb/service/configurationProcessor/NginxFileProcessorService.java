@@ -3,17 +3,11 @@ package com.sdg.cmdb.service.configurationProcessor;
 import com.sdg.cmdb.domain.nginx.*;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
-<<<<<<< HEAD
-import com.sdg.cmdb.service.impl.ConfigServerGroupServiceImpl;
-import com.sdg.cmdb.util.PathUtils;
-import org.apache.commons.lang.StringUtils;
-=======
 import com.sdg.cmdb.service.CacheKeyService;
 import com.sdg.cmdb.service.impl.ConfigServerGroupServiceImpl;
 import com.sdg.cmdb.util.PathUtils;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
->>>>>>> develop
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -22,8 +16,6 @@ import java.util.List;
 @Service
 public class NginxFileProcessorService extends ConfigurationProcessorAbs {
 
-<<<<<<< HEAD
-=======
     public static final String CACHE_KEY = "NginxFileProcessorService:";
 
     @Autowired
@@ -55,15 +47,11 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
     }
 
 
->>>>>>> develop
     private boolean isBuildLocation(ServerGroupDO serverGroupDO) {
         return configServerGroupService.isbuildLocation(serverGroupDO);
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
     /**
      * 取文件内容
      *
@@ -79,11 +67,7 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         }
 
         if (envFileDO.getFileType() == EnvFileDO.FileTypeEnum.upstream.getCode()) {
-<<<<<<< HEAD
-            nginxConf += buildUpstream(vhostDO.getId(),vhostEnvDO.getEnvType());
-=======
             nginxConf += buildUpstream(vhostDO.getId(), vhostEnvDO.getEnvType());
->>>>>>> develop
         }
 
         return nginxConf;
@@ -146,25 +130,12 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
 
     private String buildLocation(long vhostId, int envType) {
         String result = "";
-<<<<<<< HEAD
-        //List<String> projects = new ArrayList<String>();
-        //ServerDO.EnvTypeEnum.daily.getCode();
-=======
->>>>>>> develop
         List<ServerGroupDO> listServerGroupDO = getServerGroup(vhostId);
         for (ServerGroupDO serverGroupDO : listServerGroupDO) {
             List<ServerDO> listServerDO = acqServerByGroup(serverGroupDO, envType);
             // 无服务器
-<<<<<<< HEAD
-            if (listServerDO.size() == 0) {
-                //判断 isGrayEqProd
-                if (!configServerGroupService.isGrayEqProd(serverGroupDO))
-                    continue;
-            }
-=======
             if (listServerDO.size() == 0)
                 continue;
->>>>>>> develop
             // NGINX_LOCATION_MANAGE_BUILD = false
             if (!isBuildLocation(serverGroupDO)) continue;
             String l = buildLocation(serverGroupDO, envType);
@@ -191,23 +162,11 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
     }
 
 
-<<<<<<< HEAD
-    private String buildLocation(ServerGroupDO serverGroupDO, int envType) {
-        List<ServerDO> listServerDO = acqServerByGroup(serverGroupDO, envType);
-        // 无服务器
-        if (listServerDO.size() == 0) {
-            //判断 isGrayEqProd
-            if (!configServerGroupService.isGrayEqProd(serverGroupDO))
-                return "";
-        }
-        // NGINX_LOCATION_MANAGE_BUILD = false
-=======
     public String buildLocation(ServerGroupDO serverGroupDO, int envType) {
         List<ServerDO> listServerDO = acqServerByGroup(serverGroupDO, envType);
         // 无服务器
         if (listServerDO.size() == 0)
             return "";
->>>>>>> develop
         if (!isBuildLocation(serverGroupDO)) return "";
 
         String projectName = configServerGroupService.queryProjectName(serverGroupDO);
@@ -218,13 +177,7 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         } else {
             result = "# " + serverGroupDO.getName() + "\n";
         }
-<<<<<<< HEAD
-
-        result += "location " + configServerGroupService.queryNginxUrl(serverGroupDO) + "/ {\n";
-
-=======
         result += "location " + configServerGroupService.getNginxLocation(serverGroupDO) + " {\n";
->>>>>>> develop
         // 增加location扩展参数
         result += acqLocationParam(serverGroupDO);
 
@@ -233,12 +186,6 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         if (nginxLocationLimitReq != null)
             result += indent + nginxLocationLimitReq + "\n";
         result += configServerGroupService.queryNginxProxyPass(serverGroupDO, envType);
-<<<<<<< HEAD
-
-        // 通过param生成
-        //result += "    include /usr/local/nginx/conf/vhost/proxy_default.conf;\n";
-=======
->>>>>>> develop
         result += "}\n\n";
         return result;
     }
@@ -246,35 +193,6 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
     //////////////
 
 
-<<<<<<< HEAD
-    public String buildUpstream(long vhostId,int envType) {
-        List<String> projects = new ArrayList<String>();
-        String upstream = "";
-        //ServerDO.EnvTypeEnum.daily.getCode();
-       // List<ServerGroupDO> listServerGroupDO = acqServerGroupByWebservice();
-
-        List<ServerGroupDO> listServerGroupDO = getServerGroup(vhostId);
-
-        for (ServerGroupDO serverGroupDO : listServerGroupDO) {
-            //  String tomcatName = configServerGroupService.queryTomcatAppName(serverGroupDO);
-
-            String projectName = configServerGroupService.queryProjectName(serverGroupDO);
-
-            if (projectName == null || projectName.isEmpty()) continue;
-            List<ServerDO> listServerDO = new ArrayList<ServerDO>();
-            // 部分灰度环境是用的线上服务器
-            if (envType == ServerDO.EnvTypeEnum.gray.getCode() && configServerGroupService.isGrayEqProd(serverGroupDO)) {
-                listServerDO = acqServerByGroup(serverGroupDO, ServerDO.EnvTypeEnum.prod.getCode());
-            } else {
-                listServerDO = acqServerByGroup(serverGroupDO, envType);
-            }
-            if (listServerDO.size() == 0) continue;
-            String u = buildUpstream(serverGroupDO, listServerDO, envType);
-            if (u != null) {
-                upstream += u + "\n";
-                projects.add(serverGroupDO.getName());
-            }
-=======
     public String buildUpstream(long vhostId, int envType) {
         //List<String> projects = new ArrayList<String>();
         String upstream = "";
@@ -296,7 +214,6 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
             String u = buildUpstream(serverGroupDO, listServerDO, envType);
             if (u != null)
                 upstream += u;
->>>>>>> develop
         }
         return upstream;
     }
@@ -308,25 +225,10 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
      * @param serverGroupDO
      * @return
      */
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
     private String getUpsteamCheck(ServerGroupDO serverGroupDO) {
         String indent = ConfigServerGroupServiceImpl.nginx_locaton_indent;
         String indentX2 = indent + indent;
         String result = indentX2 + "check interval=1000 rise=1 fall=3 timeout=1000 type=http;\n";
-<<<<<<< HEAD
-        return result + indentX2 + "check_http_send \"GET /" + configServerGroupService.queryHttpStatus(serverGroupDO) + " HTTP/1.0\\r\\n\\r\\n\";\n";
-
-    }
-
-    private String buildUpstream(ServerGroupDO serverGroupDO, List<ServerDO> listServerDO, int envCode) {
-        String projectName = configServerGroupService.queryProjectName(serverGroupDO);
-        String indent = ConfigServerGroupServiceImpl.nginx_locaton_indent;
-        String indentX2 = indent + indent;
-
-=======
         return result + indentX2 + "check_http_send \"GET " + configServerGroupService.queryHttpCheck(serverGroupDO) + " HTTP/1.0\\r\\n\\r\\n\";\n";
 
     }
@@ -344,7 +246,6 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         String projectName = configServerGroupService.queryProjectName(serverGroupDO);
         String indent = ConfigServerGroupServiceImpl.nginx_locaton_indent;
         String indentX2 = indent + indent;
->>>>>>> develop
         if (projectName == null) return null;
         String upstream;
         upstream = indent + "# " + serverGroupDO.getName() + "\n";
@@ -354,25 +255,13 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
             upstream += indent + "# NGINX_UPSTREAM_BUILD = false\n";
             return upstream;
         }
-<<<<<<< HEAD
-        String nginxUpstreamName = configServerGroupService.queryNginxUpstreamName(serverGroupDO);
-        if (envCode == ServerDO.EnvTypeEnum.prod.getCode()) {
-            upstream += indent + "upstream upstream." + nginxUpstreamName + ".java { \n";
-        } else {
-            upstream += indent + "upstream upstream." + ServerDO.EnvTypeEnum.getEnvTypeName(envCode) + '.' + nginxUpstreamName + ".java { \n";
-        }
-=======
         upstream += indent + getUpstramName(serverGroupDO, envCode) + " { \n";
->>>>>>> develop
         for (ServerDO serverDO : listServerDO) {
             upstream += indentX2 + "# " + ServerDO.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType()) + "-" + serverDO.getSerialNumber() + "\n";
             upstream += acqUpstreamServer(serverGroupDO, serverDO);
         }
         if (listServerDO.size() > 1 && configServerGroupService.isBuildNginxCheck(serverGroupDO))
             upstream += getUpsteamCheck(serverGroupDO);
-<<<<<<< HEAD
-        return upstream + "    }\n";
-=======
         upstream += "    }\n\n";
         // TODO 缓存
         String cacheKey = getCacheKey(serverGroupDO, envCode);
@@ -395,18 +284,13 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         } else {
             return "upstream upstream." + ServerDO.EnvTypeEnum.getEnvTypeName(envCode) + '.' + nginxUpstreamName + ".java";
         }
->>>>>>> develop
     }
 
 
     private String acqUpstreamServer(ServerGroupDO serverGroupDO, ServerDO serverDO) {
         String indent = ConfigServerGroupServiceImpl.nginx_locaton_indent;
         String indentX2 = indent + indent;
-<<<<<<< HEAD
-        String tomcatHttpPort = configServerGroupService.queryTomcatHttpPort(serverGroupDO);
-=======
         String tomcatHttpPort = configServerGroupService.queryUpstreamPort(serverGroupDO);
->>>>>>> develop
 
         String weight = configServerGroupService.queryNginxUpstreamWeight(serverDO);
         if (!org.springframework.util.StringUtils.isEmpty(weight) && !weight.equals("1"))

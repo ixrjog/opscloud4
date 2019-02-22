@@ -129,15 +129,6 @@ public final class AuthServiceImplTest {
 
     }
 
-    @Test
-    public void testSearchBambooGroup() {
-        List<String> groups = authService.searchBambooGroup();
-        for (String group : groups) {
-            System.err.println(group);
-        }
-
-    }
-
 
     @Test
     public void testDelMemberToGroup() {
@@ -181,10 +172,6 @@ public final class AuthServiceImplTest {
         authService.delUser("zhengyan");
     }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
 
     @Test
     public void testLogin() {

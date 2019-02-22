@@ -58,20 +58,11 @@
                                             {{item.content}}
                                         </td>
                                         <td>
-<<<<<<< HEAD
-
-
-=======
->>>>>>> develop
                                             <div style="margin-top: 5px;">
                                                 <table class="table table-hover table-bordered table-striped">
 
                                                     <tr ng-repeat="env in item.envList">
-<<<<<<< HEAD
-                                                        <td>
-=======
                                                         <td class="col-md-2">
->>>>>>> develop
                                                             <span style="color: #777" ng-if="env.envType == 0">保留</span>
                                                             <span style="color: #5bc0de"
                                                                   ng-if="env.envType == 1">dev</span>
@@ -89,11 +80,7 @@
                                                         <td>
                                                             <div class="col-md-6" ng-repeat="file in env.envFiles">
 
-<<<<<<< HEAD
-
-=======
                                                                <div ng-show="env.autoBuild == true || file.fileKey !='UPSTREAM'">
->>>>>>> develop
                                                                 <b style="margin-left: 5px; color: #286090;"><i
                                                                         class="glyphicon glyphicon-file"></i>{{file.fileKey}}</b>
 
@@ -116,10 +103,7 @@
                                                                     <i class="glyphicon glyphicon-save"
                                                                        ng-show="!taskRunning"></i>保存
                                                                 </button>
-<<<<<<< HEAD
-=======
                                                                </div>
->>>>>>> develop
 
 
                                                             </div>
@@ -179,34 +163,13 @@
                         </div>
                     </div>
                 </uib-tab>
-<<<<<<< HEAD
-                <uib-tab index="1" heading="远程同步配置">
-                    <div class="panel panel-default" ng-controller="copyCtrl">
-=======
                 <uib-tab index="1" heading="PLAYBOOK配置">
                     <div class="panel panel-default" ng-controller="playbookCtrl">
->>>>>>> develop
                         <div class="panel-body">
                             <div>
                                 <form class="form-inline" role="form">
                                     <div class="form-group">
                                         <button
-<<<<<<< HEAD
-                                                type="button" class="btn btn-success" ng-click="pageChanged()"><span
-                                                class="glyphicon glyphicon-repeat"></span>查询
-                                        </button>
-                                        <button type="button" class="btn btn-success" ng-click="addCopy()"><span
-                                                class="glyphicon glyphicon-plus"></span>新增
-                                        </button>
-
-                                        <button ng-click="copyItemAll()"
-                                                class="btn"
-                                                ng-disabled="butInvokeDisabled"
-                                                uib-popover-html="'批量远程同步配置'" popover-trigger="'mouseenter'"
-                                                style="margin-left: 5px; background-color: #ff5f87; color: white;">
-                                            <i class="fa fa-spin fa-spinner" ng-show="butRunCopyItem"></i>
-                                            <i class="icon icon-control-play" ng-show="!butRunCopyItem"></i>批量同步
-=======
                                                 type="button" class="btn btn-success" ng-click="queryPlaybook()"><span
                                                 class="glyphicon glyphicon-repeat"></span>查询
                                         </button>
@@ -214,7 +177,6 @@
                                         <button type="button" class="btn btn-success"
                                                 ng-click="addPlaybook()"><span
                                                 class="glyphicon glyphicon-plus"></span>新增
->>>>>>> develop
                                         </button>
                                     </div>
                                 </form>
@@ -223,96 +185,13 @@
                                 <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                     <tr>
-<<<<<<< HEAD
-                                        <td class="col-md-2">VHOST配置</td>
-                                        <td class="col-md-5">同步配置</td>
-                                        <td class="col-md-3">远程服务器列表</td>
-=======
                                         <td class="col-md-2">虚拟主机</td>
                                         <td class="col-md-3">配置详情</td>
                                         <td>分组中的服务器</td>
->>>>>>> develop
                                         <td class="col-md-2">操作</td>
                                     </tr>
                                     </thead>
                                     <tbody>
-<<<<<<< HEAD
-                                    <tr ng-repeat="item in pageData">
-                                        <td>
-                                            {{item.vhostVO.serverName}}
-                                            <b class="pull-right">名称</b>
-                                            </br>
-                                            <b style="color: #017ebc">{{item.vhostVO.serverKey}}</b>
-                                            <b class="pull-right">Key</b>
-                                            </br>
-                                            <b style="color: #777" ng-if="item.vhostEnvDO.envType == 0">保留</b>
-                                            <b style="color: #5bc0de" ng-if="item.vhostEnvDO.envType == 1">dev</b>
-                                            <b style="color: #449d44" ng-if="item.vhostEnvDO.envType == 2">daily</b>
-                                            <b style="color: #ec971f" ng-if="item.vhostEnvDO.envType == 3">gray</b>
-                                            <b style="color: #d9534f" ng-if="item.vhostEnvDO.envType == 4">prod</b>
-                                            <b style="color: #5e5e5e" ng-if="item.vhostEnvDO.envType == 5">test</b>
-                                            <b style="color: #286090" ng-if="item.vhostEnvDO.envType == 6">back</b>
-                                            <b class="pull-right">环境</b>
-                                            </br>
-                                            {{item.vhostVO.content}}
-                                        </td>
-                                        <td>
-                                            <b style="color: #286090">{{item.srcPath}}</b>
-                                            <b class="pull-right">源路径</b>
-                                            </br>
-                                            <b style="color: #286090">{{item.destPath}}</b>
-                                            <b class="pull-right">目标路径</b>
-                                            </br>
-                                            <b style="color: #990000">{{item.username}}:{{item.usergroup}}</b>
-                                            <b class="pull-right">Owner:Group</b>
-                                            <span ng-show="item.doCopy">
-                                                </br>
-                                                <span class="label"
-                                                      style="background-color: #00af00; color: white">自动同步</span>
-                                                <span ng-show="item.doScript">
-                                                    <span class="label" style="background-color: #00af00; color: white">自动脚本</span>
-                                                </span>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <div ng-repeat="server in item.copyServerList">
-                                                <b>{{server.serverDO.serverName}}</b><span
-                                                    ng-show="server.serverDO.serialNumber != ''">-{{server.serverDO.serialNumber}}</span>
-                                                {{server.serverDO.insideIp}}
-                                                <b class="pull-right" style="color: #777"
-                                                   ng-if="server.serverDO.envType == 0">保留</b>
-                                                <b class="pull-right" style="color: #5bc0de"
-                                                   ng-if="server.serverDO.envType == 1">dev</b>
-                                                <b class="pull-right" style="color: #449d44"
-                                                   ng-if="server.serverDO.envType == 2">daily</b>
-                                                <b class="pull-right" style="color: #ec971f"
-                                                   ng-if="server.serverDO.envType == 3">gray</b>
-                                                <b class="pull-right" style="color: #d9534f"
-                                                   ng-if="server.serverDO.envType == 4">prod</b>
-                                                <b class="pull-right" style="color: #5e5e5e"
-                                                   ng-if="server.serverDO.envType == 5">test</b>
-                                                <b class="pull-right" style="color: #286090"
-                                                   ng-if="server.serverDO.envType == 6">back</b>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <button ng-click="editCopy(item)"
-                                                    class="btn btn-xs"
-                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                <i class="glyphicon glyphicon-edit"></i>编辑
-                                            </button>
-
-                                            <button ng-click="doCopy(item.id)"
-                                                    class="btn btn-xs"
-                                                    ng-disabled="butInvokeDisabled"
-                                                    uib-popover-html="'同步配置并生效'" popover-trigger="'mouseenter'"
-                                                    style="margin-left: 5px; background-color: #ff5f87; color: white;">
-                                                <i class="fa fa-spin fa-spinner" ng-show="copyRunning"></i>
-                                                <i class="icon icon-control-play" ng-show="!copyRunning"></i>同步
-                                            </button>
-
-                                            <button ng-click="delCopy(item.id)"
-=======
                                     <tr ng-repeat="item in playbookList">
                                         <td>
                                             <b style="color: #286090">{{item.vhostVO.serverName}}</b>
@@ -345,7 +224,6 @@
                                             </button>
 
                                             <button ng-click="delPlaybook(item.id)"
->>>>>>> develop
                                                     class="btn btn-xs pull-right"
                                                     ng-disabled="butDelDisabled"
                                                     style="background-color: red; color: white;">
@@ -365,52 +243,6 @@
                                     </tr>
                                     </tfoot>
                                 </table>
-<<<<<<< HEAD
-
-                                <div class="form-group">
-                                    <div ng-if="alert.type != ''">
-                                        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">
-                                            {{alert.msg}}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </uib-tab>
-                <uib-tab index="2" heading="同步日志">
-                    <div class="panel panel-default" ng-controller="copyLogCtrl">
-                        <div class="panel-body">
-
-                            <form class="form-inline" role="form">
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">名称</span>
-                                        <input type="text" class="form-control" ng-model="queryServerName" placeholder="名称">
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <span class="input-group-addon">环境类型</span>
-                                        <select class="form-control" ng-model="nowEnvType"
-                                                ng-options="envItem.code as envItem.name for envItem in envType"
-                                                required>
-                                            <option value="">--请选择--</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-info" ng-click="pageChanged()"><span
-                                            class="glyphicon glyphicon-search"></span>搜索
-                                    </button>
-                                    <button type="button" class="btn btn-info" ng-click="reSet()"><span
-                                            class="glyphicon glyphicon-repeat"></span>重置
-                                    </button>
-                                </div>
-                            </form>
-
-=======
                             </div>
 
 
@@ -464,77 +296,17 @@
                                     </div>
                                 </form>
                             </div>
->>>>>>> develop
                             <div style="margin-top: 5px;">
                                 <table class="table table-hover table-bordered table-striped">
                                     <thead>
                                     <tr>
-<<<<<<< HEAD
-                                        <td>虚拟主机</td>
-                                        <td>日志</td>
-=======
                                         <td class="col-md-3">Playbook</td>
                                         <td>参数</td>
->>>>>>> develop
                                         <td class="col-md-2">操作</td>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr ng-repeat="item in pageData">
-<<<<<<< HEAD
-                                        <td>{{item.serverName}}
-                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
-                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
-                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
-                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
-                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
-                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
-                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>
-                                            </br>
-                                            <b style="color: #286090">{{item.serverContent}}</b>
-                                        </td>
-                                        <td>
-                                            <b class="label"
-                                               style="background-color: #286090; color: white;">同步</b>
-                                            <b class="label"
-                                               style="background-color: #449d44; color: white;"
-                                               ng-show="item.copySuccess">成功：{{item.copyResult}}</b>
-                                            <b class="label"
-                                               style="background-color: #ef2929; color: white;"
-                                               ng-show="!item.copySuccess">失败：{{item.copyResult}}</b>
-                                            <b class="label"
-                                               style="background-color: #449d44; color: white;"
-                                               ng-show="item.doScript">执行脚本</b>
-                                            <b class="label"
-                                               style="background-color: #ff8700; color: white;"
-                                               ng-show="!item.doScript">执行脚本条件未满足！</b>
-
-                                            <button ng-click="launchLog(0,item)"
-                                                    class="btn btn-xs"
-                                                    style="background-color: #00b3ee; color: white;">
-                                                <i class="glyphicon glyphicon-search"></i>同步日志
-                                            </button>
-
-                                            <span ng-show="item.copySuccess && item.doScript">
-                                                </br>
-                                                <b class="label"
-                                                   style="background-color: #286090; color: white;">脚本</b>
-                                                <b class="label"
-                                                   style="background-color: #449d44; color: white;"
-                                                   ng-show="item.scriptSuccess">成功：{{item.scriptResult}}</b>
-                                                <b class="label"
-                                                   style="background-color: #ef2929; color: white;"
-                                                   ng-show="!item.scriptSuccess">失败：{{item.scriptResult}}</b>
-                                                <button ng-click="launchLog(1,item)"
-                                                        class="btn btn-xs"
-                                                        style="background-color: #00b3ee; color: white;">
-                                                <i class="glyphicon glyphicon-search"></i>脚本日志
-                                                </button>
-                                            </span>
-                                        </td>
-                                        <td>
-                                            <button ng-click="delLog(item.id)"
-=======
                                         <td>
                                             <b>{{item.playbookName}}</b>
                                             <b class="pull-right">名称</b>
@@ -566,7 +338,6 @@
                                             </button>
 
                                             <button ng-click="delItem(item.id)"
->>>>>>> develop
                                                     class="btn btn-xs pull-right"
                                                     ng-disabled="butDelDisabled"
                                                     style="background-color: red; color: white;">
@@ -586,8 +357,6 @@
                                     </tr>
                                     </tfoot>
                                 </table>
-<<<<<<< HEAD
-=======
                                 <div class="form-group">
                                     <div ng-if="alert.type != ''">
                                         <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">
@@ -595,7 +364,6 @@
                                         </div>
                                     </div>
                                 </div>
->>>>>>> develop
                             </div>
                         </div>
                     </div>
@@ -616,27 +384,11 @@
     <div ng-include="'tpl/modal/nginx/vhost_configure_info_modal.html'"></div>
 </script>
 
-<<<<<<< HEAD
-<!--查看copy相关日志-->
-<script type="text/ng-template" id="launchLogInfoModal">
-    <div ng-include="'tpl/modal/copy/launch_log_modal.html'"></div>
-</script>
-
-=======
->>>>>>> develop
 <!--查看nginx配置-->
 <script type="text/ng-template" id="launchFileInfoModal">
     <div ng-include="'tpl/modal/nginx/launch_file_info_modal.html'"></div>
 </script>
 
-<<<<<<< HEAD
-
-<!--Copy配置页面-->
-<script type="text/ng-template" id="copyInfo">
-    <div ng-include="'tpl/modal/copy/copy_info_modal.html'"></div>
-</script>
-
-=======
 <script type="text/ng-template" id="nginxPlaybookModal">
     <div ng-include="'tpl/modal/playbook/nginx_playbook_modal.html'"></div>
 </script>
@@ -650,4 +402,3 @@
 
 
 
->>>>>>> develop

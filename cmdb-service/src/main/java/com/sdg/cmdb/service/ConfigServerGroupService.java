@@ -89,7 +89,6 @@ public interface ConfigServerGroupService {
 
     /**
      * 是否生成Upsteam中的check模块配置
-<<<<<<< HEAD
      * @param serverGroupDO
      * @return
      */
@@ -97,20 +96,6 @@ public interface ConfigServerGroupService {
 
     /**
      * 获取location中的limit配置
-     *
-=======
->>>>>>> develop
-     * @param serverGroupDO
-     * @return
-     */
-    boolean isBuildNginxCheck(ServerGroupDO serverGroupDO);
-
-    /**
-<<<<<<< HEAD
-     * 是否生成标准的location
-=======
-     * 获取location中的limit配置
->>>>>>> develop
      *
      * @param serverGroupDO
      * @return
@@ -196,8 +181,6 @@ public interface ConfigServerGroupService {
     String queryZabbixProxy(ServerGroupDO serverGroupDO);
 
     /**
-<<<<<<< HEAD
-=======
      * MONITOR_IP
      * @param serverDO
      * @return MONITOR_IP
@@ -212,7 +195,6 @@ public interface ConfigServerGroupService {
     String queryZabbixMacros(ServerDO serverDO);
 
     /**
->>>>>>> develop
      * 取分组配置
      * @param serverGroupDO
      * @return

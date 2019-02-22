@@ -231,12 +231,7 @@
                         <div class="panel-body">
                             <form class="form-inline" role="form">
                                 <div class="form-group">
-
                                     <div class="input-group">
-<<<<<<< HEAD
-                                        <span class="input-group-addon">区域(ZoneId)</span>
-                                        <input type="text" class="form-control" ng-model="queryZoneId" placeholder="区域(ZoneId)">
-=======
                                         <span class="input-group-addon">到期天数</span>
                                         <input type="text" class="form-control" ng-model="queryDay" placeholder="天数，默认值30">
                                     </div>
@@ -260,7 +255,6 @@
                                                 ng-options="status.code as status.name for status in ecsStatus">
                                             <option value="">--请选择--</option>
                                         </select>
->>>>>>> develop
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -592,12 +586,7 @@
                         </div>
                     </div>
                 </uib-tab>
-<<<<<<< HEAD
-
-                <uib-tab index="3" heading="Aliyun配置">
-=======
                 <uib-tab index="4" heading="Aliyun配置">
->>>>>>> develop
                     <div class="panel panel-default" ng-controller="aliyunConfigCtrl">
                         <div class="panel-body" ng-if="contains(authPoint, '/aliyun/mgmt')">
                             <form class="form-horizontal">
@@ -685,11 +674,8 @@
 <script type="text/ng-template" id="ecsTemplateInfo">
     <div ng-include="'tpl/modal/aliyun/aliyun_ecs_template_info_modal.html'"></div>
 </script>
-<<<<<<< HEAD
-=======
 
 <!--续费-->
 <script type="text/ng-template" id="renewEcsInstance">
     <div ng-include="'tpl/modal/aliyun/aliyun_ecs_instance_renew_modal.html'"></div>
 </script>
->>>>>>> develop

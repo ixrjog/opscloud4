@@ -10,10 +10,6 @@ import com.sdg.cmdb.domain.ansible.AnsibleReslut;
 import com.sdg.cmdb.domain.ansible.AnsibleScriptReslut;
 import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.configCenter.itemEnum.AnsibleItemEnum;
-=======
->>>>>>> develop
 import com.sdg.cmdb.domain.copy.*;
 import com.sdg.cmdb.domain.nginx.VhostDO;
 import com.sdg.cmdb.domain.nginx.VhostEnvDO;
@@ -48,15 +44,12 @@ public class CopyServiceImpl implements CopyService, InitializingBean {
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
-<<<<<<< HEAD
-=======
     @Value("#{cmdb['ansible.bin']}")
     private String ansibleBin;
 
     @Value("#{cmdb['ansible.scripts.path']}")
     private String ansibleScriptsPath;
 
->>>>>>> develop
     public static final String BUSINESS_KEY_NGINX = "NGINX";
 
     public static final String COPY_LOGS_PATH = "/data/www/logs/copyLogs";
@@ -405,13 +398,8 @@ public class CopyServiceImpl implements CopyService, InitializingBean {
      * @return
      */
     private String acqScriptPath(TaskScriptDO taskScriptDO) {
-<<<<<<< HEAD
-        String scriptsPath = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_TASK_SCRIPTS_PATH.getItemKey());
-        String scriptFile = scriptsPath + "/" + taskScriptDO.getUsername() + "/id_" + taskScriptDO.getId();
-=======
 
         String scriptFile = ansibleScriptsPath + "/" + taskScriptDO.getUsername() + "/id_" + taskScriptDO.getId();
->>>>>>> develop
         return scriptFile;
     }
 
@@ -421,10 +409,6 @@ public class CopyServiceImpl implements CopyService, InitializingBean {
      * @return
      */
     private void init() {
-<<<<<<< HEAD
-        ansibleConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.ANSIBLE.getItemKey(), invokeEnv);
-=======
->>>>>>> develop
         ansibleHostsPath = configService.getAnsibleHostsAllPath();
 
     }

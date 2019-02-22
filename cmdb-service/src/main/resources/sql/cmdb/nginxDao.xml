@@ -66,19 +66,13 @@
         vhostId,
         envType,
         confPath,
-<<<<<<< HEAD
-=======
         autoBuild,
->>>>>>> develop
         content
         ) VALUES (
         #{vhostId},
         #{envType},
         #{confPath},
-<<<<<<< HEAD
-=======
         #{autoBuild},
->>>>>>> develop
         #{content}
         );
     </insert>
@@ -87,10 +81,7 @@
         UPDATE oc_nginx_vhost_env
         SET
         confPath = #{confPath},
-<<<<<<< HEAD
-=======
         autoBuild = #{autoBuild},
->>>>>>> develop
         content = #{content}
         WHERE id = #{id}
     </update>
@@ -158,8 +149,6 @@
         ORDER BY groupName DESC
     </select>
 
-<<<<<<< HEAD
-=======
 
     <insert id="addPlaybook" parameterType="NginxPlaybookDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
         INSERT INTO oc_nginx_playbook (
@@ -213,5 +202,4 @@
         SELECT * FROM oc_nginx_playbook WHERE id = #{id}
     </select>
 
->>>>>>> develop
 </mapper>

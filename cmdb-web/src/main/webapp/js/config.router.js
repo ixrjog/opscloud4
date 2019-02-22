@@ -662,29 +662,6 @@ angular.module('app')
                     .state('app.nginxConfig', {
                         url: '/nginxConfig',
                         templateUrl: 'tpl/app_nginx_config.html',
-<<<<<<< HEAD
-                        permission: true,
-                        resolve: {
-                            deps: ['$ocLazyLoad',
-                                function ($ocLazyLoad) {
-                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
-                                        function () {
-                                            return $ocLazyLoad.load(['js/controllers/nginxConfig.js']);
-                                        }
-                                    );
-                                }]
-                        },
-                        authGroup: ["configFile","nginx","copy"],
-                        data: {
-                            authPoint: {}
-                        }
-                    })
-
-                    .state('app.configFile', {
-                        url: '/configFile',
-                        templateUrl: 'tpl/app_configFile.html',
-=======
->>>>>>> develop
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
@@ -1011,84 +988,49 @@ angular.module('app')
                         }
                     })
 
-<<<<<<< HEAD
-                    .state('app.workflow', {
-                        url: '/team',
-                        templateUrl: 'tpl/app_workflow.html',
-=======
                     .state('app.aliyunMqMgmt', {
                         url: '/aliyunMqMgmt',
                         templateUrl: 'tpl/app_aliyun_mq_mgmt.html',
->>>>>>> develop
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-<<<<<<< HEAD
-                                            return $ocLazyLoad.load(['js/controllers/workflow.js']);
-=======
                                             return $ocLazyLoad.load(['js/controllers/aliyunMqMgmt.js']);
->>>>>>> develop
                                         }
                                     );
                                 }]
                         },
-<<<<<<< HEAD
-                        authGroup: ["workflow"],
-=======
                         authGroup: ["aliyunMq"],
->>>>>>> develop
                         data: {
                             authPoint: {}
                         }
                     })
 
-<<<<<<< HEAD
-                    .state('app.teamMgmt', {
-                        url: '/team',
-                        templateUrl: 'tpl/app_team_mgmt.html',
-=======
                     .state('app.aliyunMqStatus', {
                         url: '/aliyunMqStatus',
                         templateUrl: 'tpl/app_aliyun_mq_status.html',
->>>>>>> develop
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-<<<<<<< HEAD
-                                            return $ocLazyLoad.load(['js/controllers/team.js']);
-=======
                                             return $ocLazyLoad.load(['js/controllers/aliyunMqStatus.js']);
->>>>>>> develop
                                         }
                                     );
                                 }]
                         },
-<<<<<<< HEAD
-                        authGroup: ["team"],
-=======
                         authGroup: ["aliyunMq"],
->>>>>>> develop
                         data: {
                             authPoint: {}
                         }
                     })
-<<<<<<< HEAD
-                    
-                    .state('app.todoConfig', {
-                        url: '/todoConfig',
-                        templateUrl: 'tpl/app_todoConfig.html',
-=======
 
                     .state('app.aliyunRamPolicy', {
                         url: '/aliyunRamPolicy',
                         templateUrl: 'tpl/app_aliyun_ram_policy.html',
->>>>>>> develop
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',

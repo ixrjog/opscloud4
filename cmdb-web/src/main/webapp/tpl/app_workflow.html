@@ -34,11 +34,7 @@
                             <!--</button>-->
                     <!--</form>-->
                     <div class="panel panel-default" ng-repeat="workflowGroup in workflowGroupList">
-<<<<<<< HEAD
-                        <div uib-accordion-group class="panel-info" is-open="status.open">
-=======
                         <div uib-accordion-group class="panel-info" is-open="workflowOpen">
->>>>>>> develop
                             <uib-accordion-heading>{{workflowGroup.groupName}}
                                 <i class="pull-right glyphicon"
                                    ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
@@ -53,10 +49,7 @@
                                 <button ng-if="workflow.wfStatus == 0" ng-click="createTodo(workflow)"
                                         class="btn btn-xs pull-right"
                                         style="background-color: #2e6da4; color: white;">
-<<<<<<< HEAD
-=======
                                     <i class="fa fa-spin fa-spinner" ng-show="btnCreateTodo"></i>
->>>>>>> develop
                                     发起工作流
                                 </button>
 
@@ -85,11 +78,7 @@
                                 <uib-accordion>
                                     <div class="panel panel-default">
                                         <div uib-accordion-group class="panel-info" is-open="myJobStatusOpen">
-<<<<<<< HEAD
-                                            <uib-accordion-heading>待办工作
-=======
                                             <uib-accordion-heading>待办工作流
->>>>>>> develop
                                                 <i class="pull-right glyphicon"
                                                    ng-class="{'glyphicon-chevron-down': myJobStatusOpen, 'glyphicon-chevron-right': !myJobStatusOpen}"></i>
                                             </uib-accordion-heading>
@@ -106,10 +95,6 @@
                                                     </thead>
                                                     <tbody>
                                                     <tr ng-repeat="todo in myTodoList">
-<<<<<<< HEAD
-
-=======
->>>>>>> develop
                                                         <td>
                                                             <b style="color: #286090"
                                                                ng-show="todo.workflowDO.wfType == 0">OPS</b>
@@ -128,17 +113,6 @@
                                                         <td>
                                                             <b style="color: green;"
                                                                ng-show="todo.todoPhase == 0">新建</b>
-<<<<<<< HEAD
-                                                            <b style="color: #00d7af;"
-                                                               ng-show="todo.todoPhase == 1">QA审批</b>
-                                                            <b style="color: #00d7af;"
-                                                               ng-show="todo.todoPhase == 2">TL审批</b>
-                                                            <b style="color: #00d7af;"
-                                                               ng-show="todo.todoPhase == 3">DL审批</b>
-                                                            <b style="color: #00d7af;"
-                                                               ng-show="todo.todoPhase == 4">待审核</b>
-                                                            <b style="color: #00d7af;"
-=======
                                                             <b style="color: #ff8700;"
                                                                ng-show="todo.todoPhase == 1">QA审批</b>
                                                             <b style="color: #ff8700;"
@@ -148,7 +122,6 @@
                                                             <b style="color: #ef2929;"
                                                                ng-show="todo.todoPhase == 4">待审核</b>
                                                             <b style="color: #2e6da4;"
->>>>>>> develop
                                                                ng-show="todo.todoPhase == 5">结束</b>
                                                         </td>
                                                         <td>
@@ -167,24 +140,6 @@
                                                                 <span class="glyphicon glyphicon-edit"></span>编辑
                                                             </button>
 
-<<<<<<< HEAD
-                                                            <button class="btn btn-xs" ng-show="todo.todoPhase == 0"
-                                                                    style="margin-right: 5px; background-color: #2e6da4; color: white;"
-                                                                    ng-click="revokeTodo(todo.id)"
-                                                                    uib-popover-html="'删除工作流申请'"
-                                                                    popover-trigger="'mouseenter'">
-                                                                <span class="glyphicon glyphicon-remove"></span>撤销
-                                                            </button>
-
-
-                                                            <span class="glyphicon glyphicon-ok"
-                                                                  ng-if="contains(authPoint, '/workflow/todo/invoke')"
-                                                                  style="color: green; margin-left: 20px;"
-                                                                  uib-popover-html="'执行工单'"
-                                                                  popover-trigger="'mouseenter'"
-                                                                  ng-click="invokeTodo(todo.id)">
-                                                             </span>
-=======
                                                             <button class="btn btn-xs" ng-show="todo.todoPhase != 5"
                                                                     style="margin-right: 5px; background-color: #ff8700; color: white;"
                                                                     ng-click="revokeTodo(todo.id)"
@@ -237,7 +192,6 @@
                                                             </button>
 
 
->>>>>>> develop
                                                         </td>
                                                     </tr>
                                                     </tbody>
@@ -250,11 +204,7 @@
                                 <uib-accordion>
                                     <div class="panel panel-default">
                                         <div uib-accordion-group class="panel-info" is-open="status.open">
-<<<<<<< HEAD
-                                            <uib-accordion-heading>完成工单
-=======
                                             <uib-accordion-heading>完成工作流
->>>>>>> develop
                                                 <i class="pull-right glyphicon"
                                                    ng-class="{'glyphicon-chevron-down': status.open, 'glyphicon-chevron-right': !status.open}"></i>
                                             </uib-accordion-heading>
@@ -262,29 +212,6 @@
                                                 <table class="table table-striped">
                                                     <thead>
                                                     <tr>
-<<<<<<< HEAD
-                                                        <td>类别</td>
-                                                        <td class="col-md-6">详情</td>
-                                                        <td>状态</td>
-                                                        <td>历时</td>
-                                                        <td>负责人</td>
-                                                    </tr>
-                                                    </thead>
-                                                    <tbody>
-                                                    <tr ng-repeat="todoDetail in todoDetailCompleteList">
-
-                                                        <td>
-                                                            <b style="color: #286090"
-                                                               ng-show="todoDetail.todoDO.todoType == 0">运维类工单</b>
-                                                            <b style="color: #286090"
-                                                               ng-show="todoDetail.todoDO.todoType == 1">DB类工单</b>
-                                                        </td>
-                                                        <td>
-                                                            <b style="color: #286090">{{todoDetail.todoDO.title}}</b>
-                                                            <i class="glyphicon glyphicon-search"
-                                                               ng-click="viewTodo(todoDetail)" uib-popover-html="'工单详情'"
-                                                               popover-trigger="'mouseenter'"></i>
-=======
                                                         <td class="col-md-1">类别</td>
                                                         <td class="col-md-5">详情</td>
                                                         <td>状态</td>
@@ -303,33 +230,10 @@
                                                         </td>
                                                         <td>
                                                             <b style="color: #286090">{{todo.workflowDO.title}}</b>
->>>>>>> develop
                                                             <i uib-popover-html="todoDetail.initiatorUserDO.initiatorUserInfo"
                                                                popover-trigger="'mouseenter'"
                                                                class="icon icon-info pull-right"
                                                                style="color: green;"></i>
-<<<<<<< HEAD
-                                                            <b style="color: #286090" class="pull-right">{{todoDetail.initiatorUserDO.displayName}}</b>
-
-                                                        </td>
-                                                        <td>
-                                                            <!--<b style="color: green;"-->
-                                                            <!--ng-show="todoDetail.todoStatus == 1">新工单</b>-->
-                                                            <b style="color: green;"
-                                                               ng-show="todoDetail.todoStatus == 9">完成</b>
-                                                        </td>
-                                                        <td>
-                                                            <b>{{todoDetail.timeView}}</b>
-                                                        </td>
-                                                        <td>
-                                                            <i uib-popover-html="todoDetail.assigneeUserDO.assigneeUserInfo"
-                                                               popover-trigger="'mouseenter'"
-                                                               class="icon icon-info pull-right"
-                                                               style="color: green;"></i>
-                                                            <b style="color: #286090" class="pull-right">{{todoDetail.assigneeUserDO.displayName}}</b>
-                                                        </td>
-                                                    </tr>
-=======
                                                             <b style="color: #286090" class="pull-right">{{todo.applyDisplayName}}</b>
 
                                                         </td>
@@ -389,7 +293,6 @@
                                                         </td>
                                                     </tr>
 
->>>>>>> develop
                                                     </tbody>
                                                 </table>
                                             </div>
@@ -415,8 +318,6 @@
 <script type="text/ng-template" id="todoKeyboxModal">
     <div ng-include="'tpl/modal/workflow/todo_keybox_modal.html'"></div>
 </script>
-<<<<<<< HEAD
-=======
 
 
 <script type="text/ng-template" id="todoAliyunRamModal">
@@ -431,4 +332,3 @@
 <script type="text/ng-template" id="todoLdapGroupModal">
     <div ng-include="'tpl/modal/workflow/todo_ldapGroup_modal.html'"></div>
 </script>
->>>>>>> develop

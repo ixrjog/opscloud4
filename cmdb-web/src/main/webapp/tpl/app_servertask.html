@@ -139,22 +139,14 @@
                                     <span ng-if="taskVO.taskServerList != null" class="label">
                                               <i class="fa fa-spin fa-spinner"
                                                  ng-show="taskVO.ansibleTaskDO.finalized ==false"></i>
-<<<<<<< HEAD
-                                              <b style="color: #00a8f3" ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
-=======
                                               <b style="color: #00a8f3"
                                                  ng-show="taskVO.ansibleTaskDO.finalized ==false">指令执行中...</b>
->>>>>>> develop
                                         <!--<i ng-show="taskVO.ansibleTaskDO.finalized ==true">指令执行完成</i>-->
                                               <i uib-popover-html="'执行指令'"
                                                  popover-trigger="'mouseenter'"> <b style="color: #00a8f3"> Command:`{{taskVO.ansibleTaskDO.cmd}}`</b></i>
                                               <i uib-popover-html="'服务器数量'"
-<<<<<<< HEAD
-                                                 popover-trigger="'mouseenter'" class="label"> <b style="color: #00a8f3"> ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</b></i>
-=======
                                                  popover-trigger="'mouseenter'" class="label"> <b
                                                       style="color: #00a8f3"> ServerTotal:{{taskVO.ansibleTaskDO.serverCnt}}</b></i>
->>>>>>> develop
 
                                         <input type="checkbox" ng-model="resultChoose.all" ng-click="chooseAllResult()"><b
                                             style="color: #00a8f3"> 所有结果</b>
@@ -425,8 +417,6 @@
                                                     <div hljs hljs-source="taskServer.msg"></div>
                                                     <!--<pre style="background-color: #777" hljs-->
                                                     <!--hljs-source="taskServer.msg"></pre>-->
-<<<<<<< HEAD
-=======
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -599,7 +589,6 @@
                                                         </button>
                                                     </div>
                                                     <div hljs hljs-source="host.playbookLogVO.playbookLog"></div>
->>>>>>> develop
                                                 </td>
                                             </tr>
                                             </tbody>

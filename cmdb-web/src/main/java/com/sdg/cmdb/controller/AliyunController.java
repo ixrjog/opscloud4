@@ -2,9 +2,6 @@ package com.sdg.cmdb.controller;
 
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.aliyun.*;
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.server.EcsTemplateDO;
-=======
 import com.sdg.cmdb.domain.aliyunMQ.AliyunMqGroupUserDO;
 import com.sdg.cmdb.domain.aliyunMQ.AliyunMqGroupVO;
 import com.sdg.cmdb.domain.aliyunMQ.CreateOnsGroup;
@@ -12,7 +9,6 @@ import com.sdg.cmdb.domain.aliyunMQ.CreateTopic;
 import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunMQService;
 import com.sdg.cmdb.service.AliyunRAMService;
->>>>>>> develop
 import com.sdg.cmdb.service.AliyunService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -166,48 +162,6 @@ public class AliyunController {
     @ResponseBody
     public HttpResult getDescribeImages() {
         return new HttpResult(aliyunService.getImages());
-<<<<<<< HEAD
-    }
-
-    /**
-     * 查询实例类型
-     *
-     * @return
-     */
-    @RequestMapping(value = "/api/describeInstanceTypes", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getDescribeInstanceTypes(@RequestParam String regionId) {
-        return new HttpResult(aliyunService.getInstanceTypes(regionId));
-    }
-
-    /**
-     * 查询实例类型
-     *
-     * @return
-     */
-    @RequestMapping(value = "/api/describeZones", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getZones(@RequestParam String regionId) {
-        return new HttpResult(aliyunService.getZones(regionId));
-    }
-
-
-    /**
-     * 保存EcsTemplate
-     *
-     * @return
-     */
-    @RequestMapping(value = "/template/save", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult saveTemplate(@RequestBody EcsTemplateDO ecsTemplateDO) {
-        return new HttpResult(aliyunService.saveTemplate(ecsTemplateDO));
-    }
-
-    @RequestMapping(value = "/template/del", method = RequestMethod.DELETE)
-    @ResponseBody
-    public HttpResult saveTemplate(@RequestParam long id) {
-        return new HttpResult(aliyunService.delTemplate(id));
-=======
     }
 
     /**
@@ -388,7 +342,6 @@ public class AliyunController {
     @ResponseBody
     public HttpResult getRamUser(@RequestBody AliyunRamUserDO aliyunRamUserDO) {
         return new HttpResult(aliyunRamService.saveRamUser(aliyunRamUserDO));
->>>>>>> develop
     }
 
 }

@@ -34,8 +34,6 @@ public class TimeUtilsTest {
         System.err.println(now);
 
     }
-<<<<<<< HEAD
-=======
 
     @Test
     public void test2(){
@@ -50,5 +48,4 @@ public class TimeUtilsTest {
         System.err.println(formatter.format(now + 24*3600*1000)) ;
     }
 
->>>>>>> develop
 }

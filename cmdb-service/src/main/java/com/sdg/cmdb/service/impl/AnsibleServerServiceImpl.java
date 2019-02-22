@@ -1,10 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
 import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.configCenter.itemEnum.AnsibleItemEnum;
-=======
->>>>>>> develop
 import com.sdg.cmdb.service.AnsibleServerService;
 import com.sdg.cmdb.service.ConfigCenterService;
 import com.sdg.cmdb.util.CmdUtils;
@@ -27,13 +23,6 @@ public class AnsibleServerServiceImpl implements AnsibleServerService,Initializi
     @Resource
     private ConfigCenterService configCenterService;
 
-<<<<<<< HEAD
-    //@Resource
-    //private ConfigService configService;
-
-    private HashMap<String, String> ansibleConfigMap;
-=======
->>>>>>> develop
 
     private HashMap<String, String> getwayConfigMap;
 
@@ -79,13 +68,6 @@ public class AnsibleServerServiceImpl implements AnsibleServerService,Initializi
      * @return
      */
     private void init() {
-<<<<<<< HEAD
-        ansibleConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.ANSIBLE.getItemKey(), "dev");
-        getwayConfigMap = configCenterService.queryItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey(), ConfigCenterServiceImpl.DEFAULT_ENV);
-        ansibleBin = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_BIN.getItemKey());
-        //ansibleHostsPath = configService.getAnsibleHostsAllPath();
-=======
->>>>>>> develop
 
     }
 

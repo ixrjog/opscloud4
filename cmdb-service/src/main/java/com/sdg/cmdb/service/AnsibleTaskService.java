@@ -24,37 +24,10 @@ public interface AnsibleTaskService {
 
     String task(boolean isSudo, String hostgroupName, String cmd);
 
-<<<<<<< HEAD
-
-
-=======
->>>>>>> develop
     BusinessWrapper<Boolean> cmdTask(CmdVO cmdVO);
 
     BusinessWrapper<Boolean> scriptTask(CmdVO cmdVO);
 
-<<<<<<< HEAD
-
-    BusinessWrapper<Boolean> doScriptByCopyServer(long id);
-
-    BusinessWrapper<Boolean> doScriptByCopyByGroup(String groupName);
-
-
-    BusinessWrapper<Boolean> scriptTaskUpdateGetway();
-
-    BusinessWrapper<Boolean> scriptTaskGetwaySetLogin();
-
-   // String taskScript(boolean isSudo, String hostgroupName, String cmd);
-
-    /**
-     * 文件复制
-     * @param id
-     * @return
-     */
-    BusinessWrapper<Boolean> doFileCopy(long id);
-
-=======
->>>>>>> develop
     /**
      * 对外Playbook执行接口
      * @param doPlaybook
@@ -82,14 +55,10 @@ public interface AnsibleTaskService {
 
     TableVO<List<AnsibleTaskVO>> getAnsibleTaskPage(String cmd, int page, int length);
 
-<<<<<<< HEAD
-
-=======
     TaskResult doPlaybook(boolean isSudo, String hostPattern, String playbook, String extraVars);
 
     void playbook(boolean isSudo, String hostPattern, String playbook, String extraVars,PlaybookLogDO playbookLogDO);
 
     String getPlaybookPath(TaskScriptDO taskScriptDO);
->>>>>>> develop
 
 }

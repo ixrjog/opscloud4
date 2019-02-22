@@ -96,29 +96,6 @@ public class KeyBoxController {
     @ResponseBody
     public HttpResult getUserGroupPage(@RequestBody KeyboxUserServerDO userServerDO,
                                        @RequestParam int page, @RequestParam int length) {
-<<<<<<< HEAD
-
-        return new HttpResult(keyBoxService.getUserServerPage(userServerDO, page, length));
-    }
-
-    /**
-     * 查看用户的Getway主机配置文件
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/user/getway/launch", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult launchUserGetway(@RequestParam String username) {
-        BusinessWrapper<String> wrapper = keyBoxService.launchUserGetway(username);
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-
-=======
->>>>>>> develop
 
         return new HttpResult(keyBoxService.getUserServerPage(userServerDO, page, length));
     }
@@ -133,13 +110,7 @@ public class KeyBoxController {
     @RequestMapping(value = "/user/group/save", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult saveUserGroup(@RequestBody KeyboxUserServerVO userServerVO) {
-<<<<<<< HEAD
-        BusinessWrapper<Boolean> wrapper = keyBoxService.saveUserGroup(userServerVO);
-        //添加用户组同时更新用户授权组文件
-        return new HttpResult(keyBoxService.createUserGroupConfigFile(userServerVO.getUsername()));
-=======
         return new HttpResult(keyBoxService.saveUserGroup(userServerVO));
->>>>>>> develop
     }
 
 
@@ -157,44 +128,7 @@ public class KeyBoxController {
         userServerDO.setServerGroupId(groupId);
         userServerDO.setUsername(username);
         BusinessWrapper<Boolean> wrapper = keyBoxService.delUserGroup(userServerDO);
-<<<<<<< HEAD
-        return new HttpResult(keyBoxService.createUserGroupConfigFile(userServerDO.getUsername()));
-    }
-
-    /**
-     * 创建指定用户的配置文件
-     *
-     * @param username
-     * @return
-     */
-    @RequestMapping(value = "/user/group/create", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createUserGroupConfigFile(String username) {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.createUserGroupConfigFile(username);
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-    }
-
-    /**
-     * 创建所有用户的配置文件
-     *
-     * @return
-     */
-    @RequestMapping(value = "/user/group/createAll", method = RequestMethod.POST)
-    @ResponseBody
-    public HttpResult createAllUserGroupConfigFile() {
-        BusinessWrapper<Boolean> wrapper = keyBoxService.createAllUserGroupConfigFile();
-        if (wrapper.isSuccess()) {
-            return new HttpResult(wrapper.getBody());
-        } else {
-            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
-        }
-=======
         return new HttpResult(wrapper);
->>>>>>> develop
     }
 
 

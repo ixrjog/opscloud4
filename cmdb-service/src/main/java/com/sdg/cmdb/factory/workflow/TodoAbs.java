@@ -1,16 +1,5 @@
 package com.sdg.cmdb.factory.workflow;
 
-<<<<<<< HEAD
-import com.sdg.cmdb.dao.cmdb.UserDao;
-import com.sdg.cmdb.dao.cmdb.WorkflowDao;
-import com.sdg.cmdb.domain.auth.UserDO;
-import com.sdg.cmdb.domain.workflow.WorkflowDO;
-import com.sdg.cmdb.domain.workflow.WorkflowTodoDO;
-import com.sdg.cmdb.domain.workflow.WorkflowTodoUserDO;
-import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
-import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
-import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
-=======
 import com.sdg.cmdb.dao.cmdb.TeamDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.dao.cmdb.WorkflowDao;
@@ -23,22 +12,15 @@ import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
 import com.sdg.cmdb.service.AuthService;
 import com.sdg.cmdb.service.NotificationCenterService;
->>>>>>> develop
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.TimeViewUtils;
 import org.springframework.beans.factory.InitializingBean;
-<<<<<<< HEAD
-import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
-=======
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Type;
->>>>>>> develop
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,8 +34,6 @@ public abstract class TodoAbs implements InitializingBean {
     @Resource
     private WorkflowDao workflowDao;
 
-<<<<<<< HEAD
-=======
     @Resource
     private TeamDao teamDao;
 
@@ -63,7 +43,6 @@ public abstract class TodoAbs implements InitializingBean {
     @Autowired
     private NotificationCenterService ncService;
 
->>>>>>> develop
     abstract public String getKey();
 
     /**
@@ -74,10 +53,6 @@ public abstract class TodoAbs implements InitializingBean {
      */
     public boolean approvalTodo(long todoId) {
         WorkflowTodoVO todoVO = getTodo(todoId);
-<<<<<<< HEAD
-        WorkflowDO workflowDO = todoVO.getWorkflowDO();
-        // 工单状态
-=======
         // 工单状态
         if (approvalTodo(todoVO)) {
             // TODO 审批成功，重新设置工作流阶段 todoPhase
@@ -132,7 +107,6 @@ public abstract class TodoAbs implements InitializingBean {
     }
 
     private boolean approvalTodo(WorkflowTodoVO todoVO) {
->>>>>>> develop
         int todoPhase = todoVO.getTodoPhase();
         switch (todoPhase) {
             // TODO 申请状态直接跳过
@@ -140,21 +114,6 @@ public abstract class TodoAbs implements InitializingBean {
                 return false;
             // TODO 质量审批
             case WorkflowTodoDO.TODO_PHASE_QA_APPROVAL:
-<<<<<<< HEAD
-                if(workflowDO.isQaApproval()){
-
-                }
-                break;
-        }
-
-        return true;
-
-    }
-
-
-    /**
-     * 新建todo
-=======
                 // TODO 审批成功
                 return checkApprovalAndUpdate(getTodoUserByAssigneeType(todoVO.getId(), WorkflowTodoUserDO.AssigneeTypeEnum.qc.getCode()));
             case WorkflowTodoDO.TODO_PHASE_TL_APPROVAL:
@@ -219,7 +178,6 @@ public abstract class TodoAbs implements InitializingBean {
 
     /**
      * 新建workflowTodo
->>>>>>> develop
      *
      * @return
      */
@@ -227,18 +185,6 @@ public abstract class TodoAbs implements InitializingBean {
         WorkflowTodoDO workflowTodoDO = buildWorkflowTodo();
         workflowDao.addTodo(workflowTodoDO);
         long todoId = workflowTodoDO.getId();
-<<<<<<< HEAD
-        WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(), workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
-        return workflowTodoVO;
-    }
-
-    abstract public WorkflowTodoVO saveTodo(WorkflowTodoVO workflowTodoVO);
-
-    // abstract boolean saveTodo(long todoId);
-
-    abstract public boolean invokeTodo(long todoId);
-
-=======
         createTodoUser(workflowTodoDO);
         WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(), workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
         invokeTodoUserList(workflowTodoVO);
@@ -281,7 +227,6 @@ public abstract class TodoAbs implements InitializingBean {
 
 
     abstract protected Type getType();
->>>>>>> develop
 
     /**
      * 查询一个Todo
@@ -291,13 +236,6 @@ public abstract class TodoAbs implements InitializingBean {
      */
     public WorkflowTodoVO getTodo(long todoId) {
         WorkflowTodoDO workflowTodoDO = workflowDao.getTodo(todoId);
-<<<<<<< HEAD
-        WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(getWorkflow(), workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
-        workflowTodoVO.setApplyViewTime(TimeViewUtils.format(workflowTodoVO.getGmtApply()));
-        return workflowTodoVO;
-    }
-
-=======
         WorkflowDO workflowDO = getWorkflow();
         WorkflowTodoVO workflowTodoVO = new WorkflowTodoVO(workflowDO, workflowTodoDO, getWorkflowTodoDetailVOList(todoId), getTodoUserMap(todoId));
         workflowTodoVO.setApplyViewTime(TimeViewUtils.format(workflowTodoVO.getGmtApply()));
@@ -363,7 +301,6 @@ public abstract class TodoAbs implements InitializingBean {
         }
     }
 
->>>>>>> develop
 
     abstract protected WorkflowTodoDetailVO getTodoDetailVO(WorkflowTodoDetailDO workflowTodoDetailDO);
 
@@ -435,21 +372,6 @@ public abstract class TodoAbs implements InitializingBean {
      * @return
      */
     public WorkflowTodoVO applyTodo(WorkflowDO workflowDO, WorkflowTodoDO workflowTodoDO) {
-<<<<<<< HEAD
-        // 是否审批
-        if (workflowDO.isApproval()) {
-            if (workflowDO.isQaApproval())
-                workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_QA_APPROVAL);
-            if (workflowDO.isTlApproval())
-                workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_TL_APPROVAL);
-            if (workflowDO.isDlApproval())
-                workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_DL_APPROVAL);
-        } else {
-            workflowTodoDO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_AUDITING);
-        }
-        try {
-            workflowTodoDO.setGmtApply(TimeUtils.nowDate());
-=======
         // TODO 前置检查
         if (!checkTodoUser(workflowDO, workflowTodoDO.getId()))
             return getTodo(workflowTodoDO.getId());
@@ -458,14 +380,10 @@ public abstract class TodoAbs implements InitializingBean {
             // TODO 设置申请时间
             workflowTodoDO.setGmtApply(TimeUtils.nowDate());
             // TODO 设置工作流详情
->>>>>>> develop
             workflowDao.updateTodo(workflowTodoDO);
         } catch (Exception e) {
             e.printStackTrace();
         }
-<<<<<<< HEAD
-        return getTodo(workflowTodoDO.getId());
-=======
         WorkflowTodoVO workflowTodoVO = getTodo(workflowTodoDO.getId());
         UserDO userDO = userDao.getUserById(getUserByTodoPhase(workflowTodoVO).getUserId());
         ncService.notifWorkflowTodo(workflowTodoVO, userDO);
@@ -519,7 +437,6 @@ public abstract class TodoAbs implements InitializingBean {
                 return WorkflowTodoDO.TODO_PHASE_DL_APPROVAL;
         }
         return WorkflowTodoDO.TODO_PHASE_AUDITING;
->>>>>>> develop
     }
 
     /**
@@ -530,15 +447,10 @@ public abstract class TodoAbs implements InitializingBean {
      */
     private List<WorkflowTodoDetailVO> getWorkflowTodoDetailVOList(long todoId) {
         List<WorkflowTodoDetailDO> doList = getTodoDetails(todoId);
-<<<<<<< HEAD
-
-        List<WorkflowTodoDetailVO> voList = new ArrayList<>();
-=======
         List<WorkflowTodoDetailVO> voList = new ArrayList<>();
         // TODO 如果工单没有细节，看是否需要生成初始信息
         if (doList.size() == 0)
             createTodoDetails(todoId, voList);
->>>>>>> develop
         for (WorkflowTodoDetailDO workflowTodoDetailDO : doList) {
             WorkflowTodoDetailVO workflowTodoDetailVO = getTodoDetailVO(workflowTodoDetailDO);
             voList.add(workflowTodoDetailVO);
@@ -547,8 +459,6 @@ public abstract class TodoAbs implements InitializingBean {
         return voList;
     }
 
-<<<<<<< HEAD
-=======
     /**
      * 去重
      */
@@ -574,7 +484,6 @@ public abstract class TodoAbs implements InitializingBean {
      */
     abstract protected void createTodoDetails(long todoId, List<WorkflowTodoDetailVO> detailList);
 
->>>>>>> develop
     private HashMap<String, WorkflowTodoUserDO> getTodoUserMap(long todoId) {
         List<WorkflowTodoUserDO> list = getTodoUserList(todoId);
         HashMap<String, WorkflowTodoUserDO> map = new HashMap<String, WorkflowTodoUserDO>();
@@ -643,12 +552,6 @@ public abstract class TodoAbs implements InitializingBean {
         }
     }
 
-<<<<<<< HEAD
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        WorkflowTodoFactory.register(this);
-
-=======
 
     /**
      * 执行工单
@@ -685,7 +588,6 @@ public abstract class TodoAbs implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         WorkflowTodoFactory.register(this);
->>>>>>> develop
     }
 
 }

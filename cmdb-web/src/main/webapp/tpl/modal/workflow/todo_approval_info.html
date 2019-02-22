@@ -1,51 +1,8 @@
-<<<<<<< HEAD
-
-<div class="form-group" ng-show="workflowTodo.workflowDO.qaApproval">
-    <div class="col-md-6">
-        <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>指定质量保证</label>
-        <div class="col-lg-8">
-            <ui-select ng-model="nowTeamleader.selected" theme="bootstrap">
-                <ui-select-match placeholder="搜索用户名称......">{{$select.selected.username +
-                    '<'+$select.selected.displayName +'>' }}
-                </ui-select-match>
-                <ui-select-choices refresh="queryUser($select.search)" refresh-dalay="0"
-                                   repeat="item in userList | filter: $select.search">
-                    <div ng-bind-html="item.username | highlight: $select.search"></div>
-                </ui-select-choices>
-            </ui-select>
-        </div>
-    </div>
-
-    <div class="col-md-6" style=" margin-top: 5px;">
-        <span class="label" style="background-color:  #20a03f; color: white;">此工作流要求质量审批</span>
-    </div>
-
-</div>
-
-
-=======
 <!--审批/审核-->
->>>>>>> develop
 <div class="form-group" ng-show="workflowTodo.workflowDO.tlApproval">
     <div class="col-md-6">
         <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>TeamLeader</label>
         <div class="col-lg-8">
-<<<<<<< HEAD
-            <ui-select ng-model="nowTeamleader.selected" theme="bootstrap">
-                <ui-select-match placeholder="搜索用户名称......">{{$select.selected.username +
-                    '<'+$select.selected.displayName +'>' }}
-                </ui-select-match>
-                <ui-select-choices refresh="queryUser($select.search)" refresh-dalay="0"
-                                   repeat="item in userList | filter: $select.search">
-                    <div ng-bind-html="item.username | highlight: $select.search"></div>
-                </ui-select-choices>
-            </ui-select>
-        </div>
-    </div>
-
-    <div class="col-md-6" style=" margin-top: 5px;">
-        <span class="label" style="background-color:  #20a03f; color: white;">此工作流要求TL审批</span>
-=======
             <input type="text" class="form-control" placeholder="团队经理"
                    ng-model="workflowTodo.todoUserList.teamleader.displayName" readonly>
         </div>
@@ -61,7 +18,6 @@
     <!--disapprove-->
     <div class="col-md-6" style="margin-top: 5px;" ng-show="workflowTodo.todoUserList.teamleader != null && workflowTodo.todoUserList.teamleader.evaluation == 2">
         <span class="label" style="background-color:  #ef2929; color: white;">审批未通过</span>
->>>>>>> develop
     </div>
 
 </div>
@@ -71,23 +27,6 @@
     <div class="col-md-6">
         <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>DeptLeader</label>
         <div class="col-lg-8">
-<<<<<<< HEAD
-            <ui-select ng-model="nowTeamleader.selected" theme="bootstrap">
-                <ui-select-match placeholder="搜索用户名称......">{{$select.selected.username +
-                    '<'+$select.selected.displayName +'>' }}
-                </ui-select-match>
-                <ui-select-choices refresh="queryUser($select.search)" refresh-dalay="0"
-                                   repeat="item in userList | filter: $select.search">
-                    <div ng-bind-html="item.username | highlight: $select.search"></div>
-                </ui-select-choices>
-            </ui-select>
-        </div>
-    </div>
-
-    <div class="col-md-6" style=" margin-top: 5px;">
-        <span class="label" style="background-color:  #20a03f; color: white;">此工作流要求DL审批</span>
-    </div>
-=======
             <select class="form-control" ng-model="nowDeptLeader.selected" ng-disabled="workflowTodo.todoPhase != 0"
                     ng-options="user as user.username + '<' + user.displayName + '>' for user in workflowTodo.dlUserList">
                 <option value="">--请选择--</option>
@@ -107,7 +46,6 @@
         <span class="label" style="background-color:  #ef2929; color: white;">审批未通过</span>
     </div>
 
->>>>>>> develop
 </div>
 
 
@@ -115,22 +53,6 @@
     <div class="col-md-6">
         <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>Ops</label>
         <div class="col-lg-8">
-<<<<<<< HEAD
-            <ui-select ng-model="nowTeamleader.selected" theme="bootstrap">
-                <ui-select-match placeholder="搜索用户名称......">{{$select.selected.username +
-                    '<'+$select.selected.displayName +'>' }}
-                </ui-select-match>
-                <ui-select-choices refresh="queryUser($select.search)" refresh-dalay="0"
-                                   repeat="item in userList | filter: $select.search">
-                    <div ng-bind-html="item.username | highlight: $select.search"></div>
-                </ui-select-choices>
-            </ui-select>
-        </div>
-    </div>
-    <div class="col-md-6" style=" margin-top: 5px;">
-        <span class="label" style="background-color:  #20a03f; color: white;">此工作流要求OPS审核</span>
-    </div>
-=======
             <select class="form-control" ng-model="nowOps.selected" ng-disabled="workflowTodo.todoPhase != 0"
                     ng-options="user as user.username + '<' + user.displayName + '>' for user in workflowTodo.opsUserList">
                 <option value="">--请选择--</option>
@@ -151,5 +73,4 @@
     </div>
 
 
->>>>>>> develop
 </div>

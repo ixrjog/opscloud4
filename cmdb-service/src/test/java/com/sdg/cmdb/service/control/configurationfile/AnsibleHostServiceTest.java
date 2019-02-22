@@ -49,29 +49,6 @@ public class AnsibleHostServiceTest {
     }
 
 
-<<<<<<< HEAD
-    @Test
-    public void testAcqHostCfg() {
-      System.err.println(ansibleHostService.acqHostsCfgByUseType(ServerGroupDO.UseTypeEnum.webservice.getCode()));
-    }
-
-    @Test
-    public void testAcqHostsAllCfg() {
-        System.err.println(ansibleHostService.acqHostsAllCfg());
-    }
-
-    @Test
-    public void testSubgroup() {
-        int i = 10/3;
-        int j = 10%3;
-        System.err.println(i);
-        System.err.println(j);
-
-        String x = "";
-        System.err.println(Integer.valueOf(x));
-    }
-
-=======
 
 
     @Test
@@ -85,5 +62,4 @@ public class AnsibleHostServiceTest {
         System.err.println(Integer.valueOf(x));
     }
 
->>>>>>> develop
 }

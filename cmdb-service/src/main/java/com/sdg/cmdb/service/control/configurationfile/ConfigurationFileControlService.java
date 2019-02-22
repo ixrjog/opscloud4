@@ -43,20 +43,8 @@ public class ConfigurationFileControlService {
     @Resource
     private TomcatInstallConfigService tomcatInstallConfigService;
 
-<<<<<<< HEAD
-    @Resource
-    private GetwayService getwayService;
-
-    @Resource
-    private ShadowsocksService shadowsocksService;
-
-
-    @Resource
-    private IptablsZookeeperService iptablsZookeeperService;
-=======
     @Autowired
     private ShadowsocksFileProcessorService shadowsocksFileProcessorService;
->>>>>>> develop
 
     @Resource
     private ConfigDao configDao;
@@ -100,15 +88,6 @@ public class ConfigurationFileControlService {
                 return tomcatInstallConfigService.acqConfig();
             case nameGetway:
                 return "";
-<<<<<<< HEAD
-            case nameShadowsocks:
-                return shadowsocksService.acqConfig();
-            case nameIptablesDubbo:
-                return iptablsZookeeperService.acqConfig(type);
-            case nameDnsmasq:
-                return dnsmasqService.acqConfig(type);
-=======
->>>>>>> develop
         }
         return new String();
     }

@@ -129,21 +129,6 @@ public class EcsServerDO implements Serializable {
         if (!StringUtils.isEmpty(instance.getEipAddress().getIpAddress())) {
             this.publicIp = instance.getEipAddress().getIpAddress();
         }
-<<<<<<< HEAD
-        // 弹性IP
-        if (!StringUtils.isEmpty(ecs.getEipAddress().getIpAddress())) {
-            this.publicIp = ecs.getEipAddress().getIpAddress();
-        }
-
-        this.internetMaxBandwidthOut = ecs.getInternetMaxBandwidthOut();
-        this.cpu = ecs.getCpu();
-        this.memory = ecs.getMemory();
-        this.ioOptimized = ecs.getIoOptimized();
-        this.instanceId = ecs.getInstanceId();
-        this.area = ecs.getZoneId();
-        this.regionId = ecs.getRegionId();
-        this.internetChargeType = ecs.getInstanceChargeType();
-=======
         this.internetMaxBandwidthOut = instance.getInternetMaxBandwidthOut();
         this.cpu = instance.getCpu();
         this.memory = instance.getMemory();
@@ -154,7 +139,6 @@ public class EcsServerDO implements Serializable {
         this.internetChargeType = instance.getInternetChargeType();
         this.instanceType = instance.getInstanceType();
         this.instanceTypeFamily = instance.getInstanceTypeFamily();
->>>>>>> develop
     }
 
     //转换时间

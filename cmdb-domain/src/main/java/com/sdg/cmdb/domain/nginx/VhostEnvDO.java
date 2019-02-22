@@ -17,14 +17,11 @@ public class VhostEnvDO implements Serializable {
      */
     private String confPath;
 
-<<<<<<< HEAD
-=======
     /**
      * 是否自动生成upstream配置
      */
     private boolean autoBuild = false;
 
->>>>>>> develop
     private String content;
 
     private String gmtCreate;
@@ -38,10 +35,7 @@ public class VhostEnvDO implements Serializable {
                 ", vhostId=" + vhostId +
                 ", envType=" + envType +
                 ", confPath='" + confPath + '\'' +
-<<<<<<< HEAD
-=======
                 ", autoBuild='" + autoBuild + '\'' +
->>>>>>> develop
                 ", content='" + content + '\'' +
                 ", gmtModify='" + gmtModify + '\'' +
                 ", gmtCreate='" + gmtCreate + '\'' +
@@ -81,8 +75,6 @@ public class VhostEnvDO implements Serializable {
         this.confPath = confPath;
     }
 
-<<<<<<< HEAD
-=======
     public boolean isAutoBuild() {
         return autoBuild;
     }
@@ -91,7 +83,6 @@ public class VhostEnvDO implements Serializable {
         this.autoBuild = autoBuild;
     }
 
->>>>>>> develop
     public String getContent() {
         return content;
     }

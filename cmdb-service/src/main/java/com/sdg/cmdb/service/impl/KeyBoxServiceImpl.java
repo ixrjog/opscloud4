@@ -84,9 +84,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     @Resource
     private ZabbixService zabbixService;
 
-    @Resource
-    private ZabbixService zabbixService;
-
 
     @Resource
     private CiUserGroupService ciUserGroupService;
@@ -102,11 +99,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(userServerDOItem.getServerGroupId());
             KeyboxUserServerVO userServerVO = new KeyboxUserServerVO(userServerDOItem, serverGroupDO);
 
-<<<<<<< HEAD
-            userServerVO.setZabbixUsergroup(zabbixService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
-=======
             userServerVO.setZabbixUsergroup(zabbixServerService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
->>>>>>> develop
             userServerVOList.add(userServerVO);
         }
         return new TableVO<>(size, userServerVOList);
@@ -140,11 +133,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         userDO.setAuthed(UserDO.AuthType.authed.getCode());
         userService.updateUserAuthStatus(userDO);
         zabbixService.userCreate(userDO);
-<<<<<<< HEAD
-        return wrapper;
-=======
         return null;
->>>>>>> develop
     }
 
     @Override
@@ -158,21 +147,12 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             userDO.setUsername(username);
         }
 
-<<<<<<< HEAD
-        delKeyFile(username);
-
-=======
->>>>>>> develop
         try {
             //BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayDelAccount(userDO.getUsername());
             userDO.setAuthed(UserDO.AuthType.noAuth.getCode());
             userService.updateUserAuthStatus(userDO);
             zabbixService.userDelete(userDO);
-<<<<<<< HEAD
-            return wrapper;
-=======
             return null;
->>>>>>> develop
         } catch (Exception e) {
             return new BusinessWrapper<Boolean>(false);
         }
@@ -243,62 +223,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 
 
 
-<<<<<<< HEAD
-        try {
-            UserDO userDO = userService.getUserDOByName(username);
-            if (userDO == null) {
-                return new BusinessWrapper<>(ErrorCode.userNotExist);
-            }
-
-            List<ServerGroupDO> groupDOList = keyboxDao.getGroupListByUsername(username);
-            if (groupDOList == null || groupDOList.size() == 0) {
-                IOUtils.delFile(configFilePath + "/" + username + "/getway.conf");
-            } else {
-                Getway gw = new Getway(userDO, groupDOList);
-                IOUtils.writeFile(gw.toString(), configFilePath + "/" + username + "/getway.conf");
-            }
-
-            //UserDO userDO = userDao.getUserByName(userServerVO.getUsername());
-            // 异步变更zabbix用户组
-            schedulerManager.registerJob(() -> {
-                int userid = zabbixService.userGet(userDO);
-                if (userid == 0) {
-                    zabbixService.userCreate(userDO);
-                } else {
-                    zabbixService.userUpdate(userDO);
-                }
-            });
-
-            return new BusinessWrapper<>(true);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure);
-        }
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> createAllUserGroupConfigFile() {
-        coreLogger.info("create all user getway config file!");
-        HashMap<String, String> configMap = acqConifMap();
-        String configFilePath = configMap.get(GetwayItemEnum.GETWAY_USER_CONF_PATH.getItemKey());
-
-        try {
-            List<UserDO> users = userDao.getAllUser();
-            if (users == null || users.size() == 0) return new BusinessWrapper<>(ErrorCode.serverFailure);
-            for (UserDO userDO : users) {
-                List<ServerGroupDO> groupDOList = keyboxDao.getGroupListByUsername(userDO.getUsername());
-                if (groupDOList == null || groupDOList.size() == 0) continue;
-                Getway gw = new Getway(userDO, groupDOList);
-                IOUtils.writeFile(gw.toString(), configFilePath + "/" + userDO.getUsername() + "/getway.conf");
-            }
-            return new BusinessWrapper<>(true);
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure);
-        }
-    }
-=======
->>>>>>> develop
 
 
     @Override

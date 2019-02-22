@@ -125,11 +125,7 @@ public class TeamServiceImpl implements TeamService {
     }
 
     private boolean checkAuth(long teamuserId) {
-<<<<<<< HEAD
-        TeamuserDO teamuserDO = teamDao.geteamuser(teamuserId);
-=======
         TeamuserDO teamuserDO = teamDao.getTeamuser(teamuserId);
->>>>>>> develop
         return checkAuth(teamuserDO);
     }
 

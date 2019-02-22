@@ -16,8 +16,6 @@ public class WorkflowTodoDetailDO implements Serializable {
 
     private String detailValue;
 
-<<<<<<< HEAD
-=======
     static public final int STATUS_NOT = 0;
 
     static public final int STATUS_COMPLETE = 1;
@@ -30,33 +28,25 @@ public class WorkflowTodoDetailDO implements Serializable {
      */
     private int detailStatus = 0;
 
->>>>>>> develop
     private String content;
 
     private String gmtCreate;
 
     private String gmtModify;
 
-<<<<<<< HEAD
-=======
     public WorkflowTodoDetailDO(long todoId, String name, String detailKey) {
         this.todoId = todoId;
         this.name = name;
         this.detailKey = detailKey;
     }
 
->>>>>>> develop
     public WorkflowTodoDetailDO(WorkflowTodoDetailVO workflowTodoDetailVO, String detailValue) {
         this.id = workflowTodoDetailVO.getId();
         this.todoId = workflowTodoDetailVO.getTodoId();
         this.name = workflowTodoDetailVO.getName();
         this.detailKey = workflowTodoDetailVO.getDetailKey();
         this.detailValue = detailValue;
-<<<<<<< HEAD
-        this.content =workflowTodoDetailVO.getContent();
-=======
         this.content = workflowTodoDetailVO.getContent();
->>>>>>> develop
     }
 
     public WorkflowTodoDetailDO() {
@@ -127,8 +117,6 @@ public class WorkflowTodoDetailDO implements Serializable {
     public void setContent(String content) {
         this.content = content;
     }
-<<<<<<< HEAD
-=======
 
     public int getDetailStatus() {
         return detailStatus;
@@ -137,5 +125,4 @@ public class WorkflowTodoDetailDO implements Serializable {
     public void setDetailStatus(int detailStatus) {
         this.detailStatus = detailStatus;
     }
->>>>>>> develop
 }

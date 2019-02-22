@@ -1,17 +1,5 @@
 package com.sdg.cmdb.service.impl;
 
-<<<<<<< HEAD
-import com.sdg.cmdb.dao.cmdb.NginxDao;
-import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
-import com.sdg.cmdb.domain.BusinessWrapper;
-import com.sdg.cmdb.domain.ErrorCode;
-import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.nginx.*;
-import com.sdg.cmdb.domain.server.ServerGroupDO;
-import com.sdg.cmdb.service.NginxService;
-import com.sdg.cmdb.service.configurationProcessor.NginxFileProcessorService;
-import com.sdg.cmdb.util.IOUtils;
-=======
 import com.sdg.cmdb.dao.cmdb.AnsibleTaskDao;
 import com.sdg.cmdb.dao.cmdb.NginxDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
@@ -35,7 +23,6 @@ import com.sdg.cmdb.service.configurationProcessor.NginxFileProcessorService;
 import com.sdg.cmdb.util.IOUtils;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
->>>>>>> develop
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -49,23 +36,14 @@ public class NginxServiceImpl implements NginxService {
 
     @Resource
     private NginxDao nginxDao;
-<<<<<<< HEAD
-
-
-    @Resource
-    private ServerGroupDao serverGroupDao;
-=======
     @Resource
     private ServerGroupDao serverGroupDao;
     @Resource
     private AnsibleTaskDao ansibleTaskDao;
->>>>>>> develop
 
     @Resource
     private NginxFileProcessorService nginxFileProcessorService;
 
-<<<<<<< HEAD
-=======
     @Resource
     private ServerGroupService serverGroupService;
 
@@ -78,7 +56,6 @@ public class NginxServiceImpl implements NginxService {
     @Resource
     private SchedulerManager schedulerManager;
 
->>>>>>> develop
     private static final Logger logger = LoggerFactory.getLogger(NginxServiceImpl.class);
 
     @Override
@@ -86,22 +63,9 @@ public class NginxServiceImpl implements NginxService {
 
         long size = nginxDao.getVhostSize(serverName);
         List<VhostDO> list = nginxDao.getVhostPage(serverName, page * length, length);
-<<<<<<< HEAD
-
-        List<VhostVO> voList = new ArrayList<>();
-
-        for (VhostDO vhostDO : list) {
-            // List<VhostEnvDO> envs = nginxDao.queryVhostEnvByVhostId(vhostDO.getId());
-            VhostVO vhostVO = new VhostVO(vhostDO);
-            invokeVhostVO(vhostVO);
-            voList.add(vhostVO);
-        }
-
-=======
         List<VhostVO> voList = new ArrayList<>();
         for (VhostDO vhostDO : list)
             voList.add(getVhostVO(vhostDO));
->>>>>>> develop
         return new TableVO<>(size, voList);
     }
 
@@ -113,15 +77,6 @@ public class NginxServiceImpl implements NginxService {
             if (vhostDO == null)
                 return new BusinessWrapper<Boolean>(false);
 
-<<<<<<< HEAD
-            List<VhostEnvDO> envs = nginxDao.queryVhostEnvByVhostId(id);
-            for (VhostEnvDO envDO : envs) {
-                delEnvFileByEnvId(envDO.getId());
-            }
-
-            List<VhostServerGroupDO> groups= nginxDao.queryVhostServerGroupByVhostId(id);
-            for(VhostServerGroupDO group:groups)
-=======
             List<VhostEnvDO> vhostEnvList = nginxDao.queryVhostEnvByVhostId(id);
             for (VhostEnvDO envDO : vhostEnvList)
                 delEnvFileByEnvId(envDO.getId());
@@ -129,7 +84,6 @@ public class NginxServiceImpl implements NginxService {
 
             List<VhostServerGroupDO> groups = nginxDao.queryVhostServerGroupByVhostId(id);
             for (VhostServerGroupDO group : groups)
->>>>>>> develop
                 delServerGroup(group.getId());
 
             nginxDao.delVhost(id);
@@ -144,26 +98,6 @@ public class NginxServiceImpl implements NginxService {
     @Override
     public VhostVO getVhost(long id) {
         VhostDO vhostDO = nginxDao.getVhost(id);
-<<<<<<< HEAD
-        VhostVO vhostVO = new VhostVO(vhostDO);
-        invokeVhostVO(vhostVO);
-        return vhostVO;
-
-    }
-
-
-    private void invokeVhostVO(VhostVO vhostVO) {
-        if (vhostVO.getEnvList() == null || vhostVO.getEnvList().size() == 0) {
-            List<VhostEnvDO> envDOList = nginxDao.queryVhostEnvByVhostId(vhostVO.getId());
-            List<VhostEnvVO> envs = new ArrayList<>();
-            for (VhostEnvDO vhostEnvDO : envDOList) {
-                List<EnvFileDO> envFiles = nginxDao.queryEnvFileByEnvId(vhostEnvDO.getId());
-                VhostEnvVO vhostEnvVO = new VhostEnvVO(vhostEnvDO, envFiles);
-                envs.add(vhostEnvVO);
-            }
-            vhostVO.setEnvList(envs);
-        }
-=======
         return getVhostVO(vhostDO);
 
     }
@@ -182,7 +116,6 @@ public class NginxServiceImpl implements NginxService {
         List<EnvFileDO> envFiles = nginxDao.queryEnvFileByEnvId(vhostEnvDO.getId());
         VhostEnvVO vhostEnvVO = new VhostEnvVO(vhostEnvDO, envFiles);
         return vhostEnvVO;
->>>>>>> develop
     }
 
 
@@ -225,14 +158,8 @@ public class NginxServiceImpl implements NginxService {
     private boolean delEnvFileByEnvId(long envId) {
         try {
             List<EnvFileDO> envFiles = nginxDao.queryEnvFileByEnvId(envId);
-<<<<<<< HEAD
-            for (EnvFileDO envFileDO : envFiles) {
-                nginxDao.delEnvFile(envFileDO.getEnvId());
-            }
-=======
             for (EnvFileDO envFileDO : envFiles)
                 nginxDao.delEnvFile(envFileDO.getId());
->>>>>>> develop
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -240,10 +167,7 @@ public class NginxServiceImpl implements NginxService {
         }
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> develop
     @Override
     public BusinessWrapper<Boolean> saveEnvFile(EnvFileDO envFileDO) {
         try {
@@ -289,8 +213,6 @@ public class NginxServiceImpl implements NginxService {
     }
 
     @Override
-<<<<<<< HEAD
-=======
     public BusinessWrapper<Boolean> buildEnvFile(long envFileId, boolean auto) {
         if (!auto)
             return buildEnvFile(envFileId);
@@ -305,7 +227,6 @@ public class NginxServiceImpl implements NginxService {
     }
 
     @Override
->>>>>>> develop
     public BusinessWrapper<Boolean> addServerGroup(long vhostId, long serverGroupId) {
         try {
             ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverGroupId);
@@ -409,8 +330,6 @@ public class NginxServiceImpl implements NginxService {
         }
     }
 
-<<<<<<< HEAD
-=======
     @Override
     public List<NginxPlaybookVO> getPlaybookPage() {
         List<NginxPlaybookDO> playbookList = nginxDao.queryPlaybookPage();
@@ -487,5 +406,4 @@ public class NginxServiceImpl implements NginxService {
 
 
 
->>>>>>> develop
 }

@@ -20,11 +20,8 @@ import com.sdg.cmdb.util.schedule.SchedulerManager;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-<<<<<<< HEAD
-=======
 import org.springframework.beans.factory.annotation.Autowired;
 
->>>>>>> develop
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -38,20 +35,6 @@ import java.util.List;
  */
 @Service
 public class ZabbixServiceImpl implements ZabbixService {
-<<<<<<< HEAD
-    // InitializingBean
-
-    @Resource
-    private ConfigCenterService configCenterService;
-
-    @Resource
-    private CacheZabbixService cacheZabbixService;
-
-    @Resource
-    private ZabbixHistoryService zabbixHistoryService;
-
-=======
->>>>>>> develop
 
     @Resource
     private ZabbixServerDao zabbixDao;
@@ -85,14 +68,8 @@ public class ZabbixServiceImpl implements ZabbixService {
     @Resource
     protected UserDao userDao;
 
-<<<<<<< HEAD
-
-    @Resource
-    protected CiService ciService;
-=======
     @Autowired
     protected ConfigServerGroupService configServerGroupService;
->>>>>>> develop
 
     //停用主机监控
     public static final int hostStatusDisable = 1;
@@ -115,174 +92,6 @@ public class ZabbixServiceImpl implements ZabbixService {
     @Resource
     private KeyboxDao keyboxDao;
 
-<<<<<<< HEAD
-    private void setUrl(String url) {
-        try {
-            uri = new URI(url.trim());
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("zabbix url invalid", e);
-        }
-    }
-
-    private void setHttpClient(CloseableHttpClient httpClient) {
-        this.httpClient = httpClient;
-    }
-
-    private HashMap<String, String> configMap;
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ZABBIX.getItemKey());
-    }
-
-    private void destroy() {
-        if (httpClient != null) {
-            try {
-                httpClient.close();
-            } catch (Exception e) {
-                logger.error("zabbix close httpclient error!", e);
-            }
-        }
-    }
-
-
-    /**
-     * 初始化
-     *
-     * @return
-     */
-    private void init() {
-        HashMap<String, String> configMap = acqConifMap();
-        String zabbixApiUrl = configMap.get(ZabbixItemEnum.ZABBIX_API_URL.getItemKey());
-        String zabbixApiUser = configMap.get(ZabbixItemEnum.ZABBIX_API_USER.getItemKey());
-        String zabbixAipPasswd = configMap.get(ZabbixItemEnum.ZABBIX_API_PASSWD.getItemKey());
-
-        logger.info("Zabbix login api url : {}", zabbixApiUrl);
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(5 * 1000).setConnectionRequestTimeout(5 * 1000)
-                .setSocketTimeout(5 * 1000).build();
-        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        CloseableHttpClient httpclient = HttpClients.custom().setConnectionManager(connManager)
-                .setDefaultRequestConfig(requestConfig).build();
-        setUrl(zabbixApiUrl);
-        setHttpClient(httpclient);
-        boolean login = login(zabbixApiUser, zabbixAipPasswd);
-        if (!login) {
-            logger.error("zabbix 登陆失败");
-        }
-    }
-
-    /**
-     * login zabbix
-     *
-     * @param user
-     * @param password
-     * @return
-     */
-    private boolean login(String user, String password) {
-        if (checkAuth())
-            return true;
-
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder().paramEntry("user", user).paramEntry("password", password)
-                .method("user.login").build();
-
-        logger.info("Zabbix login user : {}  passwd : {}", user, password);
-        //JSONObject response = call(request);
-        try {
-            HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder.post().setUri(uri)
-                    .addHeader("Content-Type", "application/json")
-                    .setEntity(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON)).build();
-
-            CloseableHttpResponse response = httpClient.execute(httpRequest);
-            HttpEntity entity = response.getEntity();
-            byte[] data = EntityUtils.toByteArray(entity);
-            JSONObject jsonObject = (JSONObject) JSON.parse(data);
-
-            if (jsonObject == null || jsonObject.isEmpty()) return false;
-            auth = jsonObject.getString("result");
-            if (auth != null && !auth.isEmpty()) {
-                logger.info("Zabbix login success!");
-                this.auth = auth;
-                cacheZabbixService.insertZabbixAuth(auth);
-                return true;
-            }
-            return false;
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("zabbix server 登陆失败!");
-            return false;
-        }
-    }
-
-    /**
-     * 从redis获取auth，并校验auth是否过期
-     *
-     * @return
-     */
-    private boolean checkAuth() {
-        String auth = cacheZabbixService.getZabbixAuth();
-        if (!StringUtils.isEmpty(auth)) {
-            this.auth = auth;
-            JSONObject filter = new JSONObject();
-            filter.put("host", ZABBIX_SERVER_DEFAULT_NAME);
-            ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                    .method("host.get").paramEntry("filter", filter)
-                    .build();
-            JSONObject getResponse = call(request);
-
-            try {
-                JSONObject result = getResponse.getJSONArray("result").getJSONObject(0);
-                String hostid = result.getString("hostid");
-                if (Integer.valueOf(hostid) != 0) return true;
-                return false;
-            } catch (Exception e) {
-                logger.info("Check zabbix auth failed！");
-                return false;
-            }
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public String getApiVersion() {
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("apiinfo.version").build();
-        JSONObject response = call(request);
-        return response.getString("result");
-    }
-
-    /**
-     * 调用Zabbix API
-     *
-     * @param request
-     * @return
-     */
-    private JSONObject call(ZabbixRequest request) {
-        if (auth == null) {
-            init();
-        }
-
-        if (request.getAuth() == null && !request.getMethod().equalsIgnoreCase("apiinfo.version") && !request.getMethod().equalsIgnoreCase("user.login")) {
-            request.setAuth(auth);
-        }
-        try {
-            HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder.post().setUri(uri)
-                    .addHeader("Content-Type", "application/json")
-                    .setEntity(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON)).build();
-            CloseableHttpResponse response = httpClient.execute(httpRequest);
-            HttpEntity entity = response.getEntity();
-            byte[] data = EntityUtils.toByteArray(entity);
-            JSONObject jsonObject = (JSONObject) JSON.parse(data);
-            return jsonObject;
-        } catch (IOException e) {
-            e.printStackTrace();
-            logger.error("zabbix server 登陆失败!");
-        }
-        return new JSONObject();
-    }
-
-=======
->>>>>>> develop
     private String getServerGroupName(ServerDO serverDO) {
         if (serverDO == null) return null;
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverDO.getServerGroupId());
@@ -361,70 +170,6 @@ public class ZabbixServiceImpl implements ZabbixService {
 
     }
 
-<<<<<<< HEAD
-    public int proxyGet(String hostname) {
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("proxy.get")
-                .build();
-        if (hostname != null && !hostname.isEmpty()) {
-            JSONObject filter = new JSONObject();
-            filter.put("host", hostname);
-            request.putParam("filter", filter);
-        }
-        JSONObject getResponse = call(request);
-        return getResultId(getResponse, "proxyid");
-    }
-
-    /**
-     * 主机组是否存在
-     *
-     * @return
-     */
-    private boolean hostgroupExists(ServerDO serverDO) {
-        int groupids = hostgroupGet(serverDO);
-        if (groupids == 0) return false;
-        return true;
-    }
-
-
-    private int hostgroupGet(ServerDO serverDO) {
-        int groupids = hostgroupGet(getServerGroupName(serverDO));
-        return groupids;
-    }
-
-    private int hostgroupGet(String name) {
-        JSONObject filter = new JSONObject();
-        //filter.put("name", new String[]{name});
-        filter.put("name", name);
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("hostgroup.get").paramEntry("filter", filter).paramEntry("output", "extend")
-                .build();
-        JSONObject getResponse = call(request);
-        return getResultId(getResponse, "groupid");
-    }
-
-    public void hostgroupGet2(){
-        JSONObject filter = new JSONObject();
-        //filter.put("name", new String[]{name});
-        filter.put("name", new JSONArray());
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("hostgroup.get").paramEntry("filter", filter).paramEntry("output", "extend")
-                .build();
-        JSONObject getResponse = call(request);
-        System.err.println(getResponse);
-    }
-
-    private boolean hostgroupCreate(ServerDO serverDO) {
-        // 如果存在则法诺true
-        if (hostgroupExists(serverDO)) return true;
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("hostgroup.create").paramEntry("name", getServerGroupName(serverDO)).build();
-        JSONObject response = call(request);
-        int groupids = getResultId(response, "groupids");
-        if (groupids == 0) return false;
-        return true;
-    }
-=======
->>>>>>> develop
 
     /**
      * 创建服务器组
@@ -769,27 +514,6 @@ public class ZabbixServiceImpl implements ZabbixService {
         return proxyQueryAll();
     }
 
-<<<<<<< HEAD
-
-    private void invokeProxy(long serverGroupId, ZabbixHost host) {
-        List<ZabbixProxy> proxys = proxyQueryAll();
-
-        ServerGroupDO serverGroupDO = new ServerGroupDO(serverGroupId);
-        String proxyName = configServerGroupService.queryZabbixProxy(serverGroupDO);
-        for (ZabbixProxy proxy : proxys) {
-            if (proxy.getHost().equalsIgnoreCase(proxyName)) {
-                proxy.setSelected(true);
-                host.setUseProxy(true);
-                // host.setProxy(proxy);
-                break;
-            }
-        }
-
-        host.setProxys(proxys);
-    }
-
-=======
->>>>>>> develop
     @Override
     public BusinessWrapper<Boolean> setTemplate(long id) {
         try {
@@ -836,12 +560,5 @@ public class ZabbixServiceImpl implements ZabbixService {
         return new BusinessWrapper<Boolean>(true);
     }
 
-<<<<<<< HEAD
-//    @Override
-//    public void afterPropertiesSet() throws Exception {
-//        init();
-//    }
-=======
 
->>>>>>> develop
 }

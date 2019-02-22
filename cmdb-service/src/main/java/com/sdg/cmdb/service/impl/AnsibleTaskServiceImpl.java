@@ -7,16 +7,6 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.config.ConfigFileCopyDO;
-<<<<<<< HEAD
-import com.sdg.cmdb.domain.config.ConfigFileCopyDoScriptDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AnsibleItemEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.GetwayItemEnum;
-import com.sdg.cmdb.domain.copy.CopyDO;
-import com.sdg.cmdb.domain.copy.CopyServerVO;
-import com.sdg.cmdb.domain.copy.CopyVO;
-=======
->>>>>>> develop
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerVO;
@@ -95,12 +85,9 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     @Resource
     private AuthService authService;
 
-<<<<<<< HEAD
-=======
     @Autowired
     private ConfigServerGroupService configServerGroupService;
 
->>>>>>> develop
     @Resource
     private SchedulerManager schedulerManager;
 
@@ -112,11 +99,6 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
 
     public static final String GETWAY_SET_LOGIN = "getway_set_login";
 
-<<<<<<< HEAD
-    private HashMap<String, String> ansibleConfigMap;
-
-=======
->>>>>>> develop
     private HashMap<String, String> getwayConfigMap;
 
 
@@ -149,11 +131,6 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         return rt;
     }
 
-<<<<<<< HEAD
-
-    private String taskCopy(boolean isSudo, String hostgroupName, ConfigFileCopyDO configFileCopyDO) {
-=======
->>>>>>> develop
 
     private String taskCopy(boolean isSudo, String hostgroupName, ConfigFileCopyDO configFileCopyDO) {
         String ansible_hosts_path = configService.getAnsibleHostsAllPath();
@@ -181,14 +158,7 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     }
 
 
-<<<<<<< HEAD
-
-
     private String taskScript(boolean isSudo, String hostgroupName, String cmd) {
-        String ansible_bin = ansibleConfigMap.get(AnsibleItemEnum.ANSIBLE_BIN.getItemKey());
-=======
-    private String taskScript(boolean isSudo, String hostgroupName, String cmd) {
->>>>>>> develop
         String ansible_hosts_path = configService.getAnsibleHostsAllPath();
 
         CommandLine c = new CommandLine(ansibleBin);
@@ -245,146 +215,6 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         }
     }
 
-<<<<<<< HEAD
-
-
-    @Override
-    public BusinessWrapper<Boolean> doFileCopy(long id) {
-        AnsibleTaskDO ansibleTaskDO = new AnsibleTaskDO("copy", 0, "SysTask", 1, AnsibleTaskDO.TASK_TYPE_COPY);
-        ConfigFileCopyDO configFileCopyDO = configDao.getConfigFileCopy(id);
-        ServerDO serverDO = serverDao.getServerInfoById(configFileCopyDO.getServerId());
-
-        try {
-            ansibleTaskDao.addAnsibleTask(ansibleTaskDO);
-            // 异步处理任务
-            schedulerManager.registerJob(() -> {
-                AnsibleTaskServerDO taskServerDO = new AnsibleTaskServerDO(serverDO, ansibleTaskDO.getId());
-                try {
-                    String invokeStr = taskCopy(true, serverDO.getInsideIp(), configFileCopyDO);
-                    CmdUtils.invokeAnsibleScriptTaskServer(taskServerDO, invokeStr);
-                    doCopyScript(configFileCopyDO);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-                ansibleTaskDao.addAnsibleTaskServer(taskServerDO);
-            });
-
-            BusinessWrapper wrapper = new BusinessWrapper<>(true);
-            wrapper.setBody(ansibleTaskDO);
-            return wrapper;
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(false);
-        }
-    }
-
-    // 复制文件完成后执行Script
-    private void doCopyScript(ConfigFileCopyDO configFileCopyDO) {
-        ConfigFileCopyDoScriptDO configFileCopyDoScriptDO = configDao.getConfigFileCopyDoScriptByCopyId(configFileCopyDO.getId());
-        if (configFileCopyDoScriptDO != null) {
-            logger.info("ansible script task :" + configFileCopyDoScriptDO);
-            doScriptByCopyServer(configFileCopyDoScriptDO.getId());
-        }
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> doFileCopyByFileGroupName(String groupName) {
-
-        List<ConfigFileCopyDO> list = configDao.queryConfigFileCopyByGroupName(groupName);
-        if (list == null || list.size() == 0)
-            return new BusinessWrapper<Boolean>(true);
-
-        AnsibleTaskDO ansibleTaskDO = new AnsibleTaskDO();
-        ansibleTaskDO.setCmd("copy");
-        ansibleTaskDO.setUserId(0);
-        ansibleTaskDO.setUserName("SysTask");
-        ansibleTaskDO.setServerCnt(list.size());
-        ansibleTaskDO.setTaskType(AnsibleTaskDO.TASK_TYPE_COPY);
-
-        try {
-            for (ConfigFileCopyDO configFileCopyDO : list) {
-                logger.info("ansible copy task :" + configFileCopyDO);
-                ansibleTaskDao.addAnsibleTask(ansibleTaskDO);
-                // 异步处理任务
-                schedulerManager.registerJob(() -> {
-                    ServerDO serverDO = serverDao.getServerInfoById(configFileCopyDO.getServerId());
-                    AnsibleTaskServerDO taskServerDO = new AnsibleTaskServerDO(serverDO, ansibleTaskDO.getId());
-                    try {
-                        String invokeStr = taskCopy(true, serverDO.getInsideIp(), configFileCopyDO);
-                        //System.err.println(invokeStr);
-                        CmdUtils.invokeAnsibleScriptTaskServer(taskServerDO, invokeStr);
-                        doCopyScript(configFileCopyDO);
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                    ansibleTaskDao.addAnsibleTaskServer(taskServerDO);
-                });
-            }
-            BusinessWrapper wrapper = new BusinessWrapper<>(true);
-            wrapper.setBody(ansibleTaskDO);
-            return wrapper;
-        } catch (Exception e) {
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(false);
-        }
-    }
-
-
-
-
-    @Override
-    public BusinessWrapper<Boolean> doScriptByCopyServer(long id) {
-        ConfigFileCopyDoScriptDO doScriptDO = configDao.getConfigFileCopyDoScript(id);
-        ConfigFileCopyDO configFileCopyDO = configDao.getConfigFileCopy(doScriptDO.getCopyId());
-
-        CmdVO cmdVO = new CmdVO();
-        cmdVO.setTaskScriptId(doScriptDO.getTaskScriptId());
-        cmdVO.setParams(doScriptDO.getParams());
-        ServerVO serverVO = new ServerVO(serverDao.getServerInfoById(configFileCopyDO.getServerId()));
-
-        List<ServerVO> servers = new ArrayList<>();
-        servers.add(serverVO);
-        cmdVO.setServerList(servers);
-        return scriptTask(cmdVO);
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> doScriptByCopyByGroup(String groupName) {
-        List<ConfigFileCopyDoScriptDO> list = configDao.getConfigFileCopyDoScriptPage(groupName, 0, 100);
-        for (ConfigFileCopyDoScriptDO configFileCopyDoScriptDO : list) {
-            doScriptByCopyServer(configFileCopyDoScriptDO.getId());
-        }
-        return new BusinessWrapper<>(true);
-    }
-
-
-    @Override
-    public BusinessWrapper<Boolean> scriptTaskUpdateGetway() {
-        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY);
-        CmdVO cmdVO = new CmdVO();
-        cmdVO.setTaskScriptId(taskScriptDO.getId());
-        List<ServerVO> servers = acqGetwayServers();
-        if (servers.size() == 0)
-            return new BusinessWrapper<>(false);
-        cmdVO.setServerList(servers);
-        String params = "-i";
-        cmdVO.setParams(params);
-        return this.scriptTask(cmdVO);
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> scriptTaskGetwaySetLogin() {
-        TaskScriptDO taskScriptDO = ansibleTaskDao.getTaskScriptByScriptName(GETWAY_SET_LOGIN);
-        CmdVO cmdVO = new CmdVO();
-        cmdVO.setTaskScriptId(taskScriptDO.getId());
-        List<ServerVO> servers = acqGetwayServers();
-        if (servers.size() == 0)
-            return new BusinessWrapper<>(false);
-        cmdVO.setServerList(servers);
-        return this.scriptTask(cmdVO);
-    }
-=======
->>>>>>> develop
 
     @Override
     public BusinessWrapper<Boolean> taskQuery(long taskId) {
@@ -571,13 +401,6 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
     }
 
 
-<<<<<<< HEAD
-
-
-
-
-=======
->>>>>>> develop
     @Override
     public BusinessWrapper<Boolean> scriptTask(CmdVO cmdVO) {
         try {
@@ -640,12 +463,6 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         }
     }
 
-<<<<<<< HEAD
-
-
-
-
-=======
     @Override
     public PlaybookTaskDO playbookTask(DoPlaybook doPlaybook) {
         String username = SessionUtils.getUsername();
@@ -698,7 +515,6 @@ public class AnsibleTaskServiceImpl implements AnsibleTaskService, InitializingB
         playbookTaskVO.setTaskHostList(taskHostList);
         return playbookTaskVO;
     }
->>>>>>> develop
 
     /**
      * 执行 Playbook

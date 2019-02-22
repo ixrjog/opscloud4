@@ -1,21 +1,14 @@
 package com.sdg.cmdb.domain.server;
 
-<<<<<<< HEAD
-import org.springframework.util.StringUtils;
-=======
 import com.alibaba.fastjson.JSON;
 import lombok.Data;
->>>>>>> develop
 
 import java.io.Serializable;
 
 /**
  * Created by zxxiao on 16/9/6.
  */
-<<<<<<< HEAD
-=======
 @Data
->>>>>>> develop
 public class ServerDO implements Serializable, Comparable<ServerDO> {
     private static final long serialVersionUID = -8455519494554601001L;
 
@@ -193,13 +186,9 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
     public int compareTo(ServerDO serverDO) {
         //自定义比较方法，如果认为此实体本身大则返回1，否则返回-1
         try {
-<<<<<<< HEAD
-            if (Integer.valueOf(this.serialNumber) >= Integer.valueOf(serverDO.getSerialNumber()))
-=======
             if (Integer.valueOf(this.serialNumber) == Integer.valueOf(serverDO.getSerialNumber()))
                 return 0;
             if (Integer.valueOf(this.serialNumber) > Integer.valueOf(serverDO.getSerialNumber()))
->>>>>>> develop
                 return 1;
         } catch (Exception e) {
             e.printStackTrace();

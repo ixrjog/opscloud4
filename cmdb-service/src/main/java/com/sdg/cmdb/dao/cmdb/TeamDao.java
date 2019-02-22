@@ -29,22 +29,15 @@ public interface TeamDao {
 
     TeamDO getTeam(@Param("id") long id);
 
-<<<<<<< HEAD
-=======
     TeamDO queryTeamByLeaderUserId(@Param("teamleaderUserId") long teamleaderUserId);
 
->>>>>>> develop
 
     List<TeamuserDO> queryTeamuserByTeamId(
             @Param("teamId") long teamId);
 
-<<<<<<< HEAD
-    TeamuserDO geteamuser(@Param("id") long id);
-=======
     TeamuserDO getTeamuser(@Param("id") long id);
 
     TeamuserDO queryTeamuserByUserId(@Param("userId") long userId);
->>>>>>> develop
 
     int addTeamuser(TeamuserDO teamuserDO);
 
