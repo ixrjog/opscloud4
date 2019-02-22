@@ -64,20 +64,12 @@ public class EnvFileDO implements Serializable {
         this.envId = envId;
         this.fileType = fileType;
         if (fileType == FileTypeEnum.location.getCode()) {
-<<<<<<< HEAD
-            this.filePath = "vhost/" + FileTypeEnum.location.getDesc();
-=======
             this.filePath =  FileTypeEnum.location.getDesc();
->>>>>>> develop
             this.fileName = FileTypeEnum.location.getDesc() + "_default.conf";
             this.fileKey = FileTypeEnum.location.getDesc().toUpperCase();
         }
         if (fileType == FileTypeEnum.upstream.getCode()) {
-<<<<<<< HEAD
-            this.filePath = "vhost/" + FileTypeEnum.upstream.getDesc();
-=======
             this.filePath =  FileTypeEnum.upstream.getDesc();
->>>>>>> develop
             this.fileName = FileTypeEnum.upstream.getDesc() + "_default.conf";
             this.fileKey = FileTypeEnum.upstream.getDesc().toUpperCase();
         }
