@@ -44,6 +44,10 @@
         SELECT count(*) FROM cmdb_user WHERE username LIKE "%" #{username} "%" AND userType = 0
     </select>
 
+    <select id="getUserTotal"  resultType="_int">
+        SELECT count(*) FROM cmdb_user
+    </select>
+
     <!-- 获取指定用户名的分页数据 -->
     <select id="getUserPage" parameterType="object" resultType="UserDO">
         SELECT

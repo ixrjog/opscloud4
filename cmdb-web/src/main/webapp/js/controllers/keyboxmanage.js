@@ -804,7 +804,43 @@ app.controller('jumpserverCtrl', function ($scope, $state, $uibModal, toaster, h
     $scope.adminuserList = [];
     $scope.nowAdminuser = {};
 
-    var getJumpserver = function () {
+
+    $scope.nowUser = {};
+    $scope.userList = [];
+
+    $scope.queryUser = function (queryParam) {
+        var url = "/users?username=" + queryParam + "&page=0&length=10";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.userList = body.data;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+
+    // 授权用户
+    $scope.authAdmin = function () {
+        if ($scope.nowUser == null || $scope.nowUser.selected == null)
+            return;
+        var url = "/jumpserver/authAdmin?userId=" + $scope.nowUser.selected.id;
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "授权完成！");
+                getJumpserver();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.getJumpserver = function () {
         var url = "/jumpserver/get"
 
         httpService.doGet(url).then(function (data) {
@@ -825,7 +861,7 @@ app.controller('jumpserverCtrl', function ($scope, $state, $uibModal, toaster, h
         });
     }
 
-    getJumpserver();
+    $scope.getJumpserver();
 
     $scope.querySystemuser = function (queryName) {
         var url = "/jumpserver/assetsSystemuser/query?name=" + (queryName == null ? "" : queryName);

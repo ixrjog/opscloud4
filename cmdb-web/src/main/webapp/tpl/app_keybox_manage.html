@@ -94,32 +94,35 @@
                                                         class="btn btn-xs"
                                                         uib-popover-html="'授权&更新授权'" popover-trigger="'mouseenter'"
                                                         style="margin-left: 5px; background-color: red; color: white;">
-                                                    <span class="glyphicon glyphicon-log-in"></span>授权</button>
+                                                    <span class="glyphicon glyphicon-log-in"></span>授权
+                                                </button>
 
                                                 <!--<span  class="glyphicon glyphicon-log-in"-->
-                                                       <!--uib-popover-html="'授权&更新授权'" popover-trigger="'mouseenter'"-->
-                                                        <!--ng-click="addAuth(item.username)" ng-show="item.servers != 0">-->
+                                                <!--uib-popover-html="'授权&更新授权'" popover-trigger="'mouseenter'"-->
+                                                <!--ng-click="addAuth(item.username)" ng-show="item.servers != 0">-->
                                                 <!--</span>-->
 
                                                 <button ng-click="serverList(item.username)"
                                                         class="btn btn-xs"
                                                         uib-popover-html="'授权服务器组列表'" popover-trigger="'mouseenter'"
                                                         style="margin-left: 5px; background-color: limegreen; color: white;">
-                                                    <span class="glyphicon glyphicon-th-list"></span>服务器组</button>
+                                                    <span class="glyphicon glyphicon-th-list"></span>服务器组
+                                                </button>
 
                                                 <!--<span class="glyphicon glyphicon-th-list" style="margin-left: 20px;"-->
-                                                      <!--uib-popover-html="'授权服务器组列表'" popover-trigger="'mouseenter'"-->
-                                                        <!--ng-click="serverList(item.username)"></span>-->
+                                                <!--uib-popover-html="'授权服务器组列表'" popover-trigger="'mouseenter'"-->
+                                                <!--ng-click="serverList(item.username)"></span>-->
 
                                                 <button ng-click="delAuth(item.username)"
                                                         ng-show="item.authed != 0"
                                                         class="btn btn-xs pull-right"
                                                         style="background-color: red; color: white;">
-                                                    <span class="glyphicon glyphicon-log-out"></span>解除</button>
+                                                    <span class="glyphicon glyphicon-log-out"></span>解除
+                                                </button>
 
                                                 <!--<span class="glyphicon glyphicon-log-out pull-right" style="color: #d9534f"-->
-                                                      <!--uib-popover-html="'解除授权'" popover-trigger="'mouseenter'"-->
-                                                        <!--ng-click="delAuth(item.username)" ng-show="item.authed != 0">-->
+                                                <!--uib-popover-html="'解除授权'" popover-trigger="'mouseenter'"-->
+                                                <!--ng-click="delAuth(item.username)" ng-show="item.authed != 0">-->
                                                 <!--</span>-->
 
                                             </td>
@@ -168,7 +171,8 @@
                                                     <tbody>
                                                     <tr ng-repeat="taskServer in taskVO.taskServerList">
                                                         <td class="col-md-12" ng-show="checkResultShow(taskServer)">
-                                                            <div class="panel-heading" style="background-color: #2e6da4">
+                                                            <div class="panel-heading"
+                                                                 style="background-color: #2e6da4">
                                                     <span class="label label-default"
                                                           ng-if="taskServer.serverDO.envType == 0">{{taskServer.serverDO.serverName + "-" + taskServer.serverDO.serialNumber}}(保留)</span>
                                                                 <span class="label label-info"
@@ -209,7 +213,8 @@
                                     </div>
                                     <div class="form-group">
                                         <div ng-if="alert.type != ''">
-                                            <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}
+                                            <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">
+                                                {{alert.msg}}
                                             </div>
                                         </div>
                                     </div>
@@ -280,26 +285,30 @@
                                                 <span class="badge pull-right bg-info" ng-if="item.userCnt >= 10">{{item.userCnt}}</span>
                                             </td>
                                             <td>
-                                                <div class="col-md-6" ng-repeat="userName in item.users">{{userName}}</div>
+                                                <div class="col-md-6" ng-repeat="userName in item.users">{{userName}}
+                                                </div>
                                             </td>
                                             <td>{{item.content}}</td>
                                             <td>
                                                 <button ng-click="userList(item.id)"
                                                         class="btn btn-xs"
                                                         style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                    <span class="icon icon-users"></span>用户详情</button>
+                                                    <span class="icon icon-users"></span>用户详情
+                                                </button>
 
                                                 <!--<span  class="icon icon-users"-->
-                                                        <!--ng-click="userList(item.id)">-->
+                                                <!--ng-click="userList(item.id)">-->
                                                 <!--</span>-->
-                                                <button ng-click="delServerGroup(item)" ng-if="contains(authPoint, '/servergroup/del')"
+                                                <button ng-click="delServerGroup(item)"
+                                                        ng-if="contains(authPoint, '/servergroup/del')"
                                                         class="btn btn-xs pull-right"
                                                         style="background-color: red; color: white;">
-                                                    <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                                    <span class="glyphicon glyphicon-remove"></span>删除
+                                                </button>
 
                                                 <!--<button type="button" class="btn btn-danger btn-xs pull-right"-->
-                                                        <!--ng-click="delServerGroup(item)"-->
-                                                        <!--ng-if="contains(authPoint, '/servergroup/del')">删除-->
+                                                <!--ng-click="delServerGroup(item)"-->
+                                                <!--ng-if="contains(authPoint, '/servergroup/del')">删除-->
                                                 <!--</button>-->
                                             </td>
                                         </tr>
@@ -326,26 +335,28 @@
                             <div class="panel-body">
                                 <div class="form-horizontal">
                                     <!--<div class="form-group">-->
-                                        <!--<div class="col-md-8">-->
-                                            <!--<label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>私钥(rsa)</label>-->
-                                            <!--<div class="col-md-8">-->
-                                                <!--<textarea class="form-control" ng-model="keyItem.originalPrivateKey"-->
-                                                          <!--rows="16"></textarea>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
+                                    <!--<div class="col-md-8">-->
+                                    <!--<label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>私钥(rsa)</label>-->
+                                    <!--<div class="col-md-8">-->
+                                    <!--<textarea class="form-control" ng-model="keyItem.originalPrivateKey"-->
+                                    <!--rows="16"></textarea>-->
+                                    <!--</div>-->
+                                    <!--</div>-->
                                     <!--</div>-->
 
                                     <!--style="background-color: #54596a"-->
                                     <div class="form-group">
                                         <div class="col-md-8">
                                             <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>加密的私钥(rsa)</label>
-                                            <div  ng-show="!editPrivateKey" hljs
+                                            <div ng-show="!editPrivateKey" hljs
                                                  hljs-source="keyItem.privateKey"></div>
                                             <div class="col-md-9">
                                                 <textarea
-                                                        uib-popover-html="'填入pirvateKey（id_rsa）原文'" popover-trigger="'mouseenter'"
-                                                        ng-show="editPrivateKey" class="form-control" ng-model="keyItem.originalPrivateKey"
-                                                          rows="16"></textarea>
+                                                        uib-popover-html="'填入pirvateKey（id_rsa）原文'"
+                                                        popover-trigger="'mouseenter'"
+                                                        ng-show="editPrivateKey" class="form-control"
+                                                        ng-model="keyItem.originalPrivateKey"
+                                                        rows="16"></textarea>
                                             </div>
                                         </div>
                                     </div>
@@ -363,21 +374,25 @@
                                         <button ng-click="editKey()" ng-show="!editPrivateKey"
                                                 class="btn btn-xs"
                                                 style="margin-left: 5px; background-color: #00af00; color: white;">
-                                            <span class="glyphicon glyphicon-edit"></span>编辑私钥</button>
+                                            <span class="glyphicon glyphicon-edit"></span>编辑私钥
+                                        </button>
 
-                                        <button ng-click="saveKey()"  ng-show="editPrivateKey"
+                                        <button ng-click="saveKey()" ng-show="editPrivateKey"
                                                 class="btn btn-xs"
                                                 style="margin-left: 5px; background-color: #ef2929; color: white;">
-                                            <span class="glyphicon glyphicon-ok"></span>保存私钥</button>
+                                            <span class="glyphicon glyphicon-ok"></span>保存私钥
+                                        </button>
                                     </div>
 
                                     <div class="form-group">
                                         <div class="col-md-8">
-                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>公钥(public key)</label>
+                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>公钥(public
+                                                key)</label>
                                             <div ng-show="!editPublicKey" hljs
                                                  hljs-source="keyItem.publicKey"></div>
                                             <div class="col-md-9">
-                                                <textarea ng-show="editPublicKey" class="form-control" ng-model="keyItem.publicKey"
+                                                <textarea ng-show="editPublicKey" class="form-control"
+                                                          ng-model="keyItem.publicKey"
                                                           rows="5"></textarea>
                                             </div>
                                         </div>
@@ -387,14 +402,15 @@
                                         <button ng-click="editPubKey()" ng-show="!editPublicKey"
                                                 class="btn btn-xs"
                                                 style="margin-left: 5px; background-color: #00af00; color: white;">
-                                            <span class="glyphicon glyphicon-edit"></span>编辑公钥</button>
+                                            <span class="glyphicon glyphicon-edit"></span>编辑公钥
+                                        </button>
 
-                                        <button ng-click="saveKey()"  ng-show="editPublicKey"
+                                        <button ng-click="saveKey()" ng-show="editPublicKey"
                                                 class="btn btn-xs"
                                                 style="margin-left: 5px; background-color: #ef2929; color: white;">
-                                            <span class="glyphicon glyphicon-ok"></span>保存公钥</button>
+                                            <span class="glyphicon glyphicon-ok"></span>保存公钥
+                                        </button>
                                     </div>
-
 
 
                                 </div>
@@ -404,84 +420,310 @@
                 </uib-tab>
                 <uib-tab index="3" heading="Jumpserver管理">
                     <div ng-controller="jumpserverCtrl">
-                        <div class="panel">
+                        <div style="margin-top: 5px;" class="panel">
                             <div class="panel-body">
-                                <div class="form-horizontal">
+
+                                <div class="form-horizontal col-md-12">
                                     <div class="form-group">
-                                        <div class="col-md-8">
-                                            <label class="col-md-3 control-label">Jumpserver Host</label>
-                                            <div class="col-md-9">
-                                                <input type="text" class="form-control" ng-model="jumpserver.host" readonly>
-                                            </div>
-                                        </div>
+                                        <button type="button" class="btn btn-info" ng-click="getJumpserver()"><span
+                                                class="glyphicon glyphicon-repeat"></span>刷新
+                                        </button>
                                     </div>
+                                </div>
 
-                                    <div class="form-group">
-                                        <div class="col-md-8">
-                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>管理账户</label>
-                                            <div class="col-md-4">
-                                                <ui-select ng-model="nowAdminuser.selected" theme="bootstrap">
-                                                    <ui-select-match placeholder="搜索管理账户名称......">{{$select.selected.username}}</ui-select-match>
-                                                    <ui-select-choices refresh="queryAdminuser($select.search)" refresh-dalay="0"
-                                                                       repeat="item in adminuserList | filter: $select.search">
-                                                        <div ng-bind-html="item.username | highlight: $select.search"></div>
-                                                    </ui-select-choices>
-                                                </ui-select>
-                                            </div>
+                                <!--活动会话-->
+                                <div class="form-horizontal col-md-12">
+                                    <!--终端-->
+                                    <div class="col-md-12">
+                                        <uib-accordion close-others="false">
+                                            <div uib-accordion-group class="panel-default"
+                                                 heading="Administrators"
+                                                 is-open="true" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                                <uib-accordion-heading>
+                                                    <b style="color: #777">活动会话</b>
+                                                    <span class="label pull-right"
+                                                          style="background-color: #2a2a2b; color: white;">TerminalSession</span>
+                                                </uib-accordion-heading>
 
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-sm btn-info" ng-click="saveAdminuser()"><span
-                                                        class="glyphicon glyphicon-ok"></span>保存
-                                                </button>
+                                                <div style="margin-top: 5px;">
+
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                        <tr>
+                                                            <td><b style="margin-left: 5px; color: #777">用户</b></td>
+                                                            <td><b style="margin-left: 5px; color: #777">用户IP</b></td>
+                                                            <td><b style="margin-left: 5px; color: #777">系统账户@主机</b></td>
+                                                            <td><b style="margin-left: 5px; color: #777">终端</b></td>
+                                                            <td><b style="margin-left: 5px; color: #777">协议</b></td>
+                                                            <td class="col-md-2"><b style="margin-left: 5px; color: #777">开始时间</b></td>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr ng-repeat="session in jumpserver.terminalSessions"
+                                                            style="font-size:1em;">
+                                                            <td>{{session.user}}</td>
+                                                            <td>{{session.remote_addr}}</td>
+                                                            <td>{{session.system_user}}@{{session.asset}}</td>
+                                                            <td>
+                                                                <b style="margin-left: 5px; color: #286090">{{session.terminal_name}}</b>
+                                                            </td>
+                                                            <td>{{session.protocol}}</td>
+                                                            <td>{{session.date_start}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
                                             </div>
-                                        </div>
+                                        </uib-accordion>
                                     </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-8">
-                                            <label class="col-md-3 control-label"><span style="color: #ec2121;">*</span>系统账户</label>
-                                            <div class="col-md-4">
-                                                <ui-select ng-model="nowSystemuser.selected" theme="bootstrap">
-                                                    <ui-select-match placeholder="搜索系统账户名称......">{{$select.selected.username}}</ui-select-match>
-                                                    <ui-select-choices refresh="querySystemuser($select.search)" refresh-dalay="0"
-                                                                       repeat="item in systemuserList | filter: $select.search">
-                                                        <div ng-bind-html="item.username | highlight: $select.search"></div>
-                                                    </ui-select-choices>
-                                                </ui-select>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-sm btn-info" ng-click="saveSystemuser()"><span
-                                                        class="glyphicon glyphicon-ok"></span>保存
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <div class="col-md-8">
-                                            <label class="col-md-3 control-label">数据同步</label>
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-success" ng-click="syncAssets()">
-                                                    <i class="fa fa-spin fa-spinner" ng-show="btnSyncAssets"></i>
-                                                    <i class="icon icon-control-play" ng-show="!btnSyncAssets"></i>同步资产
-                                                </button>
-                                            </div>
-
-                                            <div class="col-md-2">
-                                                <button type="button" class="btn btn-success" ng-click="syncUsers()">
-                                                    <i class="fa fa-spin fa-spinner" ng-show="btnSyncUsers"></i>
-                                                    <i class="icon icon-control-play" ng-show="!btnSyncUsers"></i>同步用户
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-
 
                                 </div>
+
+                                <div class="form-horizontal col-md-6">
+                                    <div class="col-md-12">
+                                        <uib-accordion close-others="false">
+                                            <div uib-accordion-group class="panel-default" heading="Jumpserver"
+                                                 is-open="true" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                                <uib-accordion-heading>
+                                                    <b style="color: #777">Jumpserver</b>
+                                                    <span class="label pull-right"
+                                                          style="background-color: #00a8f3; color: white;">{{jumpserver.host}}</span>
+                                                </uib-accordion-heading>
+                                                <div class="col-md-12">
+                                                    <label class="col-md-2 control-label"><span
+                                                            style="color: #ec2121;">*</span><b
+                                                            style="color : #777">管理账户</b></label>
+                                                    <div class="col-md-8">
+                                                        <ui-select ng-model="nowAdminuser.selected"
+                                                                   theme="bootstrap">
+                                                            <ui-select-match placeholder="搜索管理账户名称......">
+                                                                {{$select.selected.username}}
+                                                            </ui-select-match>
+                                                            <ui-select-choices
+                                                                    refresh="queryAdminuser($select.search)"
+                                                                    refresh-dalay="0"
+                                                                    repeat="item in adminuserList | filter: $select.search">
+                                                                <div ng-bind-html="item.username | highlight: $select.search"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="col-md-2" style="margin-top: 5px;">
+                                                        <button type="button" class="btn btn-xs"
+                                                                style="margin-left: 5px; background-color: limegreen; color: white;"
+                                                                ng-click="saveAdminuser()"><span
+                                                                class="glyphicon glyphicon-ok"></span>保存
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div class="col-md-12" style="margin-top: 5px;">
+                                                    <label class="col-md-2 control-label"><span
+                                                            style="color: #ec2121;">*</span><b
+                                                            style="color : #777">系统账户</b></label>
+                                                    <div class="col-md-8">
+                                                        <ui-select ng-model="nowSystemuser.selected"
+                                                                   theme="bootstrap">
+                                                            <ui-select-match placeholder="搜索系统账户名称......">
+                                                                {{$select.selected.username}}
+                                                            </ui-select-match>
+                                                            <ui-select-choices
+                                                                    refresh="querySystemuser($select.search)"
+                                                                    refresh-dalay="0"
+                                                                    repeat="item in systemuserList | filter: $select.search">
+                                                                <div ng-bind-html="item.username | highlight: $select.search"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="col-md-2" style="margin-top: 5px;">
+                                                        <button type="button" class="btn btn-xs"
+                                                                style="margin-left: 5px; background-color: limegreen; color: white;"
+                                                                ng-click="saveSystemuser()"><span
+                                                                class="glyphicon glyphicon-ok"></span>保存
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+                                        </uib-accordion>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <uib-accordion close-others="false">
+                                            <div uib-accordion-group class="panel-default"
+                                                 heading="Administrators"
+                                                 is-open="true" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                                <uib-accordion-heading>
+                                                    <b style="color: #777">超级管理员</b>
+                                                    <span class="label pull-right"
+                                                          style="background-color: #ff8700; color: white;">Administrators</span>
+                                                </uib-accordion-heading>
+                                                <div>
+                                                    <label class="col-md-2 control-label"><span
+                                                            style="color: #ec2121;">*</span><b
+                                                            style="color : #777">用户名</b></label>
+                                                    <div class="col-md-8">
+                                                        <ui-select ng-model="nowUser.selected" theme="bootstrap">
+                                                            <ui-select-match placeholder="搜索用户名称......">
+                                                                {{$select.selected.username}}
+                                                            </ui-select-match>
+                                                            <ui-select-choices refresh="queryUser($select.search)"
+                                                                               refresh-dalay="0"
+                                                                               repeat="item in userList | filter: $select.search">
+                                                                <div ng-bind-html="item.username | highlight: $select.search"></div>
+                                                            </ui-select-choices>
+                                                        </ui-select>
+                                                    </div>
+                                                    <div class="col-md-2" style="margin-top: 5px;">
+                                                        <button type="button" class="btn btn-xs"
+                                                                style="background-color: red; color: white;"
+                                                                ng-click="authAdmin()">
+                                                            <i class="glyphicon glyphicon-plus"></i>授权
+                                                        </button>
+                                                    </div>
+                                                </div>
+
+                                                <div style="margin-top: 5px;">
+
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                        <tr>
+                                                            <td class="col-md-6"><b style="margin-left: 10px; color: #777">管理员</b></td>
+                                                            <td class="col-md-6"><b style="margin-left: 10px; color: #777">Email</b></td>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr ng-repeat="administrator in jumpserver.administrators"
+                                                            style="font-size:1em;">
+                                                            <td>
+                                                                <b style="margin-left: 5px; color: #286090">{{administrator.username}}<{{administrator.name}}></b>
+                                                            </td>
+                                                            <td>{{administrator.email}}
+                                                            </td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </uib-accordion>
+                                    </div>
+                                </div>
+
+
+                                <!--用户/主机-->
+                                <div class="form-horizontal col-md-6">
+                                    <div class="col-md-12">
+                                        <uib-accordion close-others="false">
+                                            <div uib-accordion-group class="panel-default" heading="Hosts"
+                                                 is-open="true" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                                <uib-accordion-heading>
+                                                    <b style="color: #777">主机</b>
+                                                    <span class="label pull-right"
+                                                          style="background-color: #00a8f3; color: white;">Hosts</span>
+                                                </uib-accordion-heading>
+                                                <div>
+                                                    <b>Local Hosts</b>
+                                                    <button type="button" class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: limegreen; color: white;"
+                                                            ng-click="syncAssets()">
+                                                        <i class="fa fa-spin fa-spinner"
+                                                           ng-show="btnSyncAssets"></i>
+                                                        <i class="icon icon-control-play"
+                                                           ng-show="!btnSyncAssets"></i>全量同步主机
+                                                    </button>
+                                                    <span class="badge pull-right" style="color: #286090">{{jumpserver.localServersTotal}}</span>
+                                                </div>
+
+                                                <div style="margin-top: 10px;">
+                                                    <b>Jumpserve Hosts</b>
+                                                    <span class="badge pull-right" style="color: #286090">{{jumpserver.jumpserverAssetsTotal}}</span>
+                                                </div>
+                                            </div>
+                                        </uib-accordion>
+                                    </div>
+
+                                    <div class="col-md-12">
+                                        <uib-accordion close-others="false">
+                                            <div uib-accordion-group class="panel-default" heading="Users"
+                                                 is-open="true" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                                <uib-accordion-heading>
+                                                    <b style="color: #777">用户</b>
+                                                    <span class="label pull-right"
+                                                          style="background-color: #ff5f87; color: white;">Users</span>
+                                                </uib-accordion-heading>
+                                                <div>
+                                                    <b>Local Users</b>
+                                                    <button type="button" class="btn btn-xs"
+                                                            style="margin-left: 5px; background-color: limegreen; color: white;"
+                                                            ng-click="syncUsers()">
+                                                        <i class="fa fa-spin fa-spinner"
+                                                           ng-show="btnSyncUsers"></i>
+                                                        <i class="icon icon-control-play"
+                                                           ng-show="!btnSyncUsers"></i>全量同步用户
+                                                    </button>
+                                                    <span class="badge pull-right" style="color: #286090">{{jumpserver.localUsersTotal}}</span>
+                                                </div>
+
+                                                <div style="margin-top: 10px;">
+                                                    <b>Jumpserver Users</b>
+                                                    <span class="badge pull-right" style="color: #286090">{{jumpserver.jumpserverUsersTotal}}</span>
+                                                </div>
+                                            </div>
+                                        </uib-accordion>
+                                    </div>
+
+                                    <!--终端-->
+                                    <div class="col-md-12">
+                                        <uib-accordion close-others="false">
+                                            <div uib-accordion-group class="panel-default"
+                                                 heading="Administrators"
+                                                 is-open="true" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+                                                <uib-accordion-heading>
+                                                    <b style="color: #777">终端</b>
+                                                    <span class="label pull-right"
+                                                          style="background-color: #ff8700; color: white;">Terminal</span>
+                                                </uib-accordion-heading>
+
+                                                <div style="margin-top: 5px;">
+
+                                                    <table class="table table-striped">
+                                                        <thead>
+                                                        <tr>
+                                                            <td class="col-md-3"><b style="margin-left: 10px; color: #777">名称</b></td>
+                                                            <td class="col-md-3"><b style="margin-left: 10px; color: #777">IP</b></td>
+                                                            <td class="col-md-3"><b style="margin-left: 10px; color: #777">SSH/HTTP</b></td>
+                                                            <td class="col-md-3"><b style="margin-left: 10px; color: #777">会话</b></td>
+                                                        </tr>
+                                                        </thead>
+
+                                                        <tbody>
+                                                        <tr ng-repeat="terminal in jumpserver.terminals"
+                                                            style="font-size:1em;">
+                                                            <td>
+                                                                <b style="margin-left: 5px; color: #286090">{{terminal.name}}</b>
+                                                            </td>
+                                                            <td>{{terminal.remote_addr}}</td>
+                                                            <td>{{terminal.ssh_port}}/{{terminal.http_port}}</td>
+                                                            <td>{{terminal.session}}</td>
+                                                        </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+
+                                            </div>
+                                        </uib-accordion>
+                                    </div>
+
+                                </div>
+
+
                             </div>
                         </div>
                     </div>
+
                 </uib-tab>
             </uib-tabset>
         </div>

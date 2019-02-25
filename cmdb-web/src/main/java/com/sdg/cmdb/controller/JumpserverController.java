@@ -19,6 +19,13 @@ public class JumpserverController {
     @Autowired
     private JumpserverService jumpserverService;
 
+
+    @RequestMapping(value = "/authAdmin", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult authAdmin(@RequestParam long userId) {
+        return new HttpResult(jumpserverService.authAdmin(userId));
+    }
+
     /**
      * 查询系统账户
      * @param name

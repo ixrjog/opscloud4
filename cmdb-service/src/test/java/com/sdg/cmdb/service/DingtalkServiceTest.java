@@ -53,4 +53,9 @@ public class DingtalkServiceTest {
     }
 
 
+    @Test
+    public void testNotifyTest() {
+       dingtalkServiceImpl.notifyTest();
+    }
+
 }

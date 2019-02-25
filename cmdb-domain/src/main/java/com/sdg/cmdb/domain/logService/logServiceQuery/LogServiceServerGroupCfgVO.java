@@ -3,10 +3,12 @@ package com.sdg.cmdb.domain.logService.logServiceQuery;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 import java.io.Serializable;
 
 @Data
+@EqualsAndHashCode(callSuper=false)
 public class LogServiceServerGroupCfgVO extends LogServiceServerGroupCfgDO implements Serializable {
     private static final long serialVersionUID = 573733901286113356L;
 

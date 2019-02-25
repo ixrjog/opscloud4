@@ -12,6 +12,7 @@ import com.sdg.cmdb.domain.jumpserver.*;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.CacheKeyService;
+import com.sdg.cmdb.service.ConfigServerGroupService;
 import com.sdg.cmdb.service.JumpserverService;
 import com.sdg.cmdb.util.TimeUtils;
 import org.slf4j.Logger;
@@ -21,6 +22,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,8 +34,6 @@ public class JumpserverServiceImpl implements JumpserverService {
     @Value("#{cmdb['jumpserver.host']}")
     private String jumpserverHost;
 
-    //public final String adminuser_id = "ea301619659048d1ba262011f405b344";
-
     // TODO 用户组前缀
     public final String USERGROUP_PREFIX = "usergroup_";
     public final String SERVERGROUP_PREFIX = "group_";
@@ -41,9 +41,14 @@ public class JumpserverServiceImpl implements JumpserverService {
     public final String PERMS_PREFIX = "perms_";
 
     // TODO 过期时间
-    public final String DATA_EXPIRED = "2089-01-01 00:00:00";
+    public final String DATE_EXPIRED = "2089-01-01 00:00:00";
 
     public final String CACHE_KEY = "JumpserverServiceImpl:";
+
+    // 管理员用户组 绑定 根节点
+    public final String USERGROUP_ADMINISTRATORS = "usergroup_administrators";
+    // 管理员授权
+    public final String PERMS_ADMINISTRATORS = "perms_administrators";
 
     @Autowired
     private CacheKeyService cacheKeyService;
@@ -63,6 +68,9 @@ public class JumpserverServiceImpl implements JumpserverService {
 
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private ConfigServerGroupService configServerGroupService;
 
     /**
      * TODO 生产随机主键
@@ -84,19 +92,36 @@ public class JumpserverServiceImpl implements JumpserverService {
 
     /**
      * 创建资产（主机）
+     * 需要解决一个问题 公网链接服务器删除内网服务器
      *
      * @param serverDO
      * @return
      */
-    private AssetsAssetDO createAssetsAsset(ServerDO serverDO) {
+    private AssetsAssetDO createAssetsAsset(ServerDO serverDO, String comment) {
+        if (StringUtils.isEmpty(comment))
+            comment = "";
         String adminuserId = getAdminuserId();
         if (StringUtils.isEmpty(adminuserId))
             return null;
+        String ip = configServerGroupService.queryGetwayIp(serverDO);
         AssetsAssetDO assetsAssetDO;
-        assetsAssetDO = jumpserverDao.getAssetsAssetByIp(serverDO.getInsideIp());
-        if (assetsAssetDO != null) return assetsAssetDO;
-        assetsAssetDO = new AssetsAssetDO(getId(), serverDO, adminuserId);
-        jumpserverDao.addAssetsAsset(assetsAssetDO);
+        assetsAssetDO = jumpserverDao.getAssetsAssetByIp(ip);
+        // TODO 更新服务器信息
+        if (assetsAssetDO != null) {
+            if (StringUtils.isEmpty(serverDO.getContent())) {
+                assetsAssetDO.setComment(comment);
+            } else {
+                assetsAssetDO.setComment(serverDO.getContent());
+            }
+
+            assetsAssetDO.setHostname(serverDO.acqServerName());
+            //assetsAssetDO.setCreated_by("oc auto");
+            jumpserverDao.updateAssetsAsset(assetsAssetDO);
+        } else {
+            assetsAssetDO = new AssetsAssetDO(getId(), ip, serverDO, adminuserId);
+            jumpserverDao.addAssetsAsset(assetsAssetDO);
+        }
+        System.err.println(assetsAssetDO);
         return assetsAssetDO;
     }
 
@@ -107,9 +132,9 @@ public class JumpserverServiceImpl implements JumpserverService {
      * @return
      */
     private AssetsNodeDO createAssetsNode(ServerGroupDO serverGroupDO) {
-        AssetsNodeDO assetsNodeDO = null;
+        // AssetsNodeDO assetsNodeDO =null;
         try {
-            assetsNodeDO = jumpserverDao.getAssetsNodeByValue(serverGroupDO.getName());
+            AssetsNodeDO assetsNodeDO = jumpserverDao.getAssetsNodeByValue(serverGroupDO.getName());
             if (assetsNodeDO != null) return assetsNodeDO;
             int cnt = jumpserverDao.countAssetsNode();
             String key = "1:" + cnt + 1;
@@ -119,7 +144,7 @@ public class JumpserverServiceImpl implements JumpserverService {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return assetsNodeDO;
+        return null;
     }
 
     /**
@@ -153,9 +178,13 @@ public class JumpserverServiceImpl implements JumpserverService {
      */
     private UsersUsergroupDO createUsersUsergroup(ServerGroupDO serverGroupDO) {
         String name = serverGroupDO.getName().replace(SERVERGROUP_PREFIX, USERGROUP_PREFIX);
+        return createUsersUsergroup(name, serverGroupDO.getContent());
+    }
+
+    private UsersUsergroupDO createUsersUsergroup(String name, String content) {
         UsersUsergroupDO usersUsergroupDO = jumpserverDao.getUsersUsergroupByName(name);
         if (usersUsergroupDO != null) return usersUsergroupDO;
-        usersUsergroupDO = new UsersUsergroupDO(getId(), name, serverGroupDO.getContent(), getNowDate());
+        usersUsergroupDO = new UsersUsergroupDO(getId(), name, content, getNowDate());
         try {
             jumpserverDao.addUsersUsergroup(usersUsergroupDO);
             return usersUsergroupDO;
@@ -179,7 +208,7 @@ public class JumpserverServiceImpl implements JumpserverService {
         PermsAssetpermissionDO permsAssetpermissionDO = jumpserverDao.getPermsAssetpermissionByName(name);
         if (permsAssetpermissionDO == null) {
             // TODO 新增授权策略
-            permsAssetpermissionDO = new PermsAssetpermissionDO(getId(), name, DATA_EXPIRED, getNowDate());
+            permsAssetpermissionDO = new PermsAssetpermissionDO(getId(), name, DATE_EXPIRED, getNowDate());
             try {
                 jumpserverDao.addPermsAssetpermission(permsAssetpermissionDO);
             } catch (Exception e) {
@@ -281,7 +310,7 @@ public class JumpserverServiceImpl implements JumpserverService {
             // TODO 创建用户组
             UsersUsergroupDO usersUsergroupDO = createUsersUsergroup(serverGroupDO);
             if (assetsNodeDO == null) {
-                logger.error("Jumpserver 同步资产树（服务器组）{} Error !", serverGroupDO.getName());
+                logger.error("Jumpserver 同步节点（服务器组）{} Error !", serverGroupDO.getName());
                 continue;
             }
             // TODO 创建授权并绑定 节点，用户组，系统账户
@@ -291,15 +320,54 @@ public class JumpserverServiceImpl implements JumpserverService {
             for (ServerDO serverDO : serverList) {
                 try {
                     // TODO 创建资产（主机）
-                    AssetsAssetDO assetsAssetDO = createAssetsAsset(serverDO);
+                    AssetsAssetDO assetsAssetDO = createAssetsAsset(serverDO, serverGroupDO.getContent());
                     // TODO 绑定资产到节点
                     bindAssetsAssetNodes(assetsAssetDO, assetsNodeDO);
+                    // TODO 资产绑定系统账户
+                    bindAvssetsSystemuserAssets(assetsAssetDO.getId());
                 } catch (Exception e) {
-                    // e.printStackTrace();
+                    e.printStackTrace();
                 }
             }
         }
         return new BusinessWrapper<Boolean>(true);
+    }
+
+
+    /**
+     * 新增资产
+     *
+     * @param serverDO
+     */
+    @Override
+    public void addAssets(ServerDO serverDO) {
+        ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverDO.getServerGroupId());
+        // TODO 创建资产节点（服务器组）
+        AssetsNodeDO assetsNodeDO = createAssetsNode(serverGroupDO);
+        // TODO 创建用户组
+        UsersUsergroupDO usersUsergroupDO = createUsersUsergroup(serverGroupDO);
+        if (assetsNodeDO == null) {
+            logger.error("Jumpserver 同步节点（服务器组）{} Error !", serverGroupDO.getName());
+            return;
+        }
+        // TODO 创建授权并绑定 节点，用户组，系统账户
+        PermsAssetpermissionDO permsAssetpermissionDO = createPermsAssetpermission(serverGroupDO, assetsNodeDO, usersUsergroupDO);
+        // TODO 创建资产（主机）
+        AssetsAssetDO assetsAssetDO = createAssetsAsset(serverDO,"");
+        // TODO 绑定资产到节点
+        bindAssetsAssetNodes(assetsAssetDO, assetsNodeDO);
+        // TODO 资产绑定系统账户
+        bindAvssetsSystemuserAssets(assetsAssetDO.getId());
+    }
+
+    /**
+     * 资产绑定系统账户
+     */
+    private void bindAvssetsSystemuserAssets(String assetId) {
+        String systemuser_id = getSystemuserId();
+        AvssetsSystemuserAssetsDO avssetsSystemuserAssetsDO = new AvssetsSystemuserAssetsDO(systemuser_id, assetId);
+        if (jumpserverDao.getAvssetsSystemuserAssets(avssetsSystemuserAssetsDO) == null)
+            jumpserverDao.addAvssetsSystemuserAssets(avssetsSystemuserAssetsDO);
     }
 
 
@@ -325,7 +393,7 @@ public class JumpserverServiceImpl implements JumpserverService {
         UsersUserDO usersUserDO = jumpserverDao.getUsersUserByUsername(userDO.getUsername());
         if (usersUserDO == null) {
             //  public UsersUserDO(UserDO userDO, String id, String date_joined, String date_expired)
-            usersUserDO = new UsersUserDO(userDO, getId(), getNowDate(), DATA_EXPIRED);
+            usersUserDO = new UsersUserDO(userDO, getId(), getNowDate(), DATE_EXPIRED);
             try {
                 jumpserverDao.addUsersUser(usersUserDO);
             } catch (Exception e) {
@@ -348,14 +416,36 @@ public class JumpserverServiceImpl implements JumpserverService {
         List<ServerGroupDO> serverGroupList = keyboxDao.getGroupListByUsername(userDO.getUsername());
         // TODO 创建用户
         UsersUserDO usersUserDO = createUsersUser(userDO);
-        for (ServerGroupDO serverGroupDO : serverGroupList) {
-            // TODO 用户组名称
-            String name = serverGroupDO.getName().replace(SERVERGROUP_PREFIX, USERGROUP_PREFIX);
-            UsersUsergroupDO usersUsergroupDO = jumpserverDao.getUsersUsergroupByName(name);
-            if (usersUsergroupDO == null)
-                usersUsergroupDO = createUsersUsergroup(serverGroupDO);
-            bindUserGroups(usersUserDO, usersUsergroupDO);
-        }
+        for (ServerGroupDO serverGroupDO : serverGroupList)
+            bindUserGroups(usersUserDO, serverGroupDO);
+    }
+
+    private void bindUserGroups(UsersUserDO usersUserDO, ServerGroupDO serverGroupDO) {
+        // TODO 用户组名称
+        String name = serverGroupDO.getName().replace(SERVERGROUP_PREFIX, USERGROUP_PREFIX);
+        UsersUsergroupDO usersUsergroupDO = jumpserverDao.getUsersUsergroupByName(name);
+        if (usersUsergroupDO == null)
+            usersUsergroupDO = createUsersUsergroup(serverGroupDO);
+        bindUserGroups(usersUserDO, usersUsergroupDO);
+    }
+
+    @Override
+    public void bindUserGroup(UserDO userDO, ServerGroupDO serverGroupDO) {
+        // TODO 创建用户
+        UsersUserDO usersUserDO = createUsersUser(userDO);
+        // TODO 用户绑定组
+        bindUserGroups(usersUserDO, serverGroupDO);
+    }
+
+    @Override
+    public void unbindUserGroup(UserDO userDO, ServerGroupDO serverGroupDO) {
+        UsersUserDO usersUserDO = createUsersUser(userDO);
+        if (usersUserDO == null) return;
+        String name = serverGroupDO.getName().replace(SERVERGROUP_PREFIX, USERGROUP_PREFIX);
+        UsersUsergroupDO usersUsergroupDO = jumpserverDao.getUsersUsergroupByName(name);
+        UsersUserGroupsDO usersUserGroupsDO = new UsersUserGroupsDO(usersUserDO.getId(), usersUsergroupDO.getId());
+        UsersUserGroupsDO checkDO = jumpserverDao.getUsersUserGroups(usersUserGroupsDO);
+        jumpserverDao.delUsersUserGroups(checkDO.getId());
     }
 
     private boolean bindUserGroups(UsersUserDO usersUserDO, UsersUsergroupDO usersUsergroupDO) {
@@ -372,6 +462,20 @@ public class JumpserverServiceImpl implements JumpserverService {
         }
         return true;
     }
+
+    public List<UsersUserDO> getAdministrators() {
+        // 查询超高级管理员用户组
+        UsersUsergroupDO usersUsergroupDO = jumpserverDao.getUsersUsergroupByName(this.USERGROUP_ADMINISTRATORS);
+        List<UsersUserDO> userList = new ArrayList<>();
+        if (usersUsergroupDO == null)
+            return userList;
+        // 关联表
+        List<UsersUserGroupsDO> usersUserGroupsList = jumpserverDao.queryUsersUserGroupsByUsergroupId(usersUsergroupDO.getId());
+        for (UsersUserGroupsDO usersUserGroupsDO : usersUserGroupsList)
+            userList.add(jumpserverDao.getUsersUser(usersUserGroupsDO.getUser_id()));
+        return userList;
+    }
+
 
     @Override
     public List<AssetsSystemuserDO> queryAssetsSystemuser(String name) {
@@ -409,8 +513,61 @@ public class JumpserverServiceImpl implements JumpserverService {
             AssetsAdminuserDO assetsAdminuserDO = jumpserverDao.getAssetsAdminuser(adminuserId);
             jumpserverVO.setAssetsAdminuserDO(assetsAdminuserDO);
         }
-
+        // 用户统计
+        jumpserverVO.setLocalUsersTotal(userDao.getUserTotal());
+        jumpserverVO.setJumpserverUsersTotal(jumpserverDao.getUsersUserTotal());
+        // 主机统计
+        jumpserverVO.setLocalServersTotal(serverDao.getServerTotal());
+        jumpserverVO.setJumpserverAssetsTotal(jumpserverDao.getAssetsAssetTotal());
+        // 插入管理员列表
+        jumpserverVO.setAdministrators(getAdministrators());
+        // 插入终端列表
+        jumpserverVO.setTerminals(jumpserverDao.queryTerminal());
+        // 插入当前会话
+        jumpserverVO.setTerminalSessions(jumpserverDao.queryTerminalSession());
         return jumpserverVO;
+    }
+
+
+    /**
+     * 授权用户成为管理员（绑定根节点）
+     *
+     * @param userId
+     * @return
+     */
+    @Override
+    public BusinessWrapper<Boolean> authAdmin(long userId) {
+        UserDO userDO = userDao.getUserById(userId);
+        if (userDO == null) return new BusinessWrapper<Boolean>(false);
+        UsersUserDO usersUserDO = createUsersUser(userDO);
+        // TODO 用户组名称
+        UsersUsergroupDO usersUsergroupDO = jumpserverDao.getUsersUsergroupByName(USERGROUP_ADMINISTRATORS);
+        if (usersUsergroupDO == null)
+            usersUsergroupDO = createUsersUsergroup(USERGROUP_ADMINISTRATORS, "Administrators");
+        bindUserGroups(usersUserDO, usersUsergroupDO);
+        // TODO 建立根节点绑定关系
+        PermsAssetpermissionDO permsAssetpermissionDO = jumpserverDao.getPermsAssetpermissionByName(PERMS_ADMINISTRATORS);
+        if (permsAssetpermissionDO == null) {
+            // TODO 新增授权策略
+            permsAssetpermissionDO = new PermsAssetpermissionDO(getId(), PERMS_ADMINISTRATORS, DATE_EXPIRED, getNowDate());
+            try {
+                jumpserverDao.addPermsAssetpermission(permsAssetpermissionDO);
+            } catch (Exception e) {
+                return new BusinessWrapper<Boolean>(false);
+            }
+        }
+        // TODO 绑定系统账户
+        bindPermsAssetpermissionSystemUsers(permsAssetpermissionDO);
+        // TODO 绑定用户组
+        PermsAssetpermissionUserGroupsDO permsAssetpermissionUserGroupsDO = bindPermsAssetpermissionUserGroups(permsAssetpermissionDO, usersUsergroupDO);
+        // TODO 绑定根节点
+        AssetsNodeDO assetsNodeDO = jumpserverDao.getAssetsNodeRoot();
+        if (assetsNodeDO == null) {
+            logger.error("Jumpserver 查询根节点失败 !");
+            return new BusinessWrapper<Boolean>(false);
+        }
+        PermsAssetpermissionNodesDO bindPermsAssetpermissionNodes = bindPermsAssetpermissionNodes(permsAssetpermissionDO, assetsNodeDO);
+        return new BusinessWrapper<Boolean>(true);
     }
 
     @Override

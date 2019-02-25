@@ -176,7 +176,7 @@ public class EcsServiceImpl implements EcsService {
     }
 
 
-    private List<EcsServerDO> ecsGetAll() {
+    public List<EcsServerDO> ecsGetAll() {
         List<EcsServerDO> servers = new ArrayList<EcsServerDO>();
         for (String regionId : acqRegionIds()) {
             servers.addAll(ecsGetAll(regionId));
@@ -253,13 +253,15 @@ public class EcsServiceImpl implements EcsService {
     }
 
 
-    private boolean ecsSyncByAliyun() {
+    public boolean ecsSyncByAliyun() {
         // 获取阿里云ECS
         List<EcsServerDO> servers = ecsGetAll();
         HashMap<String, ServerDO> serverMap = acqServerMapEcs();
         HashMap<String, EcsServerDO> ecsServerMap4Aliyun = new HashMap<>();
         try {
             for (EcsServerDO ecsServerDO : servers) {
+                if(ecsServerDO.getInsideIp().equals("192.168.101.92"))
+                    System.err.println("----");
                 ecsServerMap4Aliyun.put(ecsServerDO.getInstanceId(), ecsServerDO);
                 // server表已经存在
                 if (serverMap.containsKey(ecsServerDO.getInsideIp())) {

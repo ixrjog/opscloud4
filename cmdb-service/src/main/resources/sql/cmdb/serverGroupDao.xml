@@ -230,7 +230,7 @@
 
     <!-- 查询一定条件下分页服务器组信息 -->
     <select id="queryUseTypePage" parameterType="object" resultType="ServerGroupUseTypeDO">
-        SELECT * FROM oc_server_group_useType
+        SELECT * FROM oc_server_group_usetype
         <where>
             <if test="typeName != null and typeName != ''">
                 typeName LIKE "%" #{typeName} "%"
@@ -242,7 +242,7 @@
 
     <!-- 查询一定条件下服务器组数量 -->
     <select id="queryUseTypeSize" parameterType="object" resultType="_long">
-        SELECT COUNT(*) FROM oc_server_group_useType
+        SELECT COUNT(*) FROM oc_server_group_usetype
         <where>
             <if test="typeName != null and typeName != ''">
                 typeName LIKE "%" #{typeName} "%"
@@ -252,7 +252,7 @@
 
     <!--新增服务器组使用类型信息-->
     <insert id="addServerGroupUseType" parameterType="ServerGroupUseTypeDO">
-        INSERT INTO oc_server_group_useType(
+        INSERT INTO oc_server_group_usetype(
         useType,
         typeName,
         color,
@@ -267,7 +267,7 @@
 
     <!-- 更新服务器组使用类型信息 -->
     <update id="updateServerGroupUseType" parameterType="ServerGroupUseTypeDO">
-        UPDATE oc_server_group_useType
+        UPDATE oc_server_group_usetype
         SET useType = #{useType},
         typeName = #{typeName},
         color = #{color},
@@ -278,11 +278,11 @@
 
     <!-- 删除服务器组使用类型信息 -->
     <delete id="delServerGroupUseType" parameterType="_long">
-        DELETE FROM oc_server_group_useType WHERE id = #{id}
+        DELETE FROM oc_server_group_usetype WHERE id = #{id}
     </delete>
 
     <select id="getServerGroupUseTypeByUseType" parameterType="_int" resultType="ServerGroupUseTypeDO">
-        SELECT * FROM oc_server_group_useType
+        SELECT * FROM oc_server_group_usetype
         WHERE useType = #{useType}
     </select>
 

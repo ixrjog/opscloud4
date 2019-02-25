@@ -69,6 +69,9 @@ public class ServerServiceImpl implements ServerService {
     @Resource
     private CacheKeyService cacheKeyService;
 
+    @Autowired
+    private JumpserverService jumpserverService;
+
     public static final String DEFAULT_LOGIN_USER = "root";
 
     @Override
@@ -212,6 +215,7 @@ public class ServerServiceImpl implements ServerService {
             if (result) {
                 // 变更配置文件
                 configService.invokeServerConfig(serverDO.getServerGroupId(), serverDO.getEnvType());
+                jumpserverService.addAssets(serverDO);
                 return new BusinessWrapper<>(true);
             } else {
                 return new BusinessWrapper<>(ErrorCode.serverFailure);

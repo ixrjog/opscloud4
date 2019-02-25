@@ -33,6 +33,22 @@ public class EcsServiceTest {
     @Resource
     private EcsServiceImpl ecsServiceImpl;
 
+    @Test
+    public void testEcsGetAll() {
+        List<EcsServerDO> servers = ecsServiceImpl.ecsGetAll();
+        for (EcsServerDO ecs : servers) {
+            if (ecs.getInsideIp().equals("192.168.101.92"))
+                System.err.println(ecs);
+        }
+    }
+
+    @Test
+    public void testEcsSyncByAliyun() {
+       ecsServiceImpl.ecsSyncByAliyun();
+
+    }
+
+
 
     @Resource
     private ServerDao serverDao;

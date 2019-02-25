@@ -33,6 +33,7 @@ public interface ServerDao {
             @Param("envType") int envType,
             @Param("queryIp") String queryIp);
 
+    int getServerTotal();
 
     /**
      * 获取Zabbix服务器数目

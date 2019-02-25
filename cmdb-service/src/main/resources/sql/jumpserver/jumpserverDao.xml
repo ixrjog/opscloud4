@@ -7,6 +7,10 @@
         limit 1
     </select>
 
+    <select id="getAssetsAssetTotal" resultType="_int">
+        SELECT COUNT(*) FROM assets_asset
+    </select>
+
     <insert id="addAssetsAsset" parameterType="AssetsAssetDO">
         INSERT INTO assets_asset (
         id,
@@ -35,11 +39,13 @@
         );
     </insert>
 
-    <update id="updateAssetsAsset" parameterType="AliyunMqGroupDO">
+    <update id="updateAssetsAsset" parameterType="AssetsAssetDO">
         UPDATE assets_asset
         SET hostname = #{hostname},
         port = #{port},
-        admin_user_id = #{admin_user_id}
+        admin_user_id = #{admin_user_id},
+        comment = #{comment},
+        created_by = #{created_by}
         WHERE id = #{id}
     </update>
 
@@ -62,7 +68,12 @@
     </insert>
 
     <select id="getAssetsNodeByValue" parameterType="object" resultType="AssetsNodeDO">
-        SELECT * FROM assets_node WHERE value = #{value}
+        SELECT * FROM assets_node WHERE `value` = #{value}
+        limit 1
+    </select>
+
+    <select id="getAssetsNodeRoot" resultType="AssetsNodeDO">
+        SELECT * FROM assets_node WHERE child_mark = 3 AND `key` = '1'
         limit 1
     </select>
 
@@ -79,6 +90,11 @@
         #{node_id}
         );
     </insert>
+
+    <select id="getAssetsAssetNodes" parameterType="AssetsAssetNodesDO" resultType="AssetsAssetNodesDO">
+        SELECT * FROM assets_asset_nodes WHERE asset_id = #{asset_id} AND node_id = #{node_id}
+        limit 1
+    </select>
 
     <select id="getUsersUsergroupByName" parameterType="object" resultType="UsersUsergroupDO">
         SELECT * FROM users_usergroup WHERE name = #{name}
@@ -133,7 +149,8 @@
     </insert>
 
 
-    <select id="getPermsAssetpermissionUserGroups" parameterType="PermsAssetpermissionUserGroupsDO" resultType="PermsAssetpermissionUserGroupsDO">
+    <select id="getPermsAssetpermissionUserGroups" parameterType="PermsAssetpermissionUserGroupsDO"
+            resultType="PermsAssetpermissionUserGroupsDO">
         SELECT * FROM perms_assetpermission_user_groups
         WHERE assetpermission_id = #{assetpermission_id} AND usergroup_id = #{usergroup_id}
     </select>
@@ -148,7 +165,8 @@
         );
     </insert>
 
-    <select id="getPermsAssetpermissionNodes" parameterType="PermsAssetpermissionNodesDO" resultType="PermsAssetpermissionNodesDO">
+    <select id="getPermsAssetpermissionNodes" parameterType="PermsAssetpermissionNodesDO"
+            resultType="PermsAssetpermissionNodesDO">
         SELECT * FROM perms_assetpermission_nodes
         WHERE assetpermission_id = #{assetpermission_id} AND node_id = #{node_id}
     </select>
@@ -163,7 +181,8 @@
         );
     </insert>
 
-    <select id="getPermsAssetpermissionSystemUsers" parameterType="PermsAssetpermissionSystemUsersDO" resultType="PermsAssetpermissionSystemUsersDO">
+    <select id="getPermsAssetpermissionSystemUsers" parameterType="PermsAssetpermissionSystemUsersDO"
+            resultType="PermsAssetpermissionSystemUsersDO">
         SELECT * FROM perms_assetpermission_system_users
         WHERE assetpermission_id = #{assetpermission_id} AND systemuser_id = #{systemuser_id}
     </select>
@@ -181,6 +200,11 @@
     <select id="getUsersUserByUsername" parameterType="object" resultType="UsersUserDO">
         SELECT * FROM users_user
         WHERE username = #{username}
+    </select>
+
+    <select id="getUsersUser" parameterType="object" resultType="UsersUserDO">
+        SELECT * FROM users_user
+        WHERE id = #{id}
     </select>
 
     <insert id="addUsersUser" parameterType="UsersUserDO">
@@ -231,10 +255,19 @@
         );
     </insert>
 
+    <select id="getUsersUserTotal" resultType="_int">
+        SELECT COUNT(*) FROM users_user
+    </select>
+
 
     <select id="getUsersUserGroups" parameterType="UsersUserGroupsDO" resultType="UsersUserGroupsDO">
         SELECT * FROM users_user_groups
         WHERE user_id = #{user_id} AND usergroup_id = #{usergroup_id}
+    </select>
+
+    <select id="queryUsersUserGroupsByUsergroupId" parameterType="object" resultType="UsersUserGroupsDO">
+        SELECT * FROM users_user_groups
+        WHERE usergroup_id = #{usergroup_id}
     </select>
 
     <insert id="addUsersUserGroups" parameterType="UsersUserGroupsDO">
@@ -246,6 +279,10 @@
         #{usergroup_id}
         );
     </insert>
+
+    <delete id="delUsersUserGroups" parameterType="_int">
+        DELETE FROM users_user_groups WHERE id = #{id}
+    </delete>
 
     <select id="queryAssetsAdminuser" parameterType="object" resultType="AssetsAdminuserDO">
         SELECT * FROM assets_adminuser
@@ -263,6 +300,32 @@
 
     <select id="getAssetsSystemuser" parameterType="object" resultType="AssetsSystemuserDO">
         SELECT * FROM assets_systemuser WHERE id = #{id}
+    </select>
+
+    <select id="getAvssetsSystemuserAssets" parameterType="object" resultType="AvssetsSystemuserAssetsDO">
+        SELECT * FROM assets_systemuser_assets
+        WHERE systemuser_id = #{systemuser_id} AND asset_id = #{asset_id}
+    </select>
+
+    <insert id="addAvssetsSystemuserAssets" parameterType="AvssetsSystemuserAssetsDO">
+        INSERT INTO assets_systemuser_assets (
+        systemuser_id,
+        asset_id
+        ) VALUES (
+        #{systemuser_id},
+        #{asset_id}
+        );
+    </insert>
+
+    <select id="queryTerminal" resultType="TerminalDO">
+        SELECT * ,( SELECT count(*) FROM terminal_session WHERE terminal_id = terminal.id AND is_finished = 0) `session`
+        FROM terminal
+        WHERE is_accepted = 1 AND is_deleted = 0
+    </select>
+
+    <select id="queryTerminalSession" resultType="TerminalSessionDO">
+       SELECT * ,(SELECT name FROM terminal WHERE terminal.id = terminal_session.terminal_id) terminal_name FROM terminal_session
+       WHERE is_finished = 0
     </select>
 
 </mapper>

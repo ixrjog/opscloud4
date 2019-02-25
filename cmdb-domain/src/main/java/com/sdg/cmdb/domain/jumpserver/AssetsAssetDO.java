@@ -22,19 +22,20 @@ public class AssetsAssetDO implements Serializable {
     private String platform = "Linux"; // Linux
     private String admin_user_id;  // assets_adminuser:id  账户
 
-    private String created_by ="opscloud";
-    private String comment = "opscloud server";
+    private String created_by ="oc auto";
+    private String comment = "";
     private String protocol = "ssh";
     private String org_id = "";
 
     public AssetsAssetDO() {
     }
 
-    public AssetsAssetDO(String id, ServerDO serverDO, String admin_user_id) {
+    public AssetsAssetDO(String id, String ip,ServerDO serverDO, String admin_user_id) {
         this.id = id;
-        this.ip = serverDO.getInsideIp();
+        this.ip = ip;
         this.hostname = serverDO.acqServerName();
         this.admin_user_id = admin_user_id;
+        this.comment = serverDO.getContent();
     }
 
     @Override

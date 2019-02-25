@@ -140,6 +140,13 @@ public interface UserDao {
      */
     List<UserDO> getAllUser();
 
+
+    /**
+     * 查询用户总数
+     * @return
+     */
+    int getUserTotal();
+
     /**
      * 按用户名查询显示名
      *

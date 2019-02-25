@@ -76,7 +76,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     private AuthService authService;
 
     @Resource
-    private ConfigCenterService configCenterService;
+    private JumpserverService jumpserverService;
 
     @Resource
     private   ZabbixServerService zabbixServerService;
@@ -84,11 +84,8 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     @Resource
     private ZabbixService zabbixService;
 
-
     @Resource
     private CiUserGroupService ciUserGroupService;
-
-
 
     @Override
     public TableVO<List<KeyboxUserServerVO>> getUserServerPage(KeyboxUserServerDO userServerDO, int page, int length) {
@@ -98,7 +95,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         for (KeyboxUserServerDO userServerDOItem : userServerDOList) {
             ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(userServerDOItem.getServerGroupId());
             KeyboxUserServerVO userServerVO = new KeyboxUserServerVO(userServerDOItem, serverGroupDO);
-
             userServerVO.setZabbixUsergroup(zabbixServerService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
             userServerVOList.add(userServerVO);
         }
@@ -118,7 +114,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
      */
     @Override
     public BusinessWrapper<Boolean> authUserKeybox(String username) {
-        coreLogger.info(SessionUtils.getUsername() + " invoke method, auth user:" + username);
+        coreLogger.info(SessionUtils.getUsername() + "Invoke method, auth user:" + username);
 
         UserDO userDO = userService.getUserDOByName(username);
         if (userDO == null) {
@@ -138,7 +134,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
 
     @Override
     public BusinessWrapper<Boolean> delUserKeybox(String username) {
-        coreLogger.info(SessionUtils.getUsername() + " invoke method, del user:" + username);
+        coreLogger.info(SessionUtils.getUsername() + " Invoke method, del user:" + username);
 
         UserDO userDO = userService.getUserDOByName(username);
         if (userDO == null) {
@@ -171,14 +167,13 @@ public class KeyBoxServiceImpl implements KeyBoxService {
                 keyboxDao.updateUserServer(userServerDO);
             }
             UserDO userDO = userDao.getUserByName(userServerDO.getUsername());
-            // 异步变更ldap
+            ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(userServerDO.getServerGroupId());
+            // TODO 变更 Jumpserver
+            jumpserverService.bindUserGroup(userDO,serverGroupDO);
+            // TODO 变更 Zabbix
             schedulerManager.registerJob(() -> {
-                ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(userServerDO.getServerGroupId());
-                if (userServerVO.isCiChoose())
-                    ciUserGroupService.userAddGroup(userDO.getId(), serverGroupDO.getName());
-                //authService.addMemberToGroup(userDO, serverGroupDO);
+                zabbixService.userUpdate(userDO);
             });
-
             return new BusinessWrapper<>(true);
         } catch (Exception e) {
             logger.error(e.getMessage(), e);
@@ -189,23 +184,13 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     @Override
     public BusinessWrapper<Boolean> delUserGroup(KeyboxUserServerDO userServerDO) {
         try {
-            // userServerDO.getServerGroupId() = 0 则删除所有用户
-
             // List<ServerGroupDO> list = keyboxDao.getGroupListByUsername(userServerDO.getUsername());
             UserDO userDO = userDao.getUserByName(userServerDO.getUsername());
             // 异步变更ldap
-//            schedulerManager.registerJob(() -> {
-//                if (userServerDO.getServerGroupId() == 0) {
-//                    List<ServerGroupDO> list = keyboxDao.getGroupListByUsername(userServerDO.getUsername());
-//                    for (ServerGroupDO serverGroupDO : list) {
-//                        authService.delMemberToGroup(userDO, serverGroupDO);
-//                    }
-//                } else {
-//                    ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(userServerDO.getServerGroupId());
-//                    authService.delMemberToGroup(userDO, serverGroupDO);
-//                }
-//            });
             keyboxDao.delUserServer(userServerDO);
+            ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(userServerDO.getServerGroupId());
+            // TODO 变更 Jumpserver
+            jumpserverService.unbindUserGroup(userDO,serverGroupDO);
             // 异步变更zabbix用户组
             schedulerManager.registerJob(() -> {
                 if (userServerDO.getServerGroupId() == 0) {

@@ -910,6 +910,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
     public BusinessWrapper<Boolean> updateUser(UserDO userDO) {
         if (userDO == null)
             return new BusinessWrapper<>(ErrorCode.userNotExist.getCode(), ErrorCode.userNotExist.getMsg());
+        ZabbixResponseUser zabbixResponseUser = getUser(userDO);
+        if(zabbixResponseUser == null || StringUtils.isEmpty(zabbixResponseUser.getUserid()))
+            return new BusinessWrapper<Boolean>(false);
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("user.update").build();
         request.putParam("userid", getUser(userDO).getUserid());

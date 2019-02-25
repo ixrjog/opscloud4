@@ -500,4 +500,36 @@ public class DingtalkServiceImpl implements DingtalkService {
     }
 
 
+
+    public void notifyTest() {
+        logger.info("Dingtalk MQ alarm notify!");
+
+
+        // https://img.shields.io/badge/MQ%E5%91%8A%E8%AD%A6-brightgreen.svg
+
+        String dingtalkString = "{\n" +
+                "    \"actionCard\": {\n" +
+                "        \"title\": \"乔布斯 20 年前想打造一间苹果咖啡厅，而它正是 Apple Store 的前身\", \n" +
+                "         \"text\": \"![screenshot](https://img.shields.io/badge/mq-brightgreen.jpg) \\n #### 乔布斯 20 年前想打造的苹果咖啡厅 \\n\\n Apple Store 的设计正从原来满满的科技感走向生活化，而其生活化的走向其实可以追溯到 20 年前苹果一个建立咖啡馆的计划\", \n" +
+                "        \"hideAvatar\": \"0\", \n" +
+                "        \"btnOrientation\": \"0\", \n" +
+                "        \"singleTitle\" : \"详情\",\n" +
+                "        \"singleURL\" : \"http://zabbix.ops.yangege.cn/\"\n" +
+                "    }, \n" +
+                "    \"msgtype\": \"actionCard\"\n" +
+                "}";
+
+        //System.err.println(resolvedString);
+        try {
+            DingtalkDO dingtalkDO = dingtalkDao.getDingtalk(1);
+            DingTalkContent dingTalkContent = new DingTalkContent();
+            dingTalkContent.setWebHook(dingtalkDO.getWebhook());
+            dingTalkContent.setMsg( dingtalkString);
+            if (dingTalkHandler.doNotify(dingTalkContent)) ;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
 }

@@ -65,7 +65,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String iptables_dubbo_build = "IPTABLES_DUBBO_BUILD";
 
-    public static final String getway_host_ssh_public_ip = "GETWAY_HOST_SSH_PUBLIC_IP";
+    public static final String GETWAY_HOST_SSH_PUBLIC_IP = "GETWAY_HOST_SSH_PUBLIC_IP";
 
     public static final String tomcat_install_version = "TOMCAT_INSTALL_VERSION";
 
@@ -269,7 +269,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     @Override
     public String queryGetwayIp(ServerDO serverDO) {
-        String result = configService.acqConfigByServerAndKey(serverDO, getway_host_ssh_public_ip);
+        String result = configService.acqConfigByServerAndKey(serverDO, GETWAY_HOST_SSH_PUBLIC_IP);
         if (StringUtils.isEmpty(result)) return null;
         if (result.equalsIgnoreCase("true")) {
             return serverDO.getPublicIp();

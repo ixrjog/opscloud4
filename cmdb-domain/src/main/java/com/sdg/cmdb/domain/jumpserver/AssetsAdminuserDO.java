@@ -1,5 +1,6 @@
 package com.sdg.cmdb.domain.jumpserver;
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -11,5 +12,9 @@ public class AssetsAdminuserDO implements Serializable {
     private String id;
     private String name;
     private String username;
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 
 }

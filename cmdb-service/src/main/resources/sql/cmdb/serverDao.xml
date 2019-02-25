@@ -74,9 +74,13 @@
         WHERE id = #{id}
     </select>
 
+    <select id="getServerTotal"  resultType="_int">
+       SELECT count(*) FROM oc_server
+    </select>
+
     <!-- 获取服务器数目 -->
     <select id="getServerSize" parameterType="object" resultType="_long">
-        SELECT count(*) from oc_server
+        SELECT count(*) FROM oc_server
         <where>
             <if test="serverGroupId > 0">
                 serverGroupId = #{serverGroupId}

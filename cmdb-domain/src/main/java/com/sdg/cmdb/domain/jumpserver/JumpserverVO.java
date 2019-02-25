@@ -3,6 +3,7 @@ package com.sdg.cmdb.domain.jumpserver;
 import lombok.Data;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 public class JumpserverVO implements Serializable {
@@ -14,15 +15,29 @@ public class JumpserverVO implements Serializable {
     private AssetsSystemuserDO assetsSystemuserDO;
     // TODO 当前资产管理账户
     private AssetsAdminuserDO assetsAdminuserDO;
-    // 资产数量
-    private int assetCnt ;
-    // 用户数量
-    private int userCnt ;
+
+    // 用户
+    private int localUsersTotal;
+    private int jumpserverUsersTotal;
+
+    // 服务器
+    private int localServersTotal;
+    private int jumpserverAssetsTotal;
+
     // 授权数量
-    private int permsCnt;
+    private int permsTotal;
 
-    private int usergroupCnt;
+    /**
+     * 管理员
+     */
+    private List<UsersUserDO> administrators;
 
-    private int nodeCnt;
+    /**
+     * 终端列表 coco
+     */
+    private List<TerminalDO> terminals;
+
+    private List<TerminalSessionDO> terminalSessions;
+
 
 }
