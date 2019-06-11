@@ -45,6 +45,7 @@ public interface ConfigServerGroupService {
     /**
      * 查询服务器组属性 location
      * 例如 location ~ ^/sdop/ 中的 ~ ^/sdop/
+     *
      * @param serverGroupDO
      * @return
      */
@@ -64,10 +65,6 @@ public interface ConfigServerGroupService {
     String queryTomcatAppName(ServerGroupDO serverGroupDO);
 
     String queryUpstreamPort(ServerGroupDO serverGroupDO);
-
-
-
-
 
     /**
      * 取check页面路径
@@ -89,6 +86,7 @@ public interface ConfigServerGroupService {
 
     /**
      * 是否生成Upsteam中的check模块配置
+     *
      * @param serverGroupDO
      * @return
      */
@@ -182,6 +180,7 @@ public interface ConfigServerGroupService {
 
     /**
      * MONITOR_IP
+     *
      * @param serverDO
      * @return MONITOR_IP
      */
@@ -189,6 +188,7 @@ public interface ConfigServerGroupService {
 
     /**
      * 此接口查询服务器组属性 ZABBIX.MONITOR_IP
+     *
      * @param serverDO
      * @return ZABBIX_MACROS
      */
@@ -196,9 +196,25 @@ public interface ConfigServerGroupService {
 
     /**
      * 取分组配置
+     *
      * @param serverGroupDO
      * @return
      */
     int queryAnsibleSubgroup(ServerGroupDO serverGroupDO);
+
+
+    String queryGatewayAdminAppName(ServerGroupDO serverGroupDO);
+
+    String queryGatewayAdminAppHealthCheckPath(ServerGroupDO serverGroupDO);
+
+    String queryGatewayAdminAppPort(ServerGroupDO serverGroupDO);
+
+    String queryGatewayAdminRoutePath(ServerGroupDO serverGroupDO);
+
+    String queryGatewayAdminAppServiceByKey(ServerGroupDO serverGroupDO, String key);
+
+    String queryLogServiceTopic(ServerGroupDO serverGroupDO);
+
+    String queryKubernetesLabel(ServerDO serverDO);
 
 }

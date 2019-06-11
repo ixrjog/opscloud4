@@ -5,6 +5,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeDisksResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.aliyun.AliyunPrepaidInstance;
 import com.sdg.cmdb.domain.aliyun.AliyunRenewInstances;
 import com.sdg.cmdb.domain.server.*;
 
@@ -20,17 +21,18 @@ public interface EcsService {
      * 获取ECS服务器分页数据
      *
      * @param serverName
-     * @praam queryIp
      * @param status
      * @param page
      * @param length
      * @return
+     * @praam queryIp
      */
-    TableVO<List<EcsServerVO>> getEcsServerPage(String serverName, String queryIp, int status, int page, int length);
+    TableVO<List<EcsServerVO>> getEcsServerPage(String serverName, String queryIp, int status, String chargeType, int page, int length);
 
 
     /**
      * 查询待续费ECS实例
+     *
      * @param serverName
      * @param queryIp
      * @param day
@@ -39,7 +41,7 @@ public interface EcsService {
      * @param length
      * @return
      */
-    TableVO<List<EcsServerVO>> getEcsRenewPage(String serverName, String queryIp,int day, int status, int page, int length);
+    TableVO<List<EcsServerVO>> getEcsRenewPage(String serverName, String queryIp, int day, int status, int page, int length);
 
     /**
      * 查询ecs状态
@@ -47,7 +49,7 @@ public interface EcsService {
      * @param regionId
      * @return
      */
-    EcsServerDO ecsStatus(String regionId, ServerDO serverDO);
+   // EcsServerDO ecsStatus(String regionId, ServerDO serverDO);
 
     /**
      * 停止实例
@@ -60,6 +62,7 @@ public interface EcsService {
 
     /**
      * 启动实例
+     *
      * @param instanceId
      * @return
      */
@@ -100,7 +103,8 @@ public interface EcsService {
 
     /**
      * 同步并更新ECS列表
-     * @param type  0 阿里云 1 金融云
+     *
+     * @param type 0 阿里云 1 金融云
      * @return
      */
     BusinessWrapper<Boolean> ecsSync(int type);
@@ -115,6 +119,7 @@ public interface EcsService {
 
     /**
      * 统计
+     *
      * @return
      */
     ServerStatisticsDO statistics();
@@ -122,6 +127,7 @@ public interface EcsService {
 
     /**
      * 获取ECS模版机分页数据
+     *
      * @param zoneId
      * @param page
      * @param length
@@ -131,6 +137,7 @@ public interface EcsService {
 
     /**
      * 从server表更新ecsServer数据（content,serverId 字段数据）
+     *
      * @param ecsServerDO
      * @return
      */
@@ -139,6 +146,7 @@ public interface EcsService {
 
     /**
      * 从server表更新ecsServer数据（content,serverId 字段数据）
+     *
      * @param serverDO
      * @return
      */
@@ -146,24 +154,18 @@ public interface EcsService {
 
     /**
      * 按instanceId查询ecs
+     *
      * @param regionId
      * @param instanceId
      * @return
      */
     EcsServerDO ecsGet(String regionId, String instanceId);
 
-    DescribeInstancesResponse.Instance query(String regionId, String instanceId);
-
-    /**
-     * 查询磁盘
-     * @param regionId
-     * @param instanceId
-     * @return
-     */
-    List<DescribeDisksResponse.Disk> queryDisks(String regionId, String instanceId, boolean isFinance);
+   // DescribeInstancesResponse.Instance query(String regionId, String instanceId);
 
     /**
      * 设置ecs属性
+     *
      * @param ecsServerDO
      * @param propertyType
      * @param value
@@ -173,6 +175,7 @@ public interface EcsService {
 
     /**
      * 查询ecs属性
+     *
      * @param ecsServerDO
      * @param propertyType
      * @return
@@ -181,6 +184,7 @@ public interface EcsService {
 
     /**
      * 查询ecs属性
+     *
      * @param ecsServerDO
      * @param propertyType
      * @return
@@ -189,6 +193,7 @@ public interface EcsService {
 
     /**
      * 保存ecsServer的所有属性
+     *
      * @param ecsServerDO
      * @return
      */
@@ -196,6 +201,7 @@ public interface EcsService {
 
     /**
      * 清理ecs扩展属性
+     *
      * @param serverDO
      * @return
      */
@@ -205,9 +211,17 @@ public interface EcsService {
 
     /**
      * 实例续费接口
+     *
      * @param aliyunRenewInstances
      * @return
      */
     BusinessWrapper<Boolean> renewInstances(AliyunRenewInstances aliyunRenewInstances);
+
+    /**
+     * 按量实例转预付费
+     * @param aliyunPrepaidInstance
+     * @return
+     */
+    BusinessWrapper<Boolean> prepaidInstance(AliyunPrepaidInstance aliyunPrepaidInstance);
 
 }

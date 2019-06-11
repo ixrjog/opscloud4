@@ -79,13 +79,11 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     private JumpserverService jumpserverService;
 
     @Resource
-    private   ZabbixServerService zabbixServerService;
+    private ZabbixServerService zabbixServerService;
 
     @Resource
     private ZabbixService zabbixService;
 
-    @Resource
-    private CiUserGroupService ciUserGroupService;
 
     @Override
     public TableVO<List<KeyboxUserServerVO>> getUserServerPage(KeyboxUserServerDO userServerDO, int page, int length) {
@@ -94,8 +92,13 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         List<KeyboxUserServerVO> userServerVOList = new ArrayList<>();
         for (KeyboxUserServerDO userServerDOItem : userServerDOList) {
             ServerGroupDO serverGroupDO = serverGroupService.queryServerGroupById(userServerDOItem.getServerGroupId());
+            if (serverGroupDO == null) {
+                delUserGroup(userServerDOItem);
+                size -= 1;
+                continue;
+            }
             KeyboxUserServerVO userServerVO = new KeyboxUserServerVO(userServerDOItem, serverGroupDO);
-            userServerVO.setZabbixUsergroup(zabbixServerService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()),userServerVO.getServerGroupDO()));
+            userServerVO.setZabbixUsergroup(zabbixServerService.checkUserInUsergroup(new UserDO(userServerVO.getUsername()), userServerVO.getServerGroupDO()));
             userServerVOList.add(userServerVO);
         }
         return new TableVO<>(size, userServerVOList);
@@ -125,11 +128,17 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             return new BusinessWrapper<>(ErrorCode.userPwdNotInput);
         }
 
-       // BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
+        // BusinessWrapper<Boolean> wrapper = ansibleTaskService.taskGetwayAddAccount(userDO.getUsername(), userDO.getPwd());
         userDO.setAuthed(UserDO.AuthType.authed.getCode());
         userService.updateUserAuthStatus(userDO);
         zabbixService.userCreate(userDO);
         return null;
+    }
+
+    @Override
+    public boolean checkUserGroup(String username, long serverGroupId) {
+        if (serverGroupDao.checkUserGroup(username, serverGroupId) == 1) return true;
+        return false;
     }
 
     @Override
@@ -169,7 +178,7 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             UserDO userDO = userDao.getUserByName(userServerDO.getUsername());
             ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(userServerDO.getServerGroupId());
             // TODO 变更 Jumpserver
-            jumpserverService.bindUserGroup(userDO,serverGroupDO);
+            jumpserverService.bindUserGroup(userDO, serverGroupDO);
             // TODO 变更 Zabbix
             schedulerManager.registerJob(() -> {
                 zabbixService.userUpdate(userDO);
@@ -184,13 +193,11 @@ public class KeyBoxServiceImpl implements KeyBoxService {
     @Override
     public BusinessWrapper<Boolean> delUserGroup(KeyboxUserServerDO userServerDO) {
         try {
-            // List<ServerGroupDO> list = keyboxDao.getGroupListByUsername(userServerDO.getUsername());
             UserDO userDO = userDao.getUserByName(userServerDO.getUsername());
-            // 异步变更ldap
             keyboxDao.delUserServer(userServerDO);
             ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(userServerDO.getServerGroupId());
-            // TODO 变更 Jumpserver
-            jumpserverService.unbindUserGroup(userDO,serverGroupDO);
+            // 解绑Jumpserver
+            jumpserverService.unbindUserGroup(userDO, serverGroupDO);
             // 异步变更zabbix用户组
             schedulerManager.registerJob(() -> {
                 if (userServerDO.getServerGroupId() == 0) {
@@ -205,9 +212,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
             return new BusinessWrapper<>(ErrorCode.serverFailure);
         }
     }
-
-
-
 
 
     @Override
@@ -242,16 +246,13 @@ public class KeyBoxServiceImpl implements KeyBoxService {
      */
     @Override
     public void invokeServerInfo(ServerVO serverVO) {
-        if (serverVO.getServerType() == ServerDO.ServerTypeEnum.vm.getCode()) {
-            VmServerDO vmServerDO = serverDao.queryVmServerByInsideIp(serverVO.getInsideIP().getIp());
-            serverVO.setVmServerDO(vmServerDO);
-        }
-
         if (serverVO.getServerType() == ServerDO.ServerTypeEnum.ecs.getCode()) {
-            EcsServerDO ecsServerDO = serverDao.queryEcsByInsideIp(serverVO.getInsideIP().getIp());
-            serverVO.setEcsServerDO(ecsServerDO);
-        }
+            if (serverVO.getInsideIP() != null) {
+                EcsServerDO ecsServerDO = serverDao.queryEcsByInsideIp(serverVO.getInsideIP().getIp());
+                serverVO.setEcsServerDO(ecsServerDO);
+            }
 
+        }
     }
 
 
@@ -299,7 +300,6 @@ public class KeyBoxServiceImpl implements KeyBoxService {
         }
         return new TableVO<>(size, voList);
     }
-
 
 
     @Override

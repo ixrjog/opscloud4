@@ -1,19 +1,24 @@
 package com.sdg.cmdb.service.impl;
 
 
+import com.alibaba.fastjson.JSON;
+import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import javax.annotation.Resource;
+import java.util.List;
+
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations = {"classpath:springtest/context.xml"})
 public class WorkflowServiceIpmlTest {
 
 
-    @Resource
+    @Autowired
     private WorkflowServiceImpl workflowServiceImpl;
 
     @Test
@@ -22,9 +27,15 @@ public class WorkflowServiceIpmlTest {
     }
 
     @Test
-    public void testTodoPhase(){
-        for(int i=2; i<=5; i++)
+    public void testTodoPhase() {
+        for (int i = 2; i <= 5; i++)
             System.err.println(i);
+    }
+
+    @Test
+    public void testTodoPage() {
+        TableVO<List<WorkflowTodoVO>> page = workflowServiceImpl.getWorkflowTodoPage("baiyi", 1, 0, 10);
+        System.err.println(JSON.toJSONString(page));
     }
 
 }

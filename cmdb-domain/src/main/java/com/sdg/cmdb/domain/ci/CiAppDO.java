@@ -1,6 +1,7 @@
 package com.sdg.cmdb.domain.ci;
 
 
+import com.alibaba.fastjson.JSON;
 import lombok.Data;
 
 import java.io.Serializable;
@@ -35,38 +36,31 @@ public class CiAppDO implements Serializable {
         this.gmtCreate = ciAppVO.getGmtCreate();
         this.gmtModify = ciAppVO.getGmtModify();
         this.userId = ciAppVO.getUserId();
+        this.gitFlow = ciAppVO.isGitFlow();
     }
 
     private long id;
     private String appName;
     private String projectName;
-
     private long serverGroupId;
-
     private String serverGroupName;
-
     private long dingtalkId;
-
     private String content;
-
     private String sshUrl;
-
     private String webUrl;
-
     private int projectId;
-
     private int ciType;
-
     private int appType;
-
     private long userId;
-
     private boolean authBranch;
-
+    private boolean gitFlow;
     private String gmtCreate;
-
     private String gmtModify;
 
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
+    }
 
 
 }

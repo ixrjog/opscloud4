@@ -12,7 +12,7 @@ public interface NginxService {
 
     TableVO<List<VhostVO>> getVhostPage(String serverName, int page, int length);
 
-    BusinessWrapper<Boolean>  delVhost(long id);
+    BusinessWrapper<Boolean> delVhost(long id);
 
     VhostVO getVhost(long id);
 
@@ -27,9 +27,9 @@ public interface NginxService {
     /**
      * 自动化配置
      */
-   // void auto(long serverId);
+    // void auto(long serverId);
 
-   // void auto(long serverGroupId,int envType);
+    // void auto(long serverGroupId,int envType);
 
     /**
      * 预览本地文件
@@ -50,11 +50,12 @@ public interface NginxService {
 
     /**
      * 判断 autoBuild 是否自动构建
+     *
      * @param envFileId
      * @param auto
      * @return
      */
-    BusinessWrapper<Boolean> buildEnvFile(long envFileId,boolean auto);
+    BusinessWrapper<Boolean> buildEnvFile(long envFileId, boolean auto);
 
     BusinessWrapper<Boolean> addServerGroup(long vhostId, long serverGroupId);
 
@@ -65,9 +66,32 @@ public interface NginxService {
 
     List<NginxPlaybookVO> getPlaybookPage();
 
-    BusinessWrapper<Boolean>  savePlaybook(NginxPlaybookDO nginxPlaybookDO);
+    BusinessWrapper<Boolean> savePlaybook(NginxPlaybookDO nginxPlaybookDO);
 
     PlaybookLogVO doPlaybook(long id, int doType);
 
-    BusinessWrapper<Boolean>  delPlaybook(long id);
+    BusinessWrapper<Boolean> delPlaybook(long id);
+
+    boolean addNginxTcp(long serverGroupId, int env, String portName);
+
+    /**
+     * 自动配置Tcp映射服务
+     * @return
+     */
+    BusinessWrapper<Boolean> autoNginxTcp();
+
+    BusinessWrapper<Boolean> scanNginxTcp();
+
+
+    NginxTcpVO getNginxTcp(long serverGroupId, int env, String portName);
+
+    String getNginxTcpServerConf(int envType);
+
+    TableVO<List<NginxTcpVO>> getNginxTcpPage(String serviceName, int envType, int page, int length);
+
+    NginxTcpVO createNginxTcp(NginxTcpVO nginxTcpVO);
+
+    BusinessWrapper<Boolean> delNginxTcp(long id);
+
+    String scanNginxTcpDubbo();
 }

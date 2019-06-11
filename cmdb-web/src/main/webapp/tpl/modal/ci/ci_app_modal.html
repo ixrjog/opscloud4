@@ -1,26 +1,6 @@
 <style>
-    .build-params .popover {
-        max-width: 400px !important;
-    }
-
     .projectName .popover {
         max-width: 400px !important;
-    }
-
-    .environmentVariables .popover {
-        max-width: 400px !important;
-    }
-
-    .zoneType .popover {
-        max-width: 500px !important;
-    }
-
-    .tomcatWebAppsPath .popover {
-        max-width: 500px !important;
-    }
-
-    .httpStatus .popover {
-        max-width: 500px !important;
     }
 </style>
 <div class="modal-header">
@@ -55,6 +35,17 @@
                     </div>
                 </div>
 
+                <div class="col-md-6">
+                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>应用类型</label>
+                    <div class="col-lg-8">
+                        <!--required-->
+                        <select class="form-control" ng-model="appItem.appType"
+                                ng-options="app.code as app.name for app in appType">
+                            <option value="">--请选择--</option>
+                        </select>
+                    </div>
+                </div>
+
             </div>
 
             <div class="form-group">
@@ -72,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="col-md-6">
+                <div class="col-md-6" ng-if="appItem.appType <=1">
                     <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器组名称</label>
                     <div class="col-lg-8">
                         <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
@@ -114,24 +105,15 @@
                         </select>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>应用类型</label>
-                    <div class="col-lg-8">
-                        <!--required-->
-                        <select class="form-control" ng-model="appItem.appType"
-                                ng-options="app.code as app.name for app in appType">
-                            <option value="">--请选择--</option>
-                        </select>
-                    </div>
-                </div>
+
             </div>
 
             <div class="form-group">
                 <div class="col-md-6">
-                    <label class="col-lg-4 control-label">分支权限</label>
+                    <label class="col-lg-4 control-label">GitFlow</label>
                     <div class="col-lg-8">
                         <label style="margin-top:5px;">
-                            <input type="checkbox" ng-model="appItem.authBranch"><b style="color: #2b669a;margin-left: 5px">启用分支权限控制</b>
+                            <input type="checkbox" ng-model="appItem.gitFlow"><b style="color: #2b669a;margin-left: 5px">启用</b>
                         </label>
                     </div>
                 </div>

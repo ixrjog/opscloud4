@@ -1,5 +1,5 @@
 /* *
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -36,37 +36,13 @@ seriesType('bar', 'column',
      */
 
     /**
-     * Alignment of the data label relative to the data point.
-     *
-     * @sample {highcharts} highcharts/plotoptions/bar-datalabels-align-inside-bar/
-     *         Data labels inside the bar
-     *
-     * @type      {string}
-     * @default   left
-     * @product   highcharts
-     * @apioption plotOptions.bar.dataLabels.align
-     */
-
-    /**
-     * The x position of the data label relative to the data point.
-     *
-     * @sample {highcharts} highcharts/plotoptions/bar-datalabels-align-inside-bar/
-     *         Data labels inside the bar
-     *
-     * @type      {number}
-     * @default   5
-     * @product   highcharts
-     * @apioption plotOptions.bar.dataLabels.x
-     */
-
-    /**
      * @ignore
      */
     null
 
-, {
-    inverted: true
-});
+    , {
+        inverted: true
+    });
 
 
 /**
@@ -134,7 +110,7 @@ seriesType('bar', 'column',
  * @sample {highcharts} highcharts/series/data-array-of-objects/
  *         Config objects
  *
- * @type      {Array<number|Array<(number|string),number>|*>}
+ * @type      {Array<number|Array<(number|string),(number|null)>|null|*>}
  * @extends   series.column.data
  * @product   highcharts
  * @apioption series.bar.data

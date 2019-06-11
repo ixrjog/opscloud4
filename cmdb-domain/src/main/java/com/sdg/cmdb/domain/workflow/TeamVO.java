@@ -1,10 +1,13 @@
 package com.sdg.cmdb.domain.workflow;
 
+import com.alibaba.fastjson.JSON;
 import com.sdg.cmdb.domain.auth.UserDO;
+import lombok.Data;
 
 import java.io.Serializable;
 import java.util.List;
 
+@Data
 public class TeamVO extends TeamDO implements Serializable {
     private static final long serialVersionUID = 7348364045181679481L;
 
@@ -29,19 +32,8 @@ public class TeamVO extends TeamDO implements Serializable {
 
     }
 
-    public UserDO getLeader() {
-        return leader;
-    }
-
-    public void setLeader(UserDO leader) {
-        this.leader = leader;
-    }
-
-    public List<TeamuserVO> getTeamusers() {
-        return teamusers;
-    }
-
-    public void setTeamusers(List<TeamuserVO> teamusers) {
-        this.teamusers = teamusers;
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

@@ -1,7 +1,9 @@
 package com.sdg.cmdb.service.impl;
 
 
-import com.alibaba.fastjson.JSON;
+
+import com.aliyun.oss.OSS;
+import com.aliyun.oss.OSSClientBuilder;
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
@@ -15,26 +17,23 @@ import com.sdg.cmdb.dao.cmdb.AliyunDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
-import com.sdg.cmdb.domain.server.EcsServerDO;
 import com.sdg.cmdb.domain.server.EcsTemplateDO;
 import com.sdg.cmdb.service.AliyunService;
-import com.sdg.cmdb.service.ConfigCenterService;
+import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 /**
  * Created by liangjian on 2017/6/13.
  */
 @Service
-public class AliyunServiceImpl implements AliyunService {
+public class AliyunServiceImpl implements AliyunService,InitializingBean {
 
     @Resource
     private AliyunDao aliyunDao;
@@ -42,16 +41,19 @@ public class AliyunServiceImpl implements AliyunService {
     @Resource
     private ServerDao serverDao;
 
-    @Resource
-    private ConfigCenterService configCenterService;
+    @Value(value = "${aliyun.access.key}")
+    private String accessKey;
 
-    private HashMap<String, String> configMap;
+    @Value(value = "${aliyun.access.secret}")
+    private String accessSecret;
+
+    @Value(value = "${aliyun.region.id}")
+    private String regionIdList;
+
+    @Value(value = "${aliyun.ecs.public.network.id}")
+    private String publicNetworkId;
 
 
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
-    }
 
     @Override
     public List<AliyunEcsImageVO> queryAliyunImage(String queryDesc) {
@@ -60,6 +62,11 @@ public class AliyunServiceImpl implements AliyunService {
         for (AliyunEcsImageDO aliyunEcsImageDO : list)
             listVO.add(new AliyunEcsImageVO(aliyunEcsImageDO));
         return listVO;
+    }
+
+    @Override
+    public  String getRegionIds(){
+        return regionIdList;
     }
 
     @Override
@@ -537,25 +544,35 @@ public class AliyunServiceImpl implements AliyunService {
      * @param regionId
      * @return
      */
-    private IAcsClient acqIAcsClient(String regionId) {
-        HashMap<String, String> configMap = acqConifMap();
-        String accessKey = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_KEY.getItemKey());
-        String accessSecret = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_SECRET.getItemKey());
+    @Override
+    public IAcsClient acqIAcsClient(String regionId) {
         IClientProfile profile = DefaultProfile.getProfile(regionId, accessKey, accessSecret);
         IAcsClient client = new DefaultAcsClient(profile);
         return client;
     }
+
+    @Override
+    public OSS acqOSSClient(String endpoint) {
+
+        OSS client = new OSSClientBuilder().build(endpoint, accessKey, accessSecret);
+        return client;
+    }
+
 
     /**
      * 获取配置的所有regionId
      *
      * @return
      */
-    private String[] acqRegionIds() {
-        HashMap<String, String> configMap = acqConifMap();
-        String aliyunRegionId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_REGION_ID.getItemKey());
-        String[] regionIds = aliyunRegionId.split(",");
+    @Override
+    public String[] acqRegionIds() {
+        String[] regionIds = regionIdList.split(",");
         return regionIds;
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception{
+
     }
 
 

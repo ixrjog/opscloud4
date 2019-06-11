@@ -1,6 +1,5 @@
 package com.sdg.cmdb.dao.cmdb;
 
-import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.zabbix.ZabbixTemplateDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;

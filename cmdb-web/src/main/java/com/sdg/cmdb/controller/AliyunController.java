@@ -35,6 +35,18 @@ public class AliyunController {
     @Resource
     private AliyunMQService mqService;
 
+
+    /**
+     * 获取EcsImage列表
+     *
+     * @return
+     */
+    @RequestMapping(value = "/region/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getRegionIds() {
+        return new HttpResult(aliyunService.getRegionIds());
+    }
+
     /**
      * 获取EcsImage列表
      *
@@ -308,6 +320,8 @@ public class AliyunController {
      * 获取指定条件的RAM用户分页数据
      *
      * @param username
+     * @param userTag
+     * @param keyType
      * @param page
      * @param length
      * @return
@@ -315,8 +329,9 @@ public class AliyunController {
     @RequestMapping(value = "/ram/user/page", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult queryRamUserPage(@RequestParam String username, @RequestParam String userTag,
+                                       @RequestParam int keyType,
                                        @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(aliyunRamService.getRamUserPage(username, userTag, page, length));
+        return new HttpResult(aliyunRamService.getRamUserPage(username, userTag, keyType, page, length));
     }
 
     @RequestMapping(value = "/ram/user/update", method = RequestMethod.GET)
@@ -328,7 +343,7 @@ public class AliyunController {
 
     @RequestMapping(value = "/ram/user/get", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getRamUser( @RequestParam long userId) {
+    public HttpResult getRamUser(@RequestParam long userId) {
         return new HttpResult(aliyunRamService.getRamUser(userId));
     }
 

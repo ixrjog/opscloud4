@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.domain.server.serverStatus.ServerStatusVO;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,6 +29,7 @@ public interface ServerService {
 
 
     ServerVO acqServerVO(ServerDO serverDO);
+
     /**
      * 获取服务器分页数据
      *
@@ -42,7 +44,7 @@ public interface ServerService {
      * @param length
      * @return
      */
-    TableVO<List<ServerVO>> getZabbixServerPage(long serverGroupId, String serverName, int useType, int envType, String queryIp, int zabbixStatus, int zabbixMonitor, String tomcatVersion,int page, int length);
+    TableVO<List<ServerVO>> getZabbixServerPage(long serverGroupId, String serverName, int useType, int envType, String queryIp, int zabbixStatus, int zabbixMonitor, String tomcatVersion, int page, int length);
 
 
     /**
@@ -88,6 +90,7 @@ public interface ServerService {
 
     /**
      * 获取指定服务器组的服务器集合
+     *
      * @param groupId
      * @return
      */
@@ -96,6 +99,7 @@ public interface ServerService {
 
     /**
      * 找出envType相同的其余服务器
+     *
      * @param serverDOList
      * @return
      */
@@ -103,22 +107,35 @@ public interface ServerService {
 
     /**
      * 设置nginx upstream
+     *
      * @param ip
      * @param serviceAction
      * @return
      */
-    BusinessWrapper<Boolean> setUpstream(String ip,String serviceAction);
+    BusinessWrapper<Boolean> setUpstream(String ip, String serviceAction);
 
     /**
      * 首页服务器统计信息
+     *
      * @return
      */
     ServerStatusVO status();
 
     /**
      * 获取默认登录用户
+     *
      * @return
      */
     String getLoginUser();
+
+    /**
+     * 按服务器组和环境查询服务器
+     * @param serverGroupDO
+     * @param envType
+     * @return
+     */
+    List<ServerDO> getServerByGroup(ServerGroupDO serverGroupDO, int envType);
+
+    int getMyServerSize();
 
 }

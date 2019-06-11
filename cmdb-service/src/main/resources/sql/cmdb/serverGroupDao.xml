@@ -141,6 +141,13 @@
         WHERE useType = #{useType}
     </select>
 
+
+    <select id="checkUserGroup" parameterType="object" resultType="_int">
+        SELECT count(id) FROM keybox_user_server
+        WHERE username = #{username} AND serverGroupId = #{serverGroupId}
+        limit 1
+    </select>
+
     <!-- 获取指定用户对应的服务器组集合 -->
     <select id="getGroupsByName" parameterType="string" resultType="ServerGroupDO">
         SELECT a1.* FROM keybox_user_server a0 JOIN oc_server_group a1 ON a0.serverGroupId = a1.id
@@ -285,5 +292,23 @@
         SELECT * FROM oc_server_group_usetype
         WHERE useType = #{useType}
     </select>
+
+    <select id="getMyGroupSize" parameterType="object" resultType="_int">
+       SELECT count(id) FROM oc_server_group
+       WHERE id IN ( SELECT serverGroupId FROM keybox_user_server WHERE username = #{username} )
+    </select>
+
+    <select id="queryLogServiceMemberPage" parameterType="object" resultType="ServerGroupDO">
+        SELECT * FROM oc_server_group
+        <where>
+            id NOT IN ( SELECT serverGroupId FROM oc_log_service_member WHERE groupCfgId = #{groupCfgId} )
+            <if test="name != null and name != ''">
+              AND name LIKE "%" #{name} "%"
+            </if>
+        </where>
+        LIMIT 100
+    </select>
+
+
 
 </mapper>

@@ -1,17 +1,16 @@
 package com.sdg.cmdb.controller;
 
-import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
 import com.sdg.cmdb.domain.BusinessWrapper;
+import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
 import com.sdg.cmdb.domain.HttpResult;
+import com.sdg.cmdb.domain.logCleanup.LogcleanupDO;
 import com.sdg.cmdb.domain.task.CmdVO;
 import com.sdg.cmdb.domain.task.DoPlaybook;
 import com.sdg.cmdb.service.AnsibleTaskService;
-import com.sdg.cmdb.service.LogCleanupService;
-import com.sdg.cmdb.service.ServerTaskService;
+import com.sdg.cmdb.service.LogcleanupService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 /**
  * Created by liangjian on 2017/3/31.
@@ -20,13 +19,10 @@ import javax.annotation.Resource;
 @RequestMapping("/task")
 public class TaskController {
 
-    @Resource
-    private LogCleanupService logCleanupService;
+    @Autowired
+    private LogcleanupService logcleanupService;
 
-    @Resource
-    private ServerTaskService serverTaskService;
-
-    @Resource
+    @Autowired
     private AnsibleTaskService ansibleTaskService;
 
     /**
@@ -37,112 +33,72 @@ public class TaskController {
      * @param enabled
      * @param page
      * @param length
-     * @return
+     * @return //
      */
     @RequestMapping(value = "/logcleanup/page", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getLogCleanupPage(
+    public HttpResult getLogcleanupPage(
             @RequestParam long serverGroupId,
             @RequestParam String serverName,
             @RequestParam int enabled,
             @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(logCleanupService.getLogCleanupPage(serverGroupId, serverName, enabled, page, length));
+        return new HttpResult(logcleanupService.getLogcleanupPage(serverGroupId, serverName, enabled, page, length));
     }
 
     /**
-     * 清理服务器日志
+     * 查询清理任务日志
      *
-     * @param serverId
+     * @param id
+     * @param page
+     * @param length
      * @return
      */
-    @RequestMapping(value = "/logcleanup/cleanup", method = RequestMethod.GET)
+    @RequestMapping(value = "/logcleanup/log/page", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getCleanup(
-            @RequestParam long serverId) {
-        return new HttpResult(logCleanupService.cleanup(serverId));
+    public HttpResult getLogcleanupTaskPage(
+            @RequestParam long id,
+            @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(logcleanupService.getLogcleanupTaskLogPage(id, page, length));
     }
 
     /**
-     * 同步数据
+     * 修改配置
+     *
+     * @return
+     */
+    @RequestMapping(value = "/logcleanup/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult getSaveLogcleanup(@RequestBody LogcleanupDO logcleanupDO) {
+        return new HttpResult(logcleanupService.save(logcleanupDO));
+    }
+
+    /**
+     * 更新数据（采集）
+     *
+     * @return
+     */
+    @RequestMapping(value = "/logcleanup/update", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult updateLogcleanup(@RequestParam long serverId) {
+        return new HttpResult(logcleanupService.updateLogcleanupConfig(serverId));
+    }
+
+    /**
+     * 刷新
      *
      * @return
      */
     @RequestMapping(value = "/logcleanup/refresh", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getRefresh() {
-        logCleanupService.syncData();
-        return new HttpResult(new BusinessWrapper<>(true));
+    public HttpResult updateServers() {
+        return new HttpResult(logcleanupService.updateLogcleanupServers());
     }
 
-    /**
-     * 同步数据
-     *
-     * @return
-     */
-    @RequestMapping(value = "/logcleanup/setEnabled", method = RequestMethod.GET)
+    @RequestMapping(value = "/logcleanup/doTask", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getSetEnabled(@RequestParam long serverId) {
-        return new HttpResult(new BusinessWrapper<>(logCleanupService.setEnabled(serverId)));
+    public HttpResult doLogcleanupTask(@RequestParam long id) {
+        return new HttpResult(logcleanupService.doTask(id));
     }
-
-    /**
-     * 减少清理日期
-     *
-     * @return
-     */
-    @RequestMapping(value = "/logcleanup/subtractHistory", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getSubtractHistory(@RequestParam long serverId) {
-        return new HttpResult(new BusinessWrapper<>(logCleanupService.setHistory(serverId, -1)));
-    }
-
-    /**
-     * 增加清理日期
-     *
-     * @return
-     */
-    @RequestMapping(value = "/logcleanup/addHistory", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getAddHistory(@RequestParam long serverId) {
-        return new HttpResult(new BusinessWrapper<>(logCleanupService.setHistory(serverId, 1)));
-    }
-
-    /**
-     * 刷新磁盘使用率
-     *
-     * @return
-     */
-    @RequestMapping(value = "/logcleanup/refreshDiskRate", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getRefreshDiskRate(@RequestParam long serverId) {
-        return new HttpResult(new BusinessWrapper<>(logCleanupService.refreshDiskRate(serverId)));
-    }
-
-
-    /**
-     * 初始化系统
-     *
-     * @return
-     */
-    @RequestMapping(value = "/servertask/initializationSystem", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getInitializationSystem(@RequestParam long serverId) {
-        return new HttpResult(new BusinessWrapper<>(serverTaskService.initializationSystem(serverId)));
-    }
-
-
-    /**
-     * 修改日志保留天数
-     *
-     * @return
-     */
-    @RequestMapping(value = "/logcleanup/save", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getSaveLogcleanup(@RequestParam long id, @RequestParam int history) {
-
-        return new HttpResult(new BusinessWrapper<>(logCleanupService.saveHistory(id, history)));
-    }
-
 
     @RequestMapping(value = "/cmd/doCmd", method = RequestMethod.POST)
     @ResponseBody
@@ -156,7 +112,7 @@ public class TaskController {
         return new HttpResult(ansibleTaskService.scriptTask(cmdVO));
     }
 
-    @RequestMapping(value = "/cmd/doPlaybook", method = RequestMethod.POST)
+    @RequestMapping(value = "/playbook/do", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult doPlaybook(@RequestBody DoPlaybook doPlaybook) {
         return new HttpResult(ansibleTaskService.playbookTask(doPlaybook));

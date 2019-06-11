@@ -1,30 +1,9 @@
 <style>
-    .build-params .popover {
-        max-width: 400px !important;
-    }
-
-    .projectName .popover {
-        max-width: 400px !important;
-    }
-
-    .environmentVariables .popover {
-        max-width: 400px !important;
-    }
-
-    .zoneType .popover {
-        max-width: 500px !important;
-    }
-
-    .tomcatWebAppsPath .popover {
-        max-width: 500px !important;
-    }
-
-    .httpStatus .popover {
-        max-width: 500px !important;
+    .ace_editor {
+        height: 500px;
     }
 </style>
 <div class="modal-header">
-    <!--<h3 class="modal-title">项目管理配置</h3>-->
     <h3 class="modal-title">
         <b style="color: #286090">Script</b>
     </h3>
@@ -62,7 +41,6 @@
                         <div class="col-lg-8">
                             <!--required--> <!--ng-disabled="todoDetail.todoStatus >= 1"-->
                             <select class="form-control" ng-model="scriptItem.scriptType"
-
                                     ng-options="sType.code as sType.name for sType in scriptType">
                                 <option value="">--请选择--</option>
                             </select>
@@ -74,7 +52,6 @@
                         <div class="col-lg-8">
                             <!--&lt;!&ndash;required&ndash;&gt; &lt;!&ndash;ng-disabled="todoDetail.todoStatus >= 1"-->
                             <select class="form-control" ng-model="scriptItem.sysScript"
-
                                     ng-options="ssType .code as ssType .name for ssType in sysScriptType">
                                 <option value="">--请选择--</option>
                             </select>
@@ -82,19 +59,9 @@
                     </div>
                 </div>
 
-                <div class="form-group"  ng-show="!isView">
-                    <label class="col-lg-2 control-label">Script</label>
-                    <!--cols="20"-->
-                    <div class="col-lg-10">
-                        <textarea class="form-control" rows="20" ng-model="scriptItem.script"></textarea>
-                    </div>
-                </div>
-
-                <div class="form-group" ng-show="isView">
-                    <div hljs hljs-source="scriptItem.script"></div>
-                </div>
-
-                <ui-codemirror ui-codemirror-opts="editorOptions">{{scriptItem.script}}</ui-codemirror>
+                <select ng-model="scriptItem.modeType" ng-options="m for m in modes" ng-change="modeChanged(aceMode)">
+                </select>
+                <div ui-ace="aceOption" ng-readonly="isView" ng-model="scriptItem.script" class="ace_editor"></div>
 
             </uib-tabset>
         </div>
@@ -103,8 +70,6 @@
 
     <!--按钮-->
     <div class="form-group">
-
-
         <div style="text-align:center;">
             <button class="btn btn-xs" ng-show="!isView"
                     style="background-color:  #2e6da4; color: white;"

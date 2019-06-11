@@ -48,6 +48,10 @@ app.factory("staticModel", function () {
             {
                 code: 6,
                 name: "back"
+            },
+            {
+                code: 7,
+                name: "pre"
             }
         ],
         groupEnvType: [
@@ -188,7 +192,17 @@ app.factory("staticModel", function () {
                 name: "已添加"
             }
         ],
-        ecsServerInternetChargeType: [
+        instanceChargeType: [
+            {
+                code: "PrePaid",
+                name: "预付费"
+            },
+            {
+                code: "PostPaid",
+                name: "按量付费"
+            }
+        ],
+        internetChargeType: [
             {
                 code: "PayByTraffic",
                 name: "按流量计费"
@@ -334,11 +348,11 @@ app.factory("staticModel", function () {
         enabled: [
             {
                 code: 0,
-                name: "disalbed"
+                name: "禁用"
             },
             {
                 code: 1,
-                name: "enabled"
+                name: "启用"
             }
         ],
         zoneIds: [
@@ -668,33 +682,326 @@ app.factory("staticModel", function () {
         ciType: [
             {
                 code: 0,
-                name: "构建部署拆分"
+                name: "CI+CD"
             },
             {
                 code: 1,
-                name: "流水线(简单模式)"
+                name: "CI"
             }
         ],
         appType: [
             {
                 code: 0,
-                name: "gradle(jar)"
+                name: "Java"
             },
             {
                 code: 1,
-                name: "gradle(war)"
+                name: "Python"
             },
             {
                 code: 2,
-                name: "maven(jar)"
+                name: "iOS"
             },
             {
                 code: 3,
-                name: "maven(war)"
+                name: "Android"
             },
             {
                 code: 4,
-                name: "python"
+                name: "Test"
+            }
+        ],
+        accessKey: [
+            {
+                code: 0,
+                name: "无"
+            },
+            {
+                code: 1,
+                name: "有"
+            }
+        ],
+        queryPhaseType: [
+            {
+                code: -1,
+                name: "进行中"
+            },
+            {
+                code: 1,
+                name: "全部"
+            },
+            {
+                code: 5,
+                name: "已完成"
+            }
+        ],
+        autoBuildType: [
+            {
+                code: false,
+                name: "禁用"
+            },
+            {
+                code: true,
+                name: "PUSH BUILD"
+            }
+        ],
+        triggerBuildType: [
+            {
+                code: 0,
+                name: "静默"
+            },
+            {
+                code: 1,
+                name: "触发"
+            }
+        ],
+        androidBuildEnv: [
+            {
+                code: "beta",
+                name: "beta"
+            },
+            {
+                code: "release",
+                name: "release"
+            },
+            {
+                code: "debug",
+                name: "debug"
+            }
+        ],
+        androidBuildProductFlavor: [
+            {
+                code: "msms",
+                name: "美食买手"
+            },
+            {
+                code: "qihoo360",
+                name: "奇虎360"
+            },
+            {
+                code: "baidu",
+                name: "百度"
+            },
+            {
+                code: "baidusem",
+                name: "百度SEM"
+            },
+            {
+                code: "yyb",
+                name: "应用宝"
+            },
+            {
+                code: "taobao",
+                name: "淘宝"
+            },
+            {
+                code: "sanxing",
+                name: "三星"
+            },
+            {
+                code: "huawei",
+                name: "华为"
+            },
+            {
+                code: "xiaomi",
+                name: "小米"
+            },
+            {
+                code: "meizu",
+                name: "魅族"
+            },
+            {
+                code: "lianxiang",
+                name: "联想"
+            },
+            {
+                code: "leshi",
+                name: "乐视"
+            },
+            {
+                code: "chuizi",
+                name: "锤子"
+            },
+            {
+                code: "vivo",
+                name: "VIVO"
+            },
+            {
+                code: "oppo",
+                name: "OPPO"
+            },
+            {
+                code: "sougou",
+                name: "搜狗"
+            },
+            {
+                code: "anzhi",
+                name: "anzhi"
+            },
+            {
+                code: "jifeng",
+                name: "机锋"
+            },
+            {
+                code: "mumayi",
+                name: "木蚂蚁"
+            },
+            {
+                code: "youyishichang",
+                name: "优亿市场"
+            },
+            {
+                code: "bmhy",
+                name: "斑马会员"
+            },
+            {
+                code: "hqbs",
+                name: "环球捕手"
+            },
+            {
+                code: "ceshi",
+                name: "测试渠道"
+            }
+        ],
+        gitlabAccessLevel: [
+            {
+                code: "Owner",
+                name: "所有者"
+            },
+            {
+                code: "Master",
+                name: "主程序员"
+            },
+            {
+                code: "Developer",
+                name: "开发人员"
+            },
+            {
+                code: "Reporter",
+                name: "报告者"
+            }
+        ],
+        gitlabProjectAccessLevel: [
+            {
+                code: "Master",
+                name: "主程序员"
+            },
+            {
+                code: "Developer",
+                name: "开发人员"
+            },
+            {
+                code: "Reporter",
+                name: "报告者"
+            }
+        ],
+        atAll: [
+            {
+                code: false,
+                name: "自己"
+            },
+            {
+                code: true,
+                name: "所有人"
+            }
+        ],
+        workflowList: [
+            {
+                key: "KEYBOX",
+                templateUrl: "todoKeyboxModal",
+                controller: "todoKeyboxInstanceCtrl"
+            },
+            {
+                key: "RAM",
+                templateUrl: "todoAliyunRamModal",
+                controller: "todoAliyunRamInstanceCtrl"
+            },
+            {
+                key: "LDAPGROUP",
+                templateUrl: "todoLdapGroupModal",
+                controller: "todoLdapGroupInstanceCtrl"
+            },
+            {
+                key: "RAMPolicy",
+                templateUrl: "todoAliyunRamPolicyModal",
+                controller: "todoAliyunRamPolicyInstanceCtrl"
+            },
+            {
+                key: "ROLE",
+                templateUrl: "todoRoleModal",
+                controller: "todoRoleInstanceCtrl"
+            },
+            {
+                key: "GITLABGROUP",
+                templateUrl: "todoGitlabGroupModal",
+                controller: "todoGitlabGroupInstanceCtrl"
+            },
+            {
+                key: "GITLABPROJECT",
+                templateUrl: "todoGitlabProjectModal",
+                controller: "todoGitlabProjectInstanceCtrl"
+            },
+            {
+                key: "CIANDROIDAUTH",
+                templateUrl: "todoCIAndroidAuthModal",
+                controller: "todoCIAndroidAuthInstanceCtrl"
+            },
+            {
+                key: "CITESTAUTH",
+                templateUrl: "todoCITestAuthModal",
+                controller: "todoCITestAuthInstanceCtrl"
+            }
+        ],
+        channelType: [
+            {
+                code: 0,
+                name: "全渠道"
+            },
+            {
+                code: 1,
+                name: "选择渠道"
+            }
+        ],
+        servicePortType: [
+            {
+                code: "http",
+                name: "Http"
+            },
+            {
+                code: "debug",
+                name: "JavaDebug"
+            },
+            {
+                code: "dubbo",
+                name: "Dubbo"
+            }
+        ],
+        serviceEnvType: [
+            {
+                code: 5,
+                name: "test"
+            },
+            {
+                code: 7,
+                name: "pre"
+            },
+            {
+                code: 4,
+                name: "prod"
+            }
+        ],
+        nginxTcpPeriod: [
+            {
+                code: 30,
+                name: "30分钟"
+            },
+            {
+                code: 60,
+                name: "1小时"
+            },
+            {
+                code: 120,
+                name: "2小时"
             }
         ]
     }

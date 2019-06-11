@@ -33,7 +33,7 @@ public class EcsCreateServiceTest {
 
     @Test
     public void testAllocatePublicIpAddress(){
-        System.err.println(ecsCreateService.allocateIpAddress("i-bp"));
+      //  System.err.println(ecsCreateService.allocateIpAddress("i-bp"));
     }
 
     @Test

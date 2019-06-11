@@ -19,7 +19,9 @@ public class DoPlaybook implements Serializable {
      */
     private String extraVars;
 
-    private List<PlaybookHostPattern> playbookServerGroupList;
+    private String parms;
+
+    private List<PlaybookHostPattern> playbookGroupList;
 
     @Override
     public String toString() {

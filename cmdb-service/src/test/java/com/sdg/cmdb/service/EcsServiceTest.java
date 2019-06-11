@@ -53,11 +53,7 @@ public class EcsServiceTest {
     @Resource
     private ServerDao serverDao;
 
-    @Test
-    public void testDescribeInstance() {
-        DescribeInstancesResponse.Instance instance = ecsServiceImpl.describeInstance(EcsServiceImpl.regionIdCnHangzhou, "i-bp1hf2fotcwwj3lp7nir");
-        System.err.println(JSON.toJSONString(instance));
-    }
+
 
     @Test
     public void test() {
@@ -84,17 +80,7 @@ public class EcsServiceTest {
         ecsServiceImpl.updateServerPublicIp(serverDO, ecsServerDO);
     }
 
-    @Test
-    public void testQueryDisks() {
 
-        List<DescribeDisksResponse.Disk> disks = ecsService.queryDisks(null, "i-bp16", false);
-        for (DescribeDisksResponse.Disk disk : disks) {
-            System.err.println("DiskId:" + disk.getDiskId());
-            System.err.println("Category:" + disk.getCategory());
-            System.err.println("Type:" + disk.getType());
-            System.err.println("Size:" + disk.getSize());
-        }
-    }
 
     @Test
     public void testCreateTime() {
@@ -134,12 +120,6 @@ public class EcsServiceTest {
     }
 
 
-    @Test
-    public void testQuery() {
-        //// TODO 查询ECS实例
-        DescribeInstancesResponse.Instance i = ecsService.query(null, "i-bp1hf2fotcwwj3lp7nir");
-        System.err.println(JSON.toJSONString(i).toString());
-    }
 
     @Test
     public void testEcsGet() {

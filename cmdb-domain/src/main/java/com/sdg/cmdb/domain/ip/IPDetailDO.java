@@ -1,16 +1,20 @@
 package com.sdg.cmdb.domain.ip;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * Created by zxxiao on 16/9/11.
  */
+@Data
 public class IPDetailDO implements Serializable {
     private static final long serialVersionUID = -5837328039464401850L;
 
-    public static final Integer publicIP = 0;
+    public static final int PUBLIC_IP = 0;
 
-    public static final Integer insideIP = 1;
+    public static final int INSIDE_IP = 1;
 
 
     private long id = -1;
@@ -21,8 +25,8 @@ public class IPDetailDO implements Serializable {
 
     private String ip;
 
-    /*
-    0:公网;1:内网
+    /**
+     * 0:公网;1:内网
      */
     private int ipType;
 
@@ -52,96 +56,16 @@ public class IPDetailDO implements Serializable {
         this.ipType = ipType;
     }
 
-    public IPDetailDO(long ipNetworkId, String ip, Integer ipType) {
-        this.ipNetworkId = ipNetworkId;
-        this.ip = ip;
-        this.ipType = ipType;
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getIpNetworkId() {
-        return ipNetworkId;
-    }
-
-    public void setIpNetworkId(long ipNetworkId) {
-        this.ipNetworkId = ipNetworkId;
-    }
-
-    public long getServerId() {
-        return serverId;
-    }
-
-    public void setServerId(long serverId) {
+    public IPDetailDO(long serverId, long ipNetworkId, String ip, int ipType) {
         this.serverId = serverId;
-    }
-
-    public String getIp() {
-        return ip;
-    }
-
-    public void setIp(String ip) {
+        this.ipNetworkId = ipNetworkId;
         this.ip = ip;
-    }
-
-    public int getIpType() {
-        return ipType;
-    }
-
-    public void setIpType(int ipType) {
         this.ipType = ipType;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
-
-    public int getIpUseType() {
-        return ipUseType;
-    }
-
-    public void setIpUseType(int ipUseType) {
-        this.ipUseType = ipUseType;
     }
 
     @Override
     public String toString() {
-        return "IPDetailDO{" +
-                "id=" + id +
-                ", ipNetworkId=" + ipNetworkId +
-                ", serverId=" + serverId +
-                ", ip='" + ip + '\'' +
-                ", ipType=" + ipType +
-                ", content='" + content + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 
     public enum IpUseTypeEnum {

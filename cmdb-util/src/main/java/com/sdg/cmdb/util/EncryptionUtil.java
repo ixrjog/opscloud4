@@ -144,9 +144,14 @@ public class EncryptionUtil {
      * @return
      */
     public static String key2md5(ApplicationKeyVO applicationKeyVO) {
-        String privateKey = decrypt(applicationKeyVO.getPrivateKey());
-        String md5code = DigestUtils.md5Hex(privateKey);
-        return md5code.toUpperCase();
+        try{
+            String privateKey = decrypt(applicationKeyVO.getPrivateKey());
+            String md5code = DigestUtils.md5Hex(privateKey);
+            return md5code.toUpperCase();
+        }catch (Exception e){
+            e.printStackTrace();
+            return "";
+        }
     }
 
     public static String md5(String str) {

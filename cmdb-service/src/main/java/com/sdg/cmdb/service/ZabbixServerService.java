@@ -4,9 +4,11 @@ import com.alibaba.fastjson.JSONObject;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.logCleanup.LogcleanupDO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.zabbix.ZabbixHost;
+import com.sdg.cmdb.domain.zabbix.ZabbixProblemVO;
 import com.sdg.cmdb.domain.zabbix.ZabbixTemplateVO;
 import com.sdg.cmdb.domain.zabbix.ZabbixVersion;
 import com.sdg.cmdb.domain.zabbix.response.*;
@@ -83,6 +85,10 @@ public interface ZabbixServerService {
 
     ZabbixResponseItem getItem(ServerDO serverDO, String itemName, String itemKey);
 
+    ZabbixResponseItem getItem(String itemid);
+
+    List<ZabbixResponseItem> queryItems(ServerDO serverDO);
+
     List<ZabbixResponseProxy> queryProxys();
 
     ZabbixResponseProxy getProxy(String hostname);
@@ -94,5 +100,26 @@ public interface ZabbixServerService {
     JSONObject getHistory(ServerDO serverDO, String itemName, String itemKey, int historyType, String timestampFrom, String timestampTill);
 
     int checkUserInUsergroup(UserDO userDO, ServerGroupDO serverGroupDO);
+
+    /**
+     * 加入磁盘监控信息
+     * @param logcleanupDO
+     */
+    void invokeLogcleanupDiskInfo(LogcleanupDO logcleanupDO);
+
+
+    List<ZabbixResponseTrigger> getTriggers(int priority);
+
+    List<ZabbixResponseHostinterface> getHostinterface(String hostid);
+
+    List<ZabbixProblemVO> getProblems();
+
+    /**
+     * 查询我的问题
+     * @return
+     */
+    List<ZabbixProblemVO> getMyProblems();
+
+    void getDashboards();
 
 }

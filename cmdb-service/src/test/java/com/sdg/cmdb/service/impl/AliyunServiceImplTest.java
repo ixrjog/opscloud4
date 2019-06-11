@@ -1,5 +1,7 @@
 package com.sdg.cmdb.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
@@ -53,7 +55,6 @@ public class AliyunServiceImplTest {
     private void printVSwitchs(List<String> vSwitchIds) {
         for (String id : vSwitchIds)
             System.err.println(id);
-
     }
 
     @Test
@@ -61,6 +62,14 @@ public class AliyunServiceImplTest {
         System.err.println(aliyunServiceImpl.rsyncAliyunNetwork());
     }
 
+
+    @Test
+    public void testGetImages() {
+        List<DescribeImagesResponse.Image> list = aliyunServiceImpl.getImages();
+        for(DescribeImagesResponse.Image image:list){
+            System.err.println(JSON.toJSONString(image));
+        }
+    }
 
     @Test
     public void testDescribeInstanceTypes() {

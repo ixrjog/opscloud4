@@ -20,4 +20,6 @@ public class AliyunMqGroupVO extends AliyunMqGroupDO implements Serializable {
      */
     private long uibProgressbarMax = 10000;
 
+
+
 }

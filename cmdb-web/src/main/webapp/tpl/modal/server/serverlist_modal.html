@@ -11,14 +11,6 @@
         </div>
         <div class="form-group">
             <div class="input-group">
-                <span class="input-group-addon">使用类型</span>
-                <select class="form-control" ng-model="nowType" ng-options="type.code as type.name for type in useType">
-                    <option value="">--请选择--</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="input-group">
                 <span class="input-group-addon">环境类型</span>
                 <select class="form-control" ng-model="nowEnv" ng-options="envItem.code as envItem.name for envItem in envType">
                     <option value="">--请选择--</option>
@@ -26,7 +18,7 @@
             </div>
         </div>
         <div class="form-group">
-            <button type="button" class="btn btn-default" ng-click="doQuery()">搜索</button>
+            <button type="button" class="btn btn-info" ng-click="doQuery()">搜索</button>
             <button type="button" class="btn btn-info" ng-click="reSet()">重置</button>
         </div>
     </form>
@@ -52,13 +44,7 @@
                     <b style="color:{{item.serverGroupUseTypeDO.color}}">{{item.serverGroupUseTypeDO.typeName}}</b>
                 </td>
                 <td>
-                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
-                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
-                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
-                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
-                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
-                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
-                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                    <b style="color: {{item.env.color}}">{{item.env.name}}</b>
                 </td>
                 <td>{{item.serialNumber}}</td>
                 <td ng-if="contains(authPoint, '/server/del')">

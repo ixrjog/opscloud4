@@ -1,7 +1,7 @@
 /**
  * Experimental data export module for Highcharts
  *
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -23,11 +23,14 @@ var defined = Highcharts.defined,
     win = Highcharts.win,
     doc = win.document,
     seriesTypes = Highcharts.seriesTypes,
-    downloadURL = Highcharts.downloadURL;
+    downloadURL = Highcharts.downloadURL,
+    fireEvent = Highcharts.fireEvent;
+
 
 // Can we add this to utils? Also used in screen-reader.js
 /**
  * HTML encode some characters vulnerable for XSS.
+ * @private
  * @param  {string} html The input string
  * @return {string} The excaped string
  */
@@ -42,9 +45,22 @@ function htmlencode(html) {
 }
 
 Highcharts.setOptions({
+    /**
+     * Export-data module required. When set to `false` will prevent the series
+     * data from being included in any form of data export.
+     *
+     * Since version 6.0.0 until 7.1.0 the option was existing undocumented
+     * as `includeInCSVExport`.
+     *
+     * @type      {boolean}
+     * @since     7.1.0
+     * @apioption plotOptions.series.includeInDataExport
+     */
 
     /**
      * @optionparent exporting
+     *
+     * @private
      */
     exporting: {
 
@@ -185,6 +201,8 @@ Highcharts.setOptions({
 
     /**
      * @optionparent lang
+     *
+     * @private
      */
     lang: {
 
@@ -286,6 +304,7 @@ Highcharts.Chart.prototype.getDataRows = function (multiLevelHeaders) {
         columnHeaderFormatter = function (item, key, keyLength) {
             if (csvOptions.columnHeaderFormatter) {
                 var s = csvOptions.columnHeaderFormatter(item, key, keyLength);
+
                 if (s !== false) {
                     return s;
                 }
@@ -345,7 +364,7 @@ Highcharts.Chart.prototype.getDataRows = function (multiLevelHeaders) {
         });
 
         if (
-            series.options.includeInCSVExport !== false &&
+            series.options.includeInDataExport !== false &&
             !series.options.isInternal &&
             series.visible !== false // #55
         ) {
@@ -482,6 +501,7 @@ Highcharts.Chart.prototype.getDataRows = function (multiLevelHeaders) {
         // Add the category column
         rowArr.forEach(function (row) { // eslint-disable-line no-loop-func
             var category = row.name;
+
             if (xAxis && !defined(category)) {
                 if (xAxis.isDatetimeAxis) {
                     if (row.x instanceof Date) {
@@ -508,7 +528,7 @@ Highcharts.Chart.prototype.getDataRows = function (multiLevelHeaders) {
     }
     dataRows = dataRows.concat(rowArr);
 
-    Highcharts.fireEvent(this, 'exportData', { dataRows: dataRows });
+    fireEvent(this, 'exportData', { dataRows: dataRows });
 
     return dataRows;
 };
@@ -548,6 +568,7 @@ Highcharts.Chart.prototype.getCSV = function (useLocalDecimalPoint) {
     rows.forEach(function (row, i) {
         var val = '',
             j = row.length;
+
         while (j--) {
             val = row[j];
             if (typeof val === 'string') {
@@ -589,7 +610,7 @@ Highcharts.Chart.prototype.getCSV = function (useLocalDecimalPoint) {
  *         HTML representation of the data.
  */
 Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
-    var html = '<table>',
+    var html = '<table id="highcharts-data-table-' + this.index + '">',
         options = this.options,
         decimalPoint = useLocalDecimalPoint ? (1.1).toLocaleString()[1] : '.',
         useMultiLevelHeaders = pick(
@@ -602,6 +623,7 @@ Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
         // Compare two rows for equality
         isRowEqual = function (row1, row2) {
             var i = row1.length;
+
             if (row2.length === i) {
                 while (i--) {
                     if (row1[i] !== row2[i]) {
@@ -617,6 +639,7 @@ Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
         getCellHTMLFromValue = function (tag, classes, attrs, value) {
             var val = pick(value, ''),
                 className = 'text' + (classes ? ' ' + classes : '');
+
             // Convert to string if number
             if (typeof val === 'number') {
                 val = val.toString();
@@ -640,6 +663,7 @@ Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
                 cur,
                 curColspan = 0,
                 rowspan;
+
             // Clean up multiple table headers. Chart.getDataRows() returns two
             // levels of headers when using multilevel, not merged. We need to
             // merge identical headers, remove redundant headers, and keep it
@@ -687,7 +711,7 @@ Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
                             'scope="col"' +
                             (rowspan > 1 ?
                                 ' valign="top" rowspan="' + rowspan + '"' :
-                            ''),
+                                ''),
                             cur
                         );
                     }
@@ -714,13 +738,13 @@ Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
     // Add table caption
     if (options.exporting.tableCaption !== false) {
         html += '<caption class="highcharts-table-caption">' + pick(
-                options.exporting.tableCaption,
-                (
-                    options.title.text ?
+            options.exporting.tableCaption,
+            (
+                options.title.text ?
                     htmlencode(options.title.text) :
                     'Chart'
-                )) +
-                '</caption>';
+            )
+        ) + '</caption>';
     }
 
     // Find longest row
@@ -756,7 +780,11 @@ Highcharts.Chart.prototype.getTable = function (useLocalDecimalPoint) {
     });
     html += '</tbody></table>';
 
-    return html;
+    var e = { html: html };
+
+    fireEvent(this, 'afterGetTable', e);
+
+    return e.html;
 };
 
 
@@ -787,6 +815,7 @@ function getBlobFromContent(content, type) {
  */
 Highcharts.Chart.prototype.downloadCSV = function () {
     var csv = this.getCSV(true);
+
     downloadURL(
         getBlobFromContent(csv, 'text/csv') ||
             'data:text/csv,\uFEFF' + encodeURIComponent(csv),
@@ -848,6 +877,7 @@ Highcharts.Chart.prototype.viewData = function () {
     }
 
     this.dataTableDiv.innerHTML = this.getTable();
+    fireEvent(this, 'afterViewData', this.dataTableDiv);
 };
 
 /**
@@ -886,11 +916,13 @@ Highcharts.Chart.prototype.openInCloud = function () {
 
     function openInCloud() {
         var form = doc.createElement('form');
+
         doc.body.appendChild(form);
         form.method = 'post';
         form.action = 'https://cloud-api.highcharts.com/openincloud';
         form.target = '_blank';
         var input = doc.createElement('input');
+
         input.type = 'hidden';
         input.name = 'chart';
         input.value = params;
@@ -919,6 +951,7 @@ Highcharts.Chart.prototype.openInCloud = function () {
 
 // Add "Download CSV" to the exporting menu.
 var exportingOptions = Highcharts.getOptions().exporting;
+
 if (exportingOptions) {
 
     Highcharts.extend(exportingOptions.menuItemDefinitions, {
@@ -948,13 +981,15 @@ if (exportingOptions) {
         }
     });
 
-    exportingOptions.buttons.contextButton.menuItems.push(
-        'separator',
-        'downloadCSV',
-        'downloadXLS',
-        'viewData',
-        'openInCloud'
-    );
+    if (exportingOptions.buttons) {
+        exportingOptions.buttons.contextButton.menuItems.push(
+            'separator',
+            'downloadCSV',
+            'downloadXLS',
+            'viewData',
+            'openInCloud'
+        );
+    }
 }
 
 // Series specific

@@ -151,22 +151,29 @@ public interface ConfigDao {
      *
      * @param groupId
      * @param serverId
+     * @param queryIp
      * @return
      */
-    long getServerPropertyGroupByServerIdSize(@Param("groupId") long groupId, @Param("serverId") long serverId);
+    long getServerPropertyGroupByServerSize(@Param("groupId") long groupId,
+                                            @Param("serverId") long serverId,
+                                            @Param("queryIp") String queryIp);
 
     /**
      * 获取指定服务器组&服务器的属性的分页数据
      *
      * @param groupId
      * @param serverId
+     * @param queryIp
      * @param pageStart
      * @param pageLength
      * @return
      */
-    List<Long> getServerPropertyGroupByServerIdPage(
-            @Param("groupId") long groupId, @Param("serverId") long serverId,
-            @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
+    List<Long> getServerPropertyGroupByServerPage(
+            @Param("groupId") long groupId,
+            @Param("serverId") long serverId,
+            @Param("queryIp") String queryIp,
+            @Param("pageStart") long pageStart,
+            @Param("pageLength") int pageLength);
 
     /**
      * 获取指定条件下的服务器组&属性组的数据

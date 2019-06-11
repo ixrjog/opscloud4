@@ -11,7 +11,7 @@ public class ZabbixResponseItem  implements Serializable{
 
     // TODO HELP https://www.zabbix.com/documentation/4.0/manual/api/reference/item/get
 
-     private String itemid;
+    private String itemid;
     private String type;
     private String snmp_community;
     private String snmp_oid;

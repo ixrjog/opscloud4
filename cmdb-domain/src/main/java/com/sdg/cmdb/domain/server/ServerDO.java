@@ -29,6 +29,7 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
     private String ciGroup;
     private String content;
     private int zabbixStatus;
+    // 0 : 未监控  1 : 监控
     private int zabbixMonitor;
     // 扩展字段 tomcatVersion
     private String extTomcatVersion;
@@ -66,10 +67,10 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
      * @return
      */
     public String acqServerName() {
-        if (this.envType == ServerDO.EnvTypeEnum.prod.getCode()) {
+        if (this.envType == EnvType.EnvTypeEnum.prod.getCode()) {
             return serverName + "-" + serialNumber;
         } else {
-            return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType) + "-" + serialNumber;
+            return serverName + "-" + EnvType.EnvTypeEnum.getEnvTypeName(envType) + "-" + serialNumber;
         }
     }
 
@@ -102,10 +103,10 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
      * @return
      */
     public String acqHostname() {
-        if (this.envType == ServerDO.EnvTypeEnum.prod.getCode()) {
+        if (this.envType == EnvType.EnvTypeEnum.prod.getCode()) {
             return serverName;
         } else {
-            return serverName + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(envType);
+            return serverName + "-" + EnvType.EnvTypeEnum.getEnvTypeName(envType);
         }
     }
 
@@ -114,40 +115,6 @@ public class ServerDO implements Serializable, Comparable<ServerDO> {
      return JSON.toJSONString(this);
     }
 
-    public enum EnvTypeEnum {
-        //0 保留／在组中代表的是所有权限
-        keep(0, "default"),
-        dev(1, "dev"),
-        daily(2, "daily"),
-        gray(3, "gray"),
-        prod(4, "prod"),
-        test(5, "test"),
-        back(6, "back");
-        private int code;
-        private String desc;
-
-        EnvTypeEnum(int code, String desc) {
-            this.code = code;
-            this.desc = desc;
-        }
-
-        public int getCode() {
-            return code;
-        }
-
-        public String getDesc() {
-            return desc;
-        }
-
-        public static String getEnvTypeName(int code) {
-            for (EnvTypeEnum envTypeEnum : EnvTypeEnum.values()) {
-                if (envTypeEnum.getCode() == code) {
-                    return envTypeEnum.getDesc();
-                }
-            }
-            return "undefined";
-        }
-    }
 
 
     public enum ServerTypeEnum {

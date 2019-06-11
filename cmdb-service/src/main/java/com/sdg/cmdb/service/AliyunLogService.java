@@ -2,6 +2,7 @@ package com.sdg.cmdb.service;
 
 import com.aliyun.openservices.log.Client;
 import com.aliyun.openservices.log.exception.LogException;
+import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.logService.*;
 import com.sdg.cmdb.domain.logService.logServiceQuery.*;
@@ -23,6 +24,7 @@ public interface AliyunLogService {
 
     /**
      * JAVA日志初始化视图
+     *
      * @param logServiceQuery
      * @return
      * @throws LogException
@@ -42,11 +44,10 @@ public interface AliyunLogService {
 
     TableVO<List<LogServicePathDO>> getLogServicePathPage(int page, int length, String tagPath, long serverGroupId);
 
-
-    TableVO<List<LogServiceServerGroupCfgVO>> queryServerGroupPage(int page, int length, String name,boolean isUsername,int useType);
-
+    TableVO<List<LogServiceServerGroupCfgVO>> queryServerGroupPage(int page, int length, String name, boolean isUsername, int useType);
 
     Client acqClient();
+
 
 
 }

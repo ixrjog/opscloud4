@@ -1,12 +1,15 @@
 package com.sdg.cmdb.domain.gitlab;
 
 import com.sdg.cmdb.domain.auth.UserVO;
+import lombok.Data;
 import org.gitlab.api.models.GitlabBranch;
+import org.gitlab.api.models.GitlabProjectMember;
 import org.gitlab.api.models.GitlabTag;
 
 import java.io.Serializable;
 import java.util.List;
 
+@Data
 public class GitlabProjectVO extends GitlabProjectDO implements Serializable {
     private static final long serialVersionUID = 7684730167181501379L;
 
@@ -15,6 +18,8 @@ public class GitlabProjectVO extends GitlabProjectDO implements Serializable {
     List<GitlabTag> tagList;
 
     List<GitlabBranch> branchList;
+
+    private List<GitlabProjectMember> memberList;
 
     public GitlabProjectVO(GitlabProjectDO gitlabProjectDO, UserVO owner, List<GitlabBranch> branchList, List<GitlabTag> tagList) {
         setId(gitlabProjectDO.getId());
@@ -36,30 +41,6 @@ public class GitlabProjectVO extends GitlabProjectDO implements Serializable {
     }
 
     public GitlabProjectVO() {
-
     }
 
-    public UserVO getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UserVO owner) {
-        this.owner = owner;
-    }
-
-    public List<GitlabTag> getTagList() {
-        return tagList;
-    }
-
-    public void setTagList(List<GitlabTag> tagList) {
-        this.tagList = tagList;
-    }
-
-    public List<GitlabBranch> getBranchList() {
-        return branchList;
-    }
-
-    public void setBranchList(List<GitlabBranch> branchList) {
-        this.branchList = branchList;
-    }
 }

@@ -1,15 +1,15 @@
 <div class="modal-header">
-    <h3 class="modal-title">
-        <b style="color: #286090">{{workflowTodo.workflowDO.title}}</b>自动化工作流
-    </h3>
-    <div>
-        <b ng-show="workflowTodo.workflowDO.wfType == 0" class="pull-left">OPS</b>
-        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
-           class="icon icon-info" style="color: green;"></i>
-    </div>
+    <div ng-include="'tpl/modal/workflow/include/header_info.html'"></div>
 </div>
 
 <div class="modal-body">
+
+    <form class="form-horizontal" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
+          style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+        <div ng-include="'tpl/modal/workflow/include/help_info.html'"></div>
+    </form>
+
+
     <form class="form-horizontal" style="padding: 10px;">
 
         <div class="form-group">
@@ -72,31 +72,11 @@
 
     <div style="width: 100%; height: 1px; border: 0.5px solid #eee;"></div>
 
-    <!--<div class="modal-body">-->
-    <form class="form-horizontal" style="margin-top: 35px;">
-        <div ng-include="'tpl/modal/workflow/todo_approval_info.html'"></div>
+    <form class="form-horizontal" style="margin-top: 25px;">
+        <div ng-include="'tpl/modal/workflow/include/approval_info.html'"></div>
     </form>
-    <!--</div>-->
 </div>
 
 <div class="modal-footer">
-    <div class="form-group">
-        <div style="text-align:center;">
-            <button class="btn btn-xs" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
-                    style="margin-right: 25px; background-color: green; color: white;"
-                    ng-click="saveTodo()">
-                <i class="fa fa-spin fa-spinner" ng-show="btnSaveing"></i>
-                <i class="glyphicon glyphicon-ok" ng-show="!btnSaveing"></i>保存
-            </button>
-            <button class="btn btn-xs" ng-show="todoDetail.todoStatus != 0"
-                    style="background-color: #ff8700; color: white;"
-                    ng-click="closeModal()">关闭
-            </button>
-        </div>
-    </div>
-
-
-    <div ng-if="alert.type != ''">
-        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
-    </div>
+    <div ng-include="'tpl/modal/workflow/include/footer_info.html'"></div>
 </div>

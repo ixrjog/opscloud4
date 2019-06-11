@@ -1,302 +1,244 @@
 package com.sdg.cmdb.service.impl;
 
-import com.sdg.cmdb.dao.cmdb.LogCleanupDao;
+import com.sdg.cmdb.dao.cmdb.AnsibleTaskDao;
+import com.sdg.cmdb.dao.cmdb.LogcleanupDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
-import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
-import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.logCleanup.LogCleanupConfigurationDO;
-import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyDO;
-import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyVO;
+import com.sdg.cmdb.domain.ansibleTask.AnsibleTaskServerDO;
+import com.sdg.cmdb.domain.logCleanup.LogcleanupDO;
+import com.sdg.cmdb.domain.logCleanup.LogcleanupVO;
 import com.sdg.cmdb.domain.server.ServerDO;
-import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.server.ServerVO;
 import com.sdg.cmdb.service.AnsibleTaskService;
-import com.sdg.cmdb.service.LogCleanupService;
-import com.sdg.cmdb.service.ServerPerfService;
-import com.sdg.cmdb.util.ArithUtils;
+import com.sdg.cmdb.service.LogcleanupService;
+import com.sdg.cmdb.service.ServerService;
+import com.sdg.cmdb.service.ZabbixServerService;
+import com.sdg.cmdb.util.BeanCopierUtils;
+import com.sdg.cmdb.util.ByteUtils;
 import com.sdg.cmdb.util.TimeUtils;
+import com.sdg.cmdb.util.TimeViewUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
-/**
- * Created by liangjian on 2017/3/30.
- */
 @Service
-public class LogCleanupServiceImpl implements LogCleanupService {
-    private static final Logger logger = LoggerFactory.getLogger(LogCleanupServiceImpl.class);
+public class LogcleanupServiceImpl implements LogcleanupService {
 
-    @Value("#{cmdb['invoke.env']}")
-    private String invokeEnv;
+    private static final Logger logger = LoggerFactory.getLogger(LogcleanupServiceImpl.class);
 
-    @Resource
-    private ServerGroupDao serverGroupDao;
+    /**
+     * 磁盘清理阈值
+     */
+    public static final int LOGCLEANUP_FREE_RATE = 20;
 
-    @Resource
-    private ServerDao serverDao;
+    public static final int LOGCLEANUP_HISTORY_MAX_DAY = 30;
+    public static final int LOGCLEANUP_HISTORY_MIN_DAY = 7;
 
-    @Resource
-    private LogCleanupDao logCleanupDao;
+    @Autowired
+    private LogcleanupDao logcleanupDao;
 
-    @Resource
-    private ServerPerfService serverPerfService;
+    @Autowired
+    private ZabbixServerService zabbixServerService;
 
-    @Resource
+    @Autowired
     private AnsibleTaskService ansibleTaskService;
 
-    // 日志清理成功的返回字符，用于判断是否成功
-    public final static String LOGCLEANUP_SUCCESS_STR = "日志清理成功";
+    @Autowired
+    private ServerService serverService;
 
+    @Autowired
+    private AnsibleTaskDao ansibleTaskDao;
 
-    /**
-     * 清理日志任务
-     *
-     * @return
-     */
-    @Override
-    public BusinessWrapper<Boolean> task() {
-        if (!invokeEnv.equalsIgnoreCase("getway")) return new BusinessWrapper<>(true);
-        //this.syncData();
-        List<LogCleanupPropertyDO> list = logCleanupDao.getAllEnabledLogCleanupProperty();
-        for (LogCleanupPropertyDO logCleanupPropertyDO : list) {
-            if (checkTime(logCleanupPropertyDO))
-                cleanup(logCleanupPropertyDO.getServerId());
-        }
-        return new BusinessWrapper<>(true);
-    }
-
+    @Autowired
+    private ServerDao serverDao;
 
     @Override
-    public void syncData() {
-        // 只在online环境执行
-        // if (!invokeEnv.equalsIgnoreCase("getway")) return;
-        List<ServerGroupDO> listServerGroupDO = serverGroupDao.queryServerGroup();
-
-        HashMap<Long, LogCleanupPropertyDO> map = acqLogCleanupPropertyMap();
-
-        for (ServerGroupDO serverGroupDO : listServerGroupDO) {
-            // 非web-service 类跳过
-            if (serverGroupDO.getUseType() != ServerGroupDO.UseTypeEnum.webservice.getCode()) continue;
-            List<ServerDO> listServerDO = serverDao.acqServersByGroupId(serverGroupDO.getId());
-            for (ServerDO serverDO : listServerDO) {
-                LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverDO.getId());
-                if (logCleanupPropertyDO != null) {
-                    map.remove(logCleanupPropertyDO.getServerId());
-                } else {
-                    logCleanupPropertyDO = new LogCleanupPropertyDO(serverGroupDO, serverDO);
-                    invokeHistory(logCleanupPropertyDO);
-                    logCleanupDao.addLogCleanupProperty(logCleanupPropertyDO);
-                }
+    public TableVO<List<LogcleanupVO>> getLogcleanupPage(long serverGroupId, String serverName, int enabled, int page, int length) {
+        long size = logcleanupDao.getLogcleanupSize(serverGroupId, serverName, enabled);
+        List<LogcleanupDO> list = logcleanupDao.getLogcleanupPage(serverGroupId, serverName, enabled, page * length, length);
+        List<LogcleanupVO> voList = new ArrayList<>();
+        for (LogcleanupDO logcleanupDO : list) {
+            LogcleanupVO logcleanupVO = BeanCopierUtils.copyProperties(logcleanupDO, LogcleanupVO.class);
+            logcleanupVO.setServerDO(serverService.getServerById(logcleanupDO.getServerId()));
+            if (!StringUtils.isEmpty(logcleanupVO.getUpdateTime()))
+                logcleanupVO.setUpdateTimeView(TimeViewUtils.format(logcleanupVO.getUpdateTime()));
+            if (!StringUtils.isEmpty(logcleanupVO.getCleanupTime()))
+                logcleanupVO.setCleanupTimeView(TimeViewUtils.format(logcleanupVO.getCleanupTime()));
+            try {
+                logcleanupVO.setSizeView(ByteUtils.getSize(logcleanupVO.getUsedDiskSpace()) + "/" + ByteUtils.getSize(logcleanupVO.getTotalDiskSpace()));
+            } catch (Exception e) {
             }
+            voList.add(logcleanupVO);
         }
-
-        for (Map.Entry<Long, LogCleanupPropertyDO> entry : map.entrySet()) {
-            LogCleanupPropertyDO logCleanupPropertyDO = entry.getValue();
-            logCleanupDao.delLogCleanupProperty(logCleanupPropertyDO.getId());
-        }
-    }
-
-    private HashMap<Long, LogCleanupPropertyDO> acqLogCleanupPropertyMap() {
-        List<LogCleanupPropertyDO> logServers = logCleanupDao.getAllLogCleanupProperty();
-        HashMap<Long, LogCleanupPropertyDO> map = new HashMap<>();
-        for (LogCleanupPropertyDO logCleanupPropertyDO : logServers) {
-            map.put(logCleanupPropertyDO.getServerId(), logCleanupPropertyDO);
-        }
-        return map;
-    }
-
-
-    private void invokeHistory(LogCleanupPropertyDO logCleanupPropertyDO) {
-        LogCleanupConfigurationDO logCleanupConfigurationDO = logCleanupDao.getLogCleanupConfigurationByEnvType(logCleanupPropertyDO.getEnvType());
-        logCleanupPropertyDO.setHistory(logCleanupConfigurationDO.getHistory());
+        return new TableVO<>(size, voList);
     }
 
     @Override
-    public TableVO<List<LogCleanupPropertyVO>> getLogCleanupPage(long serverGroupId, String serverName, int enabled, int page, int length) {
-        long size = logCleanupDao.getLogCleanupPropertySize(serverGroupId, serverName, enabled);
-        List<LogCleanupPropertyDO> list = logCleanupDao.getLogCleanupPropertyPage(serverGroupId, serverName, enabled, page * length, length);
-
-        List<LogCleanupPropertyVO> listVO = new ArrayList<LogCleanupPropertyVO>();
-        for (LogCleanupPropertyDO logCleanupPropertyDO : list) {
-            ServerDO serverDO = serverDao.getServerInfoById(logCleanupPropertyDO.getServerId());
-            // 没找到服务器的脏数据需要删除
-            if (serverDO != null) {
-                listVO.add(new LogCleanupPropertyVO(logCleanupPropertyDO, serverDO));
-            } else {
-                logCleanupDao.delLogCleanupProperty(logCleanupPropertyDO.getId());
-            }
-        }
-
-        return new TableVO<>(size, listVO);
+    public TableVO<List<AnsibleTaskServerDO>> getLogcleanupTaskLogPage(long id, int page, int length) {
+        LogcleanupDO logcleanupDO = logcleanupDao.getLogcleanup(id);
+        long size = ansibleTaskDao.getAnsibleTaskServerSize(logcleanupDO.getScriptId(), logcleanupDO.getServerId());
+        List<AnsibleTaskServerDO> list = ansibleTaskDao.queryAnsibleTaskServerPage(logcleanupDO.getScriptId(), logcleanupDO.getServerId(), page * length, length);
+        return new TableVO<>(size, list);
     }
 
-    /**
-     * 清理日志任务
-     *
-     * @return
-     */
     @Override
-    public BusinessWrapper<String> cleanup(long serverId) {
-        // 只在online环境执行
-        //if (!invokeEnv.equalsIgnoreCase("online")) return new BusinessWrapper<>(ErrorCode.serverFailure);
-        ServerDO serverDO = serverDao.getServerInfoById(serverId);
-        LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverId);
-        if (!logCleanupPropertyDO.isEnabled())
-            return new BusinessWrapper<>(ErrorCode.logcleanupDisabled);
-        //logCleanupPropertyDO.setDiskRate((int) serverPerfService.acqDiskRate(serverDO));
-        //若无服务器，则删除LogCleanupPropertyDO配置
-        if (serverDO == null) {
-            logCleanupDao.delLogCleanupProperty(logCleanupPropertyDO.getId());
-            return new BusinessWrapper<>(ErrorCode.serverNotExist);
-        }
-
+    public BusinessWrapper<Boolean> save(LogcleanupDO logcleanupDO) {
+        if (logcleanupDO.getHistory() == 0)
+            logcleanupDO.setHistory(LogcleanupDO.HISTORY_DEFAULT);
         try {
-            //更新磁盘可用空间
-            invokeDiskRate(logCleanupPropertyDO,serverDO);
-            calHistory(logCleanupPropertyDO);
-            String invokeStr = ansibleTaskService.taskLogCleanup(serverDO, (int) logCleanupPropertyDO.getHistory());
-            logger.info(logCleanupPropertyDO.acqServerName() + ":" + invokeStr);
-            //success 修改清理时间
-            if (checkSuccess(invokeStr))
-                logCleanupPropertyDO.setCleanupTime(TimeUtils.nowDate());
-            logCleanupPropertyDO.setCleanupResult(true);
-            logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-            return new BusinessWrapper<>(invokeStr);
+            logcleanupDao.updateLogcleanupConfig(logcleanupDO);
+            return new BusinessWrapper<Boolean>(true);
         } catch (Exception e) {
-            //calHistory(logCleanupPropertyDO);
-            //logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-            logCleanupDao.updateLogCleanupPropertyByResult(false);
-            logger.error(e.getMessage(), e);
-            return new BusinessWrapper<>(ErrorCode.serverFailure);
-        }
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> refreshDiskRate(long serverId) {
-        ServerDO serverDO = serverDao.getServerInfoById(serverId);
-        LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverId);
-        int diskRate = acqDiskRate(serverDO);
-        logCleanupPropertyDO.setDiskRate(diskRate);
-        logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-        return new BusinessWrapper<>(true);
-    }
-
-    private void invokeDiskRate(LogCleanupPropertyDO logCleanupPropertyDO,ServerDO serverDO) {
-
-        //ServerDO serverDO = new ServerDO();
-        //serverDO.setId(logCleanupPropertyDO.getServerId());
-        int diskRate = acqDiskRate(serverDO);
-        logCleanupPropertyDO.setDiskRate(diskRate);
-    }
-
-
-    //判断日志清理是否成功
-    private boolean checkSuccess(String str) {
-        if (StringUtils.isEmpty(str)) return false;
-        if (str.indexOf(LOGCLEANUP_SUCCESS_STR) != -1) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-
-    @Override
-    public BusinessWrapper<Boolean> setEnabled(long serverId) {
-        //ServerDO serverDO = serverDao.getServerInfoById(serverId);
-        LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverId);
-        if (logCleanupPropertyDO.isEnabled()) {
-            logCleanupPropertyDO.setEnabled(false);
-        } else {
-            logCleanupPropertyDO.setEnabled(true);
-        }
-        logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-        return new BusinessWrapper<>(true);
-    }
-
-    @Override
-    public BusinessWrapper<Boolean> setHistory(long serverId, int cnt) {
-        LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverId);
-        LogCleanupConfigurationDO logCleanupConfigurationDO = logCleanupDao.getLogCleanupConfigurationByEnvType(logCleanupPropertyDO.getEnvType());
-        int max = logCleanupConfigurationDO.getMax();
-        int min = logCleanupConfigurationDO.getMin();
-        float history = logCleanupPropertyDO.getHistory() + cnt;
-        if (history < min || history > max) return new BusinessWrapper<>(false);
-        logCleanupPropertyDO.setHistory(history);
-        logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-        return new BusinessWrapper<>(true);
-    }
-
-    private int acqDiskRate(ServerDO serverDO) {
-        Float diskRate = serverPerfService.acqDiskRate(serverDO);
-        return diskRate.intValue();
-    }
-
-    /**
-     * 计算递增率rate
-     *
-     * @param logCleanupPropertyDO
-     */
-    public void calHistory(LogCleanupPropertyDO logCleanupPropertyDO) {
-        if (logCleanupPropertyDO.getDiskRate() == 0) return;
-        int diskRate = logCleanupPropertyDO.getDiskRate();
-        float history = logCleanupPropertyDO.getHistory();
-        LogCleanupConfigurationDO logCleanupConfigurationDO = logCleanupDao.getLogCleanupConfigurationByEnvType(logCleanupPropertyDO.getEnvType());
-        int historyMin = logCleanupConfigurationDO.getMin();
-        int historyMax = logCleanupConfigurationDO.getMax();
-        // rate = ((100 - diskRate) / 30) ^ 4;
-        double x = ArithUtils.div(100 - diskRate, 30);
-        //float rate = (float) ArithUtils.pow(x, 4, 10);
-        float rate = 0.1f;
-        if (logCleanupPropertyDO.getDiskRate() >= 78) {
-            if (historyMin >= (history - 1)) {
-                logCleanupPropertyDO.setHistory(historyMin);
-            } else {
-                logCleanupPropertyDO.setHistory(history - 1);
-            }
-        } else {
-            if (historyMax <= (rate + history)) {
-                logCleanupPropertyDO.setHistory(historyMax);
-            } else {
-                logCleanupPropertyDO.setHistory(rate + history);
-            }
+            e.printStackTrace();
+            return new BusinessWrapper<Boolean>(false);
         }
     }
 
     /**
-     * 判断时间是否已经过了12小时
+     * 判断清理任务是否执行:
+     * 磁盘空间超过阈值，则执行清理任务，并记录cleanupTime
      *
-     * @param log
+     * @param logcleanupDO
      * @return
      */
-    public boolean checkTime(LogCleanupPropertyDO log) {
-        if (StringUtils.isEmpty(log.getCleanupTime())) return true;
-        try {
-            long cleanupDateStamp = TimeUtils.dateToStamp(log.getCleanupTime());
-            long nowDateStamp = new Date().getTime();
-            //System.err.println(cleanupDateStamp + "/" + nowDateStamp);
-            //System.err.println(nowDateStamp - cleanupDateStamp);
-            if ((nowDateStamp - cleanupDateStamp) > 72001000) {
+    private boolean checkTask(LogcleanupDO logcleanupDO) {
+        // TODO 禁用
+        if (!logcleanupDO.isEnabled())
+            return false;
+        // TODO 判断磁盘空间阈值
+        if (logcleanupDO.getFreeDiskSpace() <= LOGCLEANUP_FREE_RATE) {
+            if (logcleanupDO.getHistory() > LOGCLEANUP_HISTORY_MIN_DAY) {
+                logcleanupDO.setHistory(logcleanupDO.getHistory() - 1);
+                logcleanupDO.setCleanupTime(TimeUtils.nowDate());
+                logcleanupDao.updateLogcleanupTask(logcleanupDO);
                 return true;
             }
+            // TODO 已经低于日志归档最小天数，不执行清理
             return false;
-        } catch (Exception e) {
+        } else {
+            // TODO 磁盘空间未到清理阈值，需要计算是否增加归档天数
+            if (StringUtils.isEmpty(logcleanupDO.getCleanupTime())) {
+                logcleanupDO.setCleanupTime(TimeUtils.nowDate());
+                logcleanupDao.updateLogcleanupTask(logcleanupDO);
+                return false;
+            }
+            // TODO 距离1天则更新归档天数
+            if (TimeUtils.calculateDateDiff4Day(logcleanupDO.getCleanupTime()) >= 1) {
+                if (logcleanupDO.getHistory() < LOGCLEANUP_HISTORY_MAX_DAY) {
+                    logcleanupDO.setHistory(logcleanupDO.getHistory() + 1);
+                    logcleanupDO.setCleanupTime(TimeUtils.nowDate());
+                    logcleanupDao.updateLogcleanupTask(logcleanupDO);
+                }
+            }
             return false;
         }
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveHistory(long serverId, int history) {
-        LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverId);
-        logCleanupPropertyDO.setHistory(Float.valueOf(history));
-        logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-        return new BusinessWrapper<>(true);
+    public void task() {
+        List<LogcleanupDO> list = logcleanupDao.getLogcleanupByEnabled();
+        for (LogcleanupDO logcleanupDO : list) {
+            try {
+                doTask(logcleanupDO);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public AnsibleTaskServerDO doTask(long id) {
+        LogcleanupDO logcleanupDO = logcleanupDao.getLogcleanup(id);
+        return doTask(logcleanupDO);
+    }
+
+    private AnsibleTaskServerDO doTask(LogcleanupDO logcleanupDO) {
+        AnsibleTaskServerDO ansibleTaskServerDO = new AnsibleTaskServerDO();
+        if (checkTask(logcleanupDO)) {
+            ansibleTaskServerDO = ansibleTaskService.scriptLogcleanup(logcleanupDO);
+            // TODO 更新任务执行结果 cleanupResult
+            logcleanupDao.updateLogcleanupTask(logcleanupDO);
+        }
+        return ansibleTaskServerDO;
+    }
+
+
+    /**
+     * 更新服务器日志清理配置
+     */
+    @Override
+    public BusinessWrapper<Boolean> updateLogcleanupServers() {
+        List<ServerDO> serverList = serverDao.queryZabbixServer();
+        for (ServerDO serverDO : serverList)
+            updateLogcleanupServer(serverDO);
+        return new BusinessWrapper<Boolean>(true);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> updateLogcleanupConfig(long serverId) {
+        ServerDO serverDO = serverService.getServerById(serverId);
+        return new BusinessWrapper<>(updateLogcleanupServer(serverDO));
+    }
+
+    private boolean updateLogcleanupServer(ServerDO serverDO) {
+        try {
+            // 查询配置是否存在
+            LogcleanupDO logcleanupDO = logcleanupDao.getLogcleanupByServerId(serverDO.getId());
+            // 更新服务器信息
+            if (logcleanupDO != null) {
+                logcleanupDO = updateLogcleanupServerInfo(logcleanupDO, serverDO);
+            } else {
+                logcleanupDO = new LogcleanupDO(serverDO);
+            }
+            // 插入采样信息
+            zabbixServerService.invokeLogcleanupDiskInfo(logcleanupDO);
+            saveLogcleanup(logcleanupDO);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private boolean saveLogcleanup(LogcleanupDO logcleanupDO) {
+        try {
+            if (logcleanupDO.getId() == 0) {
+                logcleanupDao.addLogcleanup(logcleanupDO);
+            } else {
+                logcleanupDao.updateLogcleanup(logcleanupDO);
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    /**
+     * 更新服务器信息
+     *
+     * @param logcleanupDO
+     * @param serverDO
+     * @return
+     */
+    private LogcleanupDO updateLogcleanupServerInfo(LogcleanupDO logcleanupDO, ServerDO serverDO) {
+        if (!logcleanupDO.acqServerName().equals(serverDO.acqServerName())) {
+            logcleanupDO.setServerName(serverDO.getServerName());
+            logcleanupDO.setEnvType(serverDO.getEnvType());
+            logcleanupDO.setServerName(serverDO.getServerName());
+            logcleanupDO.setServerGroupId(serverDO.getServerGroupId());
+            try {
+                logcleanupDao.updateLogcleanupServerInfo(logcleanupDO);
+            } catch (Exception e) {
+                return null;
+            }
+        }
+        return logcleanupDO;
     }
 
 

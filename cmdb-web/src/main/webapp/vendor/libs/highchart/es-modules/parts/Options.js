@@ -1,7 +1,132 @@
 /**
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
+ */
+
+/**
+ * @typedef {"plotBox"|"spacingBox"} Highcharts.ButtonRelativeToValue
+ */
+
+/**
+ * Gets fired when a series is added to the chart after load time, using the
+ * `addSeries` method. Returning `false` prevents the series from being added.
+ *
+ * @callback Highcharts.ChartAddSeriesCallbackFunction
+ *
+ * @param {Highcharts.Chart} this
+ *        The chart on which the event occured.
+ *
+ * @param {Highcharts.ChartAddSeriesEventObject} event
+ *        The event that occured.
+ */
+
+/**
+ * Conaints common event information. Through the `options` property you can
+ * access the series options that were passed to the `addSeries` method.
+ *
+ * @interface Highcharts.ChartAddSeriesEventObject
+ *//**
+ * The series options that were passed to the `addSeries` method.
+ * @name Highcharts.ChartAddSeriesEventObject#options
+ * @type {Highcharts.SeriesOptionsType}
+ *//**
+ * Prevents the default behaviour of the event.
+ * @name Highcharts.ChartAddSeriesEventObject#preventDefault
+ * @type {Function}
+ *//**
+ * The event target.
+ * @name Highcharts.ChartAddSeriesEventObject#target
+ * @type {Highcharts.Chart}
+ *//**
+ * The event type.
+ * @name Highcharts.ChartAddSeriesEventObject#type
+ * @type {"drilldown"}
+ */
+
+/**
+ * Gets fired when clicking on the plot background.
+ *
+ * @callback Highcharts.ChartClickCallbackFunction
+ *
+ * @param {Highcharts.Chart} this
+ *        The chart on which the event occured.
+ *
+ * @param {Highcharts.PointerEventObject} event
+ *        The event that occured.
+ */
+
+/**
+ * Contains an axes of the clicked spot.
+ *
+ * @interface Highcharts.ChartClickEventAxisObject
+ *//**
+ * Axis at the clicked spot.
+ * @name Highcharts.ChartClickEventAxisObject#axis
+ * @type {Highcharts.Axis}
+ *//**
+ * Axis value at the clicked spot.
+ * @name Highcharts.ChartClickEventAxisObject#value
+ * @type {number}
+ */
+
+/**
+ * Contains information about the clicked spot on the chart. Remember the unit
+ * of a datetime axis is milliseconds since 1970-01-01 00:00:00.
+ *
+ * @interface Highcharts.ChartClickEventObject
+ * @extends Highcharts.PointerEventObject
+ *//**
+ * Information about the x-axis on the clicked spot.
+ * @name Highcharts.ChartClickEventObject#xAxis
+ * @type {Array<Highcharts.ChartClickEventAxisObject>}
+ *//**
+ * Information about the y-axis on the clicked spot.
+ * @name Highcharts.ChartClickEventObject#yAxis
+ * @type {Array<Highcharts.ChartClickEventAxisObject>}
+ *//**
+ * Information about the z-axis on the clicked spot.
+ * @name Highcharts.ChartClickEventObject#zAxis
+ * @type {Array<Highcharts.ChartClickEventAxisObject>|undefined}
+ */
+
+/**
+ * Gets fired when the chart is finished loading.
+ *
+ * @callback Highcharts.ChartLoadCallbackFunction
+ *
+ * @param {Highcharts.Chart} this
+ *        The chart on which the event occured.
+ *
+ * @param {global.Event} event
+ *        The event that occured.
+ */
+
+/**
+ * Fires when the chart is redrawn, either after a call to `chart.redraw()` or
+ * after an axis, series or point is modified with the `redraw` option set to
+ * `true`.
+ *
+ * @callback Highcharts.ChartRedrawCallbackFunction
+ *
+ * @param {Highcharts.Chart} this
+ *        The chart on which the event occured.
+ *
+ * @param {global.Event} event
+ *        The event that occured.
+ */
+
+/**
+ * Gets fired after initial load of the chart (directly after the `load` event),
+ * and after each redraw (directly after the `redraw` event).
+ *
+ * @callback Highcharts.ChartRenderCallbackFunction
+ *
+ * @param {Highcharts.Chart} this
+ *        The chart on which the event occured.
+ *
+ * @param {global.Event} event
+ *        The event that occured.
  */
 
 /**
@@ -11,7 +136,10 @@
  *
  * @callback Highcharts.ChartSelectionCallbackFunction
  *
- * @param {global.Event} event
+ * @param {Highcharts.Chart} this
+ *        The chart on which the event occured.
+ *
+ * @param {global.ChartSelectionContextObject} event
  *        Event informations
  *
  * @return {boolean|undefined}
@@ -19,33 +147,38 @@
  */
 
 /**
- * @interface Highcharts.TooltipFormatterContextObject
+ * The primary axes are `xAxis[0]` and `yAxis[0]`. Remember the unit of a
+ * datetime axis is milliseconds since 1970-01-01 00:00:00.
+ *
+ * @interface Highcharts.ChartSelectionContextObject
+ * @extends global.Event
  *//**
- * @name Highcharts.TooltipFormatterContextObject#color
- * @type {Highcharts.ColorString}
+ * Arrays containing the axes of each dimension and each axis' min and max
+ * values.
+ * @name Highcharts.ChartSelectionContextObject#xAxis
+ * @type {Array<Highcharts.ChartSelectionAxisContextObject>}
  *//**
- * @name Highcharts.TooltipFormatterContextObject#colorIndex
- * @type {number|undefined}
+ * Arrays containing the axes of each dimension and each axis' min and max
+ * values.
+ * @name Highcharts.ChartSelectionContextObject#yAxis
+ * @type {Array<Highcharts.ChartSelectionAxisContextObject>}
+ */
+
+/**
+ * Axis context of the selection.
+ *
+ * @interface Highcharts.ChartSelectionAxisContextObject
  *//**
- * @name Highcharts.TooltipFormatterContextObject#key
+ * The selected Axis.
+ * @name Highcharts.ChartSelectionAxisContextObject#axis
+ * @type {Highcharts.Axis}
+ *//**
+ * The maximum axis value, either automatic or set manually.
+ * @name Highcharts.ChartSelectionAxisContextObject#max
  * @type {number}
  *//**
- * @name Highcharts.TooltipFormatterContextObject#percentage
- * @type {number|undefined}
- *//**
- * @name Highcharts.TooltipFormatterContextObject#point
- * @type {Highcharts.Point}
- *//**
- * @name Highcharts.TooltipFormatterContextObject#series
- * @type {Highcharts.Series}
- *//**
- * @name Highcharts.TooltipFormatterContextObject#total
- * @type {number|undefined}
- *//**
- * @name Highcharts.TooltipFormatterContextObject#x
- * @type {number}
- *//**
- * @name Highcharts.TooltipFormatterContextObject#y
+ * The minimum axis value, either automatic or set manually.
+ * @name Highcharts.ChartSelectionAxisContextObject#min
  * @type {number}
  */
 
@@ -127,7 +260,7 @@ H.defaultOptions = {
 
     /**
      * The language object is global and it can't be set on each chart
-     * initiation. Instead, use `Highcharts.setOptions` to set it before any
+     * initialization. Instead, use `Highcharts.setOptions` to set it before any
      * chart is initialized.
      *
      * <pre>Highcharts.setOptions({
@@ -402,9 +535,14 @@ H.defaultOptions = {
         /**
          * Default `mapData` for all series. If set to a string, it functions
          * as an index into the `Highcharts.maps` array. Otherwise it is
-         * interpreted s map data.
+         * interpreted as map data.
          *
          * @see [mapData](#series.map.mapData)
+         *
+         * @sample    maps/demo/geojson
+         *            Loading geoJSON data
+         * @sample    maps/chart/topojson
+         *            Loading topoJSON converted to geoJSON
          *
          * @type      {string|Array<*>}
          * @since     5.0.0
@@ -510,19 +648,19 @@ H.defaultOptions = {
          */
 
         /**
-         * Fires when a series is added to the chart after load time, using
-         * the `addSeries` method. One parameter, `event`, is passed to the
-         * function, containing common event information.
-         * Through `event.options` you can access the series options that was
-         * passed to the `addSeries` method. Returning false prevents the series
-         * from being added.
+         * Fires when a series is added to the chart after load time, using the
+         * `addSeries` method. One parameter, `event`, is passed to the
+         * function, containing common event information. Through
+         * `event.options` you can access the series options that were passed to
+         * the `addSeries` method. Returning false prevents the series from
+         * being added.
          *
          * @sample {highcharts} highcharts/chart/events-addseries/
          *         Alert on add series
          * @sample {highstock} stock/chart/events-addseries/
          *         Alert on add series
          *
-         * @type      {Function}
+         * @type      {Highcharts.ChartAddSeriesCallbackFunction}
          * @since     1.2.0
          * @context   Highcharts.Chart
          * @apioption chart.events.addSeries
@@ -558,7 +696,7 @@ H.defaultOptions = {
          * @sample {highmaps} highcharts/chart/events-container/
          *         Alternatively, attach event to container
          *
-         * @type      {Function}
+         * @type      {Highcharts.ChartClickCallbackFunction}
          * @since     1.2.0
          * @context   Highcharts.Chart
          * @apioption chart.events.click
@@ -581,7 +719,7 @@ H.defaultOptions = {
          * @sample {highmaps} maps/chart/events-load/
          *         Add series on chart load
          *
-         * @type      {Function}
+         * @type      {Highcharts.ChartLoadCallbackFunction}
          * @context   Highcharts.Chart
          * @apioption chart.events.load
          */
@@ -589,8 +727,8 @@ H.defaultOptions = {
         /**
          * Fires when the chart is redrawn, either after a call to
          * `chart.redraw()` or after an axis, series or point is modified with
-         * the `redraw` option set to true. One parameter, `event`, is passed to
-         * the function, containing common event information.
+         * the `redraw` option set to `true`. One parameter, `event`, is passed
+         * to the function, containing common event information.
          *
          * @sample {highcharts} highcharts/chart/events-redraw/
          *         Alert on chart redraw
@@ -600,7 +738,7 @@ H.defaultOptions = {
          * @sample {highmaps} maps/chart/events-redraw/
          *         Set subtitle on chart redraw
          *
-         * @type      {Function}
+         * @type      {Highcharts.ChartRedrawCallbackFunction}
          * @since     1.2.0
          * @context   Highcharts.Chart
          * @apioption chart.events.redraw
@@ -610,7 +748,7 @@ H.defaultOptions = {
          * Fires after initial load of the chart (directly after the `load`
          * event), and after each redraw (directly after the `redraw` event).
          *
-         * @type      {Function}
+         * @type      {Highcharts.ChartRenderCallbackFunction}
          * @since     5.0.7
          * @context   Highcharts.Chart
          * @apioption chart.events.render
@@ -916,18 +1054,17 @@ H.defaultOptions = {
         resetZoomButton: {
 
             /**
-             * What frame the button should be placed related to. Can be either
-             * `plot` or `chart`
+             * What frame the button placement should be related to. Can be
+             * either `plotBox` or `spacingBox`.
              *
              * @sample {highcharts} highcharts/chart/resetzoombutton-relativeto/
              *         Relative to the chart
              * @sample {highstock} highcharts/chart/resetzoombutton-relativeto/
              *         Relative to the chart
              *
-             * @type       {string}
+             * @type       {Highcharts.ButtonRelativeToValue}
              * @default    plot
              * @since      2.2
-             * @validvalue ["plot", "chart"]
              * @apioption  chart.resetZoomButton.relativeTo
              */
 
@@ -943,14 +1080,12 @@ H.defaultOptions = {
              * @sample {highstock} highcharts/chart/resetzoombutton-theme/
              *         Theming the button
              *
+             * @type {Highcharts.SVGAttributes}
+             * @default {"zIndex":6}
              * @since 2.2
              */
             theme: {
-
-                /**
-                 * The Z index for the reset zoom button. The default value
-                 * places it below the tooltip that has Z index 7.
-                 */
+                /** @ignore-option */
                 zIndex: 6
             },
 
@@ -964,6 +1099,7 @@ H.defaultOptions = {
              * @sample {highmaps} highcharts/chart/resetzoombutton-position/
              *         Above the plot area
              *
+             * @type  {Highcharts.AlignObject}
              * @since 2.2
              */
             position: {
@@ -981,9 +1117,8 @@ H.defaultOptions = {
                 /**
                  * The vertical alignment of the button.
                  *
-                 * @type       {string}
+                 * @type       {Highcharts.VerticalAlignValue}
                  * @default    top
-                 * @validvalue ["top", "middle", "bottom"]
                  * @apioption  chart.resetZoomButton.position.verticalAlign
                  */
 
@@ -1241,7 +1376,11 @@ H.defaultOptions = {
 
         /**
          * The default series type for the chart. Can be any of the chart types
-         * listed under [plotOptions](#plotOptions).
+         * listed under [plotOptions](#plotOptions) and [series](#series) or can
+         * be a series provided by an additional module.
+         *
+         * In TypeScript this option has no effect in sense of typing and
+         * instead the `type` option must always be set in the series.
          *
          * @sample {highcharts} highcharts/chart/type-bar/
          *         Bar
@@ -1255,11 +1394,6 @@ H.defaultOptions = {
          * @default    {highstock} line
          * @default    {highmaps} map
          * @since      2.1.0
-         * @validvalue ["line", "spline", "column", "bar", "area", "areaspline",
-         *             "pie", "arearange", "areasplinerange", "boxplot",
-         *             "bubble", "columnrange", "errorbar", "funnel", "gauge",
-         *             "heatmap", "polygon", "pyramid", "scatter", "solidgauge",
-         *             "treemap", "waterfall"]
          * @apioption  chart.type
          */
 
@@ -1385,7 +1519,7 @@ H.defaultOptions = {
          * @sample {highmaps} maps/chart/backgroundcolor-gradient/
          *         Gradient
          *
-         * @type {Highcharts.ColorString}
+         * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
          */
         backgroundColor: '#ffffff',
 
@@ -1516,10 +1650,9 @@ H.defaultOptions = {
          * @sample {highstock} stock/chart/title-verticalalign/
          *         Chart title in bottom right corner
          *
-         * @type       {string}
-         * @since      2.1
-         * @validvalue ["top", "middle", "bottom"]
-         * @apioption  title.verticalAlign
+         * @type      {Highcharts.VerticalAlignValue}
+         * @since     2.1
+         * @apioption title.verticalAlign
          */
 
         /**
@@ -1579,8 +1712,8 @@ H.defaultOptions = {
          *         Aligned to the plot area (x = 50px = margin left - spacing
          *         left)
          *
-         * @since      2.0
-         * @validvalue ["left", "center", "right"]
+         * @type  {Highcharts.AlignValue}
+         * @since 2.0
          */
         align: 'center',
 
@@ -1671,18 +1804,18 @@ H.defaultOptions = {
          */
 
         /**
-         * The vertical alignment of the title. Can be one of "top", "middle"
-         * and "bottom". When a value is given, the title behaves as floating.
+         * The vertical alignment of the title. Can be one of `"top"`,
+         * `"middle"` and `"bottom"`. When a value is given, the title behaves
+         * as floating.
          *
          * @sample {highcharts} highcharts/subtitle/verticalalign/
          *         Footnote at the bottom right of plot area
          * @sample {highstock} stock/chart/subtitle-footnote
          *         Footnote at the bottom right of plot area
          *
-         * @type       {string}
-         * @since      2.1
-         * @validvalue ["top", "middle", "bottom"]
-         * @apioption  subtitle.verticalAlign
+         * @type      {Highcharts.VerticalAlignValue}
+         * @since     2.1
+         * @apioption subtitle.verticalAlign
          */
 
         /**
@@ -1734,8 +1867,8 @@ H.defaultOptions = {
          * @sample {highstock} stock/chart/subtitle-footnote
          *         Footnote at bottom right of plot area
          *
-         * @since      2.0
-         * @validvalue ["left", "center", "right"]
+         * @type  {Highcharts.AlignValue}
+         * @since 2.0
          */
         align: 'center',
 
@@ -1899,8 +2032,8 @@ H.defaultOptions = {
          * @sample {highmaps} maps/legend/alignment/
          *         Legend alignment
          *
-         * @since      2.0
-         * @validvalue ["left", "center", "right"]
+         * @type  {Highcharts.AlignValue}
+         * @since 2.0
          */
         align: 'center',
 
@@ -2483,12 +2616,19 @@ H.defaultOptions = {
          */
 
         /**
-         * The width of the legend box.
+         * The width of the legend box. If a number is set, it translates to
+         * pixels. Since v7.0.2 it allows setting a percent string of the full
+         * chart width, for example `40%`.
+         *
+         * Defaults to the full chart width from legends below or above the
+         * chart, half the chart width for legends to the left and right.
          *
          * @sample {highcharts} highcharts/legend/width/
          *         Aligned to the plot area
+         * @sample {highcharts} highcharts/legend/width-percent/
+         *         A percent of the chart width
          *
-         * @type      {number}
+         * @type      {number|string}
          * @since     2.0
          * @apioption legend.width
          */
@@ -2521,8 +2661,8 @@ H.defaultOptions = {
          * @sample {highmaps} maps/legend/alignment/
          *         Legend alignment
          *
-         * @since      2.0
-         * @validvalue ["top", "middle", "bottom"]
+         * @type  {Highcharts.VerticalAlignValue}
+         * @since 2.0
          */
         verticalAlign: 'bottom',
 
@@ -2737,9 +2877,10 @@ H.defaultOptions = {
 
         /**
          * Whether the tooltip should follow the mouse as it moves across
-         * columns, pie slices and other point types with an extent. By default
-         * it behaves this way for scatter, bubble and pie series by override
-         * in the `plotOptions` for those series types.
+         * columns, pie slices and other point types with an extent.
+         * By default it behaves this way for pie, polygon, map, sankey
+         * and wordcloud series by override in the `plotOptions`
+         * for those series types.
          *
          * For touch moves to behave the same way, [followTouchMove](
          * #tooltip.followTouchMove) must be `true` also.
@@ -2773,8 +2914,12 @@ H.defaultOptions = {
          */
 
         /**
-         * Callback function to format the text of the tooltip from scratch.
-         * Return `false` to disable tooltip for a specific point on series.
+         * Callback function to format the text of the tooltip from scratch. In
+         * case of single or [shared](#tooltip.shared) tooltips, a string should
+         * be returned. In case of [split](#tooltip.split) tooltips, it should
+         * return an array where the first item is the header, and subsequent
+         * items are mapped to the points. Return `false` to disable tooltip for
+         * a specific point on series.
          *
          * A subset of HTML is supported. Unless `useHTML` is true, the HTML of
          * the tooltip is parsed and converted to SVG, therefore this isn't a
@@ -2783,10 +2928,9 @@ H.defaultOptions = {
          * with a `style` attribute, but only text-related CSS that is shared
          * with SVG is handled.
          *
-         * Since version 2.1 the tooltip can be shared between multiple series
-         * through the `shared` option. The available data in the formatter
-         * differ a bit depending on whether the tooltip is shared or not. In
-         * a shared tooltip, all properties except `x`, which is common for
+         * The available data in the formatter differ a bit depending on whether
+         * the tooltip is shared or split, or belongs to a single point. In a
+         * shared/split tooltip, all properties except `x`, which is common for
          * all points, are kept in an array, `this.points`.
          *
          * Available data are:
@@ -2835,14 +2979,32 @@ H.defaultOptions = {
          *         Simple string formatting
          * @sample {highcharts} highcharts/tooltip/formatter-shared/
          *         Formatting with shared tooltip
+         * @sample {highcharts|highstock} highcharts/tooltip/formatter-split/
+         *         Formatting with split tooltip
+         * @sample highcharts/tooltip/formatter-conditional-default/
+         *         Extending default formatter
          * @sample {highstock} stock/tooltip/formatter/
          *         Formatting with shared tooltip
          * @sample {highmaps} maps/tooltip/formatter/
          *         String formatting
          *
-         * @type      {Highcharts.FormatterCallbackFunction<Highcharts.TooltipFormatterContextObject>}
+         * @type      {Highcharts.TooltipFormatterCallbackFunction}
          * @apioption tooltip.formatter
          */
+
+
+        /**
+         * Callback function to format the text of the tooltip for
+         * visible null points.
+         * Works analogously to [formatter](#tooltip.formatter).
+         *
+         * @sample highcharts/plotoptions/series-nullformat
+         *         Format data label and tooltip for null point.
+         *
+         * @type      {Highcharts.TooltipFormatterCallbackFunction}
+         * @apioption tooltip.nullFormatter
+         */
+
 
         /**
          * The number of milliseconds to wait until the tooltip is hidden when
@@ -2877,7 +3039,7 @@ H.defaultOptions = {
          * in the tooltip. Like the `pointFormat` string, but with more
          * flexibility.
          *
-         * @type      {Function}
+         * @type      {Highcharts.FormatterCallbackFunction<Highcharts.Point>}
          * @since     4.1.0
          * @context   Highcharts.Point
          * @apioption tooltip.pointFormatter
@@ -2909,30 +3071,30 @@ H.defaultOptions = {
          * @sample {highstock} stock/tooltip/split-positioner/
          *         Split tooltip with fixed positions
          *
-         * @type      {Function}
+         * @type      {Highcharts.TooltipPositionerCallbackFunction}
          * @since     2.2.4
          * @apioption tooltip.positioner
          */
 
         /**
          * The name of a symbol to use for the border around the tooltip. Can
-         * be one of: `"callout"`, `"circle"` or `"square"`. When
-         * [tooltip.split](#tooltip.split) option is enabled, shape is applied
-         * to all boxes except header, which is controlled by
+         * be one of: `"callout"`, `"circle"`, or `"square"`. When
+         * [tooltip.split](#tooltip.split)
+         * option is enabled, shape is applied to all boxes except header, which
+         * is controlled by
          * [tooltip.headerShape](#tooltip.headerShape).
          *
          * Custom callbacks for symbol path generation can also be added to
          * `Highcharts.SVGRenderer.prototype.symbols` the same way as for
          * [series.marker.symbol](plotOptions.line.marker.symbol).
          *
-         * @type       {string}
-         * @default    callout
-         * @since      4.0
-         * @validvalue ["callout", "square"]
-         * @apioption  tooltip.shape
+         * @type      {Highcharts.TooltipShapeValue}
+         * @default   callout
+         * @since     4.0
+         * @apioption tooltip.shape
          */
 
-         /**
+        /**
          * The name of a symbol to use for the border around the tooltip
          * header. Applies only when [tooltip.split](#tooltip.split) is
          * enabled.
@@ -2991,6 +3153,8 @@ H.defaultOptions = {
          *
          * @sample highcharts/tooltip/split/
          *         Split tooltip
+         * @sample {highcharts|highstock} highcharts/tooltip/formatter-split/
+         *         Split tooltip and custom formatter callback
          *
          * @type      {boolean}
          * @default   {highcharts} false
@@ -3202,6 +3366,16 @@ H.defaultOptions = {
         headerFormat: '<span style="font-size: 10px">{point.key}</span><br/>',
 
         /**
+         * The HTML of the null point's line in the tooltip. Works analogously
+         * to [pointFormat](#tooltip.pointFormat).
+         *
+         * @type {string}
+         * @sample {highcharts} highcharts/plotoptions/series-nullformat
+         *         Format data label and tooltip for null point.
+         * @apioption tooltip.nullFormat
+         */
+
+        /**
          * The HTML of the point's line in the tooltip. Variables are enclosed
          * by curly brackets. Available variables are point.x, point.y, series.
          * name and series.color and other properties on the same form.
@@ -3289,6 +3463,10 @@ H.defaultOptions = {
          * CSS styles for the tooltip. The tooltip can also be styled through
          * the CSS class `.highcharts-tooltip`.
          *
+         * Note that the default `pointerEvents` style makes the tooltip ignore
+         * mouse events, so in order to use clickable tooltips, this value must
+         * be set to `auto`.
+         *
          * @sample {highcharts} highcharts/tooltip/style/
          *         Greater padding, bold text
          *
@@ -3312,7 +3490,6 @@ H.defaultOptions = {
              * @ignore
              */
             pointerEvents: 'none',
-            // #1686 http://caniuse.com/#feat=pointer-events
             /**
              * @ignore
              */
@@ -3391,6 +3568,7 @@ H.defaultOptions = {
          * @sample {highmaps} maps/credits/customized/
          *         Left aligned
          *
+         * @type  {Highcharts.AlignObject}
          * @since 2.1
          */
         position: {
@@ -3398,7 +3576,7 @@ H.defaultOptions = {
             /**
              * Horizontal alignment of the credits.
              *
-             * @validvalue ["left", "center", "right"]
+             * @type {Highcharts.AlignValue}
              */
             align: 'right',
 
@@ -3410,7 +3588,7 @@ H.defaultOptions = {
             /**
              * Vertical alignment of the credits.
              *
-             * @validvalue ["top", "middle", "bottom"]
+             * @type {Highcharts.VerticalAlignValue}
              */
             verticalAlign: 'bottom',
 

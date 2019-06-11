@@ -1,7 +1,7 @@
 /**
  * Data module
  *
- * (c) 2012-2018 Torstein Honsi
+ * (c) 2012-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -568,6 +568,11 @@ Highcharts.extend(Data.prototype, {
             hasData = true;
         }
 
+        if (this.hasURLOption(options)) {
+            clearTimeout(this.liveDataTimeout);
+            hasData = false;
+        }
+
         if (!hasData) {
             // Fetch live data
             hasData = this.fetchLiveData();
@@ -592,6 +597,13 @@ Highcharts.extend(Data.prototype, {
         if (!hasData && options.afterComplete) {
             options.afterComplete();
         }
+    },
+
+    hasURLOption: function (options) {
+        return Boolean(
+            options &&
+            (options.rowsURL || options.csvURL || options.columnsURL)
+        );
     },
 
     /**
@@ -693,6 +705,7 @@ Highcharts.extend(Data.prototype, {
         });
 
         var globalPointArrayMap = getPointArrayMap(globalType);
+
         if (globalPointArrayMap === undefined) {
             globalPointArrayMap = ['y'];
         }
@@ -885,7 +898,9 @@ Highcharts.extend(Data.prototype, {
                     // The rest of the row is a comment
                     push();
                     return;
-                } else if (c === '"') {
+                }
+
+                if (c === '"') {
                     read(++i);
 
                     while (i < columnStr.length) {
@@ -933,8 +948,7 @@ Highcharts.extend(Data.prototype, {
                     c,
                     cn,
                     cl,
-                    token = ''
-                    ;
+                    token = '';
 
 
                 // We should be able to detect dateformats within 13 rows
@@ -950,7 +964,9 @@ Highcharts.extend(Data.prototype, {
                     if (c === '#') {
                         // Skip the rest of the line - it's a comment
                         return;
-                    } else if (c === '"') {
+                    }
+
+                    if (c === '"') {
                         if (inStr) {
                             if (cl !== '"' && cn !== '"') {
                                 while (cn === ' ' && j < columnStr.length) {
@@ -1058,11 +1074,11 @@ Highcharts.extend(Data.prototype, {
                     data[i] && data[i].length
                 ) {
                     thing = data[i]
-                            .trim()
-                            .replace(/\//g, ' ')
-                            .replace(/\-/g, ' ')
-                            .replace(/\./g, ' ')
-                            .split(' ');
+                        .trim()
+                        .replace(/\//g, ' ')
+                        .replace(/\-/g, ' ')
+                        .replace(/\./g, ' ')
+                        .split(' ');
 
                     guessedFormat = [
                         '',
@@ -1307,7 +1323,8 @@ Highcharts.extend(Data.prototype, {
      *         The first URL that was tried.
      */
     fetchLiveData: function () {
-        var chart = this.chart,
+        var data = this,
+            chart = this.chart,
             options = this.options,
             maxRetries = 3,
             currentRetries = 0,
@@ -1315,9 +1332,7 @@ Highcharts.extend(Data.prototype, {
             updateIntervalMs = (options.dataRefreshRate || 2) * 1000,
             originalOptions = merge(options);
 
-        if (!options ||
-            (!options.csvURL && !options.rowsURL && !options.columnsURL)
-        ) {
+        if (!this.hasURLOption(options)) {
             return false;
         }
 
@@ -1342,7 +1357,7 @@ Highcharts.extend(Data.prototype, {
                 }
 
                 if (initialFetch) {
-                    clearTimeout(chart.liveDataTimeout);
+                    clearTimeout(data.liveDataTimeout);
                     chart.liveDataURL = url;
                 }
 
@@ -1350,7 +1365,7 @@ Highcharts.extend(Data.prototype, {
                     // Poll
                     if (pollingEnabled && chart.liveDataURL === url) {
                         // We need to stop doing this if the URL has changed
-                        chart.liveDataTimeout =
+                        data.liveDataTimeout =
                             setTimeout(performFetch, updateIntervalMs);
                     }
                 }
@@ -1405,9 +1420,7 @@ Highcharts.extend(Data.prototype, {
 
         performFetch(true);
 
-        return (options &&
-            (options.csvURL || options.rowsURL || options.columnsURL)
-        );
+        return this.hasURLOption(options);
     },
 
 
@@ -1778,8 +1791,7 @@ Highcharts.extend(Data.prototype, {
             regex: /^([0-9]{1,2})[\-\/\.]([0-9]{1,2})[\-\/\.]([0-9]{2})$/,
             parser: function (match) {
                 var year = +match[3],
-                    d = new Date()
-                ;
+                    d = new Date();
 
                 if (year > (d.getFullYear() - 2000)) {
                     year += 1900;
@@ -1900,6 +1912,26 @@ Highcharts.extend(Data.prototype, {
             }
         }
         return columns;
+    },
+
+    /**
+     * Get the parsed data in a form that we can apply directly to the
+     * `series.data` config. Array positions can be mapped using the
+     * `series.keys` option.
+     *
+     * @example
+     * const data = Highcharts.data({
+     *   csv: document.getElementById('data').innerHTML
+     * }).getData();
+     *
+     * @function Highcharts.Data#getData
+     *
+     * @return {Array<Array<*>>} Data rows
+     */
+    getData: function () {
+        if (this.columns) {
+            return this.rowsToColumns(this.columns).slice(1);
+        }
     },
 
     /**
@@ -2093,7 +2125,6 @@ Highcharts.extend(Data.prototype, {
             }
 
 
-
             // Do the callback
             chartOptions = {
                 series: series
@@ -2131,21 +2162,24 @@ Highcharts.extend(Data.prototype, {
      */
     update: function (options, redraw) {
         var chart = this.chart;
+
         if (options) {
             // Set the complete handler
             options.afterComplete = function (dataOptions) {
                 // Avoid setting axis options unless the type changes. Running
                 // Axis.update will cause the whole structure to be destroyed
                 // and rebuilt, and animation is lost.
-                if (
-                    dataOptions.xAxis &&
-                    chart.xAxis[0] &&
-                    dataOptions.xAxis.type === chart.xAxis[0].options.type
-                ) {
-                    delete dataOptions.xAxis;
-                }
+                if (dataOptions) {
+                    if (
+                        dataOptions.xAxis &&
+                        chart.xAxis[0] &&
+                        dataOptions.xAxis.type === chart.xAxis[0].options.type
+                    ) {
+                        delete dataOptions.xAxis;
+                    }
 
-                chart.update(dataOptions, redraw, true);
+                    chart.update(dataOptions, redraw, true);
+                }
             };
             // Apply it
             merge(true, this.options, options);
@@ -2310,6 +2344,7 @@ SeriesBuilder.prototype.read = function (columns, rowIndex) {
     // Then, build an array or point based on the readers names.
     builder.readers.forEach(function (reader) {
         var value = columns[reader.columnIndex][rowIndex];
+
         if (pointIsArray) {
             point.push(value);
         } else {
@@ -2402,6 +2437,7 @@ SeriesBuilder.prototype.getReferencedColumnIndexes = function () {
  */
 SeriesBuilder.prototype.hasReader = function (configName) {
     var i, columnReader;
+
     for (i = 0; i < this.readers.length; i = i + 1) {
         columnReader = this.readers[i];
         if (columnReader.configName === configName) {

@@ -1,16 +1,16 @@
 <div class="modal-header">
-    <h3 class="modal-title">
-        <b style="color: #286090">{{workflowTodo.workflowDO.title}}</b>自动化工作流
-    </h3>
-    <div>
-        <b ng-show="workflowTodo.workflowDO.wfType == 0" class="pull-left">OPS</b>
-        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
-           class="icon icon-info" style="color: green;"></i>
-    </div>
+    <div ng-include="'tpl/modal/workflow/include/header_info.html'"></div>
 </div>
 
 
 <div class="modal-body">
+
+    <form class="form-horizontal" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
+          style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+        <div ng-include="'tpl/modal/workflow/include/help_info.html'"></div>
+    </form>
+
+
     <form class="form-horizontal" style="padding: 10px;">
         <div class="form-group" ng-show="type == 0">
             <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>服务器组</label>
@@ -23,7 +23,7 @@
                     </ui-select-choices>
                 </ui-select>
             </div>
-            <div class="col-lg-3">
+            <div class="col-lg-3" ng-show="false">
                 <label style="margin-top:5px;">
                     <input type="checkbox" ng-model="item.choose"><b style="margin-left:10px;">需要持续集成权限</b>
                 </label>
@@ -37,12 +37,12 @@
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group"  style="box-shadow: 0 0 5px #ddd;padding: 10px;">
             <table class="table table-hover table-bordered table-striped">
                 <thead>
                 <tr>
                     <td>服务器组</td>
-                    <td class="col-md-3">持续集成组</td>
+                    <td>说明</td>
                     <td class="col-md-2" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0 && type ==0">操作</td>
                 </tr>
                 </thead>
@@ -50,24 +50,20 @@
                 <tr ng-repeat="todoDetail in workflowTodo.todoDetails">
                     <td>
                         <b style="color: #286090">{{todoDetail.detail.serverGroupDO.name}}</b>
-                        <!--<b class="pull-right" style="color: #777">组</b>-->
-                        </br>
-                        <!--服务器描述-->
-                        <b style="color: #777">{{todoDetail.detail.serverGroupDO.content}}</b>
                     </td>
                     <td>
-                        <!--<b style="color: #449d44">{{todoDetail.detail.ciAuth}}</b>-->
-                        <b style="color: #449d44" ng-if="todoDetail.detail.ciAuth == false">不申请</b>
-                        <span style="color: #777" ng-if="todoDetail.detail.ciAuth == true">
-                        <b ng-show="todoDetail.detail.ciUserGroupDO.id != 0" style="color: #286090">已申请:{{todoDetail.detail.ciUserGroupDO.groupName}}</b>
-                        <b ng-show="todoDetail.detail.ciUserGroupDO.id == 0" style="color: red">申请无效:组未配置</b>
+                        <b style="color: #777">{{todoDetail.detail.serverGroupDO.content}}</b>
+                        <!--<b style="color: #449d44" ng-if="todoDetail.detail.ciAuth == false">不申请</b>-->
+                        <!--<span style="color: #777" ng-if="todoDetail.detail.ciAuth == true">-->
+                        <!--<b ng-show="todoDetail.detail.ciUserGroupDO.id != 0" style="color: #286090">已申请:{{todoDetail.detail.ciUserGroupDO.groupName}}</b>-->
+                        <!--<b ng-show="todoDetail.detail.ciUserGroupDO.id == 0" style="color: red">申请无效:组未配置</b>-->
                     </span>
                     </td>
                     <td ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0 && type == 0">
-                        <button ng-click="delItem(todoDetail.id)" class="btn btn-xs"
+                        <button ng-click="delItem(todoDetail.id)" class="btn btn-xs pull-right"
                                 style="background-color: #d9534f; color: white;"
                                 uib-popover-html="'移除'" popover-trigger="'mouseenter'">
-                            <span class="glyphicon glyphicon-remove pull-right"></span>移除
+                            <span class="glyphicon glyphicon-remove"></span>移除
                         </button>
                     </td>
                 </tr>
@@ -87,36 +83,11 @@
 
     <div style="width: 100%; height: 1px; border: 0.5px solid #eee;"></div>
 
-    <!--<div class="modal-body">-->
-    <form class="form-horizontal" style="margin-top: 35px;">
-        <div ng-include="'tpl/modal/workflow/todo_approval_info.html'"></div>
+    <form class="form-horizontal" style="margin-top: 25px;">
+        <div ng-include="'tpl/modal/workflow/include/approval_info.html'"></div>
     </form>
-    <!--</div>-->
-
 </div>
 
-
 <div class="modal-footer">
-    <div class="form-group">
-        <div style="text-align:center;">
-            <!--icon-paper-plane-->
-            <button class="btn btn-xs" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
-                    style="margin-right: 25px; background-color: green; color: white;"
-                    ng-click="saveTodo()">
-                <i class="fa fa-spin fa-spinner" ng-show="btnSaveing"></i>
-                <i class="glyphicon glyphicon-ok" ng-show="!btnSaveing"></i>保存
-            </button>
-
-
-            <button class="btn btn-xs" ng-show="todoDetail.todoStatus != 0"
-                    style="background-color: #ff8700; color: white;"
-                    ng-click="closeModal()">关闭
-            </button>
-        </div>
-    </div>
-
-
-    <div ng-if="alert.type != ''">
-        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
-    </div>
+    <div ng-include="'tpl/modal/workflow/include/footer_info.html'"></div>
 </div>

@@ -17,7 +17,7 @@ import javax.annotation.Resource;
 import java.util.List;
 
 /**
- * Created by zxxiao on 2016/11/22.
+ * 用户管理
  */
 @Controller
 public class UserController {
@@ -117,21 +117,6 @@ public class UserController {
     @ResponseBody
     public HttpResult getCmdbUserPage(@RequestParam String username, @RequestParam int page, @RequestParam int length) {
         return new HttpResult(userService.getCmdbUserPage(username, page, length));
-    }
-
-    /**
-     * 获取指定条件的用户集合(开放外部接口)
-     *
-     * @param authKey
-     * @param username
-     * @param page
-     * @param length
-     * @return
-     */
-    @RequestMapping(value = "/api/users", method = RequestMethod.GET)
-    @ResponseBody
-    public HttpResult getCmdbUserPage(@RequestParam String authKey, @RequestParam String username, @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(userService.getCmdbApiUserPage(authKey, username, page, length));
     }
 
     /**
@@ -346,6 +331,32 @@ public class UserController {
     @ResponseBody
     public HttpResult addUsersMobile(@RequestParam long userId) {
         return new HttpResult(userService.addUserMobile(userId));
+    }
+
+
+
+    @RequestMapping(value = "/app/user/exclude", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult addUsersMobile(@RequestParam String username,@RequestParam long appId) {
+        return new HttpResult(userService.queryUserExcludeApp(username,appId));
+    }
+
+    @RequestMapping(value = "/app/user/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryUserByApp(@RequestParam long appId) {
+        return new HttpResult(userService.queryUserByApp(appId));
+    }
+
+    @RequestMapping(value = "/app/user/add", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult addUserByApp(@RequestParam long appId,@RequestParam long userId) {
+        return new HttpResult(userService.addUserByApp(appId,userId));
+    }
+
+    @RequestMapping(value = "/app/user/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delUserByApp(@RequestParam long appId,@RequestParam long userId) {
+        return new HttpResult(userService.delUserByApp(appId,userId));
     }
 
 

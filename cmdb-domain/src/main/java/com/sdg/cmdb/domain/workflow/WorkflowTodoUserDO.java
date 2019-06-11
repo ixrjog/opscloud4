@@ -1,24 +1,22 @@
 package com.sdg.cmdb.domain.workflow;
 
+import com.alibaba.fastjson.JSON;
 import com.sdg.cmdb.domain.auth.UserDO;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 
+@Data
 public class WorkflowTodoUserDO implements Serializable {
 
     private static final long serialVersionUID = 2349909897311211918L;
     private long id;
-
     private long todoId;
-
-    /**
-     * 代理类型 0:teamleader 1:deptLeader 2:ops
-     */
-    private int assigneeType;
+    private int assigneeType; // 代理类型
 
     public enum AssigneeTypeEnum {
-        qc(0, "qc"),
+        cmo(0, "cmo"),
         teamleader(1, "teamleader"),
         deptLeader(2, "deptLeader"),
         ops(3, "ops");
@@ -49,11 +47,8 @@ public class WorkflowTodoUserDO implements Serializable {
     }
 
     private String assigneeDesc;
-
     private long userId;
-
     private String username;
-
     private String displayName;
 
     /**
@@ -93,16 +88,11 @@ public class WorkflowTodoUserDO implements Serializable {
         }
     }
 
-
     private String evaluationMsg;
-
     private String gmtCreate;
-
     private String gmtModify;
 
-    public WorkflowTodoUserDO() {
-
-    }
+    public WorkflowTodoUserDO() {}
 
     public WorkflowTodoUserDO(long todoId, UserDO userDO, int assigneeType) {
         this.todoId = todoId;
@@ -114,93 +104,8 @@ public class WorkflowTodoUserDO implements Serializable {
         this.assigneeDesc = AssigneeTypeEnum.getAssigneeTypeName(assigneeType);
     }
 
-
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getTodoId() {
-        return todoId;
-    }
-
-    public void setTodoId(long todoId) {
-        this.todoId = todoId;
-    }
-
-    public int getAssigneeType() {
-        return assigneeType;
-    }
-
-    public void setAssigneeType(int assigneeType) {
-        this.assigneeType = assigneeType;
-    }
-
-    public String getAssigneeDesc() {
-        return assigneeDesc;
-    }
-
-    public void setAssigneeDesc(String assigneeDesc) {
-        this.assigneeDesc = assigneeDesc;
-    }
-
-    public long getUserId() {
-        return userId;
-    }
-
-    public void setUserId(long userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public void setDisplayName(String displayName) {
-        this.displayName = displayName;
-    }
-
-    public int getEvaluation() {
-        return evaluation;
-    }
-
-    public void setEvaluation(int evaluation) {
-        this.evaluation = evaluation;
-    }
-
-    public String getEvaluationMsg() {
-        return evaluationMsg;
-    }
-
-    public void setEvaluationMsg(String evaluationMsg) {
-        this.evaluationMsg = evaluationMsg;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

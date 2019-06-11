@@ -11,6 +11,9 @@ import com.sdg.cmdb.domain.workflow.detail.TodoDetailKeybox;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
 import com.sdg.cmdb.service.KeyBoxService;
+import com.sdg.cmdb.service.ZabbixServerService;
+import org.checkerframework.checker.units.qual.A;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,8 +28,10 @@ public class TodoKeybox extends TodoAbs implements Serializable {
     private static final long serialVersionUID = 6101632469561002018L;
     private final String TODO_KEY = "KEYBOX";
 
-    @Resource
+    @Autowired
     private KeyBoxService keyBoxService;
+    @Autowired
+    private ZabbixServerService zabbixServer;
 
     /**
      * 工作流名称
@@ -50,7 +55,7 @@ public class TodoKeybox extends TodoAbs implements Serializable {
         List<WorkflowTodoDetailVO> todoDetails = workflowTodoVO.getTodoDetails();
         // 去重
         HashMap<String, WorkflowTodoDetailDO> map = new HashMap<>();
-        String notice = "服务器组：";
+        String notice = "服务器组: ";
         for (WorkflowTodoDetailVO workflowTodoDetailVO : todoDetails) {
             WorkflowTodoDetailDO workflowTodoDetailDO = getTodoDetailDO(workflowTodoDetailVO);
             TodoDetailKeybox keyboxDetail = (TodoDetailKeybox) getTodoDetailVO(workflowTodoDetailDO).getDetail();
@@ -91,7 +96,6 @@ public class TodoKeybox extends TodoAbs implements Serializable {
         return workflowTodoDetailDO;
     }
 
-
     @Override
     protected boolean invokeTodoDetails(WorkflowTodoVO todoVO) {
         List<WorkflowTodoDetailVO> todoDetails = todoVO.getTodoDetails();
@@ -100,8 +104,8 @@ public class TodoKeybox extends TodoAbs implements Serializable {
         for (WorkflowTodoDetailVO workflowTodoDetailVO : todoDetails) {
             TodoDetailKeybox keybox = (TodoDetailKeybox) workflowTodoDetailVO.getDetail();
             KeyboxUserServerVO keyboxVO = new KeyboxUserServerVO(userDO.getUsername(), keybox);
-            BusinessWrapper<Boolean> businessWrapper = keyBoxService.saveUserGroup(keyboxVO);
-            if (businessWrapper.isSuccess()) {
+            BusinessWrapper<Boolean> wrapper = keyBoxService.saveUserGroup(keyboxVO);
+            if (wrapper.isSuccess()) {
                 workflowTodoDetailVO.setDetailStatus(WorkflowTodoDetailDO.STATUS_COMPLETE);
             } else {
                 workflowTodoDetailVO.setDetailStatus(WorkflowTodoDetailDO.STATUS_ERR);
@@ -109,12 +113,8 @@ public class TodoKeybox extends TodoAbs implements Serializable {
             }
             saveTodoDetail(workflowTodoDetailVO);
         }
+        zabbixServer.createUser(userDO); // 增加Zabbix授权
         return result;
     }
-
-    @Override
-    protected void createTodoDetails(long todoId, List<WorkflowTodoDetailVO> detailList) {
-    }
-
 
 }

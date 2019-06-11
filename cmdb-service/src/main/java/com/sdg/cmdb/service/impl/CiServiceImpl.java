@@ -2,28 +2,35 @@ package com.sdg.cmdb.service.impl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
+import com.alibaba.fastjson.JSONArray;
 import com.aliyun.oss.model.OSSObjectSummary;
+import com.google.common.base.Joiner;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.offbytwo.jenkins.helper.JenkinsVersion;
 
+import com.offbytwo.jenkins.model.Build;
+import com.offbytwo.jenkins.model.BuildWithDetails;
 import com.offbytwo.jenkins.model.Job;
 import com.offbytwo.jenkins.model.JobWithDetails;
 import com.sdg.cmdb.dao.cmdb.*;
 import com.sdg.cmdb.domain.BusinessWrapper;
+import com.sdg.cmdb.domain.ErrorCode;
+import com.sdg.cmdb.domain.PublicType;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.ci.*;
-import com.sdg.cmdb.domain.ci.ciStatus.CiDeployVO;
-import com.sdg.cmdb.domain.ci.ciStatus.CiStatusVO;
+import com.sdg.cmdb.domain.ci.android.AndroidChannel;
 import com.sdg.cmdb.domain.ci.jenkins.Notify;
 
+import com.sdg.cmdb.domain.ci.jobParametersYaml.JobParameterYaml;
+import com.sdg.cmdb.domain.ci.jobParametersYaml.JobParametersYaml;
 import com.sdg.cmdb.domain.dingtalk.DingtalkDO;
 
 
+import com.sdg.cmdb.domain.gitlab.GitlabWebHooksDO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
@@ -38,9 +45,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.yaml.snakeyaml.Yaml;
 
-import javax.annotation.Resource;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -51,63 +57,84 @@ public class CiServiceImpl implements CiService {
 
     private static final Logger logger = LoggerFactory.getLogger(CiServiceImpl.class);
 
-    @Resource
+    @Autowired
     private AuthService authService;
 
-    @Resource
+    @Autowired
     private GitlabService gitlabService;
 
-    @Resource
+    @Autowired
     private UserDao userDao;
 
-    @Resource
+    @Autowired
+    private UserService userService;
+
+    @Autowired
     private JenkinsService jenkinsService;
 
-    @Resource
+    @Autowired
     private CiDao ciDao;
 
-    @Resource
+    @Autowired
     private DingtalkDao dingtalkDao;
 
-    @Resource
+    @Autowired
     private ServerGroupDao serverGroupDao;
 
-    @Resource
+    @Autowired
     private ServerGroupService serverGroupService;
 
-    @Resource
-    private AnsibleFileProcessorService ansibleFileProcessorService;
-
-    @Resource
+    @Autowired
     private DingtalkService dingtalkService;
 
-    @Resource
+    @Autowired
     private SchedulerManager schedulerManager;
 
     @Autowired
     private AnsibleFileProcessorService ansibleService;
 
-    @Resource
+    @Autowired
+    private GitlabDao gitlabDao;
+
+    @Autowired
     private AliyunOssService aliyunOssService;
 
     static public final String PARAM_BRANCH = "branch";
-
     static public final String PARAM_HOSTPATTERN = "hostPattern";
-
     static public final String PARAM_SSHURL = "sshUrl";
-
     static public final String PARAM_ARTIFACT_PATH = "artifactPath";
+    static public final String PARAM_PROJECT_RECIPIENT_LIST = "projectRecipientList";
+    static public final String PARAM_CHANNEL_TYPE = "channelType";
+    static public final String PARAM_CHANNEL_GROUP = "channelGroup";
 
     // TODO Deploy
     static public final String PARAM_OSS_PATH = "ossPath";
 
-    static public final String TEMPLATE = "template_";
+    static public final String TEMPLATE = "tpl_";
 
     static public final String BUILD_CONSOLE = "console";
+
+    static public final String BUILD_TEST_JACOCO = "jacoco";
+
+    static public final String BUILD_TEST_NGREPORTS = "testngreports";
 
     static public final String BUILD_PLAIN_LINK = "badge/icon";
 
     static public final String VERSION_NAME = "release-";
+
+    static public final String PKG_SERVER_URL = "https://pkg.ops.yangege.cn/";
+
+    // TODO 构建图标网站 https://shields.io/#/examples/build
+    public static final String BUILD_PASSING = "https://img.shields.io/badge/build-passing-brightgreen.svg";
+    public static final String BUILD_FAILING = "https://img.shields.io/badge/build-failing-red.svg";
+    public static final String BUILD_STARTED = "https://img.shields.io/badge/build-started-orange.svg";
+
+    public static final String BUILD_TEST_PASSING = "https://img.shields.io/badge/test-passing-brightgreen.svg";
+    public static final String BUILD_TEST_FAILING = "https://img.shields.io/badge/test-failing-red.svg";
+    public static final String BUILD_TEST_STARTED = "https://img.shields.io/badge/test-started-green.svg";
+    public static final String BUILD_TEST_UNSTABLE = "https://img.shields.io/badge/test-unstable-yellow.svg";
+
+    public static final String BADGE_URL = "https://img.shields.io/badge/";
 
     // TODO buildType
     static public final int TYPE_BUILD = 0;
@@ -115,15 +142,6 @@ public class CiServiceImpl implements CiService {
 
     @Override
     public BusinessWrapper<Boolean> buildNotify(Notify notify) {
-        // JSONObject notifyJson
-
-        // Notify notify
-        // TODO 打印日志用于调试
-        // logger.info("Jenkins Notifications: {}", notifyJson);
-        // Gson gson = new GsonBuilder().create();
-        //  Notify notify = gson.fromJson(notifyJson.toJSONString(), Notify.class);
-
-        // TODO 异步处理
         schedulerManager.registerJob(() -> {
             CiBuildDO ciBuildDO = ciDao.getBuildByUnique(notify.getName(), notify.getBuild().getNumber());
             if (ciBuildDO == null) {
@@ -139,8 +157,7 @@ public class CiServiceImpl implements CiService {
             CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
             boolean isDeploy = isDeploy(ciJobDO, notify);
             ciBuildDO = updateBuild(ciBuildDO, notify, isDeploy);
-            // TODO 更新 buildPhase/buildStatus 如果是队列则更新buildNumber
-            //if (ciBuildDO == null) return;
+            // 更新 buildPhase/buildStatus 如果是队列则更新buildNumber
             BuildNotifyDO buildNotifyDO = new BuildNotifyDO(ciBuildDO.getId(), notify);
             try {
                 BuildNotifyDO checkNotify = ciDao.getBuildNotifyByUnique(buildNotifyDO);
@@ -150,14 +167,57 @@ public class CiServiceImpl implements CiService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            // TODO 记录Artifacts
-            if (!isDeploy && buildNotifyDO.getBuildPhase().equals("FINALIZED"))
+            if (buildNotifyDO.getBuildPhase().equals("FINALIZED")) // 记录Artifacts
                 saveBuildArtifacts(notify, ciBuildDO);
-            // TODO 更新DeployHistory
-            updateDeployHistory(ciBuildDO, buildNotifyDO);
-            // TODO 触发通知
-            notify(ciBuildDO, buildNotifyDO, isDeploy);
+            updateDeployHistory(ciBuildDO, buildNotifyDO); // 更新DeployHistory
+            notify(ciBuildDO, buildNotifyDO, isDeploy); // 触发通知
         });
+        return new BusinessWrapper<>(true);
+    }
+
+    @Override
+    public CiAppDO getCiAppByBuildId(long buildId) {
+        CiBuildDO ciBuildDO = ciDao.getBuild(buildId);
+        return getCiAppByJobId(ciBuildDO.getJobId());
+    }
+
+    @Override
+    public CiAppDO getCiAppByJobId(long jobId) {
+        CiJobDO ciJobDO = ciDao.getCiJob(jobId);
+        return ciDao.getCiApp(ciJobDO.getAppId());
+    }
+
+    public void autoBuild(GitlabWebHooksDO gitlabWebHooksDO) {
+        schedulerManager.registerJob(() -> {
+            String branch = gitlabWebHooksDO.getRef().replace(GitlabServiceImpl.BRANCH_REF, "");
+            List<CiJobDO> jobs = ciDao.queryCiJobByAutoBuild(gitlabWebHooksDO.getProjectName(), branch);
+            for (CiJobDO ciJobDO : jobs) {
+                buildJob(ciJobDO.getId());
+                gitlabWebHooksDO.setTriggerBuild(true);
+                gitlabWebHooksDO.setJobName(ciJobDO.getJobName());
+                gitlabDao.updateWebHooks(gitlabWebHooksDO);
+            }
+        });
+    }
+
+
+    /**
+     * 刷新任务详情（Notify丢失）
+     *
+     * @param buildId
+     * @return
+     */
+    public BusinessWrapper<Boolean> refreshBuildDetails(long buildId) {
+
+        JobWithDetails jd = jenkinsService.getJobDetails("pipeline_oc_prod");
+        Build build = jd.getBuildByNumber(5);
+        try {
+            BuildWithDetails bd = build.details();
+            System.err.println(JSON.toJSONString(bd));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return new BusinessWrapper<>(true);
     }
 
@@ -178,7 +238,25 @@ public class CiServiceImpl implements CiService {
         if (isDeploy) {
             dingtalkService.notifyDeploy(ciBuildDO, buildNotifyDO);
         } else {
-            dingtalkService.notifyCi(ciBuildDO, buildNotifyDO);
+            CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
+            CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+            switch (ciAppDO.getAppType()) {
+                case 0: //Java
+                    dingtalkService.notifyCi(ciBuildDO, buildNotifyDO);
+                    break;
+                case 1: //Python
+                    //
+                case 2: //iOS
+                    //
+                case 3: //Android
+                    dingtalkService.notifyCiAndroid(ciBuildDO, buildNotifyDO);
+                    break;
+                case 4: //Test
+                    dingtalkService.notifyCiTest(ciBuildDO, buildNotifyDO);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 
@@ -193,9 +271,12 @@ public class CiServiceImpl implements CiService {
         try {
             ciBuildDO.setBuildPhase(notify.getBuild().getPhase());
             ciBuildDO.setBuildStatus(notify.getBuild().getStatus());
-            // TODO 队列任务插入默认版本号(Deploy不插入)
-            if (!isDeploy && StringUtils.isEmpty(ciBuildDO.getVersionName()))
-                ciBuildDO.setVersionName(VERSION_NAME + ciBuildDO.getBuildNumber());
+            // 任务插入默认版本号(Deploy不插入)
+            if (!isDeploy && StringUtils.isEmpty(ciBuildDO.getVersionName())) {
+                if (ciBuildDO.getBuildNumber() > 0)
+                    ciBuildDO.setVersionName(VERSION_NAME + ciBuildDO.getBuildNumber());
+            }
+
             ciDao.updateBuild(ciBuildDO);
             return ciBuildDO;
         } catch (Exception e) {
@@ -212,9 +293,6 @@ public class CiServiceImpl implements CiService {
      * @param ciBuildDO
      */
     private void saveBuildArtifacts(Notify notify, CiBuildDO ciBuildDO) {
-        // logger.info("Save build artifacts Notify : {}", notify.toString());
-        // logger.info("Save build artifacts CiBuildDO : {}", ciBuildDO.toString());
-
         if (ciBuildDO == null) return;
         Map<String, HashMap<String, String>> artifacts = notify.getBuild().getArtifacts();
         for (String artifactsName : artifacts.keySet()) {
@@ -223,8 +301,6 @@ public class CiServiceImpl implements CiService {
                 String archiveUrl = artifact.get("archive");
                 if (StringUtils.isEmpty(archiveUrl)) return;
                 BuildArtifactDO buildArtifactDO = new BuildArtifactDO(ciBuildDO.getId(), artifactsName, archiveUrl);
-                // logger.info("Save build artifacts BuildArtifactDO : {}", buildArtifactDO.toString());
-                //String ossPath = getOssPath(ciBuildDO, buildArtifactDO);
                 OSSObjectSummary ossObject = getOssObject(ciBuildDO, buildArtifactDO);
                 if (ossObject != null) {
                     buildArtifactDO.setOssPath(ossObject.getKey());
@@ -248,11 +324,11 @@ public class CiServiceImpl implements CiService {
      *
      * @return
      */
-    private OSSObjectSummary getOssObject(CiBuildDO ciBuildDO, BuildArtifactDO buildArtifactDO) {
+    public OSSObjectSummary getOssObject(CiBuildDO ciBuildDO, BuildArtifactDO buildArtifactDO) {
         try {
             String artifactPath = getBuildParamValue(ciBuildDO, PARAM_ARTIFACT_PATH);
             String artifactName = buildArtifactDO.getArtifactName().replace(artifactPath, "");
-            String ossPath = "ci/" + ciBuildDO.getJobName() + "/" + ciBuildDO.getBuildNumber() + "/" + artifactName;
+            String ossPath = getOssCiTypeName(ciBuildDO) + ciBuildDO.getJobName() + "/" + ciBuildDO.getBuildNumber() + "/" + artifactName;
             List<OSSObjectSummary> list = aliyunOssService.listObject(ossPath);
             if (list != null && list.size() == 1)
                 for (OSSObjectSummary object : list) {
@@ -264,6 +340,19 @@ public class CiServiceImpl implements CiService {
         return null;
     }
 
+    /**
+     * 获取OSS中App类型名称
+     *
+     * @param ciBuildDO
+     * @return
+     */
+    private String getOssCiTypeName(CiBuildDO ciBuildDO) {
+        CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        if (ciAppDO.getAppType() == 0) return "ci/";
+        return PublicType.CiAppTypeEnum.getCiAppTypeName(ciAppDO.getAppType()) + "/";
+    }
+
     @Override
     public CiAppVO getApp(long id) {
         CiAppDO ciAppDO = ciDao.getCiApp(id);
@@ -271,20 +360,82 @@ public class CiServiceImpl implements CiService {
     }
 
     @Override
-    public List<CiAppVO> queryMyApp(String projectName) {
+    public List<CiAppVO> queryMyApp(String queryName, long labelId) {
         String username = SessionUtils.getUsername();
         UserDO userDO = userDao.getUserByName(username);
         // 管理员可查看所有App
         if (authService.isRole(username, RoleDO.roleAdmin))
             userDO.setId(0);
-        List<CiAppDO> list = ciDao.getCiAppByAuthUserId(userDO.getId(), projectName);
+        List<CiAppDO> list = ciDao.getCiAppByAuthUserId(userDO.getId(), labelId, queryName, -1);
         List<CiAppVO> voList = new ArrayList<>();
         for (CiAppDO ciAppDO : list)
             voList.add(getCiAppVO(ciAppDO));
         return voList;
     }
 
+    @Override
+    public List<CiAppDO> queryAppByLabel(long labelId, String queryName) {
+        List<CiAppDO> list = ciDao.queryAppByLabel(labelId, queryName);
+        return list;
+    }
 
+    /**
+     * 查询未授权应用
+     *
+     * @param queryName
+     * @return
+     */
+    @Override
+    public List<CiAppVO> queryUnauthApp(String queryName, int appType) {
+        String username = SessionUtils.getUsername();
+        UserDO userDO = userDao.getUserByName(username);
+        List<CiAppDO> list = ciDao.getCiAppUnauthUserId(userDO.getId(), queryName, appType);
+        List<CiAppVO> voList = new ArrayList<>();
+        for (CiAppDO ciAppDO : list)
+            voList.add(getCiAppVO(ciAppDO));
+        return voList;
+    }
+
+    @Override
+    public List<CiAppVO> queryMyAppByType(String queryName, int appType) {
+        String username = SessionUtils.getUsername();
+        UserDO userDO = userDao.getUserByName(username);
+        // 管理员可查看所有App
+        if (authService.isRole(username, RoleDO.roleAdmin))
+            userDO.setId(0);
+        List<CiAppDO> list = ciDao.getCiAppByAuthUserId(userDO.getId(), 0, queryName, appType);
+        List<CiAppVO> voList = new ArrayList<>();
+        for (CiAppDO ciAppDO : list)
+            voList.add(getCiAppVO(ciAppDO));
+        return voList;
+    }
+
+    @Override
+    public CiAppVO queryAppByName(String appName) {
+        return getCiAppVO(ciDao.getCiAppByName(appName));
+    }
+
+    @Override
+    public List<CiAppVO> queryUserApp(long userId) {
+        UserDO userDO = userDao.getUserById(userId);
+        // 管理员可查看所有App
+        if (authService.isRole(userDO.getUsername(), RoleDO.roleAdmin))
+            userDO.setId(0);
+        List<CiAppDO> list = ciDao.getCiAppByAuthUserId(userDO.getId(), 0, "", -1);
+        List<CiAppVO> voList = new ArrayList<>();
+        for (CiAppDO ciAppDO : list)
+            voList.add(getCiAppVO(ciAppDO));
+        return voList;
+
+    }
+
+
+    /**
+     * 需要更新所有Job属性
+     *
+     * @param ciAppVO
+     * @return
+     */
     @Override
     public BusinessWrapper<Boolean> saveApp(CiAppVO ciAppVO) {
         CiAppDO ciAppDO = new CiAppDO(ciAppVO);
@@ -295,13 +446,45 @@ public class CiServiceImpl implements CiService {
         try {
             if (ciAppDO.getId() == 0) {
                 ciDao.addCiApp(ciAppDO);
+                UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
+                CiAppAuthDO authDO = new CiAppAuthDO(ciAppDO, userDO);
+                ciAppAuth(authDO);
             } else {
                 ciDao.updateCiApp(ciAppDO);
             }
+            saveAppJobs(ciAppDO);
             return new BusinessWrapper<Boolean>(true);
         } catch (Exception e) {
             e.printStackTrace();
             return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public boolean ciAppAuth(CiAppAuthDO authDO) {
+        try {
+            ciDao.addCiAppAuth(authDO);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delApp(long ciAppId) {
+        List<CiJobDO> list = ciDao.getCiJobByAppId(ciAppId);
+        if (list.size() != 0)
+            return new BusinessWrapper<Boolean>(ErrorCode.ciAppJobsUndeleted);
+        ciDao.delCiApp(ciAppId);
+        return new BusinessWrapper<Boolean>(true);
+
+    }
+
+    private void saveAppJobs(CiAppDO ciAppDO) {
+        List<CiJobDO> jobs = ciDao.getCiJobByAppId(ciAppDO.getId());
+        for (CiJobDO ciJobDO : jobs) {
+            ciJobDO.setCiType(ciAppDO.getCiType());
+            ciDao.updateCiJob(ciJobDO);
         }
     }
 
@@ -313,22 +496,78 @@ public class CiServiceImpl implements CiService {
         List<DingtalkDO> dingtalkList = dingtalkDao.queryDingtalk();
         ciAppVO.setDingtalkDO(dingtalkDO);
         ciAppVO.setDingtalkList(dingtalkList);
+        ciAppVO.setAuthUserList(userService.queryUserByApp(ciAppDO.getId()));
         return ciAppVO;
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveJob(CiJobVO ciJobVO) {
+    public CiJobVO saveJob(CiJobVO ciJobVO) {
         try {
             if (ciJobVO.getId() == 0) {
                 ciDao.addCiJob(ciJobVO);
             } else {
                 ciDao.updateCiJob(ciJobVO);
             }
-            return new BusinessWrapper<Boolean>(true);
+            return getCiJobVO(ciJobVO);
         } catch (Exception e) {
             e.printStackTrace();
-            return new BusinessWrapper<Boolean>(false);
+            return new CiJobVO();
         }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveJobParams(CiJobVO ciJobVO) {
+        try {
+
+            JobParametersYaml jobParams = getYaml(ciJobVO);
+            if (!delJobParams(ciJobVO.getId()))
+                return new BusinessWrapper<Boolean>(false);
+            if (!addJobParams(ciJobVO.getId(), jobParams))
+                return new BusinessWrapper<Boolean>(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new BusinessWrapper<Boolean>(true);
+    }
+
+    private JobParametersYaml getYaml(CiJobVO ciJobVO) {
+        Yaml yaml = new Yaml();
+        Object paramsYaml = yaml.load(ciJobVO.getParamsYaml());
+        ciDao.updateCiJobParamsYaml(ciJobVO);
+
+        Gson gson = new GsonBuilder().create();
+        JobParametersYaml jobYaml = gson.fromJson(JSON.toJSONString(paramsYaml), JobParametersYaml.class);
+        return jobYaml;
+    }
+
+    private boolean addJobParams(long jobId, JobParametersYaml jobParams) {
+        try {
+            for (JobParameterYaml param : jobParams.getParameters()) {
+                CiJobParamDO ciJobParamDO = new CiJobParamDO(jobId, param);
+                ciDao.addJobParam(ciJobParamDO);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+    /**
+     * 清除Job所有参数
+     *
+     * @param jobId
+     * @return
+     */
+    private boolean delJobParams(long jobId) {
+        try {
+            List<CiJobParamDO> list = ciDao.queryJobParamByJobId(jobId);
+            for (CiJobParamDO ciJobParamDO : list)
+                ciDao.delJobParam(ciJobParamDO.getId());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
     }
 
 
@@ -337,9 +576,11 @@ public class CiServiceImpl implements CiService {
         CiJobDO ciJobDO = ciDao.getCiJob(jobId);
         if (!StringUtils.isEmpty(ciJobDO.getJobTemplate())) {
             Job job = jenkinsService.getJob(ciJobDO.getJobName());
-            if (job == null)
-                if (jenkinsService.createJobByTemplate(ciJobDO.getJobName(), ciJobDO.getJobTemplate()))
+            if (job == null){
+                if (jenkinsService.createJobByTemplate(ciJobDO.getJobName(), ciJobDO.getJobTemplate(),getYaml(   getCiJobVO(ciJobDO))))
                     return new BusinessWrapper<Boolean>(false);
+            }
+
         }
         if (!StringUtils.isEmpty(ciJobDO.getDeployJobTemplate())) {
             Job job = jenkinsService.getJob(ciJobDO.getDeployJobName());
@@ -355,10 +596,47 @@ public class CiServiceImpl implements CiService {
     public List<CiJobVO> queryJob(long appId) {
         List<CiJobDO> list = ciDao.getCiJobByAppId(appId);
         List<CiJobVO> voList = new ArrayList<>();
-        for (CiJobDO ciJobDO : list) {
+        for (CiJobDO ciJobDO : list)
             voList.add(getCiJobVO(ciJobDO));
-        }
         return voList;
+    }
+
+    @Override
+    public DeployInfo queryDeployInfo(long appId) {
+        CiAppDO ciAppDO = ciDao.getCiApp(appId);
+        if (ciAppDO.getServerGroupId() == 0) return new DeployInfo();
+        ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(ciAppDO.getServerGroupId());
+        Map<String, List<ServerDO>> hostPatternMap = serverGroupService.getHostPatternFilterMap(serverGroupDO.getId());
+        Map<String, String> uniqueDataKey = new HashMap<>();
+        JSONArray versionData = new JSONArray();
+        String defVersion = "def";
+        for (String hostPattern : hostPatternMap.keySet()) {
+            List<ServerDO> serverList = hostPatternMap.get(hostPattern);
+            for (ServerDO serverDO : serverList) {
+                String env = EnvType.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
+                uniqueDataKey.put(ciAppDO.getAppName() + ":" + env, "");  // 应用/环境 （顶层数据 ）
+                uniqueDataKey.put(env + ":" + hostPattern, "");           // 环境/分组
+                CiDeployHistoryVO ciDeployHistoryVO = getCiDeployHistory(serverDO);
+                String version = defVersion;
+                if (ciDeployHistoryVO != null && !StringUtils.isEmpty(ciDeployHistoryVO.getVersionName()))
+                    version = ciDeployHistoryVO.getVersionName();
+                uniqueDataKey.put(hostPattern + ":" + version, ""); // 分组/版本
+                uniqueDataKey.put(version + ":" + serverDO.acqServerName(), ""); // 版本/服务器
+            }
+        }
+
+        for (String key : uniqueDataKey.keySet())
+            invokeVersionData(versionData, key);
+        DeployInfo info = new DeployInfo(ciAppDO.getAppName(), versionData);
+        return info;
+    }
+
+    private void invokeVersionData(JSONArray versionData, String data) {
+        JSONArray arrayObj = new JSONArray();
+        String[] x = data.split(":");
+        arrayObj.add(x[0]);
+        arrayObj.add(x[1]);
+        versionData.add(arrayObj);
     }
 
     @Override
@@ -374,13 +652,57 @@ public class CiServiceImpl implements CiService {
         return buildJob(ciJobVO);
     }
 
+    @Override
+    public BusinessWrapper<Boolean> delJob(long id) {
+        // 清理Job相关表数据
+        CiJobDO ciJobDO = ciDao.getCiJob(id);
+        // 清理Build相关数据
+        if (!delBuilds(ciJobDO))
+            return new BusinessWrapper<Boolean>(false);
+        if (!delJobParams(ciJobDO.getId()))
+            return new BusinessWrapper<Boolean>(false);
+        ciDao.delCiJob(id);
+        return new BusinessWrapper<Boolean>(true);
+    }
+
+
+    private boolean delBuilds(CiJobDO ciJobDO) {
+        List<CiBuildDO> buildList = ciDao.getBuildByJobId(ciJobDO.getId());
+        // 清理build相关数据
+        for (CiBuildDO ciBuildDO : buildList)
+            if (!delBuildDetails(ciBuildDO)) return false;
+        return true;
+    }
+
+    private boolean delBuildDetails(CiBuildDO ciBuildDO) {
+        try {
+            // oc_ci_build_artifact
+            List<BuildArtifactDO> buildArtifactList = ciDao.queryBuildArtifactByBuildId(ciBuildDO.getId());
+            for (BuildArtifactDO buildArtifactDO : buildArtifactList)
+                ciDao.delBuildArtifact(buildArtifactDO.getId());
+            // oc_ci_build_commit
+            List<CiBuildCommitDO> ciBuildCommitList = ciDao.queryCiBuildCommitByBuildId(ciBuildDO.getId());
+            for (CiBuildCommitDO ciBuildCommitDO : ciBuildCommitList)
+                ciDao.delCiBuildCommit(ciBuildCommitDO.getId());
+            // oc_ci_build_notify
+            List<BuildNotifyDO> buildNotifyList = ciDao.queryBuildNotifyByBuildId(ciBuildDO.getId());
+            for (BuildNotifyDO buildNotifyDO : buildNotifyList)
+                ciDao.delBuildNotify(buildNotifyDO.getId());
+            // oc_ci_build
+            ciDao.delBuild(ciBuildDO.getId());
+        } catch (Exception e) {
+            return false;
+        }
+        return true;
+    }
+
 
     /**
      * 新增部署记录
      */
     private void addDeployHistory(CiJobVO ciJobVO, CiBuildDO ciBuildDO) {
         if (ciJobVO.getCiType() == 0) return;
-        CiBuildVO ciBuildVO = getBuildVO(ciBuildDO, TYPE_BUILD);
+        CiBuildVO ciBuildVO = getBuildVO(ciJobVO, ciBuildDO);
         List<ServerDO> servers = getHostPattern(ciBuildDO, ciJobVO.getCiAppVO().getServerGroupId());
         for (ServerDO serverDO : servers) {
             CiDeployHistoryDO ciDeployHistoryDO = new CiDeployHistoryDO(serverDO, ciJobVO, ciBuildVO);
@@ -399,7 +721,6 @@ public class CiServiceImpl implements CiService {
         Map<String, List<ServerDO>> hostPatternMap = serverGroupService.getHostPatternMap(serverGroupId);
         return hostPatternMap.get(hostPattern);
     }
-
 
     /**
      * 查询某次构建的参数
@@ -480,21 +801,34 @@ public class CiServiceImpl implements CiService {
      */
     @Override
     public BusinessWrapper<Boolean> buildJob(CiJobVO ciJobVO) {
-        // TODO 校验不通过
-        if (!checkBuildJob(ciJobVO))
-            return new BusinessWrapper<Boolean>(false);
+        // 校验
+        BusinessWrapper<Boolean> wrapper = checkBuildJob(ciJobVO);
+        if (!wrapper.isSuccess())
+            return wrapper;
         HashMap<String, String> params = getParams(ciJobVO);
-        // TODO 检查Job是否存在，不存在按模版创建
-        Job job = checkJob(ciJobVO.getJobName(), ciJobVO.getJobTemplate());
+        //  检查Job是否存在，不存在按模版创建
+        Job job = checkJob(ciJobVO, ciJobVO.getJobName(), ciJobVO.getJobTemplate());
+        if (isJobInQueue(ciJobVO.getJobName()))
+            return new BusinessWrapper<Boolean>(false);
         if (job != null) {
             JobWithDetails jobWithDetails = jenkinsService.build(job, params);
             if (jobWithDetails != null) {
                 CiBuildDO ciBuildDO = saveBuild(ciJobVO, params, jobWithDetails);
-                // TODO 流水线插入Deploy记录
+                //  流水线插入Deploy记录
                 addDeployHistory(ciJobVO, ciBuildDO);
             }
         }
         return new BusinessWrapper<Boolean>(true);
+    }
+
+
+    private boolean isJobInQueue(String jobName) {
+        try {
+            JobWithDetails jd = jenkinsService.getJobDetails(jobName);
+            return jd.isInQueue();
+        } catch (Exception e) {
+            return false;
+        }
     }
 
     /**
@@ -505,32 +839,33 @@ public class CiServiceImpl implements CiService {
      */
     @Override
     public BusinessWrapper<Boolean> deployJob(CiJobVO ciJobVO) {
-        // TODO 校验不通过
-        if (!checkBuildJob(ciJobVO))
-            return new BusinessWrapper<Boolean>(false);
+        // 校验
+        BusinessWrapper<Boolean> wrapper = checkBuildJob(ciJobVO);
+        if (!wrapper.isSuccess())
+            return wrapper;
         HashMap<String, String> params = getParams(ciJobVO);
         BuildArtifactDO buildArtifactDO = ciDao.getBuildArtifact(ciJobVO.getDeployArtifactId());
-        // TODO 插入 ossPath
+        // 插入 ossPath
         invokeDeployParams(buildArtifactDO, params);
-        // TODO 检查Job是否存在，不存在按模版创建
-        Job job = checkJob(ciJobVO.getDeployJobName(), ciJobVO.getDeployJobTemplate());
+        // 检查Job是否存在，不存在按模版创建
+        Job job = checkJob(ciJobVO, ciJobVO.getDeployJobName(), ciJobVO.getDeployJobTemplate());
         if (job != null) {
             JobWithDetails jobWithDetails = jenkinsService.build(job, params);
             if (jobWithDetails != null) {
-
                 CiBuildDO ciBuildDO = saveBuildByDeploy(ciJobVO, params, jobWithDetails, buildArtifactDO);
-                // TODO 流水线插入Deploy记录
+                // 流水线插入Deploy记录
                 addDeployHistory(ciJobVO, ciBuildDO);
             }
         }
         return new BusinessWrapper<Boolean>(true);
     }
 
-    private Job checkJob(String jobName, String templateName) {
+    private Job checkJob(CiJobVO ciJobVO, String jobName, String templateName) {
+        JobParametersYaml jobYaml = getYaml(ciJobVO);
         if (StringUtils.isEmpty(jobName)) return null;
         Job job = jenkinsService.getJob(jobName);
         if (job != null) return job;
-        if (jenkinsService.createJobByTemplate(jobName, templateName))
+        if (jenkinsService.createJobByTemplate(jobName, templateName,jobYaml))
             return jenkinsService.getJob(jobName);
         return null;
     }
@@ -542,52 +877,58 @@ public class CiServiceImpl implements CiService {
      *
      * @param checkJobVO
      */
-    private boolean checkBuildJob(CiJobVO checkJobVO) {
+    private BusinessWrapper<Boolean> checkBuildJob(CiJobVO checkJobVO) {
         CiJobDO ciJobDO = ciDao.getCiJob(checkJobVO.getId());
-        String username = SessionUtils.getUsername();
-        UserDO userDO = userDao.getUserByName(username);
-        // TODO 校验用户通过
-        if (ciDao.checkCiAppAuth(userDO.getId(), ciJobDO.getAppId()) == 0) {
-            if (!authService.isRole(username, RoleDO.roleAdmin))
-                return false;
+        if (!StringUtils.isEmpty(SessionUtils.getUsername())) {
+            String username = SessionUtils.getUsername();
+            UserDO userDO = userDao.getUserByName(username);
+            // 校验用户通过
+            if (ciDao.checkCiAppAuth(userDO.getId(), ciJobDO.getAppId()) == 0) {
+                if (!authService.isRole(username, RoleDO.roleAdmin))
+                    return new BusinessWrapper<Boolean>(ErrorCode.ciBuildJobAuthFailure);
+            }
         }
-        // TODO 校验服务器组
-        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
-        Map<String, List<ServerDO>> map = serverGroupService.getHostPatternMap(ciAppDO.getServerGroupId());
-        // TODO 当前分组不存在
-        if (!map.containsKey(checkJobVO.getHostPattern()))
-            return false;
 
+        // 校验服务器组
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        if (ciAppDO.getCiType() == PublicType.CiTypeEnum.cicd.getCode()) {
+            Map<String, List<ServerDO>> map = serverGroupService.getHostPatternMap(ciAppDO.getServerGroupId());
+            // 当前分组不存在
+            if (!map.containsKey(checkJobVO.getHostPattern()))
+                return new BusinessWrapper<Boolean>(ErrorCode.ciBuildJobHostPatternNotExist);
+        }
         CiJobVO ciJobVO = getCiJobVO(ciJobDO);
         ciJobVO.setBranch(checkJobVO.getBranch());
-        ciJobVO.setHostPattern(checkJobVO.getHostPattern());
+        if (ciAppDO.getCiType() == PublicType.CiTypeEnum.cd.getCode())
+            ciJobVO.setHostPattern(checkJobVO.getHostPattern());
         ciJobVO.setVersionName(checkJobVO.getVersionName());
         ciJobVO.setVersionDesc(checkJobVO.getVersionDesc());
-        checkJobVO = ciJobVO;
-        return true;
+        return new BusinessWrapper<Boolean>(true);
     }
 
     private CiBuildDO saveBuild(CiJobVO ciJobVO, HashMap<String, String> params, JobWithDetails jobWithDetails) {
         UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
         CiBuildDO ciBuildDO = new CiBuildDO(ciJobVO, userDO, getParams(ciJobVO, params).toString(), false);
-        if (jobWithDetails.isInQueue()) {
-            // TODO 设置为队列
-            ciBuildDO.setBuildNumber(jobWithDetails.getNextBuildNumber());
-        } else {
-            ciBuildDO.setBuildNumber(jobWithDetails.getLastBuild().getNumber());
-            // TODO 设置版本名称
-            if (StringUtils.isEmpty(ciJobVO.getVersionName()))
-                ciBuildDO.setVersionName(VERSION_NAME + ciBuildDO.getBuildNumber());
-        }
+        invokeBuild(ciBuildDO, ciJobVO, jobWithDetails);
         String branch = getBuildParamValue(ciBuildDO, this.PARAM_BRANCH);
         GitlabBranch gitlabBranch = gitlabService.getProjectBranch(ciJobVO.getCiAppVO().getProjectId(), branch);
         if (gitlabBranch == null) return ciBuildDO;
-
         String commit = gitlabBranch.getCommit().getId();
         ciBuildDO.setCommit(commit);
         ciDao.addBuild(ciBuildDO);
         saveBuildCommit(ciBuildDO, ciJobVO.getId(), ciJobVO.getJobName(), branch);
         return ciBuildDO;
+    }
+
+    private void invokeBuild(CiBuildDO ciBuildDO, CiJobVO ciJobVO, JobWithDetails jobWithDetails) {
+        if (!jobWithDetails.isInQueue()) {
+            ciBuildDO.setBuildNumber(jobWithDetails.getNextBuildNumber());
+            // 设置版本名称
+            if (StringUtils.isEmpty(ciJobVO.getVersionName()))
+                ciBuildDO.setVersionName(VERSION_NAME + ciBuildDO.getBuildNumber());
+        } else {
+            ciBuildDO.setBuildNumber(-1); // 设置为队列
+        }
     }
 
     /**
@@ -600,23 +941,11 @@ public class CiServiceImpl implements CiService {
      */
     private CiBuildDO saveBuildByDeploy(CiJobVO ciJobVO, HashMap<String, String> params, JobWithDetails jobWithDetails, BuildArtifactDO buildArtifactDO) {
         UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
-        // TODO 取构件的versionName
         CiBuildDO buildDO = ciDao.getBuild(buildArtifactDO.getBuildId());
-
-
         CiBuildDO ciBuildDO = new CiBuildDO(ciJobVO, userDO, getParams(ciJobVO, params).toString(), true);
         ciBuildDO.setVersionName(buildDO.getVersionName());
         ciBuildDO.setVersionDesc(buildDO.getVersionDesc());
-        //
-        if (jobWithDetails.isInQueue()) {
-            // TODO 设置为队列
-            ciBuildDO.setBuildNumber(jobWithDetails.getNextBuildNumber());
-        } else {
-            ciBuildDO.setBuildNumber(jobWithDetails.getLastBuild().getNumber());
-            // TODO 设置版本名称
-            if (StringUtils.isEmpty(ciJobVO.getVersionName()))
-                ciBuildDO.setVersionName(VERSION_NAME + ciBuildDO.getBuildNumber());
-        }
+        invokeBuild(ciBuildDO, ciJobVO, jobWithDetails);
         String branch = getBuildParamValue(ciBuildDO, this.PARAM_BRANCH);
         GitlabBranch gitlabBranch = gitlabService.getProjectBranch(ciJobVO.getCiAppVO().getProjectId(), branch);
         if (gitlabBranch == null) return ciBuildDO;
@@ -641,7 +970,6 @@ public class CiServiceImpl implements CiService {
             e.printStackTrace();
             return false;
         }
-
     }
 
     private JobParams getParams(CiJobVO ciJobVO, HashMap<String, String> params) {
@@ -682,18 +1010,67 @@ public class CiServiceImpl implements CiService {
         for (CiJobParamDO param : paramList) {
             params.put(param.getParamName(), param.getParamValue());
         }
-        // TODO 如果没有branch则生成
-        if (!params.containsKey(PARAM_BRANCH)) {
-            if (!StringUtils.isEmpty(ciJobVO.getBranch()))
-                params.put(PARAM_BRANCH, ciJobVO.getBranch());
+        // 用户选择分支优先
+        if (!StringUtils.isEmpty(ciJobVO.getBranch()))
+            params.put(PARAM_BRANCH, ciJobVO.getBranch());
+
+        // 如果有项目邮件列表则生成
+        if (params.containsKey(PARAM_PROJECT_RECIPIENT_LIST)) {
+            String projectRecipientList = getProjectRecipientList(ciJobVO.getAppId());
+            if (StringUtils.isEmpty(projectRecipientList)) {
+                params.remove(PARAM_PROJECT_RECIPIENT_LIST); //空邮件列表则删除
+            } else {
+                params.put(PARAM_PROJECT_RECIPIENT_LIST, projectRecipientList);
+            }
         }
         if (!StringUtils.isEmpty(ciJobVO.getHostPattern())) {
             params.put(PARAM_HOSTPATTERN, ciJobVO.getHostPattern());
         }
+        // 多渠道
+        if (ciJobVO.getChannelType() == 1) {
+            params.put(PARAM_CHANNEL_TYPE, "1");
+            params.put(PARAM_CHANNEL_GROUP, getChannelGroup(ciJobVO.getChannelGroup()));
+        }
 
-        // TODO 生成sshUrl
+        // 生成sshUrl
         params.put(PARAM_SSHURL, ciJobVO.getCiAppVO().getSshUrl());
+        invokeParamByAppType(ciJobVO, params); // 按构建类型处理参数
         return params;
+    }
+
+    private String getChannelGroup(List<AndroidChannel> channelGroup) {
+        String groupName = "";
+        for (AndroidChannel androidChannel : channelGroup) {
+            String name = PublicType.CiAndroidChannelTypeEnum.getCiAndroidChannelTypeName(androidChannel.getCode());
+            if (name.equals("undefined")) continue;
+            groupName += "./sign/*_" + name + "_sign.apk ";
+        }
+        return groupName;
+    }
+
+    private void invokeParamByAppType(CiJobVO ciJobVO, HashMap<String, String> params) {
+        // Android
+        if (ciJobVO.getCiAppVO().getAppType() == PublicType.CiAppTypeEnum.android.getCode()) {
+            if (ciJobVO.getAndroidBuild() == null) return;
+            AndroidBuild ab = ciJobVO.getAndroidBuild();
+            ab.processor(params);
+            return;
+        }
+    }
+
+    private String getProjectRecipientList(long appId) {
+        String projectRecipientList = "";
+        List<UserVO> userList = userService.queryUserByApp(appId);
+        for (UserVO userVO : userList) {
+            if (StringUtils.isEmpty(userVO.getMail()))
+                continue;
+            if (StringUtils.isEmpty(projectRecipientList)) {
+                projectRecipientList += userVO.getMail();
+            } else {
+                projectRecipientList += "," + userVO.getMail();
+            }
+        }
+        return projectRecipientList;
     }
 
     /**
@@ -707,23 +1084,38 @@ public class CiServiceImpl implements CiService {
 
     private CiJobVO getCiJobVO(CiJobDO ciJobDO) {
         CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
-        // TODO gitlab分支
-        List<GitlabBranch> branchList = gitlabService.getProjectBranchs(ciAppDO.getProjectId());
-        // TODO 参数
+        List<GitlabBranch> branchList;
+        // gitlab分支(按GitFlow)
+        if (ciAppDO.isGitFlow()) {
+            branchList = gitlabService.getProjectBranchsByGitFlow(ciAppDO.getProjectId(), ciJobDO.getEnvType());
+        } else {
+            branchList = gitlabService.getProjectBranchs(ciAppDO.getProjectId());
+        }
+        // Params
         List<CiJobParamDO> paramList = ciDao.queryJobParamByJobId(ciJobDO.getId());
         CiJobVO ciJobVO = new CiJobVO(ciJobDO, branchList, paramList, getCiAppVO(ciAppDO));
         if (!StringUtils.isEmpty(ciJobDO.getJobTemplate())) {
             CiTemplateDO ciTemplateDO = ciDao.getTemplateByName(ciJobDO.getJobTemplate());
             ciJobVO.setCiTemplateDO(ciTemplateDO);
-            ciJobVO.setJobTemplateMd5(jenkinsService.getJobXmlMd5(ciJobDO.getJobName()));
+            //ciJobVO.setJobTemplateMd5(jenkinsService.getJobXmlMd5(ciJobDO.getJobName()));
         }
 
         if (!StringUtils.isEmpty(ciJobDO.getDeployJobTemplate())) {
             CiTemplateDO ciTemplateDO = ciDao.getTemplateByName(ciJobDO.getDeployJobTemplate());
             ciJobVO.setCiDeployTemplateDO(ciTemplateDO);
-            ciJobVO.setDeployJobTemplateMd5(jenkinsService.getJobXmlMd5(ciJobDO.getDeployJobName()));
+            //ciJobVO.setDeployJobTemplateMd5(jenkinsService.getJobXmlMd5(ciJobDO.getDeployJobName()));
         }
+        // BuildDetails  只查询最新的3次build
+        ciJobVO.setBuildDetails(getBuildDetails(ciJobDO));
         return ciJobVO;
+    }
+
+    private List<BuildDetail> getBuildDetails(CiJobDO ciJobDO) {
+        List<CiBuildDO> buildList = ciDao.getBuildPage(ciJobDO.getId(), ciJobDO.getJobName(), 0, 3);
+        List<BuildDetail> buildDetails = new ArrayList<>();
+        for (CiBuildDO ciBuildDO : buildList)
+            buildDetails.add(new BuildDetail(ciBuildDO));
+        return buildDetails;
     }
 
     @Override
@@ -760,23 +1152,32 @@ public class CiServiceImpl implements CiService {
     }
 
     @Override
-    public TableVO<List<CiTemplateVO>> getTemplatePage(String name, int appType, int ciType, int page, int length) {
-        long size = ciDao.getTemplateSize(name, appType, ciType);
-        List<CiTemplateDO> list = ciDao.getTemplatePage(name, appType, ciType, page * length, length);
-        List<CiTemplateVO> voList = new ArrayList<>();
+    public BusinessWrapper<Boolean> scanTpls() {
+        List<CiTemplateDO> list = ciDao.queryTemplates();
         for (CiTemplateDO ciTemplateDO : list) {
-            // TODO 更新自己，转换字符
+            // 更新自己，转换字符
             jenkinsService.updateJob(ciTemplateDO.getName(), ciTemplateDO.getName());
-            // TODO Check MD5
             String md5 = jenkinsService.getJobXmlMd5(ciTemplateDO.getName());
             if (!ciTemplateDO.getMd5().equals(md5)) {
                 ciTemplateDO.setMd5(md5);
                 ciTemplateDO.setVersion(ciTemplateDO.getVersion() + 1);
                 ciDao.updateTemplate(ciTemplateDO);
             }
-            voList.add(getCiTemplateVO(ciTemplateDO));
         }
+        return new BusinessWrapper<Boolean>(true);
+    }
 
+
+    @Override
+    public TableVO<List<CiTemplateVO>> getTemplatePage(String name, int appType, int ciType, int page, int length) {
+        long size = ciDao.getTemplateSize(name, appType, ciType);
+        List<CiTemplateDO> list = ciDao.getTemplatePage(name, appType, ciType, page * length, length);
+        List<CiTemplateVO> voList = new ArrayList<>();
+        for (CiTemplateDO ciTemplateDO : list) {
+            CiTemplateVO tplVO = getCiTemplateVO(ciTemplateDO);
+            tplVO.setEnv(new EnvType(tplVO.getEnvType()));
+            voList.add(tplVO);
+        }
         return new TableVO<>(size, voList);
     }
 
@@ -798,28 +1199,55 @@ public class CiServiceImpl implements CiService {
         return ciTemplateVO;
     }
 
-
     @Override
     public TableVO<List<CiBuildVO>> getBuildPage(long jobId, int page, int length) {
         CiJobDO ciJobDO = ciDao.getCiJob(jobId);
         long size = ciDao.getBuildSize(jobId, ciJobDO.getJobName());
-
         List<CiBuildDO> list = ciDao.getBuildPage(jobId, ciJobDO.getJobName(), page * length, length);
         List<CiBuildVO> voList = new ArrayList<>();
         for (CiBuildDO ciBuildDO : list)
-            voList.add(getBuildVO(ciBuildDO, TYPE_BUILD));
+            voList.add(getBuildVO(ciJobDO, ciBuildDO));
         return new TableVO<>(size, voList);
     }
 
     @Override
+    public CiBuildVO getBuildDetail(long buildId) {
+        CiBuildDO ciBuildDO = ciDao.getBuild(buildId);
+        CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
+        CiBuildVO ciBuildVO = getBuildVO(ciJobDO, ciBuildDO);
+        return ciBuildVO;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> checkBuildDetail(long buildId) {
+        CiBuildDO ciBuildDO = ciDao.getBuild(buildId);
+        BuildWithDetails bd = jenkinsService.getBuildDetail(ciBuildDO);
+        if (bd == null) return new BusinessWrapper<Boolean>(false);
+        if (!bd.isBuilding()) {
+            ciBuildDO.setBuildPhase("FINALIZED");
+            ciBuildDO.setBuildStatus(bd.getResult().name());
+            ciDao.updateBuild(ciBuildDO);
+            return new BusinessWrapper<Boolean>(true);
+        }
+        return new BusinessWrapper<Boolean>(false);
+    }
+
+    /**
+     * 部署详情（兼容Android加固）
+     *
+     * @param jobId
+     * @param page
+     * @param length
+     * @return
+     */
+    @Override
     public TableVO<List<CiBuildVO>> getDeployPage(long jobId, int page, int length) {
         CiJobDO ciJobDO = ciDao.getCiJob(jobId);
         long size = ciDao.getBuildSize(jobId, ciJobDO.getDeployJobName());
-
         List<CiBuildDO> list = ciDao.getBuildPage(jobId, ciJobDO.getDeployJobName(), page * length, length);
         List<CiBuildVO> voList = new ArrayList<>();
         for (CiBuildDO ciBuildDO : list)
-            voList.add(getBuildVO(ciBuildDO, TYPE_DEPLOY));
+            voList.add(getBuildVO(ciJobDO, ciBuildDO));
         return new TableVO<>(size, voList);
     }
 
@@ -830,7 +1258,19 @@ public class CiServiceImpl implements CiService {
         List<CiBuildVO> voList = new ArrayList<>();
         for (BuildArtifactDO buildArtifactDO : list) {
             CiBuildDO ciBuildDO = ciDao.getBuild(buildArtifactDO.getBuildId());
-            voList.add(getBuildVO(ciBuildDO, TYPE_BUILD));
+            voList.add(getBuildVO(ciJobDO, ciBuildDO));
+        }
+        return voList;
+    }
+
+    @Override
+    public List<CiBuildVO> getArtifact(long jobId, String versionName) {
+        CiJobDO ciJobDO = ciDao.getCiJob(jobId);
+        List<BuildArtifactDO> list = ciDao.queryBuildArtifactByVersionName(ciJobDO.getJobName(), versionName);
+        List<CiBuildVO> voList = new ArrayList<>();
+        for (BuildArtifactDO buildArtifactDO : list) {
+            CiBuildDO ciBuildDO = ciDao.getBuild(buildArtifactDO.getBuildId());
+            voList.add(getBuildVO(ciJobDO, ciBuildDO));
         }
         return voList;
     }
@@ -840,70 +1280,138 @@ public class CiServiceImpl implements CiService {
         return gitlabService.getChanges(jobId, jobName, branch);
     }
 
-
     /**
+     * 取Build详情
+     *
+     * @param ciJobDO
      * @param ciBuildDO
-     * @param buildType
      * @return
      */
-    private CiBuildVO getBuildVO(CiBuildDO ciBuildDO, int buildType) {
+    private CiBuildVO getBuildVO(CiJobDO ciJobDO, CiBuildDO ciBuildDO) {
         CiBuildVO ciBuildVO = new CiBuildVO(ciBuildDO);
-        //JSONObject jsonObject = JSON.parseObject(ciBuildDO.getParameters());
         ciBuildVO.setJobParams(getBuildParams(ciBuildDO));
-        // TODO notifyList
+        // notifyList
         List<BuildNotifyDO> notifyList = ciDao.queryBuildNotifyByBuildId(ciBuildDO.getId());
         ciBuildVO.setNotifyList(notifyList);
-        // TODO console http://ci.domain.cn/job/java_opscloud_prod/112/console
-        for (BuildNotifyDO buildNotifyDO : notifyList)
-            if (!StringUtils.isEmpty(buildNotifyDO.getBuildFullUrl())) {
-                ciBuildVO.setConsole(buildNotifyDO.getBuildFullUrl() + BUILD_CONSOLE);
-                break;
-            }
-        // TODO artifactList
-        ciBuildVO.setArtifactList(getArtifactList(ciBuildDO.getId(), buildType));
-
-        // TODO commitList
+        // console http://ci.domain.cn/job/java_opscloud_prod/112/console
+        invokeCiBuildVONotify(ciBuildVO);
+        // artifactList ,android 加固详情
+        ciBuildVO.setArtifactList(getArtifactList(ciBuildVO.getId()));
+        // commitList
         List<CiBuildCommitDO> commitList = ciDao.queryCiBuildCommitByBuildId(ciBuildDO.getId());
         ciBuildVO.setCommitList(commitList);
-        // TODO badge icon
-        String badgeIcon = "";
-        for (BuildNotifyDO buildNotifyDO : notifyList) {
-            if (!StringUtils.isEmpty(buildNotifyDO.getBuildFullUrl())) {
-                badgeIcon = buildNotifyDO.getBuildFullUrl() + BUILD_PLAIN_LINK;
-                break;
-            }
-        }
-        if (StringUtils.isEmpty(badgeIcon)) {
-            ciBuildVO.setBadgeIcon(badgeIcon);
-        } else {
-            ciBuildVO.setBadgeIcon(badgeIcon);
-        }
-        // TODO deployHistory
+        invokeBadgeIcon(ciJobDO, ciBuildVO); // badge icon
+        // deployHistory
         List<CiDeployHistoryDO> serverList = ciDao.queryDeployHistoryByBuildId(ciBuildDO.getId());
         ciBuildVO.setServerList(serverList);
         return ciBuildVO;
     }
 
-    private List<BuildArtifactVO> getArtifactList(long buildId, int buildType) {
-        List<BuildArtifactDO> artifactList = new ArrayList<>();
-        List<BuildArtifactVO> list = new ArrayList<>();
-        if (buildType == TYPE_BUILD) {
-            artifactList = ciDao.queryBuildArtifactByBuildId(buildId);
-        } else {
-            CiBuildDO ciBuildDO = ciDao.getBuild(buildId);
-            String ossPath = getBuildParamValue(ciBuildDO, PARAM_OSS_PATH);
-            if (!StringUtils.isEmpty(ossPath)) {
-                artifactList = ciDao.queryBuildArtifactByOssPath(ossPath);
+    private void invokeBadgeIcon(CiJobDO ciJobDO, CiBuildVO ciBuildVO) {
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        // 4 : Test
+        if (ciAppDO.getAppType() == 4) {
+            if (!StringUtils.isEmpty(ciBuildVO.getBuildPhase()) && ciBuildVO.getBuildPhase().equals("FINALIZED")) {
+                if (ciBuildVO.getBuildStatus().equals("SUCCESS")) {
+                    ciBuildVO.setBadgeIcon(BUILD_TEST_PASSING);
+                    return;
+                }
+                if (ciBuildVO.getBuildStatus().equals("UNSTABLE")) {
+                    ciBuildVO.setBadgeIcon(BUILD_TEST_UNSTABLE);
+                    return;
+                }
+                ciBuildVO.setBadgeIcon(BUILD_TEST_FAILING);
             } else {
-                return list;
+                ciBuildVO.setBadgeIcon(BUILD_TEST_STARTED);
+            }
+        } else {
+            if (!StringUtils.isEmpty(ciBuildVO.getBuildPhase()) && ciBuildVO.getBuildPhase().equals("FINALIZED")) {
+                if (ciBuildVO.getBuildStatus().equals("SUCCESS")) {
+                    ciBuildVO.setBadgeIcon(BUILD_PASSING);
+                } else {
+                    ciBuildVO.setBadgeIcon(BUILD_FAILING);
+                }
+            } else {
+                ciBuildVO.setBadgeIcon(BUILD_STARTED);
             }
         }
+    }
+
+
+    private void invokeCiBuildVONotify(CiBuildVO ciBuildVO) {
+        HashMap<String, BuildNotifyDO> map = new HashMap<>();
+        for (BuildNotifyDO buildNotifyDO : ciBuildVO.getNotifyList())
+            map.put(buildNotifyDO.getBuildPhase(), buildNotifyDO);
+        if (map.containsKey("STARTED"))
+            ciBuildVO.setConsole(map.get("STARTED").getBuildFullUrl() + BUILD_CONSOLE);
+        if (map.containsKey("FINALIZED"))
+            ciBuildVO.setDingtalk(map.get("FINALIZED").isDingtalk());
+        if (map.containsKey("QUEUED") && map.containsKey("STARTED")) {
+            try {
+                long timeQueue = TimeUtils.dateToStamp(map.get("STARTED").getGmtCreate()) - TimeUtils.dateToStamp(map.get("QUEUED").getGmtCreate());
+                ciBuildVO.setTimeQueue(timeQueue / 1000);
+            } catch (Exception e) {
+            }
+        }
+        if (map.containsKey("FINALIZED") && map.containsKey("STARTED")) {
+            try {
+                long timeBuild = TimeUtils.dateToStamp(map.get("FINALIZED").getGmtCreate()) - TimeUtils.dateToStamp(map.get("STARTED").getGmtCreate());
+                ciBuildVO.setTimeBuild(timeBuild / 1000);
+            } catch (Exception e) {
+            }
+        }
+
+    }
+
+    private List<BuildArtifactVO> getArtifactList(long buildId) {
+        List<BuildArtifactDO> artifactList = ciDao.queryBuildArtifactByBuildId(buildId);
+        List<BuildArtifactVO> list = new ArrayList<>();
+        //artifactList = ciDao.queryBuildArtifactByBuildId(buildId);
+//        if (buildType == TYPE_BUILD) {
+//            artifactList = ciDao.queryBuildArtifactByBuildId(buildId);
+//        } else {
+//            CiBuildDO ciBuildDO = ciDao.getBuild(buildId);
+//            String ossPath = getBuildParamValue(ciBuildDO, PARAM_OSS_PATH);
+//            if (!StringUtils.isEmpty(ossPath)) {
+//                artifactList = ciDao.queryBuildArtifactByOssPath(ossPath);
+//            } else {
+//                return list;
+//            }
+//        }
         for (BuildArtifactDO buildArtifactDO : artifactList) {
             BuildArtifactVO vo = BeanCopierUtils.copyProperties(buildArtifactDO, BuildArtifactVO.class);
             vo.setSize(ByteUtils.getSize(buildArtifactDO.getArtifactSize()));
+            invokePkgUrl(vo);
+            invokeArtifactBadge(vo);
             list.add(vo);
         }
         return list;
+    }
+
+    private void invokePkgUrl(BuildArtifactVO buildArtifactVO) {
+        CiBuildDO ciBuildDO = ciDao.getBuild(buildArtifactVO.getBuildId());
+        CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        switch (ciAppDO.getAppType()) {
+            case 1: //Python
+                //
+            case 2: //iOS
+                //
+            case 3: //Android
+                buildArtifactVO.setPkgUrl(PKG_SERVER_URL + buildArtifactVO.getOssPath());
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void invokeArtifactBadge(BuildArtifactVO buildArtifactVO) {
+        try {
+            String r = BADGE_URL + Joiner.on("-").join(buildArtifactVO.getOssPath().replaceAll("-", "--"), buildArtifactVO.getSize(), "blue.svg");
+            buildArtifactVO.setBadge(r);
+        } catch (Exception e) {
+        }
     }
 
     private JobParams getBuildParams(CiBuildDO ciBuildDO) {
@@ -912,7 +1420,6 @@ public class CiServiceImpl implements CiService {
         JobParams jobParams = gson.fromJson(ciBuildDO.getParameters(), JobParams.class);
         return jobParams;
     }
-
 
     @Override
     public BusinessWrapper<CiTemplateDO> saveTemplate(CiTemplateDO ciTemplateDO) {
@@ -946,30 +1453,33 @@ public class CiServiceImpl implements CiService {
     }
 
     private boolean updateJobTemplate(CiJobDO ciJobDO, int type) {
-
-        if (type == 0) {
-            // TODO Check
-            String templateMd5 = jenkinsService.getJobXmlMd5(ciJobDO.getJobTemplate());
-            if (StringUtils.isEmpty(templateMd5)) return false;
-            String jobMd5 = jenkinsService.getJobXmlMd5(ciJobDO.getJobName());
-            if (StringUtils.isEmpty(jobMd5)) return false;
-            // TODO Job为最新模版，无需更新
-            if (jobMd5.equals(templateMd5)) return false;
-            return jenkinsService.updateJob(ciJobDO.getJobName(), ciJobDO.getJobTemplate());
+        CiTemplateDO tpl = null;
+        String jobName = "";
+        try {
+            // CI
+            if (type == 0) {
+                tpl = ciDao.getTemplateByName(ciJobDO.getJobTemplate());
+                jobName = ciJobDO.getJobName();
+                if (tpl.getVersion() == ciJobDO.getJobVersion())  // 比对版本Code
+                    return true;
+                ciJobDO.setJobVersion(tpl.getVersion());
+            }
+            // CD
+            if (type == 1) {
+                tpl = ciDao.getTemplateByName(ciJobDO.getDeployJobTemplate());
+                jobName = ciJobDO.getDeployJobName();
+                if (tpl.getVersion() == ciJobDO.getDeployJobVersion())  // 比对版本Code
+                    return true;
+                ciJobDO.setDeployJobVersion(tpl.getVersion());
+            }
+            // 比对版本Code
+            jenkinsService.updateJob(jobName, tpl.getName(),getYaml(getCiJobVO(ciJobDO)));
+            ciJobDO.setJobVersion(tpl.getVersion());
+            ciDao.updateCiJob(ciJobDO);
+            return true;
+        } catch (Exception e) {
+            return false;
         }
-
-        if (type == 1) {
-            // TODO Check
-            String templateMd5 = jenkinsService.getJobXmlMd5(ciJobDO.getDeployJobTemplate());
-            if (StringUtils.isEmpty(templateMd5)) return false;
-            String jobMd5 = jenkinsService.getJobXmlMd5(ciJobDO.getDeployJobName());
-            if (StringUtils.isEmpty(jobMd5)) return false;
-            // TODO Job为最新模版，无需更新
-            if (jobMd5.equals(templateMd5)) return false;
-            return jenkinsService.updateJob(ciJobDO.getDeployJobName(), ciJobDO.getDeployJobTemplate());
-        }
-
-        return false;
     }
 
     @Override
@@ -983,6 +1493,18 @@ public class CiServiceImpl implements CiService {
             updateJobTemplate(ciJobDO, 1);
         }
         return new BusinessWrapper<Boolean>(reslut);
+    }
+
+    @Override
+    public String previewTemplate(long templateId) {
+        try {
+            CiTemplateDO ciTemplateDO = ciDao.getTemplate(templateId);
+            String tempXml = jenkinsService.getJobXml(ciTemplateDO.getName());
+            return tempXml;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
     }
 
 
@@ -1025,7 +1547,8 @@ public class CiServiceImpl implements CiService {
      * @return
      */
     @Override
-    public List<HostPatternCi>  getHostPatternCi(long groupId) {
+    public List<HostPatternCi> getHostPatternCi(long groupId) {
+        if (groupId == 0) return new ArrayList<>();
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(groupId);
         Map<String, List<ServerDO>> map = ansibleService.grouping(serverGroupDO, true);
         List<HostPatternCi> hostPatterns = new ArrayList<>();
@@ -1054,6 +1577,71 @@ public class CiServiceImpl implements CiService {
         if (ciDeployHistoryDO == null) return new CiDeployHistoryVO(serverDO);
         CiBuildDO ciBuildDO = ciDao.getBuild(ciDeployHistoryDO.getBuildId());
         return new CiDeployHistoryVO(ciDeployHistoryDO, ciBuildDO);
+    }
+
+    @Override
+    public int getMyAppSize() {
+        return ciDao.getMyAppSize(SessionUtils.getUsername());
+    }
+
+
+    @Override
+    public LabelDO addLabel(LabelDO labelDO) {
+        try {
+            ciDao.addLabel(labelDO);
+        } catch (Exception e) {
+        }
+        return labelDO;
+    }
+
+    @Override
+    public LabelDO saveLabel(LabelDO labelDO) {
+        try {
+            ciDao.updateLabel(labelDO);
+        } catch (Exception e) {
+        }
+        return labelDO;
+    }
+
+    @Override
+    public List<LabelVO> queryLabel() {
+        List<LabelDO> list = ciDao.queryLabel();
+        List<LabelVO> voList = new ArrayList<>();
+        for (LabelDO labelDO : list) {
+            LabelVO labelVO = BeanCopierUtils.copyProperties(labelDO, LabelVO.class);
+            if (labelVO.getLabelType() == 0) {
+                labelVO.setActive(true);
+                labelVO.setColor(LabelVO.ACTIVE_COLOR);
+            }
+            labelVO.setMemberList(ciDao.getMemberByLabel(labelVO.getId()));
+            voList.add(labelVO);
+        }
+        return voList;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> addLabelMember(LabelMemberDO labelMemberDO) {
+        try {
+            ciDao.addMember(labelMemberDO);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delLabelMember(long id) {
+        try {
+            ciDao.delMember(id);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public List<LabelMemberVO> getLabelMember(long id) {
+        return ciDao.getMemberByLabel(id);
     }
 
 }

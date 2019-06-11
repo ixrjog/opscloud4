@@ -27,7 +27,6 @@ app.controller('logcleanupCtrl', function ($scope, $state, $uibModal, httpServic
     $scope.nowServerGroup = {};
     $scope.serverGroupList = [];
 
-
     $scope.reSet = function () {
         $scope.queryName = "";
         $scope.nowEnabled = -1;
@@ -53,7 +52,7 @@ app.controller('logcleanupCtrl', function ($scope, $state, $uibModal, httpServic
         var url = "/task/logcleanup/page?"
             + "serverGroupId=" + ($scope.nowServerGroup.selected == null ? -1 : $scope.nowServerGroup.selected.id)
             + "&serverName=" + $scope.queryName
-            + "&enabled=" + $scope.nowEnabled
+            + "&enabled=" + ($scope.nowEnabled == null ? -1 : $scope.nowEnabled)
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
 
@@ -86,15 +85,14 @@ app.controller('logcleanupCtrl', function ($scope, $state, $uibModal, httpServic
     ///////////////////////////////////////////////////////////
 
     /**
-     * 清理数据
+     * 更新采集数据
      * @param item
      */
-    $scope.cleanup = function (item) {
-        var url = "/task/logcleanup/cleanup?"
-            + "serverId=" + item.serverId;
+    $scope.update = function (item) {
+        var url = "/task/logcleanup/update?serverId=" + item.serverId;
         httpService.doGet(url).then(function (data) {
             if (data.success) {
-                toaster.pop("success", "清理成功", data.body);
+                toaster.pop("success", "更新采集数据成功！");
                 $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
@@ -122,53 +120,6 @@ app.controller('logcleanupCtrl', function ($scope, $state, $uibModal, httpServic
         });
     }
 
-    /**
-     * 设置是否启用任务
-     * @param item
-     */
-    $scope.setEnabled = function (item) {
-        var url = "/task/logcleanup/setEnabled?"
-            + "serverId=" + item.serverId;
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                toaster.pop("success", "设置成功");
-                $scope.doQuery();
-            } else {
-                toaster.pop("warning", data.msg);
-            }
-        }, function (err) {
-            toaster.pop("warning", err);
-        });
-    }
-
-    /**
-     * 减少history
-     * @param item
-     */
-    $scope.subtractHistory = function (item) {
-        var url = "/task/logcleanup/subtractHistory?"
-            + "serverId=" + item.serverId;
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                $scope.doQuery();
-            }
-        });
-    }
-
-    /**
-     * 增加history
-     * @param item
-     */
-    $scope.addHistory = function (item) {
-        var url = "/task/logcleanup/addHistory?"
-            + "serverId=" + item.serverId;
-        httpService.doGet(url).then(function (data) {
-            if (data.success) {
-                toaster.pop("success", "设置成功");
-                $scope.doQuery();
-            }
-        });
-    }
 
     /**
      * 增加history
@@ -194,7 +145,28 @@ app.controller('logcleanupCtrl', function ($scope, $state, $uibModal, httpServic
     $scope.edit = function (item) {
         var modalInstance = $uibModal.open({
             templateUrl: 'logcleanupInfo',
-            controller: 'logcleanupInstanceCtrl',
+            controller: 'logcleanupInfoCtrl',
+            size: 'lg',
+            resolve: {
+                httpService: function () {
+                    return httpService;
+                },
+                logcleanup: function () {
+                    return item;
+                }
+            }
+        });
+        modalInstance.result.then(function () {
+            $scope.doQuery();
+        }, function () {
+            $scope.doQuery();
+        });
+    }
+
+    $scope.task = function (item) {
+        var modalInstance = $uibModal.open({
+            templateUrl: 'logcleanupTask',
+            controller: 'logcleanupTaskCtrl',
             size: 'lg',
             resolve: {
                 httpService: function () {
@@ -215,12 +187,51 @@ app.controller('logcleanupCtrl', function ($scope, $state, $uibModal, httpServic
 
 });
 
-
-app.controller('logcleanupInstanceCtrl', function ($scope, $uibModalInstance, staticModel, httpService, logcleanup) {
+/**
+ * 配置
+ */
+app.controller('logcleanupInfoCtrl', function ($scope, $uibModalInstance, staticModel, httpService, logcleanup) {
     $scope.userType = staticModel.userType;
     $scope.envType = staticModel.envType;
     $scope.serverType = staticModel.serverType;
     $scope.item = logcleanup;
+    $scope.nowScript = {};
+    $scope.scriptList = [];
+
+
+    var queryLogcleanupStriptList = function () {
+        var url = "/task/script/page?scriptName=logcleanup&sysScript=1&page=0&length=15";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.scriptList = data.body.data;
+                setScript();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    var setScript = function () {
+        if ($scope.item.scriptId != 0) {
+            for (var i = 0; i < $scope.scriptList.length; i++) {
+                if ($scope.scriptList[i].id == $scope.item.scriptId) {
+                    $scope.nowScript.selected = $scope.scriptList[i];
+                    break;
+                }
+            }
+        } else {
+            $scope.nowScript.selected = $scope.scriptList[0];
+        }
+
+    }
+
+    var init = function () {
+        queryLogcleanupStriptList();
+    }
+
+    init();
 
     $scope.alert = {
         type: "",
@@ -235,18 +246,30 @@ app.controller('logcleanupInstanceCtrl', function ($scope, $uibModalInstance, st
     }
 
     /**
-     * 修改日志保留天数
+     * 修改配置
      * @param item
      */
     $scope.saveItem = function (item) {
-        var url = "/task/logcleanup/save?"
-            + "id=" + item.serverId
-            + "&history=" + item.history;
+        if (item.enabled) {
+            if ($scope.nowScript.selected == null) {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = "必须清理脚本";
+                return;
+            } else {
+                item.scriptId = $scope.nowScript.selected.id; // 设置脚本id
+            }
+        }
+        var url = "/task/logcleanup/save";
 
-        httpService.doGet(url).then(function (data) {
+        httpService.doPostWithJSON(url, item).then(function (data) {
             if (data.success) {
                 $scope.alert.type = 'success';
-                $scope.alert.msg = "保存成功!";
+                $scope.alert.msg = "保存成功！";
+
+                $scope.nowServerGroup = {};
+                $scope.nowServer = {};
+                $scope.propertyGroup = {};
+                $scope.groupProperties = [];
             } else {
                 $scope.alert.type = 'warning';
                 $scope.alert.msg = data.msg;
@@ -255,6 +278,79 @@ app.controller('logcleanupInstanceCtrl', function ($scope, $uibModalInstance, st
             $scope.alert.type = 'danger';
             $scope.alert.msg = err;
         });
+    }
+
+
+});
+
+/**
+ * 任务详情
+ */
+app.controller('logcleanupTaskCtrl', function ($scope, $uibModalInstance, staticModel, httpService, logcleanup) {
+
+    $scope.item = logcleanup;
+
+
+    $scope.pageData = [];
+    $scope.totalItems = 0;
+    $scope.currentPage = 0;
+    $scope.pageLength = 5;
+
+
+    $scope.pageChanged = function () {
+        $scope.doQuery();
+    };
+
+    /////////////////////////////////////////////////
+
+    $scope.doQuery = function () {
+        var url = "/task/logcleanup/log/page?"
+            + "id=" +  $scope.item.id
+            + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
+            + "&length=" + $scope.pageLength;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.totalItems = body.size;
+                $scope.pageData = body.data;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.doQuery();
+
+    /**
+     * 执行清理任务
+     */
+    $scope.doTask = function () {
+        var url = "/task/logcleanup/doTask?id=" +  $scope.item.id ;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.doQuery();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.alert = {
+        type: "",
+        msg: ""
+    };
+
+    $scope.closeAlert = function () {
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
     }
 
 

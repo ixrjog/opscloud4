@@ -86,11 +86,46 @@ public class TimeUtils {
         return diff.intValue();
     }
 
+
+    /**
+     * 计算时间已经过多少天
+     *
+     * @param fromDate
+     * @return
+     */
+    public static int calculateDateDiff4Day(String fromDate) {
+        try {
+            long subTime = new Date().getTime() - dateToStamp(fromDate);
+            if (subTime < 0)
+                return 0;
+            Long diff = subTime / dayTime;
+            return diff.intValue();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /**
+     * 计算时间是否过期
+     *
+     * @param expired
+     * @return
+     */
+    public static boolean calculateDateExpired(String expired) {
+        try {
+            long subTime = dateToStamp(expired) - new Date().getTime();
+            if (subTime > 0)
+                return false;
+            return true;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
     /*
     * 将时间转换为时间戳
     */
     public static long dateToStamp(String s) throws ParseException {
-        String res;
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         Date date = simpleDateFormat.parse(s);
         long ts = date.getTime();

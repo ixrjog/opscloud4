@@ -1,16 +1,13 @@
 package com.sdg.cmdb.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
-import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.profile.IClientProfile;
 import com.sdg.cmdb.dao.cmdb.IPGroupDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
+import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.HttpResult;
@@ -18,24 +15,26 @@ import com.sdg.cmdb.domain.TableVO;
 
 import com.sdg.cmdb.domain.aliyun.AliyunNetworkDO;
 import com.sdg.cmdb.domain.aliyun.AliyunVO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
+
+import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.ip.IPDetailDO;
 import com.sdg.cmdb.domain.ip.IPDetailVO;
 import com.sdg.cmdb.domain.ip.IPNetworkDO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.util.PasswdUtils;
+import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
-import java.util.HashMap;
+
 import java.util.List;
 
 /**
@@ -47,8 +46,13 @@ public class EcsCreateServiceImpl implements EcsCreateService {
     private static final Logger logger = LoggerFactory.getLogger(EcsCreateServiceImpl.class);
     private static final Logger coreLogger = LoggerFactory.getLogger("coreLogger");
 
-    @Resource
-    private AliyunService aliyunService;
+
+    @Value(value = "${aliyun.ecs.classic.security.group.id}")
+    private String classicSecurityGroupId;
+
+
+    @Value(value = "${aliyun.ecs.public.network.id}")
+    private String publicNetworkId;
 
     @Resource
     private EcsService ecsService;
@@ -65,63 +69,111 @@ public class EcsCreateServiceImpl implements EcsCreateService {
     @Resource
     private ConfigService configService;
 
-    @Resource
-    private ConfigCenterService configCenterService;
+    @Autowired
+    private AliyunService aliyunService;
 
-    @Resource
+    @Autowired
     private IPService ipService;
 
-    @Resource
+    @Autowired
     private IPGroupDao ipGroupDao;
 
-    @Resource
+    @Autowired
+    private UserDao userDao;
+
+    @Autowired
     private SchedulerManager schedulerManager;
 
-    @Resource
+    @Autowired
     private ServerGroupService serverGroupService;
-
-    private HashMap<String, String> configMap;
 
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
+    @Override
+    public EcsTaskVO getEcsTask(long taskId) {
+        EcsTaskDO ecsTaskDO = serverDao.getEcsTask(taskId);
+        List<EcsTaskServerDO> taskServerList = serverDao.getEcsTaskServerByTaskId(taskId);
+        List<EcsServerDO> serverList = new ArrayList<>();
+        for (EcsTaskServerDO ecsTaskServerDO : taskServerList) {
+            EcsServerDO ecsServerDO = serverDao.queryEcsByInstanceId(ecsTaskServerDO.getInstanceId());
+            if (ecsServerDO == null)
+                ecsServerDO = new EcsServerDO(ecsTaskServerDO.getInstanceId());
+            serverList.add(ecsServerDO);
+        }
+        EcsTaskVO ecsTaskVO = new EcsTaskVO(ecsTaskDO, serverList);
+        return ecsTaskVO;
+    }
+
+    @Override
+    public EcsTaskDO createEcsTask(CreateEcsVO template) {
+        String username = SessionUtils.getUsername();
+        UserDO userDO = userDao.getUserByName(username);
+        EcsTaskDO ecsTaskDO = new EcsTaskDO(userDO, template.getCnt());
+        serverDao.addEcsTask(ecsTaskDO);
+        ServerVO serverVO = template.getServerVO();
+        ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverVO.getServerGroupDO().getId());
+        // TODO 设置服务器名称
+        if (StringUtils.isEmpty(serverVO.getServerName()))
+            serverVO.setServerName(serverGroupDO.acqShortName());
+        EcsTemplateDO ecsTemplateDO = serverDao.queryEcsTemplateById(template.getEcsTemplateId());
+        template.setEcsTemplateDO(ecsTemplateDO);
+        List<ServerDO> servers = serverDao.getServersByGroupIdAndEnvType(serverGroupDO.getId(), template.getServerVO().getEnvType());
+        int serverSize = servers.size();
+        schedulerManager.registerJob(() -> {
+            createEcsTask(template, serverVO, serverSize, ecsTaskDO);
+        });
+        return ecsTaskDO;
+    }
+
+    private void createEcsTask(CreateEcsVO template, ServerVO serverVO, int serverSize, EcsTaskDO ecsTaskDO) {
+        List<CreateInstanceResponse> instanceList = new ArrayList<>();
+        List<EcsServerDO> newServers = new ArrayList<EcsServerDO>();
+        // TODO 先开通服务器
+        for (int i = 1; i <= template.getCnt(); i++) {
+            //serverVO.setSerialNumber(String.valueOf(serverSize + i));
+            template.getServerVO().setSerialNumber(String.valueOf(serverSize + i));
+            CreateInstanceResponse instance = createEcs(null, template);
+            instanceList.add(instance);
+            // TODO 插入TaskServer记录，用于前端返回
+            EcsTaskServerDO ecsTaskServerDO = new EcsTaskServerDO(ecsTaskDO.getId(), instance.getInstanceId());
+            serverDao.addEcsTaskServer(ecsTaskServerDO);
+        }
+        // TODO 登记ECS实例信息
+        for (CreateInstanceResponse instance : instanceList) {
+            newServers.add(saveServer(instance.getInstanceId(), template));
+        }
+        // TODO 更新Task完成
+        ecsTaskDO.setComplete(true);
+        serverDao.updateEcsTask(ecsTaskDO);
+        //变更配置
+        if (invokeEnv.equalsIgnoreCase("online"))
+            configService.invokeServerConfig(serverVO);
     }
 
     @Override
     public HttpResult create(String regionId, CreateEcsVO template) {
-        // TableVO<List<EcsServerVO>>
-
         if (regionId == null) regionId = EcsServiceImpl.regionIdCnHangzhou;
         ServerVO serverVO = template.getServerVO();
-
-
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverVO.getServerGroupDO().getId());
         if (serverGroupDO == null)
             return new HttpResult(new BusinessWrapper<>(ErrorCode.serverGroupNotExist));
-
         // 设置服务器名称
         if (StringUtils.isEmpty(serverVO.getServerName()))
             serverVO.setServerName(serverGroupDO.acqShortName());
-
         EcsTemplateDO ecsTemplateDO = serverDao.queryEcsTemplateById(template.getEcsTemplateId());
         template.setEcsTemplateDO(ecsTemplateDO);
-
         List<ServerDO> servers = serverDao.getServersByGroupIdAndEnvType(serverGroupDO.getId(), template.getServerVO().getEnvType());
-
         int serverSize = servers.size();
 
         List<EcsServerDO> newServers = new ArrayList<EcsServerDO>();
         List<CreateInstanceResponse> instanceList = new ArrayList<>();
-        //开通ECS & 保存服务器信息（server & ecsServer）
+
         for (int i = 1; i <= template.getCnt(); i++) {
             //serverVO.setSerialNumber(String.valueOf(serverSize + i));
             template.getServerVO().setSerialNumber(String.valueOf(serverSize + i));
             CreateInstanceResponse instance = createEcs(regionId, template);
             instanceList.add(instance);
-            // newServers.add(saveServer(instance.getInstanceId(), template));
         }
         for (CreateInstanceResponse instance : instanceList) {
             newServers.add(saveServer(instance.getInstanceId(), template));
@@ -201,8 +253,6 @@ public class EcsCreateServiceImpl implements EcsCreateService {
 
         ServerVO serverVO = template.getServerVO();
         AliyunVO aliyunVO = aliyunService.getAliyun(template);
-        HashMap<String, String> configMap = acqConifMap();
-        String securityGroupId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_SECURITY_GROUP_ID.getItemKey());
 
         CreateInstanceRequest create = new CreateInstanceRequest();
         // 实例所属的可用区编号，空表示由系统选择，默认值：空。
@@ -218,7 +268,7 @@ public class EcsCreateServiceImpl implements EcsCreateService {
             create.setSecurityGroupId(aliyunVO.getAliyunVpcSecurityGroupDO().getSecurityGroupId());
         } else {
             // classic
-            create.setSecurityGroupId(securityGroupId);
+            create.setSecurityGroupId(classicSecurityGroupId);
         }
         // 设置付费类型
         create.setInstanceChargeType(template.getChargeType());
@@ -295,15 +345,7 @@ public class EcsCreateServiceImpl implements EcsCreateService {
 
 
     private IAcsClient acqIAcsClient(String regionId) {
-        HashMap<String, String> configMap = acqConifMap();
-        String aliyunAccessKey = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_KEY.getItemKey());
-        String aliyunAccessSecret = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_SECRET.getItemKey());
-        //生成 IClientProfile 的对象 profile，该对象存放 Access Key ID 和 Access Key Secret 和默认的地域信息
-        IClientProfile profile = DefaultProfile.getProfile(regionId, aliyunAccessKey, aliyunAccessSecret);
-        //创建一个对应方法的 Request，类的命名规则一般为 API 的方法名加上 “Request”，如获得镜像列表的 API 方法名为 DescribeImages，
-        //那么对应的请求类名就是 DescribeImagesRequest，直接使用构造函数生成一个默认的类 describe：
-        IAcsClient client = new DefaultAcsClient(profile);
-        return client;
+        return aliyunService.acqIAcsClient(regionId);
     }
 
     private CreateInstanceResponse sampleCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest) {
@@ -413,8 +455,7 @@ public class EcsCreateServiceImpl implements EcsCreateService {
         if (serverDO != null) {
             if (!isAllocateIp(instanceId))
                 return new BusinessWrapper<>(ErrorCode.ecsStatusError);
-            HashMap<String, String> configMap = acqConifMap();
-            String publicNetworkId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_PUBLIC_NETWORK_ID.getItemKey());
+            // String publicNetworkId
             long networkId = Long.valueOf(publicNetworkId);
 
             IPNetworkDO ipNetworkDO = ipGroupDao.queryIPGroupInfo(networkId);

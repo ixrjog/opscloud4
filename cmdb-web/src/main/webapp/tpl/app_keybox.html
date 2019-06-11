@@ -88,13 +88,7 @@
                                 </td>
                                 <td>{{item.serialNumber}}</td>
                                 <td>
-                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
-                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
-                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
-                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
-                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
-                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
-                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                    <b style="color: {{item.env.color}}">{{item.env.name}}</b>
                                 </td>
                                 <td>{{item.loginUser}}@{{item.insideIP.ip}}</td>
                             </tr>
@@ -130,24 +124,22 @@
                      'keybox-unFocus' : !(boxItem.hasChoose || allChoosed)}" ng-click="chooseOne(boxItem)">
                         <div class="panel-default">
                             <div class="panel-heading" style="color: #777;">
-                                <span class="label label-default" ng-if="boxItem.instance.envType == 0">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(保留)</span>
-                                <span class="label label-info" ng-if="boxItem.instance.envType == 1">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(dev)</span>
-                                <span class="label label-success" ng-if="boxItem.instance.envType == 2">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(daily)</span>
-                                <span class="label label-warning" ng-if="boxItem.instance.envType == 3">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(gray)</span>
-                                <span class="label label-danger" ng-if="boxItem.instance.envType == 4">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(prod)</span>
-                                <span class="label label-primary" ng-if="boxItem.instance.envType == 5">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(test)</span>
-                                <span class="label label-primary" ng-if="boxItem.instance.envType == 6">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}(back)</span>
+                                <span class="label"
+                                      style="background-color:{{boxItem.instance.env.color}}; color: white;">{{boxItem.instance.serverName + "-" + boxItem.instance.serialNumber}}({{boxItem.instance.env.name}})</span>
 
                                 <span class="label label-success">{{boxItem.instance.publicIP != null ? ("公网:" + boxItem.instance.publicIP.ip) : ""}}</span>
                                 <span class="label label-info">{{boxItem.instance.insideIP != null ? ("内网:" + boxItem.instance.insideIP.ip) : ""}}</span>
 
+                                <span class="label" style="background-color: #8c8c8c" ng-show="boxItem.instance.ecsServerDO != null && boxItem.instance.ecsServerDO.instanceId != null"
+                                      uib-popover-html="'ECS Instance Id'" popover-trigger="'mouseenter'"
+                                     >{{boxItem.instance.ecsServerDO.instanceId}}</span>
                                 <i uib-popover-html="boxItem.instance.serverInfo" popover-trigger="'mouseenter'"
                                    popover-placement="bottom"
                                    class="icon icon-info" style="color: green;"></i>
 
                                 <button type="button" class="btn btn-info btn-xs pull-right"
                                         ng-click="closeItem(boxItem.id)"><span
-                                        class="glyphicon glyphicon-log-out"></span>logout
+                                        class="glyphicon glyphicon-log-out"></span>Logout
                                 </button>
                             </div>
                             <div ng-bind-html="boxItem.xtermDom"></div>

@@ -1,8 +1,10 @@
 /* *
- * (c) 2010-2018 Torstein Honsi
  *
- * License: www.highcharts.com/license
- */
+ *  (c) 2010-2019 Torstein Honsi
+ *
+ *  License: www.highcharts.com/license
+ *
+ * */
 
 /**
  * Map data object.
@@ -55,7 +57,9 @@ var colorPointMixin = H.colorPointMixin,
  *
  * @augments Highcharts.Series
  */
-seriesType('map', 'scatter',
+seriesType(
+    'map',
+    'scatter',
     /**
      * The map series is used for basic choropleth maps, where each map area has
      * a color based on its value.
@@ -73,17 +77,27 @@ seriesType('map', 'scatter',
         animation: false, // makes the complex shapes slow
 
         dataLabels: {
+            /** @ignore-option */
             crop: false,
+            /** @ignore-option */
             formatter: function () { // #2945
                 return this.point.value;
             },
+            /** @ignore-option */
             inside: true, // for the color
+            /** @ignore-option */
             overflow: false,
+            /** @ignore-option */
             padding: 0,
+            /** @ignore-option */
             verticalAlign: 'middle'
         },
 
-        /** @ignore-option */
+        /**
+         * @ignore-option
+         *
+         * @private
+         */
         marker: null,
 
         /**
@@ -95,7 +109,9 @@ seriesType('map', 'scatter',
          * @sample maps/demo/all-areas-as-null/
          *         Null color
          *
-         * @type {Highcharts.ColorString}
+         * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+         *
+         * @private
          */
         nullColor: '#f7f7f7',
 
@@ -106,6 +122,8 @@ seriesType('map', 'scatter',
          * @type      {boolean}
          * @since     4.2.7
          * @apioption plotOptions.map.nullInteraction
+         *
+         * @private
          */
 
         stickyTracking: false,
@@ -115,7 +133,11 @@ seriesType('map', 'scatter',
             pointFormat: '{point.name}: {point.value}<br/>'
         },
 
-        /** @ignore-option */
+        /**
+         * @ignore-option
+         *
+         * @private
+         */
         turboThreshold: 0,
 
         /**
@@ -130,6 +152,8 @@ seriesType('map', 'scatter',
          * @default   true
          * @product   highmaps
          * @apioption plotOptions.series.allAreas
+         *
+         * @private
          */
         allAreas: true,
 
@@ -146,6 +170,8 @@ seriesType('map', 'scatter',
          * @default   '#cccccc'
          * @product   highmaps
          * @apioption plotOptions.series.borderColor
+         *
+         * @private
          */
         borderColor: '#cccccc',
 
@@ -162,6 +188,8 @@ seriesType('map', 'scatter',
          * @default   1
          * @product   highmaps
          * @apioption plotOptions.series.borderWidth
+         *
+         * @private
          */
         borderWidth: 1,
 
@@ -202,6 +230,8 @@ seriesType('map', 'scatter',
          * @default   hc-key
          * @product   highmaps
          * @apioption plotOptions.series.joinBy
+         *
+         * @private
          */
         joinBy: 'hc-key',
 
@@ -213,10 +243,19 @@ seriesType('map', 'scatter',
          * @apioption plotOptions.series.zIndex
          */
 
+        /**
+         * @apioption plotOptions.series.states
+         *
+         * @private
+         */
         states: {
 
+            /**
+             * @apioption plotOptions.series.states.hover
+             */
             hover: {
 
+                /** @ignore-option */
                 halo: null,
 
                 /**
@@ -225,7 +264,7 @@ seriesType('map', 'scatter',
                  * @sample maps/plotoptions/series-states-hover/
                  *         Hover options
                  *
-                 * @type      {Highcharts.ColorString}
+                 * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  * @product   highmaps
                  * @apioption plotOptions.series.states.hover.color
                  */
@@ -256,35 +295,38 @@ seriesType('map', 'scatter',
                  * @apioption plotOptions.series.states.hover.brightness
                  */
                 brightness: 0.2
-
             },
 
             /**
-             * Overrides for the normal state.
-             *
-             * @product   highmaps
              * @apioption plotOptions.series.states.normal
              */
             normal: {
 
                 /**
-                 * Animation options for the fill color when returning from
-                 * hover state to normal state. The animation adds some latency
-                 * in order to reduce the effect of flickering when hovering in
-                 * and out of for example an uneven coastline.
+                 * @productdesc {highmaps}
+                 * The animation adds some latency in order to reduce the effect
+                 * of flickering when hovering in and out of for example an
+                 * uneven coastline.
                  *
-                 * @sample maps/plotoptions/series-states-animation-false/
+                 * @sample {highmaps} maps/plotoptions/series-states-animation-false/
                  *         No animation of fill color
                  *
-                 * @type      {boolean|Highcharts.AnimationOptionsObject}
-                 * @default   true
-                 * @product   highmaps
                  * @apioption plotOptions.series.states.normal.animation
                  */
                 animation: true
             },
 
+            /**
+             * @apioption plotOptions.series.states.select
+             */
             select: {
+
+                /**
+                 * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
+                 * @default   #cccccc
+                 * @product   highmaps
+                 * @apioption plotOptions.series.states.select.color
+                 */
                 color: '#cccccc'
             }
         }
@@ -411,6 +453,12 @@ seriesType('map', 'scatter',
             }
         },
 
+        // Define hasData function for non-cartesian series.
+        // Returns true if the series has points at all.
+        hasData: function () {
+            return !!this.processedXData.length; // != 0
+        },
+
         getExtremes: function () {
             // Get the actual value extremes for colors
             Series.prototype.getExtremes.call(this, this.valueData);
@@ -500,6 +548,7 @@ seriesType('map', 'scatter',
             if (data) {
                 data.forEach(function (val, i) {
                     var ix = 0;
+
                     if (isNumber(val)) {
                         data[i] = {
                             value: val
@@ -883,13 +932,13 @@ seriesType('map', 'scatter',
             if (!chart.styledMode) {
                 group.element.setAttribute(
                     'stroke-width',
-                    (
+                    pick(
                         series.options[
                             (
                                 series.pointAttrToOptions &&
                                 series.pointAttrToOptions['stroke-width']
                             ) || 'borderWidth'
-                        ] ||
+                        ],
                         1 // Styled mode
                     ) / (scaleX || 1)
                 );
@@ -1125,43 +1174,42 @@ seriesType('map', 'scatter',
  * An array of data points for the series. For the `map` series type, points can
  * be given in the following ways:
  *
- * 1.  An array of numerical values. In this case, the numerical values will be
- * interpreted as `value` options. Example:
+ * 1. An array of numerical values. In this case, the numerical values will be
+ *    interpreted as `value` options. Example:
+ *    ```js
+ *    data: [0, 5, 3, 5]
+ *    ```
  *
- *  ```js
- *  data: [0, 5, 3, 5]
- *  ```
+ * 2. An array of arrays with 2 values. In this case, the values correspond to
+ *    `[hc-key, value]`. Example:
+ *    ```js
+ *        data: [
+ *            ['us-ny', 0],
+ *            ['us-mi', 5],
+ *            ['us-tx', 3],
+ *            ['us-ak', 5]
+ *        ]
+ *    ```
  *
- * 2.  An array of arrays with 2 values. In this case, the values correspond to
- * `[hc-key, value]`. Example:
+ * 3. An array of objects with named values. The following snippet shows only a
+ *    few settings, see the complete options set below. If the total number of
+ *    data points exceeds the series'
+ *    [turboThreshold](#series.map.turboThreshold),
+ *    this option is not available.
+ *    ```js
+ *        data: [{
+ *            value: 6,
+ *            name: "Point2",
+ *            color: "#00FF00"
+ *        }, {
+ *            value: 6,
+ *            name: "Point1",
+ *            color: "#FF00FF"
+ *        }]
+ *    ```
  *
- *  ```js
- *     data: [
- *         ['us-ny', 0],
- *         ['us-mi', 5],
- *         ['us-tx', 3],
- *         ['us-ak', 5]
- *     ]
- *  ```
- *
- * 3.  An array of objects with named values. The following snippet shows only a
- * few settings, see the complete options set below. If the total number of data
- * points exceeds the series' [turboThreshold](#series.map.turboThreshold), this
- * option is not available.
- *
- *  ```js
- *     data: [{
- *         value: 6,
- *         name: "Point2",
- *         color: "#00FF00"
- *     }, {
- *         value: 6,
- *         name: "Point1",
- *         color: "#FF00FF"
- *     }]
- *  ```
- *
- * @type      {Array<number|Array<string,number>|*>}
+ * @type      {Array<number|Array<string,(number|null)>|null|*>}
+ * @product   highmaps
  * @apioption series.map.data
  */
 
@@ -1169,7 +1217,7 @@ seriesType('map', 'scatter',
  * Individual color for the point. By default the color is either used
  * to denote the value, or pulled from the global `colors` array.
  *
- * @type      {Highcharts.ColorString}
+ * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
  * @product   highmaps
  * @apioption series.map.data.color
  */
@@ -1182,8 +1230,8 @@ seriesType('map', 'scatter',
  * @sample maps/series/data-datalabels/
  *         Disable data labels for individual areas
  *
- * @type {Object}
- * @product highmaps
+ * @type      {Object}
+ * @product   highmaps
  * @apioption series.map.data.dataLabels
  */
 
@@ -1222,7 +1270,7 @@ seriesType('map', 'scatter',
  * @apioption series.map.data.labelrank
  */
 
- /**
+/**
  * The relative mid point of an area, used to place the data label.
  * Ranges from 0 to 1\. When `mapData` is used, middleX can be defined
  * there.
@@ -1276,7 +1324,7 @@ seriesType('map', 'scatter',
 /**
  * The numeric value of the data point.
  *
- * @type      {number}
+ * @type      {number|null}
  * @product   highmaps
  * @apioption series.map.data.value
  */

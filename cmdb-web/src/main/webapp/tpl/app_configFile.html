@@ -80,13 +80,7 @@
                                             <b class="pull-right">{{item.fileDesc}}</b>
                                         </td>
                                         <td>
-                                            <b style="color: #777" ng-if="item.envType == 0">保留</b>
-                                            <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
-                                            <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
-                                            <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
-                                            <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
-                                            <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
-                                            <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                            <b style="color:{{item.env.color}}">{{item.env.name}}</b>
                                         </td>
                                         <td>
                                             <button ng-click="editItem(item)"

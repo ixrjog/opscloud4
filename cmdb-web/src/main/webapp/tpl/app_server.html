@@ -24,7 +24,6 @@
                 <uib-tab index="0" heading="服务器">
                     <div class="panel panel-default" ng-controller="serverCtrl">
                         <div class="panel-body">
-
                             <form class="form-inline" role="form">
                                 <div class="form-group">
                                     <div class="input-group">
@@ -84,95 +83,78 @@
                                     </button>
                                 </div>
                             </form>
-
-                            <div class="panel panel-default" style="margin-top: 5px;;">
-                                <div class="panel-body">
-                                    <div>
-                                        <table class="table table-hover table-bordered table-striped">
-                                            <thead>
-                                            <tr>
-                                                <td>服务器</td>
-                                                <td>IP</td>
-                                                <td>使用类型</td>
-                                                <td>环境</td>
-                                                <td>序列号</td>
-                                                <td>创建时间</td>
-                                                <td ng-if="contains(authPoint, '/server/save')">操作</td>
-                                            </tr>
-                                            </thead>
-                                            <tbody>
-                                            <tr ng-repeat="item in pageData">
-                                                <td>
-                                                    <b style="color: #777">{{item.serverGroupDO.name}}</b>
-                                                    <b class="pull-right">组</b>
-                                                    </br>
-                                                    <b style="color: #286090">{{item.serverName}}</b>
-                                                    <b class="pull-right">名称</b>
-                                                </td>
-                                                <td>
+                            <div style="margin-top: 5px;">
+                                <table class="table table-hover table-bordered table-striped">
+                                    <thead>
+                                    <tr>
+                                        <td>服务器</td>
+                                        <td>IP</td>
+                                        <td>使用类型</td>
+                                        <td>环境</td>
+                                        <td>序列号</td>
+                                        <td>创建时间</td>
+                                        <td ng-if="contains(authPoint, '/server/save')">操作</td>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    <tr ng-repeat="item in pageData">
+                                        <td>
+                                            <b style="color: #777">{{item.serverGroupDO.name}}</b>
+                                            <b class="pull-right">组</b>
+                                            </br>
+                                            <b style="color: #286090">{{item.serverName}}</b>
+                                            <b class="pull-right">名称</b>
+                                        </td>
+                                        <td>
                                                     <span ng-show="item.publicIP != null">
                                                       <span>{{item.publicIP.ip}}</span>
                                                            <b class="pull-right">公网</b>
-                                                           </br>
+                                                        </br>
                                                     </span>
-                                                    </span>{{item.insideIP.ip}}</span>
-                                                    <b class="pull-right">内网</b>
-                                                </td>
-                                                <td>
-                                                    <b ng-if="item.useType == 10">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b ng-if="item.useType == 1">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: #990000" ng-if="item.useType == 2">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: #ec971f" ng-if="item.useType == 3">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b ng-if="item.useType == 4">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b ng-if="item.useType == 5">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: #286090" ng-if="item.useType == 6">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: #d9534f" ng-if="item.useType == 7">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: #449d44" ng-if="item.useType == 8">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: #5bc0de" ng-if="item.useType == 9">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                    <b style="color: black" ng-if="item.useType > 9">{{item.serverGroupUseTypeDO.typeName}}</b>
-                                                </td>
-                                                <td>
-                                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
-                                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
-                                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
-                                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
-                                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
-                                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
-                                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
-                                                </td>
-                                                <td>{{item.serialNumber}}</td>
-                                                <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
-                                                    : item.gmtModify}}
-                                                </td>
-                                                <td ng-if="contains(authPoint, '/server/save')">
-                                                    <button ng-click="editServer(item)"
-                                                            class="btn btn-xs"
-                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                        <span class="glyphicon glyphicon-edit"></span>编辑</button>
+                                            </span>{{item.insideIP.ip}}</span>
+                                            <b class="pull-right">内网</b>
+                                        </td>
+                                        <td>
+                                            <b style="color: {{item.serverGroupUseTypeDO.color}}">{{item.serverGroupUseTypeDO.typeName}}</b>
+                                        </td>
+                                        <td>
+                                            <b style="color:{{item.env.color}}">{{item.env.name}}</b>
+                                        </td>
+                                        <td>{{item.serialNumber}}</td>
+                                        <td>{{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate
+                                            : item.gmtModify}}
+                                        </td>
+                                        <td ng-if="contains(authPoint, '/server/save')">
+                                            <button ng-click="editServer(item)"
+                                                    class="btn btn-xs"
+                                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                                <span class="glyphicon glyphicon-edit"></span>编辑
+                                            </button>
 
-                                                    <button ng-click="delServer(item)"
-                                                            class="btn btn-xs pull-right"
-                                                            style="background-color: red; color: white;">
-                                                        <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                            <button ng-click="delServer(item)"
+                                                    class="btn btn-xs pull-right"
+                                                    style="background-color: red; color: white;">
+                                                <span class="glyphicon glyphicon-remove"></span>删除
+                                            </button>
 
-                                                </td>
-                                            </tr>
-                                            </tbody>
-                                            <tfoot>
-                                            <tr>
-                                                <td colspan="9">
-                                                    <ul style="margin: 0px; float: right;" uib-pagination
-                                                        total-items="totalItems" ng-model="currentPage"
-                                                        items-per-page="pageLength" max-size="10"
-                                                        ng-change="pageChanged()" previous-text="&lsaquo;"
-                                                        next-text="&rsaquo;"></ul>
-                                                </td>
-                                            </tr>
-                                            </tfoot>
-                                        </table>
-                                    </div>
-                                </div>
+                                        </td>
+                                    </tr>
+                                    </tbody>
+                                    <tfoot>
+                                    <tr>
+                                        <td colspan="9">
+                                            <ul style="margin: 0px; float: right;" uib-pagination
+                                                total-items="totalItems" ng-model="currentPage"
+                                                items-per-page="pageLength" max-size="10"
+                                                ng-change="pageChanged()" previous-text="&lsaquo;"
+                                                next-text="&rsaquo;"></ul>
+                                        </td>
+                                    </tr>
+                                    </tfoot>
+                                </table>
                             </div>
+
+
                         </div>
                     </div>
                 </uib-tab>
@@ -183,7 +165,8 @@
                             <form class="form-inline" role="form">
                                 <div class="input-group">
                                     <span class="input-group-addon">服务器组</span>
-                                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap" ng-change="changeServerGroupSelected()">
+                                    <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
+                                               ng-change="changeServerGroupSelected()">
                                         <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
                                         </ui-select-match>
                                         <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
@@ -206,6 +189,12 @@
                                                 <div ng-bind-html="(item.serverName + (item.serialNumber != '' ? ('-' + item.serialNumber) : '') + '-(' + item.envTypeStr + ')') | highlight: $select.search"></div>
                                             </ui-select-choices>
                                         </ui-select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">IP</span>
+                                        <input type="text" class="form-control" ng-model="queryIp" placeholder="IP">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -263,20 +252,23 @@
                                                     <button type="button" class="btn btn-default btn-xs pull-left"
                                                             ng-click="nowShowType = 1" ng-show="nowShowType == 0"><span
                                                             class="glyphicon glyphicon-chevron-down"></span></button>
-                                                    <b style="color: #286090">{{value.groupName + ":" + value.groupDesc}}</b>
+                                                    <b style="color: #286090">{{value.groupName + ":" +
+                                                        value.groupDesc}}</b>
 
 
-                                                    <button  ng-click="delItem(item.serverDO.id, value.id)"
+                                                    <button ng-click="delItem(item.serverDO.id, value.id)"
                                                             ng-if="contains(authPoint, '/config/propertygroup/del')"
                                                             class="btn btn-xs pull-right"
                                                             style="background-color: red; color: white; margin-left: 20px;">
-                                                        <span class="glyphicon glyphicon-remove"></span>删除</button>
+                                                        <span class="glyphicon glyphicon-remove"></span>删除
+                                                    </button>
 
                                                     <button ng-click="editItem(item.serverDO, item.serverGroupDO, value, item.groupPropertyMap[key])"
                                                             ng-if="contains(authPoint, '/config/propertygroup/save')"
                                                             class="btn btn-xs pull-right"
                                                             style="margin-left: 20px; background-color: #2e6da4; color: white;">
-                                                        <span class="glyphicon glyphicon-edit"></span>编辑</button>
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                                    </button>
 
 
                                                 </div>
@@ -304,9 +296,8 @@
                                         <td colspan="4">
                                             <ul style="margin: 0px; float: right;" uib-pagination
                                                 total-items="totalItems" ng-model="currentPage"
-                                                items-per-page="pageLength" max-size="10"
-                                                ng-change="pageChanged(currentPage)" previous-text="&lsaquo;"
-                                                next-text="&rsaquo;"></ul>
+                                                items-per-page="pageLength" max-size="10" ng-change="pageChanged(currentPage)"
+                                                previous-text="&lsaquo;" next-text="&rsaquo;"></ul>
                                         </td>
                                     </tr>
                                     </tfoot>

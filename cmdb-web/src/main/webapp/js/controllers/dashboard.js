@@ -5,22 +5,25 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
     $scope.keyboxStatusVO = {};
     $scope.ciStatusVO = {};
     $scope.serverStatusVO = {}
+    $scope.zabbixProblems = [];
+    $scope.dashboard = {};
+
     //$scope.topProjectData = [];
 
     // Radialize the colors
-    Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
-        return {
-            radialGradient: {
-                cx: 0.5,
-                cy: 0.3,
-                r: 0.7
-            },
-            stops: [
-                [0, color],
-                [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
-            ]
-        };
-    });
+    // Highcharts.getOptions().colors = Highcharts.map(Highcharts.getOptions().colors, function (color) {
+    //     return {
+    //         radialGradient: {
+    //             cx: 0.5,
+    //             cy: 0.3,
+    //             r: 0.7
+    //         },
+    //         stops: [
+    //             [0, color],
+    //             [1, Highcharts.Color(color).brighten(-0.3).get('rgb')] // darken
+    //         ]
+    //     };
+    // });
 
     // var _lastGoodResult = '';
     // $scope.toPrettyJSON = function (objStr, tabWidth) {
@@ -38,32 +41,32 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
     // };
 
     // 生成部署详情
-    $scope.refreshCiDeployInfo = function () {
-
-        if ($scope.ciStatusVO.ciDeployList.length == 0) return;
-
-        for (var i = 0; i < $scope.ciStatusVO.ciDeployList.length; i++) {
-            var item = $scope.ciStatusVO.ciDeployList[i];
-            // "<b style='color: red'>I can</b> have <div class='label label-success'>HTML "
-            var info = '<b style="color: #286090">部署详情</b>';
-            info += '<hr style="margin-bottom: 2px; margin-top: 2px" />';
-            info += '<b style="color: #d75f00">' + item.projectName + "</b><br/>";
-            info += '<b style="color: #777">' + item.version + "</b><br/>";
-            info += '<b style="color: #286090">' + item.groupName + "</b><br/>";
-
-            if (item.servers.length != 0) {
-                info += '<hr style="margin-bottom: 2px; margin-top: 2px" />';
-                for (var j = 0; j < item.servers.length; j++) {
-                    var server = item.servers[j];
-                    info += server.serverName + "-" + server.serialNumber + " " + server.insideIp + "<br/>";
-                }
-            }
-
-            item.deployInfo = $sce.trustAsHtml(
-                info
-            );
-        }
-    }
+    // $scope.refreshCiDeployInfo = function () {
+    //
+    //     if ($scope.ciStatusVO.ciDeployList.length == 0) return;
+    //
+    //     for (var i = 0; i < $scope.ciStatusVO.ciDeployList.length; i++) {
+    //         var item = $scope.ciStatusVO.ciDeployList[i];
+    //         // "<b style='color: red'>I can</b> have <div class='label label-success'>HTML "
+    //         var info = '<b style="color: #286090">部署详情</b>';
+    //         info += '<hr style="margin-bottom: 2px; margin-top: 2px" />';
+    //         info += '<b style="color: #d75f00">' + item.projectName + "</b><br/>";
+    //         info += '<b style="color: #777">' + item.version + "</b><br/>";
+    //         info += '<b style="color: #286090">' + item.groupName + "</b><br/>";
+    //
+    //         if (item.servers.length != 0) {
+    //             info += '<hr style="margin-bottom: 2px; margin-top: 2px" />';
+    //             for (var j = 0; j < item.servers.length; j++) {
+    //                 var server = item.servers[j];
+    //                 info += server.serverName + "-" + server.serialNumber + " " + server.insideIp + "<br/>";
+    //             }
+    //         }
+    //
+    //         item.deployInfo = $sce.trustAsHtml(
+    //             info
+    //         );
+    //     }
+    // }
 
     $scope.initCiTopProjectData = function () {
         //$scope.ciStatusVO.topProjectList
@@ -265,9 +268,7 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
             },
             series: [{
                 name: '累计登陆',
-                data:
-                data
-                ,
+                data: data,
                 dataLabels: {
                     enabled: true,
                     rotation: 0,
@@ -335,9 +336,7 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
             },
             series: [{
                 name: '累计查询',
-                data:
-                data
-                ,
+                data: data,
                 dataLabels: {
                     enabled: true,
                     rotation: 0,
@@ -792,12 +791,8 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
         });
     }
 
-
-
     $scope.statusServer = function () {
-
         var url = "/server/status";
-
         httpService.doGet(url).then(function (data) {
             if (data.success) {
                 $scope.serverStatusVO = data.body;
@@ -807,6 +802,29 @@ app.controller('dashboardCtrl', function ($scope, $state, $uibModal, $timeout, $
             }
         });
     }
+
+    $scope.getZabbixProblems = function () {
+        var url = "/dashboard/problems/get";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.zabbixProblems = data.body;
+            }
+        });
+    }
+
+    $scope.getZabbixProblems();
+
+
+    $scope.getDashboardBase = function () {
+        var url = "/dashboard/base/get";
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.dashboard = data.body;
+            }
+        });
+    }
+
+    $scope.getDashboardBase();
 
     var init = function () {
         $scope.statusLogService();

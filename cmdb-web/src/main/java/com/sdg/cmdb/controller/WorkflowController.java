@@ -68,6 +68,7 @@ public class WorkflowController {
 
     /**
      * 审批/审核工单
+     *
      * @param id
      * @return
      */
@@ -81,6 +82,7 @@ public class WorkflowController {
 
     /**
      * 审批/审核工单(不批准)
+     *
      * @param id
      * @return
      */
@@ -93,8 +95,6 @@ public class WorkflowController {
     }
 
 
-
-
     @RequestMapping(value = "/todo/detail/del", method = RequestMethod.DELETE)
     @ResponseBody
     public HttpResult delTodoDetail(@RequestParam long todoId, @RequestParam long detailId) {
@@ -105,6 +105,7 @@ public class WorkflowController {
 
     /**
      * 提交申请
+     *
      * @param todoId
      * @return
      */
@@ -124,13 +125,12 @@ public class WorkflowController {
     @RequestMapping(value = "/todo/query", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult queryMyTodo() {
-        return new HttpResult(
-                workflowService.queryMyTodo()
-        );
+        return new HttpResult(workflowService.queryMyTodo());
     }
 
     /**
      * 查询我的工作流（完成）
+     *
      * @return
      */
     @RequestMapping(value = "/todo/queryComplete", method = RequestMethod.GET)
@@ -139,6 +139,18 @@ public class WorkflowController {
         return new HttpResult(
                 workflowService.queryMyCompleteTodo()
         );
+    }
+
+    @RequestMapping(value = "/todo/page", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryTodoPage(@RequestParam String queryName, @RequestParam int queryPhase, @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(workflowService.getWorkflowTodoPage(queryName, queryPhase, page, length));
+    }
+
+    @RequestMapping(value = "/status", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getStatus() {
+        return new HttpResult(workflowService.getWorkflowStatus());
     }
 
 

@@ -10,14 +10,18 @@ import com.sdg.cmdb.dao.cmdb.*;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.logCleanup.LogcleanupDO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.zabbix.*;
 import com.sdg.cmdb.domain.zabbix.response.*;
 import com.sdg.cmdb.plugin.cache.CacheZabbixService;
-import com.sdg.cmdb.service.ConfigServerGroupService;
-import com.sdg.cmdb.service.ZabbixServerService;
+import com.sdg.cmdb.service.*;
+import com.sdg.cmdb.util.SessionUtils;
+import com.sdg.cmdb.util.TimeUtils;
+import com.sdg.cmdb.util.TimeViewUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
@@ -41,6 +45,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -57,20 +62,34 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
 
     public static final String ZABBIX_KEY_APIINFO = "apiinfo.version";
 
+    public static final String ZABBIX_CACHE_KEY = "ZabbixServerServiceImpl:";
+
+    public static final String ZABBIX_KEY_SYSDISK_TOTAL = "vfs.fs.size[/,total]";
+    public static final String ZABBIX_KEY_SYSDISK_USED = "vfs.fs.size[/,used]";
+    public static final String ZABBIX_KEY_SYSDISK_PFREE = "vfs.fs.size[/,pfree]";
+
+    public static final String ZABBIX_KEY_DATADISK_TOTAL = "vfs.fs.size[/data,total]";
+    public static final String ZABBIX_KEY_DATADISK_USED = "vfs.fs.size[/data,used]";
+    public static final String ZABBIX_KEY_DATADISK_PFREE = "vfs.fs.size[/data,pfree]";
+
     private String defaultUsergroupId;
 
-
-    @Value("#{cmdb['zabbix.url']}")
+    @Value(value = "${zabbix.url}")
     private String zabbixUrl;
-    @Value("#{cmdb['zabbix.user']}")
+
+    @Value(value = "${zabbix.user}")
     private String zabbixUser;
-    @Value("#{cmdb['zabbix.passwd']}")
+
+    @Value(value = "${zabbix.passwd}")
     private String zabbixPasswd;
 
     private static final Logger logger = LoggerFactory.getLogger(ZabbixServerServiceImpl.class);
 
     @Resource
     private CacheZabbixService cacheZabbixService;
+
+    @Resource
+    private CacheKeyService cacheKeyService;
 
     @Autowired
     private ConfigServerGroupService configServerGroupService;
@@ -79,13 +98,16 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
     private ServerGroupDao serverGroupDao;
 
     @Autowired
+    private KeyBoxService keyBoxService;
+
+    @Autowired
     private ServerDao serverDao;
 
     @Autowired
     private UserDao userDao;
 
     @Autowired
-    private ConfigDao configDao;
+    private AuthService authService;
 
     @Autowired
     private KeyboxDao keyboxDao;
@@ -183,35 +205,34 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
             boolean isUpdate = false;
             // TODO 当前Host的宏
             List<ZabbixResponseMacro> list = getHostMacros(serverDO);
-            if(list.size() == 0)
+            if (list.size() == 0)
                 isUpdate = true;
             for (ZabbixResponseMacro macro : list) {
                 if (!macrosMap.containsKey(macro.getMacro())) {
                     isUpdate = true;
                     macrosMap.put(macro.getMacro(), macro.getValue());
-                }else{
-                   if(!macro.getValue().equals(macrosMap.get(macro.getMacro()))) {
-                       isUpdate = true;
-                       macrosMap.put(macro.getMacro(), macro.getValue());
-                   }
+                } else {
+                    if (!macro.getValue().equals(macrosMap.get(macro.getMacro()))) {
+                        isUpdate = true;
+                        macrosMap.put(macro.getMacro(), macro.getValue());
+                    }
                 }
             }
-            if(isUpdate)
-                updateHostMacros(serverDO,macrosMap);
+            if (isUpdate)
+                updateHostMacros(serverDO, macrosMap);
         } catch (Exception e) {
         }
 
     }
 
-    public void updateHostMacros(ServerDO serverDO,HashMap<String, String> macrosMap) {
+    public void updateHostMacros(ServerDO serverDO, HashMap<String, String> macrosMap) {
         JSONArray macros = new JSONArray();
-        for(String key:macrosMap.keySet()){
+        for (String key : macrosMap.keySet()) {
             JSONObject macro = new JSONObject();
-            macro.put("macro",key);
-            macro.put("value",macrosMap.get(key));
+            macro.put("macro", key);
+            macro.put("value", macrosMap.get(key));
             macros.add(macro);
         }
-
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("host.update").build();
         request.putParam("hostid", getHost(serverDO.getId()).getHostid());
@@ -238,7 +259,6 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("hostids", host.getHostid());
         try {
             JSONObject response = call(request);
-            //  String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             String macros = response.getJSONArray(ZABBIX_KEY_RESULT).getJSONObject(0).getJSONArray("macros").toJSONString();
             Gson gson = new GsonBuilder().create();
             List<ZabbixResponseMacro> list = gson.fromJson(macros,
@@ -346,9 +366,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("hostids", host.getHostid());
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseParentTemplate> list = gson.fromJson(reslut,
+            List<ZabbixResponseParentTemplate> list = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseParentTemplate>>() {
                     }.getType());
             return list.get(0).getParentTemplates();
@@ -366,9 +386,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .method("template.get").paramEntry("filter", filter)
                 .build();
         JSONObject response = call(request);
-        String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+        String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
         Gson gson = new GsonBuilder().create();
-        List<ZabbixResponseTemplate> templateList = gson.fromJson(reslut,
+        List<ZabbixResponseTemplate> templateList = gson.fromJson(result,
                 new TypeToken<ArrayList<ZabbixResponseTemplate>>() {
                 }.getType());
         return templateList.get(0);
@@ -380,9 +400,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .method("template.get")
                 .build();
         JSONObject response = call(request);
-        String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+        String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
         Gson gson = new GsonBuilder().create();
-        List<ZabbixResponseTemplate> templateList = gson.fromJson(reslut,
+        List<ZabbixResponseTemplate> templateList = gson.fromJson(result,
                 new TypeToken<ArrayList<ZabbixResponseTemplate>>() {
                 }.getType());
         return templateList;
@@ -399,10 +419,10 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
             request.putParam("filter", filter);
         }
         JSONObject response = call(request);
-        String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+        String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
         try {
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseUsergroup> usergroupList = gson.fromJson(reslut,
+            List<ZabbixResponseUsergroup> usergroupList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseUsergroup>>() {
                     }.getType());
             //System.err.println(response);
@@ -438,9 +458,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("rights", rights);
         JSONObject response = call(request);
         try {
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("usrgrpids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("usrgrpids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> usrgrpids = gson.fromJson(reslut,
+            List<String> usrgrpids = gson.fromJson(result,
                     new TypeToken<ArrayList<String>>() {
                     }.getType());
 
@@ -529,9 +549,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("filter", filter);
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("actionids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("actionids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> actionids = gson.fromJson(reslut,
+            List<String> actionids = gson.fromJson(result,
                     new TypeToken<ArrayList<String>>() {
                     }.getType());
             return actionids.get(0);
@@ -557,9 +577,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
 
         JSONObject response = call(request);
         try {
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseAction> actionList = gson.fromJson(reslut,
+            List<ZabbixResponseAction> actionList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseAction>>() {
                     }.getType());
             return actionList.get(0);
@@ -582,9 +602,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder().method("hostgroup.create").paramEntry("name", hostgroupName).build();
         JSONObject response = call(request);
         try {
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("groupids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("groupids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> groupids = gson.fromJson(reslut, new TypeToken<ArrayList<String>>() {
+            List<String> groupids = gson.fromJson(result, new TypeToken<ArrayList<String>>() {
             }.getType());
             return groupids.get(0);
         } catch (Exception e) {
@@ -620,9 +640,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 request.putParam("proxy_hostid", host.getProxy().getProxyid());
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("hostids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("hostids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> hostids = gson.fromJson(reslut, new TypeToken<ArrayList<String>>() {
+            List<String> hostids = gson.fromJson(result, new TypeToken<ArrayList<String>>() {
             }.getType());
             String hostid = hostids.get(0);
             if (!StringUtils.isEmpty(hostid))
@@ -679,9 +699,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         }
         JSONObject response = call(request);
         try {
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseProxy> proxyList = gson.fromJson(reslut, new TypeToken<ArrayList<ZabbixResponseProxy>>() {
+            List<ZabbixResponseProxy> proxyList = gson.fromJson(result, new TypeToken<ArrayList<ZabbixResponseProxy>>() {
             }.getType());
             return proxyList.get(0);
         } catch (Exception e) {
@@ -720,9 +740,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .method("host.delete").paramEntry("params", new String[]{host.getHostid()}).build();
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("hostids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("hostids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> hostids = gson.fromJson(reslut, new TypeToken<ArrayList<String>>() {
+            List<String> hostids = gson.fromJson(result, new TypeToken<ArrayList<String>>() {
             }.getType());
             if (!StringUtils.isEmpty(hostids.get(0)))
                 return true;
@@ -761,9 +781,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .build();
         JSONObject response = call(request);
         try {
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseHostgroup> hostgroupList = gson.fromJson(reslut,
+            List<ZabbixResponseHostgroup> hostgroupList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseHostgroup>>() {
                     }.getType());
             return hostgroupList.get(0);
@@ -784,9 +804,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("status", status);
         JSONObject response = call(request);
         try {
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("hostids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("hostids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> hostids = gson.fromJson(reslut, new TypeToken<ArrayList<String>>() {
+            List<String> hostids = gson.fromJson(result, new TypeToken<ArrayList<String>>() {
             }.getType());
             if (!StringUtils.isEmpty(hostids.get(0)))
                 return true;
@@ -807,9 +827,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .build();
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseUser> userList = gson.fromJson(reslut,
+            List<ZabbixResponseUser> userList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseUser>>() {
                     }.getType());
 
@@ -826,9 +846,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .build();
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseUser> userList = gson.fromJson(reslut,
+            List<ZabbixResponseUser> userList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseUser>>() {
                     }.getType());
             return userList;
@@ -850,9 +870,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                             user.getUserid()
                     }).build();
             JSONObject response = call(request);
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("userids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("userids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> userids = gson.fromJson(reslut, new TypeToken<ArrayList<String>>() {
+            List<String> userids = gson.fromJson(result, new TypeToken<ArrayList<String>>() {
             }.getType());
 
             String userid = userids.get(0);
@@ -871,6 +891,8 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
     public BusinessWrapper<Boolean> createUser(UserDO userDO) {
         if (userDO == null)
             return new BusinessWrapper<>(ErrorCode.userNotExist.getCode(), ErrorCode.userNotExist.getMsg());
+        if (userDO.getZabbixAuthed() == UserDO.ZabbixAuthType.authed.getCode()) //直接判断用户是否授权
+            return new BusinessWrapper<Boolean>(true);
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("user.create").build();
         request.putParam("alias", userDO.getUsername());
@@ -885,11 +907,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("user_medias", userMedias);
         try {
             JSONObject response = call(request);
-            System.err.println(request);
-            System.err.println(response);
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("userids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("userids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> usrgrpids = gson.fromJson(reslut,
+            List<String> usrgrpids = gson.fromJson(result,
                     new TypeToken<ArrayList<String>>() {
                     }.getType());
             String userid = usrgrpids.get(0);
@@ -911,7 +931,7 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         if (userDO == null)
             return new BusinessWrapper<>(ErrorCode.userNotExist.getCode(), ErrorCode.userNotExist.getMsg());
         ZabbixResponseUser zabbixResponseUser = getUser(userDO);
-        if(zabbixResponseUser == null || StringUtils.isEmpty(zabbixResponseUser.getUserid()))
+        if (zabbixResponseUser == null || StringUtils.isEmpty(zabbixResponseUser.getUserid()))
             return new BusinessWrapper<Boolean>(false);
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("user.update").build();
@@ -926,9 +946,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("user_medias", userMedias);
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("userids").toJSONString();
+            String result = response.getJSONObject(ZABBIX_KEY_RESULT).getJSONArray("userids").toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<String> usrgrpids = gson.fromJson(reslut,
+            List<String> usrgrpids = gson.fromJson(result,
                     new TypeToken<ArrayList<String>>() {
                     }.getType());
             String userid = usrgrpids.get(0);
@@ -948,10 +968,14 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
     @Override
     public ZabbixResponseItem getItem(ServerDO serverDO, String itemName, String itemKey) {
         if (serverDO == null) return null;
+        return getItem(getHost(serverDO).getHostid(), itemName, itemKey);
+    }
+
+    private ZabbixResponseItem getItem(String hostid, String itemName, String itemKey) {
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("item.get").build();
         request.putParam("output", "extend");
-        request.putParam("hostids", getHost(serverDO).getHostid());
+        request.putParam("hostids", hostid);
         if (itemName != null) {
             JSONObject name = new JSONObject();
             name.put("name", itemName);
@@ -965,9 +989,30 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("sortfield", "name");
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseItem> itemList = gson.fromJson(reslut,
+            List<ZabbixResponseItem> itemList = gson.fromJson(result,
+                    new TypeToken<ArrayList<ZabbixResponseItem>>() {
+                    }.getType());
+            return itemList.get(0);
+        } catch (Exception e) {
+            //  e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public ZabbixResponseItem getItem(String itemid) {
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("item.get").build();
+        request.putParam("output", "extend");
+        request.putParam("itemids", itemid);
+        request.putParam("sortfield", "name");
+        try {
+            JSONObject response = call(request);
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            Gson gson = new GsonBuilder().create();
+            List<ZabbixResponseItem> itemList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseItem>>() {
                     }.getType());
             return itemList.get(0);
@@ -977,6 +1022,8 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         return null;
     }
 
+
+    @Override
     public List<ZabbixResponseItem> queryItems(ServerDO serverDO) {
         if (serverDO == null) return null;
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
@@ -986,9 +1033,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         request.putParam("sortfield", "name");
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseItem> itemList = gson.fromJson(reslut,
+            List<ZabbixResponseItem> itemList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseItem>>() {
                     }.getType());
             return itemList;
@@ -1058,9 +1105,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .method("proxy.get")
                 .build();
         JSONObject response = call(request);
-        String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+        String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
         Gson gson = new GsonBuilder().create();
-        List<ZabbixResponseProxy> templateList = gson.fromJson(reslut,
+        List<ZabbixResponseProxy> templateList = gson.fromJson(result,
                 new TypeToken<ArrayList<ZabbixResponseProxy>>() {
                 }.getType());
         return templateList;
@@ -1089,9 +1136,9 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
                 .build();
         try {
             JSONObject response = call(request);
-            String reslut = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
             Gson gson = new GsonBuilder().create();
-            List<ZabbixResponseUser> userList = gson.fromJson(reslut,
+            List<ZabbixResponseUser> userList = gson.fromJson(result,
                     new TypeToken<ArrayList<ZabbixResponseUser>>() {
                     }.getType());
             ZabbixResponseUser checkZabbixUser = userList.get(0);
@@ -1101,6 +1148,98 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
 
         }
         return 0;
+    }
+
+    @Override
+    public void invokeLogcleanupDiskInfo(LogcleanupDO logcleanupDO) {
+        try{
+            ZabbixServerCache serverCache = getZabbixServer(logcleanupDO.getServerId());
+            // 初始化Disk类型
+            ZabbixResponseHost host = getHost(logcleanupDO.getServerId());
+            if (host == null || StringUtils.isEmpty(host.getHostid()))
+                return;
+            if (StringUtils.isEmpty(logcleanupDO.getDiskType()))
+                if (!setLogcleanupDiskType(logcleanupDO, host)) return;
+            if (serverCache != null) {
+                // TODO 空闲率
+                ZabbixResponseItem freeDiskSpaceItem = getItem(serverCache.getFreeDiskSpaceItemid());
+                float pfree = Float.valueOf(freeDiskSpaceItem.getLastvalue());
+                logcleanupDO.setFreeDiskSpace((int) pfree);
+                // TODO 总容量
+                ZabbixResponseItem totalDiskSpaceItem = getItem(serverCache.getTotalDiskSpaceItemid());
+                logcleanupDO.setTotalDiskSpace(Long.valueOf(totalDiskSpaceItem.getLastvalue()));
+                // TODO 使用量
+                ZabbixResponseItem usedDiskSpaceItem = getItem(serverCache.getUsedDiskSpaceItemid());
+                logcleanupDO.setUsedDiskSpace(Long.valueOf(usedDiskSpaceItem.getLastvalue()));
+                logcleanupDO.setUpdateTime(TimeUtils.stampSecToDate(freeDiskSpaceItem.getLastclock()));
+            } else {
+                // TODO 插入数据
+                if (logcleanupDO.getDiskType().equals(LogcleanupDO.DISKTYPE_DATA)) {
+                    invokeLogcleanupDataDiskInfo(logcleanupDO, host.getHostid());
+                } else {
+                    invokeLogcleanupSysDiskInfo(logcleanupDO, host.getHostid());
+                }
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    private boolean setLogcleanupDiskType(LogcleanupDO logcleanupDO, ZabbixResponseHost host) {
+        ZabbixResponseItem totalItem = getItem(host.getHostid(), "", ZABBIX_KEY_DATADISK_TOTAL);
+        // TODO 数据盘存在
+        if (totalItem != null && !StringUtils.isEmpty(totalItem.getItemid())) {
+            logcleanupDO.setDiskType(LogcleanupDO.DISKTYPE_DATA);
+        } else {
+            logcleanupDO.setDiskType(LogcleanupDO.DISKTYPE_SYS);
+        }
+        return true;
+    }
+
+    private void invokeLogcleanupDataDiskInfo(LogcleanupDO logcleanupDO, String hostid) {
+        ZabbixResponseItem freeDiskSpaceItem = getItem(hostid, "", ZABBIX_KEY_DATADISK_PFREE);
+        float pfree = Float.valueOf(freeDiskSpaceItem.getLastvalue());
+        logcleanupDO.setFreeDiskSpace((int) pfree);
+        ZabbixResponseItem totalDiskSpaceItem = getItem(hostid, "", ZABBIX_KEY_DATADISK_TOTAL);
+        logcleanupDO.setTotalDiskSpace(Long.valueOf(totalDiskSpaceItem.getLastvalue()));
+        ZabbixResponseItem usedDiskSpaceItem = getItem(hostid, "", ZABBIX_KEY_DATADISK_USED);
+        logcleanupDO.setUsedDiskSpace(Long.valueOf(usedDiskSpaceItem.getLastvalue()));
+        logcleanupDO.setUpdateTime(TimeUtils.stampSecToDate(freeDiskSpaceItem.getLastclock()));
+        ZabbixServerCache serverCache = new ZabbixServerCache(logcleanupDO.getServerId(), hostid, usedDiskSpaceItem.getItemid(), totalDiskSpaceItem.getItemid(), freeDiskSpaceItem.getItemid());
+        setZabbixServer(serverCache);
+    }
+
+    private void invokeLogcleanupSysDiskInfo(LogcleanupDO logcleanupDO, String hostid) {
+        ZabbixResponseItem freeDiskSpaceItem = getItem(hostid, "", ZABBIX_KEY_SYSDISK_PFREE);
+        float pfree = Float.valueOf(freeDiskSpaceItem.getLastvalue());
+        logcleanupDO.setFreeDiskSpace((int) pfree);
+        ZabbixResponseItem totalDiskSpaceItem = getItem(hostid, "", ZABBIX_KEY_SYSDISK_TOTAL);
+        logcleanupDO.setTotalDiskSpace(Long.valueOf(totalDiskSpaceItem.getLastvalue()));
+        ZabbixResponseItem usedDiskSpaceItem = getItem(hostid, "", ZABBIX_KEY_SYSDISK_USED);
+        logcleanupDO.setUpdateTime(TimeUtils.stampSecToDate(freeDiskSpaceItem.getLastclock()));
+        logcleanupDO.setUpdateTime(freeDiskSpaceItem.getLastclock());
+        ZabbixServerCache serverCache = new ZabbixServerCache(logcleanupDO.getServerId(), hostid, usedDiskSpaceItem.getItemid(), totalDiskSpaceItem.getItemid(), freeDiskSpaceItem.getItemid());
+        setZabbixServer(serverCache);
+    }
+
+    private ZabbixServerCache getZabbixServer(long serverId) {
+        String key = ZABBIX_CACHE_KEY + "ServerCache:serverId:" + serverId;
+        //cacheKeyService.set(key,);
+        try {
+            String o = cacheKeyService.getKeyByString(key);
+            if (StringUtils.isEmpty(o))
+                return null;
+            Gson gson = new GsonBuilder().create();
+            return gson.fromJson(o, ZabbixServerCache.class);
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private void setZabbixServer(ZabbixServerCache serverCache) {
+        String key = ZABBIX_CACHE_KEY + "ServerCache:serverId:" + serverCache.getServerId();
+        // 缓存24Hour
+        cacheKeyService.set(key, serverCache.toString(), 60 * 24);
     }
 
     /**
@@ -1304,4 +1443,208 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
         login();
     }
 
+
+//    public void getProblems() {
+//        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+//                .method("problem.get").build();
+//        request.putParam("output", "extend");
+//        request.putParam("selectAcknowledges", "extend");
+//        request.putParam("selectTags", "extend");
+//        request.putParam("selectSuppressionData", "extend");
+//        request.putParam("recent", "true");
+//        // "sortfield": ["eventid"],
+//        request.putParam("sortfield", new JSONArray().add("eventid"));
+//        request.putParam("sortfield", "extend");
+//        request.putParam("sortorder", "DESC");
+//        try {
+//            JSONObject response = call(request);
+//            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+//            System.err.println(result);
+////            Gson gson = new GsonBuilder().create();
+////            List<ZabbixResponseParentTemplate> list = gson.fromJson(reslut,
+////                    new TypeToken<ArrayList<ZabbixResponseParentTemplate>>() {
+////                    }.getType());
+//            // return list.get(0).getParentTemplates();
+//        } catch (Exception e) {
+//            logger.info("Zabbix查询主机模版失败！");
+//        }
+//        //return new ArrayList<ZabbixResponseTemplate>();
+//    }
+
+    /**
+     * Severity of the trigger.
+     * Possible values are:
+     * 0 - (default) not classified;
+     * 1 - information;
+     * 2 - warning;
+     * 3 - average;
+     * 4 - high;
+     * 5 - disaster.
+     *
+     * @param priority
+     */
+    @Override
+    public List<ZabbixResponseTrigger> getTriggers(int priority) {
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("trigger.get").build();
+        JSONArray output = new JSONArray();
+        output.add("triggerid");
+        output.add("itemid");
+        output.add("description");
+        output.add("priority");
+        output.add("value");
+        output.add("lastchange");
+        output.add("hosts");
+
+        request.putParam("output", output);
+        request.putParam("filter", new JSONObject().put("value", 1));
+        request.putParam("active", 1); // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
+        request.putParam("sortfield", "priority"); // 排序
+        request.putParam("sortorder", "DESC"); // 正排还是倒排
+        request.putParam("min_severity", priority); // 大于等于给定的触发器级别，这里是大于等于严重
+        request.putParam("skipDependent", 1); // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
+        request.putParam("selectHosts", "hosts"); // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
+        request.putParam("monitored", 1); // 属于受监控主机的已启用触发器，并仅包含已启用的项目
+        request.putParam("only_true", 1); // 只返回最近处于问题状态的触发器（个人理解为处于告警状态的主机）
+
+        try {
+            JSONObject response = call(request);
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            Gson gson = new GsonBuilder().create();
+            List<ZabbixResponseTrigger> list = gson.fromJson(result,
+                    new TypeToken<ArrayList<ZabbixResponseTrigger>>() {
+                    }.getType());
+            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Zabbix查询发生问题的触发器失败！");
+            return new ArrayList<ZabbixResponseTrigger>();
+        }
+    }
+
+
+    private ZabbixResponseHost getHost(String hostid) {
+        //JSONObject filter = new JSONObject();
+        // filter.put("hostids", hostid);
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("host.get")
+                .build();
+        request.putParam("hostids", hostid);
+        try {
+            JSONObject response = call(request);
+            Gson gson = new GsonBuilder().create();
+            List<ZabbixResponseHost> hostList = gson.fromJson(response.getJSONArray(ZABBIX_KEY_RESULT).toString(), new TypeToken<ArrayList<ZabbixResponseHost>>() {
+            }.getType());
+            for (ZabbixResponseHost host : hostList)
+                return host;
+        } catch (Exception e) {
+            logger.info("Zabbix查询主机失败！");
+        }
+        return new ZabbixResponseHost();
+    }
+
+    @Override
+    public List<ZabbixResponseHostinterface> getHostinterface(String hostid) {
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("hostinterface.get")
+                .build();
+        request.putParam("output", "extend");
+        request.putParam("hostids", hostid);
+        try {
+            JSONObject response = call(request);
+            Gson gson = new GsonBuilder().create();
+            List<ZabbixResponseHostinterface> hostinterfaceList = gson.fromJson(response.getJSONArray(ZABBIX_KEY_RESULT).toString(), new TypeToken<ArrayList<ZabbixResponseHostinterface>>() {
+            }.getType());
+            return hostinterfaceList;
+        } catch (Exception e) {
+            logger.info("Zabbix查询主机接口失败！");
+        }
+        return new ArrayList<ZabbixResponseHostinterface>();
+    }
+
+    /**
+     * 按接口类型生成Map
+     * 接口类型.
+     * 1 - agent;
+     * 2 - SNMP;
+     * 3 - IPMI;
+     * 4 - JMX.
+     *
+     * @param hostid
+     * @return
+     */
+    private HashMap<Integer, ZabbixResponseHostinterface> getHostinterfaceMap(String hostid) {
+        List<ZabbixResponseHostinterface> hostinterfaceList = getHostinterface(hostid);
+        HashMap<Integer, ZabbixResponseHostinterface> map = new HashMap<>();
+        for (ZabbixResponseHostinterface hostinterface : hostinterfaceList)
+            map.put(Integer.valueOf(hostinterface.getType()), hostinterface);
+        return map;
+    }
+
+    @Override
+    public List<ZabbixProblemVO> getProblems() {
+        List<ZabbixResponseTrigger> list = getTriggers(2);
+        List<ZabbixProblemVO> problems = new ArrayList<>();
+        for (ZabbixResponseTrigger trigger : list) {
+            String hostid = trigger.getHosts().get(0).getHostid();
+            ZabbixResponseHost host = getHost(hostid);
+            ZabbixProblemVO problem = new ZabbixProblemVO(trigger, host);
+            long time = Long.valueOf(trigger.getLastchange()) * 1000;
+            problem.setAgo(TimeViewUtils.format(new Date(time)));
+            problems.add(problem);
+        }
+        return problems;
+    }
+
+    @Override
+    public List<ZabbixProblemVO> getMyProblems() {
+        String username = SessionUtils.getUsername();
+        List<ZabbixProblemVO> problems = getProblems();
+        // TODO 管理员直接返回所有问题
+        if (authService.isRole(username, RoleDO.roleAdmin)) return problems;
+        List<ZabbixProblemVO> myProblems = new ArrayList<>();
+        for (ZabbixProblemVO zabbixProblemVO : problems) {
+            HashMap<Integer, ZabbixResponseHostinterface> map = getHostinterfaceMap(zabbixProblemVO.getHost().getHostid());
+            // 取agent接口配置
+            ZabbixResponseHostinterface zabbixResponseHostinterface = map.get(1);
+            if (zabbixResponseHostinterface == null) continue;
+            ServerDO serverDO = serverDao.queryServerByIp(zabbixResponseHostinterface.getIp());
+            if (serverDO == null) continue;
+            if (keyBoxService.checkUserGroup(username, serverDO.getServerGroupId()))
+                myProblems.add(zabbixProblemVO);
+        }
+        return myProblems;
+    }
+
+
+    public void getDashboards() {
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("dashboard.get").build();
+        JSONArray widgets = new JSONArray();
+        widgets.add("type");
+        widgets.add("name");
+        widgets.add("fields");
+        widgets.add("widgetid");
+
+        request.putParam("output", "extend");
+        request.putParam("selectWidgets", widgets);
+        request.putParam("selectUsers", "extend");
+        request.putParam("selectUserGroups", "extend");
+
+
+        try {
+            JSONObject response = call(request);
+            String result = response.getJSONArray(ZABBIX_KEY_RESULT).toJSONString();
+            System.err.println(result);
+//            Gson gson = new GsonBuilder().create();
+//            List<ZabbixResponseTrigger> list = gson.fromJson(result,
+//                    new TypeToken<ArrayList<ZabbixResponseTrigger>>() {
+//                    }.getType());
+//            return list;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.info("Zabbix查询发生问题的触发器失败！");
+            //   return new ArrayList<ZabbixResponseTrigger>();
+        }
+    }
 }

@@ -1,26 +1,54 @@
 Welcome to the opsCloud wiki!
 
-# OpsCloud
-<img src="https://img.shields.io/jenkins/s/https/jenkins.qa.ubuntu.com/view/Precise/view/All%20Precise/job/precise-desktop-amd64_default.svg"></img> 
-<img src="https://img.shields.io/hexpm/l/plug.svg"></img>
+# OpsCloud简介
+![](https://img.shields.io/badge/version-2.0.1-brightgreen.svg)
+![](https://img.shields.io/badge/java-8-brightgreen.svg)
 <br>
-OpsCloud是云时代的运维自动配置平台
+OpsCloud是云时代的全工具链集成自动化运维平台(DevOps)
+
+开源协议：<a style="color:#2b669a" href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank">GNU General Public License v2</a>
+
+### 开发者
+* 白衣（liangjian）
 
 ### 最新版本说明
-* 增强了LDAP管理（用户管理，组管理）
-* AnsilbePlaybook支持
-* Jenkins灵活管理，按模版创建Job,参数化build，模版更新批量同步Job
-* Gitlab管理（API v4）
-* Zabbix可同步模版/宏
-* Nginx配置管理优化
-* ECS批量续费
-* 阿里云RAM子账户管理
-* 工作流支持
-* 阿里云MQ管理（需要购买铂金版，铂金版才支持API）
-
++ 集中认证LDAP
+ + LDAP用户/用户组管理
+ + 工作流支持用户自动授权
++ 批量运维
+ + Jumpserver全自动配置
+ + AnsilbePlaybook支持
+ + 日志弹性清理
++ Jenkins持续集成
+ + 按模版生成job,支持从模版更新job（大批量job自动化运维）
+ + 支持ci/cd任务分离(仿Bamboo)
+ + 支持在运维的约束下由研发自主配置持续集成应用+任务
+ + 支持钉钉任务通知
+ + 应用权限封装
++ Gitlab管理（API v4）
+ + 工作流支持用户自动项目或群组授权
+ + webhook支持
+ + 支持push代码触发持续集成任务
++ Zabbix管理
+ + 用户授权绑定服务器组
+ + 支持Zabbix自动化运维
++ Nginx配置管理优化
+ + 自动化配置location,upstream
+ + 自动同步配置，并重启服务
++ 阿里云
+ + 阿里云RAM子账户管理
+ + 阿里云MQ管理（需要购买铂金版，铂金版才支持API）
+ + ECS管理
++ Kubernetes
+ + 支持多集群扫描服务
++ 其他
+ + 支持配置文件加密
 
 ### 开发环境
-* MacOS10.13.5/JRE1.8.0_144/IntelliJ IDEA/Gradel3.1
++ MacOS10.13.5
++ JRE1.8.0_144(Java8)
++ Gradle3.1
++ IntelliJ IDEA
 
 ### 服务器部署环境
 * Centos6/7(2vCPU/内存4G）
@@ -30,27 +58,25 @@ OpsCloud是云时代的运维自动配置平台
 * Redis3.0.3
 * LDAP(最新版本apacheDS http://directory.apache.org)
 * Ansible2.4
-* Jumpserver 1.4.6-2 GPLv2(Mysql表结构兼容即可)
-* Gitlab API v4
-* Zabbix 4.x(API4.0)
 
-### 构建
-```$xslt
+### 构建(编译打包)
+```
 # 可选参数（指定jdk位置，适用多版本安装） -Dorg.gradle.java.home=/usr/java/jdk1.8.0_51
 # 可选参数（刷新gradle依赖缓存，避免依赖包同版本号更新导致编译失败） -refresh-dependencies
 $ gradle clean war -DpkgName=opscloud -Denv=online -Dorg.gradle.daemon=false
 ```
 
 ### 安装步骤1 数据库
-```$xslt
-# 安装 Mysql5.6 或使用AliyunRDS 
+```
+# 安装 Mysql5.6 或使用AliyunRDS
+
 # 建库
 create database opscloud character set utf8 collate utf8_bin;
 grant all PRIVILEGES on opscloud.* to opscloud@'%' identified by 'opscloud';
 # 导入db
-$ mysql -f -uopscloud -popscloud opscloud < ./opscloud-db/opscloud.sql
-# 如果没有则导入
-$ mysql -uopscloud -popscloud opscloud < ./opscloud-db/auth_resources.sql
+# 此sql从阿里云RDS导出，若提示错误可忽略，或删除错误指定行
+$ mysql -f -uopscloud -popscloud opscloud < ./opscloud.sql
+
 
 # Mysql5.7 兼容性问题
 已知问题1：如安装的是mysql5.7+，需要关闭mysql的"ONLY_FULL_GROUP_BY"
@@ -61,7 +87,7 @@ set @@global.sql_mode=‘STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_
 ```
 
 ### 安装步骤2 Redis
-```$xslt
+```
 # 安装Redis3 或使用阿里云Redis
 $ wget http://download.redis.io/releases/redis-3.2.11.tar.gz
 $ tar -xzvf redis-3.2.11.tar.gz
@@ -74,9 +100,8 @@ $ make && make install
 * 安装JDK8
   下载地址 http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html
   CentOS可直接下载rpm包安装
-
 * 在/etc/profile中添加
-```$xslt
+```
 # JAVA 请修改为安装的版本目录
 JAVA_HOME=/usr/local/jdk/jdk1.8.0_91
 PATH=$PATH:$JAVA_HOME/bin:/usr/bin:/usr/sbin:/bin:/sbin:/usr/X11R6/bin
@@ -93,7 +118,7 @@ export CLASSPATH
 * 下载安装包
    wget http://mirrors.tuna.tsinghua.edu.cn/apache//directory/apacheds/dist/2.0.0-M24/apacheds-2.0.0-M24-64bit.bin
 
-```$xslt
+```
 $ chmod +x apacheds-2.0.0-M24-64bit.bin && ./apacheds-2.0.0-M24-64bit.bin
 Do you agree to the above license terms? [yes or no]
 yes
@@ -118,12 +143,12 @@ ApacheDS has been installed successfully.
 ```
 
 # 启动服务
-```$xslt
+```
 $ /etc/init.d/apacheds-2.0.0-M24-default start
 Starting ApacheDS - default...
 ```
 > 如果只使用admin账户可以不安装apacheDS，其他账户都会存储在LDAP中，cn=liangjian,ou=users,ou=system
-强烈推荐使用LDAP来存储和管理用户和用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Crowd ...)
+强烈推荐使用LDAP来存储和管理用户和用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Grafana ...)
 
 
 
@@ -136,8 +161,6 @@ RFC 3986文档规定，Url中只允许包含英文字母（a-zA-Z）、数字（
 还有一些字符当直接放在Url中的时候，可能会引起解析程序的歧义，这些字符被视为不安全字符。
 空格：Url在传输的过程，或者用户在排版的过程，或者文本处理程序在处理Url的过程，都有可能引入无关紧要的空格，或者将那些有意义的空格给去掉。
 引号以及<>：引号和尖括号通常用于在普通文本中起到分隔Url的作用
-
-```
 
 
 ### 安装步骤5 部署
@@ -155,7 +178,7 @@ RFC 3986文档规定，Url中只允许包含英文字母（a-zA-Z）、数字（
    - Redis 配置修改：redis.host, redis.port, redis.pwd
 * 启动Tomcat 首次登录使用admin/opscloud
 * 如果启用了Nginx反向代理Tomcat(opscloud)，需要配置nginx支持websocket（KeyBox）
-```$xslt
+```
 server {
         listen 443;
         server_name opscloud.com;
@@ -306,94 +329,6 @@ accelerate_multi_key = yes
 
 ```
 
-
-### opscloud配置文件
-配置文件路径 WEB-INF/classes/server.properties
-```
-jdbc_url=jdbc:mysql://{MYSQL-IP}/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true
-jdbc_user=opscloud
-jdbc_password={MYSQL-PASSWORD}
-
-# 启用Jumpserver支持
-jumpserver_jdbc_url=jdbc:mysql://{JUMPSERVER-MYSQL-IP}:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
-jumpserver_jdbc_user=jumpserver
-jumpserver_jdbc_password={JUMPSERVER-MYSQL-PASSWORD}
-jumpserver.host=http://jumpserver.ops.cn
-
-#ldap配置，建议使用apacheDS,用户dn:cn=user1,ou=users,ou=system
-ldap.url=ldap://{LDAP-IP}:10389
-ldap.base.dn=ou=system
-# 管理员账户，用户账户管理
-ldap.manager.dn=uid=admin,ou=system
-# 密码
-ldap.manager.passwd=secret
-ldap.group.dn=ou=groups
-ldap.user.dn=ou=users
-ldap.user.id=cn
-ldap.user.object=inetorgperson
-ldap.group.object=groupOfUniqueNames
-ldap.group.member=uniqueMember
-
-
-# 配置文件环境: dev=开发环境，online=线上环境
-invoke.env=dev
-
-# redis配置
-redis.host=opscloud.redis.test
-redis.port=16379
-# 没有密码可留空
-redis.pwd=
-
-# 邮箱配置，通知中心使用
-email.host=smtp.exmail.qq.com
-email.user=ops@ops.com
-email.passwd=PASSWORD
-
-# 是否开启定时任务，集群部署使用
-task.open=false
-
-# 超级管理员密码
-admin.passwd=opscloud
-
-# 外部url
-external.url=https://oc.ops.cn
-
-# key临时目录
-keystore.filePath=/data/www/keystore/
-
-# ansible配置
-ansible.bin=/usr/local/Cellar/ansible/2.4.3.0/bin/ansible
-ansible.playbook.bin=/usr/local/Cellar/ansible/2.4.3.0/bin/ansible-playbook
-ansible.scripts.path=/data/www/data/scrips
-# configPlaybook: ${ansible.logs.path}/configPlaybook
-# copyLog: ${ansible.logs.path}/copyLogs
-ansible.logs.path=/data/www/logs
-
-# ss服务列表 域名:说明 多服务器用,分割 例如  ss-1.a.com:说明1,ss-2.a.com:说明2
-ss.servers=hk-ss1.ops.cn:hongkong,us-w-ss2.ops.cn:usa-west
-
-# gitlab配置(必须支持v4版本的API)
-gitlab.url=http://gitlab.ops.cn:80
-gitlab.token={GITLAB-TOKEN}
-
-# jenkins配置
-jenkins.url=http://ci.ops.cn
-jenkins.user=admin
-# jenkins登陆password或Token(推荐)
-jenkins.token={JENKINS-TOKEN}
-
-# dns.public.conf
-# 用户读取头部全局配置文件
-dns.public.conf=/data/www/data/dnsmasq/dnsmasq-public.conf
-# 写入的配置文件
-dns.conf=/data/www/data/dnsmasq/dnsmasq.conf
-
-# zabbix配置
-zabbix.url=http://zabbix.ops.yangege.cn/api_jsonrpc.php
-zabbix.user=zabbix
-zabbix.passwd=${ZABBIX-PASSWORD}
-```
-
 ### 配置 Aliyun(ECS）
 * 配置Aliyun AccessKey(登录阿里云，右上角头像菜单中找到accessKeys)
 ![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
@@ -509,6 +444,9 @@ http://${ZABBIX_HOST}/api_jsonrpc.php
 * terminal堡垒机配置管理（内部功能）
 * ansible主机文件管理（自动分组）
 
+### 跳板机（不支持操作审计）
+* Web版跳板机KeyBox（支持多服务器同时操作）
+* Terminal跳板机Getway
 
 
 

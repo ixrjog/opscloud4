@@ -4,16 +4,11 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.ansibleTask.PlaybookLogDO;
 import com.sdg.cmdb.domain.ansibleTask.PlaybookLogVO;
-import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.config.*;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
-import com.sdg.cmdb.domain.ldap.LdapGroupVO;
-import com.sdg.cmdb.domain.server.CreateEcsVO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerVO;
 
-import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -93,7 +88,7 @@ public interface ConfigService {
      * @param length
      * @return
      */
-    TableVO<List<ServerGroupPropertiesVO>> getGroupPropertyPageByServerId(long groupId, long serverId, int page, int length);
+    TableVO<List<ServerGroupPropertiesVO>> getGroupPropertyPageByServer(long groupId, long serverId, String queryIp, int page, int length);
 
     /**
      * 新增 or 更新服务器组属性组数据
@@ -126,7 +121,7 @@ public interface ConfigService {
      * @param propertyGroupId
      * @return
      */
-   // BusinessWrapper<String> createServerPropertyFile(long serverGroupId, long propertyGroupId);
+    // BusinessWrapper<String> createServerPropertyFile(long serverGroupId, long propertyGroupId);
 
     /**
      * 预览指定服务器组&属性组的配置文件
@@ -144,7 +139,7 @@ public interface ConfigService {
      * @param propertyGroupId
      * @return
      */
-  //  BusinessWrapper<String> launchServerPropertyFile(long serverGroupId, long propertyGroupId);
+    //  BusinessWrapper<String> launchServerPropertyFile(long serverGroupId, long propertyGroupId);
 
     /**
      * 获取文件组
@@ -237,6 +232,14 @@ public interface ConfigService {
 
 
     /**
+     * NginxTcp配置变更
+     *
+     * @param envType
+     */
+    void invokeNginxTcpConfig(int envType);
+
+
+    /**
      * 用户相关的配置文件自动同步和执行script
      */
     void invokeUserConfig();
@@ -279,6 +282,9 @@ public interface ConfigService {
      */
     boolean saveConfigServerGroupValue(ServerGroupDO serverGroupDO, String key, String value);
 
+
+    boolean saveConfigServerValue(ServerDO serverDO, String key, String value);
+
     /**
      * 获取服务器属性
      *
@@ -319,7 +325,7 @@ public interface ConfigService {
      * @param file
      * @return
      */
-    boolean saveGetwayHostFileConfigFile(String file);
+    // boolean saveGetwayHostFileConfigFile(String file);
 
     /**
      * 获取ansible所有主机列表文件

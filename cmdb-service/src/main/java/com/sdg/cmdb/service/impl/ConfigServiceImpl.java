@@ -1,7 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
 
-
 import com.sdg.cmdb.dao.cmdb.*;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
@@ -14,9 +13,10 @@ import com.sdg.cmdb.domain.config.*;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
+import com.sdg.cmdb.service.configurationProcessor.ConfigurationProcessorAbs;
 import com.sdg.cmdb.service.configurationProcessor.NginxFileProcessorService;
-import com.sdg.cmdb.service.control.configurationfile.ConfigurationFileControlService;
 
+import com.sdg.cmdb.service.configurationProcessor.ShadowsocksFileProcessorService;
 import com.sdg.cmdb.template.tomcat.TomcatSetenv;
 import com.sdg.cmdb.util.*;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
@@ -49,6 +49,9 @@ public class ConfigServiceImpl implements ConfigService {
     public static final String ANSIBLE_HOSTS_ALL = "ansible_hosts_all";
 
     static public final String FILEGROUP_SS = "filegroup_ss";
+    static public final String FILEGROUP_NGINX_TCP = "filegroup_nginx-tcp";
+    public static final String CONFIG_FILE_NGINX_TCP = "vhost_server.conf";
+
 
     @Value("#{cmdb['ansible.scripts.path']}")
     private String ansibleScriptsPath;
@@ -72,9 +75,6 @@ public class ConfigServiceImpl implements ConfigService {
     @Resource
     private ServerGroupDao serverGroupDao;
 
-    @Resource
-    private ConfigurationFileControlService configurationFileControlService;
-
 
     @Resource
     private AnsibleTaskService ansibleTaskService;
@@ -94,6 +94,13 @@ public class ConfigServiceImpl implements ConfigService {
     @Autowired
     private NginxFileProcessorService nginxFileProcessorService;
 
+    @Autowired
+    private ShadowsocksFileProcessorService shadowsocksFileProcessorService;
+
+
+    @Autowired
+    private NginxService nginxService;
+
 
     // 新增
     public final boolean ADD_CONFIG = true;
@@ -104,18 +111,8 @@ public class ConfigServiceImpl implements ConfigService {
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
-
     @Resource
     private ConfigCenterService configCenterService;
-
-
-//    private HashMap<String, String> publicConfigMap;
-//
-//    private HashMap<String, String> acqPublicConfigMap() {
-//        if (publicConfigMap != null) return publicConfigMap;
-//        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.PUBLIC.getItemKey());
-//    }
-
 
     @Override
     public TableVO<List<ConfigPropertyVO>> getConfigPropertyPage(String proName, long groupId, int page, int length) {
@@ -246,9 +243,9 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public TableVO<List<ServerGroupPropertiesVO>> getGroupPropertyPageByServerId(long groupId, long serverId, int page, int length) {
-        long size = configDao.getServerPropertyGroupByServerIdSize(groupId, serverId);
-        List<Long> serverList = configDao.getServerPropertyGroupByServerIdPage(groupId, serverId, page * length, length);
+    public TableVO<List<ServerGroupPropertiesVO>> getGroupPropertyPageByServer(long groupId, long serverId, String queryIp,int page, int length) {
+        long size = configDao.getServerPropertyGroupByServerSize(groupId, serverId,queryIp);
+        List<Long> serverList = configDao.getServerPropertyGroupByServerPage(groupId, serverId,queryIp, page * length, length);
         List<ServerGroupPropertiesVO> propertiesVOList = new ArrayList<>();
         for (long tmpId : serverList) {
             ServerGroupPropertiesDO queryPropertyDO = new ServerGroupPropertiesDO();
@@ -424,10 +421,10 @@ public class ConfigServiceImpl implements ConfigService {
 
         // TODO GROUP_NAME_NGINX
         if (configPropertyGroupDO.getGroupName().equals(GROUP_NAME_NGINX)) {
-           // List<ServerDO> serverList = serverDao.acqServersByGroupId(serverGroupId);
-            for (ServerDO.EnvTypeEnum e : ServerDO.EnvTypeEnum.values()) {
-                List<ServerDO> serverList =   serverDao.getServersByGroupIdAndEnvType(serverGroupId,e.getCode());
-                if(serverList.size() == 0)
+            // List<ServerDO> serverList = serverDao.acqServersByGroupId(serverGroupId);
+            for (EnvType.EnvTypeEnum e : EnvType.EnvTypeEnum.values()) {
+                List<ServerDO> serverList = serverDao.getServersByGroupIdAndEnvType(serverGroupId, e.getCode());
+                if (serverList.size() == 0)
                     continue;
                 String locationConfig = nginxFileProcessorService.buildLocation(new ServerGroupDO(serverGroupId), e.getCode());
                 if (!StringUtils.isEmpty(locationConfig))
@@ -535,6 +532,7 @@ public class ConfigServiceImpl implements ConfigService {
             ConfigFileVO fileVO = new ConfigFileVO(fileDO, fileGroupDO);
             ServerGroupUseTypeDO useType = serverGroupDao.getServerGroupUseTypeByUseType(fileDO.getUseType());
             fileVO.setUseTypeDO(useType);
+            fileVO.setEnv(new EnvType(fileVO.getEnvType()));
             fileVOList.add(fileVO);
         }
         return new TableVO<>(size, fileVOList);
@@ -572,17 +570,32 @@ public class ConfigServiceImpl implements ConfigService {
         }
     }
 
+    private String buildConfiFile(ConfigFileDO configFileDO) {
+        ConfigFileGroupDO configFileGroupDO = configDao.getConfigFileGroupById(configFileDO.getFileGroupId());
+        //System.err.println(configFileGroupDO);
+
+        if (configFileGroupDO.getGroupName().equalsIgnoreCase(ConfigurationProcessorAbs.GROUP_ANSIBLE))
+            return ansibleFileProcessorService.getConfig(configFileDO.getUseType(), true);
+
+        if (configFileGroupDO.getGroupName().equalsIgnoreCase(ConfigurationProcessorAbs.GROUP_SHADOWSOCKS))
+            return shadowsocksFileProcessorService.getConfig();
+
+        if (configFileGroupDO.getGroupName().equalsIgnoreCase(FILEGROUP_NGINX_TCP))
+            return nginxService.getNginxTcpServerConf(configFileDO.getEnvType());
+
+        return "";
+    }
+
+
     @Override
     public BusinessWrapper<Boolean> createConfigFile(long id) {
         ConfigFileDO configFileDO = configDao.getConfigFileById(id);
-
-        if (configFileDO == null) {
+        if (configFileDO == null)
             return new BusinessWrapper<>(ErrorCode.configFileNotExist);
-        }
         // 必须是系统配置文件
         if (configFileDO.getFileType() == ConfigFileDO.systemConfigFile) {
             coreLogger.info(SessionUtils.getUsername() + " createConfigFile for:" + id);
-            String value = configurationFileControlService.build(configFileDO);
+            String value = buildConfiFile(configFileDO);
             IOUtils.writeFile(value, configFileDO.getFilePath() + "/" + configFileDO.getFileName());
         } else {
             coreLogger.info(SessionUtils.getUsername() + " createConfigFile for:" + id);
@@ -621,18 +634,36 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
+    public void invokeNginxTcpConfig(int envType) {
+        // 触发用户变更代码
+        try {
+            ConfigFileGroupDO groupDO = configDao.getConfigFileGroupByName(FILEGROUP_NGINX_TCP);
+            if (groupDO == null) return;
+            List<ConfigFileDO> files = configDao.getConfigFileByGroupAndFileNameAndEnvType(groupDO.getId(), CONFIG_FILE_NGINX_TCP, envType);
+            doConfigFileListPlaybook(files);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    private void doConfigFileListPlaybook(List<ConfigFileDO> files) {
+        for (ConfigFileDO file : files) {
+            createConfigFile(file.getId());
+            List<ConfigFilePlaybookDO> playbooks = configDao.queryConfigFilePlaybookByFileId(file.getId());
+            for (ConfigFilePlaybookDO playbook : playbooks)
+                doPlaybook(playbook.getId(), PLAYBOOK_DO_TYPE_SYSTEM);
+        }
+    }
+
+    @Override
     public void invokeUserConfig() {
         // 触发用户变更代码
         try {
             ConfigFileGroupDO groupDO = configDao.getConfigFileGroupByName(FILEGROUP_SS);
             if (groupDO == null) return;
-            List<ConfigFileDO> files = configDao.getConfigFileByGroupAndFileNameAndEnvType(groupDO.getId(), CONFIG_FILE_SHADOWSOCKS, ServerDO.EnvTypeEnum.prod.getCode());
-            for (ConfigFileDO file : files) {
-                createConfigFile(file.getId());
-                List<ConfigFilePlaybookDO> playbooks = configDao.queryConfigFilePlaybookByFileId(file.getId());
-                for (ConfigFilePlaybookDO playbook : playbooks)
-                    doPlaybook(playbook.getId(), PLAYBOOK_DO_TYPE_SYSTEM);
-            }
+            List<ConfigFileDO> files = configDao.getConfigFileByGroupAndFileNameAndEnvType(groupDO.getId(), CONFIG_FILE_SHADOWSOCKS, EnvType.EnvTypeEnum.prod.getCode());
+            doConfigFileListPlaybook(files);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -681,7 +712,7 @@ public class ConfigServiceImpl implements ConfigService {
      */
     private void invokeAnsibleConfig(ServerGroupDO serverGroupDO) {
         ansibleFileProcessorService.delCache(serverGroupDO);
-        ConfigFileGroupDO configFileGroupDO = configDao.getConfigFileGroupByName(ConfigurationFileControlService.GROUP_ANSIBLE);
+        ConfigFileGroupDO configFileGroupDO = configDao.getConfigFileGroupByName(ConfigurationProcessorAbs.GROUP_ANSIBLE);
         List<ConfigFileDO> ansibleConfigList = configDao.queryConfigFileByGroupId(configFileGroupDO.getId());
         for (ConfigFileDO andibleConfig : ansibleConfigList) {
             createConfigFile(andibleConfig.getId());
@@ -761,8 +792,28 @@ public class ConfigServiceImpl implements ConfigService {
         if (serverGroupPropertiesDO == null) return false;
 
         serverGroupPropertiesDO.setPropertyValue(value);
+        return saveServerGroupProperty(serverGroupPropertiesDO);
+    }
+
+    @Override
+    public boolean saveConfigServerValue(ServerDO serverDO, String key, String value) {
+        ConfigPropertyDO configPropertyDO = configDao.getConfigPropertyByName(key);
+        if (configPropertyDO == null) return false;
+        ServerGroupPropertiesDO serverGroupPropertiesDO = configDao.getServerPropertyData(serverDO.getId(), configPropertyDO.getId());
+        if (serverGroupPropertiesDO == null) {
+            serverGroupPropertiesDO = new ServerGroupPropertiesDO(serverDO, configPropertyDO, value);
+        }
+        serverGroupPropertiesDO.setPropertyValue(value);
+        return saveServerGroupProperty(serverGroupPropertiesDO);
+    }
+
+    private boolean saveServerGroupProperty(ServerGroupPropertiesDO serverGroupPropertiesDO) {
         try {
-            configDao.updateServerGroupProperty(serverGroupPropertiesDO);
+            if(serverGroupPropertiesDO.getId() == 0){
+                configDao.addServerPropertyData(serverGroupPropertiesDO);
+            }else{
+                configDao.updateServerGroupProperty(serverGroupPropertiesDO);
+            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -782,31 +833,31 @@ public class ConfigServiceImpl implements ConfigService {
         return confPropertyDO.getProValue();
     }
 
-    @Override
-    public boolean saveGetwayHostFileConfigFile(String filePath) {
-        ConfigFileGroupDO fileGroupDO = configDao.getConfigFileGroupByName(ConfigurationFileControlService.GROUP_GETWAY);
-        if (fileGroupDO == null) return false;
-        List<ConfigFileDO> list = configDao.queryConfigFileByGroupId(fileGroupDO.getId());
-        try {
-            for (ConfigFileDO configFileDO : list) {
-                File tempFile = new File(filePath.trim());
-                String fileName = tempFile.getName();
-                String path = filePath.replace(fileName, "");
-                configFileDO.setFileName(fileName);
-                configFileDO.setFilePath(path);
-                configDao.updateConfigFile(configFileDO);
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
+//    @Override
+//    public boolean saveGetwayHostFileConfigFile(String filePath) {
+//        ConfigFileGroupDO fileGroupDO = configDao.getConfigFileGroupByName(ConfigurationProcessorAbs.GROUP_GETWAY);
+//        if (fileGroupDO == null) return false;
+//        List<ConfigFileDO> list = configDao.queryConfigFileByGroupId(fileGroupDO.getId());
+//        try {
+//            for (ConfigFileDO configFileDO : list) {
+//                File tempFile = new File(filePath.trim());
+//                String fileName = tempFile.getName();
+//                String path = filePath.replace(fileName, "");
+//                configFileDO.setFileName(fileName);
+//                configFileDO.setFilePath(path);
+//                configDao.updateConfigFile(configFileDO);
+//            }
+//            return true;
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return false;
+//        }
+//    }
 
     @Override
     public String getAnsibleHostsAllPath() {
         //configDao.getConfigFileByFileName("ansible_hosts_all");
-        ConfigFileGroupDO fileGroupDO = configDao.getConfigFileGroupByName(ConfigurationFileControlService.GROUP_ANSIBLE);
+        ConfigFileGroupDO fileGroupDO = configDao.getConfigFileGroupByName(ConfigurationProcessorAbs.GROUP_ANSIBLE);
         if (fileGroupDO == null) return "";
         List<ConfigFileDO> list = configDao.queryConfigFileByGroupId(fileGroupDO.getId());
         for (ConfigFileDO fileDO : list) {

@@ -30,8 +30,6 @@ public enum ErrorCode {
     userNotExist("0015", "用户不存在!"),
     userPwdNotInput("0016", "用户授权密码未录入!"),
 
-
-
     keyboxFailure("0018", "堡垒机错误!"),
 
     configFileGroupHasUsed("0019", "文件组正在使用!"),
@@ -77,6 +75,17 @@ public enum ErrorCode {
 
     createTopicError("0050","创建Topic错误!"),
     createEmpowerError("0051","Topic授权错误!"),
+
+    userpasswordNonConformity("0061","用户密码不符合规范!"),
+    userUpdateUltraVires("0062","越权，不允许变更管理员角色账户信息!"),
+
+    ciBuildJobAuthFailure("0100","未授权执行!"),
+    ciBuildJobHostPatternNotExist("0101","构建任务缺少服务器分组信息!"),
+    ciAppJobsUndeleted("0102","持续集成应用中有任务未删除!"),
+
+    gatewayAdminSetError("0101","GatewayAdmin配置失败!"),
+
+    checkAuthFailure("9001","未经授权!"),
 
     serverFailure("9999", "系统错误");
 

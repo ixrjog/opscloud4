@@ -9,8 +9,6 @@ import groovy.text.markup.TemplateConfiguration
 
 class TplWorkflowUtils {
 
-    //public static String OC_URL = "https://oc.admin.gegejia.com/#/app/workflow"
-
     /**
      * 获取提交的工单邮件模板
      * @param todoDetailVO
@@ -18,7 +16,7 @@ class TplWorkflowUtils {
      * @return
      */
     public static String doWorkflowTodoNotify(WorkflowTodoVO workflowTodoVO, UserDO userDO, String externalUrl, String todoPhaseDesc) {
-        def engine = new MarkupTemplateEngine(buildTplConfiguration());
+        def engine = new MarkupTemplateEngine(buildTplConfiguration())
         URL url = engine.resolveTemplate("emailTpl/workflow_todo_v2.tpl")
 
         Map<String, Object> binding = new HashMap<>();
@@ -32,7 +30,7 @@ class TplWorkflowUtils {
         // binding.put("todoStatus", TodoDetailDO.TodoStatusEnum.getCodeDesc(todoDetailVO.getTodoStatus()))
         // 工单类型+名称
         binding.put("workflowTitle", workflowTodoVO.getWorkflowDO().getTitle())
-        binding.put("applyTime", workflowTodoVO.applyViewTime)
+        binding.put("applyTime", workflowTodoVO.getGmtApply())
         binding.put("todoContent", workflowTodoVO.getNotice())
 
         def simpleEngine = new SimpleTemplateEngine()
@@ -42,14 +40,13 @@ class TplWorkflowUtils {
     }
 
     private static TemplateConfiguration buildTplConfiguration() {
-        TemplateConfiguration configuration = new TemplateConfiguration();
-        configuration.setDeclarationEncoding("UTF-8");
-        configuration.setExpandEmptyElements(true);
-        configuration.setUseDoubleQuotes(true);
-        configuration.setAutoNewLine(true);
-        configuration.setAutoIndent(true);
-        configuration.setAutoEscape(true);
-
-        return configuration;
+        TemplateConfiguration configuration = new TemplateConfiguration()
+        configuration.setDeclarationEncoding("UTF-8")
+        configuration.setExpandEmptyElements(true)
+        configuration.setUseDoubleQuotes(true)
+        configuration.setAutoNewLine(true)
+        configuration.setAutoIndent(true)
+        configuration.setAutoEscape(true)
+        return configuration
     }
 }

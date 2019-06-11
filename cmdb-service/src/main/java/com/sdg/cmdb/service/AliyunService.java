@@ -1,5 +1,7 @@
 package com.sdg.cmdb.service;
 
+import com.aliyun.oss.OSS;
+import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeRegionsResponse;
@@ -8,7 +10,6 @@ import com.aliyuncs.vpc.model.v20160428.DescribeVSwitchAttributesResponse;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.aliyun.*;
 import com.sdg.cmdb.domain.server.CreateEcsVO;
-import com.sdg.cmdb.domain.server.EcsServerDO;
 import com.sdg.cmdb.domain.server.EcsTemplateDO;
 
 import java.util.List;
@@ -19,6 +20,8 @@ import java.util.List;
 public interface AliyunService {
 
     List<AliyunEcsImageVO> queryAliyunImage(String queryDesc);
+
+    String getRegionIds();
 
     BusinessWrapper<Boolean> saveAliyunImage(AliyunEcsImageDO aliyunEcsImageDO);
 
@@ -60,6 +63,11 @@ public interface AliyunService {
 
     DescribeVSwitchAttributesResponse getVSwitchAttributes(String regionId, String vSwitchId);
 
+    IAcsClient acqIAcsClient(String regionId);
+
+    OSS acqOSSClient(String endpoint);
+
+    String[] acqRegionIds();
 
 
 }

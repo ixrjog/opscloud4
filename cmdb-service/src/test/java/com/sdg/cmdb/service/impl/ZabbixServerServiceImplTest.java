@@ -61,6 +61,11 @@ public class ZabbixServerServiceImplTest {
         System.err.println(zv);
     }
 
+    @Test
+    public void testGetProblems() {
+       zabbixServer.getProblems();
+
+    }
 
 //    @Test
 //    public void testQueryTemplate() {

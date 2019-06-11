@@ -1,5 +1,5 @@
 /**
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -22,8 +22,7 @@ var attr = H.attr,
     pInt = H.pInt,
     SVGElement = H.SVGElement,
     SVGRenderer = H.SVGRenderer,
-    win = H.win,
-    wrap = H.wrap;
+    win = H.win;
 
 // Extend SvgElement for useHTML option.
 extend(SVGElement.prototype, /** @lends SVGElement.prototype */ {
@@ -154,7 +153,7 @@ extend(SVGElement.prototype, /** @lends SVGElement.prototype */ {
 
         // apply inversion
         if (wrapper.inverted) { // wrapper is a group
-            elem.childNodes.forEach(function (child) {
+            [].forEach.call(elem.childNodes, function (child) {
                 renderer.invertChild(child, elem);
             });
         }
@@ -332,21 +331,26 @@ extend(SVGRenderer.prototype, /** @lends SVGRenderer.prototype */ {
             element = wrapper.element,
             renderer = wrapper.renderer,
             isSVG = renderer.isSVG,
-            addSetters = function (element, style) {
+            addSetters = function (gWrapper, style) {
                 // These properties are set as attributes on the SVG group, and
                 // as identical CSS properties on the div. (#3542)
                 ['opacity', 'visibility'].forEach(function (prop) {
-                    wrap(element, prop + 'Setter', function (
-                        proceed,
+                    gWrapper[prop + 'Setter'] = function (
                         value,
                         key,
                         elem
                     ) {
-                        proceed.call(this, value, key, elem);
-                        style[key] = value;
-                    });
+                        var styleObject = gWrapper.div ?
+                            gWrapper.div.style :
+                            style;
+                        SVGElement.prototype[prop + 'Setter']
+                            .call(this, value, key, elem);
+                        if (styleObject) {
+                            styleObject[key] = value;
+                        }
+                    };
                 });
-                element.addedSetters = true;
+                gWrapper.addedSetters = true;
             },
             chart = H.charts[renderer.chartIndex],
             styledMode = chart && chart.styledMode;
@@ -355,6 +359,7 @@ extend(SVGRenderer.prototype, /** @lends SVGRenderer.prototype */ {
         wrapper.textSetter = function (value) {
             if (value !== element.innerHTML) {
                 delete this.bBox;
+                delete this.oldTextWidth;
             }
             this.textStr = value;
             element.innerHTML = pick(value, '');
@@ -515,7 +520,7 @@ extend(SVGRenderer.prototype, /** @lends SVGRenderer.prototype */ {
                                 translateYSetter: translateSetter
                             });
                             if (!parentGroup.addedSetters) {
-                                addSetters(parentGroup, htmlGroupStyle);
+                                addSetters(parentGroup);
                             }
                         });
 

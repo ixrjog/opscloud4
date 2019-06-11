@@ -1,8 +1,10 @@
-/**
- * (c) 2010-2018 Torstein Honsi
+/* *
  *
- * License: www.highcharts.com/license
- */
+ *  (c) 2010-2019 Torstein Honsi
+ *
+ *  License: www.highcharts.com/license
+ *
+ * */
 
 /**
  * A latitude/longitude object.
@@ -322,6 +324,7 @@ H.geojson = function (geojson, hType, series) {
         polygonToPath = function (polygon) {
             var i,
                 len = polygon.length;
+
             path.push('M');
             for (i = 0; i < len; i++) {
                 if (i === 1) {

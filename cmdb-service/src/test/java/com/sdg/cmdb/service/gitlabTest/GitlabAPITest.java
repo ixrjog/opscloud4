@@ -2,6 +2,7 @@ package com.sdg.cmdb.service.gitlabTest;
 
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.GitlabAPIException;
+import org.gitlab.api.Pagination;
 import org.gitlab.api.models.*;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;

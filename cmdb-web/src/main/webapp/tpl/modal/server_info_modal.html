@@ -8,7 +8,7 @@
                 <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>服务器组名称</label>
                 <div class="col-lg-8">
                     <ui-select ng-model="nowServerGroup.selected" theme="bootstrap"
-                               ng-change="changeServerGroup(nowServerGroup.selected)">>
+                               ng-change="changeServerGroup(nowServerGroup.selected)">
                         <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}</ui-select-match>
                         <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
                                            repeat="item in serverGroupList | filter: $select.search">

@@ -31,7 +31,7 @@ dependencies {
     compile "org.mybatis:mybatis-spring:1.2.+"
     compile "org.mybatis:mybatis:3.2.+"
     // jenkins
-    compile "com.offbytwo.jenkins:jenkins-client:0.3.7"
+    compile "com.offbytwo.jenkins:jenkins-client:0.3.8"
     // gitlab
     compile "org.gitlab4j:gitlab4j-api:4.3.5"
     // bamboo

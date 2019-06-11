@@ -7,8 +7,21 @@
         limit 1
     </select>
 
+    <select id="getAssetsAssetByHostname" parameterType="object" resultType="AssetsAssetDO">
+        SELECT * FROM assets_asset WHERE hostname = #{hostname}
+        limit 1
+    </select>
+
+    <delete id="delAssetsAsset" parameterType="object">
+        DELETE FROM assets_asset WHERE id = #{id}
+    </delete>
+
     <select id="getAssetsAssetTotal" resultType="_int">
         SELECT COUNT(*) FROM assets_asset
+    </select>
+
+    <select id="queryAssetsAssetByIsActive" parameterType="object" resultType="AssetsAssetDO">
+        SELECT * FROM assets_asset WHERE is_active = #{is_active}
     </select>
 
     <insert id="addAssetsAsset" parameterType="AssetsAssetDO">
@@ -42,6 +55,8 @@
     <update id="updateAssetsAsset" parameterType="AssetsAssetDO">
         UPDATE assets_asset
         SET hostname = #{hostname},
+        ip = #{ip},
+        is_active = #{is_active},
         port = #{port},
         admin_user_id = #{admin_user_id},
         comment = #{comment},
@@ -66,6 +81,26 @@
         #{org_id}
         );
     </insert>
+
+    <select id="getAssetsNodeLastOne"  resultType="AssetsNodeDO">
+        SELECT * FROM assets_node
+        ORDER BY date_create DESC limit 1
+    </select>
+
+    <select id="getAssetsNodeByKey" parameterType="object" resultType="AssetsNodeDO">
+        SELECT * FROM assets_node WHERE `key` = #{key}  limit 1
+    </select>
+
+    <select id="getAssetsNodeAll"  resultType="AssetsNodeDO">
+        SELECT * FROM assets_node
+    </select>
+
+    <update id="updateAssetsNode" parameterType="AssetsNodeDO">
+        UPDATE assets_node
+        SET `key` = #{key},
+        `value` = #{value}
+        WHERE id = #{id}
+    </update>
 
     <select id="getAssetsNodeByValue" parameterType="object" resultType="AssetsNodeDO">
         SELECT * FROM assets_node WHERE `value` = #{value}
@@ -207,6 +242,15 @@
         WHERE id = #{id}
     </select>
 
+    <delete id="delUsersUser" parameterType="object">
+        DELETE FROM users_user WHERE id = #{id}
+    </delete>
+
+    <select id="queryUsersUserByIsActive" parameterType="object" resultType="UsersUserDO">
+        SELECT * FROM users_user
+        WHERE is_active = #{is_active} AND role = 'User'
+    </select>
+
     <insert id="addUsersUser" parameterType="UsersUserDO">
         INSERT INTO users_user (
         password,
@@ -258,6 +302,14 @@
     <select id="getUsersUserTotal" resultType="_int">
         SELECT COUNT(*) FROM users_user
     </select>
+
+    <update id="updateUsersUser" parameterType="UsersUserDO">
+        UPDATE users_user
+        SET is_active = #{is_active},
+        phone = #{phone},
+        name = #{name}
+        WHERE id = #{id}
+    </update>
 
 
     <select id="getUsersUserGroups" parameterType="UsersUserGroupsDO" resultType="UsersUserGroupsDO">

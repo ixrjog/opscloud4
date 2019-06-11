@@ -154,7 +154,7 @@
     </select>
 
     <!-- 获取指定服务器组&服务器的属性总数 -->
-    <select id="getServerPropertyGroupByServerIdSize" parameterType="object" resultType="_long">
+    <select id="getServerPropertyGroupByServerSize" parameterType="object" resultType="_long">
         SELECT count(DISTINCT a0.id) FROM oc_server a0 JOIN oc_servergroup_properties a1
         ON a0.id = a1.serverId
         <where>
@@ -164,11 +164,14 @@
             <if test="serverId > 0">
                 AND a0.id = #{serverId}
             </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND a0.publicIp LIKE "%"#{queryIp}"%" OR a0.insideIp LIKE "%"#{queryIp}"%"
+            </if>
         </where>
     </select>
 
     <!-- 获取指定服务器组&服务器的属性的分页数据 -->
-    <select id="getServerPropertyGroupByServerIdPage" parameterType="object" resultType="_long">
+    <select id="getServerPropertyGroupByServerPage" parameterType="object" resultType="_long">
         SELECT a0.id FROM oc_server a0 JOIN oc_servergroup_properties a1
         ON a0.id = a1.serverId
         <where>
@@ -177,6 +180,9 @@
             </if>
             <if test="serverId > 0">
                 AND a0.id = #{serverId}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                AND a0.publicIp LIKE "%"#{queryIp}"%" OR a0.insideIp LIKE "%"#{queryIp}"%"
             </if>
         </where>
         GROUP BY a0.id

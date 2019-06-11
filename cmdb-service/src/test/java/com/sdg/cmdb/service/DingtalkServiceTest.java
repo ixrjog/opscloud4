@@ -1,9 +1,9 @@
 package com.sdg.cmdb.service;
 
+import com.google.common.base.Joiner;
 import com.sdg.cmdb.dao.cmdb.CiDao;
 import com.sdg.cmdb.domain.ci.BuildNotifyDO;
 import com.sdg.cmdb.domain.ci.CiBuildDO;
-import com.sdg.cmdb.domain.ci.CiDeployStatisticsDO;
 import com.sdg.cmdb.service.impl.DingtalkServiceImpl;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.junit.Test;
@@ -34,8 +34,8 @@ public class DingtalkServiceTest {
     //notifyCi(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO)
     @Test
     public void testNotifyCi() {
-        CiBuildDO ciBuildDO = ciDao.getBuild(58);
-        BuildNotifyDO buildNotifyDO = ciDao.getBuildNotify(266);
+        CiBuildDO ciBuildDO = ciDao.getBuild(628);
+        BuildNotifyDO buildNotifyDO = ciDao.getBuildNotify(2385);
         dingtalkService.notifyCi(ciBuildDO, buildNotifyDO);
     }
 
@@ -55,7 +55,17 @@ public class DingtalkServiceTest {
 
     @Test
     public void testNotifyTest() {
-       dingtalkServiceImpl.notifyTest();
+        dingtalkServiceImpl.notifyTest();
     }
+
+    @Test
+    public void testTest2() {
+        String mobileList =null ;
+        mobileList = Joiner.on(",").skipNulls().join(mobileList, "\"" + "12345" + "\"").toString();
+        System.err.println(mobileList);
+        mobileList = Joiner.on(",").join(mobileList, "\"" + "6789" + "\"").toString();
+        System.err.println(mobileList);
+    }
+
 
 }

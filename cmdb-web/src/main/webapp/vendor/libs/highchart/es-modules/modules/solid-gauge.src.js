@@ -1,7 +1,7 @@
 /* *
  * Solid angular gauge module
  *
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -60,6 +60,7 @@ wrap(
     function (proceed, x, y, w, h, options) {
         var arc = proceed,
             path = arc(x, y, w, h, options);
+
         if (options.rounded) {
             var r = options.r || w,
                 smallR = (r - options.innerR) / 2,
@@ -69,6 +70,7 @@ wrap(
                 y2 = path[13],
                 roundStart = ['A', smallR, smallR, 0, 1, 1, x1, y1],
                 roundEnd = ['A', smallR, smallR, 0, 1, 1, x2, y2];
+
             // Insert rounded edge on end, and remove line.
             path.splice.apply(path, [path.length - 1, 0].concat(roundStart));
             // Insert rounded edge on end, and remove line.
@@ -89,6 +91,7 @@ colorAxisMethods = {
             dataClasses,
             colorCounter = 0,
             options = this.options;
+
         this.dataClasses = dataClasses = [];
 
         userOptions.dataClasses.forEach(function (dataClass, i) {
@@ -254,11 +257,12 @@ var solidGaugeOptions = {
 
 // The solidgauge series type
 H.seriesType('solidgauge', 'gauge', solidGaugeOptions, {
-
+    drawLegendSymbol: H.LegendSymbolMixin.drawRectangle,
     // Extend the translate function to extend the Y axis with the necessary
     // decoration (#5895).
     translate: function () {
         var axis = this.yAxis;
+
         H.extend(axis, colorAxisMethods);
 
         // Prepare data classes
@@ -449,7 +453,7 @@ H.seriesType('solidgauge', 'gauge', solidGaugeOptions, {
  * @sample {highcharts} highcharts/series/data-array-of-objects/
  *         Config objects
  *
- * @type      {Array<number|*>}
+ * @type      {Array<number|null|*>}
  * @extends   series.gauge.data
  * @product   highcharts
  * @apioption series.solidgauge.data

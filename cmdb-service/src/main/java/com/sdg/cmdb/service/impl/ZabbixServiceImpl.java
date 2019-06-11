@@ -11,6 +11,7 @@ import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.ci.CiDeployStatisticsDO;
 import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.config.ServerGroupPropertiesDO;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.zabbix.*;
@@ -141,8 +142,8 @@ public class ZabbixServiceImpl implements ZabbixService {
             serialNumberName = "-" + serverDO.getSerialNumber();
         }
         String envName = "";
-        if (serverDO.getEnvType() != ServerDO.EnvTypeEnum.prod.getCode()) {
-            envName = "-" + ServerDO.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
+        if (serverDO.getEnvType() != EnvType.EnvTypeEnum.prod.getCode()) {
+            envName = "-" + EnvType.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
         }
         return name + envName + serialNumberName;
     }
@@ -469,7 +470,7 @@ public class ZabbixServiceImpl implements ZabbixService {
         if (listServerDO == null || listServerDO.size() == 0)
             return new BusinessWrapper<>(ErrorCode.serverGroupServerNull);
         for (ServerDO serverDO : listServerDO) {
-            String serverEnv = ServerDO.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
+            String serverEnv = EnvType.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
             if (!serverEnv.equals(env)) continue;
             if (hostUpdateStatus(serverDO, type)) {
                 logger.info("Zabbix : ci update " + serverDO.getServerName() + "/" + serverDO.getInsideIp() + "/" + serverEnv + " status " + type);
@@ -559,6 +560,8 @@ public class ZabbixServiceImpl implements ZabbixService {
         }
         return new BusinessWrapper<Boolean>(true);
     }
+
+
 
 
 }

@@ -1,5 +1,5 @@
 /**
- * (c) 2009-2018 Torstein Honsi
+ * (c) 2009-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -13,16 +13,27 @@ import '../parts/Series.js';
 
 var addEvent = H.addEvent,
     pick = H.pick,
-    wrap = H.wrap,
     extend = H.extend,
     isArray = H.isArray,
+    find = H.find,
     fireEvent = H.fireEvent,
     Axis = H.Axis,
     Series = H.Series;
 
-function stripArguments() {
-    return Array.prototype.slice.call(arguments, 1);
-}
+/**
+ * Returns the first break found where the x is larger then break.from and
+ * smaller then break.to.
+ *
+ * @param {number} x The number which should be within a break.
+ * @param {array} breaks The array of breaks to search within.
+ * @return {object|boolean} Returns the first break found that matches, returns
+ * false if no break is found.
+ */
+var findBreakAt = function (x, breaks) {
+    return find(breaks, function (b) {
+        return b.from < x && x < b.to;
+    });
+};
 
 extend(Axis.prototype, {
     isInBreak: function (brk, val) {
@@ -61,7 +72,7 @@ extend(Axis.prototype, {
                     if (!keep) {
                         keep = pick(
                             breaks[i].showPoints,
-                            this.isXAxis ? false : true
+                            !this.isXAxis
                         );
                     }
                 }
@@ -188,14 +199,22 @@ Axis.prototype.setBreaks = function (breaks, redraw) {
             animation,
             eventArguments
         ) {
-            // If trying to set extremes inside a break, extend it to before and
-            // after the break ( #3857 )
+            // If trying to set extremes inside a break, extend min to after,
+            // and max to before the break ( #3857 )
             if (this.isBroken) {
-                while (this.isInAnyBreak(newMin)) {
-                    newMin -= this.closestPointRange;
+                var axisBreak,
+                    breaks = this.options.breaks;
+
+                while ((axisBreak = findBreakAt(newMin, breaks))) {
+                    newMin = axisBreak.to;
                 }
-                while (this.isInAnyBreak(newMax)) {
-                    newMax -= this.closestPointRange;
+                while ((axisBreak = findBreakAt(newMax, breaks))) {
+                    newMax = axisBreak.from;
+                }
+
+                // If both min and max is within the same break.
+                if (newMax < newMin) {
+                    newMax = newMin;
                 }
             }
             Axis.prototype.setExtremes.call(
@@ -214,7 +233,7 @@ Axis.prototype.setBreaks = function (breaks, redraw) {
             this.unitLength = null;
             if (this.isBroken) {
                 var breaks = axis.options.breaks,
-                    breakArrayT = [],    // Temporary one
+                    breakArrayT = [], // Temporary one
                     breakArray = [],
                     length = 0,
                     inBrk,
@@ -264,8 +283,11 @@ Axis.prototype.setBreaks = function (breaks, redraw) {
                 breakArrayT.sort(function (a, b) {
                     return (
                         (a.value === b.value) ?
-                        (a.move === 'in' ? 0 : 1) - (b.move === 'in' ? 0 : 1) :
-                        a.value - b.value
+                            (
+                                (a.move === 'in' ? 0 : 1) -
+                                (b.move === 'in' ? 0 : 1)
+                            ) :
+                            a.value - b.value
                     );
                 });
 
@@ -319,9 +341,7 @@ Axis.prototype.setBreaks = function (breaks, redraw) {
     }
 };
 
-wrap(Series.prototype, 'generatePoints', function (proceed) {
-
-    proceed.apply(this, stripArguments(arguments));
+addEvent(Series, 'afterGeneratePoints', function () {
 
     var series = this,
         xAxis = series.xAxis,
@@ -357,11 +377,10 @@ wrap(Series.prototype, 'generatePoints', function (proceed) {
 
 });
 
-function drawPointsWrapped(proceed) {
-    proceed.apply(this);
+addEvent(Series, 'afterRender', function drawPointsWrapped() {
     this.drawBreaks(this.xAxis, ['x']);
     this.drawBreaks(this.yAxis, pick(this.pointArrayMap, ['y']));
-}
+});
 
 H.Series.prototype.drawBreaks = function (axis, keys) {
     var series = this,
@@ -416,7 +435,7 @@ H.Series.prototype.drawBreaks = function (axis, keys) {
  */
 H.Series.prototype.gappedPath = function () {
     var currentDataGrouping = this.currentDataGrouping,
-        groupingSize = currentDataGrouping && currentDataGrouping.totalRange,
+        groupingSize = currentDataGrouping && currentDataGrouping.gapSize,
         gapSize = this.options.gapSize,
         points = this.points.slice(),
         i = points.length - 1,
@@ -519,6 +538,3 @@ H.Series.prototype.gappedPath = function () {
     // Call base method
     return this.getGraphPath(points);
 };
-
-wrap(H.seriesTypes.column.prototype, 'drawPoints', drawPointsWrapped);
-wrap(H.Series.prototype, 'drawPoints', drawPointsWrapped);

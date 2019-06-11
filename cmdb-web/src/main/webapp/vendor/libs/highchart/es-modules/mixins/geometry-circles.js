@@ -5,7 +5,34 @@ var getAngleBetweenPoints = geometry.getAngleBetweenPoints,
 
 var round = function round(x, decimals) {
     var a = Math.pow(10, decimals);
+
     return Math.round(x * a) / a;
+};
+
+/**
+ * Calculates the area of a circle based on its radius.
+ *
+ * @param {number} r The radius of the circle.
+ * @returns {number} Returns the area of the circle.
+ */
+var getAreaOfCircle = function (r) {
+    if (r <= 0) {
+        throw new Error('radius of circle must be a positive number.');
+    }
+    return Math.PI * r * r;
+};
+
+/**
+ * Calculates the area of a circular segment based on the radius of the circle
+ * and the height of the segment.
+ * See http://mathworld.wolfram.com/CircularSegment.html
+ *
+ * @param {number} r The radius of the circle.
+ * @param {number} h The height of the circular segment.
+ * @returns {number} Returns the area of the circular segment.
+ */
+var getCircularSegmentArea = function getCircularSegmentArea(r, h) {
+    return r * r * Math.acos(1 - h / r) - (r - h) * Math.sqrt(h * (2 * r - h));
 };
 
 /**
@@ -25,23 +52,19 @@ function getOverlapBetweenCircles(r1, r2, d) {
     // If the distance is larger than the sum of the radiuses then the circles
     // does not overlap.
     if (d < r1 + r2) {
-        var r1Square = r1 * r1,
-            r2Square = r2 * r2;
-
         if (d <= Math.abs(r2 - r1)) {
             // If the circles are completely overlapping, then the overlap
             // equals the area of the smallest circle.
-            overlap = Math.PI * Math.min(r1Square, r2Square);
+            overlap = getAreaOfCircle(r1 < r2 ? r1 : r2);
         } else {
-                // d^2 - r^2 + R^2 / 2d
-            var x = (r1Square - r2Square + d * d) / (2 * d),
-                // y^2 = R^2 - x^2
-                y = Math.sqrt(r1Square - x * x);
+            // Height of first triangle segment.
+            var d1 = (r1 * r1 - r2 * r2 + d * d) / (2 * d),
+                // Height of second triangle segment.
+                d2 = d - d1;
 
             overlap = (
-                r1Square * Math.asin(y / r1) +
-                r2Square * Math.asin(y / r2) -
-                y * (x + Math.sqrt(x * x + r2Square - r1Square))
+                getCircularSegmentArea(r1, r1 - d1) +
+                getCircularSegmentArea(r2, r2 - d2)
             );
         }
         // Round the result to two decimals.
@@ -103,6 +126,7 @@ var getCirclesIntersectionPoints = function getIntersectionPoints(circles) {
         var additional = arr.slice(i + 1)
             .reduce(function (points, c2, j) {
                 var indexes = [i, j + i + 1];
+
                 return points.concat(
                     getCircleCircleIntersection(c1, c2)
                         .map(function (p) {
@@ -111,6 +135,7 @@ var getCirclesIntersectionPoints = function getIntersectionPoints(circles) {
                         })
                 );
             }, []);
+
         return points.concat(additional);
     }, []);
 };
@@ -169,9 +194,9 @@ function isPointOutsideAllCircles(point, circles) {
 var getAreaOfIntersectionBetweenCircles =
 function getAreaOfIntersectionBetweenCircles(circles) {
     var intersectionPoints = getCirclesIntersectionPoints(circles)
-        .filter(function (p) {
-            return isPointInsideAllCircles(p, circles);
-        }),
+            .filter(function (p) {
+                return isPointInsideAllCircles(p, circles);
+            }),
         result;
 
     if (intersectionPoints.length > 1) {
@@ -244,6 +269,7 @@ function getAreaOfIntersectionBetweenCircles(circles) {
                 // If we find an arc then add it to the list and update p2.
                 if (arc) {
                     var r = arc.r;
+
                     data.arcs.push(
                         ['A', r, r, 0, arc.largeArc, 1, arc.x, arc.y]
                     );
@@ -270,9 +296,11 @@ function getAreaOfIntersectionBetweenCircles(circles) {
 };
 
 var geometryCircles = {
+    getAreaOfCircle: getAreaOfCircle,
     getAreaOfIntersectionBetweenCircles: getAreaOfIntersectionBetweenCircles,
     getCircleCircleIntersection: getCircleCircleIntersection,
     getCirclesIntersectionPoints: getCirclesIntersectionPoints,
+    getCircularSegmentArea: getCircularSegmentArea,
     getOverlapBetweenCircles: getOverlapBetweenCircles,
     isPointInsideCircle: isPointInsideCircle,
     isPointInsideAllCircles: isPointInsideAllCircles,

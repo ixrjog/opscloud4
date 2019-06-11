@@ -17,23 +17,17 @@ import com.sdg.cmdb.domain.aliyun.AliyunRamUserDO;
 import com.sdg.cmdb.domain.aliyun.AliyunRamUserVO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserVO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
-import com.sdg.cmdb.domain.ip.IPDetailDO;
-import com.sdg.cmdb.domain.ip.IPDetailVO;
-import com.sdg.cmdb.domain.server.ServerDO;
-import com.sdg.cmdb.domain.server.ServerGroupDO;
-import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
-import com.sdg.cmdb.domain.server.ServerVO;
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailRAMGroup;
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailRAMPolicy;
 import com.sdg.cmdb.service.AliyunRAMService;
-import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.service.UserService;
+import com.sdg.cmdb.service.AliyunService;
+
+
 import com.sdg.cmdb.util.BeanCopierUtils;
 import com.sdg.cmdb.util.MobileUtil;
-import com.sdg.cmdb.util.SessionUtils;
+
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -45,10 +39,9 @@ import java.util.List;
 @Service
 public class AliyunRAMServiceImpl implements AliyunRAMService {
 
-    @Resource
-    private ConfigCenterService configCenterService;
 
-    private HashMap<String, String> configMap;
+    @Autowired
+    private AliyunService aliyunService;
 
     public static final String RAM_GROUP = "RG_";
 
@@ -60,11 +53,6 @@ public class AliyunRAMServiceImpl implements AliyunRAMService {
 
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
-    }
 
 
     @Override
@@ -489,17 +477,17 @@ public class AliyunRAMServiceImpl implements AliyunRAMService {
             }
             return keys;
         } catch (ServerException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         } catch (ClientException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return keys;
     }
 
     @Override
-    public TableVO<List<AliyunRamUserVO>> getRamUserPage(String username, String userTag, int page, int length) {
-        long size = aliyunDao.getRamUserSize(username, userTag);
-        List<AliyunRamUserDO> list = aliyunDao.getRamUserPage(username, userTag, page * length, length);
+    public TableVO<List<AliyunRamUserVO>> getRamUserPage(String username, String userTag, int keyType, int page, int length) {
+        long size = aliyunDao.getRamUserSize(username, userTag, keyType);
+        List<AliyunRamUserDO> list = aliyunDao.getRamUserPage(username, userTag, keyType, page * length, length);
         List<AliyunRamUserVO> voList = new ArrayList<>();
         for (AliyunRamUserDO aliyunRamUserDO : list) {
             voList.add(getAliyunRamUserVO(aliyunRamUserDO));
@@ -515,6 +503,20 @@ public class AliyunRAMServiceImpl implements AliyunRAMService {
             return (aliyunDao.getRamUserByName(userDO.getUsername()));
         return new AliyunRamUserDO(userDO);
     }
+
+    @Override
+    public void invokeRam(UserVO userVO){
+        AliyunRamUserDO aliyunRamUserDO = getRamUser(userVO.getId());
+        if(aliyunRamUserDO == null) return;
+        try{
+            userVO.setPolicyList(listPoliciesForUser(aliyunRamUserDO.getRamUserName())); // 插入用户策略
+            userVO.setAccessKeyList(listAccessKeys(aliyunRamUserDO.getRamUserName())); // 插入用户AccessKeys
+        }catch (Exception e){
+
+        }
+
+    }
+
 
     @Override
     public BusinessWrapper<Boolean> importRamUserPolicy(long id) {
@@ -563,7 +565,6 @@ public class AliyunRAMServiceImpl implements AliyunRAMService {
     }
 
     private AliyunRamUserVO getAliyunRamUserVO(AliyunRamUserDO aliyunRamUserDO) {
-
         AliyunRamUserVO aliyunRamUserVO = BeanCopierUtils.copyProperties(aliyunRamUserDO, AliyunRamUserVO.class);
         // TODO 插入用户策略
         aliyunRamUserVO.setPolicyList(listPoliciesForUser(aliyunRamUserDO.getRamUserName()));
@@ -574,7 +575,6 @@ public class AliyunRAMServiceImpl implements AliyunRAMService {
             UserVO userVO = new UserVO(userDO, true);
             aliyunRamUserVO.setUserVO(userVO);
         }
-
         return aliyunRamUserVO;
     }
 
@@ -623,11 +623,6 @@ public class AliyunRAMServiceImpl implements AliyunRAMService {
     }
 
     private IAcsClient acqIAcsClient(String regionId) {
-        HashMap<String, String> configMap = acqConifMap();
-        String aliyunAccessKey = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_KEY.getItemKey());
-        String aliyunAccessSecret = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_SECRET.getItemKey());
-        IClientProfile profile = DefaultProfile.getProfile(regionId, aliyunAccessKey, aliyunAccessSecret);
-        IAcsClient client = new DefaultAcsClient(profile);
-        return client;
+        return aliyunService.acqIAcsClient(regionId);
     }
 }

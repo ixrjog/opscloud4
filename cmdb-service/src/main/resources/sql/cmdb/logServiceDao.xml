@@ -189,5 +189,78 @@
          AND serverGroupId IN (SELECT DISTINCT serverGroupId FROM log_service_servergroup_cfg )
     </select>
 
+    <select id="getLogServiceGroupSize" parameterType="object" resultType="_int">
+        SELECT count(*) from oc_log_service_group_cfg
+        <where>
+            <if test="project != null and project != ''">
+                project LIKE "%" #{project} "%"
+            </if>
+            <if test="logstore != null and logstore != ''">
+                AND logstore LIKE "%" #{logstore} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getLogServiceGroupPage" parameterType="object" resultType="LogServiceGroupCfgDO">
+        SELECT * FROM oc_log_service_group_cfg
+        <where>
+            <if test="project != null and project != ''">
+                project LIKE "%" #{project} "%"
+            </if>
+            <if test="logstore != null and logstore != ''">
+                AND logstore LIKE "%" #{logstore} "%"
+            </if>
+        </where>
+        ORDER BY project DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getLogServiceGroup" parameterType="_long" resultType="LogServiceGroupCfgDO">
+        SELECT * FROM oc_log_service_group_cfg WHERE id = #{id}
+    </select>
+
+    <insert id="addLogServiceMember" parameterType="LogServiceMemberDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_log_service_member (
+        groupCfgId,
+        serverGroupId,
+        serverGroupName
+        ) VALUES (
+        #{groupCfgId},
+        #{serverGroupId},
+        #{serverGroupName}
+        );
+    </insert>
+
+    <select id="getLogServiceMemberByGroupCfgId" parameterType="_long" resultType="LogServiceMemberDO">
+        SELECT * FROM oc_log_service_member
+        WHERE groupCfgId = #{groupCfgId}
+    </select>
+
+    <delete id="delLogServiceMember" parameterType="_long">
+        DELETE FROM oc_log_service_member WHERE id = #{id}
+    </delete>
+
+    <insert id="addLogServiceGroupCfg" parameterType="LogServiceGroupCfgDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_log_service_group_cfg (
+        project,
+        logstore,
+        config,
+        content
+        ) VALUES (
+        #{project},
+        #{logstore},
+        #{config},
+        #{content}
+        );
+    </insert>
+
+    <update id="updateLogServiceGroupCfg" parameterType="LogServiceGroupCfgDO">
+        UPDATE oc_log_service_group_cfg
+        SET project = #{project},
+        logstore = #{logstore},
+        config = #{config}
+        WHERE id = #{id}
+    </update>
+
 
 </mapper>

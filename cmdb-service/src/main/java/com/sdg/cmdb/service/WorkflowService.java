@@ -2,8 +2,10 @@ package com.sdg.cmdb.service;
 
 
 import com.sdg.cmdb.domain.BusinessWrapper;
+import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.workflow.WorkflowGroupVO;
 import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
+import com.sdg.cmdb.domain.workflow.status.WorkflowStatus;
 
 import java.util.List;
 
@@ -26,7 +28,6 @@ public interface WorkflowService {
      * @return
      */
     BusinessWrapper<Boolean> revokeTodo(long todoId);
-
 
     /**
      * 执行工作流任务
@@ -79,5 +80,11 @@ public interface WorkflowService {
      * @return
      */
     List<WorkflowTodoVO> queryMyCompleteTodo();
+
+    TableVO<List<WorkflowTodoVO>> getWorkflowTodoPage(String queryName, int queryPhase, int page, int length);
+
+    int getMyTodoSize(int queryPhase);
+
+    WorkflowStatus getWorkflowStatus();
 
 }

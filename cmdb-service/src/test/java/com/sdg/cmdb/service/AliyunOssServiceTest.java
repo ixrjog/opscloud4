@@ -20,7 +20,7 @@ public class AliyunOssServiceTest {
 
     @Test
     public void testListObject() {
-        List<OSSObjectSummary> objects = aliyunOssService.listObject("ci/java_opscloud_prod/184/opscloud-1.0.0-SNAPSHOT.war");
+        List<OSSObjectSummary> objects = aliyunOssService.listObject("android/android-globalagency-test/52/bm_release_[yyb].apk");
         for(OSSObjectSummary object :objects){
             System.err.println(object.getBucketName());
             System.err.println(object.getKey());

@@ -48,6 +48,7 @@ p{padding:0px;margin:0px;}
 <li>服务器权限申请</li>
 <li>外部平台权限申请</li>
 <li>阿里云RAM(策略)权限申请</li>
+<li>平台角色申请</li>
 </ul>
 </div>
 </div>
@@ -64,7 +65,8 @@ p{padding:0px;margin:0px;}
 <li>申请人: ${applyUser}</li>
 <li>状态: ${todoPhase}</li>
 <li>发起时间: ${applyTime}</li>
-<li>工作流内容: ${todoContent}</li>
+<!-- 工作流内容 -->
+<li>${todoContent}</li>
 </ul>
 <p style="clear:both;margin-top:10px;"><a href="${todoAddress}/#/app/workflow" style="color:#ec8a1b;text-decoration:underline;">链接</a></p>
 </div>
@@ -78,7 +80,7 @@ p{padding:0px;margin:0px;}
 <!-- Bottom Copyright Starts Here -->
 <div style="width:600px;margin-top:10px;color:#999999;font-size:11px;">
 Structured Mail designed by <a href="#"><span style="color:#cccccc;text-decoration:underline;">https://github.com/ixrjog/opsCloud</span></a><br />
-bayi@gegejia.com</div>
+baiyi@gegejia.com</div>
 <!-- Bottom Copyright Ends Here -->
 <br />
 </body>

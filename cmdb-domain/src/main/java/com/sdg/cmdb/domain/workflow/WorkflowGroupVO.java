@@ -1,11 +1,15 @@
 package com.sdg.cmdb.domain.workflow;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * 工作流视图
  */
+@Data
 public class WorkflowGroupVO extends WorkflowGroupDO implements Serializable {
     private static final long serialVersionUID = -5243228153219397722L;
 
@@ -18,15 +22,10 @@ public class WorkflowGroupVO extends WorkflowGroupDO implements Serializable {
     }
 
     public WorkflowGroupVO() {
-
     }
 
-
-    public List<WorkflowDO> getWorkflowList() {
-        return workflowList;
-    }
-
-    public void setWorkflowList(List<WorkflowDO> workflowList) {
-        this.workflowList = workflowList;
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

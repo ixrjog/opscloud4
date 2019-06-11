@@ -263,13 +263,16 @@
         SELECT count(*) from oc_ecs_server
         <where>
             <if test="serverName != null and serverName != ''">
-                AND serverName like "%" #{serverName} "%"
+                serverName like "%" #{serverName} "%"
             </if>
             <if test="queryIp != null and queryIp != ''">
                 AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
             </if>
             <if test="status != -1">
                 AND status = #{status}
+            </if>
+            <if test="instanceChargeType != null and instanceChargeType != ''">
+                AND instanceChargeType = #{instanceChargeType}
             </if>
         </where>
     </select>
@@ -279,13 +282,16 @@
         SELECT * FROM oc_ecs_server
         <where>
             <if test="serverName != null and serverName != ''">
-                AND serverName like "%" #{serverName} "%"
+                serverName like "%" #{serverName} "%"
             </if>
             <if test="queryIp != null and queryIp != ''">
                 AND publicIp LIKE "%"#{queryIp}"%" OR insideIp LIKE "%"#{queryIp}"%"
             </if>
             <if test="status != -1">
                 AND status = #{status}
+            </if>
+            <if test="instanceChargeType != null and instanceChargeType != ''">
+                AND instanceChargeType = #{instanceChargeType}
             </if>
         </where>
         ORDER BY serverName DESC,creationTime DESC
@@ -329,9 +335,8 @@
         </where>
     </select>
 
-    <select id="getEcsServerByFinance" parameterType="_boolean" resultType="EcsServerDO">
+    <select id="getEcsServerAll"  resultType="EcsServerDO">
         SELECT * FROM oc_ecs_server
-        WHERE finance = #{finance}
     </select>
 
     <!-- 获取服务器详情 -->
@@ -558,6 +563,16 @@
     <!-- 按内网ip查询server -->
     <select id="queryServerByInsideIp" parameterType="string" resultType="ServerDO">
         SELECT * FROM oc_server WHERE insideIp = #{insideIp}
+    </select>
+
+    <select id="queryServerByPublicIp" parameterType="string" resultType="ServerDO">
+        SELECT * FROM oc_server WHERE publicIp = #{publicIp} LIMIT 1
+    </select>
+
+    <select id="queryServerByIp" parameterType="string" resultType="ServerDO">
+        SELECT * FROM oc_server
+        WHERE insideIp = #{ip} OR publicIp = #{ip}
+        LIMIT 1
     </select>
 
     <!-- 按类型查询所有server -->
@@ -870,6 +885,58 @@
         FROM oc_server
         WHERE year(gmtCreate) &gt;= 2017
         GROUP BY dateCat
+    </select>
+
+    <!-- 获取服务器详情 -->
+    <select id="queryZabbixServer" resultType="ServerDO">
+        SELECT * FROM oc_server
+        WHERE zabbixMonitor = 1 AND zabbixStatus = 0
+    </select>
+
+    <insert id="addEcsTask" parameterType="EcsTaskDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ecs_task (
+        taskName,
+        cnt,
+        complete,
+        userId
+        ) VALUES (
+        #{taskName},
+        #{cnt},
+        #{complete},
+        #{userId}
+        );
+    </insert>
+
+    <select id="getEcsTask" parameterType="_long" resultType="EcsTaskDO">
+        SELECT * FROM oc_ecs_task
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateEcsTask" parameterType="EcsTaskDO">
+        UPDATE oc_ecs_task
+        SET
+        complete = #{complete}
+        WHERE id = #{id}
+    </update>
+
+    <insert id="addEcsTaskServer" parameterType="EcsTaskServerDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_ecs_task_server (
+        taskId,
+        instanceId
+        ) VALUES (
+        #{taskId},
+        #{instanceId}
+        );
+    </insert>
+
+    <select id="getEcsTaskServerByTaskId" parameterType="_long" resultType="EcsTaskServerDO">
+        SELECT * FROM oc_ecs_task_server
+        WHERE taskId = #{taskId}
+    </select>
+
+    <select id="getMyServerSize" parameterType="object" resultType="_int">
+        SELECT count(id) FROM oc_server
+        WHERE serverGroupId IN ( SELECT serverGroupId FROM keybox_user_server WHERE username = #{username} )
     </select>
 
 

@@ -40,6 +40,14 @@ public interface KeyBoxService {
     BusinessWrapper<Boolean> authUserKeybox(String username);
 
     /**
+     * 校验用户是否有服务器组授权
+     * @param username
+     * @param serverGroupId
+     * @return
+     */
+    boolean checkUserGroup(String username, long serverGroupId);
+
+    /**
      * 终止用户授权
      * @param username
      * @return

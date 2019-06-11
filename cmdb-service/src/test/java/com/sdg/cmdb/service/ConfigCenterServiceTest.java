@@ -1,8 +1,6 @@
 package com.sdg.cmdb.service;
 
 import com.sdg.cmdb.domain.configCenter.ConfigCenterDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.*;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Value;
@@ -31,8 +29,6 @@ public class ConfigCenterServiceTest {
         System.err.println(invokeEnv);
 
     }
-
-
 
 
     @Test

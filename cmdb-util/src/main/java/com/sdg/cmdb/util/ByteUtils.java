@@ -11,6 +11,10 @@ public class ByteUtils {
 
 
     static public String getSize(int size) {
+       return getSize((long) size);
+    }
+
+    static public String getSize(long size) {
         //获取到的size为：1705230
         int GB = 1024 * 1024 * 1024;//定义GB的计算常量
         int MB = 1024 * 1024;//定义MB的计算常量

@@ -18,7 +18,6 @@ import com.sdg.cmdb.plugin.chain.TaskChain;
 import com.sdg.cmdb.plugin.chain.TaskItem;
 import com.sdg.cmdb.scheduler.task.ServerGroupSubTask;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.service.control.configurationfile.GetwayService;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -71,12 +70,6 @@ public class KeyboxWebSocketHandler extends TextWebSocketHandler implements Init
 
     @Resource
     private ServerGroupService serverGroupService;
-
-    @Resource
-    private GetwayService getwayService;
-
-    @Resource
-    private AnsibleTaskService ansibleTaskService;
 
     @Resource
     private ServerGroupSubTask groupSubTask;

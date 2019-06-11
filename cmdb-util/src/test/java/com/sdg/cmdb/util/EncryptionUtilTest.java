@@ -5,6 +5,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import sun.misc.BASE64Decoder;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;
@@ -100,16 +101,27 @@ public class EncryptionUtilTest {
     @Test
     public void test2() {
         String id_rsa_pub = "eyJhbGciOiJIUzI1NiJ9.InNzaC1yc2EgQUFBQUIzTnphQzF5YzJFQUFBQUJJd0FBQVFFQXM1VkdNelVmL2JRYmtGM2E4V2M5NjVUWS9oQmZNZGdyNCtOczhISWZaWjFORUl5a1hEZ3BtbDNnQzhkQm1FbUJ1K3Bkekw5MndaVFFFT2E3bTkzdXNiYlhUUzZoZTZIMkphRzNlcDRwbGlTYmluNEUyUzBxQUlQZm10bzI0ajJYOGZjTlBwSW82YmtlSUs0TjM4NHRtMXluaFdialhraVgzMHAyNjBwSGJFUEtNdmhWVVlhdzdXSnFDS2tOMTVVZEtQakE4Q2c5S3lYdTFQMUorNnJzeUYzVk9QK1JsNXczMHB2K083andmSEJrZCtRVWlha2YrYUV0NGZUZVRyTyt5c3c0RWR1UDZTY2d0MnpoRWpjbEgzdE5NbEt2TGZEc2R4Tk0xTUhQdVcxVTBORlV3Y01UT2xpWGNKSmJ2OXdaV3dnSUM3TERSUVFoZzNyeCtCVEQwUT09IGxpYW5namlhbkA1MXhpYW5xdS5uZXQi.sh20VPQSBmGSjfSey-ZYc5YISuVdlqi7BkOh3rXzccY";
-        String id = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtVLKSMBSDxFBApa+1fmcGG0OHizL6kPfrFY7KMScoILNrhf5y2GoV5WxSSSd73c56YYd5HbfK3CFIjwZ54swDhKEiGkSDA7FOlriv1TTyvhknkDSsnsABibPKtRkP9XT3EzznolwikqWCbANTu1XiIR6EaX5r+rL54mtwE2xqOEKdkbU9wkkd41dEIMcwqcgazzTb3hrUunVFF5JrZXukCkLRRDGtYcXKA4vFOILpqLZiTMW7hPto3F9NGdBIy7ZphD2QUEuVmFgnwpCUb2ps0Ud3uLqdIF+folEHC4rqDBB2Nqgx/vbIB94U3bIJED9zkfOtubC5eUq7IFPrZvPb";
 
-        String secretKey = "2vym+ky!997d5kkcc64mnz06y1mmui3lut#(^wd=%s_qj$1%x";
         try {
-            System.err.println( EncryptionUtil.encryptBASE64(id_rsa_pub.getBytes()));
+
+            byte[] x = new BASE64Decoder().decodeBuffer(id_rsa_pub);
+            String x2 = new String(x);
+            System.err.println(x2);
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
     }
+
+    @Test
+    public void test99() {
+        String pwd = EncryptionUtil.encrypt("BadPaddingException: Decryption error");
+        System.err.println(pwd);
+
+
+        String result = EncryptionUtil.decrypt(pwd);
+
+        System.err.println(result);
+    }
+
 
 }

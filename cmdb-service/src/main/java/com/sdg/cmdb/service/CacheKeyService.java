@@ -27,6 +27,27 @@ public class CacheKeyService {
         return false;
     }
 
+
+    /**
+     * 单任务锁，过期时间
+     * @param key
+     * @param minutes
+     * @return
+     */
+    public boolean checkRunning(String key,int minutes) {
+        String isRunning = this.getKeyByString(key);
+        if (isRunning != null && isRunning.equalsIgnoreCase("true")) {
+            return true;
+        }else{
+            // 插入缓存时间避免同一任务周期内并发执行
+            set(key,"true",minutes);
+            return false;
+        }
+
+    }
+
+
+
     /**
      * 用于单任务锁
      *
@@ -53,7 +74,6 @@ public class CacheKeyService {
     }
 
     public void set(String key, Object obj) {
-
         redisTemplate.opsForSet().add(key,obj);
     }
     /**

@@ -1,20 +1,10 @@
 /* *
  *
- *  (c) 2010-2018 Torstein Honsi
+ *  (c) 2010-2019 Torstein Honsi
  *
  *  License: www.highcharts.com/license
  *
  * */
-
-/**
- * Reference to the global SVGElement class as a workaround for a name conflict
- * in the Highcharts namespace.
- *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/SVGElement
- *
- * @global
- * @typedef {global.SVGElement} GlobalSVGElement
- */
 
 /**
  * An animation configuration. Animation configurations can also be defined as
@@ -82,7 +72,7 @@
  *//**
  * Style of the mouse cursor when resting over the element.
  * @name Highcharts.CSSObject#cursor
- * @type {Highcharts.CursorType|undefined}
+ * @type {Highcharts.CursorValue|undefined}
  *//**
  * Font family of the element text. Multiple values have to be in decreasing
  * preference order and separated by comma.
@@ -158,7 +148,13 @@
 /**
  * All possible cursor styles.
  *
- * @typedef {"alias"|"all-scroll"|"auto"|"cell"|"col-resize"|"context-menu"|"copy"|"crosshair"|"default"|"e-resize"|"ew-resize"|"grab"|"grabbing"|"help"|"move"|"n-resize"|"ne-resize"|"nesw-resize"|"no-drop"|"none"|"not-allowed"|"ns-resize"|"nw-resize"|"nwse-resize"|"pointer"|"progress"|"row-resize"|"s-resize"|"se-resize"|"sw-resize"|"text"|"vertical-text"|"w-resize"|"wait"|"zoom-in"|"zoom-out"} Highcharts.CursorType
+ * @typedef {"alias"|"all-scroll"|"auto"|"cell"|"col-resize"|"context-menu"|"copy"|"crosshair"|"default"|"e-resize"|"ew-resize"|"grab"|"grabbing"|"help"|"move"|"n-resize"|"ne-resize"|"nesw-resize"|"no-drop"|"none"|"not-allowed"|"ns-resize"|"nw-resize"|"nwse-resize"|"pointer"|"progress"|"row-resize"|"s-resize"|"se-resize"|"sw-resize"|"text"|"vertical-text"|"w-resize"|"wait"|"zoom-in"|"zoom-out"} Highcharts.CursorValue
+ */
+
+/**
+ * All possible dash styles.
+ *
+ * @typedef {"Dash"|"DashDot"|"Dot"|"LongDash"|"LongDashDot"|"LongDashDotDot"|"ShortDash"|"ShortDashDot"|"ShortDashDotDot"|"ShortDot"|"Solid"} Highcharts.DashStyleValue
  */
 
 /**
@@ -201,8 +197,10 @@
  * @callback Highcharts.FormatterCallbackFunction<T>
  *
  * @param {T} this
+ *        Context to format
  *
  * @return {string}
+ *         Formatted text
  */
 
 /**
@@ -251,20 +249,6 @@
  */
 
 /**
- * An object containing `x` and `y` properties for the position of an element.
- *
- * @interface Highcharts.PositionObject
- *//**
- * X position of the element.
- * @name Highcharts.PositionObject#x
- * @type {number}
- *//**
- * Y position of the element.
- * @name Highcharts.PositionObject#y
- * @type {number}
- */
-
-/**
  * If a number is given, it defines the pixel length. If a percentage string is
  * given, like for example `'50%'`, the setting defines a length relative to a
  * base size, for example the size of a container.
@@ -273,84 +257,24 @@
  */
 
 /**
- * An object of key-value pairs for SVG attributes. Attributes in Highcharts
- * elements for the most parts correspond to SVG, but some are specific to
- * Highcharts, like `zIndex`, `rotation`, `rotationOriginX`,
- * `rotationOriginY`, `translateX`, `translateY`, `scaleX` and `scaleY`. SVG
- * attributes containing a hyphen are _not_ camel-cased, they should be
- * quoted to preserve the hyphen.
+ * Proceed function to call original (wrapped) function.
  *
- * @example
- * {
- *     'stroke': '#ff0000', // basic
- *     'stroke-width': 2, // hyphenated
- *     'rotation': 45 // custom
- *     'd': ['M', 10, 10, 'L', 30, 30, 'z'] // path definition, note format
- * }
+ * @callback Highcharts.WrapProceedFunction
  *
- * @interface Highcharts.SVGAttributes
- *//**
- * @name Highcharts.SVGAttributes#[key:string]
- * @type {boolean|number|string|Array<number|string>|undefined}
- *//**
- * @name Highcharts.SVGAttributes#d
- * @type {string|Highcharts.SVGPathArray|undefined}
- *//**
- * @name Highcharts.SVGAttributes#inverted
- * @type {boolean|undefined}
- *//**
- * @name Highcharts.SVGAttributes#matrix
- * @type {Array<number>|undefined}
- *//**
- * @name Highcharts.SVGAttributes#stroke
- * @type {Highcharts.ColorString|undefined}
- *//**
- * @name Highcharts.SVGAttributes#rotation
- * @type {string|undefined}
- *//**
- * @name Highcharts.SVGAttributes#rotationOriginX
- * @type {number|undefined}
- *//**
- * @name Highcharts.SVGAttributes#rotationOriginY
- * @type {number|undefined}
- *//**
- * @name Highcharts.SVGAttributes#scaleX
- * @type {number|undefined}
- *//**
- * @name Highcharts.SVGAttributes#scaleY
- * @type {number|undefined}
- *//**
- * @name Highcharts.SVGAttributes#translateX
- * @type {number|undefined}
- *//**
- * @name Highcharts.SVGAttributes#translateY
- * @type {number|undefined}
- *//**
- * @name Highcharts.SVGAttributes#zIndex
- * @type {number|undefined}
- */
-
-/**
- * An SVG DOM element. The type is a reference to the regular SVGElement in the
- * global scope.
+ * @param {*} [arg1]
+ *        Optional argument. Without any arguments defaults to first argument of
+ *        the wrapping function.
  *
- * @typedef {globals.GlobalSVGElement} Highcharts.SVGDOMElement
+ * @param {*} [arg2]
+ *        Optional argument. Without any arguments defaults to second argument
+ *        of the wrapping function.
  *
- * @see https://developer.mozilla.org/en-US/docs/Web/API/SVGElement
- */
-
-/**
- * Array of path commands, that will go into the `d` attribute of an SVG
- * element.
+ * @param {*} [arg3]
+ *        Optional argument. Without any arguments defaults to third argument of
+ *        the wrapping function.
  *
- * @typedef {Array<number|Highcharts.SVGPathCommand>} Highcharts.SVGPathArray
- */
-
-/**
- * Possible path commands in a SVG path array.
- *
- * @typedef {string} Highcharts.SVGPathCommand
- * @validvalue ["a","c","h","l","m","q","s","t","v","z","A","C","H","L","M","Q","S","T","V","Z"]
+ * @return {*}
+ *         Return value of the original function.
  */
 
 'use strict';
@@ -391,20 +315,33 @@ var charts = H.charts,
  *
  * @param {boolean} [stop=false]
  *        Whether to throw an error or just log a warning in the console.
+ *
+ * @param {Highcharts.Chart} [chart]
+ *        Reference to the chart that causes the error. Used in 'debugger'
+ *        module to display errors directly on the chart.
+ *        Important note: This argument is undefined for errors that lack
+ *        access to the Chart instance.
  */
 H.error = function (code, stop, chart) {
     var msg = H.isNumber(code) ?
-        'Highcharts error #' + code + ': www.highcharts.com/errors/' + code :
-        code;
+            'Highcharts error #' + code + ': www.highcharts.com/errors/' +
+            code : code,
+        defaultHandler = function () {
+            if (stop) {
+                throw new Error(msg);
+            }
+            // else ...
+            if (win.console) {
+                console.log(msg); // eslint-disable-line no-console
+            }
+        };
+
     if (chart) {
-        H.fireEvent(chart, 'displayError', { code: code });
-    }
-    if (stop) {
-        throw new Error(msg);
-    }
-    // else ...
-    if (win.console) {
-        console.log(msg); // eslint-disable-line no-console
+        H.fireEvent(
+            chart, 'displayError', { code: code, message: msg }, defaultHandler
+        );
+    } else {
+        defaultHandler();
     }
 };
 
@@ -458,8 +395,8 @@ H.Fx.prototype = {
                 startVal = parseFloat(start[i]);
                 ret[i] =
                     isNaN(startVal) ? // a letter instruction like M or L
-                            end[i] :
-                            now * (parseFloat(end[i] - startVal)) + startVal;
+                        end[i] :
+                        now * (parseFloat(end[i] - startVal)) + startVal;
 
             }
         // If animation is finished or length not matching, land on right value
@@ -654,6 +591,7 @@ H.Fx.prototype = {
         function sixify(arr) {
             var isOperator,
                 nextIsOperator;
+
             i = arr.length;
             while (i--) {
 
@@ -711,6 +649,7 @@ H.Fx.prototype = {
          */
         function append(arr, other) {
             var i = (fullLength - arr.length) / numParams;
+
             while (i > 0 && i--) {
 
                 // Pull out the slice that is going to be appended or inserted.
@@ -813,7 +752,6 @@ H.Fx.prototype = {
 }; // End of Fx prototype
 
 
-
 /**
  * Utility function to deep merge two or more objects and return a third object.
  * The merge function can also be used with a single object argument to create a
@@ -868,10 +806,9 @@ H.merge = function () {
             H.objectEach(original, function (value, key) {
 
                 // Copy the contents of objects, but not arrays or DOM nodes
-                if (
-                        H.isObject(value, true) &&
-                        !H.isClass(value) &&
-                        !H.isDOMElement(value)
+                if (H.isObject(value, true) &&
+                    !H.isClass(value) &&
+                    !H.isDOMElement(value)
                 ) {
                     copy[key] = doCopy(copy[key] || {}, value);
 
@@ -944,6 +881,7 @@ H.isString = function (s) {
  */
 H.isArray = function (obj) {
     var str = Object.prototype.toString.call(obj);
+
     return str === '[object Array]' || str === '[object Array Iterator]';
 };
 
@@ -993,6 +931,7 @@ H.isDOMElement = function (obj) {
  */
 H.isClass = function (obj) {
     var c = obj && obj.constructor;
+
     return !!(
         H.isObject(obj, true) &&
         !H.isDOMElement(obj) &&
@@ -1029,6 +968,7 @@ H.isNumber = function (n) {
  */
 H.erase = function (arr, item) {
     var i = arr.length;
+
     while (i--) {
         if (arr[i] === item) {
             arr.splice(i, 1);
@@ -1126,8 +1066,8 @@ H.splat = function (obj) {
  * @param {number} delay
  *        Delay in milliseconds.
  *
- * @param {*} [context]
- *        The context.
+ * @param {*} [parameter]
+ *        An optional parameter to send to the function callback.
  *
  * @return {number}
  *         An identifier for the timeout that can later be cleared with
@@ -1172,6 +1112,7 @@ H.clearTimeout = function (id) {
  */
 H.extend = function (a, b) {
     var n;
+
     if (!a) {
         a = {};
     }
@@ -1198,6 +1139,7 @@ H.pick = function () {
         i,
         arg,
         length = args.length;
+
     for (i = 0; i < length; i++) {
         arg = args[i];
         if (arg !== undefined && arg !== null) {
@@ -1252,6 +1194,7 @@ H.css = function (el, styles) {
 H.createElement = function (tag, attribs, styles, parent, nopad) {
     var el = doc.createElement(tag),
         css = H.css;
+
     if (attribs) {
         H.extend(el, attribs);
     }
@@ -1284,6 +1227,7 @@ H.createElement = function (tag, attribs, styles, parent, nopad) {
  */
 H.extendClass = function (parent, members) {
     var object = function () {};
+
     object.prototype = new parent(); // eslint-disable-line new-cap
     H.extend(object.prototype, members);
     return object;
@@ -1308,12 +1252,12 @@ H.extendClass = function (parent, members) {
  */
 H.pad = function (number, length, padder) {
     return new Array(
-            (length || 2) +
-            1 -
-            String(number)
-                .replace('-', '')
-                .length
-        ).join(padder || 0) + number;
+        (length || 2) +
+        1 -
+        String(number)
+            .replace('-', '')
+            .length
+    ).join(padder || 0) + number;
 };
 
 /**
@@ -1352,18 +1296,20 @@ H.relativeLength = function (value, base, offset) {
  * @param {string} method
  *        The name of the method to extend.
  *
- * @param {Function} func
+ * @param {Highcharts.WrapProceedFunction} func
  *        A wrapper function callback. This function is called with the same
  *        arguments as the original function, except that the original function
  *        is unshifted and passed as the first argument.
  */
 H.wrap = function (obj, method, func) {
     var proceed = obj[method];
+
     obj[method] = function () {
         var args = Array.prototype.slice.call(arguments),
             outerArgs = arguments,
             ctx = this,
             ret;
+
         ctx.proceed = function () {
             proceed.apply(ctx, arguments.length ? arguments : outerArgs);
         };
@@ -1373,7 +1319,6 @@ H.wrap = function (obj, method, func) {
         return ret;
     };
 };
-
 
 
 /**
@@ -1645,6 +1590,10 @@ H.normalizeTickInterval = function (
  *        The function to sort it with, like with regular Array.prototype.sort.
  */
 H.stableSort = function (arr, sortFunction) {
+
+    // @todo It seems like Chrome since v70 sorts in a stable way internally,
+    // plus all other browsers do it, so over time we may be able to remove this
+    // function
     var length = arr.length,
         sortValue,
         i;
@@ -1752,6 +1701,7 @@ H.destroyObjectProperties = function (obj, except) {
  */
 H.discardElement = function (element) {
     var garbageBin = H.garbageBin;
+
     // create a garbage bin element, not part of the DOM
     if (!garbageBin) {
         garbageBin = H.createElement('div');
@@ -1999,7 +1949,12 @@ H.getStyle = function (el, prop, toInt) {
                 Math.min(
                     el.offsetWidth,
                     el.scrollWidth,
-                    el.getBoundingClientRect ?
+                    (
+                        el.getBoundingClientRect &&
+                        // #9871, getBoundingClientRect doesn't handle
+                        // transforms, so avoid that
+                        H.getStyle(el, 'transform', false) === 'none'
+                    ) ?
                         Math.floor(el.getBoundingClientRect().width) : // #6427
                         Infinity
                 ) -
@@ -2007,7 +1962,9 @@ H.getStyle = function (el, prop, toInt) {
                 H.getStyle(el, 'padding-right')
             )
         );
-    } else if (prop === 'height') {
+    }
+
+    if (prop === 'height') {
         return Math.max(
             0, // #8377
             Math.min(el.offsetHeight, el.scrollHeight) -
@@ -2413,6 +2370,7 @@ H.removeEvent = function (el, type, fn) {
 
     ['protoEvents', 'hcEvents'].forEach(function (coll) {
         var eventCollection = el[coll];
+
         if (eventCollection) {
             if (type) {
                 events = eventCollection[type] || [];
@@ -2710,7 +2668,7 @@ if (win.jQuery) {
      * @param {Highcharts.ChartCallbackFunction} [callback]
      *        Function to run when the chart has loaded and and all external
      *        images are loaded. Defining a
-     *        [chart.event.load](https://api.highcharts.com/highcharts/chart.events.load)
+     *        [chart.events.load](https://api.highcharts.com/highcharts/chart.events.load)
      *        handler is equivalent.
      *
      * @return {JQuery}

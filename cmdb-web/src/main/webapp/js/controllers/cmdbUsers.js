@@ -542,6 +542,20 @@ app.controller('userInstanceCtrl', function ($scope, $uibModalInstance, httpServ
         };
     }
 
+    $scope.getPassword = function () {
+        var url = "/box/user/getPassword";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.userItem.userpassword = data.body;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
     /**
      * 保存user信息
      */

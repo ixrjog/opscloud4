@@ -161,12 +161,14 @@ public interface AliyunDao {
 
     long getRamUserSize(
             @Param("ramUserName") String ramUserName,
-            @Param("userTag") String userTag
+            @Param("userTag") String userTag,
+            @Param("accessKeys") int accessKeys
     );
 
     List<AliyunRamUserDO> getRamUserPage(
             @Param("ramUserName") String ramUserName,
             @Param("userTag") String userTag,
+            @Param("accessKeys") int accessKeys,
             @Param("pageStart") long pageStart, @Param("length") int length);
 
 

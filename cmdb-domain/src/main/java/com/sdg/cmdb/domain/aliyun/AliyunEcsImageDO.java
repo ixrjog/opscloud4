@@ -1,94 +1,29 @@
 package com.sdg.cmdb.domain.aliyun;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 
 /**
  * Created by liangjian on 2017/6/12.
  */
+@Data
 public class AliyunEcsImageDO implements Serializable {
     private static final long serialVersionUID = 1412441161180428711L;
 
     private long id;
-
     private String imageId;
-
     private String imageDesc;
-
     private int imageType;
-
     private String version;
-
+    private int size;
     private String gmtCreate;
-
     private String gmtModify;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public String getImageId() {
-        return imageId;
-    }
-
-    public void setImageId(String imageId) {
-        this.imageId = imageId;
-    }
-
-    public String getImageDesc() {
-        return imageDesc;
-    }
-
-    public void setImageDesc(String imageDesc) {
-        this.imageDesc = imageDesc;
-    }
-
-    public int getImageType() {
-        return imageType;
-    }
-
-    public void setImageType(int imageType) {
-        this.imageType = imageType;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
-    }
 
     @Override
     public String toString() {
-        return "AliyunEcsImageDO{" +
-                "id=" + id +
-                ", imageId='" + imageId + '\'' +
-                ", imageDesc='" + imageDesc + '\'' +
-                ", imageType=" + imageType +
-                ", version='" + version + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 
     public enum ImageTypeEnum {

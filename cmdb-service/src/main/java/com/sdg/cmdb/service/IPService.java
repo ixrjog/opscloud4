@@ -29,6 +29,8 @@ public interface IPService {
      */
     BusinessWrapper<Boolean> saveGroupIP(IPDetailDO ipDetailDO);
 
+    boolean invokeIP(IPDetailDO ipDetailDO);
+
     /**
      * 删除指定id的ip信息
      * @param ipId

@@ -229,7 +229,7 @@ app.controller('serverPropertyCtrl', function ($scope, $state, $uibModal, httpSe
             + "&envType=" + -1
             + "&queryIp="
             + "&page=" + 0
-            + "&length=" + 20;
+            + "&length=" + 100;
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
@@ -245,10 +245,12 @@ app.controller('serverPropertyCtrl', function ($scope, $state, $uibModal, httpSe
 
     $scope.nowServer = {};
     $scope.serverList = [];
+    $scope.queryIp = "";
 
     $scope.reSet = function () {
         $scope.nowServerGroup = {};
         $scope.nowServer = {};
+        $scope.serverList = [];
         $scope.queryServer("");
     }
 
@@ -259,16 +261,19 @@ app.controller('serverPropertyCtrl', function ($scope, $state, $uibModal, httpSe
     $scope.currentPage = 0;
     $scope.pageLength = 10;
 
-    $scope.pageChanged = function () {
+    $scope.pageChanged = function (currentPage) {
+        $scope.currentPage = currentPage;
         $scope.doQuery();
     };
 
     /////////////////////////////////////////////////
 
     $scope.doQuery = function () {
+
         var url = "/server/propertygroup/query?"
             + "groupId=" + ($scope.nowServerGroup.selected == null ? 0 : $scope.nowServerGroup.selected.id)
             + "&serverId=" + ($scope.nowServer.selected == null ? 0 : $scope.nowServer.selected.id)
+            + "&queryIp=" + $scope.queryIp
             + "&page=" + ($scope.currentPage <= 0 ? 0 : ($scope.currentPage - 1))
             + "&length=" + $scope.pageLength;
 

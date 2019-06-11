@@ -3,6 +3,9 @@
 app.controller('aliyunRamUserCtrl', function ($scope, $state, $uibModal, httpService, toaster, staticModel) {
     $scope.authPoint = $state.current.data.authPoint;
 
+    $scope.keyTypes = staticModel.accessKey;
+    $scope.nowKeyType = -1;
+
     $scope.queryUsername = "";
     $scope.queryUserTag = "";
     $scope.butUpdateUsers = false;
@@ -10,6 +13,8 @@ app.controller('aliyunRamUserCtrl', function ($scope, $state, $uibModal, httpSer
 
     $scope.reSet = function () {
         $scope.queryUsername = "";
+        $scope.queryUserTag = "";
+        $scope.nowKeyType = -1;
     }
 
     /////////////////////////////////////////////////
@@ -23,6 +28,7 @@ app.controller('aliyunRamUserCtrl', function ($scope, $state, $uibModal, httpSer
     $scope.queryUser = function () {
         var url = "/aliyun/ram/user/page?username=" + ($scope.queryUsername == null ? "" : $scope.queryUsername)
             + "&userTag=" + $scope.queryUserTag
+            + "&keyType=" + $scope.nowKeyType
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
         httpService.doGet(url).then(function (data) {

@@ -208,27 +208,9 @@
                     <div style="font-size:1em;">&nbsp;</div>
 
                     <div class="form-group">
-                        <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>服务器组</label>
-                        <div class="col-lg-5">
-                            <ui-select ng-model="nowServerGroup.selected" theme="bootstrap">
-                                <ui-select-match placeholder="搜索服务器组名称......">{{$select.selected.name}}
-                                </ui-select-match>
-                                <ui-select-choices refresh="queryServerGroup($select.search)" refresh-dalay="0"
-                                                   repeat="item in serverGroupList | filter: $select.search">
-                                    <div ng-bind-html="item.name | highlight: $select.search"></div>
-                                </ui-select-choices>
-                            </ui-select>
-                        </div>
-
-                        <div class="col-lg-2">
-                            <button ng-click="addServerGroup()"
-                                    class="btn btn-xs"
-                                    style="margin-top:5px; margin-left: 5px; background-color: #2e6da4; color: white;">
-                                <span class="glyphicon glyphicon-plus"></span>添加
-                            </button>
-
-                        </div>
+                        <div ng-include="'tpl/modal/public/pub_select_servergroup.html'"></div>
                     </div>
+
 
                     <div style="margin-top: 5px;">
                         <table class="table table-hover table-bordered table-striped">

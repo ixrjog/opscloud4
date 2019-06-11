@@ -105,6 +105,21 @@ angular.module('app')
                                                 'vendor/libs/highchart/modules/solid-gauge.js'
                                             ]);
                                         })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/exporting.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/oldie.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/networkgraph.js'
+                                            ]);
+                                        })
                                         ;
                                 }]
                         }
@@ -225,6 +240,46 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.kubernetesCluster', {
+                        url: '/kubernetesCluster',
+                        templateUrl: 'tpl/app_kubernetes_cluster.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/kubernetesCluster.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["kubernetes", "kubernetesCluster"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.kubernetesService', {
+                        url: '/kubernetesService',
+                        templateUrl: 'tpl/app_kubernetes_service.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/kubernetesService.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["kubernetes"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
                     .state('app.gitlab', {
                         url: '/gitlab',
                         templateUrl: 'tpl/app_gitlab.html',
@@ -258,11 +313,40 @@ angular.module('app')
                                                 'js/controllers/ciApp.js',
                                                 'vendor/libs/highchart/highcharts.js'
                                             ]);
-                                        }
-                                    )
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/highcharts-more.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/solid-gauge.js'
+                                            ]);
+                                        })
                                         .then(function () {
                                             return $ocLazyLoad.load([
                                                 'vendor/libs/highchart/modules/exporting.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/sankey.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/oldie.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/networkgraph.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/organization.js'
                                             ]);
                                         })
                                         ;
@@ -353,6 +437,26 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.grafana', {
+                        url: '/grafana',
+                        templateUrl: 'tpl/app_grafana.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/grafana.js']);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["grafana"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
                     .state('app.servermonitor', {
                         url: '/servermonitor',
                         templateUrl: 'tpl/app_servermonitor.html',
@@ -384,7 +488,6 @@ angular.module('app')
                         authGroup: ["zabbixserver", "server", "servergroup"]
                     })
 
-
                     .state('app.servertask', {
                         url: '/servertask',
                         templateUrl: 'tpl/app_servertask.html',
@@ -407,6 +510,28 @@ angular.module('app')
                         }
                     })
 
+                    .state('app.serverplaybook', {
+                        url: '/serverplaybook',
+                        templateUrl: 'tpl/app_serverplaybook.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster', 'angularBootstrapNavTree']).then(
+                                        function () {
+                                            return $ocLazyLoad.load([
+                                                'js/controllers/serverplaybook.js'
+                                            ]);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["task"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
 
                     .state('app.taskScript', {
                         url: '/taskScript',
@@ -418,11 +543,10 @@ angular.module('app')
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
                                             return $ocLazyLoad.load([
-                                                'js/controllers/tasksScript.js',
-                                                'vendor/libs/codemirror/codemirror.js'
+                                                'js/controllers/tasksScript.js'
                                             ]);
                                         }
-                                    );
+                                    )
                                 }]
                         },
                         authGroup: ["task"],
@@ -619,21 +743,21 @@ angular.module('app')
                         }
                     })
 
-                    .state('app.getwayConfigFile', {
-                        url: '/getwayConfigFile',
-                        templateUrl: 'tpl/app_getway_config_file.html',
+                    .state('app.gatewayadmin', {
+                        url: '/gatewayadmin',
+                        templateUrl: 'tpl/app_gatewayadmin.html',
                         permission: true,
                         resolve: {
                             deps: ['$ocLazyLoad',
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-                                            return $ocLazyLoad.load(['js/controllers/getwayConfigFile.js']);
+                                            return $ocLazyLoad.load(['js/controllers/gatewayadmin.js']);
                                         }
                                     );
                                 }]
                         },
-                        authGroup: ["configFile"],
+                        authGroup: ["gatewayadmin"],
                         data: {
                             authPoint: {}
                         }
@@ -1077,12 +1201,56 @@ angular.module('app')
                                 function ($ocLazyLoad) {
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
-                                            return $ocLazyLoad.load(['js/controllers/workflow.js']);
+                                            return $ocLazyLoad.load(['js/controllers/workflow.js',
+                                                'vendor/libs/highchart/highcharts.js']);
                                         }
-                                    );
+                                    )
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/highcharts-more.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/exporting.js'
+                                            ]);
+                                        })
+                                        ;
                                 }]
                         },
                         authGroup: ["workflow"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
+
+                    .state('app.nginxTcp', {
+                        url: '/nginxTcp',
+                        templateUrl: 'tpl/app_nginx_tcp.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/nginxTcp.js',
+                                                'vendor/libs/highchart/highcharts.js']);
+                                        }
+                                    )
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/highcharts-more.js'
+                                            ]);
+                                        })
+                                        .then(function () {
+                                            return $ocLazyLoad.load([
+                                                'vendor/libs/highchart/modules/exporting.js'
+                                            ]);
+                                        })
+                                        ;
+                                }]
+                        },
+                        authGroup: ["nginxTcp"],
                         data: {
                             authPoint: {}
                         }
@@ -1171,6 +1339,21 @@ angular.module('app')
                                 }]
                         }
                     })
+                    .state('app.jumpserver', {
+                        url: '/jumpserver',
+                        templateUrl: 'tpl/app_jumpserver.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load(['js/controllers/jumpserver.js']);
+                                        }
+                                    );
+                                }]
+                        }
+                    })
                     .state('app.keybox', {
                         url: '/keybox',
                         templateUrl: 'tpl/app_keybox.html',
@@ -1181,6 +1364,25 @@ angular.module('app')
                                     return $ocLazyLoad.load(['ui.select', 'toaster']).then(
                                         function () {
                                             return $ocLazyLoad.load(['js/controllers/keybox.js']);
+                                        }
+                                    );
+                                }]
+                        }
+                    })
+
+                    .state('app.jms', {
+                        url: '/jms',
+                        templateUrl: 'tpl/app_jms.html',
+                        permission: true,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load([
+                                                'js/controllers/jms.js',
+                                                'vendor/libs/marked/marked.js'
+                                            ]);
                                         }
                                     );
                                 }]
@@ -1227,6 +1429,32 @@ angular.module('app')
                         }
                     })
 
+
+
+                    /**
+                     * Android持续集成制品下载页面
+                     */
+                    .state('access.androidArtifact', {
+                        url: '/androidArtifact',
+                        templateUrl: 'tpl/page_android_artifact.html',
+                        permission: false,
+                        resolve: {
+                            deps: ['$ocLazyLoad',
+                                function ($ocLazyLoad) {
+                                    return $ocLazyLoad.load(['ui.select', 'toaster']).then(
+                                        function () {
+                                            return $ocLazyLoad.load([
+                                                'js/controllers/accessAndroidArtifact.js'
+                                            ]);
+                                        }
+                                    );
+                                }]
+                        },
+                        authGroup: ["readmeMD"],
+                        data: {
+                            authPoint: {}
+                        }
+                    })
 
                     .state('access.artifacts', {
                         url: '/artifacts',

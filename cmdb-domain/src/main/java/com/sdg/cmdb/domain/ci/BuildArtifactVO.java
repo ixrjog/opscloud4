@@ -6,10 +6,12 @@ import lombok.EqualsAndHashCode;
 import java.io.Serializable;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class BuildArtifactVO extends BuildArtifactDO implements Serializable {
 
     private static final long serialVersionUID = 7294772174686082059L;
+    private String badge;
     private String size;
+    private String pkgUrl;
 
 }

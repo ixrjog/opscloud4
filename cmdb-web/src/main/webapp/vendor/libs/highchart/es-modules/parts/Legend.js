@@ -1,7 +1,79 @@
 /**
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
+ */
+
+/**
+ * Gets fired when the legend item belonging to a point is clicked. The default
+ * action is to toggle the visibility of the point. This can be prevented by
+ * returning `false` or calling `event.preventDefault()`.
+ *
+ * @callback Highcharts.PointLegendItemClickCallbackFunction
+ *
+ * @param {Highcharts.Point} this
+ *        The point on which the event occured.
+ *
+ * @param {Highcharts.PointLegendItemClickEventObject} event
+ *        The event that occured.
+ */
+
+/**
+ * Information about the legend click event.
+ *
+ * @interface Highcharts.PointLegendItemClickEventObject
+ *//**
+ * Related browser event.
+ * @name Highcharts.PointLegendItemClickEventObject#browserEvent
+ * @type {Highcharts.PointerEvent}
+ *//**
+ * Prevent the default action of toggle the visibility of the point.
+ * @name Highcharts.PointLegendItemClickEventObject#preventDefault
+ * @type {Function}
+ *//**
+ * Related point.
+ * @name Highcharts.PointLegendItemClickEventObject#target
+ * @type {Highcharts.Point}
+ *//**
+ * Event type.
+ * @name Highcharts.PointLegendItemClickEventObject#type
+ * @type {"legendItemClick"}
+ */
+
+/**
+ * Gets fired when the legend item belonging to a series is clicked. The default
+ * action is to toggle the visibility of the series. This can be prevented by
+ * returning `false` or calling `event.preventDefault()`.
+ *
+ * @callback Highcharts.SeriesLegendItemClickCallbackFunction
+ *
+ * @param {Highcharts.Series} this
+ *        The series where the event occured.
+ *
+ * @param {Highcharts.SeriesLegendItemClickEventObject} event
+ *        The event that occured.
+ */
+
+/**
+ * Information about the legend click event.
+ *
+ * @interface Highcharts.SeriesLegendItemClickEventObject
+ *//**
+ * Related browser event.
+ * @name Highcharts.SeriesLegendItemClickEventObject#browserEvent
+ * @type {Highcharts.PointerEvent}
+ *//**
+ * Prevent the default action of toggle the visibility of the series.
+ * @name Highcharts.SeriesLegendItemClickEventObject#preventDefault
+ * @type {Function}
+ *//**
+ * Related series.
+ * @name Highcharts.SeriesLegendItemClickEventObject#target
+ * @type {Highcharts.Series}
+ *//**
+ * Event type.
+ * @name Highcharts.SeriesLegendItemClickEventObject#type
+ * @type {"legendItemClick"}
  */
 
 'use strict';
@@ -395,16 +467,16 @@ Highcharts.Legend.prototype = {
                  * @type {Highcharts.SVGElement}
                  */
                 this.title = this.chart.renderer.label(
-                        titleOptions.text,
-                        padding - 3,
-                        padding - 4,
-                        null,
-                        null,
-                        null,
-                        options.useHTML,
-                        null,
-                        'legend-title'
-                    )
+                    titleOptions.text,
+                    padding - 3,
+                    padding - 4,
+                    null,
+                    null,
+                    null,
+                    options.useHTML,
+                    null,
+                    'legend-title'
+                )
                     .attr({ zIndex: 1 });
 
                 if (!this.chart.styledMode) {
@@ -413,6 +485,14 @@ Highcharts.Legend.prototype = {
 
                 this.title.add(this.group);
             }
+
+            // Set the max title width (#7253)
+            if (!titleOptions.width) {
+                this.title.css({
+                    width: this.maxLegendWidth + 'px'
+                });
+            }
+
             bBox = this.title.getBBox();
             titleHeight = bBox.height;
             this.offsetWidth = bBox.width; // #1717
@@ -431,6 +511,7 @@ Highcharts.Legend.prototype = {
      */
     setText: function (item) {
         var options = this.options;
+
         item.legendItem.attr({
             text: options.labelFormat ?
                 H.format(options.labelFormat, item, this.chart.time) :
@@ -492,11 +573,11 @@ Highcharts.Legend.prototype = {
 
             // Generate the list item text and add it to the group
             item.legendItem = li = renderer.text(
-                    '',
-                    ltr ? symbolWidth + symbolPadding : -symbolPadding,
-                    legend.baseline || 0,
-                    useHTML
-                );
+                '',
+                ltr ? symbolWidth + symbolPadding : -symbolPadding,
+                legend.baseline || 0,
+                useHTML
+            );
 
             if (!chart.styledMode) {
                 // merge to prevent modifying original (#1021)
@@ -507,7 +588,7 @@ Highcharts.Legend.prototype = {
                 align: ltr ? 'left' : 'right',
                 zIndex: 2
             })
-            .add(item.legendGroup);
+                .add(item.legendGroup);
 
             // Get the baseline for the first item - the font size is equal for
             // all
@@ -529,10 +610,11 @@ Highcharts.Legend.prototype = {
                 legend.setItemEvents(item, li, useHTML);
             }
 
-            // add the HTML checkbox on top
-            if (showCheckbox) {
-                legend.createCheckboxForItem(item);
-            }
+        }
+
+        // Add the HTML checkbox on top
+        if (showCheckbox && !item.checkbox) {
+            legend.createCheckboxForItem(item);
         }
 
         // Colorize the items
@@ -543,7 +625,7 @@ Highcharts.Legend.prototype = {
             li.css({
                 width: (
                     options.itemWidth ||
-                    options.width ||
+                    legend.widthOption ||
                     chart.spacingBox.width
                 ) - itemExtraWidth
             });
@@ -584,14 +666,11 @@ Highcharts.Legend.prototype = {
             itemMarginBottom = options.itemMarginBottom || 0,
             itemMarginTop = this.itemMarginTop,
             itemDistance = horizontal ? pick(options.itemDistance, 20) : 0,
-            widthOption = options.width,
-            maxLegendWidth = widthOption || (
-                this.chart.spacingBox.width - 2 * padding - options.x
-            ),
+            maxLegendWidth = this.maxLegendWidth,
             itemWidth = (
-                    options.alignColumns &&
+                options.alignColumns &&
                     this.totalItemWidth > maxLegendWidth
-                ) ?
+            ) ?
                 this.maxItemWidth :
                 item.itemWidth;
 
@@ -601,8 +680,13 @@ Highcharts.Legend.prototype = {
             this.itemX - padding + itemWidth > maxLegendWidth
         ) {
             this.itemX = padding;
-            this.itemY += itemMarginTop + this.lastLineHeight +
-                itemMarginBottom;
+            if (this.lastLineHeight) { // Not for the first line (#10167)
+                this.itemY += (
+                    itemMarginTop +
+                    this.lastLineHeight +
+                    itemMarginBottom
+                );
+            }
             this.lastLineHeight = 0; // reset for next line (#915, #3976)
         }
 
@@ -626,7 +710,7 @@ Highcharts.Legend.prototype = {
         }
 
         // the width of the widest item
-        this.offsetWidth = widthOption || Math.max(
+        this.offsetWidth = this.widthOption || Math.max(
             (
                 horizontal ? this.itemX - padding - (item.checkbox ?
                     // decrease by itemDistance only when no checkbox #4853
@@ -655,6 +739,7 @@ Highcharts.Legend.prototype = {
      */
     getAllItems: function () {
         var allItems = [];
+
         this.chart.series.forEach(function (series) {
             var seriesOptions = series && series.options;
 
@@ -722,7 +807,11 @@ Highcharts.Legend.prototype = {
     adjustMargins: function (margin, spacing) {
         var chart = this.chart,
             options = this.options,
-            alignment = this.getAlignment();
+            alignment = this.getAlignment(),
+            titleMargin = chart.options.title.margin !== undefined ?
+                chart.titleOffset +
+                    chart.options.title.margin :
+                0;
 
         if (alignment) {
 
@@ -749,10 +838,7 @@ Highcharts.Legend.prototype = {
                             spacing[side] +
                             (
                                 side === 0 &&
-                                chart.options.title.margin !== undefined ?
-                                    chart.titleOffset +
-                                        chart.options.title.margin :
-                                    0
+                                (chart.titleOffset === 0 ? 0 : titleMargin)
                             ) // #7428, #7894
                         )
                     );
@@ -773,9 +859,11 @@ Highcharts.Legend.prototype = {
         this.allItems.forEach(function (item) {
             var lastPoint,
                 height,
-                useFirstPoint = alignLeft;
+                useFirstPoint = alignLeft,
+                target,
+                top;
 
-            if (item.xAxis && item.points) {
+            if (item.yAxis && item.points) {
 
                 if (item.xAxis.options.reversed) {
                     useFirstPoint = !useFirstPoint;
@@ -789,11 +877,17 @@ Highcharts.Legend.prototype = {
                     }
                 );
                 height = item.legendGroup.getBBox().height;
+
+                top = item.yAxis.top - chart.plotTop;
+                if (item.visible) {
+                    target = lastPoint ? lastPoint.plotY : item.yAxis.height;
+                    target += top - 0.3 * height;
+                } else {
+                    target = top + item.yAxis.height;
+                }
+
                 boxes.push({
-                    target: item.visible ?
-                        (lastPoint ? lastPoint.plotY : item.xAxis.height) -
-                            0.3 * height :
-                        chart.plotHeight,
+                    target: target,
                     size: height,
                     item: item
                 });
@@ -828,12 +922,25 @@ Highcharts.Legend.prototype = {
             box = legend.box,
             options = legend.options,
             padding = legend.padding,
-            alignTo;
+            alignTo,
+            allowedWidth,
+            y;
 
         legend.itemX = padding;
         legend.itemY = legend.initialItemY;
         legend.offsetWidth = 0;
         legend.lastItemY = 0;
+        legend.widthOption = H.relativeLength(
+            options.width,
+            chart.spacingBox.width - padding
+        );
+
+        // Compute how wide the legend is allowed to be
+        allowedWidth = chart.spacingBox.width - 2 * padding - options.x;
+        if (['rm', 'lm'].indexOf(legend.getAlignment().substring(0, 2)) > -1) {
+            allowedWidth /= 2;
+        }
+        legend.maxLegendWidth = legend.widthOption || allowedWidth;
 
         if (!legendGroup) {
             /**
@@ -891,7 +998,7 @@ Highcharts.Legend.prototype = {
         allItems.forEach(legend.layoutItem, legend);
 
         // Get the box
-        legendWidth = (options.width || legend.offsetWidth) + padding;
+        legendWidth = (legend.widthOption || legend.offsetWidth) + padding;
         legendHeight = legend.lastItemY + legend.lastLineHeight +
             legend.titleHeight;
         legendHeight = legend.handleOverflow(legendHeight);
@@ -954,9 +1061,12 @@ Highcharts.Legend.prototype = {
             // the title (#7428)
             alignTo = chart.spacingBox;
             if (/(lth|ct|rth)/.test(legend.getAlignment())) {
+
+                y = alignTo.y + chart.titleOffset;
+
                 alignTo = merge(alignTo, {
-                    y: alignTo.y + chart.titleOffset +
-                        chart.options.title.margin
+                    y: chart.titleOffset > 0 ?
+                        y += chart.options.title.margin : y
                 });
             }
 
@@ -970,6 +1080,8 @@ Highcharts.Legend.prototype = {
         if (!this.proximate) {
             this.positionItems();
         }
+
+        fireEvent(this, 'afterRender');
     },
 
     /**
@@ -1020,6 +1132,16 @@ Highcharts.Legend.prototype = {
                             (padding + height) + 'px,0)' :
                         'auto';
                 }
+            },
+            addTracker = function (key) {
+                legend[key] = renderer
+                    .circle(0, 0, arrowSize * 1.3)
+                    .translate(arrowSize / 2, arrowSize / 2)
+                    .add(nav);
+                if (!chart.styledMode) {
+                    legend[key].attr('fill', 'rgba(0,0,0,0.0001)');
+                }
+                return legend[key];
             };
 
 
@@ -1101,10 +1223,11 @@ Highcharts.Legend.prototype = {
                         arrowSize,
                         arrowSize
                     )
+                    .add(nav);
+                addTracker('upTracker')
                     .on('click', function () {
                         legend.scroll(-1, animation);
-                    })
-                    .add(nav);
+                    });
 
                 this.pager = renderer.text('', 15, 10)
                     .addClass('highcharts-legend-navigation');
@@ -1122,10 +1245,12 @@ Highcharts.Legend.prototype = {
                         arrowSize,
                         arrowSize
                     )
+                    .add(nav);
+                addTracker('downTracker')
                     .on('click', function () {
                         legend.scroll(1, animation);
-                    })
-                    .add(nav);
+                    });
+
             }
 
             // Set initial position
@@ -1183,20 +1308,25 @@ Highcharts.Legend.prototype = {
                 translateY: clipHeight + this.padding + 7 + this.titleHeight,
                 visibility: 'visible'
             });
-            this.up.attr({
-                'class': currentPage === 1 ?
-                    'highcharts-legend-nav-inactive' :
-                    'highcharts-legend-nav-active'
+            [this.up, this.upTracker].forEach(function (elem) {
+                elem.attr({
+                    'class': currentPage === 1 ?
+                        'highcharts-legend-nav-inactive' :
+                        'highcharts-legend-nav-active'
+                });
             });
             pager.attr({
                 text: currentPage + '/' + pageCount
             });
-            this.down.attr({
-                'x': 18 + this.pager.getBBox().width, // adjust to text width
-                'class': currentPage === pageCount ?
-                    'highcharts-legend-nav-inactive' :
-                    'highcharts-legend-nav-active'
-            });
+            [this.down, this.downTracker].forEach(function (elem) {
+                elem.attr({
+                    // adjust to text width
+                    'x': 18 + this.pager.getBBox().width,
+                    'class': currentPage === pageCount ?
+                        'highcharts-legend-nav-inactive' :
+                        'highcharts-legend-nav-active'
+                });
+            }, this);
 
             if (!this.chart.styledMode) {
                 this.up
@@ -1204,7 +1334,8 @@ Highcharts.Legend.prototype = {
                         fill: currentPage === 1 ?
                             navOptions.inactiveColor :
                             navOptions.activeColor
-                    })
+                    });
+                this.upTracker
                     .css({
                         cursor: currentPage === 1 ? 'default' : 'pointer'
                     });
@@ -1213,7 +1344,8 @@ Highcharts.Legend.prototype = {
                         fill: currentPage === pageCount ?
                             navOptions.inactiveColor :
                             navOptions.activeColor
-                    })
+                    });
+                this.downTracker
                     .css({
                         cursor: currentPage === pageCount ?
                             'default' :
@@ -1268,10 +1400,10 @@ H.LegendSymbolMixin = {
             symbolHeight,
             pick(legend.options.symbolRadius, symbolHeight / 2)
         )
-        .addClass('highcharts-point')
-        .attr({
-            zIndex: 3
-        }).add(item.legendGroup);
+            .addClass('highcharts-point')
+            .attr({
+                zIndex: 3
+            }).add(item.legendGroup);
 
     },
 
@@ -1319,9 +1451,9 @@ H.LegendSymbolMixin = {
             symbolWidth,
             verticalCenter
         ])
-        .addClass('highcharts-graph')
-        .attr(attr)
-        .add(legendItemGroup);
+            .addClass('highcharts-graph')
+            .attr(attr)
+            .add(legendItemGroup);
 
         // Draw the marker
         if (markerOptions && markerOptions.enabled !== false && symbolWidth) {
@@ -1349,8 +1481,8 @@ H.LegendSymbolMixin = {
                 2 * radius,
                 markerOptions
             )
-            .addClass('highcharts-point')
-            .add(legendItemGroup);
+                .addClass('highcharts-point')
+                .add(legendItemGroup);
             legendSymbol.isMarker = true;
         }
     }
@@ -1361,7 +1493,10 @@ H.LegendSymbolMixin = {
 // Explore if there's a general cause for this. The problem may be related
 // to nested group elements, as the legend item texts are within 4 group
 // elements.
-if (/Trident\/7\.0/.test(win.navigator.userAgent) || isFirefox) {
+if (
+    /Trident\/7\.0/.test(win.navigator && win.navigator.userAgent) ||
+    isFirefox
+) {
     wrap(Highcharts.Legend.prototype, 'positionItem', function (proceed, item) {
         var legend = this,
             // If chart destroyed in sync, this is undefined (#2030)

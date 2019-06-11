@@ -22,6 +22,8 @@ var Series = H.Series,
  * @mixin derivedSeriesMixin
  */
 var derivedSeriesMixin = {
+
+    hasDerivedData: true,
     /**
      * Initialise series
      *
@@ -127,9 +129,9 @@ var derivedSeriesMixin = {
         );
 
         derivedSeries.eventRemovers.push(
-        updatedDataRemover,
-        destroyRemover
-      );
+            updatedDataRemover,
+            destroyRemover
+        );
     },
 
     /**

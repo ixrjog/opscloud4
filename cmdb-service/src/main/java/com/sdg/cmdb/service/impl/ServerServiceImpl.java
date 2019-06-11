@@ -13,7 +13,6 @@ import com.sdg.cmdb.domain.server.serverStatus.ServerEnvTypeVO;
 import com.sdg.cmdb.domain.server.serverStatus.ServerStatusVO;
 import com.sdg.cmdb.domain.server.serverStatus.ServerTypeVO;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.TimeUtils;
 import org.slf4j.Logger;
@@ -28,9 +27,6 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by zxxiao on 16/9/6.
- */
 @Service
 public class ServerServiceImpl implements ServerService {
 
@@ -55,9 +51,6 @@ public class ServerServiceImpl implements ServerService {
     private ServerGroupDao serverGropuDao;
 
     @Resource
-    private VmService vmService;
-
-    @Resource
     private ConfigService configService;
 
     @Resource
@@ -73,6 +66,7 @@ public class ServerServiceImpl implements ServerService {
     private JumpserverService jumpserverService;
 
     public static final String DEFAULT_LOGIN_USER = "root";
+    public static final String LOGIN_USER_KEY = "ServerServiceImpl:LoginUser";
 
     @Override
     public TableVO<List<ServerVO>> getServerPage(long serverGroupId, String serverName, int useType, int envType, String queryIp, int page, int length) {
@@ -125,10 +119,8 @@ public class ServerServiceImpl implements ServerService {
     public BusinessWrapper<Boolean> saveServer(ServerVO serverVO) {
         try {
             ServerDO serverDO = new ServerDO(serverVO);
-
-            //服务器使用类型跟随服务器组
+            // TODO 设置服务器使用类型 useType
             serverDO.setUseType(serverVO.getServerGroupDO().getUseType());
-
             // 若序列号为空则自动增加序列号
             if (StringUtils.isEmpty(serverDO.getSerialNumber())) {
                 long cnt = serverDao.getServerSizeByServerGroupIdAndEnvType(serverDO.getServerGroupId(), serverDO.getEnvType());
@@ -137,38 +129,19 @@ public class ServerServiceImpl implements ServerService {
 
             IPDetailDO publicDO = null;
             IPDetailDO insideDO = null;
-
             //ip存在,则获取其id,不存在,则创建并建立网关关系后,获取id
             if (serverVO.getPublicIP() != null && !StringUtils.isEmpty(serverVO.getPublicIP().getIp())) {
-                publicDO = new IPDetailDO(serverVO.getPublicIP().getIpNetworkDO().getId(), serverVO.getPublicIP().getIp(), IPDetailDO.publicIP);
-                IPDetailVO publicVO = ipService.getIPDetail(publicDO);
-
-                if (publicVO != null && publicVO.getId() != 0 && publicVO.getServerId() != serverVO.getId()) {
+                publicDO = new IPDetailDO(serverVO.getId(), serverVO.getPublicIP().getIpNetworkDO().getId(), serverVO.getPublicIP().getIp(), IPDetailDO.PUBLIC_IP);
+                if (!ipService.invokeIP(publicDO))
                     return new BusinessWrapper<>(ErrorCode.ipHasUse.getCode(), "公网ip被使用!");
-                }
-
-                if (publicVO == null) {
-                    ipService.saveGroupIP(publicDO);
-                } else {
-                    publicDO.setId(publicVO.getId());
-                }
-                serverDO.setPublicIpId(publicVO == null ? publicDO.getId() : publicVO.getId());
+                serverDO.setPublicIpId(publicDO.getId());
             }
 
             if (serverVO.getInsideIP() != null) {
-                insideDO = new IPDetailDO(serverVO.getInsideIP().getIpNetworkDO().getId(), serverVO.getInsideIP().getIp(), IPDetailDO.insideIP);
-                IPDetailVO insideVO = ipService.getIPDetail(insideDO);
-
-                if (insideVO != null && insideVO.getServerId() != 0 && insideVO.getServerId() != serverVO.getId()) {
+                insideDO = new IPDetailDO(serverVO.getId(), serverVO.getInsideIP().getIpNetworkDO().getId(), serverVO.getInsideIP().getIp(), IPDetailDO.INSIDE_IP);
+                if (!ipService.invokeIP(insideDO))
                     return new BusinessWrapper<>(ErrorCode.ipHasUse.getCode(), "内网ip被使用!");
-                }
-
-                if (insideVO == null) {
-                    ipService.saveGroupIP(insideDO);
-                } else {
-                    insideDO.setId(insideVO.getId());
-                }
-                serverDO.setInsideIpId(insideVO == null ? insideDO.getId() : insideVO.getId());
+                serverDO.setInsideIpId(insideDO.getId());
             }
 
             final IPDetailDO finalPublicDO = publicDO;
@@ -181,23 +154,17 @@ public class ServerServiceImpl implements ServerService {
                     } else {
                         // 清除server占用的ip
                         ipService.clearServerIP(serverDO.getId());
-
                         serverDao.updateServerGroupServer(serverDO);
                     }
-                    // 标记server占用新的ip
+                    // 记录服务器IP
                     if (finalPublicDO != null) {
                         finalPublicDO.setServerId(serverDO.getId());
                         ipService.saveGroupIP(finalPublicDO);
                     }
-
                     if (finalInsideDO != null) {
                         finalInsideDO.setServerId(serverDO.getId());
                         ipService.saveGroupIP(finalInsideDO);
                     }
-
-                    // 服务器关联
-                    if (serverDO.getServerType() == ServerDO.ServerTypeEnum.vm.getCode())
-                        vmService.updateVmServerForServer(serverDO);
 
                     if (serverDO.getServerType() == ServerDO.ServerTypeEnum.ecs.getCode())
                         ecsService.updateEcsServerForServer(serverDO);
@@ -213,8 +180,9 @@ public class ServerServiceImpl implements ServerService {
                 }
             });
             if (result) {
-                // 变更配置文件
+                // TODO 变更配置文件
                 configService.invokeServerConfig(serverDO.getServerGroupId(), serverDO.getEnvType());
+                // TODO JMS资产同步
                 jumpserverService.addAssets(serverDO);
                 return new BusinessWrapper<>(true);
             } else {
@@ -257,13 +225,11 @@ public class ServerServiceImpl implements ServerService {
         return serverDao.getServersByGroupId(serverGroupId);
     }
 
-
     @Override
     public BusinessWrapper<Boolean> setStatus(String ip) {
         EcsServerDO ecs = serverDao.queryEcsByInsideIp(ip);
         if (ecs != null) {
             ecs.setStatus(EcsServerDO.statusDel);
-
         }
         return new BusinessWrapper<>(true);
     }
@@ -272,7 +238,6 @@ public class ServerServiceImpl implements ServerService {
     public List<ServerDO> getServersByGroupId(long groupId) {
         return serverDao.acqServersByGroupId(groupId);
     }
-
 
     /**
      * 找出envType相同的其余服务器
@@ -332,15 +297,22 @@ public class ServerServiceImpl implements ServerService {
         return statusVO;
     }
 
-
-    public static final String LOGIN_USER_KEY = "ServerServiceImpl:LoginUser";
-
     @Override
     public String getLoginUser() {
         String loginUser = cacheKeyService.getKeyByString(LOGIN_USER_KEY);
         if (StringUtils.isEmpty(loginUser))
             return DEFAULT_LOGIN_USER;
         return loginUser;
+    }
+
+    @Override
+    public List<ServerDO> getServerByGroup(ServerGroupDO serverGroupDO, int envType) {
+        return serverDao.getServersByGroupIdAndEnvType(serverGroupDO.getId(), envType);
+    }
+
+    @Override
+    public int getMyServerSize() {
+        return serverDao.getMyServerSize(SessionUtils.getUsername());
     }
 
 }

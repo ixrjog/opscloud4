@@ -6,6 +6,10 @@
  * License: www.highcharts.com/license
  */
 
+/**
+ * @typedef {"area"|"radius"} Highcharts.VariablePieSizeByValue
+ */
+
 'use strict';
 
 import H from '../parts/Globals.js';
@@ -27,7 +31,9 @@ var pick = H.pick,
  *
  * @augments Highcharts.Series
  */
-seriesType('variablepie', 'pie',
+seriesType(
+    'variablepie',
+    'pie',
     /**
      * A variable pie series is a two dimensional series type, where each point
      * renders an Y and Z value.  Each point is drawn as a pie slice where the
@@ -102,8 +108,8 @@ seriesType('variablepie', 'pie',
          * @sample {highcharts} highcharts/variable-radius-pie/sizeby/
          *         Difference between area and radius sizeBy
          *
-         * @since      6.0.0
-         * @validvalue ["area", "radius"]
+         * @type  {Highcharts.VariablePieSizeByValue}
+         * @since 6.0.0
          */
         sizeBy: 'area',
 
@@ -152,6 +158,7 @@ seriesType('variablepie', 'pie',
             ['minPointSize', 'maxPointSize'].forEach(function (prop) {
                 var length = seriesOptions[prop],
                     isPercent = /%$/.test(length);
+
                 length = parseInt(length, 10);
                 extremes[prop] = isPercent ?
                     smallestSize * length / 100 :
@@ -257,7 +264,8 @@ seriesType('variablepie', 'pie',
                 startAngleRad = Math.PI / 180 * (startAngle - 90),
                 endAngleRad = Math.PI / 180 * (pick(
                     options.endAngle,
-                    startAngle + 360) - 90),
+                    startAngle + 360
+                ) - 90),
                 circ = endAngleRad - startAngleRad, // 2 * Math.PI,
                 points = series.points,
                 // the x component of the radius vector for a given point

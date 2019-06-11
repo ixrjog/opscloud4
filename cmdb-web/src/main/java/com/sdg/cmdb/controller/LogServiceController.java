@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.logService.LogFormatDefault;
 import com.sdg.cmdb.domain.logService.LogHistogramsVO;
+import com.sdg.cmdb.domain.logService.LogServiceGroupCfgDO;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceDefaultQuery;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogserviceNginxQuery;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceServerGroupCfgVO;
@@ -62,7 +63,7 @@ public class LogServiceController {
     @ResponseBody
     public HttpResult saveServer(@RequestBody LogserviceNginxQuery logserviceNginxQuery) {
         try {
-            return new HttpResult(aliyunLogService.queryLog(logserviceNginxQuery),true);
+            return new HttpResult(aliyunLogService.queryLog(logserviceNginxQuery), true);
         } catch (Exception e) {
             return new HttpResult(null);
         }
@@ -70,6 +71,7 @@ public class LogServiceController {
 
     /**
      * 查看日志详情(重新封装同时支持 ka/www 2种类型的nginx日志)
+     *
      * @param logHistogramsVO
      * @return
      */
@@ -77,7 +79,7 @@ public class LogServiceController {
     @ResponseBody
     public HttpResult nginxViewlog(@RequestBody LogHistogramsVO logHistogramsVO) {
         try {
-            return new HttpResult(aliyunLogService.queryNginxLog(logHistogramsVO),true);
+            return new HttpResult(aliyunLogService.queryNginxLog(logHistogramsVO), true);
         } catch (Exception e) {
             return new HttpResult(null);
         }
@@ -158,6 +160,12 @@ public class LogServiceController {
         return new HttpResult(aliyunLogManageService.queryListLogStores(project));
     }
 
+    @RequestMapping(value = "/config/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getLogServiceConfig(@RequestParam String project ,@RequestParam String logstore) {
+        return new HttpResult(aliyunLogManageService.queryListConfig(project,logstore));
+    }
+
 
     @RequestMapping(value = "/machineGroup/query", method = RequestMethod.GET)
     @ResponseBody
@@ -178,6 +186,40 @@ public class LogServiceController {
         return new HttpResult(aliyunLogManageService.logServiceStatus());
     }
 
+    @RequestMapping(value = "/group/page", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryLogServiceGroupPage(@RequestParam String project, @RequestParam String logstore, @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(aliyunLogManageService.getLogServiceGroupPage(project, logstore, page, length));
+    }
 
+    @RequestMapping(value = "/group/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getLogServiceGroup(@RequestParam long id) {
+        return new HttpResult(aliyunLogManageService.getLogServiceGroup(id));
+    }
+
+    @RequestMapping(value = "/group/addMember", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult addLogServiceGroupMember(@RequestParam long groupCfgId, @RequestParam long serverGroupId) {
+        return new HttpResult(aliyunLogManageService.addMember(groupCfgId, serverGroupId));
+    }
+
+    @RequestMapping(value = "/group/delMember", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delLogServiceGroupMember(@RequestParam long id) {
+        return new HttpResult(aliyunLogManageService.delMember(id));
+    }
+
+    @RequestMapping(value = "/group/pushCfg", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult pushGroupCfg(@RequestParam long id) {
+        return new HttpResult(aliyunLogManageService.pushGroupCfg(id));
+    }
+
+    @RequestMapping(value = "/group/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult saveGroupCfg(@RequestBody LogServiceGroupCfgDO logServiceGroupCfgDO) {
+        return new HttpResult(aliyunLogManageService.saveGroupCfg(logServiceGroupCfgDO));
+    }
 
 }

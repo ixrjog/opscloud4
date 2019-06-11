@@ -23,6 +23,8 @@ app.controller('templateCtrl', function ($scope, $state, $uibModal, $parse, $sce
     $scope.rollbackType = staticModel.rollbackType;
     $scope.envType = staticModel.envType;
 
+    $scope.previewItem = {};
+
     $scope.queryName = "";
     $scope.queryAppType = -1;
     $scope.queryCiType = -1;
@@ -84,8 +86,22 @@ app.controller('templateCtrl', function ($scope, $state, $uibModal, $parse, $sce
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
-                $scope.alert.type = 'success';
-                $scope.alert.msg = "更新成功!";
+                toaster.pop('success',"更新成功!");
+                $scope.doQuery();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.scanTemplate = function () {
+        var url = "/ci/template/scan";
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                toaster.pop('success',"模版扫描成功!");
                 $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
@@ -100,14 +116,58 @@ app.controller('templateCtrl', function ($scope, $state, $uibModal, $parse, $sce
 
         httpService.doGet(url).then(function (data) {
             if (data.success) {
-                $scope.alert.type = 'success';
-                $scope.alert.msg = "更新所有成功!";
+                toaster.pop('success',"更新所有成功!");
                 $scope.doQuery();
             } else {
                 toaster.pop("warning", data.msg);
             }
         }, function (err) {
             toaster.pop("error", err);
+        });
+    }
+
+    $scope.viewTemplate = function (item) {
+        var url = "/ci/template/preview?id=" + item.id;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                $scope.previewItem = data.body;
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'previewTemplateModal',
+                    controller: 'previewInstanceCtrl',
+                    size: 'lg',
+                    resolve: {
+                        httpService: function () {
+                            return httpService;
+                        },
+                        modeType: function () {
+                            return "xml";
+                        },
+                        previewItem: function () {
+                            return $scope.previewItem;
+                        }
+                    }
+                });
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+    }
+
+    $scope.delTemplate = function (item) {
+        var url = "/ci/template/del?id=" + item.id;
+
+        httpService.doDelete(url).then(function (data) {
+            if (data.success) {
+                toaster.pop("success", "删除成功！");
+                $scope.doQuery();
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("warning", err);
         });
     }
 
@@ -276,11 +336,12 @@ app.controller('templateInfoInstanceCtrl', function ($scope, $uibModalInstance, 
             $scope.alert.msg = "应用类型未指定!";
             return;
         }
-        if ($scope.templateItem.rollbackType == -1) {
-            $scope.alert.type = 'warning';
-            $scope.alert.msg = "回滚类型未指定!";
-            return;
-        }
+
+        // if ($scope.templateItem.rollbackType == -1) {
+        //     $scope.alert.type = 'warning';
+        //     $scope.alert.msg = "回滚类型未指定!";
+        //     return;
+        // }
 
         httpService.doPostWithJSON(url, $scope.templateItem).then(function (data) {
             if (data.success) {
@@ -299,22 +360,30 @@ app.controller('templateInfoInstanceCtrl', function ($scope, $uibModalInstance, 
     }
 
 
-    $scope.delTemplate = function (id) {
-        var url = "/ci/template/del?id=" + id;
-
-        httpService.doDelete(url).then(function (data) {
-            if (data.success) {
-                toaster.pop("success", "删除成功！");
-                $scope.doQuery();
-            } else {
-                toaster.pop("warning", data.msg);
-            }
-        }, function (err) {
-            toaster.pop("warning", err);
-        });
-    }
 
 
 });
 
 
+app.controller('previewInstanceCtrl', function ($scope, $uibModalInstance, $uibModal, $sce, staticModel, toaster, httpService, modeType, previewItem) {
+
+    $scope.modeType = modeType;
+    $scope.previewItem = previewItem;
+    $scope.modes = ['sh', 'yaml', 'python', 'php', 'lua', 'scheme'];
+
+
+    var init = function () {
+        $scope.aceOption = {
+            useWrapMode: true,
+            mode: $scope.modeType
+        };
+    }
+
+    init();
+
+    $scope.closeModal = function () {
+        $uibModalInstance.dismiss('cancel');
+    }
+
+
+});

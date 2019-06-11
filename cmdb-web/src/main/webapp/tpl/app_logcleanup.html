@@ -1,3 +1,9 @@
+<style>
+    .diskType .popover {
+        max-width: 400px !important;
+    }
+</style>
+
 <div class="hbox hbox-auto-xs hbox-auto-sm" ng-init="
     app.settings.asideFolded = false;
     app.settings.asideDock = false;
@@ -64,7 +70,7 @@
                                             class="glyphicon glyphicon-repeat"></span>重置
                                     </button>
                                     <button type="button" class="btn btn-success" ng-click="sync()"><span
-                                            class="glyphicon glyphicon-refresh"></span>Sync
+                                            class="glyphicon glyphicon-refresh"></span>更新数据
                                     </button>
                                 </div>
                             </form>
@@ -76,8 +82,10 @@
                                             <thead>
                                             <tr>
                                                 <td class="col-md-2">服务器</td>
-                                                <td>IP</td>
+                                                <td class="col-md-2">IP</td>
                                                 <td class="col-md-1">环境</td>
+                                                <td>启用</td>
+                                                <td>归档(天)</td>
                                                 <td class="col-md-2">磁盘使用率</td>
                                                 <td>详情</td>
                                                 <td>操作</td>
@@ -86,39 +94,14 @@
                                             <tbody>
                                             <tr ng-repeat="item in pageData">
                                                 <td>
-                                                    <b>{{item.groupName}}</b>
-                                                    </br>
                                                     <b style="color: #286090">{{item.serverName}}-{{item.serialNumber}}</b>
                                                 </td>
                                                 <td>
-                                                    <span ng-show="item.publicIp != null && item.publicIp != ''">
-                                                      <span>{{item.publicIp}}</span>
-                                                           <b class="pull-right">公</b>
-                                                         </br>
-                                                    </span>
-                                                    </span>{{item.insideIp}}</span>
-                                                    <b class="pull-right">内</b>
+                                                    </span>{{item.serverDO.insideIp}}</span>
                                                 </td>
                                                 <td>
-                                                    <b style="color: #777" ng-if="item.envType == 0">保留</b>
-                                                    <b style="color: #5bc0de" ng-if="item.envType == 1">dev</b>
-                                                    <b style="color: #449d44" ng-if="item.envType == 2">daily</b>
-                                                    <b style="color: #ec971f" ng-if="item.envType == 3">gray</b>
-                                                    <b style="color: #d9534f" ng-if="item.envType == 4">prod</b>
-                                                    <b style="color: #5e5e5e" ng-if="item.envType == 5">test</b>
-                                                    <b style="color: #286090" ng-if="item.envType == 6">back</b>
+                                                    <b style="color: {{item.env.color}}">{{item.env.name}}</b>
                                                 </td>
-                                                <td>
-                                                    <div class="progress" ng-show="item.diskRate != -1">
-                                                        <span class="progress-bar" role="progressbar"
-                                                             aria-valuenow="item.diskRate" aria-valuemin="0"
-                                                             aria-valuemax="100"
-                                                             style="min-width: 2em; width: {{item.diskRate}}%;">
-                                                            {{item.diskRate}}%
-                                                        </span>
-                                                    </div>
-                                                </td>
-
                                                 <td>
                                                     <b class="fa fa-circle-o"
                                                        uib-popover-html="'禁用'" popover-trigger="'mouseenter'"
@@ -126,63 +109,72 @@
                                                     <b class="fa fa-circle"
                                                        uib-popover-html="'启用'" popover-trigger="'mouseenter'"
                                                        style="color: #449d44" ng-if="item.enabled == 1"></b>
-                                                    <b class="pull-right">启用</b>
-
-                                                    <div ng-show="item.enabled == 1">
-                                                          <span class="glyphicon glyphicon-minus pull-left"
-                                                                ng-click="subtractHistory(item)"></span>
-                                                        <span style="margin-left: 20px;">{{item.viewHistory}}</span>
-                                                        <span class="glyphicon glyphicon-plus" style="margin-left: 20px;"
-                                                              ng-click="addHistory(item)"></span>
-                                                        <b class="pull-right">保留</b>
+                                                </td>
+                                                <td>{{item.history}}</td>
+                                                <td>
+                                                    <div class="col-md-2">
+                                                        <span class="label" ng-show="item.diskType == 'SYS'"
+                                                              uib-popover-html="'SYSDISK'" popover-trigger="'mouseenter'"
+                                                              style="background-color: #777; color: white;">
+                                                            <i class="glyphicon glyphicon-hdd"></i>S</span>
+                                                        <span class="label" ng-show="item.diskType == 'DATA'"
+                                                              uib-popover-html="'DATADISK'" popover-trigger="'mouseenter'"
+                                                              style="background-color: #777; color: white;">
+                                                            <i class="glyphicon glyphicon-hdd"></i>D</span>
                                                     </div>
-
-                                                    <div ng-show="item.enabled == 1 && item.cleanupTime != ''">
-                                                        {{item.cleanupTime}}
-                                                        <b class="pull-right">时间</b>
+                                                    <div class="col-md-9" style=" margin-left:3px; margin-top:1px;">
+                                                        <div class="progress" ng-show="item.freeDiskSpace != -1">
+                                                        <span class="progress-bar" role="progressbar"
+                                                              uib-popover-html="item.sizeView" popover-trigger="'mouseenter'"
+                                                              ng-show="item.freeDiskSpace < 15"
+                                                              aria-valuenow="item.diskRate" aria-valuemin="0"
+                                                              aria-valuemax="100"
+                                                              style="min-width: 2em; background-color: #c9302c; width: {{100 - item.freeDiskSpace}}%;">
+                                                            <b>{{100 - item.freeDiskSpace}}%</b>
+                                                        </span>
+                                                            <span class="progress-bar" role="progressbar"
+                                                                  uib-popover-html="item.sizeView" popover-trigger="'mouseenter'"
+                                                                  ng-show="item.freeDiskSpace >= 15"
+                                                                  aria-valuenow="item.diskRate" aria-valuemin="0"
+                                                                  aria-valuemax="100"
+                                                                  style="min-width: 2em; background-color: #20a03f; width: {{100 - item.freeDiskSpace}}%;">
+                                                            <b>{{100 - item.freeDiskSpace}}%</b>
+                                                        </span>
+                                                        </div>
                                                     </div>
-                                                    <div ng-show="item.enabled == 1 && item.cleanupTime != ''">
-                                                        {{item.cleanupResult}}
-                                                        <b class="pull-right">结果</b>
+                                                </td>
+                                                <td>
+                                                    <span class="label" uib-popover-html="item.updateTime"
+                                                           popover-trigger="'mouseenter'"
+                                                           style="background-color: #ff8700; color: white;">采样:{{item.updateTimeView}}</span>
+                                                    <div ng-show="item.enabled">
+                                                        <span class="label" uib-popover-html="item.cleanupTime" ng-show="item.cleanupTime != ''"
+                                                              popover-trigger="'mouseenter'"
+                                                              style="background-color: #ff5f87; color: white;">清理:{{item.cleanupTimeView}}</span>
                                                     </div>
                                                 </td>
                                                 <td>
                                                     <button ng-click="edit(item)"
                                                             class="btn btn-xs"
                                                             style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                        <span class="glyphicon glyphicon-edit"></span>编辑</button>
+                                                        <span class="glyphicon glyphicon-edit"></span>编辑
+                                                    </button>
 
-                                                    <button ng-click="refreshDiskRate(item)"
+                                                    <button  ng-click="update(item)"
                                                             class="btn btn-xs"
-                                                            uib-popover-html="'刷新磁盘空间使用率'" popover-trigger="'mouseenter'"
+                                                            uib-popover-html="'查询最新磁盘信息'"
+                                                            popover-trigger="'mouseenter'"
                                                             style="margin-left: 5px; background-color: limegreen; color: white;">
-                                                        <span class="glyphicon glyphicon-repeat"></span>刷新</button>
+                                                        <span class="glyphicon glyphicon-repeat"></span>查询
+                                                    </button>
 
-                                                    <!--<span class="glyphicon glyphicon-repeat pull-right"-->
-                                                          <!--uib-popover-html="'刷新'" popover-trigger="'mouseenter'"-->
-                                                          <!--ng-click="refreshDiskRate(item)"></span>-->
-
-                                                    <button ng-click="setEnabled(item)"
-                                                            class="btn btn-xs"
-                                                            uib-popover-html="'切换启用/禁用'" popover-trigger="'mouseenter'"
-                                                            style="margin-left: 5px; background-color: #2e6da4; color: white;">
-                                                        <span class="glyphicon glyphicon-refresh"></span>切换</button>
-
-                                                    <!--<span class="glyphicon glyphicon-refresh pull-right"-->
-                                                          <!--uib-popover-html="'切换'" popover-trigger="'mouseenter'"-->
-                                                          <!--ng-click="setEnabled(item)"></span>-->
-
-                                                    <button ng-click="cleanup(item)"
+                                                    <button ng-click="task(item)"
                                                             ng-show="item.enabled == true"
                                                             class="btn btn-xs pull-right"
-                                                            uib-popover-html="'执行清理日志任务'" popover-trigger="'mouseenter'"
-                                                            style="margin-left: 5px; background-color: red; color: white;">
-                                                        <span class="glyphicon glyphicon-grain"></span>清理</button>
-
-                                                    <!--<span ng-show="item.enabled == true" style="color: #449d44"-->
-                                                          <!--uib-popover-html="'执行清理日志任务'" popover-trigger="'mouseenter'"-->
-                                                          <!--class="glyphicon glyphicon-grain pull-right"-->
-                                                          <!--ng-click="cleanup(item)"></span>-->
+                                                            uib-popover-html="'任务详情'" popover-trigger="'mouseenter'"
+                                                            style="margin-left: 5px; background-color: limegreen; color: white;">
+                                                        <span class="icon icon-list"></span>任务
+                                                    </button>
                                                 </td>
                                             </tr>
                                             </tbody>
@@ -210,6 +202,10 @@
     <!-- / main -->
 </div>
 
+<script type="text/ng-template" id="logcleanupTask">
+    <div ng-include="'tpl/modal/logcleanup/logcleanup_task_modal.html'"></div>
+</script>
+
 <script type="text/ng-template" id="logcleanupInfo">
-    <div ng-include="'tpl/modal/logcleanup_info_modal.html'"></div>
+    <div ng-include="'tpl/modal/logcleanup/logcleanup_info_modal.html'"></div>
 </script>

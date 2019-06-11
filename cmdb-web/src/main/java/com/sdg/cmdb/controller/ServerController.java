@@ -4,6 +4,7 @@ import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
+import com.sdg.cmdb.domain.aliyun.AliyunPrepaidInstance;
 import com.sdg.cmdb.domain.aliyun.AliyunRenewInstances;
 import com.sdg.cmdb.domain.esxi.HostDatastoreInfoVO;
 import com.sdg.cmdb.domain.server.*;
@@ -120,15 +121,18 @@ public class ServerController {
      *
      * @param groupId
      * @param serverId
+     * @param queryIp
      * @param page
      * @param length
      * @return
      */
     @RequestMapping(value = "/propertygroup/query", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getPropertyGroup(@RequestParam long groupId, @RequestParam long serverId,
+    public HttpResult getPropertyGroup(@RequestParam long groupId,
+                                       @RequestParam long serverId,
+                                       @RequestParam String queryIp,
                                        @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(configService.getGroupPropertyPageByServerId(groupId, serverId, page, length));
+        return new HttpResult(configService.getGroupPropertyPageByServer(groupId, serverId, queryIp, page, length));
     }
 
     /**
@@ -167,15 +171,16 @@ public class ServerController {
      *
      * @param serverName
      * @param status
+     * @param chargeType
      * @param page
      * @param length
      * @return
      */
     @RequestMapping(value = "/ecsPage", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult queryEcsServerPage(@RequestParam String serverName, @RequestParam String queryIp, @RequestParam int status,
+    public HttpResult queryEcsServerPage(@RequestParam String serverName, @RequestParam String queryIp, @RequestParam int status, @RequestParam String chargeType,
                                          @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(ecsService.getEcsServerPage(serverName, queryIp, status, page, length));
+        return new HttpResult(ecsService.getEcsServerPage(serverName, queryIp, status, chargeType, page, length));
     }
 
     /**
@@ -199,6 +204,18 @@ public class ServerController {
     @ResponseBody
     public HttpResult ecsRenew(@RequestBody AliyunRenewInstances aliyunRenewInstances) {
         BusinessWrapper<Boolean> wrapper = ecsService.renewInstances(aliyunRenewInstances);
+        if (wrapper.isSuccess()) {
+            return new HttpResult(wrapper.getBody());
+        } else {
+            return new HttpResult(wrapper.getCode(), wrapper.getMsg());
+        }
+    }
+
+
+    @RequestMapping(value = "/ecsPreepaid", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult ecsPrepaid(@RequestBody AliyunPrepaidInstance aliyunPrepaidInstance) {
+        BusinessWrapper<Boolean> wrapper = ecsService.prepaidInstance(aliyunPrepaidInstance);
         if (wrapper.isSuccess()) {
             return new HttpResult(wrapper.getBody());
         } else {

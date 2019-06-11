@@ -13,7 +13,7 @@ import javax.annotation.Resource;
 @RequestMapping("/gitlab")
 public class GitlabController {
 
-    static public final String HOOK_V1 = "v1";
+    static public final String HOOK_V1 = "v1.0.0";
 
 
     @Resource
@@ -31,11 +31,34 @@ public class GitlabController {
         return new HttpResult(gitlabService.getProjectPage(name, username, page, length));
     }
 
+    @RequestMapping(value = "/webHooks/page", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryWebHooksPage(@RequestParam String projectName,
+                                        @RequestParam String ref,
+                                        @RequestParam int triggerBuild,
+                                        @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(gitlabService.getWebHooksPage(projectName, ref, triggerBuild, page, length));
+    }
+
+
     @RequestMapping(value = "/project/update", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult updateProjects() {
         return new HttpResult(gitlabService.updateProjcets());
     }
+
+    @RequestMapping(value = "/group/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryGroup(@RequestParam String groupName) {
+        return new HttpResult(gitlabService.queryGroup(groupName));
+    }
+
+    @RequestMapping(value = "/project/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryProjectPage(@RequestParam String projectName) {
+        return new HttpResult(gitlabService.queryProject(projectName));
+    }
+
 
     /**
      * http://oc.ops.yangege.cn/gitlab/v1/webHooks
@@ -53,6 +76,6 @@ public class GitlabController {
      */
     @RequestMapping(value = "/" + HOOK_V1 + "/systemHooks", method = RequestMethod.POST)
     public HttpResult forSystemHooksTriger(@RequestBody GitlabWebHooks webhooks) {
-        return new HttpResult(gitlabService.webHooksV1(webhooks));
+        return new HttpResult(gitlabService.systemHooksV1(webhooks));
     }
 }

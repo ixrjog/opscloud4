@@ -24,11 +24,13 @@
         imageId,
         imageDesc,
         imageType,
+        size,
         version
         ) VALUES (
         #{imageId},
         #{imageDesc},
         #{imageType},
+        #{size},
         #{version}
         );
     </insert>
@@ -348,6 +350,12 @@
             <if test="userTag != null and userTag != ''">
                 AND userTag LIKE "%" #{userTag} "%"
             </if>
+            <if test="accessKeys == 0">
+                AND accessKeys = 0
+            </if>
+            <if test="accessKeys == 1">
+                AND accessKeys != 0
+            </if>
         </where>
     </select>
 
@@ -359,6 +367,12 @@
             </if>
             <if test="userTag != null and userTag != ''">
                 AND userTag LIKE "%" #{userTag} "%"
+            </if>
+            <if test="accessKeys == 0">
+                AND accessKeys = 0
+            </if>
+            <if test="accessKeys == 1">
+                AND accessKeys != 0
             </if>
         </where>
         ORDER BY ramUserName DESC
@@ -395,6 +409,7 @@
         SET userTag = #{userTag},
         userId = #{userId},
         mobilePhone = #{mobilePhone},
+        accessKeys = #{accessKeys},
         email = #{email}
         WHERE id = #{id}
     </update>

@@ -2,10 +2,10 @@ package com.sdg.cmdb.service.configurationProcessor;
 
 
 import com.sdg.cmdb.domain.config.PreviewConfig;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.CacheKeyService;
-import com.sdg.cmdb.util.TimeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -17,6 +17,10 @@ import java.util.*;
 public class AnsibleFileProcessorService extends ConfigurationProcessorAbs {
 
     public static final String CACHE_KEY = "AnsibleFileProcessorService:";
+
+    // 缓存几小时
+    public static final int CACHE_HOUR = 24;
+
 
     @Autowired
     private CacheKeyService cacheKeyService;
@@ -84,8 +88,8 @@ public class AnsibleFileProcessorService extends ConfigurationProcessorAbs {
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverGroupId);
         Map<String, List<ServerDO>> serverMap = grouping(serverGroupDO, true);
         String config = format(serverGroupDO, serverMap, getCacheKey(serverGroupDO, true));
-        if(StringUtils.isEmpty(config)) return ;
-        PreviewConfig ansibleConfig = new PreviewConfig("Ansible主机配置",config);
+        if (StringUtils.isEmpty(config)) return;
+        PreviewConfig ansibleConfig = new PreviewConfig("Ansible主机配置", config);
         configList.add(ansibleConfig);
     }
 
@@ -133,7 +137,7 @@ public class AnsibleFileProcessorService extends ConfigurationProcessorAbs {
             result += "\n";
         }
 
-        cacheKeyService.set(cacheKey, result, 10080);
+        cacheKeyService.set(cacheKey, result,  CACHE_HOUR * 60);
         return result;
     }
 
@@ -147,7 +151,7 @@ public class AnsibleFileProcessorService extends ConfigurationProcessorAbs {
         List<ServerDO> servers = serverDao.acqServersByGroupId(serverGroupDO.getId());
         Map<String, List<ServerDO>> serverMap = new HashMap<>();
         for (ServerDO serverDO : servers) {
-            String groupingName = serverGroupDO.acqShortName() + "-" + ServerDO.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
+            String groupingName = serverGroupDO.acqShortName() + "-" + EnvType.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType());
             if (serverMap.containsKey(groupingName)) {
                 serverMap.get(groupingName).add(serverDO);
             } else {

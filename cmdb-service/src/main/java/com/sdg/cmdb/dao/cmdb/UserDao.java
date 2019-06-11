@@ -4,6 +4,7 @@ import com.sdg.cmdb.domain.auth.CiUserDO;
 import com.sdg.cmdb.domain.auth.CiUserGroupDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserLeaveDO;
+import com.sdg.cmdb.domain.ci.CiAppAuthDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -106,6 +107,8 @@ public interface UserDao {
      * @return
      */
     UserDO getUserByName(@Param("username") String username);
+
+    UserDO getUser(UserDO userDO);
 
     UserDO getUserById(@Param("id") long id);
 
@@ -216,5 +219,15 @@ public interface UserDao {
     int addCiUser(CiUserDO ciUserDO);
 
     int delCiUser(@Param("id") long id);
+
+    /**
+     * 查询不在应用中的用户列表
+     * @param username
+     * @param appId
+     * @return
+     */
+    List<UserDO> queryUserExcludeApp(@Param("username") String username,@Param("appId") long  appId);
+
+    List<CiAppAuthDO>  queryCiAppAuthByAppId(@Param("appId") long  appId);
 
 }

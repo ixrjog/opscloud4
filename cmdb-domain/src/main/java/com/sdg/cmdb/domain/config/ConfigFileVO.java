@@ -1,7 +1,9 @@
 package com.sdg.cmdb.domain.config;
 
 import com.alibaba.fastjson.JSON;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
+import lombok.Data;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
@@ -12,6 +14,7 @@ import java.util.Map;
 /**
  * Created by zxxiao on 2016/12/23.
  */
+@Data
 public class ConfigFileVO implements Serializable {
     private static final long serialVersionUID = -2877859581453004815L;
 
@@ -62,6 +65,7 @@ public class ConfigFileVO implements Serializable {
      * 文件组
      */
     private ConfigFileGroupDO fileGroupDO;
+    private EnvType env;
 
     private String gmtCreate;
 

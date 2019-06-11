@@ -1,5 +1,6 @@
 package com.sdg.cmdb.service.impl;
 
+import com.google.common.base.Joiner;
 import com.sdg.cmdb.dao.cmdb.LdapDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
@@ -14,6 +15,7 @@ import com.sdg.cmdb.plugin.ldap.LDAPFactory;
 import com.sdg.cmdb.service.AuthService;
 import com.sdg.cmdb.service.LdapService;
 import com.sdg.cmdb.util.PasswdUtils;
+import com.sdg.cmdb.util.RegexUtils;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
 import org.slf4j.Logger;
@@ -41,16 +43,10 @@ public class LdapServiceImpl implements LdapService {
     private static final Logger logger = LoggerFactory.getLogger(LdapServiceImpl.class);
     private static final Logger coreLogger = LoggerFactory.getLogger("coreLogger");
 
+
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
-
-    //ldap.url=
-    //@Value("#{cmdb['ldap.url']}")
-    //private String ldapUrl;
-
-    @Value("#{cmdb['admin.passwd']}")
-    private String adminPasswd;
 
     @Value("#{cmdb['ldap.manager.dn']}")
     private String manageDn;
@@ -163,6 +159,7 @@ public class LdapServiceImpl implements LdapService {
      * @param userVO
      * @return
      */
+    @Override
     public BusinessWrapper<Boolean> updateUser(UserVO userVO) {
         if (StringUtils.isEmpty(userVO.getUsername()))
             return new BusinessWrapper<>(ErrorCode.usernameIsNull);
@@ -172,6 +169,35 @@ public class LdapServiceImpl implements LdapService {
             if (!authService.isRole(username, RoleDO.roleAdmin))
                 return new BusinessWrapper<>(false);
         }
+        // TODO 判断密码强度是否符合要求
+        if (!StringUtils.isEmpty(userVO.getUserpassword())) {
+            if (!RegexUtils.checkPassword(userVO.getUserpassword()))
+                return new BusinessWrapper<>(ErrorCode.userpasswordNonConformity);
+        }
+        return updateUserBase(userVO,false);
+    }
+
+    /**
+     *
+     * @param userVO
+     * @param safe   true：不允许修改管理员账户信息
+     * @return
+     */
+    @Override
+    public BusinessWrapper<Boolean> updateUserBase(UserVO userVO, boolean safe) {
+        // TODO 插入主键
+        if (userVO.getId() <= 0) {
+            UserDO userDO = userDao.getUserByName(userVO.getUsername());
+            if (userDO == null)
+                return new BusinessWrapper<>(ErrorCode.usernameIsNull);
+            userVO.setId(userDO.getId());
+        }
+        // TODO 判断管理员
+        if(safe){
+          if(authService.isRole(userVO.getUsername(),RoleDO.roleAdmin))
+              return new BusinessWrapper<>(ErrorCode.userpasswordNonConformity);
+        }
+
         // 判断LDAP是否存在此用户
         UserDO userDO = getUserByName(userVO.getUsername());
         if (userDO != null) {
@@ -211,6 +237,7 @@ public class LdapServiceImpl implements LdapService {
         } else {
             return new BusinessWrapper<>(false);
         }
+
     }
 
 
@@ -530,7 +557,7 @@ public class LdapServiceImpl implements LdapService {
 
 
     private boolean chgMemberToGroup(UserDO userDO, ServerGroupDO serverGroupDO, int type) {
-       return chgMemberToGroup(userDO.getUsername(),serverGroupDO.getName(),type);
+        return chgMemberToGroup(userDO.getUsername(), serverGroupDO.getName(), type);
     }
 
     private boolean chgMemberToGroup(String username, String groupName, int type) {
@@ -550,6 +577,7 @@ public class LdapServiceImpl implements LdapService {
 
     /**
      * LDAP 删除组内用户的其它写法
+     *
      * @param username
      * @param groupName
      * @return
@@ -561,7 +589,7 @@ public class LdapServiceImpl implements LdapService {
             LdapTemplate ldapTemplate = ldapFactory.getLdapTemplateInstance();
             DirContextOperations ctxGroup = ldapTemplate.lookupContext(groupDn);
             DirContextOperations ctxUser = ldapTemplate.lookupContext(userDn);
-             String x = ctxUser.getStringAttribute("cn");
+            String x = ctxUser.getStringAttribute("cn");
             ctxGroup.removeAttributeValue("uniquemember", userDn);
             ldapTemplate.modifyAttributes(ctxGroup);
             return true;
@@ -572,29 +600,6 @@ public class LdapServiceImpl implements LdapService {
 
     }
 
-    /**
-     * 查询LDAP组中的用户
-     *
-     * @return
-     */
-//    public List<String> searchLdapGroupUser(String ldapGroupName) {
-//        List<String> groups = Collections.EMPTY_LIST;
-//        try {
-//            String dn = userId + "=" + ldapGroupName + "," + getGroupDn();
-//            groups = ldapFactory.getLdapTemplateInstance().search(LdapQueryBuilder.query().base(getGroupDn())
-//                            .where("objectClass").is(groupObject).and(userId).like("*"),
-//                    new AttributesMapper<String>() {
-//                        @Override
-//                        public String mapFromAttributes(Attributes attributes) throws NamingException {
-//                            return attributes.get(userId).get(0).toString();
-//                        }
-//                    }
-//            );
-//        } catch (Exception e) {
-//            logger.warn("search ldap group error={}", e.getMessage(), e);
-//        }
-//        return groups;
-//    }
     @Override
     public BusinessWrapper<Boolean> createLdapGroup(String groupName, String content, int groupType) {
         try {
@@ -710,7 +715,11 @@ public class LdapServiceImpl implements LdapService {
         } catch (Exception e) {
             return new BusinessWrapper<>(false);
         }
+    }
 
+    @Override
+    public String getUserDN(String username) {
+        return Joiner.on(",").join("cn=" + username, getUserDn());
     }
 
 

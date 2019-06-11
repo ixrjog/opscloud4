@@ -30,9 +30,9 @@ public class JenkinsJobDO implements Serializable {
     //GitlabWebHooksDO webHooks
     public JenkinsJobDO(GitlabWebHooksDO webHooks, String fullJobName, int envType, int buildType) {
         this.jobName = fullJobName;
-        this.content = webHooks.getRepositoryDescription();
+
         //this.jobEnvType = 0;
-        this.repositoryUrl = webHooks.getRepositoryUrl();
+
         this.buildType = buildType;
         this.jobEnvType = envType;
 

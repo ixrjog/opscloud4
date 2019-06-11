@@ -2,13 +2,43 @@
  *
  *  This module implements sunburst charts in Highcharts.
  *
- *  (c) 2016-2018 Highsoft AS
+ *  (c) 2016-2019 Highsoft AS
  *
  *  Authors: Jon Arild Nygard
  *
  *  License: www.highcharts.com/license
  *
  * */
+
+/**
+ * Possible rotation options for data labels in the sunburst series.
+ *
+ * @typedef {"auto"|"perpendicular"|"parallel"} Highcharts.SeriesSunburstDataLabelsRotationValue
+ */
+
+/**
+ * Options for data labels in the sunburst series.
+ *
+ * @interface Highcharts.SeriesSunburstDataLabelsOptionsObject
+ * @extends Highcharts.DataLabelsOptionsObject
+ *//**
+ * @name Highcharts.SeriesSunburstDataLabelsOptionsObject#align
+ * @type {undefined}
+ *//**
+ * @name Highcharts.SeriesSunburstDataLabelsOptionsObject#allowOverlap
+ * @type {undefined}
+ *//**
+ * Decides how the data label will be rotated relative to the perimeter
+ * of the sunburst. Valid values are `auto`, `parallel` and
+ * `perpendicular`. When `auto`, the best fit will be computed for the
+ * point.
+ *
+ * The `series.rotation` option takes precedence over `rotationMode`.
+ *
+ * @name Highcharts.SeriesSunburstDataLabelsOptionsObject#rotationMode
+ * @type {Highcharts.SeriesSunburstDataLabelsRotationValue|undefined}
+ * @since 6.0.0
+ */
 
 'use strict';
 
@@ -44,6 +74,7 @@ var CenteredSeriesMixin = H.CenteredSeriesMixin,
 var range = function range(from, to) {
     var result = [],
         i;
+
     if (isNumber(from) && isNumber(to) && from <= to) {
         for (i = from; i <= to; i++) {
             result.push(i);
@@ -90,6 +121,7 @@ var calculateLevelSizes = function calculateLevelSizes(levelOptions, params) {
             var options = result[level],
                 unit = options.levelSize.unit,
                 value = options.levelSize.value;
+
             if (unit === 'weight') {
                 totalWeight += value;
             } else if (unit === 'percentage') {
@@ -107,6 +139,7 @@ var calculateLevelSizes = function calculateLevelSizes(levelOptions, params) {
         levels.forEach(function (level) {
             var options = result[level],
                 weight;
+
             if (options.levelSize.unit === 'weight') {
                 weight = options.levelSize.value;
                 result[level].levelSize = {
@@ -168,8 +201,8 @@ var layoutAlgorithm = function layoutAlgorithm(parent, children, options) {
                 isObject(options.levelSize) &&
                 isNumber(options.levelSize.value)
             ) ?
-            options.levelSize.value :
-            0
+                options.levelSize.value :
+                0
         ),
         innerRadius = parent.r,
         outerRadius = innerRadius + radius,
@@ -191,6 +224,7 @@ var layoutAlgorithm = function layoutAlgorithm(parent, children, options) {
                 start: startAngle,
                 end: startAngle + radians
             };
+
         arr.push(values);
         startAngle = values.end;
         return arr;
@@ -203,13 +237,13 @@ var getDlOptions = function getDlOptions(params) {
         shape = isObject(params.shapeArgs) ? params.shapeArgs : {},
         optionsPoint = (
             isObject(params.optionsPoint) ?
-            params.optionsPoint.dataLabels :
-            {}
+                params.optionsPoint.dataLabels :
+                {}
         ),
         optionsLevel = (
             isObject(params.level) ?
-            params.level.dataLabels :
-            {}
+                params.level.dataLabels :
+                {}
         ),
         options = merge({
             style: {}
@@ -303,6 +337,7 @@ var getAnimation = function getAnimation(shape, params) {
             x: shape.x,
             y: shape.y
         };
+
     if (visible) {
         // Animate points in
         if (!point.graphic && shapePreviousRoot) {
@@ -333,17 +368,17 @@ var getAnimation = function getAnimation(shape, params) {
                 };
             } else if (shapeRoot) {
                 to = (shapeRoot.end <= shapeExisting.start) ?
-                {
-                    innerR: innerR,
-                    r: innerR,
-                    start: radians.end,
-                    end: radians.end
-                } : {
-                    innerR: innerR,
-                    r: innerR,
-                    start: radians.start,
-                    end: radians.start
-                };
+                    {
+                        innerR: innerR,
+                        r: innerR,
+                        start: radians.end,
+                        end: radians.end
+                    } : {
+                        innerR: innerR,
+                        r: innerR,
+                        start: radians.start,
+                        end: radians.start
+                    };
             }
         }
     }
@@ -357,6 +392,7 @@ var getDrillId = function getDrillId(point, idRoot, mapIdToNode) {
     var drillId,
         node = point.node,
         nodeRoot;
+
     if (!node.isLeaf) {
         // When it is the root node, the drillId should be set to parent.
         if (idRoot === point.id) {
@@ -386,6 +422,7 @@ var cbSetTreeValuesBefore = function before(node, options) {
             series: options.series,
             siblings: options.siblings
         });
+
     node.color = colorInfo.color;
     node.colorIndex = colorInfo.colorIndex;
     if (point) {
@@ -450,7 +487,7 @@ var sunburstOptions = {
     /**
      * Can set a `color` on all points which lies on the same level.
      *
-     * @type      {Highcharts.ColorString}
+     * @type      {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
      * @apioption plotOptions.sunburst.levels.color
      */
 
@@ -505,14 +542,26 @@ var sunburstOptions = {
 
     /**
      * When enabled the user can click on a point which is a parent and
-     * zoom in on its children.
+     * zoom in on its children. Deprecated and replaced by
+     * [allowTraversingTree](#plotOptions.sunburst.allowTraversingTree).
      *
-     * @sample highcharts/demo/sunburst
-     *         Allow drill to node
+     * @deprecated
+     * @type      {boolean}
+     * @default   false
+     * @since     6.0.0
+     * @product   highcharts
+     * @apioption plotOptions.sunburst.allowDrillToNode
+     */
+
+    /**
+     * When enabled the user can click on a point which is a parent and
+     * zoom in on its children.
      *
      * @type      {boolean}
      * @default   false
-     * @apioption plotOptions.sunburst.allowDrillToNode
+     * @since     7.0.3
+     * @product   highcharts
+     * @apioption plotOptions.sunburst.allowTraversingTree
      */
 
     /**
@@ -529,27 +578,25 @@ var sunburstOptions = {
     center: ['50%', '50%'],
     colorByPoint: false,
     /**
-     * @extends   plotOptions.series.dataLabels
-     * @excluding align, allowOverlap, distance, staggerLines, step
+     * Disable inherited opacity from Treemap series.
+     *
+     * @ignore-option
+     */
+    opacity: 1,
+    /**
+     * @type {Highcharts.SeriesSunburstDataLabelsOptionsObject|Highcharts.DataLabelsOptionsObject}
      */
     dataLabels: {
+        /** @ignore-option */
         allowOverlap: true,
+        /** @ignore-option */
         defer: true,
+        /** @ignore-option */
+        rotationMode: 'auto',
+        /** @ignore-option */
         style: {
             textOverflow: 'ellipsis'
-        },
-        /**
-         * Decides how the data label will be rotated relative to the perimeter
-         * of the sunburst. Valid values are `auto`, `parallel` and
-         * `perpendicular`. When `auto`, the best fit will be computed for the
-         * point.
-         *
-         * The `series.rotation` option takes precedence over `rotationMode`.
-         *
-         * @since      6.0.0
-         * @validvalue ["auto", "perpendicular", "parallel"]
-         */
-        rotationMode: 'auto'
+        }
     },
     /**
      * Which point to use as a root in the visualization.
@@ -602,6 +649,15 @@ var sunburstOptions = {
          */
         unit: 'weight'
     },
+
+    /**
+     * Options for the button appearing when traversing down in a treemap.
+     *
+     * @extends plotOptions.treemap.traverseUpButton
+     * @since 6.0.0
+     * @apioption plotOptions.sunburst.traverseUpButton
+     */
+
     /**
      * If a point is sliced, moved out from the center, how many pixels
      * should it be moved?.
@@ -634,8 +690,8 @@ var sunburstSeries = {
             optionsChart = chart && chart.options && chart.options.chart || {},
             animation = (
                 isBoolean(optionsChart.animation) ?
-                optionsChart.animation :
-                true
+                    optionsChart.animation :
+                    true
             ),
             positions = series.center,
             center = {
@@ -658,6 +714,7 @@ var sunburstSeries = {
             series.dataLabelsGroup.attr({ opacity: 0 });
             animateLabels = function () {
                 var s = series;
+
                 animateLabelsCalled = true;
                 if (s.dataLabelsGroup) {
                     s.dataLabelsGroup.animate({
@@ -675,6 +732,7 @@ var sunburstSeries = {
                 animationInfo,
                 onComplete,
                 visible = !!(node.visible && node.shapeArgs);
+
             if (hasRendered && animation) {
                 animationInfo = getAnimation(shape, {
                     center: center,
@@ -763,6 +821,7 @@ var sunburstSeries = {
                 return n.visible;
             }),
             twoPi = 6.28; // Two times Pi.
+
         childrenValues = this.layoutAlgorithm(parentValues, children, options);
         children.forEach(function (child, index) {
             var values = childrenValues[index],
@@ -772,18 +831,19 @@ var sunburstSeries = {
                 isCircle = (values.innerR === 0 && radians > twoPi),
                 center = (
                     isCircle ?
-                    { x: values.x, y: values.y } :
-                    getEndPoint(values.x, values.y, angle, radius)
+                        { x: values.x, y: values.y } :
+                        getEndPoint(values.x, values.y, angle, radius)
                 ),
                 val = (
                     child.val ?
-                    (
-                        child.childrenTotal > child.val ?
-                        child.childrenTotal :
-                        child.val
-                    ) :
-                    child.childrenTotal
+                        (
+                            child.childrenTotal > child.val ?
+                                child.childrenTotal :
+                                child.val
+                        ) :
+                        child.childrenTotal
                 );
+
             // The inner arc length is a convenience for data label filters.
             if (this.points[child.i]) {
                 this.points[child.i].innerArcLength = radians * values.innerR;
@@ -825,11 +885,15 @@ var sunburstSeries = {
             nodeTop,
             tree,
             values;
+
         series.shapeRoot = nodeRoot && nodeRoot.shapeArgs;
         // Call prototype function
         Series.prototype.translate.call(series);
         // @todo Only if series.isDirtyData is true
         tree = series.tree = series.getTree();
+
+        // Render traverseUpButton, after series.nodeMap i calculated.
+        series.renderTraverseUpButton(rootId);
         mapIdToNode = series.nodeMap;
         nodeRoot = mapIdToNode[rootId];
         idTop = isString(nodeRoot.parent) ? nodeRoot.parent : '';
@@ -930,8 +994,10 @@ var sunburstSeries = {
 var sunburstPoint = {
     draw: drawPoint,
     shouldDraw: function shouldDraw() {
-        var point = this;
-        return !point.isNull;
+        return !this.isNull;
+    },
+    isValid: function isValid() {
+        return true;
     }
 };
 
@@ -946,7 +1012,7 @@ var sunburstPoint = {
  */
 
 /**
- * @type      {Array<number|*>}
+ * @type      {Array<number|null|*>}
  * @extends   series.treemap.data
  * @excluding x, y
  * @product   highcharts
@@ -957,7 +1023,7 @@ var sunburstPoint = {
  * The value of the point, resulting in a relative area of the point
  * in the sunburst.
  *
- * @type      {number}
+ * @type      {number|null}
  * @since     6.0.0
  * @product   highcharts
  * @apioption series.sunburst.data.value
@@ -974,7 +1040,7 @@ var sunburstPoint = {
  * @apioption series.treemap.data.parent
  */
 
- /**
+/**
   * Whether to display a slice offset from the center. When a sunburst point is
   * sliced, its children are also offset.
   *

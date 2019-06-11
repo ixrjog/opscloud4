@@ -39,6 +39,69 @@
         ORDER BY gmtCreate DESC
     </select>
 
+    <!--查询需要审批的工作流-->
+    <select id="queryTodoByApproval" parameterType="object" resultType="WorkflowTodoDO">
+        SELECT * FROM oc_workflow_todo
+        <where>
+            <if test="todoPhase != -1">
+                todoPhase = #{todoPhase}
+            </if>
+            AND id IN ( SELECT todoId FROM oc_workflow_todo_user WHERE userId = #{userId} AND evaluation = 0)
+        </where>
+    </select>
+
+
+    <select id="queryTodoSize" parameterType="object" resultType="_long">
+        SELECT count(*) FROM oc_workflow_todo
+        <where>
+            <if test="queryName != null and queryName != ''">
+                applyDisplayName LIKE "%" #{queryName} "%"
+            </if>
+            <if test="queryPhase == -1">
+                AND todoPhase &gt; 0 AND todoPhase &lt; 5
+            </if>
+            <if test="queryPhase == 1">
+                AND todoPhase &gt; 0
+            </if>
+            <if test="queryPhase == 5">
+                AND todoPhase = 5
+            </if>
+        </where>
+    </select>
+
+    <select id="getMyTodoSize" parameterType="object" resultType="_int">
+        SELECT count(*) FROM oc_workflow_todo
+        <where>
+            applyUserId = #{applyUserId}
+            <if test="queryPhase == -1">
+                AND todoPhase &gt; 0 AND todoPhase &lt; 5
+            </if>
+            <if test="queryPhase == 1">
+                AND todoPhase &gt; 0
+            </if>
+            <if test="queryPhase == 5">
+                AND todoPhase = 5
+            </if>
+        </where>
+    </select>
+
+    <select id="queryTodoPage" parameterType="object" resultType="WorkflowTodoDO">
+        SELECT * FROM oc_workflow_todo
+        <where>
+            <if test="queryName != null and queryName != ''">
+                applyDisplayName LIKE "%" #{queryName} "%"
+            </if>
+            <if test="queryPhase == -1">
+                AND todoPhase &gt; 0 AND todoPhase &lt; 5
+            </if>
+            <if test="queryPhase == 5">
+                AND todoPhase = 5
+            </if>
+        </where>
+        ORDER BY gmtCreate DESC, applyDisplayName
+        limit #{pageStart}, #{length}
+    </select>
+
     <select id="queryTodoByTodoPhase" parameterType="object" resultType="WorkflowTodoDO">
         SELECT * FROM oc_workflow_todo
         WHERE todoStatus = 0 AND todoPhase = #{todoPhase}
@@ -117,12 +180,9 @@
         DELETE FROM oc_workflow_todo_detail WHERE id = #{id}
     </delete>
 
-
-
     <select id="getTodoUserByTodoId" parameterType="object" resultType="WorkflowTodoUserDO">
         SELECT * FROM oc_workflow_todo_user WHERE todoId = #{todoId}
     </select>
-
 
     <select id="getTodoUserByTodoIdAndAssigneeType" parameterType="object" resultType="WorkflowTodoUserDO">
         SELECT * FROM oc_workflow_todo_user
@@ -166,5 +226,20 @@
         WHERE id = #{id}
     </update>
 
+    <!--统计 工作流审批次数 -->
+    <select id="statusTodoByWorkflow" resultType="WorkflowTodoStatus">
+        SELECT title, count(*) AS cnt
+        FROM oc_workflow_todo AS todo LEFT JOIN oc_workflow AS wf ON todo.wfId = wf.id
+        WHERE todoPhase = 5 AND todoStatus = 3 AND wfStatus = 0
+        GROUP BY title;
+    </select>
+
+    <!--统计 按月统计工作流审批次数 -->
+    <select id="statusTodoByMonth" resultType="WorkflowTodoMonthStatus">
+        SELECT DATE_FORMAT(gmtCreate,'%Y-%m') AS dateCat , count(id) AS cnt
+        FROM oc_workflow_todo
+        WHERE todoPhase = 5 AND todoStatus = 3 AND year(gmtCreate) &gt;= 2019
+        GROUP BY dateCat;
+    </select>
 
 </mapper>

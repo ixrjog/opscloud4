@@ -1,6 +1,7 @@
 package com.sdg.cmdb.service.configurationProcessor;
 
 import com.sdg.cmdb.domain.nginx.*;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.CacheKeyService;
@@ -37,7 +38,7 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
     }
 
     public void delCache(ServerGroupDO serverGroupDO) {
-        for (ServerDO.EnvTypeEnum e : ServerDO.EnvTypeEnum.values())
+        for (EnvType.EnvTypeEnum e : EnvType.EnvTypeEnum.values())
             delCache(serverGroupDO, e.getCode());
     }
 
@@ -65,11 +66,9 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         if (envFileDO.getFileType() == EnvFileDO.FileTypeEnum.location.getCode()) {
             nginxConf += buildLocation(vhostDO.getId(), vhostEnvDO.getEnvType());
         }
-
         if (envFileDO.getFileType() == EnvFileDO.FileTypeEnum.upstream.getCode()) {
             nginxConf += buildUpstream(vhostDO.getId(), vhostEnvDO.getEnvType());
         }
-
         return nginxConf;
     }
 
@@ -98,7 +97,7 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
             headInfo += "# " + vhostDO.getContent() + "\n";
         // 环境信息
         headInfo += "# 环境 : " +
-                ServerDO.EnvTypeEnum.getEnvTypeName(vhostEnvDO.getEnvType()) + "\n";
+                EnvType.EnvTypeEnum.getEnvTypeName(vhostEnvDO.getEnvType()) + "\n";
 
         headInfo += "# 配置文件路径 : " + getFilePath(vhostEnvDO, envFileDO) + "\n";
         headInfo += "# 配置文件Key : " + envFileDO.getFileKey() + "\n\n";
@@ -257,7 +256,7 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
         }
         upstream += indent + getUpstramName(serverGroupDO, envCode) + " { \n";
         for (ServerDO serverDO : listServerDO) {
-            upstream += indentX2 + "# " + ServerDO.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType()) + "-" + serverDO.getSerialNumber() + "\n";
+            upstream += indentX2 + "# " + EnvType.EnvTypeEnum.getEnvTypeName(serverDO.getEnvType()) + "-" + serverDO.getSerialNumber() + "\n";
             upstream += acqUpstreamServer(serverGroupDO, serverDO);
         }
         if (listServerDO.size() > 1 && configServerGroupService.isBuildNginxCheck(serverGroupDO))
@@ -279,10 +278,10 @@ public class NginxFileProcessorService extends ConfigurationProcessorAbs {
      */
     private String getUpstramName(ServerGroupDO serverGroupDO, int envCode) {
         String nginxUpstreamName = configServerGroupService.queryNginxUpstreamName(serverGroupDO);
-        if (envCode == ServerDO.EnvTypeEnum.prod.getCode()) {
+        if (envCode == EnvType.EnvTypeEnum.prod.getCode()) {
             return "upstream upstream." + nginxUpstreamName + ".java";
         } else {
-            return "upstream upstream." + ServerDO.EnvTypeEnum.getEnvTypeName(envCode) + '.' + nginxUpstreamName + ".java";
+            return "upstream upstream." + EnvType.EnvTypeEnum.getEnvTypeName(envCode) + '.' + nginxUpstreamName + ".java";
         }
     }
 

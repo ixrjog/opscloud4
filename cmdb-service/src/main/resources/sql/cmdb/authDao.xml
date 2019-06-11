@@ -65,7 +65,6 @@
         SELECT username,token FROM new_auth_user_login_token WHERE invalid = 1
     </select>
 
-
     <!-- 获取资源组数目 -->
     <select id="getResourceGroupSize" parameterType="string" resultType="_long">
         SELECT count(*) FROM new_auth_rgroup
@@ -273,8 +272,10 @@
         </where>
     </select>
 
-
-
+    <select id="getRoleByWorkflow" resultType="RoleDO">
+        SELECT * FROM new_auth_role
+        WHERE workflow = 1
+    </select>
 
 
     <!-- 获取指定角色绑定的资源列表数目 -->

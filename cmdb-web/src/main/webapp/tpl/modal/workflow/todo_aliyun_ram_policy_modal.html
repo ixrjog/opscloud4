@@ -1,16 +1,16 @@
 <div class="modal-header">
-    <h3 class="modal-title">
-        <b style="color: #286090">{{workflowTodo.workflowDO.title}}</b>自动化工作流
-    </h3>
-    <div>
-        <b ng-show="workflowTodo.workflowDO.wfType == 0" class="pull-left">OPS</b>
-        <i uib-popover-html="assigneeUsersInfo" popover-trigger="'mouseenter'" popover-placement="bottom"
-           class="icon icon-info" style="color: green;"></i>
-    </div>
+    <div ng-include="'tpl/modal/workflow/include/header_info.html'"></div>
 </div>
 
 <div class="modal-body">
-    <form class="form-horizontal" style="padding: 10px;">
+
+    <!--help-->
+    <form class="form-horizontal" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
+          style="box-shadow: 0 0 5px #ddd;padding: 10px;">
+        <div ng-include="'tpl/modal/workflow/include/help_info.html'"></div>
+    </form>
+
+    <form class="form-horizontal" style="padding: 10px;margin-top: 15px;">
         <div class="form-group">
             <div class="col-md-6">
                 <label class="col-lg-4 control-label">RAM登录账户</label>
@@ -24,51 +24,50 @@
                 </div>
             </div>
 
-            <div class="col-md-6">
-                <label class="col-lg-4 control-label">RAM登录密码</label>
-                <div class="col-lg-8">
-                    <input type="text" class="form-control" placeholder="在'个人详情-密码'中查看" readonly>
-                </div>
-            </div>
         </div>
 
         <div class="form-group">
-            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>RAM用户标签</label>
-            <div class="col-lg-5">
-                <input type="text" class="form-control" placeholder="格格家-技术部"
-                       ng-model="ramUser.userTag">
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>RAM用户标签</label>
+                <div class="col-lg-8">
+                    <input type="text" class="form-control" placeholder="格格家-技术部"
+                           ng-model="ramUser.userTag">
+                </div>
             </div>
-            <div class="col-lg-2">
+            <div class="col-lg-1">
                 <button ng-click="saveRamUser()" class="btn btn-xs"
                         style="margin-top: 5px; background-color: #2b669a; color: white;"
-                        uib-popover-html="'保存标签用户识别用户'" popover-trigger="'mouseenter'">
+                        uib-popover-html="'用于识别用户'" popover-trigger="'mouseenter'">
                     <span class="glyphicon glyphicon-ok"></span>保存标签
                 </button>
             </div>
         </div>
-        <div class="form-group">
+
+        <div class="form-group" ng-show="false">
             <div class="col-md-12">
                 <label class="col-lg-2 control-label">登录地址</label>
                 <div class="col-lg-10">
                     <a type="button" class="btn"
                        href="https://signin.aliyun.com/1255805305757185.onaliyun.com/login.htm" target="_blank"
                        style="background-color: #ff8700; color: white;"><span
-                            class="fa fa-share"></span>登录地址https://signin.aliyun.com/1255805305757185.onaliyun.com/login.htm
+                            class="fa fa-share"></span>登录地址https://signin.aliyun.com/aliyun.ops.yangege.cn/login.htm
                     </a>
                 </div>
             </div>
         </div>
 
         <div class="form-group" ng-show="type == 0">
-            <label class="col-lg-2 control-label"><span style="color: #ec2121;">*</span>RAM策略</label>
-            <div class="col-lg-5">
-                <ui-select ng-model="nowRamPolicy.selected" theme="bootstrap">
-                    <ui-select-match placeholder="搜索策略或描述......">{{$select.selected.policyName}}</ui-select-match>
-                    <ui-select-choices refresh="queryRamPolicy($select.search)" refresh-dalay="0"
-                                       repeat="item in ramPolicyList | filter: $select.search">
-                        <div ng-bind-html="item.policyName | highlight: $select.search"></div>
-                    </ui-select-choices>
-                </ui-select>
+            <div class="col-md-6">
+                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>RAM策略</label>
+                <div class="col-lg-8">
+                    <ui-select ng-model="nowRamPolicy.selected" theme="bootstrap">
+                        <ui-select-match placeholder="搜索策略或描述......">{{$select.selected.policyName}}</ui-select-match>
+                        <ui-select-choices refresh="queryRamPolicy($select.search)" refresh-dalay="0"
+                                           repeat="item in ramPolicyList | filter: $select.search">
+                            <div ng-bind-html="item.policyName | highlight: $select.search"></div>
+                        </ui-select-choices>
+                    </ui-select>
+                </div>
             </div>
             <div class="col-lg-2">
                 <button ng-click="addItem()" class="btn btn-xs"
@@ -97,10 +96,9 @@
                         <div ng-show="todoDetail.detail.detailType == 1">
                             <!--用户信息-->
                             <td>
-                                <span style="background-color: #2b669a ;color: white;"
+                                <b style="color: #2b669a;"
                                       uib-popover-html="'新申请的阿里云RAM策略'"
-                                      popover-trigger="'mouseenter'"
-                                      class="label">{{todoDetail.name}}</span>
+                                      popover-trigger="'mouseenter'">{{todoDetail.name}}</b>
                             </td>
                             <td>{{todoDetail.detail.content}}</td>
                             <td ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0 && type == 0">
@@ -135,10 +133,8 @@
                     <tbody>
                     <tr ng-show="todoDetail.detail.detailType ==0" ng-repeat="todoDetail in workflowTodo.todoDetails">
                         <td>
-                            <span style="background-color: #2ea8e5 ;color: white;"
-                                  uib-popover-html="'已经授权的阿里云RAM策略'"
-                                  popover-trigger="'mouseenter'"
-                                  class="label">{{todoDetail.name}}</span>
+                            <b style="color: #777;" uib-popover-html="'已经授权的阿里云RAM策略'"
+                                  popover-trigger="'mouseenter'" >{{todoDetail.name}}</b>
                         </td>
                         <td ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0 && type == 0">
                             <button ng-click="setDetachPolicy(todoDetail)" class="btn btn-xs pull-left"
@@ -176,31 +172,13 @@
 
     <div style="width: 100%; height: 1px; border: 0.5px solid #eee;"></div>
 
-    <!--<div class="modal-body">-->
-    <form class="form-horizontal" style="margin-top: 35px;">
-        <div ng-include="'tpl/modal/workflow/todo_approval_info.html'"></div>
+
+    <form class="form-horizontal" style="margin-top: 25px;">
+        <div ng-include="'tpl/modal/workflow/include/approval_info.html'"></div>
     </form>
-    <!--</div>-->
+
 </div>
 
 <div class="modal-footer">
-    <div class="form-group">
-        <div style="text-align:center;">
-            <button class="btn btn-xs" ng-show="workflowTodo.todoStatus == 0 && workflowTodo.todoPhase == 0"
-                    style="margin-right: 25px; background-color: green; color: white;"
-                    ng-click="saveTodo()">
-                <i class="fa fa-spin fa-spinner" ng-show="btnSaveing"></i>
-                <i class="glyphicon glyphicon-ok" ng-show="!btnSaveing"></i>保存
-            </button>
-            <button class="btn btn-xs" ng-show="todoDetail.todoStatus != 0"
-                    style="background-color: #ff8700; color: white;"
-                    ng-click="closeModal()">关闭
-            </button>
-        </div>
-    </div>
-
-
-    <div ng-if="alert.type != ''">
-        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
-    </div>
+    <div ng-include="'tpl/modal/workflow/include/footer_info.html'"></div>
 </div>

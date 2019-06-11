@@ -13,10 +13,10 @@ import java.util.UUID;
 @Service
 public class GitlabFactory {
 
-    @Value("#{cmdb['gitlab.url']}")
+    @Value(value = "${gitlab.url}")
     private String gitlabUrl;
 
-    @Value("#{cmdb['gitlab.token']}")
+    @Value(value = "${gitlab.token}")
     private String gitlabToken;
 
 

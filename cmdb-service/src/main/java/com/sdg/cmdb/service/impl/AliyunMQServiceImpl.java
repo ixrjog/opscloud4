@@ -17,10 +17,7 @@ import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.aliyunMQ.*;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserVO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.service.AliyunMQService;
-import com.sdg.cmdb.service.ConfigCenterService;
 import com.sdg.cmdb.service.DingtalkService;
 import com.sdg.cmdb.util.BeanCopierUtils;
 import com.sdg.cmdb.util.SessionUtils;
@@ -36,7 +33,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.HashMap;
+
 import java.util.List;
 
 @Service
@@ -56,17 +53,18 @@ public class AliyunMQServiceImpl implements AliyunMQService, InitializingBean {
     @Autowired
     private DingtalkService dingtalkService;
 
-    private HashMap<String, String> configMap;
+    @Value(value = "${aliyun.access.key}")
+    private String accessKey;
 
-    @Resource
-    private ConfigCenterService configCenterService;
+    @Value(value = "${aliyun.access.secret}")
+    private String accessSecret;
+
+    @Value(value = "${aliyun.region.id}")
+    private String regionIdList;
 
     static private IAcsClient client;
 
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
-    }
+
 
     @Override
     public OnsConsumerStatusResponse.Data consumerStatus(String groupId, String regionId) {
@@ -91,9 +89,6 @@ public class AliyunMQServiceImpl implements AliyunMQService, InitializingBean {
             List<OnsConsumerStatusResponse.Data.ConnectionDo> connectionDoList = data.getConnectionSet();
             List<OnsConsumerStatusResponse.Data.DetailInTopicDo> detailInTopicDoList = data.getDetailInTopicList();
             List<OnsConsumerStatusResponse.Data.ConsumerConnectionInfoDo> consumerConnectionInfoDoList = data.getConsumerConnectionInfoList();
-            System.out.print(data.getOnline() + "  " + data.getTotalDiff() + "  " + data.getConsumeTps() + "  " +
-                    data.getLastTimestamp() + "  " + data.getDelayTime() + "  " + data.getConsumeModel() +
-                    "  " + data.getSubscriptionSame() + "  " + data.getRebalanceOK());
             return data;
         } catch (ServerException e) {
             e.printStackTrace();
@@ -417,16 +412,12 @@ public class AliyunMQServiceImpl implements AliyunMQService, InitializingBean {
 
     private IAcsClient acqClient() {
         if (client != null) return client;
-        HashMap<String, String> configMap = acqConifMap();
-        String aliyunAccessKey = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_KEY.getItemKey());
-        String aliyunAccessSecret = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_SECRET.getItemKey());
-        //生成 IClientProfile 的对象 profile，该对象存放 Access Key ID 和 Access Key Secret 和默认的地域信息
         try {
             DefaultProfile.addEndpoint(EcsServiceImpl.regionIdCnHangzhou, EcsServiceImpl.regionIdCnHangzhou, "Ons", "ons.cn-hangzhou.aliyuncs.com");
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        IClientProfile profile = DefaultProfile.getProfile(EcsServiceImpl.regionIdCnHangzhou, aliyunAccessKey, aliyunAccessSecret);
+        IClientProfile profile = DefaultProfile.getProfile(EcsServiceImpl.regionIdCnHangzhou, accessKey, accessSecret);
         IAcsClient iAcsClient = new DefaultAcsClient(profile);
         client = iAcsClient;
         return client;
@@ -434,7 +425,6 @@ public class AliyunMQServiceImpl implements AliyunMQService, InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        acqConifMap();
         acqClient();
     }
 

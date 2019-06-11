@@ -63,6 +63,15 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
+                                    <div class="input-group">
+                                        <span class="input-group-addon">付费</span>
+                                        <select class="form-control" ng-model="nowChargeType"
+                                                ng-options="chargeType.code as chargeType.name for chargeType in instanceChargeType">
+                                            <option value="">--请选择--</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group">
                                     <button type="button" class="btn btn-info"
                                             ng-click="doQuery()"
                                             ng-disabled="butSearchDisabled">
@@ -110,7 +119,7 @@
                                                 <td>规格</td>
                                                 <td>可用区(ZoneId)</td>
                                                 <td>状态</td>
-                                                <td>时间</td>
+                                                <td>创建时间</td>
                                                 <td ng-if="contains(authPoint, '/server/save')">操作</td>
                                             </tr>
                                             </thead>
@@ -143,7 +152,6 @@
                                                        ng-show="item.finance == true">Finance</i>
                                                 </td>
                                                 <td>
-                                                    <!--<b style="color: #286090" ng-if="item.status == 0">新增</b>-->
                                                     <span class="label label-primary"
                                                           ng-if="item.status == 0">未录入</span>
 
@@ -155,16 +163,7 @@
                                                     <span class="label label-default" ng-if="item.status == 3">删除</span>
                                                 </td>
                                                 <td>
-                                                    <span class="label"
-                                                          style="background-color: #00a8f3; color: white;">创建{{item.creationTime}}</span>
-                                                    <div ng-show="item.instanceChargeType == 'PrePaid'">
-                                                         <span class="label"
-                                                               style="background-color: #ff8700; color: white;">到期{{item.expiredTime}}</span>
-                                                        <span class="label"
-                                                              style="background-color: #c9302c; color: white;">{{item.expiredDay}}Day</span>
-                                                    </div>
-
-
+                                                    <span class="label" style="background-color: #00a8f3; color: white;">{{item.creationTime}}</span>
                                                 </td>
                                                 <td ng-if="contains(authPoint, '/server/ecsSave')">
 
@@ -198,6 +197,16 @@
                                                             style="background-color: #eea236; color: white;">
                                                         <span class="glyphicon glyphicon-plus"></span>IP
                                                     </button>
+
+                                                    <button ng-click="postPaid(item)"
+                                                            ng-show="item.instanceChargeType == 'PostPaid'"
+                                                            class="btn btn-xs"
+                                                            popover-trigger="'mouseenter'"
+                                                            uib-popover-html="'按量付费实例转预付费'"
+                                                            style="background-color: #ff5f87; color: white;">
+                                                        <span class="fa fa-repeat"></span>转预付费
+                                                    </button>
+
 
                                                     <button ng-click="delEcs(item)"
                                                             class="btn btn-xs pull-right"
@@ -233,7 +242,8 @@
                                 <div class="form-group">
                                     <div class="input-group">
                                         <span class="input-group-addon">到期天数</span>
-                                        <input type="text" class="form-control" ng-model="queryDay" placeholder="天数，默认值30">
+                                        <input type="text" class="form-control" ng-model="queryDay"
+                                               placeholder="天数，默认值30">
                                     </div>
                                 </div>
                                 <div class="form-group">
@@ -280,8 +290,10 @@
                                             <thead>
                                             <tr>
                                                 <td>
-                                                    <label class="checkbox i-checks m-l-md" style="margin-top: 0;margin-bottom: 0;">
-                                                        <input type="checkbox" ng-model="choose" ng-click="chooseAll()"><i></i><span style="margin-left: 5px;">服务器</span>
+                                                    <label class="checkbox i-checks m-l-md"
+                                                           style="margin-top: 0;margin-bottom: 0;">
+                                                        <input type="checkbox" ng-model="choose" ng-click="chooseAll()"><i></i><span
+                                                            style="margin-left: 5px;">服务器</span>
                                                     </label>
                                                 </td>
                                                 <td>到期天数</td>
@@ -296,8 +308,10 @@
                                             <tbody>
                                             <tr ng-repeat="item in pageData">
                                                 <td>
-                                                    <label class="checkbox i-checks m-l-md" style="margin-top:0;margin-bottom: 0;">
-                                                        <input type="checkbox" ng-model="item.choose"><i></i><span style="margin-left:5px;">{{item.serverName}}</span>
+                                                    <label class="checkbox i-checks m-l-md"
+                                                           style="margin-top:0;margin-bottom: 0;">
+                                                        <input type="checkbox" ng-model="item.choose"><i></i><span
+                                                            style="margin-left:5px;">{{item.serverName}}</span>
                                                     </label>
                                                 </td>
                                                 <td>
@@ -373,7 +387,8 @@
 
                                     <div class="input-group">
                                         <span class="input-group-addon">区域(ZoneId)</span>
-                                        <input type="text" class="form-control" ng-model="queryZoneId" placeholder="区域(ZoneId)">
+                                        <input type="text" class="form-control" ng-model="queryZoneId"
+                                               placeholder="区域(ZoneId)">
                                     </div>
                                 </div>
 
@@ -505,12 +520,14 @@
                                             <tr>
                                                 <!--<td><b style="color: #286090">镜像ID</b></td>-->
                                                 <td><b style="color: #286090">显示名称</b></td>
+                                                <td><b style="color: #286090">容量GB</b></td>
                                                 <td><b style="color: #286090">操作</b></td>
                                             </tr>
                                             </thead>
                                             <tbody>
                                             <tr ng-repeat="image in imageList">
                                                 <td>{{image.imageName}}</td>
+                                                <td>{{image.size}}</td>
                                                 <td>
                                                     <button ng-click="delImage(image.id)"
                                                             class="btn btn-xs pull-right"
@@ -586,65 +603,6 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab index="4" heading="Aliyun配置">
-                    <div class="panel panel-default" ng-controller="aliyunConfigCtrl">
-                        <div class="panel-body" ng-if="contains(authPoint, '/aliyun/mgmt')">
-                            <form class="form-horizontal">
-                                <div class="form-group col-lg-12">
-                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_ACCESS_KEY</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" placeholder="Aliyun ECS AccessKey"
-                                               uib-popover-html="'登录阿里云控制台，右上角个人头像菜单-AccessKey管理'"
-                                               popover-trigger="'mouseenter'"
-                                               ng-model="configMap.ALIYUN_ECS_ACCESS_KEY.value">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-lg-12">
-                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_ACCESS_SECRET</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control" placeholder="Aliyun ECS AccessSecret"
-                                               uib-popover-html="'登录阿里云控制台，右上角个人头像菜单-AccessKey管理'"
-                                               popover-trigger="'mouseenter'"
-                                               ng-model="configMap.ALIYUN_ECS_ACCESS_SECRET.value">
-                                    </div>
-                                </div>
-
-                                <div class="form-group col-lg-12">
-                                    <label class="col-lg-3 control-label"><span style="color: #ec2121;">*</span>ALIYUN_ECS_REGION_ID</label>
-                                    <div class="col-lg-6">
-                                        <input type="text" class="form-control"
-                                               placeholder="查询的地域ID:华东1,香港,美国西部1,按此格式添加:cn-hangzhou,cn-hongkong,us-west-1"
-                                               uib-popover-html="'查询的区域ID,可在查询并测试配置中查看区域名称对应的地域ID'"
-                                               popover-trigger="'mouseenter'"
-                                               ng-model="configMap.ALIYUN_ECS_REGION_ID.value">
-                                    </div>
-
-                                    <button ng-click="describeRegions()"
-                                            class="btn btn-xs"
-                                            style="margin-left: 5px; background-color: #00a8f3; color: white;">
-                                        <span class="glyphicon glyphicon-search"></span>查询并测试配置
-                                    </button>
-                                </div>
-
-
-                                <!--按钮-->
-                                <div class="form-group">
-
-                                    <div style="text-align:center;">
-
-                                        <button class="btn btn-xs"
-                                                style="background-color:  #2e6da4; color: white;"
-                                                ng-click="updateConfig()">保存配置
-                                        </button>
-
-                                    </div>
-                                </div>
-
-                            </form>
-                        </div>
-                    </div>
-                </uib-tab>
             </uib-tabset>
         </div>
     </div>
@@ -656,7 +614,7 @@
 </script>
 
 <script type="text/ng-template" id="createEcsInstance">
-    <div ng-include="'tpl/modal/create_ecs_server_info_modal.html'"></div>
+    <div ng-include="'tpl/modal/aliyun/create_ecs_server_info_modal.html'"></div>
 </script>
 
 
@@ -670,7 +628,6 @@
 </script>
 
 
-
 <script type="text/ng-template" id="ecsTemplateInfo">
     <div ng-include="'tpl/modal/aliyun/aliyun_ecs_template_info_modal.html'"></div>
 </script>
@@ -678,4 +635,9 @@
 <!--续费-->
 <script type="text/ng-template" id="renewEcsInstance">
     <div ng-include="'tpl/modal/aliyun/aliyun_ecs_instance_renew_modal.html'"></div>
+</script>
+
+<!--转预付费-->
+<script type="text/ng-template" id="prepaidEcsInstance">
+    <div ng-include="'tpl/modal/aliyun/aliyun_ecs_instance_prepaid_modal.html'"></div>
 </script>

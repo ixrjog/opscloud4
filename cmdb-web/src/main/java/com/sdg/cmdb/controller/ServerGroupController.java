@@ -46,6 +46,7 @@ public class ServerGroupController {
 
     /**
      * 查询服务器组的分页数据(可查询所有的服务器组，用于工作流申请)
+     *
      * @param page
      * @param length
      * @param name
@@ -55,10 +56,15 @@ public class ServerGroupController {
     @RequestMapping(value = "/query/unauthPage", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult queryUnauthServerGroupPage(@RequestParam int page, @RequestParam int length,
-                                         @RequestParam String name, @RequestParam int useType) {
+                                                 @RequestParam String name, @RequestParam int useType) {
         return new HttpResult(serverGroupService.queryUnauthServerGroupPage(page, length, name, useType));
     }
 
+    @RequestMapping(value = "/query/logServiceMemberPage", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryLogServiceMemberPage(@RequestParam String name, @RequestParam long groupCfgId) {
+        return new HttpResult(serverGroupService.queryLogServiceMemberPage(name, groupCfgId));
+    }
 
 
     /**
@@ -297,8 +303,19 @@ public class ServerGroupController {
     @RequestMapping(value = "/hostPattern/get", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getHostPatter(@RequestParam long serverGroupId) {
-        return new HttpResult(serverGroupService.getHostPattern(serverGroupId),true);
+        return new HttpResult(serverGroupService.getHostPattern(serverGroupId), true);
     }
 
+
+    /**
+     * 查询服务器分组信息
+     *
+     * @return
+     */
+    @RequestMapping(value = "/tree/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getHostPatter(@RequestParam String name) {
+        return new HttpResult(serverGroupService.queryMyServerGroupList(name));
+    }
 
 }

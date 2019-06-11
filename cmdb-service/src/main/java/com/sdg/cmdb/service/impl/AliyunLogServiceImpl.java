@@ -15,10 +15,9 @@ import com.sdg.cmdb.dao.cmdb.LogServiceDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
+import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.UserDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.logService.*;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.logService.logServiceQuery.*;
@@ -26,6 +25,7 @@ import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerGroupUseTypeDO;
 import com.sdg.cmdb.service.*;
+import com.sdg.cmdb.util.BeanCopierUtils;
 import com.sdg.cmdb.util.SessionUtils;
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.TimeViewUtils;
@@ -47,9 +47,6 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     static final String ALIYUN_LOG_ENDPOINT = "cn-hangzhou.log.aliyuncs.com";
 
     @Resource
-    private ConfigCenterService configCenterService;
-
-    @Resource
     private LogServiceDao logServiceDao;
 
     @Resource
@@ -67,19 +64,17 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     @Resource
     private ServerGroupDao serverGroupDao;
 
-    private HashMap<String, String> configMap;
+    @Value(value = "${aliyun.access.key}")
+    private String accessKey;
 
-    public static final String PROJECT_JAVA_LOG = "collect-web-service-logs";
+    @Value(value = "${aliyun.access.secret}")
+    private String accessSecret;
 
     static private Client client;
 
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
-    }
 
     @Override
     public TableVO<List<LogServiceCfgDO>> getLogServiceCfgPage(int page, int length, String serverName) {
@@ -226,12 +221,13 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     }
 
     /**
-     *     private String request_time;
-     private String http_x_forwarded_for;
-     private String upstream_addr;
-     private String uri;
-     private String upstream_response_time;
-     private String status;
+     * private String request_time;
+     * private String http_x_forwarded_for;
+     * private String upstream_addr;
+     * private String uri;
+     * private String upstream_response_time;
+     * private String status;
+     *
      * @param q
      * @return
      */
@@ -249,13 +245,13 @@ public class AliyunLogServiceImpl implements AliyunLogService {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
             query += "upstream_addr = " + q.getUpstream_addr();
         }
-        if (!StringUtils.isEmpty( q.getUpstream_response_time())) {
+        if (!StringUtils.isEmpty(q.getUpstream_response_time())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
             query += "upstream_response_time = " + q.getUpstream_response_time();
         }
         if (!StringUtils.isEmpty(q.getStatus())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
-            query += "status = " +q.getStatus();
+            query += "status = " + q.getStatus();
         }
         if (!StringUtils.isEmpty(q.getUri())) {
             query += (StringUtils.isEmpty(query)) ? "" : " and ";
@@ -471,11 +467,8 @@ public class AliyunLogServiceImpl implements AliyunLogService {
     @Override
     public Client acqClient() {
         if (client != null) return client;
-        HashMap<String, String> configMap = acqConifMap();
-        String accessKeyId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_KEY.getItemKey());
-        String accessKeySecret = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_SECRET.getItemKey());
         // 构建一个客户端实例
-        client = new Client(ALIYUN_LOG_ENDPOINT, accessKeyId, accessKeySecret);
+        client = new Client(ALIYUN_LOG_ENDPOINT, accessKey, accessSecret);
         return client;
     }
 

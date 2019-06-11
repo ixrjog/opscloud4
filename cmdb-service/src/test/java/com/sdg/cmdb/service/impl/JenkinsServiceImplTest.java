@@ -1,7 +1,11 @@
 package com.sdg.cmdb.service.impl;
 
 
-import com.sdg.cmdb.service.JenkinsService;
+import com.alibaba.fastjson.JSON;
+import com.offbytwo.jenkins.JenkinsServer;
+import com.offbytwo.jenkins.model.Build;
+import com.offbytwo.jenkins.model.BuildWithDetails;
+import com.offbytwo.jenkins.model.JobWithDetails;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
@@ -20,12 +24,40 @@ public class JenkinsServiceImplTest {
 
 
 
+
     @Test
     public void testGetJobs() {
         jenkinsServiceImpl.getJobs();
     }
 
+    @Test
+    public void test() {
+        jenkinsServiceImpl.getPlugin();
+    }
 
+
+    @Test
+    public void testGetJob() {
+        try{
+            JobWithDetails jd= jenkinsServiceImpl.getJobDetails("zebraprime-2.3.1");
+            for( Build build :jd.getBuilds()){
+              if( build.getNumber() == 8) {
+                  BuildWithDetails bd= build.details();
+                  System.err.println(bd.getActions());
+
+                  break;
+              }
+            }
+
+
+            System.err.println(JSON.toJSONString(jd));
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
+    }
 
 
 }

@@ -7,7 +7,6 @@ import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.workflow.*;
-import com.sdg.cmdb.domain.workflow.detail.TodoDetailLdapGroup;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
 import com.sdg.cmdb.service.AuthService;
@@ -55,7 +54,7 @@ public abstract class TodoAbs implements InitializingBean {
         WorkflowTodoVO todoVO = getTodo(todoId);
         // 工单状态
         if (approvalTodo(todoVO)) {
-            // TODO 审批成功，重新设置工作流阶段 todoPhase
+            // 审批成功，重新设置工作流阶段 todoPhase
             HashMap<Integer, WorkflowAppoval> userMap = getWorkflowAppoval(todoVO.getWorkflowDO(), todoVO.getId());
             int todoPhase = todoVO.getTodoPhase() + 1;
             for (int i = todoPhase; i <= 4; i++) {
@@ -65,14 +64,16 @@ public abstract class TodoAbs implements InitializingBean {
                     break;
                 }
             }
-            // TODO 重新插入审批信息
+            // 重新插入审批信息
             todoVO.setTodoUserList(getTodoUserMap(todoVO.getId()));
         }
         if (checkApproval(todoVO)) {
             todoVO.setTodoPhase(WorkflowTodoDO.TODO_PHASE_COMPLETE);
             workflowDao.updateTodo(todoVO);
-            ncService.notifWorkflowTodo(todoVO, userDao.getUserById(todoVO.getApplyUserId()));
-            return (invokeTodo(todoVO.getId()));
+            boolean r = invokeTodo(todoVO.getId());
+            // 获取todoVO最新数据
+            ncService.notifWorkflowTodo(getTodo(todoVO.getId()), userDao.getUserById(todoVO.getApplyUserId()));
+            return r;
         } else {
             workflowDao.updateTodo(todoVO);
         }
@@ -113,9 +114,9 @@ public abstract class TodoAbs implements InitializingBean {
             case WorkflowTodoDO.TODO_PHASE_APPlY:
                 return false;
             // TODO 质量审批
-            case WorkflowTodoDO.TODO_PHASE_QA_APPROVAL:
+            case WorkflowTodoDO.TODO_PHASE_CMO_APPROVAL:
                 // TODO 审批成功
-                return checkApprovalAndUpdate(getTodoUserByAssigneeType(todoVO.getId(), WorkflowTodoUserDO.AssigneeTypeEnum.qc.getCode()));
+                return checkApprovalAndUpdate(getTodoUserByAssigneeType(todoVO.getId(), WorkflowTodoUserDO.AssigneeTypeEnum.cmo.getCode()));
             case WorkflowTodoDO.TODO_PHASE_TL_APPROVAL:
                 return checkApprovalAndUpdate(getTodoUserByAssigneeType(todoVO.getId(), WorkflowTodoUserDO.AssigneeTypeEnum.teamleader.getCode()));
             case WorkflowTodoDO.TODO_PHASE_DL_APPROVAL:
@@ -136,6 +137,8 @@ public abstract class TodoAbs implements InitializingBean {
     private HashMap<Integer, WorkflowAppoval> getWorkflowAppoval(WorkflowDO workflowDO, long todoId) {
         HashMap<String, WorkflowTodoUserDO> userMap = getTodoUserMap(todoId);
         HashMap<Integer, WorkflowAppoval> map = new HashMap<>();
+        WorkflowAppoval waCmo = new WorkflowAppoval(workflowDO.isTlApproval(), userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.cmo.getDesc()));
+        map.put(WorkflowTodoDO.TODO_PHASE_CMO_APPROVAL, waCmo);
         WorkflowAppoval waTl = new WorkflowAppoval(workflowDO.isTlApproval(), userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.teamleader.getDesc()));
         map.put(WorkflowTodoDO.TODO_PHASE_TL_APPROVAL, waTl);
         WorkflowAppoval waDl = new WorkflowAppoval(workflowDO.isDlApproval(), userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.deptLeader.getDesc()));
@@ -154,7 +157,6 @@ public abstract class TodoAbs implements InitializingBean {
                 todoUser.setEvaluation(WorkflowTodoUserDO.EvaluationTypeEnum.approve.getCode());
                 workflowDao.updateTodoUser(todoUser);
             } catch (Exception e) {
-
             }
             return true;
         }
@@ -195,7 +197,6 @@ public abstract class TodoAbs implements InitializingBean {
      * 插入teamleader
      */
     private void createTodoUser(WorkflowTodoDO workflowTodoDO) {
-        //UserDO userDO = userDao.getUserByName(SessionUtils.getUsername());
         UserDO teamleaderUserDO = getTeamleader();
         if (teamleaderUserDO == null || StringUtils.isEmpty(teamleaderUserDO.getUsername())) return;
         WorkflowTodoUserDO teamleader = new WorkflowTodoUserDO(workflowTodoDO.getId(), teamleaderUserDO, WorkflowTodoUserDO.AssigneeTypeEnum.teamleader.getCode());
@@ -203,7 +204,7 @@ public abstract class TodoAbs implements InitializingBean {
     }
 
     /**
-     * 获取当前用户的Teamleader
+     * 获取当前用户的teamleader
      *
      * @return
      */
@@ -215,7 +216,7 @@ public abstract class TodoAbs implements InitializingBean {
         if (teamuserDO != null) {
             teamDO = teamDao.getTeam(teamuserDO.getTeamId());
         } else {
-            // TODO 判断用户是否为TL
+            // 判断用户是否为TL
             teamDO = teamDao.queryTeamByLeaderUserId(userDO.getId());
         }
         if (teamDO != null)
@@ -224,6 +225,31 @@ public abstract class TodoAbs implements InitializingBean {
     }
 
     abstract public WorkflowTodoVO saveTodo(WorkflowTodoVO workflowTodoVO);
+
+
+//    /**
+//     * 保存 CMO 配置管理员
+//     *
+//     * @param workflowTodoVO
+//     * @return
+//     */
+//    protected boolean saveCmoByTodoUserList(WorkflowTodoVO workflowTodoVO) {
+//        HashMap<String, WorkflowTodoUserDO> todoUserList = workflowTodoVO.getTodoUserList();
+//        try {
+//            if (todoUserList.containsKey(WorkflowTodoUserDO.AssigneeTypeEnum.cmo.name())) {
+//                WorkflowTodoUserDO workflowTodoUserDO = todoUserList.get(WorkflowTodoUserDO.AssigneeTypeEnum.cmo.name());
+//                //  public WorkflowTodoUserDO(long todoId, UserDO userDO, int assigneeType) {
+//                UserDO userDO = userDao.getUserByName(workflowTodoUserDO.getUsername());
+//                workflowTodoUserDO = new WorkflowTodoUserDO(workflowTodoVO.getId(), userDO, WorkflowTodoUserDO.AssigneeTypeEnum.cmo.getCode());
+//                saveTodoUser(WorkflowTodoUserDO.AssigneeTypeEnum.cmo.getDesc(), workflowTodoUserDO);
+//                return true;
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//        return false;
+//    }
 
 
     abstract protected Type getType();
@@ -284,14 +310,19 @@ public abstract class TodoAbs implements InitializingBean {
     private boolean saveTodoUser(String assigneeDesc, WorkflowTodoUserDO todoUser) {
         WorkflowTodoUserDO user = workflowDao.getTodoUserByTodoIdAndAssigneeType(todoUser.getTodoId(), WorkflowTodoUserDO.AssigneeTypeEnum.valueOf(assigneeDesc).getCode());
         try {
-            UserDO userDO = userDao.getUserById(todoUser.getUserId());
+            UserDO userDO;
+            if (todoUser.getUserId() != 0) {
+                userDO = userDao.getUserById(todoUser.getUserId());
+            } else {
+                userDO = userDao.getUserByName(todoUser.getUsername());
+            }
             if (user == null) {
                 todoUser = new WorkflowTodoUserDO(todoUser.getTodoId(), userDO, WorkflowTodoUserDO.AssigneeTypeEnum.valueOf(assigneeDesc).getCode());
                 workflowDao.addTodoUser(todoUser);
-            }else{
+            } else {
                 user.setUserId(userDO.getId());
-                user.setUsername(user.getUsername());
-                user.setDisplayName(user.getDisplayName());
+                user.setUsername(userDO.getUsername());
+                user.setDisplayName(userDO.getDisplayName());
                 workflowDao.updateTodoUser(user);
             }
             return true;
@@ -316,8 +347,8 @@ public abstract class TodoAbs implements InitializingBean {
         // check approval 是否需要审批
         if (!workflowDO.isApproval()) return true;
         // check qaApproval QA审批
-        if (workflowDO.isQaApproval())
-            if (!checkApprovalByUser(userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.qc.getDesc())))
+        if (workflowDO.isCmoApproval())
+            if (!checkApprovalByUser(userMap.get(WorkflowTodoUserDO.AssigneeTypeEnum.cmo.getDesc())))
                 return false;
         // check tlApproval TL审批
         if (workflowDO.isTlApproval())
@@ -346,6 +377,19 @@ public abstract class TodoAbs implements InitializingBean {
 
     private boolean checkTodoPhase(long todoId) {
         return checkTodoPhase(workflowDao.getTodo(todoId));
+    }
+
+
+    /**
+     * 删除所有工单详情
+     * @param todoId
+     * @return
+     */
+    protected void delTodoDetails(long todoId) {
+        List<WorkflowTodoDetailDO> todoDetails = workflowDao.getTodoDetailByTodoId(todoId);
+        for(WorkflowTodoDetailDO detail : todoDetails){
+            delTodoDetail(todoId,detail.getId());
+        }
     }
 
     /**
@@ -393,6 +437,8 @@ public abstract class TodoAbs implements InitializingBean {
     private WorkflowTodoUserDO getUserByTodoPhase(WorkflowTodoVO workflowTodoVO) {
         int todoPhase = workflowTodoVO.getTodoPhase();
         HashMap<String, WorkflowTodoUserDO> todoUserList = workflowTodoVO.getTodoUserList();
+        if (todoPhase == WorkflowTodoDO.TODO_PHASE_CMO_APPROVAL)
+            return todoUserList.get(WorkflowTodoUserDO.AssigneeTypeEnum.cmo.getDesc());
         if (todoPhase == WorkflowTodoDO.TODO_PHASE_TL_APPROVAL)
             return todoUserList.get(WorkflowTodoUserDO.AssigneeTypeEnum.teamleader.getDesc());
         if (todoPhase == WorkflowTodoDO.TODO_PHASE_DL_APPROVAL)
@@ -429,11 +475,11 @@ public abstract class TodoAbs implements InitializingBean {
      */
     private int getTodoPhase(WorkflowDO workflowDO) {
         if (workflowDO.isApproval()) {
-            if (workflowDO.isQaApproval())
-                return WorkflowTodoDO.TODO_PHASE_QA_APPROVAL;
-            if (workflowDO.isTlApproval())
+            if (workflowDO.isCmoApproval()) // CMO配置管理员
+                return WorkflowTodoDO.TODO_PHASE_CMO_APPROVAL;
+            if (workflowDO.isTlApproval())  // TL
                 return WorkflowTodoDO.TODO_PHASE_TL_APPROVAL;
-            if (workflowDO.isDlApproval())
+            if (workflowDO.isDlApproval())  // DL
                 return WorkflowTodoDO.TODO_PHASE_DL_APPROVAL;
         }
         return WorkflowTodoDO.TODO_PHASE_AUDITING;
@@ -476,13 +522,13 @@ public abstract class TodoAbs implements InitializingBean {
         }
     }
 
+
     /**
-     * 新工作流创建初始信息
-     *
+     * 新工作流创建初始信息，如需创建则重写
      * @param todoId
      * @param detailList
      */
-    abstract protected void createTodoDetails(long todoId, List<WorkflowTodoDetailVO> detailList);
+    protected void createTodoDetails(long todoId, List<WorkflowTodoDetailVO> detailList) {}
 
     private HashMap<String, WorkflowTodoUserDO> getTodoUserMap(long todoId) {
         List<WorkflowTodoUserDO> list = getTodoUserList(todoId);

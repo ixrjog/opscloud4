@@ -54,7 +54,6 @@
                                             <thead>
                                             <tr>
                                                 <td>Topic</td>
-                                                <td>状态</td>
                                                 <td>消息类型</td>
                                                 <td>创建人(oc平台创建才会记录)</td>
                                                 <td>修改时间</td>
@@ -67,10 +66,6 @@
                                                     <b style="color: #286090">{{topic.topic}}</b>
                                                     </br>
                                                     <b style="color: #777">{{topic.remark}}</b>
-                                                </td>
-                                                <td>
-                                                    <b style="color: #20a03f" ng-if="topic.status == 0">{{topic.statusName}}</b>
-                                                    <b style="color: #990000" ng-if="topic.status != 0">{{topic.statusName}}</b>
                                                 </td>
                                                 <td>
                                                     <b style="color: #20a03f"

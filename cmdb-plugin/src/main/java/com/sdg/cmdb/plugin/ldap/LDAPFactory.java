@@ -14,13 +14,13 @@ import org.springframework.stereotype.Service;
 @Service
 public class LDAPFactory {
 
-    @Value("#{cmdb['ldap.url']}")
+    @Value(value = "${ldap.url}")
     private String ldapUrl;
 
-    @Value("#{cmdb['ldap.manager.passwd']}")
+    @Value(value = "${ldap.manager.passwd}")
     private String ldapManagePasswd;
 
-    @Value("#{cmdb['ldap.manager.dn']}")
+    @Value(value = "${ldap.manager.dn}")
     private String manageDn;
 
 

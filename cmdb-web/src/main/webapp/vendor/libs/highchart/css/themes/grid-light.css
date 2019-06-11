@@ -440,6 +440,11 @@ g.highcharts-series,
   fill: #cccccc;
 }
 
+circle.highcharts-legend-nav-active, circle.highcharts-legend-nav-inactive {
+  /* tracker */
+  fill: rgba(192, 192, 192, 0.0001);
+}
+
 .highcharts-legend-title-box {
   fill: none;
   stroke-width: 0;

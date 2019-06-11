@@ -69,14 +69,14 @@ app.controller('taskScriptCtrl', function ($scope, $state, $uibModal, $parse, $s
 
     $scope.addScript = function () {
         var scriptItem = {
-            id:0,
-            scriptName:"",
-            content:"",
-            userId:0,
-            username:"",
-            script:"",
-            scriptType:0,
-            sysScript:0
+            id: 0,
+            scriptName: "",
+            content: "",
+            userId: 0,
+            username: "",
+            script: "",
+            scriptType: 0,
+            sysScript: 0
         }
 
         $scope.editScript(scriptItem);
@@ -149,7 +149,27 @@ app.controller('scriptInstanceCtrl', function ($scope, $uibModalInstance, $uibMo
     $scope.scriptType = scriptType;
     $scope.isView = isView;
     $scope.scriptItem = scriptItem;
+    $scope.modes = ['sh', 'yaml', 'python', 'php','lua','scheme'];
+    $scope.aceOption = {};
 
+    var init = function () {
+        // 设置文本模式
+        if($scope.scriptItem.modeType === null || $scope.scriptItem.modeType === ''){
+            $scope.scriptItem.modeType = $scope.modes[0];
+        }
+
+        $scope.aceOption = {
+            useWrapMode : true,
+            mode: $scope.scriptItem.modeType
+        };
+    }
+
+    init();
+
+
+    $scope.modeChanged = function () {
+        $scope.aceOption.mode = $scope.scriptItem.modeType　;
+    };
 
     $scope.alert = {
         type: "",
@@ -191,16 +211,28 @@ app.controller('scriptInstanceCtrl', function ($scope, $uibModalInstance, $uibMo
 
     }
 
-    $scope.editorOptions = {
-        lineWrapping : true,
-        lineNumbers: true,
-        readOnly: 'nocursor'
-    };
-
     $scope.closeModal = function () {
         $uibModalInstance.dismiss('cancel');
     }
 
+    $scope.editorOptions = {
+        lineWrapping: true,
+        lineNumbers: true,
+        readOnly: 'nocursor'
+    };
+
+
+    // The ui-ace option
+    // $scope.aceOption = {
+    //     mode: $scope.mode.toLowerCase(),
+    //     onLoad: function (_ace) {
+    //         // HACK to have the ace instance in the scope...
+    //         $scope.modeChanged = function () {
+    //             _ace.getSession().setMode("ace/mode/" + $scope.mode.toLowerCase());
+    //         };
+    //
+    //     }
+    // };
 
 });
 

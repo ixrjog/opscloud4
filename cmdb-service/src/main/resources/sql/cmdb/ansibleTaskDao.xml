@@ -22,7 +22,6 @@
         )
     </insert>
 
-
     <select id="getAnsibleTask" parameterType="_long" resultType="AnsibleTaskDO">
         SELECT * FROM oc_ansible_task WHERE id = #{id}
     </select>
@@ -38,6 +37,7 @@
         INSERT INTO oc_ansible_task_server(
         ansibleTaskId,
         serverId,
+        scriptId,
         ip,
         returncode,
         result,
@@ -46,6 +46,7 @@
         ) VALUES (
         #{ansibleTaskId},
         #{serverId},
+        #{scriptId},
         #{ip},
         #{returncode},
         #{result},
@@ -127,7 +128,8 @@
         content = #{content},
         script = #{script},
         scriptType = #{scriptType},
-        sysScript = #{sysScript}
+        sysScript = #{sysScript},
+        modeType = #{modeType}
         WHERE id = #{id}
     </update>
 
@@ -140,7 +142,8 @@
         username,
         script,
         scriptType,
-        sysScript
+        sysScript,
+        modeType
         ) VALUES (
         #{scriptName},
         #{content},
@@ -148,7 +151,8 @@
         #{username},
         #{script},
         #{scriptType},
-        #{sysScript}
+        #{sysScript},
+        #{modeType}
         )
     </insert>
 
@@ -308,5 +312,17 @@
         SELECT * FROM oc_playbook_task_host WHERE playbookTaskId = #{playbookTaskId}
     </select>
 
+
+    <select id="getAnsibleTaskServerSize" parameterType="object" resultType="_long">
+        SELECT COUNT(*) FROM oc_ansible_task_server
+        WHERE scriptId = #{scriptId} AND serverId = #{serverId}
+    </select>
+
+    <select id="queryAnsibleTaskServerPage" parameterType="object" resultType="AnsibleTaskServerDO">
+        SELECT * FROM oc_ansible_task_server
+        WHERE scriptId = #{scriptId} AND serverId = #{serverId}
+        ORDER BY gmtCreate DESC
+        limit #{pageStart}, #{length}
+    </select>
 
 </mapper>

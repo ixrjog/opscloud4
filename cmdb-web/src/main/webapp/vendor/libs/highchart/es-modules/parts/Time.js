@@ -1,5 +1,5 @@
 /**
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
  */
@@ -254,7 +254,7 @@ Highcharts.Time.prototype = {
 
     /**
      * Update the Time object with current options. It is called internally on
-     * initiating Highcharts, after running `Highcharts.setOptions` and on
+     * initializing Highcharts, after running `Highcharts.setOptions` and on
      * `Chart.update`.
      *
      * @private
@@ -269,7 +269,7 @@ Highcharts.Time.prototype = {
         this.options = options = merge(true, this.options || {}, options);
 
         // Allow using a different Date class
-        this.Date = options.Date || win.Date;
+        this.Date = options.Date || win.Date || Date;
 
         this.useUTC = useUTC;
         this.timezoneOffset = useUTC && options.timezoneOffset;
@@ -399,6 +399,7 @@ Highcharts.Time.prototype = {
      */
     makeTime: function (year, month, date, hours, minutes, seconds) {
         var d, offset, newOffset;
+
         if (this.useUTC) {
             d = this.Date.UTC.apply(0, arguments);
             offset = this.getTimezoneOffset(d);
@@ -584,19 +585,6 @@ Highcharts.Time.prototype = {
                     'L': pad(Math.floor(timestamp % 1000), 3)
                 },
 
-                /**
-                 * A hook for defining additional date format specifiers. New
-                 * specifiers are defined as key-value pairs by using the
-                 * specifier as key, and a function which takes the timestamp as
-                 * value. This function returns the formatted portion of the
-                 * date.
-                 *
-                 * @sample highcharts/global/dateformats/
-                 *         Adding support for week number
-                 *
-                 * @name Highcharts.dateFormats
-                 * @type {Highcharts.Dictionary<Highcharts.TimeFormatCallbackFunction>}
-                 */
                 H.dateFormats
             );
 
@@ -690,7 +678,8 @@ Highcharts.Time.prototype = {
             ); // #3652, #3654
 
             if (interval >= timeUnits.second) { // second
-                time.set('Seconds',
+                time.set(
+                    'Seconds',
                     minDate,
                     interval >= timeUnits.minute ?
                         0 : // #3935
@@ -699,7 +688,9 @@ Highcharts.Time.prototype = {
             }
 
             if (interval >= timeUnits.minute) { // minute
-                time.set('Minutes', minDate,
+                time.set(
+                    'Minutes',
+                    minDate,
                     interval >= timeUnits.hour ?
                         0 :
                         count * Math.floor(time.get('Minutes', minDate) / count)
@@ -730,7 +721,7 @@ Highcharts.Time.prototype = {
                                 time.get('Date', minDate) / count
                             )
                         )
-                    );
+                );
             }
 
             if (interval >= timeUnits.month) { // month
@@ -794,6 +785,7 @@ Highcharts.Time.prototype = {
 
             // Iterate and add tick positions at appropriate values
             var t = minDate.getTime();
+
             i = 1;
             while (t < max) {
                 tickPositions.push(t);
@@ -874,4 +866,3 @@ Highcharts.Time.prototype = {
     }
 
 }; // end of Time
-

@@ -1,34 +1,29 @@
 package com.sdg.cmdb.service.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
-import com.alibaba.fastjson.JSONObject;
-import com.aliyuncs.DefaultAcsClient;
+
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
-import com.aliyuncs.profile.DefaultProfile;
-import com.aliyuncs.profile.IClientProfile;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.aliyun.AliyunNetworkDO;
+import com.sdg.cmdb.domain.aliyun.AliyunPrepaidInstance;
 import com.sdg.cmdb.domain.aliyun.AliyunRenewInstance;
 import com.sdg.cmdb.domain.aliyun.AliyunRenewInstances;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
-import com.sdg.cmdb.domain.configCenter.itemEnum.AliyunEcsItemEnum;
 import com.sdg.cmdb.domain.ip.IPDetailDO;
 import com.sdg.cmdb.domain.ip.IPDetailVO;
 import com.sdg.cmdb.domain.server.*;
-import com.sdg.cmdb.service.AliyunService;
-import com.sdg.cmdb.service.ConfigCenterService;
-import com.sdg.cmdb.service.EcsService;
-import com.sdg.cmdb.service.IPService;
+import com.sdg.cmdb.service.*;
+
 import com.sdg.cmdb.util.TimeUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -48,11 +43,10 @@ public class EcsServiceImpl implements EcsService {
     private static final Logger coreLogger = LoggerFactory.getLogger("coreLogger");
 
     @Resource
-    private ConfigCenterService configCenterService;
-
-    @Resource
     private SchedulerManager schedulerManager;
 
+    @Value(value = "${aliyun.ecs.public.network.id}")
+    private String publicNetworkId;
 
     /**
      * 美国西部1
@@ -73,39 +67,22 @@ public class EcsServiceImpl implements EcsService {
      */
     public static final String regionIdFinanceCnHangzhou = "cn-hangzhou";
 
-    /**
-     * 阿里云
-     */
-    public static final int aliyunEcs = 0;
-
-    /**
-     * 金融云
-     */
-    public static final int aliyunFinanceEcs = 1;
-
-    private String[] acqRegionIds() {
-        HashMap<String, String> configMap = acqConifMap();
-        String aliyunRegionId = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_REGION_ID.getItemKey());
-        String[] regionIds = aliyunRegionId.split(",");
-        return regionIds;
-    }
 
     @Resource
     private ServerDao serverDao;
 
-    @Resource
+    @Autowired
+    private ServerService serverService;
+
+    @Autowired
     private IPService ipService;
 
-    @Resource
+    @Autowired
     private AliyunService aliyunService;
 
-    private HashMap<String, String> configMap;
+    @Autowired
+    private AliyunInstanceService aliyunInstanceService;
 
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.ALIYUN_ECS.getItemKey());
-    }
 
     /**
      * 获取ECS服务器分页数据
@@ -117,10 +94,9 @@ public class EcsServiceImpl implements EcsService {
      * @return
      */
     @Override
-    public TableVO<List<EcsServerVO>> getEcsServerPage(String serverName, String queryIp, int status, int page, int length) {
-        long size = serverDao.getEcsServerSize(serverName, queryIp, status);
-        List<EcsServerDO> list = serverDao.getEcsServerPage(serverName, queryIp, status, page * length, length);
-
+    public TableVO<List<EcsServerVO>> getEcsServerPage(String serverName, String queryIp, int status, String chargeType, int page, int length) {
+        long size = serverDao.getEcsServerSize(serverName, queryIp, status, chargeType);
+        List<EcsServerDO> list = serverDao.getEcsServerPage(serverName, queryIp, status, chargeType, page * length, length);
         List<EcsServerVO> listVO = new ArrayList<>();
         for (EcsServerDO ecsServerDO : list) {
             EcsServerVO ecsServerVO = new EcsServerVO(ecsServerDO);
@@ -133,9 +109,7 @@ public class EcsServiceImpl implements EcsService {
     @Override
     public TableVO<List<EcsServerVO>> getEcsRenewPage(String serverName, String queryIp, int status, int day, int page, int length) {
         // TODO 计算查询参数 过期日期
-        if (day <= 0)
-            day = 30;
-
+        if (day <= 0) day = 30;
         String expiredTime = TimeUtils.futureTime(day);
         long size = serverDao.getEcsRenewSize(serverName, queryIp, status, expiredTime);
         List<EcsServerDO> list = serverDao.getEcsRenewPage(serverName, queryIp, status, expiredTime, page * length, length);
@@ -163,27 +137,14 @@ public class EcsServiceImpl implements EcsService {
     }
 
 
-    /**
-     * 查询当前区域服务器总数
-     *
-     * @param RegionId
-     * @return
-     */
-    private int ecsTotalCount(String RegionId) {
-        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-        DescribeInstancesResponse response = sampleDescribeInstancesResponse(RegionId, describe);
-        return response.getTotalCount();
-    }
-
 
     public List<EcsServerDO> ecsGetAll() {
         List<EcsServerDO> servers = new ArrayList<EcsServerDO>();
-        for (String regionId : acqRegionIds()) {
+        for (String regionId : aliyunService.acqRegionIds()) {
             servers.addAll(ecsGetAll(regionId));
         }
         return servers;
     }
-
 
     /**
      * 查询当前区域所有服务器属性
@@ -192,37 +153,13 @@ public class EcsServiceImpl implements EcsService {
      * @return
      */
     private List<EcsServerDO> ecsGetAll(String regionId) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        List<EcsServerDO> allEcs = new ArrayList<EcsServerDO>();
-        int pageSize = 50;
-        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-        describe.setPageSize(pageSize);
-        DescribeInstancesResponse response = sampleDescribeInstancesResponse(regionId, describe);
-        invoke(allEcs, response);
-        //获取总数
-        int totalCount = response.getTotalCount();
-        // 循环次数
-        int cnt = (totalCount + pageSize - 1) / pageSize;
-        for (int i = 1; i < cnt; i++) {
-            describe.setPageNumber(i + 1);
-            response = sampleDescribeInstancesResponse(regionId, describe);
-            invoke(allEcs, response);
+        List<DescribeInstancesResponse.Instance> instanceList = aliyunInstanceService.getInstanceList(regionId);
+        List<EcsServerDO> ecsList = new ArrayList<EcsServerDO>();
+        for (DescribeInstancesResponse.Instance instance : instanceList) {
+            EcsServerDO ecs = new EcsServerDO(instance);
+            ecsList.add(ecs);
         }
-        return allEcs;
-    }
-
-
-    /**
-     * ECS数据转EcsServerDO
-     *
-     * @param allEcs
-     * @param response
-     */
-    private void invoke(List<EcsServerDO> allEcs, DescribeInstancesResponse response) {
-        for (DescribeInstancesResponse.Instance i : response.getInstances()) {
-            EcsServerDO ecs = new EcsServerDO(i);
-            allEcs.add(ecs);
-        }
+        return ecsList;
     }
 
     /**
@@ -252,68 +189,75 @@ public class EcsServiceImpl implements EcsService {
         return new BusinessWrapper<>(true);
     }
 
-
+    /**
+     * 同步阿里云ECS
+     *
+     * @return
+     */
     public boolean ecsSyncByAliyun() {
         // 获取阿里云ECS
         List<EcsServerDO> servers = ecsGetAll();
+        // TODO KEY=insideIp   server表中所有的Ecs
         HashMap<String, ServerDO> serverMap = acqServerMapEcs();
-        HashMap<String, EcsServerDO> ecsServerMap4Aliyun = new HashMap<>();
+        // TODO KEY=instanceId
+        HashMap<String, EcsServerDO> aliyunEcsMap = new HashMap<>();
         try {
+            // TODO 遍历ECS，并校验server表数据是否存在
             for (EcsServerDO ecsServerDO : servers) {
-                if(ecsServerDO.getInsideIp().equals("192.168.101.92"))
-                    System.err.println("----");
-                ecsServerMap4Aliyun.put(ecsServerDO.getInstanceId(), ecsServerDO);
-                // server表已经存在
+                aliyunEcsMap.put(ecsServerDO.getInstanceId(), ecsServerDO);
+                // TODO server表已经存在,标记已录入
                 if (serverMap.containsKey(ecsServerDO.getInsideIp())) {
                     ServerDO serverDO = serverMap.get(ecsServerDO.getInsideIp());
                     ecsServerDO.setContent(serverDO.getContent());
                     ecsServerDO.setServerId(serverDO.getId());
                     ecsServerDO.setStatus(EcsServerDO.statusAssociate);
-                    //invokeDisk(ecsServerDO);
-                    //更新公网ip
                     updateServerPublicIp(serverDO, ecsServerDO);
-                    //在serverMap中移除
+                    // TODO 在serverMap(server表中所有的Ecs)中移除,剩下的就是下线服务器
                     serverMap.remove(ecsServerDO.getInsideIp());
                 } else {
-                    // 新ECS服务器（server表不存在）
+                    // TODO server表不存在,新ECS服务器
                     ecsServerDO.setStatus(EcsServerDO.statusNew);
                 }
                 invokeDisk(ecsServerDO);
                 saveEcsServer(ecsServerDO);
             }
-            // 处理server表中存在的但ECS中不存在的数据（ECS服务器下线）
-            //System.err.println("处理server表中存在的但ECS中不存在的数据（ECS服务器下线）");
+            // TODO 处理server表中存在的但ECS中不存在的数据（ECS服务器下线）
             for (Map.Entry<String, ServerDO> entry : serverMap.entrySet()) {
                 ServerDO serverDO = entry.getValue();
                 EcsServerDO ecsServerDO = serverDao.queryEcsByInsideIp(serverDO.getInsideIp());
-                if (ecsServerDO == null || !ecsServerDO.isFinance()) {
+                if (ecsServerDO == null) {
                     ecsServerDO = new EcsServerDO(serverDO, EcsServerDO.statusOffline);
                     saveEcsServer(ecsServerDO);
-                    //System.err.println(ecsServerDO);
                 }
             }
-            // 校验ECS表中多余的服务器（ECS服务器下线）
-            // 获取ECS表中的 非金融云服务器 然后对比
-            HashMap<String, EcsServerDO> ecsServerMap4DB = acqEcsServerMap4DB(false);
-            for (Map.Entry<String, EcsServerDO> entry : ecsServerMap4Aliyun.entrySet()) {
-                // 阿里云 API ECS
-                EcsServerDO ecsServerDO = entry.getValue();
-                // ECS如果存在则在map中移除
-                if (ecsServerMap4DB.containsKey(ecsServerDO.getInstanceId()))
-                    ecsServerMap4DB.remove(ecsServerDO.getInstanceId());
-            }
-            // 标记下线服务器
-            for (Map.Entry<String, EcsServerDO> entry : ecsServerMap4DB.entrySet()) {
-                EcsServerDO ecsServerDO = entry.getValue();
-                ecsServerDO.setStatus(EcsServerDO.statusOffline);
-                saveEcsServer(ecsServerDO);
-            }
-
+            checkEcs(aliyunEcsMap);
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
         return true;
+    }
+
+    /**
+     * 校验ECS表中多余的服务器（ECS服务器下线）
+     *
+     * @param aliyunEcsMap API获取的所有ECS
+     */
+    private void checkEcs(HashMap<String, EcsServerDO> aliyunEcsMap) {
+        HashMap<String, EcsServerDO> ecsServerMap = acqEcsServerMap();
+        for (Map.Entry<String, EcsServerDO> entry : aliyunEcsMap.entrySet()) {
+            // 阿里云 API ECS
+            EcsServerDO ecsServerDO = entry.getValue();
+            // ECS如果存在则在map中移除
+            if (ecsServerMap.containsKey(ecsServerDO.getInstanceId()))
+                ecsServerMap.remove(ecsServerDO.getInstanceId());
+        }
+        // 标记下线服务器
+        for (Map.Entry<String, EcsServerDO> entry : ecsServerMap.entrySet()) {
+            EcsServerDO ecsServerDO = entry.getValue();
+            ecsServerDO.setStatus(EcsServerDO.statusOffline);
+            saveEcsServer(ecsServerDO);
+        }
     }
 
 
@@ -322,9 +266,9 @@ public class EcsServiceImpl implements EcsService {
      *
      * @return
      */
-    private HashMap<String, EcsServerDO> acqEcsServerMap4DB(boolean finance) {
+    private HashMap<String, EcsServerDO> acqEcsServerMap() {
         HashMap<String, EcsServerDO> map = new HashMap<>();
-        List<EcsServerDO> servers = serverDao.getEcsServerByFinance(finance);
+        List<EcsServerDO> servers = serverDao.getEcsServerAll();
         for (EcsServerDO ecsServerDO : servers)
             map.put(ecsServerDO.getInstanceId(), ecsServerDO);
         return map;
@@ -360,66 +304,8 @@ public class EcsServiceImpl implements EcsService {
         return new BusinessWrapper<>(true);
     }
 
-    /**
-     * 查询所有ecs状态
-     *
-     * @param regionId
-     * @return
-     */
-    private List<EcsServerDO> ecsStatusAll(String regionId) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        List<EcsServerDO> allEcs = new ArrayList<EcsServerDO>();
-        int pageSize = 50;
-        DescribeInstanceStatusRequest describe = new DescribeInstanceStatusRequest();
-        describe.setPageSize(pageSize);
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        DescribeInstanceStatusResponse response = sampleDescribeInstanceStatusResponse(regionId, describe);
-        invoke(allEcs, response);
-        int totalCount = response.getTotalCount();
-        // 循环次数
-        int cnt = (totalCount + pageSize - 1) / pageSize;
-        for (int i = 1; i < cnt; i++) {
-            describe.setPageNumber(i + 1);
-            response = sampleDescribeInstanceStatusResponse(regionId, describe);
-            invoke(allEcs, response);
-        }
-        return allEcs;
-    }
-
-    /**
-     * 查询ecs状态
-     *
-     * @param regionId
-     * @return
-     */
-    @Override
-    public EcsServerDO ecsStatus(String regionId, ServerDO serverDO) {
-        if (serverDO == null) return null;
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        EcsServerDO ecs = ecsGet(regionId, serverDO);
-        List<EcsServerDO> allEcs = ecsStatusAll(regionId);
-        for (EcsServerDO i : allEcs) {
-            if (i.getInstanceId().equals(ecs.getInstanceId())) {
-                ecs.setStatus(i.getStatus());
-                return ecs;
-            }
-        }
-        return ecs;
-    }
 
 
-    /**
-     * ECS数据转EcsServerDO
-     *
-     * @param allEcs
-     * @param response
-     */
-    private void invoke(List<EcsServerDO> allEcs, DescribeInstanceStatusResponse response) {
-        for (DescribeInstanceStatusResponse.InstanceStatus i : response.getInstanceStatuses()) {
-            EcsServerDO ecs = new EcsServerDO(i.getInstanceId());
-            allEcs.add(ecs);
-        }
-    }
 
     /**
      * 查询ecs
@@ -429,66 +315,22 @@ public class EcsServiceImpl implements EcsService {
      */
     private EcsServerDO ecsGet(String regionId, ServerDO serverDO) {
         if (serverDO == null) return null;
-        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        describe.setRegionId(regionId);
-        JSONArray ips = new JSONArray();
-        ips.add(serverDO.getInsideIp());
-        describe.setInnerIpAddresses(ips.toString());
-        DescribeInstancesResponse response = sampleDescribeInstancesResponse(regionId, describe);
-        return new EcsServerDO(response.getInstances().get(0));
+        DescribeInstancesResponse.Instance instance = aliyunInstanceService.getInstanceByIp(regionId,serverDO.getInsideIp());
+        return new EcsServerDO(instance);
     }
 
     @Override
     public EcsServerDO ecsGet(String regionId, String instanceId) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        DescribeInstancesResponse.Instance ecs = query(regionId, instanceId);
+        DescribeInstancesResponse.Instance instance = aliyunInstanceService.getInstance(regionId, instanceId);
         try {
-            return new EcsServerDO(ecs);
+            return new EcsServerDO(instance);
         } catch (Exception e) {
             return new EcsServerDO();
         }
     }
 
-    @Override
-    public DescribeInstancesResponse.Instance query(String regionId, String instanceId) {
-        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        describe.setRegionId(regionId);
-        JSONArray instanceIds = new JSONArray();
-        instanceIds.add(instanceId);
-        describe.setInstanceIds(instanceIds.toString());
-
-        try {
-            DescribeInstancesResponse response = sampleDescribeInstancesResponse(regionId, describe);
-            DescribeInstancesResponse.Instance ecs = response.getInstances().get(0);
-            return ecs;
-        } catch (Exception e) {
-            return new DescribeInstancesResponse.Instance();
-        }
-    }
 
 
-    /**
-     * 修改服务器名称
-     *
-     * @param regionId
-     * @return
-     */
-    private boolean ecsModifyName(String regionId, ServerDO serverDO) {
-        if (serverDO == null) return false;
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        EcsServerDO ecs = ecsGet(regionId, serverDO);
-        //ecs不存在
-        if (ecs == null) return false;
-        ModifyInstanceAttributeRequest describe = new ModifyInstanceAttributeRequest();
-        //describe.setActionName("ModifyInstanceAttribute");
-        describe.setInstanceId(ecs.getInstanceId());
-        describe.setInstanceName(serverDO.acqServerName());
-        ModifyInstanceAttributeResponse response = sampleModifyInstanceAttributeResponse(regionId, describe);
-        if (response == null || response.getRequestId().isEmpty()) return false;
-        return true;
-    }
 
     /**
      * 停止实例
@@ -558,59 +400,30 @@ public class EcsServiceImpl implements EcsService {
 
 
     private IAcsClient acqIAcsClient(String regionId) {
-        HashMap<String, String> configMap = acqConifMap();
-        String aliyunAccessKey = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_KEY.getItemKey());
-        String aliyunAccessSecret = configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_ACCESS_SECRET.getItemKey());
-        //生成 IClientProfile 的对象 profile，该对象存放 Access Key ID 和 Access Key Secret 和默认的地域信息
-        IClientProfile profile = DefaultProfile.getProfile(regionId, aliyunAccessKey, aliyunAccessSecret);
-        //创建一个对应方法的 Request，类的命名规则一般为 API 的方法名加上 “Request”，如获得镜像列表的 API 方法名为 DescribeImages，
-        //那么对应的请求类名就是 DescribeImagesRequest，直接使用构造函数生成一个默认的类 describe：
-        IAcsClient client = new DefaultAcsClient(profile);
-        return client;
+        return aliyunService.acqIAcsClient(regionId);
     }
 
 
-    private DescribeInstancesResponse sampleDescribeInstancesResponse(String regionId, DescribeInstancesRequest describe) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        IAcsClient client;
+//    private DescribeInstancesResponse sampleDescribeInstancesResponse(String regionId, DescribeInstancesRequest describe) {
+//        if (regionId == null) regionId = regionIdCnHangzhou;
+//        IAcsClient client;
+//
+//        client = acqIAcsClient(regionId);
+//
+//        try {
+//            DescribeInstancesResponse response
+//                    = client.getAcsResponse(describe);
+//            return response;
+//        } catch (ServerException e) {
+//            e.printStackTrace();
+//            return null;
+//        } catch (ClientException e) {
+//            e.printStackTrace();
+//            return null;
+//        }
+//    }
 
-        client = acqIAcsClient(regionId);
 
-        try {
-            DescribeInstancesResponse response
-                    = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ClientException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    /**
-     * 修改ecs属性
-     *
-     * @param regionId
-     * @param describe
-     * @return
-     */
-    private ModifyInstanceAttributeResponse sampleModifyInstanceAttributeResponse(String regionId, ModifyInstanceAttributeRequest describe) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        IAcsClient client = acqIAcsClient(regionId);
-        try {
-            ModifyInstanceAttributeResponse response
-                    = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ClientException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * 启动ecs
@@ -681,28 +494,7 @@ public class EcsServiceImpl implements EcsService {
         }
     }
 
-    /**
-     * 查询ecs状态
-     *
-     * @param regionId
-     * @param describe
-     * @return
-     */
-    private DescribeInstanceStatusResponse sampleDescribeInstanceStatusResponse(String regionId, DescribeInstanceStatusRequest describe) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        IAcsClient client = acqIAcsClient(regionId);
-        try {
-            DescribeInstanceStatusResponse response
-                    = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ClientException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
     /**
      * 保存ecs
@@ -796,14 +588,13 @@ public class EcsServiceImpl implements EcsService {
     }
 
     public void updateServerPublicIp(ServerDO serverDO, EcsServerDO ecsServerDO) {
-        HashMap<String, String> configMap = acqConifMap();
-        long networkId = Long.valueOf(configMap.get(AliyunEcsItemEnum.ALIYUN_ECS_PUBLIC_NETWORK_ID.getItemKey()));
+        long networkId = Long.valueOf(publicNetworkId);
         // ecs无公网ip
         if (StringUtils.isEmpty(ecsServerDO.getPublicIp())) return;
         // server有公网ip
         if (!StringUtils.isEmpty(serverDO.getPublicIp())) return;
 
-        IPDetailDO publicDO = new IPDetailDO(networkId, ecsServerDO.getPublicIp(), IPDetailDO.publicIP);
+        IPDetailDO publicDO = new IPDetailDO(networkId, ecsServerDO.getPublicIp(), IPDetailDO.PUBLIC_IP);
         IPDetailVO publicVO = ipService.getIPDetail(publicDO);
 
         if (publicVO == null) {
@@ -898,7 +689,7 @@ public class EcsServiceImpl implements EcsService {
             serverDao.delEcsServerById(ecs.getId());
         }
         if (server != null) {
-            serverDao.delServerById(server.getId());
+            serverService.delServerGroupServer(server.getId());
         }
         return new BusinessWrapper<>(true);
     }
@@ -911,10 +702,9 @@ public class EcsServiceImpl implements EcsService {
     }
 
     private void invokeDisk(EcsServerDO ecsServerDO) {
-        List<DescribeDisksResponse.Disk> disks = queryDisks(ecsServerDO.getRegionId(), ecsServerDO.getInstanceId(), ecsServerDO.isFinance());
+        List<DescribeDisksResponse.Disk> disks = aliyunInstanceService.queryDisks(ecsServerDO.getRegionId(), ecsServerDO.getInstanceId());
         try {
             for (DescribeDisksResponse.Disk disk : disks) {
-
                 if (disk.getType().equals("system")) {
                     ecsServerDO.setSystemDiskCategory("system");
                     ecsServerDO.setSystemDiskSize(disk.getSize());
@@ -926,46 +716,11 @@ public class EcsServiceImpl implements EcsService {
                     continue;
                 }
             }
-
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
-    public List<DescribeDisksResponse.Disk> queryDisks(String regionId, String instanceId, boolean isFinance) {
-        if (regionId == null) regionId = regionIdCnHangzhou;
-        DescribeDisksRequest request = new DescribeDisksRequest();
-        request.setInstanceId(instanceId);
-        DescribeDisksResponse response = sampleDescribeDisksResponse(regionId, request);
-        if (response == null || response.getRequestId().isEmpty()) return new ArrayList<DescribeDisksResponse.Disk>();
-        return response.getDisks();
-    }
-
-
-    /**
-     * 查询磁盘
-     *
-     * @param regionId
-     * @param request
-     * @return
-     */
-    private DescribeDisksResponse sampleDescribeDisksResponse(String regionId, DescribeDisksRequest request) {
-        IAcsClient client;
-
-        client = acqIAcsClient(regionId);
-        try {
-            DescribeDisksResponse response
-                    = client.getAcsResponse(request);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
-        } catch (ClientException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
 
     /**
      * 设置ecs属性
@@ -1017,7 +772,7 @@ public class EcsServiceImpl implements EcsService {
      */
     @Override
     public boolean saveEcsServerProperty(EcsServerDO ecsServerDO) {
-        DescribeInstancesResponse.Instance instance = this.query(ecsServerDO.getRegionId(), ecsServerDO.getInstanceId());
+        DescribeInstancesResponse.Instance instance = aliyunInstanceService.getInstance(ecsServerDO.getRegionId(), ecsServerDO.getInstanceId());
         if (instance == null || StringUtils.isEmpty(instance.getInstanceId())) return false;
         List<EcsPropertyDO> list = new ArrayList<>();
         // networkType
@@ -1101,39 +856,76 @@ public class EcsServiceImpl implements EcsService {
                 result = false;
             } else {
                 // TODO 续费成功更新实例信息
-                DescribeInstancesResponse.Instance instance = describeInstance(EcsServiceImpl.regionIdCnHangzhou, renewInstance.getInstanceId());
-                if(instance != null){
-                    EcsServerDO server = serverDao.queryEcsByInstanceId(renewInstance.getInstanceId());
-                    EcsServerDO ecsInstance = new EcsServerDO(instance);
-                    ecsInstance.setServerId(server.getServerId());
-                    ecsInstance.setContent(server.getContent());
-                    ecsInstance.setServerName(server.getServerName());
-                    ecsInstance.setStatus(server.getStatus());
-                    ecsInstance.setId(server.getId());
-                    updateEcsServer(ecsInstance);
-                }
+                DescribeInstancesResponse.Instance instance = aliyunInstanceService.getInstance(null,renewInstance.getInstanceId());
+                if (instance != null)
+                    saveInstance(instance);
             }
 
         }
         return new BusinessWrapper<Boolean>(result);
     }
 
-    public DescribeInstancesResponse.Instance describeInstance(String RegionId, String instanceId) {
-        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-        JSONArray instanceIds = new JSONArray();
-        instanceIds.add(instanceId);
-        describe.setInstanceIds(instanceIds.toJSONString());
-        DescribeInstancesResponse response = sampleDescribeInstancesResponse(RegionId, describe);
+    /**
+     * 保存ECS实例
+     */
+    public boolean saveInstance(DescribeInstancesResponse.Instance instance) {
         try {
-            if (response.getTotalCount() == 1) {
-                DescribeInstancesResponse.Instance instance = response.getInstances().get(0);
-                if (instance.getInstanceId().equals(instanceId))
-                    return instance;
-            }
+            EcsServerDO server = serverDao.queryEcsByInstanceId(instance.getInstanceId());
+            EcsServerDO ecsInstance = new EcsServerDO(instance);
+            ecsInstance.setServerId(server.getServerId());
+            ecsInstance.setContent(server.getContent());
+            ecsInstance.setServerName(server.getServerName());
+            ecsInstance.setStatus(server.getStatus());
+            ecsInstance.setId(server.getId());
+            updateEcsServer(ecsInstance);
+            return true;
         } catch (Exception e) {
-
+            return false;
         }
-        return null;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> prepaidInstance(AliyunPrepaidInstance prepaidInstance) {
+        ModifyInstanceChargeTypeRequest request = new ModifyInstanceChargeTypeRequest();
+        JSONArray instanceIds = new JSONArray();
+        instanceIds.add(prepaidInstance.getInstanceId());
+        request.setInstanceIds(instanceIds.toJSONString());
+        request.setPeriod(prepaidInstance.getPeriod());
+        request.setInstanceChargeType("PrePaid");
+        request.setPeriodUnit("Month");
+        request.setIncludeDataDisks(true);
+        IAcsClient client;
+        client = acqIAcsClient(EcsServiceImpl.regionIdCnHangzhou);
+        try {
+            ModifyInstanceChargeTypeResponse response
+                    = client.getAcsResponse(request);
+            // TODO 有订单编号，转预付费成功
+            if (!StringUtils.isEmpty(response.getOrderId())) {
+                savePrepaidInstance(prepaidInstance.getInstanceId(), 5);
+                return new BusinessWrapper<Boolean>(true);
+            }
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return new BusinessWrapper<Boolean>(false);
+    }
+
+    private boolean savePrepaidInstance(String instanceId, int retry) {
+        for (int i = 1; i <= retry; i++) {
+            try {
+                Thread.sleep(1000);
+                DescribeInstancesResponse.Instance instance = aliyunInstanceService.getInstance(null,instanceId);
+                if (instance.getInstanceChargeType().equals("PrePaid"))
+                    return saveInstance(instance);
+            } catch (Exception e) {
+
+            }
+        }
+        return false;
     }
 
     /**

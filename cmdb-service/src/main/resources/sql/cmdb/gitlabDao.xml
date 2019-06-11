@@ -4,12 +4,12 @@
 
     <!-- 删除指定webHooks -->
     <delete id="delWebHooks" parameterType="_long">
-        DELETE FROM gitlab_webhooks WHERE id = #{id}
+        DELETE FROM oc_gitlab_webhooks WHERE id = #{id}
     </delete>
 
     <!-- 新增指定webHooks -->
     <insert id="addWebHooks" parameterType="GitlabWebHooksDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
-        INSERT INTO gitlab_webhooks (
+        INSERT INTO oc_gitlab_webhooks (
         commitBefore,
         commitAfter,
         ref,
@@ -19,13 +19,13 @@
         projectId,
         projectName,
         projectDescription,
-        repositoryName,
-        repositoryUrl,
-        repositoryDescription,
-        repositoryHomepage,
-        webHooksType,
+        sshUrl,
+        httpUrl,
+        homepage,
+        jobName,
         triggerBuild,
-        totalCommitsCount
+        totalCommitsCount,
+        webhooksBody
         ) VALUES (
         #{commitBefore},
         #{commitAfter},
@@ -36,29 +36,33 @@
         #{projectId},
         #{projectName},
         #{projectDescription},
-        #{repositoryName},
-        #{repositoryUrl},
-        #{repositoryDescription},
-        #{repositoryHomepage},
-        #{webHooksType},
+        #{sshUrl},
+        #{httpUrl},
+        #{homepage},
+        #{jobName},
         #{triggerBuild},
-        #{totalCommitsCount}
+        #{totalCommitsCount},
+        #{webhooksBody}
         );
     </insert>
 
+    <update id="updateWebHooks" parameterType="GitlabWebHooksDO">
+        UPDATE oc_gitlab_webhooks
+        SET
+        triggerBuild= #{triggerBuild},
+        jobName = #{jobName}
+        WHERE id = #{id}
+    </update>
 
     <!-- 获取webHooks数目 -->
     <select id="getWebHooksSize" parameterType="object" resultType="_long">
-        SELECT count(*) from gitlab_webhooks
+        SELECT count(id) from oc_gitlab_webhooks
         <where>
             <if test="projectName != null and projectName != ''">
                 projectName like "%" #{projectName} "%"
             </if>
-            <if test="repositoryName != null and repositoryName != ''">
-                AND repositoryName like "%" #{repositoryName} "%"
-            </if>
-            <if test="webHooksType != -1">
-                AND webHooksType = #{webHooksType}
+            <if test="ref != null and ref != ''">
+                AND ref like "%" #{ref} "%"
             </if>
             <if test="triggerBuild != -1">
                 AND triggerBuild = #{triggerBuild}
@@ -68,16 +72,13 @@
 
     <!-- 获取webHooks详情 -->
     <select id="getWebHooksPage" parameterType="object" resultType="GitlabWebHooksDO">
-        SELECT * FROM gitlab_webhooks
+        SELECT * FROM oc_gitlab_webhooks
         <where>
             <if test="projectName != null and projectName != ''">
                 projectName like "%" #{projectName} "%"
             </if>
-            <if test="repositoryName != null and repositoryName != ''">
-                AND repositoryName like "%" #{repositoryName} "%"
-            </if>
-            <if test="webHooksType != -1">
-                AND webHooksType = #{webHooksType}
+            <if test="ref != null and ref != ''">
+                AND ref like "%" #{ref} "%"
             </if>
             <if test="triggerBuild != -1">
                 AND triggerBuild = #{triggerBuild}
@@ -92,44 +93,6 @@
         WHERE id = #{id}
     </select>
 
-
-    <!-- 删除指定Commits -->
-    <delete id="delCommits" parameterType="_long">
-        DELETE FROM gitlab_webhooks_commits WHERE id = #{id}
-    </delete>
-
-    <!-- 新增指定Commits -->
-    <insert id="addCommits" parameterType="GitlabWebHooksCommitsDO" useGeneratedKeys="true" keyColumn="id"
-            keyProperty="id">
-        INSERT INTO gitlab_webhooks_commits (
-        webHooksId,
-        commitsId,
-        message,
-        timestamp,
-        url,
-        autherName,
-        autherEmail
-        ) VALUES (
-        #{webHooksId},
-        #{commitsId},
-        #{message},
-        #{timestamp},
-        #{url},
-        #{autherName},
-        #{autherEmail}
-        );
-    </insert>
-
-    <!-- 模糊查询匹配名称的系统列表数目 -->
-    <select id="queryCommitsByWebHooksId" parameterType="_long" resultType="GitlabWebHooksCommitsDO">
-        SELECT * FROM gitlab_webhooks_commits WHERE webHooksId = #{webHooksId}
-    </select>
-
-    <select id="queryCommitsByCommit" parameterType="string" resultType="GitlabWebHooksCommitsDO">
-        SELECT * FROM gitlab_webhooks_commits WHERE commitsId = #{commitsId}
-    </select>
-
-
     <insert id="addGitlabProject" parameterType="GitlabProjectDO" useGeneratedKeys="true" keyColumn="id"
             keyProperty="id">
         INSERT INTO oc_gitlab_project (
@@ -137,6 +100,7 @@
         name,
         nameWithNamespace,
         description,
+        visibility,
         defaultBranch,
         ownerId,
         ownerUsername,
@@ -150,6 +114,7 @@
         #{name},
         #{nameWithNamespace},
         #{description},
+        #{visibility},
         #{defaultBranch},
         #{ownerId},
         #{ownerUsername},
@@ -166,12 +131,18 @@
         SET
         nameWithNamespace = #{nameWithNamespace},
         description = #{description},
+        visibility = #{visibility},
         defaultBranch = #{defaultBranch},
         ownerId = #{ownerId},
         ownerUsername = #{ownerUsername},
         lastActivityAt = #{lastActivityAt}
         WHERE id = #{id}
     </update>
+
+    <delete id="delGitlabProject" parameterType="_int">
+        DELETE FROM oc_gitlab_project WHERE projectId = #{projectId}
+    </delete>
+
 
     <select id="getGitlabProjectByProjectId" parameterType="_int" resultType="GitlabProjectDO">
         SELECT * FROM oc_gitlab_project WHERE projectId = #{projectId}
@@ -210,5 +181,97 @@
         limit #{pageStart}, #{length}
     </select>
 
+    <insert id="addGitlabGroup" parameterType="GitlabGroupDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_gitlab_group (
+        groupId,
+        name,
+        description,
+        visibility,
+        lfsEnabled,
+        requestAccessEnabled,
+        webUrl
+        ) VALUES (
+        #{groupId},
+        #{name},
+        #{description},
+        #{visibility},
+        #{lfsEnabled},
+        #{requestAccessEnabled},
+        #{webUrl}
+        );
+    </insert>
+
+    <update id="updateGitlabGroup" parameterType="GitlabGroupDO">
+        UPDATE oc_gitlab_group
+        SET
+        name = #{name},
+        description = #{description},
+        visibility = #{visibility},
+        lfsEnabled = #{lfsEnabled},
+        requestAccessEnabled = #{requestAccessEnabled},
+        webUrl = #{webUrl}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delGitlabGroup" parameterType="_int">
+        DELETE FROM oc_gitlab_group WHERE groupId = #{groupId}
+    </delete>
+
+    <select id="getGitlabGroupSize" parameterType="object" resultType="_long">
+        SELECT count(*) from oc_gitlab_group
+        <where>
+            <if test="name != null and name != ''">
+                name like "%" #{name} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getGitlabGroupPage" parameterType="object" resultType="GitlabGroupDO">
+        SELECT * FROM oc_gitlab_group
+        <where>
+            <if test="name != null and name != ''">
+                name like "%" #{name} "%"
+            </if>
+        </where>
+        ORDER BY name DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+    <select id="getGitlabGroupByGroupId" parameterType="_int" resultType="GitlabGroupDO">
+        SELECT * FROM oc_gitlab_group
+        WHERE groupId = #{groupId}
+    </select>
+
+    <insert id="addGitlabUser" parameterType="GitlabUserDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
+        INSERT INTO oc_gitlab_user (
+        gitlabUserId,
+        userId,
+        username,
+        setKey
+        ) VALUES (
+        #{gitlabUserId},
+        #{userId},
+        #{username},
+        #{setKey}
+        );
+    </insert>
+
+    <update id="updateGitlabUser" parameterType="GitlabUserDO">
+        UPDATE oc_gitlab_user
+        SET gitlabUserId = #{gitlabUserId},
+            setKey = #{setKey}
+        WHERE id = #{id}
+    </update>
+
+    <select id="getGitlabUserByUsername" parameterType="object" resultType="GitlabUserDO">
+        SELECT * FROM oc_gitlab_user
+        WHERE username = #{username}
+    </select>
+
+    <delete id="delGitlabUser" parameterType="_long">
+        DELETE FROM oc_gitlab_user WHERE id = #{id}
+    </delete>
 
 </mapper>

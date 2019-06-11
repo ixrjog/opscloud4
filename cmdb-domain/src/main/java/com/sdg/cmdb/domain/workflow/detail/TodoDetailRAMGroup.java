@@ -1,5 +1,6 @@
 package com.sdg.cmdb.domain.workflow.detail;
 
+
 import java.io.Serializable;
 
 public class TodoDetailRAMGroup extends TodoDetailAbs implements Serializable {
@@ -22,7 +23,6 @@ public class TodoDetailRAMGroup extends TodoDetailAbs implements Serializable {
      * 0 无权限， 1 有权限
      */
     private String groupValue = "0";
-
     /**
      * 申请RAM权限
      */
@@ -51,6 +51,4 @@ public class TodoDetailRAMGroup extends TodoDetailAbs implements Serializable {
     public void setApply(boolean apply) {
         this.apply = apply;
     }
-
-
 }

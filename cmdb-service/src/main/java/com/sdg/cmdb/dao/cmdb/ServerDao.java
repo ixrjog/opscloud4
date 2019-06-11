@@ -89,6 +89,7 @@ public interface ServerDao {
 
     /**
      * 只更新server的extTomcatVersion
+     *
      * @param serverDO
      * @return
      */
@@ -129,12 +130,32 @@ public interface ServerDao {
      * @param serverName
      * @param queryIp
      * @param status
+     * @param instanceChargeType
      * @return
      */
     long getEcsServerSize(
             @Param("serverName") String serverName,
             @Param("queryIp") String queryIp,
-            @Param("status") int status);
+            @Param("status") int status,
+            @Param("instanceChargeType") String instanceChargeType);
+
+    /**
+     * 获取ECS服务器详情
+     *
+     * @param serverName
+     * @param queryIp
+     * @param status
+     * @param instanceChargeType
+     * @param pageStart
+     * @param length
+     * @return
+     */
+    List<EcsServerDO> getEcsServerPage(
+            @Param("serverName") String serverName,
+            @Param("queryIp") String queryIp,
+            @Param("status") int status,
+            @Param("instanceChargeType") String instanceChargeType,
+            @Param("pageStart") long pageStart, @Param("length") int length);
 
 
     /**
@@ -167,24 +188,6 @@ public interface ServerDao {
             @Param("pageStart") long pageStart, @Param("length") int length);
 
 
-
-    /**
-     * 获取ECS服务器详情
-     *
-     * @param serverName
-     * @param queryIp
-     * @param status
-     * @param pageStart
-     * @param length
-     * @return
-     */
-    List<EcsServerDO> getEcsServerPage(
-            @Param("serverName") String serverName,
-            @Param("queryIp") String queryIp,
-            @Param("status") int status,
-            @Param("pageStart") long pageStart, @Param("length") int length);
-
-
     long getEcsRenewSize(
             @Param("serverName") String serverName,
             @Param("queryIp") String queryIp,
@@ -200,11 +203,11 @@ public interface ServerDao {
 
 
     /**
-     * 按finance（是否金融云）查询ECS服务器
-     * @param finance
+     * 查询所有ECS服务器
+     *
      * @return
      */
-    List<EcsServerDO> getEcsServerByFinance(@Param("finance") boolean finance);
+    List<EcsServerDO> getEcsServerAll();
 
 
     /**
@@ -299,6 +302,10 @@ public interface ServerDao {
     int updateEcsServer(EcsServerDO ecsServerDO);
 
     ServerDO queryServerByInsideIp(@Param("insideIp") String insideIp);
+
+    ServerDO queryServerByPublicIp(@Param("publicIp") String publicIp);
+
+    ServerDO queryServerByIp(@Param("ip") String ip);
 
     List<ServerDO> queryServerByServerType(@Param("serverType") int serverType);
 
@@ -437,9 +444,10 @@ public interface ServerDao {
 
     /**
      * 按类型查询所有server
+     *
      * @return
      */
-    List<ServerDO> getServerByType( @Param("serverType") int serverType );
+    List<ServerDO> getServerByType(@Param("serverType") int serverType);
 
 
     /**
@@ -641,9 +649,25 @@ public interface ServerDao {
 
     /**
      * 按月统计服务器新增
+     *
      * @return
      */
     List<ServerCreateByMonthVO> statusServerCreateByMonth();
 
+
+    List<ServerDO> queryZabbixServer();
+
+
+    int addEcsTask(EcsTaskDO ecsTaskDO);
+
+    EcsTaskDO getEcsTask(@Param("id") long id);
+
+    int updateEcsTask(EcsTaskDO ecsTaskDO);
+
+    int addEcsTaskServer(EcsTaskServerDO ecsTaskServerDO);
+
+    List<EcsTaskServerDO> getEcsTaskServerByTaskId(@Param("taskId") long taskId);
+
+    int getMyServerSize(@Param("username") String  username);
 
 }

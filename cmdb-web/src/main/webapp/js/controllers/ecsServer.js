@@ -16,7 +16,10 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
     $scope.ecsStatus = staticModel.serverStatus;
 
     //ECS服务器计费类型
-    $scope.ecsServerInternetChargeType = staticModel.ecsServerInternetChargeType;
+    $scope.instanceChargeType = staticModel.instanceChargeType;
+
+    //ECS服务器网络计费类型
+    $scope.ecsServerInternetChargeType = staticModel.internetChargeType;
 
     //ECS服务器是否io优化实例
     $scope.ecsServerIoOptimized = staticModel.ecsServerIoOptimized;
@@ -84,24 +87,6 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
         });
     }
 
-
-    // $scope.ecsCheck = function () {
-    //     butCheckRunning(true);
-    //     var url = "/server/ecsCheck";
-    //     httpService.doGet(url).then(function (data) {
-    //         if (data.success) {
-    //             toaster.pop("success", "校验完毕！");
-    //             butCheckRunning(false);
-    //         } else {
-    //             toaster.pop("warning", data.msg);
-    //             butCheckRunning(false);
-    //         }
-    //     }, function (err) {
-    //         toaster.pop("error", err);
-    //         butCheckRunning(false);
-    //     });
-    // }
-
     $scope.ecsDump = function () {
         var url = "/server/ecsDump";
         httpService.doGet(url).then(function (data) {
@@ -158,7 +143,8 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
     //关联
     $scope.nowStatus = -1;
     $scope.nowPublicGroup = [];
-    $scope.nowInternalGroup = [];
+    $scope.nowInternalGroup = []
+    $scope.nowChargeType = "";
 
     $scope.reSet = function () {
         $scope.queryName = "";
@@ -178,13 +164,13 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
         $scope.doQuery();
     };
 
-    /////////////////////////////////////////////////
 
     $scope.doQuery = function () {
         var url = "/server/ecsPage?"
             + "&serverName=" + $scope.queryName
             + "&queryIp=" + $scope.queryIp
             + "&status=" + ($scope.nowStatus == null ? -1 : $scope.nowStatus)
+            + "&chargeType=" + ($scope.nowChargeType == null ? "" : $scope.nowChargeType)
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)
             + "&length=" + $scope.pageLength;
 
@@ -353,6 +339,33 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
         });
     }
 
+
+    $scope.postPaid = function (serverItem) {
+
+        var modalInstance = $uibModal.open({
+            templateUrl: 'prepaidEcsInstance',
+            controller: 'prepaidEcsInstanceCtrl',
+            size: 'lg',
+            resolve: {
+                httpService: function () {
+                    return httpService;
+                },
+                envType: function () {
+                    return $scope.envType;
+                },
+                serverItem: function () {
+                    return serverItem;
+                }
+            }
+        });
+
+        modalInstance.result.then(function () {
+            $scope.doQuery();
+        }, function () {
+            $scope.doQuery();
+        });
+    }
+
     //////////////////////////////
     $scope.publicGroupList = [];
 
@@ -506,7 +519,7 @@ app.controller('ecsServerRenewCtrl', function ($scope, $state, $uibModal, $sce, 
     $scope.pageData = [];
     $scope.totalItems = 0;
     $scope.currentPage = 0;
-    $scope.pageLength = 20;
+    $scope.pageLength = 100;
 
     $scope.pageChanged = function () {
         $scope.choose = false;
@@ -517,7 +530,7 @@ app.controller('ecsServerRenewCtrl', function ($scope, $state, $uibModal, $sce, 
 
     $scope.doQuery = function () {
         var day = 30;
-        if( $scope.queryDay != null && $scope.queryDay != '' ){
+        if ($scope.queryDay != null && $scope.queryDay != '') {
             day = $scope.queryDay;
         }
 
@@ -1302,7 +1315,7 @@ app.controller('ecsConfigCtrl', function ($scope, $state, $uibModal, $sce, httpS
 /**
  * 创建ECS
  */
-app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toaster, staticModel, httpService, template) {
+app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, $interval, toaster, staticModel, httpService, template) {
     $scope.envType = staticModel.envType;
     $scope.logType = staticModel.logType;
     $scope.serverType = staticModel.serverType;
@@ -1318,6 +1331,9 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
     $scope.nowChargeType = {};
     $scope.template = template;
 
+    $scope.taskId = 0;
+
+    $scope.ecsTaskVO = {};
 
     $scope.pageData = [];
     $scope.totalItems = 0;
@@ -1404,9 +1420,7 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
      */
     $scope.createServer = function () {
         $scope.butCreatingEcs = true;
-
         var url = "/server/template/ecs/create";
-
         $scope.templateItem.serverVO.serverGroupDO = $scope.nowServerGroup.selected;
         if ($scope.nowPublicGroup.selected != null) {
             $scope.templateItem.serverVO.publicIP = {
@@ -1420,12 +1434,9 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
                 ip: "255.255.255.255"
             }
         }
-
         if ($scope.nowImage.selected != null) {
             $scope.templateItem.imageId = $scope.nowImage.selected.id
         }
-
-
         // 设置网络属性
         if ($scope.nowNetwork.selected != null) {
             $scope.templateItem.networkType = $scope.nowNetwork.selected
@@ -1445,14 +1456,14 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
             }
         }
 
-
         httpService.doPostWithJSON(url, $scope.templateItem).then(function (data) {
             if (data.success) {
                 var body = data.body;
-                $scope.totalItems = body.size;
-                $scope.pageData = body.data;
-
-                $scope.templateConfig = 0
+                $scope.ecsTaskVO = body;
+                $scope.taskId = body.id;
+                // $scope.totalItems = body.size;
+                //$scope.pageData = body.data;
+                $scope.templateConfig = 0;
                 $scope.butCreatingEcs = false;
             }
             else {
@@ -1463,6 +1474,30 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
             toaster.pop("error", err);
             $scope.butCreatingEcs = false;
         });
+    }
+
+    var timer1 = $interval(function () {
+        $scope.queryTask();
+    }, 3000);
+
+
+    $scope.queryTask = function () {
+        if ($scope.taskId == 0) return;
+        if ($scope.ecsTaskVO.complete) return;
+
+        var url = "/server/template/ecs/task?taskId=" + $scope.taskId;
+
+        httpService.doGet(url).then(function (data) {
+            if (data.success) {
+                var body = data.body;
+                $scope.ecsTaskVO = body;
+            } else {
+                toaster.pop("warning", data.msg);
+            }
+        }, function (err) {
+            toaster.pop("error", err);
+        });
+
     }
 
     //////////////////////////////////////////////////////////
@@ -1696,100 +1731,6 @@ app.controller('createEcsInstanceCtrl', function ($scope, $uibModalInstance, toa
 
 });
 
-app.controller('aliyunConfigCtrl', function ($scope, $state, $uibModal, $sce, httpService, toaster) {
-
-        $scope.authPoint = $state.current.data.authPoint;
-
-        $scope.configMap = {};
-
-        $scope.itemGroup = "ALIYUN_ECS";
-
-        /**
-         * 获取配置
-         */
-        $scope.getConfig = function () {
-            var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
-                "&env=";
-            httpService.doGet(url).then(function (data) {
-                if (data.success) {
-                    $scope.configMap = data.body;
-                } else {
-                    toaster.pop("warning", data.msg);
-                }
-            }, function (err) {
-                toaster.pop("error", err);
-            });
-        }
-
-
-        /**
-         * 更新配置
-         */
-        $scope.updateConfig = function () {
-            var url = "/config/center/update";
-            httpService.doPostWithJSON(url, $scope.configMap).then(function (data) {
-                if (data.success) {
-                    toaster.pop("success", "配置保存成功!");
-                    $scope.getConfig();
-                } else {
-                    toaster.pop("warning", data.msg);
-                }
-            }, function (err) {
-                toaster.pop("error", err);
-            });
-        }
-
-        $scope.getConfig();
-
-        $scope.describeRegions = function () {
-            var url = "/aliyun/api/describeRegions";
-
-            httpService.doGet(url).then(function (data) {
-                if (data.success) {
-                    var regions = data.body;
-                    viewRegions(regions);
-                } else {
-                    toaster.pop("warning", data.msg);
-                }
-            }, function (err) {
-                toaster.pop("error", err);
-            });
-        }
-
-
-        // 查看regions
-        var viewRegions = function (regions) {
-            var modalInstance = $uibModal.open({
-                templateUrl: 'regionsInfo',
-                controller: 'regionsInstanceCtrl',
-                size: 'lg',
-                resolve: {
-                    httpService: function () {
-                        return httpService;
-                    },
-                    regions: function () {
-                        return regions;
-                    }
-                }
-            })
-        };
-
-
-        $scope.alert = {
-            type: "",
-            msg: ""
-        };
-
-        $scope.closeAlert = function () {
-            $scope.alert = {
-                type: "",
-                msg: ""
-            };
-        }
-
-    }
-);
-
 app.controller('regionsInstanceCtrl', function ($scope, $uibModalInstance, $state, $uibModal, regions) {
 
         $scope.regions = {};
@@ -1834,6 +1775,7 @@ app.controller('imagesInstanceCtrl', function ($scope, $uibModalInstance, $state
             $scope.aliyunEcsImage = {
                 id: 0,
                 imageId: "",
+                size: 0,
                 imageDesc: "",
                 imageType: 1,
                 version: "1.0.0"
@@ -1874,6 +1816,7 @@ app.controller('imagesInstanceCtrl', function ($scope, $uibModalInstance, $state
         $scope.addImageItem = function (image) {
 
             $scope.aliyunEcsImage.imageId = image.imageId;
+            $scope.aliyunEcsImage.size = image.size;
 
             if ($scope.aliyunEcsImage.imageDesc == null || $scope.aliyunEcsImage.imageDesc == "") {
                 $scope.aliyunEcsImage.imageDesc = image.imageName;
@@ -1904,7 +1847,6 @@ app.controller('imagesInstanceCtrl', function ($scope, $uibModalInstance, $state
     }
 );
 
-//ecsTemplateInstanceCtrl
 app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $state, $uibModal, httpService, item) {
 
         $scope.template = item;
@@ -1919,19 +1861,16 @@ app.controller('ecsTemplateInstanceCtrl', function ($scope, $uibModalInstance, $
 
         $scope.configMap = {};
 
-        $scope.itemGroup = "ALIYUN_ECS";
+        // $scope.itemGroup = "ALIYUN_ECS";
 
         /**
          * 获取配置
          */
         $scope.getConfig = function () {
-            var url = "/config/center/get?itemGroup=" + $scope.itemGroup +
-                "&env=";
+            var url = "/aliyun/region/get";
             httpService.doGet(url).then(function (data) {
                 if (data.success) {
-                    $scope.configMap = data.body;
-                    $scope.aliyunEcsRegionId = $scope.configMap.ALIYUN_ECS_REGION_ID.value;
-
+                    $scope.aliyunEcsRegionId = data.body;
                     $scope.regronIds = $scope.aliyunEcsRegionId.split(",");
                 } else {
                     toaster.pop("warning", data.msg);
@@ -2229,6 +2168,67 @@ app.controller('renewEcsInstanceCtrl', function ($scope, $uibModalInstance, $sta
                     msg: err
                 }
                 $scope.butRenewing = false;
+            });
+        }
+
+    }
+);
+
+app.controller('prepaidEcsInstanceCtrl', function ($scope, $uibModalInstance, $state, $uibModal, httpService, envType, serverItem) {
+        $scope.ecsInstance = serverItem;
+        $scope.envType = envType;
+        $scope.period = 3;
+
+        /////////////////////////////////////////////////
+
+        $scope.alert = {
+            type: "",
+            msg: ""
+        };
+
+        $scope.closeAlert = function () {
+            $scope.alert = {
+                type: "",
+                msg: ""
+            };
+        }
+
+        $scope.closeModal = function () {
+            $uibModalInstance.dismiss('cancel');
+        }
+
+        $scope.preepaid = function () {
+
+            if ($scope.period <= 0) {
+                $scope.alert.type = 'warning';
+                $scope.alert.msg = "包月时长参数非法，参考值:1,2,3,4,5,6,7,8,9,12,24,36,48,60";
+                return;
+            }
+
+            var ecsPreepaid = {
+                id: $scope.ecsInstance.id,
+                instanceId: $scope.ecsInstance.instanceId,
+                period: $scope.period
+            }
+
+            var url = "/server/ecsPreepaid";
+            httpService.doPostWithJSON(url, ecsPreepaid).then(function (data) {
+                if (data.success) {
+                    $scope.alert = {
+                        type: "success",
+                        msg: "转预付费成功！"
+                    }
+                } else {
+                    $scope.alert = {
+                        type: "warning",
+                        msg: data.msg
+                    }
+                }
+            }, function (err) {
+                $scope.alert = {
+                    type: "error",
+                    msg: err
+                }
             });
         }
 

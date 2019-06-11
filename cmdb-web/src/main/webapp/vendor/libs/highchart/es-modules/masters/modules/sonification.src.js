@@ -1,8 +1,11 @@
 /**
  * @license @product.name@ JS v@product.version@ (@product.date@)
+ * @module highcharts/modules/sonification
+ * @requires highcharts
+ *
  * Sonification module
  *
- * (c) 2012-2018 Øystein Moseng
+ * (c) 2012-2019 Øystein Moseng
  *
  * License: www.highcharts.com/license
  */

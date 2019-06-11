@@ -44,7 +44,7 @@
         SELECT count(*) FROM cmdb_user WHERE username LIKE "%" #{username} "%" AND userType = 0
     </select>
 
-    <select id="getUserTotal"  resultType="_int">
+    <select id="getUserTotal" resultType="_int">
         SELECT count(*) FROM cmdb_user
     </select>
 
@@ -133,6 +133,22 @@
     <!-- 获取指定用户名的用户信息 -->
     <select id="getUserByName" parameterType="string" resultType="UserDO">
         SELECT * FROM cmdb_user WHERE username = #{username} limit 1;
+    </select>
+
+    <select id="getUser" parameterType="UserDO" resultType="UserDO">
+        SELECT * FROM cmdb_user
+        <where>
+            <if test="username != null and username != ''">
+                username = #{username}
+            </if>
+            <if test="mail != null and mail != ''">
+                OR mail = #{mail}
+            </if>
+            <if test="mobile != null and mobile != ''">
+                OR mobile = #{mobile}
+            </if>
+        </where>
+        limit 1;
     </select>
 
     <!-- 获取指定用户名的用户信息 -->
@@ -258,5 +274,16 @@
     <delete id="delCiUser" parameterType="_long">
         DELETE FROM ci_user WHERE id = #{id}
     </delete>
+
+    <select id="queryUserExcludeApp" parameterType="object" resultType="UserDO">
+       SELECT * FROM cmdb_user
+        <where>
+            id NOT IN ( SELECT userId FROM oc_ci_app_auth WHERE appId = #{appId} )
+            <if test="username != null and username != ''">
+              AND username like "%" #{username} "%"
+            </if>
+        </where>
+        limit 15
+    </select>
 
 </mapper>

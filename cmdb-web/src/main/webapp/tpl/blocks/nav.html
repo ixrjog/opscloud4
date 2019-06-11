@@ -1,6 +1,6 @@
 <ul class="nav">
     <li class="hidden-folded padder m-t m-b-sm text-muted text-xs">
-        <span style="color:white">MENU</span>
+        <span style="color:white">v2.0.1</span>
     </li>
 
 
@@ -14,8 +14,8 @@
             <span class="font-bold">首页</span>
         </a>
     </li>
-    
 
+    <!-- 服务器管理 -->
     <li ng-if="checkMenu('app.servergroup') || checkMenu('app.server') || checkMenu('app.property') || checkMenu('app.serverTemplate')">
         <a href class="auto">
       <span class="pull-right text-muted">
@@ -67,8 +67,38 @@
             </li>
         </ul>
     </li>
-
     <!-- 服务器管理 -->
+
+    <li ng-if="checkMenu('app.kubernetes')">
+        <a href class="auto">
+      <span class="pull-right text-muted">
+        <i class="fa fa-fw fa-angle-right text"></i>
+        <i class="fa fa-fw fa-angle-down text-active"></i>
+      </span>
+            <i>
+                <span><img src="img/simpleicons/kubernetes_logo_with_border.svg" width="18" height="18"></span>
+            </i>
+            <span class="font-bold"><img src="img/simpleicons/kubernetes_name_blue.svg" width="80" height="16"></span>
+        </a>
+        <ul class="nav nav-sub dk">
+            <li class="nav-sub-header">
+                <a href>
+                    <span>Kubernetes</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.kubernetesCluster')">
+                <a ui-sref="app.kubernetesCluster">
+                    <span>集群管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.kubernetesService')">
+                <a ui-sref="app.kubernetesService">
+                    <span>服务</span>
+                </a>
+            </li>
+
+        </ul>
+    </li>
 
     <!-- 持续集成  checkMenu('app.ci') -->
 
@@ -139,7 +169,15 @@
                     <span>Zabbix管理</span>
                 </a>
             </li>
-            <li ui-sref-active="active" ng-if="checkMenu('app.servermonitor')">
+            <li ui-sref-active="active" ng-if="checkMenu('app.grafana')">
+                <a ui-sref="app.grafana">
+                    <embed src="img/simpleicons/grafana.svg" width="15" height="15"
+                           type="image/svg+xml"
+                           pluginspage="img/simpleicons/"></embed>
+                    <span>Grafana</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.servermonitor')" ng-if="false">
                 <a ui-sref="app.servermonitor">
                     <span>监控查看</span>
                 </a>
@@ -174,6 +212,11 @@
             <li ui-sref-active="active" ng-if="checkMenu('app.servertask')">
                 <a ui-sref="app.servertask">
                     <span>Task</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.serverplaybook')">
+                <a ui-sref="app.serverplaybook">
+                    <span>Playbook</span>
                 </a>
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.taskScript')">
@@ -339,7 +382,7 @@
 
     <!-- 配置管理 -->
 
-    <li ng-if="checkMenu('app.configFile') || checkMenu('app.configFileGroup') || checkMenu('app.configCenter')">
+    <li ng-if="checkMenu('app.configFile') || checkMenu('app.configFileGroup') || checkMenu('app.configCenter') || checkMenu('app.gatewayadmin')">
         <a href class="auto">
       <span class="pull-right text-muted">
         <i class="fa fa-fw fa-angle-right text"></i>
@@ -360,41 +403,42 @@
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.ansibleConfigFile">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" height="15px" width="70" viewBox="0 0 815.5 119.9"><path d="M55 30.8l22.2 54.89-33.55-26.45L55 30.8zm39.5 67.59L60.3 16c-1-2.4-2.9-3.6-5.3-3.6s-4.5 1.2-5.4 3.6L12 106.3h12.85l14.86-37.21L84.1 104.9c1.8 1.5 3.1 2.1 4.7 2.1 3.4 0 6.3-2.5 6.3-6.1 0-.6-.2-1.51-.6-2.51m677.6 9.51c-26 0-41.6-9.51-41.6-28.61 0-9.1 5.2-17.74 15.2-21.79-8.1-5.02-12.3-12.1-12.3-20 0-17.3 13.6-25.5 39-25.5 8.5 0 20.5 1 30.5 3.2l-1.4 10.3c-10.6-1.6-20.5-2.6-30.1-2.6-16.5 0-25.3 4.5-25.3 15.2 0 8.5 8.1 15.22 18.9 15.22h21.8c3 0 5.4 2.37 5.4 5.3 0 3.07-2.4 5.44-5.4 5.44h-23.5c-12.3 0-20.1 6.03-20.1 15.23 0 13.5 12.7 17.6 28.6 17.6 8.7 0 20.4-1.1 29.9-3.4l1.8 10.21c-9.1 2.5-20.9 4.2-31.4 4.2m-143.5-1.5c-3.5 0-6.3-3-6.3-6.3V13.4H635v81.59h50.5v11.41h-56.9zm-91.3-42.2h-31.5v31.59h31.5c10.7 0 17.3-6.7 17.3-16.1 0-8.8-6.8-15.49-17.3-15.49M531.2 24h-25.4v29.73h25.4c10.1 0 17.5-6.43 17.5-15.33 0-8.8-6.4-14.4-17.5-14.4m6.2 82.4h-37.9c-3.7 0-6.5-2.8-6.5-6.3V19.7c0-3.4 2.8-6.3 6.5-6.3h31.4c19.2 0 30.7 9.3 30.7 24 0 8-4.8 15.35-12 19.68 10.7 3.21 18 12.01 18 22.61 0 14.8-12.4 26.71-30.2 26.71m-120.8-93h12.7v93h-12.7v-93zm-94.5 94.5c-12.3 0-25.1-2.5-37.1-7l2.9-10.01c11 3.5 23 6 34.2 6 15.5 0 23.6-5.5 23.6-13.2 0-6.9-6.3-10.4-27.9-20.47-21.7-10.05-30.2-16.42-30.2-29.02 0-15.8 12.3-22.2 35.5-22.2 9.6 0 24.4 1.9 32.9 4.5l-1.9 10.3c-9.4-2.2-21.1-3.8-30.7-3.8-16.4 0-23.1 3.1-23.1 10.8 0 7.5 4.9 10.7 27.8 21.19 24.2 11.03 30.3 16.6 30.3 28 0 16.7-15.9 24.91-36.3 24.91m-101.6-.8c-1.7 0-3.5-.5-4.7-2.1l-53.9-69.8v71.2h-12.3V18.7c0-3.5 2.9-6.3 6.3-6.3 1.9 0 3.6.6 4.9 2.2l53.7 69.69V13.4h12.3v87.5c0 3.6-3 6.2-6.3 6.2"/></svg>
-                    <!--<span>Ansibles主机文件</span>-->
+                    <embed src="img/simpleicons/ansible-circle.svg" width="15" height="15"
+                           type="image/svg+xml"
+                           pluginspage="img/simpleicons/"></embed>
+                    <span>Ansibles</span>
                 </a>
             </li>
 
-            <li ng-show="false" ui-sref-active="active" ng-if="checkMenu('app.configFile')">
-                <a ui-sref="app.getwayConfigFile">
-                    <span>Getway配置管理</span>
+            <li ui-sref-active="active" ng-if="checkMenu('app.gatewayadmin')">
+                <a ui-sref="app.gatewayadmin">
+                    <span>GatewayAdmin</span>
                 </a>
             </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.shadowsocksConfigFile">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="15px" viewBox="0 0 150 163">
-                        <path fill="#1a7dc0" d="M139.7 19l-24 100.8s-37-10.5-50.5-15l44-53.6-61 48.2L7.5 86zm-74.2 97.3l15.4 5L65 145z"/>
-                    </svg>
-                    <b>SHADOWSOCKS</b>
+                    <embed src="img/simpleicons/shadowsocks.svg" width="15" height="15" type="image/svg+xml" pluginspage="img/simpleicons/"></embed>
+                    <span>Shadowsocks</span>
                 </a>
             </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.nginxConfig">
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="white" height="15px" width="50" viewBox="0 0 125 34"><path d="M26.526 5a2.5 2.5 0 0 0-2.463 2.535v13.028L9.27 5.768A2.5 2.5 0 0 0 5 7.535v19.067a2.5 2.5 0 1 0 5 0v-13.03l14.795 14.797a2.5 2.5 0 0 0 4.268-1.768V7.535A2.5 2.5 0 0 0 26.526 5zm36.94.03C62.16 5.046 60.983 6.252 61 7.56v6.516h5V7.56c.017-1.33-1.2-2.547-2.53-2.53zm8.054.02a2.5 2.5 0 0 0-2.537 2.534V26.65a2.5 2.5 0 0 0 4.267 1.768l14.795-14.8v13.033a2.5 2.5 0 1 0 5 0V7.585a2.5 2.5 0 0 0-4.27-1.767L73.984 20.612V7.584A2.5 2.5 0 0 0 71.52 5.05zm26.918.003a2.5 2.5 0 0 0-1.735 4.295l7.778 7.748-7.755 7.728a2.5 2.5 0 1 0 3.53 3.542l7.767-7.74 7.767 7.74a2.5 2.5 0 1 0 3.53-3.542l-7.757-7.728 7.777-7.748a2.5 2.5 0 0 0-1.734-4.295 2.5 2.5 0 0 0-1.795.754l-7.788 7.762-7.79-7.763a2.5 2.5 0 0 0-1.794-.754zM38.14 5.06l-.687 1.282-5.312 9.656-.687 1.22.688 1.218 5.313 9.344.72 1.28H52.078l.688-1.405 3.97-8 1.78-3.625h-4.03l-10.158.03c-1.32-.018-2.535 1.18-2.535 2.5 0 1.322 1.215 2.52 2.535 2.5l6.125-.03-1.5 3.03h-7.875l-3.906-6.874 3.938-7.125h8.377l1.953 4.01h5.03L53.3 6.466 52.61 5.06H38.14zM61 16.083v10.465c-.016 1.31 1.16 2.515 2.47 2.53 1.33.018 2.547-1.2 2.53-2.53V16.082h-5z"/></svg>
+                    <embed src="img/simpleicons/nginx.svg" width="15" height="15" type="image/svg+xml" pluginspage="img/simpleicons/"></embed>
+                    <span>Nginx</span>
                 </a>
             </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.dnsConfig">
-                    <span>DNS配置管理</span>
+                    <span>DNS</span>
                 </a>
             </li>
 
             <li ui-sref-active="active" ng-if="checkMenu('app.configFile')">
                 <a ui-sref="app.configPlaybook">
-                    <span>自动Playbook</span>
+                    <span>Playbook</span>
                 </a>
             </li>
 
@@ -424,21 +468,30 @@
     <i class="fa fa-fw fa-angle-down text-active"></i>
     </span>
             <i>
-                <embed src="img/simpleicons/workflow.svg" width="15" height="15"
+                <embed src="img/simpleicons/work.svg" width="15" height="15"
                        type="image/svg+xml"
                        pluginspage="img/simpleicons/"></embed>
             </i>
-            <span class="font-bold">工作流管理</span>
+            <span class="font-bold">工作台</span>
         </a>
         <ul class="nav nav-sub dk">
             <li ui-sref-active="active" ng-if="checkMenu('app.workflow')">
                 <a ui-sref="app.workflow">
+                    <embed src="img/simpleicons/workflow.svg" width="15" height="15" type="image/svg+xml"
+                           pluginspage="img/simpleicons/"></embed>
                     <span>工作流</span>
                 </a>
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.workflowMgmt')">
                 <a ui-sref="app.workflowMgmt">
                     <span>工作流管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.nginxTcp')">
+                <a ui-sref="app.nginxTcp">
+                    <embed src="img/simpleicons/nginx_tcp.svg" width="15" height="15" type="image/svg+xml"
+                           pluginspage="img/simpleicons/"></embed>
+                    <span>服务映射</span>
                 </a>
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.teamMgmt')">
@@ -448,6 +501,7 @@
             </li>
         </ul>
     </li>
+
 
     <!-- 日志服务  ng-if="checkMenu('app.logService')"-->
 
@@ -516,12 +570,22 @@
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.keyboxmanage')">
                 <a ui-sref="app.keyboxmanage">
-                    <span>堡垒机管理</span>
+                    <span>Keybox管理</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jumpserver')">
+                <a ui-sref="app.jumpserver">
+                    <span>Jumpserver管理</span>
                 </a>
             </li>
             <li ui-sref-active="active" ng-if="checkMenu('app.keybox')">
                 <a ui-sref="app.keybox">
-                    <span>堡垒机</span>
+                    <span>Keybox堡垒机</span>
+                </a>
+            </li>
+            <li ui-sref-active="active" ng-if="checkMenu('app.jms')">
+                <a ui-sref="app.jms">
+                    <span>JMS堡垒机</span>
                 </a>
             </li>
         </ul>

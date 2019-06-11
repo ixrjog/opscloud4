@@ -6,14 +6,11 @@ import com.sdg.cmdb.domain.server.ServerGroupDO;
 
 import java.io.Serializable;
 
+
 public class TodoDetailKeybox extends TodoDetailAbs implements Serializable{
-
     private static final long serialVersionUID = 1964828516800144159L;
-
     private ServerGroupDO serverGroupDO;
-
     private CiUserGroupDO ciUserGroupDO;
-
     private boolean ciAuth = false;
 
     public ServerGroupDO getServerGroupDO() {

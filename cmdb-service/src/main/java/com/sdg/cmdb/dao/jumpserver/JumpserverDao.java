@@ -1,6 +1,5 @@
 package com.sdg.cmdb.dao.jumpserver;
 
-
 import com.sdg.cmdb.domain.jumpserver.*;
 
 import org.apache.ibatis.annotations.Param;
@@ -8,14 +7,16 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-
 @Component
 public interface JumpserverDao {
 
-
     AssetsAssetDO getAssetsAssetByIp(@Param("ip") String ip);
 
+    AssetsAssetDO getAssetsAssetByHostname(@Param("hostname") String hostname);
+
     int addAssetsAsset(AssetsAssetDO assetsAssetDO);
+
+    int delAssetsAsset(@Param("id") String id);
 
     /**
      * 查询资产总数
@@ -24,15 +25,33 @@ public interface JumpserverDao {
      */
     int getAssetsAssetTotal();
 
-    int updateAssetsAsset(AssetsAssetDO assetsAssetDO);
+    // List<UsersUserDO> queryUsersUserIsActive(@Param("is_active") boolean  is_active);
+    /**
+     * 查询闲置资产 is_active = false
+     * @return
+     */
+    List<AssetsAssetDO> queryAssetsAssetByIsActive(@Param("is_active") boolean  is_active);
 
+    int updateAssetsAsset(AssetsAssetDO assetsAssetDO);
 
     int addAssetsNode(AssetsNodeDO assetsNodeDO);
 
+    /**
+     * 校验节点NodeKey是否重复
+     * @return
+     */
+    AssetsNodeDO getAssetsNodeLastOne();
+    AssetsNodeDO getAssetsNodeByKey(@Param("key") String key);
+
     AssetsNodeDO getAssetsNodeByValue(@Param("value") String value);
+
+    List<AssetsNodeDO> getAssetsNodeAll();
+
+    int updateAssetsNode(AssetsNodeDO assetsNodeDO);
 
     /**
      * 查询根节点
+     *
      * @return
      */
     AssetsNodeDO getAssetsNodeRoot();
@@ -70,7 +89,17 @@ public interface JumpserverDao {
     int addPermsAssetpermissionSystemUsers(PermsAssetpermissionSystemUsersDO permsAssetpermissionSystemUsersDO);
 
     UsersUserDO getUsersUserByUsername(@Param("username") String username);
+
     UsersUserDO getUsersUser(@Param("id") String id);
+
+    int delUsersUser(@Param("id") String id);
+
+
+    /**
+     *
+     * @return
+     */
+    List<UsersUserDO> queryUsersUserByIsActive(@Param("is_active") boolean  is_active);
 
     int addUsersUser(UsersUserDO usersUserDO);
 
@@ -80,6 +109,8 @@ public interface JumpserverDao {
      * @return
      */
     int getUsersUserTotal();
+
+    int updateUsersUser(UsersUserDO usersUserDO);
 
     UsersUserGroupsDO getUsersUserGroups(UsersUserGroupsDO usersUserGroupsDO);
 
@@ -110,6 +141,7 @@ public interface JumpserverDao {
 
     /**
      * 查询当前活动会话
+     *
      * @return
      */
     List<TerminalSessionDO> queryTerminalSession();

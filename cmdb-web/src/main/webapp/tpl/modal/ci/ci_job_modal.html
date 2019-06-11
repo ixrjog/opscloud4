@@ -7,22 +7,12 @@
         max-width: 400px !important;
     }
 
-    .environmentVariables .popover {
-        max-width: 400px !important;
-    }
-
-    .zoneType .popover {
-        max-width: 500px !important;
-    }
-
-    .tomcatWebAppsPath .popover {
-        max-width: 500px !important;
-    }
-
-    .httpStatus .popover {
-        max-width: 500px !important;
+    .ace_editor {
+        height: 500px;
     }
 </style>
+
+
 <div class="modal-header">
     <h3 class="modal-title">
         <b style="color: #286090">持续集成任务配置</b>
@@ -49,9 +39,9 @@
                             <div class="input-group" style="padding-left: 15px; padding-right: 15px">
                                 <input type="text" class="form-control" placeholder="任务名称" ng-model="jobItem.jobName">
                                 <div class="input-group-btn">
-                                    <button class="btn btn-default"
-                                            ng-click="checkJobName(jobItem.jobName)"><i
-                                            class="glyphicon glyphicon-check pull-right"></i></button>
+                                    <button class="btn btn-default" ng-click="checkJobName(jobItem.jobName)">
+                                        <i class="glyphicon glyphicon-check pull-right"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
@@ -102,11 +92,21 @@
                     </div>
 
                     <div class="form-group">
+                        <!--<div class="col-md-6">-->
+                        <!--<label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>回滚类型</label>-->
+                        <!--<div class="col-lg-8">-->
+                        <!--<select class="form-control" ng-model="jobItem.rollbackType"-->
+                        <!--ng-options="rollback.code as rollback.name for rollback in rollbackType">-->
+                        <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                        <!--</select>-->
+                        <!--</div>-->
+                        <!--</div>-->
                         <div class="col-md-6">
-                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>回滚类型</label>
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>构建类型</label>
                             <div class="col-lg-8">
-                                <select class="form-control" ng-model="jobItem.rollbackType"
-                                        ng-options="rollback.code as rollback.name for rollback in rollbackType">
+                                <!--required-->
+                                <select class="form-control" ng-model="jobItem.ciType"
+                                        ng-options="ci.code as ci.name for ci in ciType">
                                     <option value="">--请选择--</option>
                                 </select>
                             </div>
@@ -125,11 +125,24 @@
 
                     <div class="form-group">
                         <div class="col-md-6">
-                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>构建类型</label>
+                            <label class="col-lg-4 control-label"><span
+                                    style="color: #ec2121;">*</span>AutoBuild</label>
                             <div class="col-lg-8">
                                 <!--required-->
-                                <select class="form-control" ng-model="jobItem.ciType"
-                                        ng-options="ci.code as ci.name for ci in ciType">
+                                <select class="form-control" ng-model="jobItem.autoBuild"
+                                        ng-options="autoBuild.code as autoBuild.name for autoBuild in autoBuildType">
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span
+                                    style="color: #ec2121;">*</span>任务通知</label>
+                            <div class="col-lg-8">
+                                <!--required-->
+                                <select class="form-control" ng-model="jobItem.atAll"
+                                        ng-options="at.code as at.name for at in atAll">
                                     <option value="">--请选择--</option>
                                 </select>
                             </div>
@@ -158,7 +171,7 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab index="1" heading="部署配置">
+                <uib-tab index="1" heading="部署配置" ng-show="jobItem.ciType == 0">
 
                     <div style="font-size:1em;">&nbsp;</div>
 
@@ -168,7 +181,8 @@
                             <label class="col-lg-4 control-label">部署任务
                             </label>
                             <div class="input-group" style="padding-left: 15px; padding-right: 15px">
-                                <input type="text" class="form-control" placeholder="任务名称" ng-model="jobItem.deployJobName">
+                                <input type="text" class="form-control" placeholder="任务名称"
+                                       ng-model="jobItem.deployJobName">
                                 <div class="input-group-btn">
                                     <button class="btn btn-default"
                                             ng-click="checkJobName(jobItem.deployJobName)"><i
@@ -182,7 +196,8 @@
                         <div class="col-md-6">
                             <label class="col-lg-4 control-label">部署模版</label>
                             <div class="col-lg-8">
-                                <ui-select ng-model="nowDeployTemplate.selected" theme="bootstrap" ng-change="setDeployTemplate()">
+                                <ui-select ng-model="nowDeployTemplate.selected" theme="bootstrap"
+                                           ng-change="setDeployTemplate()">
                                     <ui-select-match placeholder="搜索模版名称......">{{$select.selected.name}}
                                     </ui-select-match>
                                     <ui-select-choices refresh="queryDeployTemplate($select.search)" refresh-dalay="0"
@@ -221,100 +236,123 @@
                         </div>
                     </div>
                 </uib-tab>
-                <uib-tab index="2" heading="参数配置" ng-show="jobItem.id != 0">
+                <uib-tab index="2" heading="加固配置" ng-show="jobItem.ciAppVO.appType == 3">
 
                     <div style="font-size:1em;">&nbsp;</div>
 
-                    <div style="margin-top: 5px;">
-                        <table class="table table-hover table-bordered table-striped"
-                               ng-show="jobItem.paramList != null && jobItem.paramList.length != 0">
-                            <thead>
-                            <tr>
-                                <!--class="col-md-10"-->
-                                <td>参数</td>
-                                <td>操作</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="param in jobItem.paramList">
-                                <td>
-                                     <span style="background-color: #286090; color: white;"
-                                           uib-popover-html="{{param.content}}"
-                                           popover-trigger="'mouseenter'"
-                                           class="label">
-                                                   <i ng-show="param.paramName =='branch'" class="fa fa-code-fork"></i>
-                                                   <i ng-show="param.paramName =='sshUrl'" class="fa fa-git"></i>{{param.paramName}}</span>
-                                    </br>
-                                    <span class="label" style="background-color: #20a03f; color: white;">{{param.paramValue}}</span>
 
-                                </td>
-                                <td>
-                                    <button ng-click="editParam(param)"
-                                            class="btn btn-xs"
-                                            style="margin-left: 20px; background-color: #2e6da4; color: white;">
-                                        <span class="glyphicon glyphicon-edit"></span>编辑
-                                    </button>
-
-                                    <button ng-click="delParam(param.id)"
-                                            class="btn btn-xs pull-right"
-                                            uib-popover-html="'移除用户'" popover-trigger="'mouseenter'"
-                                            style="background-color: red; color: white;">
-                                        <span class="glyphicon glyphicon-log-out"></span>移除
-                                    </button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">加固任务
+                            </label>
+                            <div class="input-group" style="padding-left: 15px; padding-right: 15px">
+                                <input type="text" class="form-control" placeholder="任务名称"
+                                       ng-model="jobItem.deployJobName">
+                                <div class="input-group-btn">
+                                    <button class="btn btn-default"
+                                            ng-click="checkJobName(jobItem.deployJobName)"><i
+                                            class="glyphicon glyphicon-check pull-right"></i></button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-group" style="box-shadow: 0 0 5px #ddd;padding: 10px;">
-                        <div class="form-group">
-                            <div class="col-md-6">
-                                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>参数
-                                </label>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" placeholder="param name"
-                                           ng-model="nowParam.paramName">
-                                </div>
-                            </div>
-
-                            <div class="col-md-6">
-                                <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>参数值
-                                </label>
-                                <div class="col-lg-8">
-                                    <input type="text" class="form-control" placeholder="param value"
-                                           ng-model="nowParam.paramValue">
-                                </div>
+                    <div class="form-group">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">加固模版</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowDeployTemplate.selected" theme="bootstrap"
+                                           ng-change="setDeployTemplate()">
+                                    <ui-select-match placeholder="搜索模版名称......">{{$select.selected.name}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryDeployTemplate($select.search)" refresh-dalay="0"
+                                                       repeat="item in deployTemplateList | filter: $select.search">
+                                        <div ng-bind-html="item.name | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
                             </div>
                         </div>
-                        <div class="form-group">
-                            <label class="col-lg-2 control-label">备注</label>
-                            <div class="col-lg-10">
-                            <textarea class="form-control" cols="3" placeholder=""
-                                      ng-model="nowParam.content"></textarea>
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">模版版本</label>
+                            <div class="col-lg-8">
+                                <input type="text" class="form-control" placeholder="模版版本" readonly required
+                                       ng-model="jobItem.deployJobVersion">
                             </div>
                         </div>
+                    </div>
 
-                        <div class="form-group">
+                    <div class="form-group">
+                        <div style="text-align:center;">
                             <div style="text-align:center;">
-                                <!--保存-->
-                                <button ng-click="saveParam()"
+
+                                <button ng-click="saveJob()"
                                         class="btn btn-xs"
                                         style="margin-left: 5px; background-color: #2e6da4; color: white;">
                                     <span class="glyphicon glyphicon-ok"></span>保存
                                 </button>
-                                <!--重置-->
-                                <button ng-click="resetParam()"
+
+                                <button ng-click="resetJob()"
                                         class="btn btn-xs"
                                         style="margin-left: 5px; background-color: #449d44; color: white;">
                                     <span class="glyphicon glyphicon-repeat"></span>重置
                                 </button>
                             </div>
+
+                        </div>
+                    </div>
+                </uib-tab>
+                <uib-tab index="3" heading="参数配置" ng-show="jobItem.id != 0">
+
+                    <div style="font-size:1em;">&nbsp;</div>
+                    <!--Clone配置-->
+                    <div class="form-group" ng-if="jobItem.paramsYaml == ''">
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label">应用名称</label>
+                            <div class="col-lg-8">
+                                <ui-select ng-model="nowCiApp.selected" theme="bootstrap"
+                                           ng-change="setJob()">
+                                    <ui-select-match placeholder="搜索应用名称......">{{$select.selected.appName}}
+                                    </ui-select-match>
+                                    <ui-select-choices refresh="queryMyAppByType($select.search)" refresh-dalay="0"
+                                                       repeat="app in myAppList | filter: $select.search">
+                                        <div ng-bind-html="app.appName | highlight: $select.search"></div>
+                                    </ui-select-choices>
+                                </ui-select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>选择任务</label>
+                            <div class="col-lg-8">
+                                <select class="form-control" ng-model="nowCiJob.selected" ng-change="setParams()"
+                                        ng-options="job.jobName for job in ciJobList" required>
+                                    <option value="">--请选择--</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group" ng-if="jobItem.paramsYaml == ''">
+                        <div style="text-align:center;">
+                         <span class="label"
+                               style="margin-left: 5px; background-color: #777; color: white;">输入名称搜索并选中应用，然后选择要复制的任务名，记得点保存！清空配置可重新选择！</span>
+                        </div>
+                    </div>
+
+                    <div ui-ace="aceOption" ng-model="jobItem.paramsYaml" class="ace_editor"></div>
+
+                    <div class="form-group">
+                        <div style="text-align:center;">
+                            <!--保存-->
+                            <button ng-click="saveParams()"
+                                    class="btn btn-xs"
+                                    style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                <span class="glyphicon glyphicon-ok"></span>保存
+                            </button>
                         </div>
                     </div>
 
                 </uib-tab>
-                <uib-tab index="3" heading="用户配置">
+                <uib-tab index="4" heading="用户配置">
 
                     <div style="font-size:1em;">&nbsp;</div>
                     <form class="form-horizontal">
@@ -334,7 +372,7 @@
                             <div class="col-lg-2">
                                 <button ng-click="addUser()"
                                         class="btn btn-xs"
-                                        style="margin-left: 5px; background-color: #2e6da4; color: white;">
+                                        style="margin-top: 5px; margin-left: 5px; background-color: #2e6da4; color: white;">
                                     <span class="glyphicon glyphicon-plus"></span>添加
                                 </button>
 
@@ -395,7 +433,8 @@
 
     </form>
 
-    <div ng-if="alert.type != ''">
-        <div uib-alert ng-class="'alert-' + alert.type" close="closeAlert()">{{alert.msg}}</div>
+    <div>
+        <div ng-include="'tpl/modal/public/pub_alert.html'"></div>
     </div>
+
 </div>

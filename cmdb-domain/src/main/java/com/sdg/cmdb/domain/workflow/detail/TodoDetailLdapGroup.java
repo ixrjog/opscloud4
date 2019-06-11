@@ -4,6 +4,7 @@ import com.sdg.cmdb.domain.ldap.LdapGroupDO;
 
 import java.io.Serializable;
 
+
 public class TodoDetailLdapGroup extends TodoDetailAbs implements Serializable {
     private static final long serialVersionUID = 2175445562971024515L;
 
@@ -11,12 +12,10 @@ public class TodoDetailLdapGroup extends TodoDetailAbs implements Serializable {
      * 申请
      */
     private boolean apply = false;
-
     /**
      * 是否绑定
      */
     private boolean bind = false;
-
     private LdapGroupDO ldapGroupDO;
 
     public TodoDetailLdapGroup() {
@@ -34,14 +33,6 @@ public class TodoDetailLdapGroup extends TodoDetailAbs implements Serializable {
         this.bind = bind;
     }
 
-    public LdapGroupDO getLdapGroupDO() {
-        return ldapGroupDO;
-    }
-
-    public void setLdapGroupDO(LdapGroupDO ldapGroupDO) {
-        this.ldapGroupDO = ldapGroupDO;
-    }
-
     public boolean isApply() {
         return apply;
     }
@@ -56,5 +47,13 @@ public class TodoDetailLdapGroup extends TodoDetailAbs implements Serializable {
 
     public void setBind(boolean bind) {
         this.bind = bind;
+    }
+
+    public LdapGroupDO getLdapGroupDO() {
+        return ldapGroupDO;
+    }
+
+    public void setLdapGroupDO(LdapGroupDO ldapGroupDO) {
+        this.ldapGroupDO = ldapGroupDO;
     }
 }

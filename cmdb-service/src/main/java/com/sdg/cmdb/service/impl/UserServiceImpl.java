@@ -1,11 +1,14 @@
 package com.sdg.cmdb.service.impl;
 
 import com.sdg.cmdb.dao.cmdb.AuthDao;
+import com.sdg.cmdb.dao.cmdb.CiDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.*;
+import com.sdg.cmdb.domain.ci.CiAppAuthDO;
+import com.sdg.cmdb.domain.ci.CiAppDO;
 import com.sdg.cmdb.domain.ldap.LdapDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.ssh.SshKey;
@@ -15,9 +18,11 @@ import com.sdg.cmdb.service.configurationProcessor.ShadowsocksFileProcessorServi
 import com.sdg.cmdb.util.SessionUtils;
 
 
+import org.gitlab.api.models.GitlabUser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.stereotype.Service;
@@ -35,38 +40,41 @@ public class UserServiceImpl implements UserService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
-    private final static String API_AUTH_KEY = "02a966823690516ebee262e541404454";
-
-    @Resource
+    @Autowired
     private UserDao userDao;
 
-    @Resource
+    @Autowired
+    private CiDao ciDao;
+
+    @Autowired
     private ServerGroupService serverGroupService;
 
-    @Resource
+    @Autowired
     private AuthService authService;
 
-    @Resource
+    @Autowired
     private AuthDao authDao;
 
-    @Resource
+    @Autowired
     private LdapService ldapService;
 
-    @Resource
+    @Autowired
+    private GitlabService gitlabService;
+
+    @Autowired
     protected ShadowsocksFileProcessorService ssService;
 
-    @Resource
-    private ConfigCenterService configCenterService;
+    @Autowired
+    private JumpserverService jumpserverService;
+
+    @Autowired
+    private AliyunRAMService aliyunRAMService;
+
+    @Autowired
+    private CiService ciService;
 
     @Resource
     private LDAPFactory ldapFactory;
-
-//    private HashMap<String, String> getwayConfigMap;
-//
-//    private HashMap<String, String> acqGetwayConifMap() {
-//        if (getwayConfigMap != null) return getwayConfigMap;
-//        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.GETWAY.getItemKey());
-//    }
 
     private LdapTemplate acqLdapTemplate(String ldapType) {
 
@@ -114,25 +122,6 @@ public class UserServiceImpl implements UserService {
         return new TableVO<>(size, listVO);
     }
 
-    @Override
-    public TableVO<List<UserVO>> getCmdbApiUserPage(String authKey, String username, int page, int length) {
-        if (!authKey.equals(API_AUTH_KEY))
-            return new TableVO(0, ErrorCode.authenticationFailure);
-
-        long size = userDao.getUserSize(username);
-        List<UserDO> list = userDao.getUserPage(username, page * length, length);
-        List<UserVO> listVO = new ArrayList<>();
-
-        for (UserDO userDO : list) {
-            UserVO userVO = new UserVO(userDO);
-            // 加入角色信息
-            userVO.setRoleDOList(getUserRoles(userVO.getUsername()));
-            userVO.setPwd("");
-            listVO.add(userVO);
-        }
-        return new TableVO<>(size, listVO);
-    }
-
     /**
      * 查询用户角色
      *
@@ -164,12 +153,16 @@ public class UserServiceImpl implements UserService {
             userVO.setLdap(1);
         userVO.setLdapGroups(ldapService.searchUserLdapGroup(userVO.getUsername()));
         userVO.setSsList(ssService.getSsByUser(userDO));
-       invokeSshKey(userVO,userDO);
+        userVO.setSetKeyByGitlab(gitlabService.isSetKey(username));
+        userVO.setSetKeyByJms(jumpserverService.isSetKey(username));
+        userVO.setCiAppList(ciService.queryUserApp(userDO.getId()));
+        invokeSshKey(userVO, userDO);
+        aliyunRAMService.invokeRam(userVO);
         //EncryptionUtil.fingerprint()
         return new BusinessWrapper<>(userVO);
     }
 
-    private void invokeSshKey(UserVO userVO,UserDO userDO){
+    private void invokeSshKey(UserVO userVO, UserDO userDO) {
         if (!StringUtils.isEmpty(userDO.getRsaKey())) {
             String key = userDO.getRsaKey();
             String[] keys = key.split(" +");
@@ -193,42 +186,6 @@ public class UserServiceImpl implements UserService {
         userVO.setLdapGroups(ldapService.searchUserLdapGroup(userVO.getUsername()));
         return new TableVO<>(1, userVO);
     }
-
-
-//    public void invokeLdapGroups(UserVO userVO) {
-//        if (userVO.getLdapGroups().size() == 0) return;
-//        List<LdapGroup> bambooLdapGroups = new ArrayList<LdapGroup>();
-//        List<LdapGroup> otherLdapGroups = new ArrayList<LdapGroup>();
-//
-//        UserLdapGroupVO userLdapGroupVO = new UserLdapGroupVO();
-//        boolean check;
-//        for (String name : userVO.getLdapGroups()) {
-//            check = false;
-//            for (LdapGroup.LdapGroupTypeEnum type : LdapGroup.LdapGroupTypeEnum.values()) {
-//                if (name.indexOf(type.getDesc()) >= 0) {
-//
-//                    check = true;
-//                    LdapGroup ldapGroupVO = new LdapGroup(name, type.getCode());
-//                    if (type.getCode() == LdapGroup.LdapGroupTypeEnum.bamboo.getCode()) {
-//                        bambooLdapGroups.add(ldapGroupVO);
-//                    } else {
-//                        userLdapGroupVO.setLdapGroup(ldapGroupVO);
-//                        otherLdapGroups.add(ldapGroupVO);
-//                    }
-//                    break;
-//                }
-//            }
-//            if (!check) {
-//                otherLdapGroups.add(new LdapGroup(name, -1));
-//            }
-//
-//        }
-//        userVO.setBambooLdapGroups(bambooLdapGroups);
-//        userVO.setOtherLdapGroups(otherLdapGroups);
-//        //用于子菜单
-//        userVO.setUserLdapGroupVO(userLdapGroupVO);
-//    }
-
 
     @Override
     public TableVO<List<UserLeaveVO>> getUserLeavePage(String username, int page, int length) {
@@ -255,7 +212,6 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return new BusinessWrapper<>(ErrorCode.serverFailure);
         }
-
     }
 
     @Override
@@ -275,12 +231,20 @@ public class UserServiceImpl implements UserService {
         return userDao.getUserByName(username);
     }
 
+    @Override
+    public UserDO getUserByDO(UserDO userDO) {
+        return userDao.getUser(userDO);
+    }
 
     @Override
     public BusinessWrapper<Boolean> saveUserInfo(UserDO userDO) {
-        if (userDO.getUsername().equals(SessionUtils.getUsername())) {
+        if (userDO.getUsername().equals(SessionUtils.getUsername()) || authService.isRole(SessionUtils.getUsername(), RoleDO.roleAdmin)) {
             userDao.updateUser(userDO);
-            //createKeyFile(userDO.getUsername(), userDO.getRsaKey());
+            // TODO 如果用户提交pubKey则同步JMS/Gitlab
+            if (!StringUtils.isEmpty(userDO.getRsaKey())) {
+                jumpserverService.updateUserPubkey(userDO.getUsername());
+                gitlabService.pushSSHKey(userDO.getUsername(), userDO.getRsaKey());
+            }
 
             return new BusinessWrapper<>(true);
         } else {
@@ -288,7 +252,6 @@ public class UserServiceImpl implements UserService {
             if (checkWrapper.isSuccess()) {
                 userDao.updateUser(userDO);
                 //createKeyFile(userDO.getUsername(), userDO.getRsaKey());
-
                 return new BusinessWrapper<>(true);
             } else {
                 return new BusinessWrapper<>(ErrorCode.authenticationFailure);
@@ -318,24 +281,6 @@ public class UserServiceImpl implements UserService {
         }
     }
 
-
-//    /**
-//     * 创建key file
-//     *
-//     * @param username
-//     * @param rsaKey
-//     */
-//    private void createKeyFile(String username, String rsaKey) {
-//        HashMap<String, String> configMap = acqGetwayConifMap();
-//        String keyPath = configMap.get(GetwayItemEnum.GETWAY_KEY_PATH.getItemKey());
-//        String keyFile = configMap.get(GetwayItemEnum.GETWAY_KEY_FILE.getItemKey());
-//
-//        String path = keyPath + "/" + username + keyFile;
-//
-//        IOUtils.writeFile(rsaKey, path);
-//    }
-
-
     @Override
     public String queryUserMobileByEmail(String email) {
         return "";
@@ -350,14 +295,12 @@ public class UserServiceImpl implements UserService {
         return new BusinessWrapper<>(true);
     }
 
-
     @Override
     public BusinessWrapper<Boolean> addUserMobile(long userId) {
         UserDO userDO = userDao.getUserById(userId);
         if (userDO == null) return new BusinessWrapper<>(false);
         return new BusinessWrapper<>(addUserMobile(userDO, true));
     }
-
 
     private boolean addUserMobile(UserDO userDO, boolean refresh) {
         try {
@@ -373,6 +316,72 @@ public class UserServiceImpl implements UserService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    @Override
+    public List<UserVO> queryUserExcludeApp(String username, long appId) {
+        List<UserDO> userList = userDao.queryUserExcludeApp(username, appId);
+        List<UserVO> voList = new ArrayList<>();
+        for (UserDO userDO : userList)
+            voList.add(new UserVO(userDO, true));
+        return voList;
+    }
+
+    @Override
+    public List<UserVO> queryUserByApp(long appId) {
+        List<CiAppAuthDO> ciAppAuthList = ciDao.queryCiAppAuthByAppId(appId);
+        List<UserVO> userList = new ArrayList<>();
+        for (CiAppAuthDO ciAppAuthDO : ciAppAuthList) {
+            UserDO userDO = userDao.getUserById(ciAppAuthDO.getUserId());
+            if (userDO == null) continue;
+            UserVO userVO = new UserVO(userDO, true);
+            userList.add(userVO);
+        }
+        return userList;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> addUserByApp(long appId, long userId) {
+        CiAppAuthDO ciAppAuthDO = ciDao.getCiAppAuthByAppIdAndUserId(appId, userId);
+        if (ciAppAuthDO != null) return new BusinessWrapper<Boolean>(true);
+        UserDO userDO = userDao.getUserById(userId);
+        CiAppDO ciAppDO = ciDao.getCiApp(appId);
+        ciAppAuthDO = new CiAppAuthDO(ciAppDO, userDO);
+        try {
+            ciDao.addCiAppAuth(ciAppAuthDO);
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delUserByApp(long appId, long userId) {
+        try {
+            CiAppAuthDO ciAppAuthDO = ciDao.getCiAppAuthByAppIdAndUserId(appId, userId);
+            if (ciAppAuthDO != null)
+                ciDao.delCiAppAuth(ciAppAuthDO.getId());
+            return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+            return new BusinessWrapper<Boolean>(false);
+        }
+    }
+
+    /**
+     * @param displayName username<displayName>
+     * @return
+     */
+    @Override
+    public UserDO getUserByDisplayName(String displayName) {
+        try {
+            String name[] = displayName.split("<");
+            String username = name[0];
+            UserDO userDO = userDao.getUserByName(username);
+            if (userDO != null) return userDO;
+        } catch (Exception e) {
+            return userDao.getUserByName(displayName);
+        }
+        return null;
     }
 
 

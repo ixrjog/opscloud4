@@ -1,10 +1,7 @@
 package com.sdg.cmdb.controller;
 
 import com.sdg.cmdb.domain.HttpResult;
-import com.sdg.cmdb.domain.ci.CiAppVO;
-import com.sdg.cmdb.domain.ci.CiJobParamDO;
-import com.sdg.cmdb.domain.ci.CiJobVO;
-import com.sdg.cmdb.domain.ci.CiTemplateDO;
+import com.sdg.cmdb.domain.ci.*;
 import com.sdg.cmdb.domain.ci.jenkins.Notify;
 import com.sdg.cmdb.service.CiService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +24,53 @@ public class CiController {
     /**
      * 查询我的App
      *
-     * @param projectName
+     * @param queryName
      * @return
      */
     @RequestMapping(value = "/app/query", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getMyApp(@RequestParam String projectName) {
-        return new HttpResult(ciService.queryMyApp(projectName));
+    public HttpResult getMyApp(@RequestParam String queryName, @RequestParam long labelId) {
+        return new HttpResult(ciService.queryMyApp(queryName, labelId));
     }
+
+
+    @RequestMapping(value = "/app/label/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getAppByLabel(@RequestParam long labelId, @RequestParam String queryName) {
+        return new HttpResult(ciService.queryAppByLabel(labelId, queryName));
+    }
+
+
+    /**
+     * 查询未授权的App 按类型
+     *
+     * @param queryName
+     * @return
+     */
+    @RequestMapping(value = "/app/unauth/queryByType", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getUnauthAppByType(@RequestParam String queryName, @RequestParam int appType) {
+        return new HttpResult(ciService.queryUnauthApp(queryName, appType));
+    }
+
+    /**
+     * 查询我的App 按类型
+     *
+     * @param queryName
+     * @return
+     */
+    @RequestMapping(value = "/app/queryByType", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getMyAppByType(@RequestParam String queryName, @RequestParam int appType) {
+        return new HttpResult(ciService.queryMyAppByType(queryName, appType));
+    }
+
+    @RequestMapping(value = "/app/queryByName", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getMyAppByType(@RequestParam String appName) {
+        return new HttpResult(ciService.queryAppByName(appName));
+    }
+
 
     /**
      * 查询App
@@ -60,6 +96,11 @@ public class CiController {
         return new HttpResult(ciService.saveApp(ciAppVO));
     }
 
+    @RequestMapping(value = "/app/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delApp(@RequestParam long id) {
+        return new HttpResult(ciService.delApp(id));
+    }
 
     /**
      * 保存ciJob
@@ -73,10 +114,29 @@ public class CiController {
         return new HttpResult(ciService.saveJob(ciJobVO));
     }
 
+    /**
+     * 保存Job params yaml
+     *
+     * @param ciJobVO
+     * @return
+     */
+    @RequestMapping(value = "/job/params/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult saveJobParams(@RequestBody CiJobVO ciJobVO) {
+        return new HttpResult(ciService.saveJobParams(ciJobVO));
+    }
+
+
     @RequestMapping(value = "/job/query", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult queryJob(@RequestParam long appId) {
         return new HttpResult(ciService.queryJob(appId));
+    }
+
+    @RequestMapping(value = "/app/version", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryAppVersion(@RequestParam long appId) {
+        return new HttpResult(ciService.queryDeployInfo(appId));
     }
 
     @RequestMapping(value = "/job/create", method = RequestMethod.GET)
@@ -89,6 +149,12 @@ public class CiController {
     @ResponseBody
     public HttpResult getJob(@RequestParam long id) {
         return new HttpResult(ciService.getJob(id));
+    }
+
+    @RequestMapping(value = "/job/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delJob(@RequestParam long id) {
+        return new HttpResult(ciService.delJob(id));
     }
 
     @RequestMapping(value = "/job/buildById", method = RequestMethod.GET)
@@ -131,7 +197,13 @@ public class CiController {
     @RequestMapping(value = "/template/page", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getTemplatePage(@RequestParam String name, @RequestParam int appType, @RequestParam int ciType, @RequestParam int page, @RequestParam int length) {
-        return new HttpResult(ciService.getTemplatePage(name, appType, ciType, page, length),true);
+        return new HttpResult(ciService.getTemplatePage(name, appType, ciType, page, length), true);
+    }
+
+    @RequestMapping(value = "/template/scan", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult scanTpls() {
+        return new HttpResult(ciService.scanTpls());
     }
 
     @RequestMapping(value = "/jenkins/template", method = RequestMethod.GET)
@@ -154,8 +226,8 @@ public class CiController {
 
     @RequestMapping(value = "/template/update", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult updateTemplate(@RequestParam long jobId,@RequestParam int type) {
-        return new HttpResult(ciService.updateTemplate(jobId,type));
+    public HttpResult updateTemplate(@RequestParam long jobId, @RequestParam int type) {
+        return new HttpResult(ciService.updateTemplate(jobId, type));
     }
 
     @RequestMapping(value = "/template/updates", method = RequestMethod.GET)
@@ -164,11 +236,29 @@ public class CiController {
         return new HttpResult(ciService.updateTemplates(id));
     }
 
+    @RequestMapping(value = "/template/preview", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult previewTemplate(@RequestParam long id) {
+        return new HttpResult(ciService.previewTemplate(id));
+    }
+
 
     @RequestMapping(value = "/build/page", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getBuildPage(@RequestParam long jobId, @RequestParam int page, @RequestParam int length) {
         return new HttpResult(ciService.getBuildPage(jobId, page, length));
+    }
+
+    @RequestMapping(value = "/build/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getBuildDetail(@RequestParam long buildId) {
+        return new HttpResult(ciService.getBuildDetail(buildId));
+    }
+
+    @RequestMapping(value = "/build/check", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult checkBuildDetail(@RequestParam long buildId) {
+        return new HttpResult(ciService.checkBuildDetail(buildId));
     }
 
     @RequestMapping(value = "/deploy/page", method = RequestMethod.GET)
@@ -183,10 +273,16 @@ public class CiController {
         return new HttpResult(ciService.getArtifact(jobId, buildNumber));
     }
 
+    @RequestMapping(value = "/artifact/queryVersion", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getArtifactPage(@RequestParam long jobId, @RequestParam String versionName) {
+        return new HttpResult(ciService.getArtifact(jobId, versionName));
+    }
+
     @RequestMapping(value = "/build/commits", method = RequestMethod.GET)
     @ResponseBody
-    public HttpResult getCommits(@RequestParam long jobId,@RequestParam String jobName, @RequestParam String branch) {
-        return new HttpResult(ciService.getBuildCommit(jobId,jobName,branch));
+    public HttpResult getCommits(@RequestParam long jobId, @RequestParam String jobName, @RequestParam String branch) {
+        return new HttpResult(ciService.getBuildCommit(jobId, jobName, branch));
     }
 
     /**
@@ -197,7 +293,45 @@ public class CiController {
     @RequestMapping(value = "/hostPattern/get", method = RequestMethod.GET)
     @ResponseBody
     public HttpResult getHostPatter(@RequestParam long serverGroupId) {
-        return new HttpResult(ciService.getHostPatternCi(serverGroupId),true);
+        return new HttpResult(ciService.getHostPatternCi(serverGroupId), true);
+    }
+
+
+    @RequestMapping(value = "/label/add", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult addLabel(@RequestBody LabelDO labelDO) {
+        return new HttpResult(ciService.addLabel(labelDO));
+    }
+
+    @RequestMapping(value = "/label/save", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult saveLabel(@RequestBody LabelDO labelDO) {
+        return new HttpResult(ciService.saveLabel(labelDO));
+    }
+
+    @RequestMapping(value = "/label/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryLabel() {
+        return new HttpResult(ciService.queryLabel());
+    }
+
+    @RequestMapping(value = "/label/member/add", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult addLabelMember(@RequestBody LabelMemberDO labelMemberDO) {
+        return new HttpResult(ciService.addLabelMember(labelMemberDO));
+    }
+
+
+    @RequestMapping(value = "/label/member/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delLabelMember(@RequestParam long id) {
+        return new HttpResult(ciService.delLabelMember(id));
+    }
+
+    @RequestMapping(value = "/label/member/get", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getLabelMember(@RequestParam long id) {
+        return new HttpResult(ciService.getLabelMember(id));
     }
 
 }

@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.*;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.workflow.detail.TodoDetailRole;
 
 import java.util.List;
 
@@ -311,11 +312,24 @@ public interface AuthService {
     BusinessWrapper<Boolean> addUser(UserVO userVO);
 
     /**
+     * 获取一个高强度随机密码
+     * @return
+     */
+    String getPassword();
+
+    /**
      * 按角色名称查询所有用户(工单系统使用)
      *
      * @param roleName
      * @return
      */
     List<UserDO> queryUsersByRoleName(String roleName);
+
+    /**
+     * 查询用户申请平台角色信息
+     * @param username
+     * @return
+     */
+    List<TodoDetailRole> getUserWorkflowRole(String username);
 
 }

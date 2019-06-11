@@ -31,6 +31,13 @@ public interface LdapService {
     BusinessWrapper<Boolean> updateUser(UserVO userVO);
 
     /**
+     * 提供给API调用，不鉴权
+     * @param userVO
+     * @return
+     */
+    BusinessWrapper<Boolean> updateUserBase(UserVO userVO,boolean safe);
+
+    /**
      * LDAP新建Group
      *
      * @param username
@@ -130,5 +137,7 @@ public interface LdapService {
     boolean addUser(UserVO userVO);
 
     BusinessWrapper<Boolean> unbindUser(String username);
+
+    String getUserDN(String username);
 
 }

@@ -23,6 +23,7 @@ public class TaskScriptVO extends TaskScriptDO implements Serializable {
         setScript(taskScriptDO.getScript());
         setScriptType(taskScriptDO.getScriptType());
         setSysScript(taskScriptDO.getSysScript());
+        setModeType(taskScriptDO.getModeType());
         setGmtCreate(taskScriptDO.getGmtCreate());
         setGmtModify(taskScriptDO.getGmtModify());
     }

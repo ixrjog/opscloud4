@@ -2,7 +2,9 @@
     .artifactDetails .popover {
         max-width: 400px !important;
     }
-
+    .ace_editor {
+        height: 700px;
+    }
 </style>
 <div class="modal-header">
     <h3 class="modal-title">
@@ -157,33 +159,35 @@
                 </uib-tab>
                 <uib-tab index="1" heading="构建参数" ng-show="jobItem.id != 0">
                     <div style="font-size:1em;">&nbsp;</div>
-                    <div style="margin-top: 5px;">
-                        <table class="table table-hover table-bordered table-striped"
-                               ng-show="jobItem.paramList != null && jobItem.paramList.length != 0">
-                            <thead>
-                            <tr>
-                                <!--class="col-md-10"-->
-                                <td class="col-md-3">参数</td>
-                                <td>值</td>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr ng-repeat="param in jobItem.paramList">
-                                <td>
-                                      <span style="background-color: #286090; color: white;"
-                                            uib-popover-html="{{param.content}}"
-                                            popover-trigger="'mouseenter'"
-                                            class="label">
-                                                   <i ng-show="param.paramName =='branch'" class="fa fa-code-fork"></i>
-                                                   <i ng-show="param.paramName =='sshUrl'" class="fa fa-git"></i>{{param.paramName}}</span>
-                                </td>
-                                <td>
-                                    <span class="label" style="background-color: #20a03f; color: white;">{{param.paramValue}}</span>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+
+                    <div ui-ace="aceOption" ng-readonly=true ng-model="jobItem.paramsYaml" class="ace_editor"></div>
+                    <!--<div style="margin-top: 5px;">-->
+                        <!--<table class="table table-hover table-bordered table-striped"-->
+                               <!--ng-show="jobItem.paramList != null && jobItem.paramList.length != 0">-->
+                            <!--<thead>-->
+                            <!--<tr>-->
+                                <!--&lt;!&ndash;class="col-md-10"&ndash;&gt;-->
+                                <!--<td class="col-md-3">参数</td>-->
+                                <!--<td>值</td>-->
+                            <!--</tr>-->
+                            <!--</thead>-->
+                            <!--<tbody>-->
+                            <!--<tr ng-repeat="param in jobItem.paramList">-->
+                                <!--<td>-->
+                                      <!--<span style="background-color: #286090; color: white;"-->
+                                            <!--uib-popover-html="{{param.content}}"-->
+                                            <!--popover-trigger="'mouseenter'"-->
+                                            <!--class="label">-->
+                                                   <!--<i ng-show="param.paramName =='branch'" class="fa fa-code-fork"></i>-->
+                                                   <!--<i ng-show="param.paramName =='sshUrl'" class="fa fa-git"></i>{{param.paramName}}</span>-->
+                                <!--</td>-->
+                                <!--<td>-->
+                                    <!--<span class="label" style="background-color: #20a03f; color: white;">{{param.paramValue}}</span>-->
+                                <!--</td>-->
+                            <!--</tr>-->
+                            <!--</tbody>-->
+                        <!--</table>-->
+                    <!--</div>-->
 
                 </uib-tab>
                 <uib-tab index="2" heading="BuildHistory">

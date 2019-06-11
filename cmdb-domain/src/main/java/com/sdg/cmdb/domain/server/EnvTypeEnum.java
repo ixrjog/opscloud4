@@ -9,7 +9,9 @@ public enum EnvTypeEnum {
     daily(2, "daily"),
     gray(3, "gray"),
     prod(4, "prod"),
-    test(5, "test");
+    test(5, "test"),
+    back(6, "back"),
+    pre(7, "pre");
     private int code;
     private String desc;
 

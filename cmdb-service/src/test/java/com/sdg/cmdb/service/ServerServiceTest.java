@@ -45,4 +45,12 @@ public class ServerServiceTest {
 
     }
 
+
+    @Test
+    public void test2() {
+       int n= serverDao.getMyServerSize("baiyi");
+       System.err.println(n);
+
+    }
+
 }

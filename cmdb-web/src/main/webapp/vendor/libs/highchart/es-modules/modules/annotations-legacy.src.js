@@ -577,6 +577,15 @@ Annotation.prototype = {
         visible: true,
 
         /**
+         * Allow an annotation to be draggable by a user. Possible
+         * values are `"x"`, `"xy"`, `"y"` and `""` (disabled).
+         *
+         * @sample highcharts/annotations/draggable/
+         *         Annotations draggable: 'xy'
+         */
+        draggable: 'xy',
+
+        /**
          * Options for annotation's labels. Each label inherits options
          * from the labelOptions object. An option from the labelOptions can be
          * overwritten by config for a specific label.
@@ -590,7 +599,7 @@ Annotation.prototype = {
              * @sample highcharts/annotations/label-position/
              *         Set labels position
              *
-             * @validvalue ["left", "center", "right"]
+             * @type {Highcharts.AlignValue}
              */
             align: 'center',
 
@@ -610,7 +619,7 @@ Annotation.prototype = {
              * @sample highcharts/annotations/label-presentation/
              *         Set labels graphic options
              *
-             * @type {Highcharts.ColorString|Highcharts.GradientColorObject}
+             * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
              */
             backgroundColor: 'rgba(0, 0, 0, 0.75)',
 
@@ -784,7 +793,7 @@ Annotation.prototype = {
              * @sample highcharts/annotations/label-position/
              *         Set labels position
              *
-             * @validvalue ["top", "middle", "bottom"]
+             * @type {Highcharts.VerticalAlignValue}
              */
             verticalAlign: 'bottom',
 
@@ -867,7 +876,6 @@ Annotation.prototype = {
          * @type      {number|string}
          * @apioption annotations.labels.point.yAxis
          */
-
 
 
         /**
@@ -980,7 +988,7 @@ Annotation.prototype = {
              * @sample highcharts/annotations/shape/
              *         Basic shape annotation
              *
-             * @type {Highcharts.ColorString|Highcharts.GradientColorObject}
+             * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
              */
             fill: 'rgba(0, 0, 0, 0.75)',
 
@@ -1007,7 +1015,33 @@ Annotation.prototype = {
         /**
          * The Z index of the annotation.
          */
-        zIndex: 6
+        zIndex: 6,
+
+        /**
+         * Events available in annotations.
+         *
+         * @type {Object}
+         */
+        /**
+         * Event callback when annotation is added to the chart.
+         *
+         * @since 7.1.0
+         * @apioption annotations.events.add
+         */
+        /**
+         * Event callback when annotation is updated (e.g. drag and
+         * droppped or resized by control points).
+         *
+         * @since 7.1.0
+         * @apioption annotations.events.afterUpdate
+         */
+        /**
+         * Event callback when annotation is removed from the chart.
+         *
+         * @since 7.1.0
+         * @apioption annotations.events.remove
+         */
+        events: {}
     },
 
     /**
@@ -1017,6 +1051,7 @@ Annotation.prototype = {
      */
     init: function () {
         var anno = this;
+
         (this.options.labels || []).forEach(this.initLabel, this);
         (this.options.shapes || []).forEach(this.initShape, this);
 
@@ -1077,7 +1112,7 @@ Annotation.prototype = {
         this.shapesGroup = renderer.g('annotation-shapes').add(group);
 
         this.labelsGroup = renderer.g('annotation-labels').attr({
-      // hideOverlappingLabels requires translation
+            // hideOverlappingLabels requires translation
             translateX: 0,
             translateY: 0
         }).add(group);
@@ -1212,11 +1247,12 @@ Annotation.prototype = {
 
         if (!this.chart.styledMode) {
             var style = options.style;
+
             if (style.color === 'contrast') {
                 style.color = this.chart.renderer.getContrast(
                     this.shapesWithoutBackground.indexOf(options.shape) > -1 ?
-                    '#FFFFFF' :
-                    options.backgroundColor
+                        '#FFFFFF' :
+                        options.backgroundColor
                 );
             }
             label.css(style).shadow(options.shadow);
@@ -1882,7 +1918,6 @@ chartPrototype.callbacks.push(function (chart) {
         }
     });
 });
-
 
 
 addEvent(H.Chart, 'afterGetContainer', function () {

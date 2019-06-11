@@ -1,14 +1,16 @@
 package com.sdg.cmdb.service;
 
 
+import com.sdg.cmdb.dao.cmdb.KeyboxDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.zabbix.ZabbixProblemVO;
 import com.sdg.cmdb.domain.zabbix.response.*;
-import com.sdg.cmdb.service.impl.ZabbixServerServiceImpl;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +30,10 @@ public class ZabbixServerServiceTest {
     private ServerDao serverDao;
 
     @Autowired
-    private ServerGroupDao serverGroupDao;
+    private KeyBoxService keyBoxService;
+
+    @Autowired
+    private KeyboxDao keyboxDao;
 
     @Autowired
     private ZabbixServerService zabbixServer;
@@ -214,6 +219,92 @@ public class ZabbixServerServiceTest {
         zabbixServer.updateHostMacros(serverDO);
     }
 
+    @Test
+    public void testQueryItems() {
+        // item-center-1
+        ServerDO serverDO = serverDao.getServerInfoById(559);
+        List<ZabbixResponseItem> items = zabbixServer.queryItems(serverDO);
+        for (ZabbixResponseItem item : items)
+            System.err.println(item);
+
+    }
+
+    @Test
+    public void testGetItem() {
+        // item-center-1
+        ServerDO serverDO = serverDao.getServerInfoById(559);
+        ZabbixResponseItem itemFree = zabbixServer.getItem(serverDO, "", "vfs.fs.size[/,free]");
+        System.err.println(itemFree);
+        //vfs.fs.size[/,pfree]
+        ZabbixResponseItem itemPfree = zabbixServer.getItem(serverDO, "", "vfs.fs.size[/,pfree]");
+        System.err.println(itemPfree);
+
+        ZabbixResponseItem item = zabbixServer.getItem("40909");
+        System.err.println(item);
+    }
+
+    @Test
+    public void testGetTriggers() {
+        List<ZabbixResponseTrigger> list = zabbixServer.getTriggers(2);
+        for (ZabbixResponseTrigger trigger : list)
+            System.err.println(trigger);
+    }
+
+    @Test
+    public void testGetHostinterface() {
+        List<ZabbixResponseHostinterface> list = zabbixServer.getHostinterface("10874");
+        for (ZabbixResponseHostinterface hostinterface : list)
+            System.err.println(hostinterface);
+    }
+
+
+    @Test
+    public void testGetProblems() {
+        List<ZabbixProblemVO> list = zabbixServer.getProblems();
+    }
+
+    @Test
+    public void testGetMyProblems() {
+        //  List<ZabbixProblemVO>  list=   zabbixServer.getProblems("baiyi");
+
+    }
+
+    @Test
+    public void test3() {
+        zabbixServer.getDashboards();
+
+    }
+
+    @Test
+    public void test4() {
+        String x = "Abdiihgd #{HOST.NAME} BBB";
+        System.err.println(x.replaceAll("#\\{HOST\\.?NAME}", "SERVER1"));
+
+    }
+
+    @Test
+    public void test2() {
+        long size = 96419217408l;
+        System.err.println(size / 1024 / 1024 / 1024);
+        long size2 = 795674299l;
+        System.err.println(size2 / 1024 / 1024 / 1024);
+    }
+
+
+    @Test
+    public void test10() {
+        List<UserDO> userList = userDao.getAllUser();
+        for (UserDO userDO : userList) {
+            KeyboxUserServerDO userServerDO = new KeyboxUserServerDO(userDO.getUsername(), 0);
+            long size = keyboxDao.getUserServerSize(userServerDO);
+            if (size > 0) {
+                System.err.println(userDO.getUsername() + " 服务器组数量:" + size);
+                System.err.println(zabbixServer.createUser(userDO));
+            }
+        }
+
+
+    }
 
     /**
      *

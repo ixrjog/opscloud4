@@ -5,6 +5,7 @@ import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.domain.TableVO;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +26,8 @@ public interface ServerGroupService {
     TableVO<List<ServerGroupVO>> queryServerGroupPage(int page, int length, String name, int useType);
 
     TableVO<List<ServerGroupVO>> queryUnauthServerGroupPage(int page, int length, String name, int useType);
+
+    List<ServerGroupDO> queryLogServiceMemberPage(String name, long groupCfgId);
 
     /**
      * 查询项目管理服务器组分页信息
@@ -106,6 +109,8 @@ public interface ServerGroupService {
      */
     List<ServerGroupDO> getServerGroupsByUsername(String username);
 
+    List<ServerGroupDO> getServerGroupsAll();
+
 
     /**
      * 查询服务器组使用类型分页信息
@@ -141,7 +146,23 @@ public interface ServerGroupService {
      */
     List<HostPattern> getHostPattern(long groupId);
 
+    /**
+     * 服务器完整分组
+     * @param groupId
+     * @return
+     */
     Map<String, List<ServerDO>> getHostPatternMap(long groupId);
 
+    List<GroupTree>  queryMyServerGroupList(String name);
+
+    /**
+     * 服务器分组（过滤）  如果有 env-1 则过滤掉 env
+     * @param groupId
+     * @return
+     */
+    Map<String, List<ServerDO>> getHostPatternFilterMap(long groupId);
+
     ServerGroupUseTypeDO getUseType(int useType);
+
+    int getMyGroupSize();
 }

@@ -17,6 +17,11 @@ app.controller('accessCiJobDeployCtrl', function ($scope, $location, $uibModal, 
     $scope.jobItem = {};
     $scope.appItem = {};
 
+    $scope.aceOption = {
+        useWrapMode: true,
+        mode: 'yaml'
+    };
+
     var doQuery = function () {
         var url = "/ci/deploy/page?jobId=" + $scope.jobId
             + "&page=" + ($scope.currentPage <= 0 ? 0 : $scope.currentPage - 1)

@@ -2,6 +2,7 @@ package com.sdg.cmdb.service.cache;
 
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.domain.server.ServerPerfVO;
@@ -72,7 +73,7 @@ public class CacheZabbixServiceTest {
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupByName("group_itemcenter");
         List<ServerDO> list = serverDao.acqServersByGroupId(serverGroupDO.getId());
         for (ServerDO serverDO : list) {
-            if (serverDO.getEnvType() != ServerDO.EnvTypeEnum.prod.getCode()) continue;
+            if (serverDO.getEnvType() != EnvType.EnvTypeEnum.prod.getCode()) continue;
            // if (!serverDO.getSerialNumber().equals("1")) continue;
             ServerPerfVO serverPerfVO = new ServerPerfVO(serverDO, serverGroupDO);
             serverPerfServiceImpl.invokePerf(serverPerfVO, serverDO);

@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.List;
 
 @Data
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 public class CiBuildVO extends CiBuildDO implements Serializable {
     private static final long serialVersionUID = -6672713240140106681L;
 
@@ -39,5 +39,10 @@ public class CiBuildVO extends CiBuildDO implements Serializable {
     private String console;
     private CiJobVO ciJobVO;
     private List<CiDeployHistoryDO> serverList;
+    // 耗时
+    private long timeQueue;
+    private long timeBuild;
+    // 通知
+    private boolean dingtalk = false;
 
 }

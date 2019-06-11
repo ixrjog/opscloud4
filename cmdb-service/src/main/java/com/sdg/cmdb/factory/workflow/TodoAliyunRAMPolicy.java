@@ -6,7 +6,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.workflow.WorkflowTodoVO;
-import com.sdg.cmdb.domain.workflow.detail.TodoDetailRAMGroup;
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailRAMPolicy;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailVO;
@@ -52,7 +51,7 @@ public class TodoAliyunRAMPolicy extends TodoAbs implements Serializable {
     @Override
     public WorkflowTodoVO saveTodo(WorkflowTodoVO workflowTodoVO) {
         List<WorkflowTodoDetailVO> todoDetails = workflowTodoVO.getTodoDetails();
-        String notice = "RAMPolicy:";
+        String notice = "RAMPolicy: ";
         // TODO 去重
         removeTodoDetails(workflowTodoVO.getId(), todoDetails);
         for (WorkflowTodoDetailVO workflowTodoDetailVO : todoDetails) {

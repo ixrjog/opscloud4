@@ -2,7 +2,15 @@ package com.sdg.cmdb.service;
 
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.sdg.cmdb.dao.cmdb.GitlabDao;
+import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.gitlab.GitlabProjectDO;
+import com.sdg.cmdb.domain.server.EnvType;
+import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.plugin.gitlab.GitlabFactory;
+import com.sdg.cmdb.util.EncryptionUtil;
+import com.sdg.cmdb.util.SSHKeyUtils;
 import org.gitlab.api.Pagination;
 import org.gitlab.api.models.*;
 import org.junit.Test;
@@ -21,8 +29,14 @@ public class GitlabServiceTest {
     @Autowired
     private GitlabFactory gitlabFactory;
 
-    @Resource
+    @Autowired
     private GitlabService gitlabService;
+
+    @Autowired
+    private GitlabDao gitlabDao;
+
+    @Autowired
+    private UserService userService;
 
     @Test
     public void testUpdateProjects() {
@@ -48,19 +62,83 @@ public class GitlabServiceTest {
             System.err.println(projects);
 
 
-            System.err.println(projects);
         } catch (Exception e) {
-
         }
     }
 
     @Test
-    public void testMembers() {
+    public void testGroups() {
+        try {
+            List<GitlabGroup> groups = gitlabFactory.getApi().getGroups();
+            for (GitlabGroup group : groups)
+                System.err.println(group.getId() + " " + group.getName());
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    public void testGroups2() {
+        /**
+         * 104 BaseBusiness
+         17 bigdata
+         105 buyer
+         80 core
+         84 docs
+         112 effect
+         73 fe-admin
+         68 fe-buyer
+         63 fe-effect
+         18 fe-gnpm
+         27 fe-scaffold
+         119 fe-web
+         35 fe-xql
+         6 fe-zebra
+         128 ggj-fe-innerserver
+         65 ggj-fe-innerserver-bailu
+         51 gim
+         24 gnpm
+         12 libs_android
+         82 libs_android
+         13 libs_fe
+         11 libs_ios
+         81 libs_ios
+         5 ops
+         31 platform
+         100 seller
+         66 service
+         10 service_fe
+         76 xiaoqule
+         9 zebra_fe
+         */
+        try {
+            List<GitlabProject> projects = gitlabFactory.getApi().getGroupProjects(31);
+            for (GitlabProject p : projects)
+                System.err.println(p.getId() + " " + p.getName());
+        } catch (Exception e) {
+        }
+    }
+
+
+    @Test
+    public void testMembers1() {
         try {
 
-            GitlabProject gitlabProject = gitlabFactory.getApi().getProject(15);
+            GitlabProject gitlabProject = gitlabFactory.getApi().getProject(1);
             List<GitlabProjectMember> members = gitlabFactory.getApi().getProjectMembers(gitlabProject);
-            System.err.println(members);
+            for (GitlabProjectMember m : members)
+                System.err.println(JSON.toJSONString(m));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void testMembers2() {
+        try {
+            //GitlabGroup gitlabGroup = gitlabFactory.getApi().getGroup(9);
+            List<GitlabGroupMember> members = gitlabFactory.getApi().getGroupMembers(27);
+            for (GitlabGroupMember m : members)
+                System.err.println(JSON.toJSONString(m));
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -129,15 +207,7 @@ public class GitlabServiceTest {
     @Test
     public void test5() {
         try {
-
-            //  List<GitlabCommit>  getChanges(long jobId, String jobName,String branch);
-
-            List<GitlabCommit> list = gitlabService.getChanges(1,"java_opscloud_prod","master");
-
-
-         //   List<GitlabCommit> list = gitlabFactory.getApi().getAllCommits(1, "256aaac33d6ce16152fd5e7f88e9c5c9dc013e78");
-
-
+            List<GitlabCommit> list = gitlabService.getChanges(12, "buyer_platform", "buyer");
             for (GitlabCommit x : list) {
                 System.err.println(JSON.toJSONString(x));
             }
@@ -151,21 +221,128 @@ public class GitlabServiceTest {
     @Test
     public void test6() {
         try {
-            String r ="";
-
-            List<GitlabUser>  list = gitlabFactory.getApi().getUsers();
-            for(GitlabUser user:list){
-                r+= user.getName() + "/" + user.getUsername() +"\n";
-
-
+            String r = "";
+            List<GitlabUser> list = gitlabFactory.getApi().getUsers();
+            for (GitlabUser user : list) {
+                r += user.getName() + "/" + user.getUsername() + "\n";
+                System.err.println(JSON.toJSONString(user));
             }
-
             System.err.println(r);
-
-
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
 
+    @Test
+    public void test7() {
+        gitlabService.updateUsers();
+    }
+
+    @Test
+    public void test8() {
+        List<GitlabSSHKey> keys = gitlabService.getUserSSHKey("mingzhe");
+        for (GitlabSSHKey key : keys) {
+            System.err.println(JSON.toJSONString(key));
+            System.err.println(SSHKeyUtils.getMD5(key.getKey()));
+        }
+        //    UserDO userDO = userService.getUserDOByName("baiyi");
+        //    System.err.println(SSHKeyUtils.getMD5(userDO.getRsaKey()));
+
+    }
+
+    @Test
+    public void test9() {
+        UserDO userDO = userService.getUserDOByName("baiyi");
+        boolean r = gitlabService.pushSSHKey("baiyi", userDO.getRsaKey());
+        System.err.println(r);
+    }
+
+    @Test
+    public void test10() {
+        GitlabUser gitlabUser = gitlabService.createUser("test001");
+        System.err.println(JSON.toJSONString(gitlabUser));
+
+    }
+
+
+    @Test
+    public void test11() {
+        try {
+            List<GitlabProjectMember> list = gitlabFactory.getApi().getProjectMembers(27);
+            for (GitlabProjectMember gitlabProjectMember : list) {
+                System.err.println(JSON.toJSONString(gitlabProjectMember));
+            }
+
+        } catch (Exception e) {
+
+        }
+
+    }
+
+
+    @Test
+    public void test12() {
+        try {
+            List<GitlabGroup> list = gitlabFactory.getApi().getGroups();
+            for (GitlabGroup group : list) {
+                System.err.println(JSON.toJSONString(group));
+                List<GitlabGroupMember> gmList = gitlabFactory.getApi().getGroupMembers(group.getId());
+                for (GitlabGroupMember gitlabGroupMember : gmList)
+                    System.err.println(JSON.toJSONString(gitlabGroupMember));
+            }
+        } catch (Exception e) {
+        }
+    }
+
+    @Test
+    public void test13() {
+        try {
+            List<GitlabBranch> list = gitlabService.getProjectBranchsByGitFlow(102, EnvType.EnvTypeEnum.test.getCode());
+            for (GitlabBranch branch : list) {
+                System.err.println(JSON.toJSONString(branch));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test15() {
+        try {
+            GitlabProjectDO gitlabProjectDO = gitlabDao.getGitlabProjectByName("opscloud");
+            GitlabTag gitlabTag = gitlabFactory.getApi().addTag(gitlabProjectDO.getProjectId(), "1.0.0", "master", "测试", "#### 标题 \n");
+            System.err.println(JSON.toJSONString(gitlabTag));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Test
+    public void test16() {
+        gitlabService.updateGroups();
+    }
+
+
+    @Test
+    public void test17() {
+        JSONObject obj = new JSONObject();
+        String x = "http://1ij.coijgee.com1\"";
+        x = x.replaceAll("\"", "\\\"");
+        System.err.println(x);
+        obj.put("a", x);
+        System.err.println(obj.toJSONString());
+    }
+
+    @Test
+    public void test99() {
+        try {
+            List<GitlabProject> list = gitlabFactory.getApi().getGroupProjects(6);
+            for (GitlabProject p: list) {
+                System.err.println(JSON.toJSONString(p.getName()));
+                System.err.println(p.getDescription());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

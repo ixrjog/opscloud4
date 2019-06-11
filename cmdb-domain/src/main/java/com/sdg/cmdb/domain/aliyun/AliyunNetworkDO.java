@@ -1,5 +1,7 @@
 package com.sdg.cmdb.domain.aliyun;
 
+import com.alibaba.fastjson.JSON;
+
 import java.io.Serializable;
 
 /**
@@ -62,13 +64,7 @@ public class AliyunNetworkDO implements Serializable {
 
     @Override
     public String toString() {
-        return "AliyunEcsImageDO{" +
-                "id=" + id +
-                ", networkType='" + networkType + '\'' +
-                ", networkDesc='" + networkDesc + '\'' +
-                ", gmtModify='" + gmtModify + '\'' +
-                ", gmtCreate='" + gmtCreate + '\'' +
-                '}';
+        return JSON.toJSONString(this);
     }
 
     public enum NetworkTypeEnum {

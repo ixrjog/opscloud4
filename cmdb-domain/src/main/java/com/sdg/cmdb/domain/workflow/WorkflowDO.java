@@ -1,38 +1,33 @@
 package com.sdg.cmdb.domain.workflow;
 
+import com.alibaba.fastjson.JSON;
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class WorkflowDO implements Serializable {
     private static final long serialVersionUID = 1430354332190209812L;
 
     private long id;
-
     private long groupId;
-
     private String wfName;
-
     private String wfKey;
-
-    /**
-     * 工单状态 0正常 1暂时关闭 2开发中
-     */
-    private int wfStatus;
-
+    private int wfStatus; // 工单状态 0正常 1暂时关闭 2开发中
     private String title;
-
     private String content;
-
     private String helpUrl;
+    private String topics; // 主题（用于搜索）
+    private int wfType; // 工单类型
+    private boolean approval = false;    // 是否 审批
+    private boolean qaApproval = false;  // 质量审批
+    private boolean cmoApproval = false; // 配置管理员审批
+    private boolean tlApproval = false;  // tl审批
+    private boolean dlApproval = false;
+    private boolean opsAudit = false;    // ops审核
+    private String gmtCreate;
 
-    /**
-     * 主题（用于搜索）
-     */
-    private String topics;
-
-    /**
-     * 工单类型
-     */
-    private int wfType;
+    private String gmtModify;
 
     public enum WfTypeEnum {
         operation(0, "operation");
@@ -62,166 +57,8 @@ public class WorkflowDO implements Serializable {
         }
     }
 
-    /**
-     * 是否 审批
-     */
-    private boolean approval = false;
-
-    /**
-     * 质量审批
-     */
-    private boolean qaApproval = false;
-
-    /**
-     * tl审批
-     */
-    private boolean tlApproval = false;
-
-    private boolean dlApproval = false;
-
-    /**
-     * 审核
-     */
-    private boolean opsAudit = false;
-
-
-    private String gmtCreate;
-
-    private String gmtModify;
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    public long getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(long groupId) {
-        this.groupId = groupId;
-    }
-
-    public String getWfName() {
-        return wfName;
-    }
-
-    public void setWfName(String wfName) {
-        this.wfName = wfName;
-    }
-
-    public String getWfKey() {
-        return wfKey;
-    }
-
-    public void setWfKey(String wfKey) {
-        this.wfKey = wfKey;
-    }
-
-    public int getWfStatus() {
-        return wfStatus;
-    }
-
-    public void setWfStatus(int wfStatus) {
-        this.wfStatus = wfStatus;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
-
-    public String getHelpUrl() {
-        return helpUrl;
-    }
-
-    public void setHelpUrl(String helpUrl) {
-        this.helpUrl = helpUrl;
-    }
-
-    public String getTopics() {
-        return topics;
-    }
-
-    public void setTopics(String topics) {
-        this.topics = topics;
-    }
-
-    public int getWfType() {
-        return wfType;
-    }
-
-    public void setWfType(int wfType) {
-        this.wfType = wfType;
-    }
-
-    public boolean isApproval() {
-        return approval;
-    }
-
-    public void setApproval(boolean approval) {
-        this.approval = approval;
-    }
-
-    public boolean isQaApproval() {
-        return qaApproval;
-    }
-
-    public void setQaApproval(boolean qaApproval) {
-        this.qaApproval = qaApproval;
-    }
-
-    public boolean isTlApproval() {
-        return tlApproval;
-    }
-
-    public void setTlApproval(boolean tlApproval) {
-        this.tlApproval = tlApproval;
-    }
-
-    public boolean isDlApproval() {
-        return dlApproval;
-    }
-
-    public void setDlApproval(boolean dlApproval) {
-        this.dlApproval = dlApproval;
-    }
-
-    public boolean isOpsAudit() {
-        return opsAudit;
-    }
-
-    public void setOpsAudit(boolean opsAudit) {
-        this.opsAudit = opsAudit;
-    }
-
-    public String getGmtCreate() {
-        return gmtCreate;
-    }
-
-    public void setGmtCreate(String gmtCreate) {
-        this.gmtCreate = gmtCreate;
-    }
-
-    public String getGmtModify() {
-        return gmtModify;
-    }
-
-    public void setGmtModify(String gmtModify) {
-        this.gmtModify = gmtModify;
+    @Override
+    public String toString() {
+        return JSON.toJSONString(this);
     }
 }

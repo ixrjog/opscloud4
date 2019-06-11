@@ -25,6 +25,10 @@ public interface DingtalkService {
      */
     void notifyCi(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO);
 
+    void notifyCiAndroid(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO);
+
+    void notifyCiTest(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO);
+
     /**
      * 持续集成部署通知
      * @param ciBuildDO

@@ -1,6 +1,5 @@
 package com.sdg.cmdb.service.impl;
 
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.service.AnsibleServerService;
 import com.sdg.cmdb.service.ConfigCenterService;
 import com.sdg.cmdb.util.CmdUtils;

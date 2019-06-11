@@ -8,16 +8,21 @@ import com.sdg.cmdb.domain.HttpResult;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.*;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
+import com.sdg.cmdb.domain.ldap.LdapGroupDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
+import com.sdg.cmdb.domain.workflow.detail.TodoDetailLdapGroup;
+import com.sdg.cmdb.domain.workflow.detail.TodoDetailRole;
 import com.sdg.cmdb.extend.InvokeInvocation;
 import com.sdg.cmdb.extend.InvokeResult;
 import com.sdg.cmdb.login.LoginPluginManager;
 import com.sdg.cmdb.service.*;
+import com.sdg.cmdb.util.PasswdUtils;
 import com.sdg.cmdb.util.schedule.SchedulerManager;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.TransactionStatus;
@@ -36,16 +41,13 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
     private static final Logger logger = LoggerFactory.getLogger(AuthServiceImpl.class);
     private static final Logger coreLogger = LoggerFactory.getLogger("coreLogger");
 
-    @Resource
-    private ConfigCenterService configCenterService;
-
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
     @Value("#{cmdb['admin.passwd']}")
     private String adminPasswd;
 
-    @Resource
+    @Autowired
     private LoginPluginManager loginPluginManager;
 
     @Resource
@@ -56,13 +58,11 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
 
     private Map<String, List<String>> userGroupMap = new HashMap<>();
 
-
     @Resource
     private AuthDao authDao;
 
     @Resource
     private UserDao userDao;
-
 
     @Resource
     private UserService userService;
@@ -70,15 +70,11 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
     @Resource
     private KeyBoxService keyBoxService;
 
-
     @Resource
     private ConfigService configService;
 
-
     @Resource
     private LdapService ldapService;
-
-
 
     @Override
     public BusinessWrapper<UserDO> loginCredentialCheck(String username, String password) {
@@ -543,15 +539,18 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
     }
 
 
-
     @Override
     public BusinessWrapper<Boolean> delUser(String username) {
         if (invokeEnv.equals("daily")) {    //日常正常返回即可
             return new BusinessWrapper<>(true);
         }
 
-        // 新增离职记录
         UserDO userDO = userDao.getUserByName(username);
+        // 判断是否为管理员
+        if(isRole(username,RoleDO.roleAdmin))
+            return new BusinessWrapper<>(ErrorCode.userUpdateUltraVires);
+
+        // 新增离职记录
         UserLeaveDO userLeaveDO = new UserLeaveDO();
         if (userDO != null) {
             //离职用户记录
@@ -663,16 +662,24 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
      * @param userVO
      * @return
      */
+    @Override
     public BusinessWrapper<Boolean> addUser(UserVO userVO) {
         if (StringUtils.isEmpty(userVO.getUsername())) return new BusinessWrapper<>(ErrorCode.usernameIsNull);
         // 判断LDAP是否存在此用户
         if (ldapService.addUser(userVO)) {
+            if(userVO.isDev())
+                userRoleBind(RoleDO.roleDevelop, userVO.getUsername());
             loginCredentialCheck(userVO.getUsername(), userVO.getUserpassword());
             configService.invokeUserConfig();
             return new BusinessWrapper<>(true);
         } else {
             return new BusinessWrapper<>(ErrorCode.serverFailure);
         }
+    }
+
+    @Override
+    public String getPassword() {
+        return PasswdUtils.getPassword(20);
     }
 
 
@@ -694,8 +701,18 @@ public class AuthServiceImpl implements AuthService, InitializingBean {
             if (!org.springframework.util.StringUtils.isEmpty(user.getMobile()))
                 userDO.setMobile(user.getMobile());
         }
-
         return users;
+    }
+
+    @Override
+    public List<TodoDetailRole> getUserWorkflowRole(String username) {
+        List<RoleDO> roleList = authDao.getRoleByWorkflow();
+        List<TodoDetailRole> list = new ArrayList<>();
+        for (RoleDO roleDO : roleList) {
+            TodoDetailRole todoDetailRole = new TodoDetailRole(roleDO, isRole(username, roleDO.getRoleName()));
+            list.add(todoDetailRole);
+        }
+        return list;
     }
 
 }

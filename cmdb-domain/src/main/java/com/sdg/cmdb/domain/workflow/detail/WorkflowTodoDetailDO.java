@@ -22,7 +22,6 @@ public class WorkflowTodoDetailDO implements Serializable {
 
     static public final int STATUS_ERR = 2;
 
-
     /**
      * 处理状态 0 未处理，1 处理完成  2 ERR
      */

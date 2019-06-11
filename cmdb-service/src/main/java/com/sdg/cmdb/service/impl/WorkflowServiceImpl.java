@@ -3,30 +3,32 @@ package com.sdg.cmdb.service.impl;
 import com.sdg.cmdb.dao.cmdb.TeamDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.dao.cmdb.WorkflowDao;
-
 import com.sdg.cmdb.domain.BusinessWrapper;
+import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.auth.RoleDO;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.workflow.*;
+import com.sdg.cmdb.domain.workflow.status.WorkflowStatus;
+import com.sdg.cmdb.domain.workflow.status.WorkflowTodoMonthStatus;
+import com.sdg.cmdb.domain.workflow.status.WorkflowTodoStatus;
 import com.sdg.cmdb.factory.workflow.TodoAbs;
 import com.sdg.cmdb.factory.workflow.WorkflowTodoFactory;
 import com.sdg.cmdb.service.AuthService;
+import com.sdg.cmdb.service.UserService;
 import com.sdg.cmdb.service.WorkflowService;
 import com.sdg.cmdb.util.SessionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+@Slf4j
 @Service
 public class WorkflowServiceImpl implements WorkflowService {
 
-    private static final Logger logger = LoggerFactory.getLogger(WorkflowServiceImpl.class);
 
     @Autowired
     private WorkflowDao workflowDao;
@@ -35,13 +37,13 @@ public class WorkflowServiceImpl implements WorkflowService {
     private UserDao userDao;
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private TeamDao teamDao;
 
     @Autowired
     private AuthService authService;
-
-
-    //private WorkflowTodoFactory workflowTodoFactory;
 
     @Override
     public List<WorkflowGroupVO> queryWorkflowGroup(String topics) {
@@ -115,11 +117,12 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     /**
      * 不批准
+     *
      * @param todoId
      * @return
      */
     @Override
-    public BusinessWrapper<Boolean> disapproveTodo(long todoId){
+    public BusinessWrapper<Boolean> disapproveTodo(long todoId) {
         TodoAbs todoAbs = WorkflowTodoFactory.getByKey(getWorkflowKey(todoId));
         return new BusinessWrapper<Boolean>(todoAbs.disapproveTodo(todoId));
     }
@@ -169,11 +172,13 @@ public class WorkflowServiceImpl implements WorkflowService {
         UserDO userDO = userDao.getUserByName(username);
         HashMap<Long, WorkflowTodoDO> todoMap = new HashMap<>();
         List<WorkflowTodoDO> todos = workflowDao.queryTodoByApplyUserId(userDO.getId());
-        // TODO 去重
+        // 去重
         todoInMap(todos, todoMap);
-        // TODO 如果用户是TL则插入team成员的待审批工单
+        // 插入CMO待审批工单
+        gueryCmoTodo(userDO,todoMap);
+        // 如果用户是TL则插入team成员的待审批工单
         gueryTlTodo(userDO, todoMap);
-        // TODO 按角色插入待审批工单
+        // 按角色插入待审批工单
         gueryRoleTodo(userDO, todoMap);
         List<WorkflowTodoDO> myTodos = new ArrayList<>();
         for (long todoId : todoMap.keySet()) {
@@ -189,6 +194,18 @@ public class WorkflowServiceImpl implements WorkflowService {
         List<WorkflowTodoDO> todos = workflowDao.queryTodoByApplyUserIdAndTodoPhase(userDO.getId(), WorkflowTodoDO.TODO_PHASE_COMPLETE);
         return toVO(todos);
     }
+
+    /**
+     * 查询CMO配置管理员待审批工作流
+     *
+     * @param userDO
+     * @param todoMap
+     */
+    private void gueryCmoTodo(UserDO userDO, HashMap<Long, WorkflowTodoDO> todoMap) {
+        List<WorkflowTodoDO> todos = workflowDao.queryTodoByApproval( WorkflowTodoDO.TODO_PHASE_CMO_APPROVAL,userDO.getId());
+        todoInMap(todos, todoMap);
+    }
+
 
     /**
      * 查询TL待审批工作流
@@ -232,7 +249,6 @@ public class WorkflowServiceImpl implements WorkflowService {
         return voList;
     }
 
-
     /**
      * todo去重（避免申请人与审批人相同的重复操作）
      *
@@ -245,5 +261,28 @@ public class WorkflowServiceImpl implements WorkflowService {
             todoMap.put(todo.getId(), todo);
     }
 
+    @Override
+    public TableVO<List<WorkflowTodoVO>> getWorkflowTodoPage(String queryName, int queryPhase, int page, int length) {
+        long size = workflowDao.queryTodoSize(queryName, queryPhase);
+        List<WorkflowTodoDO> list = workflowDao.queryTodoPage(queryName, queryPhase, page * length, length);
+        List<WorkflowTodoVO> voList = new ArrayList<>();
+        for (WorkflowTodoDO workflowTodoDO : list)
+            voList.add(getTodo(workflowTodoDO.getId()));
+        return new TableVO<>(size, voList);
+    }
+
+    @Override
+    public int getMyTodoSize(int queryPhase) {
+        UserDO userDO = userService.getUserDOByName(SessionUtils.getUsername());
+        return workflowDao.getMyTodoSize(userDO.getId(), queryPhase);
+    }
+
+    @Override
+    public WorkflowStatus getWorkflowStatus(){
+        List<WorkflowTodoMonthStatus> todoMonthStatusList=  workflowDao.statusTodoByMonth();
+        List<WorkflowTodoStatus> todoStatusList=   workflowDao.statusTodoByWorkflow();
+        WorkflowStatus ws = new WorkflowStatus(todoStatusList,todoMonthStatusList);
+        return ws;
+    }
 
 }

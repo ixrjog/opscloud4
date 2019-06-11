@@ -48,4 +48,10 @@ public class TimeUtilsTest {
         System.err.println(formatter.format(now + 24*3600*1000)) ;
     }
 
+    @Test
+    public void test3(){
+        System.err.println(  TimeViewUtils.format(new Date( 1553252742000l)));
+    }
+
+
 }

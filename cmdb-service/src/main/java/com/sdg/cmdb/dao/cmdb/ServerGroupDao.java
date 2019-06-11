@@ -39,12 +39,12 @@ public interface ServerGroupDao {
             @Param("name") String name, @Param("useType") int useType);
 
 
+    long queryUnauthServerGroupSize(@Param("name") String name, @Param("useType") int useType);
 
-    long queryUnauthServerGroupSize( @Param("name") String name, @Param("useType") int useType);
     List<ServerGroupDO> queryUnauthServerGroupPage(@Param("start") long start, @Param("length") int length,
-            @Param("name") String name, @Param("useType") int useType);
+                                                   @Param("name") String name, @Param("useType") int useType);
 
-    long queryProjectServerGroupSize( @Param("name") String name, @Param("useType") int useType);
+    long queryProjectServerGroupSize(@Param("name") String name, @Param("useType") int useType);
 
 
     List<ServerGroupDO> queryLogServiceServerGroupPage(@Param("start") long start,
@@ -57,8 +57,6 @@ public interface ServerGroupDao {
     List<ServerGroupDO> queryProjectServerGroupPage(
             @Param("start") long start, @Param("length") int length,
             @Param("name") String name, @Param("useType") int useType);
-
-
 
 
     long queryLogServiceServerGroupSize(@Param("name") String name,
@@ -148,6 +146,7 @@ public interface ServerGroupDao {
 
     /**
      * 按使用类型查询
+     *
      * @param useType
      * @return
      */
@@ -164,6 +163,7 @@ public interface ServerGroupDao {
 
     /**
      * 查询一定条件下分页服务器组使用类型数量
+     *
      * @param typeName
      * @return
      */
@@ -171,6 +171,7 @@ public interface ServerGroupDao {
 
     /**
      * 查询一定条件下分页服务器组使用类型信息
+     *
      * @param typeName
      * @param start
      * @param length
@@ -198,5 +199,20 @@ public interface ServerGroupDao {
     int delServerGroupUseType(@Param("id") long id);
 
     ServerGroupUseTypeDO getServerGroupUseTypeByUseType(@Param("useType") int useType);
+
+    /**
+     * 查询我的服务器组数量
+     *
+     * @param username
+     * @return
+     */
+    int getMyGroupSize(@Param("username") String username);
+
+    int checkUserGroup(@Param("username") String username,
+                       @Param("serverGroupId") long serverGroupId);
+
+
+   List<ServerGroupDO> queryLogServiceMemberPage(@Param("name") String name,
+                              @Param("groupCfgId") long groupCfgId);
 
 }

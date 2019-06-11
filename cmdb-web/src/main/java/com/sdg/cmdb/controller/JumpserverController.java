@@ -86,5 +86,38 @@ public class JumpserverController {
         return new HttpResult(jumpserverService.saveAssetsAdminuser(id));
     }
 
+    /**
+     * 校验用户
+     * @return
+     */
+    @RequestMapping(value = "/users/check", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult checkUsers() {
+        return new HttpResult(jumpserverService.checkUsers());
+    }
+
+    /**
+     * 校验资产
+     * @return
+     */
+    @RequestMapping(value = "/assets/check", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult checkAssets() {
+        return new HttpResult(jumpserverService.checkAssets());
+    }
+
+    @RequestMapping(value = "/users/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delUsers(@RequestParam String id) {
+        return new HttpResult(jumpserverService.delUsers(id));
+    }
+
+    @RequestMapping(value = "/assets/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult delAssets(@RequestParam String id) {
+        return new HttpResult(jumpserverService.delAssets(id));
+    }
+
+
 
 }

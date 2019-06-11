@@ -19,6 +19,7 @@ import ControlPoint from './ControlPoint.js';
 
 var merge = H.merge,
     addEvent = H.addEvent,
+    fireEvent = H.fireEvent,
     defined = H.defined,
     erase = H.erase,
     find = H.find,
@@ -58,10 +59,11 @@ var merge = H.merge,
  * @mixes Annotation.eventEmitterMixin
  *
  * @param {Highcharts.Chart} chart a chart instance
- * @param {AnnotationOptions} options the options object
+ * @param {Highcharts.AnnotationsOptions} options the options object
  */
 var Annotation = H.Annotation = function (chart, options) {
     var labelsAndShapes;
+
     /**
      * The chart that the annotation belongs to.
      *
@@ -95,14 +97,14 @@ var Annotation = H.Annotation = function (chart, options) {
     /**
      * The array of shapes which belong to the annotation.
      *
-     * @type {Array<Annotation.Shape>}
+     * @type {Array<Highcharts.Annotation.Shape>}
      */
     this.shapes = [];
 
     /**
      * The options for the annotations.
      *
-     * @type {AnnotationOptions}
+     * @type {Highcharts.AnnotationsOptions}
      */
     // this.options = merge(this.defaultOptions, userOptions);
     this.options = options;
@@ -110,7 +112,7 @@ var Annotation = H.Annotation = function (chart, options) {
     /**
      * The user options for the annotations.
      *
-     * @type {AnnotationOptions}
+     * @type {Highcharts.AnnotationsOptions}
      */
     this.userOptions = merge(true, {}, options);
 
@@ -166,6 +168,13 @@ merge(
     controllableMixin,
     eventEmitterMixin, /** @lends Annotation# */ {
         /**
+         * List of events for `annotation.options.events` that should not be
+         * added to `annotation.graphic` but to the `annotation`.
+         *
+         * @type {Array<string>}
+         */
+        nonDOMEvents: ['add', 'afterUpdate', 'remove'],
+        /**
          * A basic type of an annotation. It allows to add custom labels
          * or shapes. The items  can be tied to points, axis coordinates
          * or chart pixel coordinates.
@@ -195,7 +204,7 @@ merge(
              */
             visible: true,
 
-             /**
+            /**
              * Allow an annotation to be draggable by a user. Possible
              * values are `"x"`, `"xy"`, `"y"` and `""` (disabled).
              *
@@ -215,9 +224,10 @@ merge(
                  * The alignment of the annotation's label. If right,
                  * the right side of the label should be touching the point.
                  *
-                 * @validvalue ["left", "center", "right"]
                  * @sample highcharts/annotations/label-position/
                  *         Set labels position
+                 *
+                 * @type {Highcharts.AlignValue}
                  */
                 align: 'center',
 
@@ -338,10 +348,10 @@ merge(
                  * outside the plot area. The justify option aligns the label
                  * inside the plot area.
                  *
-                 * @validvalue ["none", "justify"]
+                 * @validvalue ["allow", "justify"]
                  * @sample highcharts/annotations/label-crop-overflow/
                  *         Crop or justify labels
-                 **/
+                 */
                 overflow: 'justify',
 
                 /**
@@ -401,10 +411,10 @@ merge(
                 /**
                  * The vertical alignment of the annotation's label.
                  *
-                 * @type {string}
-                 * @validvalue ["top", "middle", "bottom"]
                  * @sample highcharts/annotations/label-position/
                  *         Set labels position
+                 *
+                 * @type {Highcharts.VerticalAlignValue}
                  */
                 verticalAlign: 'bottom',
 
@@ -489,7 +499,6 @@ merge(
              * @type {number|string}
              * @apioption annotations.crookedLine.labels.point.yAxis
              */
-
 
 
             /**
@@ -657,7 +666,28 @@ merge(
 
 
             /**
+             * Events available in annotations.
+             *
              * @type {Object}
+             */
+            /**
+             * Event callback when annotation is added to the chart.
+             *
+             * @since 7.1.0
+             * @apioption annotations.crookedLine.events.add
+             */
+            /**
+             * Event callback when annotation is updated (e.g. drag and
+             * droppped or resized by control points).
+             *
+             * @since 7.1.0
+             * @apioption annotations.crookedLine.events.afterUpdate
+             */
+            /**
+             * Event callback when annotation is removed from the chart.
+             *
+             * @since 7.1.0
+             * @apioption annotations.crookedLine.events.remove
              */
             events: {},
 
@@ -674,7 +704,7 @@ merge(
          * Initialize the annotation.
          *
          * @param {Highcharts.Chart} - the chart
-         * @param {AnnotationOptions} - the user options for the annotation
+         * @param {Highcharts.AnnotationsOptions} - the user options for the annotation
          */
         init: function () {
             this.linkPoints();
@@ -703,7 +733,7 @@ merge(
 
         addShapes: function () {
             (this.options.shapes || []).forEach(function (shapeOptions, i) {
-                var shape = this.initShape(shapeOptions);
+                var shape = this.initShape(shapeOptions, i);
 
                 this.options.shapes[i] = shape.options;
             }, this);
@@ -711,7 +741,7 @@ merge(
 
         addLabels: function () {
             (this.options.labels || []).forEach(function (labelOptions, i) {
-                var label = this.initLabel(labelOptions);
+                var label = this.initLabel(labelOptions, i);
 
                 this.options.labels[i] = label.options;
             }, this);
@@ -787,7 +817,7 @@ merge(
         /**
          * Set an annotation options.
          *
-         * @param {AnnotationOptions} - user options for an annotation
+         * @param {Highcharts.AnnotationsOptions} - user options for an annotation
          */
         setOptions: function (userOptions) {
             this.options = merge(this.defaultOptions, userOptions);
@@ -834,8 +864,8 @@ merge(
                 .attr({
                     zIndex: this.options.zIndex,
                     visibility: this.options.visible ?
-                    'visible' :
-                    'hidden'
+                        'visible' :
+                        'hidden'
                 })
                 .add();
 
@@ -937,6 +967,7 @@ merge(
                     this.userOptions,
                     userOptions
                 ),
+                userOptionsIndex = chart.annotations.indexOf(this),
                 options = H.merge(true, this.userOptions, userOptions);
 
             options.labels = labelsAndShapes.labels;
@@ -945,7 +976,13 @@ merge(
             this.destroy();
             this.constructor(chart, options);
 
+            // Update options in chart options, used in exporting (#9767):
+            chart.options.annotations[userOptionsIndex] = options;
+
+            this.isUpdating = true;
             this.redraw();
+            this.isUpdating = false;
+            fireEvent(this, 'afterUpdate');
         },
 
         /* *************************************************************
@@ -958,17 +995,18 @@ merge(
          *
          * @param {Object} shapeOptions - a confg object for a single shape
          **/
-        initShape: function (shapeOptions) {
+        initShape: function (shapeOptions, index) {
             var options = merge(
-                this.options.shapeOptions,
-                {
-                    controlPointOptions: this.options.controlPointOptions
-                },
-                shapeOptions
-            ),
+                    this.options.shapeOptions,
+                    {
+                        controlPointOptions: this.options.controlPointOptions
+                    },
+                    shapeOptions
+                ),
                 shape = new Annotation.shapesMap[options.type](
                     this,
-                    options
+                    options,
+                    index
                 );
 
             shape.itemType = 'shape';
@@ -983,17 +1021,18 @@ merge(
          *
          * @param {Object} labelOptions
          **/
-        initLabel: function (labelOptions) {
+        initLabel: function (labelOptions, index) {
             var options = merge(
-                this.options.labelOptions,
-                {
-                    controlPointOptions: this.options.controlPointOptions
-                },
-                labelOptions
-            ),
+                    this.options.labelOptions,
+                    {
+                        controlPointOptions: this.options.controlPointOptions
+                    },
+                    labelOptions
+                ),
                 label = new ControllableLabel(
                     this,
-                    options
+                    options,
+                    index
                 );
 
             label.itemType = 'label';
@@ -1035,7 +1074,7 @@ merge(
          * @param {Annotation.Label|Annotation.Shape} item
          */
 
-        adjustVisibility: function (item) {  // #9481
+        adjustVisibility: function (item) { // #9481
             var hasVisiblePoints = false,
                 label = item.graphic;
 
@@ -1073,11 +1112,12 @@ merge(
         renderItem: function (item) {
             item.render(
                 item.itemType === 'label' ?
-                this.labelsGroup :
-                this.shapesGroup
+                    this.labelsGroup :
+                    this.shapesGroup
             );
         }
-    });
+    }
+);
 
 /**
  * An object uses for mapping between a shape type and a constructor.
@@ -1144,7 +1184,7 @@ H.extend(H.Chart.prototype, /** @lends Highcharts.Chart# */ {
     /**
      * Add an annotation to the chart after render time.
      *
-     * @param  {AnnotationOptions} options
+     * @param  {Highcharts.AnnotationsOptions} options
      *         The annotation options for the new, detailed annotation.
      * @param {boolean} [redraw]
      *
@@ -1178,6 +1218,7 @@ H.extend(H.Chart.prototype, /** @lends Highcharts.Chart# */ {
             ) : idOrAnnotation;
 
         if (annotation) {
+            fireEvent(annotation, 'remove');
             erase(this.options.annotations, annotation.options);
             erase(annotations, annotation);
             annotation.destroy();

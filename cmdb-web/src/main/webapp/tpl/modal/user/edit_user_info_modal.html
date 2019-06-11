@@ -52,7 +52,9 @@
             <div class="col-md-6">
                 <label class="col-lg-4 control-label">修改登录密码</label>
                 <div class="col-lg-8">
-                    <input type="text" class="form-control" placeholder="密码" ng-model="newUserItem.userpassword">
+                    <input type="text" class="form-control" placeholder="密码"
+                           uib-popover-html="'包含大写,小写,特殊字符,长度至少8'" popover-trigger="'mouseenter'"
+                           ng-model="newUserItem.userpassword">
                 </div>
             </div>
         </div>

@@ -1,5 +1,5 @@
 /**
- * (c) 2009-2018 Sebastian Bochann
+ * (c) 2009-2019 Sebastian Bochann
  *
  * Price indicator for Highcharts
  *
@@ -105,11 +105,16 @@ addEvent(H.Series, 'afterRender', function () {
             });
 
             // Save price
-            serie.lastPrice = serie.yAxis.cross;
-            serie.lastPrice.y = yValue;
+            if (serie.yAxis.cross) {
+                serie.lastPrice = serie.yAxis.cross;
+                serie.lastPrice.y = yValue;
+            }
         }
 
-        if (lastVisiblePrice && lastVisiblePrice.enabled) {
+        if (lastVisiblePrice &&
+            lastVisiblePrice.enabled &&
+            points.length > 0
+        ) {
 
             crop = points[points.length - 1].x === x ? 1 : 2;
 
@@ -122,8 +127,10 @@ addEvent(H.Series, 'afterRender', function () {
             // Save price
             yAxis.drawCrosshair(null, lastPoint);
 
-            serie.lastVisiblePrice = yAxis.cross;
-            serie.lastVisiblePrice.y = lastPoint.y;
+            if (yAxis.cross) {
+                serie.lastVisiblePrice = yAxis.cross;
+                serie.lastVisiblePrice.y = lastPoint.y;
+            }
 
             if (serie.crossLabel) {
                 serie.crossLabel.destroy();
@@ -140,4 +147,3 @@ addEvent(H.Series, 'afterRender', function () {
 
     }
 });
-

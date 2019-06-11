@@ -18,16 +18,16 @@ public class NotificationCenterServiceImpl implements NotificationCenterService 
 
     private static final Logger logger = LoggerFactory.getLogger(NotificationCenterServiceImpl.class);
 
-    @Value("#{cmdb['email.host']}")
+    @Value(value = "${email.host}")
     private String emailHost;
 
-    @Value("#{cmdb['email.user']}")
+    @Value(value = "${email.user}")
     private String emailUser;
 
-    @Value("#{cmdb['email.passwd']}")
+    @Value(value = "${email.passwd}")
     private String emailPasswd;
 
-    @Value("#{cmdb['external.url']}")
+    @Value(value = "${external.url}")
     private String externalUrl;
 
 
@@ -49,7 +49,7 @@ public class NotificationCenterServiceImpl implements NotificationCenterService 
 
     private String getTodoPhaseDesc(WorkflowTodoVO workflowTodoVO) {
         int todoPhase = workflowTodoVO.getTodoPhase();
-        if (todoPhase == WorkflowTodoDO.TODO_PHASE_QA_APPROVAL)
+        if (todoPhase == WorkflowTodoDO.TODO_PHASE_CMO_APPROVAL)
             return "待审批";
         if (todoPhase == WorkflowTodoDO.TODO_PHASE_TL_APPROVAL)
             return "待审批";

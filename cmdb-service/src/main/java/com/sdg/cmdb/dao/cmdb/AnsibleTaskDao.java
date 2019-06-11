@@ -102,4 +102,12 @@ public interface AnsibleTaskDao {
     List<PlaybookTaskHostDO> queryPlaybookTaskHost(@Param("playbookTaskId") long playbookTaskId);
 
 
+    List<AnsibleTaskServerDO> queryAnsibleTaskServerPage(@Param("scriptId") long scriptId,
+                                                  @Param("serverId") long serverId,
+                                                  @Param("pageStart") long pageStart, @Param("length") int length);
+
+    long getAnsibleTaskServerSize(@Param("scriptId") long scriptId,
+                                  @Param("serverId") long serverId);
+
+
 }

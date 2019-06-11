@@ -5,16 +5,22 @@ import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.helper.JenkinsVersion;
 import com.offbytwo.jenkins.model.*;
 
+
+import com.sdg.cmdb.domain.ci.CiBuildDO;
+import com.sdg.cmdb.domain.ci.jobParametersYaml.JobControllerYaml;
+import com.sdg.cmdb.domain.ci.jobParametersYaml.JobParameterYaml;
+import com.sdg.cmdb.domain.ci.jobParametersYaml.JobParametersYaml;
 import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.util.*;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.*;
@@ -27,13 +33,13 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
 
     private static JenkinsServer jenkinsServer;
 
-    @Value("#{cmdb['jenkins.url']}")
+    @Value(value = "${jenkins.url}")
     private String jenkinsUrl;
 
-    @Value("#{cmdb['jenkins.user']}")
+    @Value(value = "${jenkins.user}")
     private String jenkinsUser;
 
-    @Value("#{cmdb['jenkins.token']}")
+    @Value(value = "${jenkins.token}")
     private String jenkinsToken;
 
 
@@ -49,7 +55,6 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
             return false;
         }
     }
-
 
     /**
      * 获取job
@@ -85,8 +90,6 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
         return jobMap;
     }
 
-
-
     @Override
     public JobWithDetails build(Job job, HashMap<String, String> paramList) {
         coreLogger.info("Jenkins job={} run build", job.getName());
@@ -99,6 +102,23 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
             return jobWithDetails;
         } catch (Exception e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public BuildWithDetails getBuildDetail(CiBuildDO ciBuildDO) {
+        if (ciBuildDO.getBuildNumber() <= 0) return null;
+        JobWithDetails jd = getJobDetails(ciBuildDO.getJobName());
+        if (jd == null) return null;
+        for (Build build : jd.getBuilds()) {
+            if (build.getNumber() == ciBuildDO.getBuildNumber())
+                try {
+                    return build.details();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    return null;
+                }
         }
         return null;
     }
@@ -120,7 +140,6 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
             String jobXml = jenkinsServer.getJobXml(jobName);
             return jobXml;
         } catch (Exception e) {
-            e.printStackTrace();
         }
         return null;
     }
@@ -137,6 +156,33 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
     }
 
     @Override
+    public boolean createJobByTemplate(String jobName, String templateName, JobParametersYaml jobYaml) {
+        try {
+            String jobXml = jenkinsServer.getJobXml(templateName);
+            return createJob(jobName, getJobXml(jobXml,jobYaml));
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String invokeParams(String jobXml, String invokeParams, List<JobParameterYaml> jobParameterYamls){
+        Map<String, String> valuesMap = new HashMap<String, String>();
+        String values[] = invokeParams.split(",");
+        for(String v: values){
+            for(JobParameterYaml jpy:jobParameterYamls){
+                if(jpy.getName().equals(v)){
+                    valuesMap.put(v, jpy.getValue());
+                    continue;
+                }
+            }
+        }
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        return sub.replace(jobXml);
+
+    }
+
+    @Override
     public boolean updateJob(String jobName, String templateName) {
         try {
             String jobXml = jenkinsServer.getJobXml(templateName);
@@ -146,6 +192,29 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public  boolean updateJob(String jobName, String templateName,JobParametersYaml jobYaml){
+        try {
+            String jobXml = jenkinsServer.getJobXml(templateName);
+            jenkinsServer.updateJob(jobName, getJobXml(jobXml,jobYaml), true);
+            return  true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    private String getJobXml(String jobXml,JobParametersYaml jobYaml){
+        if (jobYaml.getControllers() != null && jobYaml.getControllers().size() != 0) {
+            // 遍历控制器
+            for(JobControllerYaml controller:jobYaml.getControllers()){
+                if(controller.getName().equals("@InvokeParams"))
+                    jobXml= invokeParams(jobXml,controller.getValue(),jobYaml.getParameters());
+            }
+        }
+        return jobXml;
     }
 
     @Override
@@ -162,6 +231,18 @@ public class JenkinsServiceImpl implements JenkinsService, InitializingBean {
             version = jenkinsServer.getVersion();
         }
         return version;
+    }
+
+    @Override
+    public List<Plugin> getPlugin() {
+        try {
+            PluginManager pluginManager = jenkinsServer.getPluginManager();
+            List<Plugin> list = pluginManager.getPlugins();
+            return list;
+        } catch (Exception e) {
+            return null;
+        }
+
     }
 
     @Override

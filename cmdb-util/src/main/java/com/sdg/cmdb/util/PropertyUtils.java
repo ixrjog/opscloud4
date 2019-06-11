@@ -19,7 +19,8 @@ public class PropertyUtils {
     static {
         properties = new Properties();
         try {
-            InputStream inputStream = PropertyUtils.class.getClassLoader().getResourceAsStream("server.properties");
+            ClassLoader classLoader= PropertyUtils.class.getClassLoader();
+            InputStream inputStream = classLoader.getResourceAsStream("server.properties");
             properties.load(inputStream);
             logger.info("load properties file success!");
         } catch (Exception e) {

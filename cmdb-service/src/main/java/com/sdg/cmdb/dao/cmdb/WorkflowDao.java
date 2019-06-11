@@ -5,6 +5,8 @@ import com.sdg.cmdb.domain.workflow.WorkflowGroupDO;
 import com.sdg.cmdb.domain.workflow.WorkflowTodoDO;
 import com.sdg.cmdb.domain.workflow.WorkflowTodoUserDO;
 import com.sdg.cmdb.domain.workflow.detail.WorkflowTodoDetailDO;
+import com.sdg.cmdb.domain.workflow.status.WorkflowTodoMonthStatus;
+import com.sdg.cmdb.domain.workflow.status.WorkflowTodoStatus;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
 
@@ -30,6 +32,7 @@ public interface WorkflowDao {
 
     /**
      * 工作流查询 本人已完成
+     *
      * @param applyUserId
      * @param todoPhase
      * @return
@@ -37,6 +40,27 @@ public interface WorkflowDao {
     List<WorkflowTodoDO> queryTodoByApplyUserIdAndTodoPhase(@Param("applyUserId") long applyUserId, @Param("todoPhase") int todoPhase);
 
     List<WorkflowTodoDO> queryTodoByTodoPhase(@Param("todoPhase") int todoPhase);
+
+    /**
+     * 查询需要审批的工作流
+     *
+     * @param todoPhase
+     * @param userId    审批人
+     * @return
+     */
+    List<WorkflowTodoDO> queryTodoByApproval(@Param("todoPhase") int todoPhase, @Param("userId") long userId);
+
+    long queryTodoSize(@Param("queryName") String queryName,
+                       @Param("queryPhase") int queryPhase);
+
+
+    int getMyTodoSize(@Param("applyUserId") long applyUserId,
+                      @Param("queryPhase") int queryPhase);
+
+    List<WorkflowTodoDO> queryTodoPage(@Param("queryName") String queryName,
+                                       @Param("queryPhase") int queryPhase,
+                                       @Param("pageStart") long pageStart,
+                                       @Param("length") int length);
 
     WorkflowTodoDO getTodo(@Param("id") long id);
 
@@ -63,5 +87,8 @@ public interface WorkflowDao {
 
     int updateTodoUser(WorkflowTodoUserDO workflowTodoUserDO);
 
+    List<WorkflowTodoMonthStatus> statusTodoByMonth();
+
+    List<WorkflowTodoStatus> statusTodoByWorkflow();
 
 }

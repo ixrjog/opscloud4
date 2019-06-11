@@ -1,12 +1,10 @@
 package com.sdg.cmdb.dao.cmdb;
 
 
-import com.sdg.cmdb.domain.logService.LogHistogramsDO;
+import com.sdg.cmdb.domain.logService.*;
 import com.sdg.cmdb.domain.logService.logServiceStatus.LogServiceGroupVO;
 import com.sdg.cmdb.domain.logService.logServiceStatus.LogServiceUserVO;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceCfgDO;
-import com.sdg.cmdb.domain.logService.LogServiceDO;
-import com.sdg.cmdb.domain.logService.LogServicePathDO;
 import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceServerGroupCfgDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -93,14 +91,35 @@ public interface LogServiceDao {
 
     /**
      * 获取配置的服务器组数量
+     *
      * @return
      */
     int getLogServiceServerGroupCfgCnt();
 
     /**
      * 获取已经配置的服务器数量
+     *
      * @return
      */
     int getLogServiceServerGroupServerCnt();
+
+    int getLogServiceGroupSize(@Param("project") String project, @Param("logstore") String logstore);
+
+    int updateLogServiceGroupCfg(LogServiceGroupCfgDO logServiceGroupCfgDO);
+
+    int addLogServiceGroupCfg(LogServiceGroupCfgDO logServiceGroupCfgDO);
+
+    List<LogServiceGroupCfgDO> getLogServiceGroupPage(
+            @Param("project") String project,
+            @Param("logstore") String logstore,
+            @Param("pageStart") long pageStart, @Param("length") int length);
+
+    LogServiceGroupCfgDO getLogServiceGroup(@Param("id") long id);
+
+    int addLogServiceMember(LogServiceMemberDO logServiceMemberDO);
+
+    int delLogServiceMember(@Param("id") long id);
+
+    List<LogServiceMemberDO> getLogServiceMemberByGroupCfgId(@Param("groupCfgId") long groupCfgId);
 
 }

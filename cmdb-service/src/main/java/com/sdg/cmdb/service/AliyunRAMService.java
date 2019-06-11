@@ -9,6 +9,7 @@ import com.sdg.cmdb.domain.aliyun.AliyunRamPolicyDO;
 import com.sdg.cmdb.domain.aliyun.AliyunRamUserDO;
 import com.sdg.cmdb.domain.aliyun.AliyunRamUserVO;
 import com.sdg.cmdb.domain.auth.UserDO;
+import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailRAMGroup;
 import com.sdg.cmdb.domain.workflow.detail.TodoDetailRAMPolicy;
 
@@ -88,9 +89,12 @@ public interface AliyunRAMService {
     ListUsersResponse listUsers(int maxItems, String marker);
 
 
-    TableVO<List<AliyunRamUserVO>> getRamUserPage(String username, String userTag, int page, int length);
+    TableVO<List<AliyunRamUserVO>> getRamUserPage(String username, String userTag,int keyType, int page, int length);
+
 
     AliyunRamUserDO getRamUser(long userId);
+
+    void invokeRam(UserVO userVO);
 
     /**
      * 导入策略

@@ -1,6 +1,6 @@
 package com.sdg.cmdb.domain.nginx;
 
-import com.sdg.cmdb.domain.server.ServerDO;
+
 
 import java.io.Serializable;
 

@@ -18,6 +18,7 @@ package com.sdg.cmdb.util;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
@@ -35,8 +36,14 @@ public class KeyStoreUtil {
 	private static Logger log = LoggerFactory.getLogger(KeyStoreUtil.class);
 
 	private static KeyStore keyStore = null;
-	private static final String keyStoreFile = PropertyUtils.getProValueByKey(PropertyUtils.keyStoreFile)
-			+ "/keybox.jceks";
+
+	//private static final String keyStoreFile = "/data/www/data/keystore/keybox.jceks";
+
+	//@Value(value = "${aliyun.access.key}")
+	//private String keyStoreFile;
+
+	private static final String keyStoreFile = PropertyUtils.getProValueByKey(PropertyUtils.keyStoreFile) + "/keybox.jceks";
+
 	private static final char[] KEYSTORE_PASS = new char[]{
 			'G', '~', 'r', 'x', 'Z', 'E', 'w', 'f', 'a', '[', '!', 'f', 'Z', 'd', '*', 'L', '8', 'm', 'h', 'u', '#',
 			'j', '9', ':', '~', ';', 'U', '>', 'O', 'i', '8', 'r', 'C', '}', 'f', 't', '%', '[', 'H', 'h', 'M', '&',

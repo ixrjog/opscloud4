@@ -15,6 +15,7 @@ import com.sdg.cmdb.service.ServerService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -74,6 +75,29 @@ public class IPServiceImpl implements IPService {
     }
 
     @Override
+    public boolean invokeIP(IPDetailDO ipDetailDO) {
+
+        IPDetailVO ipVO = getIPDetail(ipDetailDO);
+        // TODO IP信息可能存在，判断是否为脏数据
+        if (ipVO != null && ipVO.getId() != 0) {
+            ServerDO serverDO = serverService.getServerById(ipVO.getServerId());
+            // TODO 如果服务器不存在则删除IP脏数据
+            if (serverDO == null) {
+                delGroupIP(ipVO.getId());
+            } else {
+                if (ipVO.getServerId() != ipDetailDO.getServerId()) return false;
+            }
+        }
+        if (ipVO == null) {
+            saveGroupIP(ipDetailDO);
+        } else {
+            ipDetailDO.setId(ipVO.getId());
+        }
+        return true;
+    }
+
+
+    @Override
     public BusinessWrapper<Boolean> delGroupIP(long ipId) {
         try {
             ipDao.delIP(ipId);
@@ -112,9 +136,8 @@ public class IPServiceImpl implements IPService {
     public IPDetailVO getIPDetail(IPDetailDO detailDO) {
         IPDetailDO ipDetailDO = ipDao.getIPDetail(detailDO);
 
-        if (ipDetailDO == null) {
+        if (ipDetailDO == null)
             return null;
-        }
 
         IPNetworkDO ipNetworkDO = ipGroupService.queryIPGroupById(ipDetailDO.getIpNetworkId());
 

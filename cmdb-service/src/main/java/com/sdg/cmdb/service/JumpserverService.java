@@ -20,7 +20,7 @@ public interface JumpserverService {
     BusinessWrapper<Boolean> syncAssets();
 
     /**
-     * 同步服务到资产
+     * 同步服务器到资产
      * @param serverDO
      */
     void addAssets(ServerDO serverDO);
@@ -53,6 +53,31 @@ public interface JumpserverService {
     BusinessWrapper<Boolean> saveAssetsAdminuser(String id);
 
     /**
+     * 校验用户
+     * @return
+     */
+    BusinessWrapper<Boolean> checkUsers();
+
+    /**
+     * 校验资产
+     * @return
+     */
+    BusinessWrapper<Boolean> checkAssets();
+
+    /**
+     * Jumpserver Mysql表关联生成的强制约束,建议在Jumpserver中删除
+     * @param id
+     * @return
+     */
+    BusinessWrapper<Boolean> delAssets(String id);
+
+    /**
+     * Jumpserver Mysql表关联生成的强制约束,建议在Jumpserver中删除
+     * @param id
+     * @return
+     */
+    BusinessWrapper<Boolean> delUsers(String id);
+    /**
      * 查询Jumpserver信息
      *
      * @return
@@ -76,4 +101,14 @@ public interface JumpserverService {
      * @param serverGroupDO
      */
     void unbindUserGroup(UserDO userDO, ServerGroupDO serverGroupDO);
+
+    /**
+     * 更新用户的pubKey
+     * @param username
+     * @return
+     */
+    BusinessWrapper<Boolean> updateUserPubkey(String username);
+
+
+    boolean isSetKey(String username);
 }

@@ -4,6 +4,7 @@ import com.sdg.cmdb.dao.cmdb.ConfigDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.service.ConfigServerGroupService;
@@ -24,7 +25,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String http_check_url = "NGINX_CHECK_URL";
 
-    public static final String NGINX_UPSTREAM_PORT ="NGINX_UPSTREAM_PORT";
+    public static final String NGINX_UPSTREAM_PORT = "NGINX_UPSTREAM_PORT";
 
     public static final String project_name = "PROJECT_NAME";
 
@@ -61,7 +62,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String nginx_location_param = "NGINX_LOCATION_PARAM";
 
-    public static final String nginx_project_name = "NGINX_PROJECT_NAME";
+    public static final String NGINX_PROJECT_NAME = "NGINX_PROJECT_NAME";
 
     public static final String iptables_dubbo_build = "IPTABLES_DUBBO_BUILD";
 
@@ -91,6 +92,16 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     // ANSIBLE 分组配置（分组数量）
     public static final String ANSIBLE_SUBGROUP = "ANSIBLE_SUBGROUP";
 
+    public static final String GETWAYADMIN_ROUTE_PATH = "GETWAYADMIN_ROUTE_PATH";
+    public static final String GETWAYADMIN_APP_NAME = "GETWAYADMIN_APP_NAME";
+    public static final String GETWAYADMIN_APP_PORT = "GETWAYADMIN_APP_PORT";
+    public static final String GATEWAYADMIN_APP_HEALTH_CHECK_PATH = "GATEWAYADMIN_APP_HEALTH_CHECK_PATH";
+
+    // 日志服务
+    public static final String LOGSERVICE_SERVERGROUP_TOPIC = "LOGSERVICE_SERVERGROUP_TOPIC";
+
+    public static final String  KUBERNETES_LABEL ="KUBERNETES_LABEL";
+
     @Resource
     protected ServerDao serverDao;
 
@@ -108,7 +119,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     @Override
     public String queryProjectName(ServerGroupDO serverGroupDO) {
-        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_project_name);
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, NGINX_PROJECT_NAME);
         if (!StringUtils.isEmpty(result))
             return result;
         result = configService.acqConfigByServerGroupAndKey(serverGroupDO, project_name);
@@ -170,8 +181,8 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
      */
     @Override
     public String queryEnvName(int envCode) {
-        if (ServerDO.EnvTypeEnum.prod.getCode() == envCode) return "";
-        return ServerDO.EnvTypeEnum.getEnvTypeName(envCode) + ".";
+        if (EnvType.EnvTypeEnum.prod.getCode() == envCode) return "";
+        return EnvType.EnvTypeEnum.getEnvTypeName(envCode) + ".";
     }
 
     @Override
@@ -180,13 +191,12 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     }
 
     @Override
-    public  String queryUpstreamPort(ServerGroupDO serverGroupDO){
+    public String queryUpstreamPort(ServerGroupDO serverGroupDO) {
         String port = configService.acqConfigByServerGroupAndKey(serverGroupDO, NGINX_UPSTREAM_PORT);
-        if(StringUtils.isEmpty(port))
+        if (StringUtils.isEmpty(port))
             return "8080";
         return port;
     }
-
 
 
     @Override
@@ -202,7 +212,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     @Override
     public boolean isManageBack(ServerGroupDO serverGroupDO, int envCode) {
-        if (envCode != ServerDO.EnvTypeEnum.gray.getCode()) return false;
+        if (envCode != EnvType.EnvTypeEnum.gray.getCode()) return false;
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, nginx_location_manage_back);
         if (result != null && result.equalsIgnoreCase("true"))
             return true;
@@ -279,6 +289,13 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     }
 
     @Override
+    public String queryKubernetesLabel(ServerDO serverDO) {
+        String result = configService.acqConfigByServerAndKey(serverDO, KUBERNETES_LABEL);
+        if (StringUtils.isEmpty(result)) return "";
+        return result;
+    }
+
+    @Override
     public String queryTomcatInstallVersion(ServerGroupDO serverGroupDO) {
         return configService.acqConfigByServerGroupAndKey(serverGroupDO, tomcat_install_version);
     }
@@ -339,18 +356,18 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     // public static final String ZABBIX_HOST_MONITOR_PUBLIC_IP = "ZABBIX_HOST_MONITOR_PUBLIC_IP";
     @Override
-    public String queryZabbixMonitorIp(ServerDO serverDO){
-        String result = configService.acqConfigByServerAndKey(serverDO,ZABBIX_HOST_MONITOR_PUBLIC_IP);
-        if(!StringUtils.isEmpty(result) && result.equalsIgnoreCase("true"))
+    public String queryZabbixMonitorIp(ServerDO serverDO) {
+        String result = configService.acqConfigByServerAndKey(serverDO, ZABBIX_HOST_MONITOR_PUBLIC_IP);
+        if (!StringUtils.isEmpty(result) && result.equalsIgnoreCase("true"))
             return serverDO.getPublicIp();
         return serverDO.getInsideIp();
     }
 
     @Override
-    public  String queryZabbixMacros(ServerDO serverDO){
+    public String queryZabbixMacros(ServerDO serverDO) {
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(serverDO.getServerGroupId());
         String macros = configService.acqConfigByServerGroupAndKey(serverGroupDO, ZABBIX_HOST_MACROS);
-        if(macros == null)
+        if (macros == null)
             return "";
         return macros;
     }
@@ -404,4 +421,48 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
         }
         return 2;
     }
+
+    @Override
+    public String queryGatewayAdminAppName(ServerGroupDO serverGroupDO) {
+        return  configService.acqConfigByServerGroupAndKey(serverGroupDO, GETWAYADMIN_APP_NAME);
+
+    }
+
+    @Override
+    public String queryGatewayAdminAppHealthCheckPath(ServerGroupDO serverGroupDO) {
+        return configService.acqConfigByServerGroupAndKey(serverGroupDO, GATEWAYADMIN_APP_HEALTH_CHECK_PATH);
+    }
+
+    @Override
+    public String queryGatewayAdminAppPort(ServerGroupDO serverGroupDO) {
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, GETWAYADMIN_APP_PORT);
+        if (!StringUtils.isEmpty(result))
+            return result;
+        result = configService.acqConfigByServerGroupAndKey(serverGroupDO, NGINX_UPSTREAM_PORT);
+        if (!StringUtils.isEmpty(result))
+            return result;
+        return "8080";
+    }
+
+    @Override
+    public String queryGatewayAdminRoutePath(ServerGroupDO serverGroupDO) {
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, GETWAYADMIN_ROUTE_PATH);
+        if (!StringUtils.isEmpty(result))
+            return result;
+        return configService.acqConfigByServerGroupAndKey(serverGroupDO, NGINX_PROJECT_NAME);
+    }
+
+    @Override
+    public String queryGatewayAdminAppServiceByKey(ServerGroupDO serverGroupDO, String key) {
+        return configService.acqConfigByServerGroupAndKey(serverGroupDO, key);
+    }
+
+    @Override
+    public String queryLogServiceTopic(ServerGroupDO serverGroupDO) {
+        String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, LOGSERVICE_SERVERGROUP_TOPIC);
+        if(!StringUtils.isEmpty(result))
+            return result;
+        return serverGroupDO.getName();
+    }
+
 }

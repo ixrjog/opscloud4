@@ -1,7 +1,47 @@
 /**
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
+ */
+
+/**
+ * Stack of data points
+ *
+ * @product highcharts
+ *
+ * @interface Highcharts.StackItemObject
+ *//**
+ * Alignment settings
+ * @name Highcharts.StackItemObject#alignOptions
+ * @type {Highcharts.AlignObject}
+ *//**
+ * Related axis
+ * @name Highcharts.StackItemObject#axis
+ * @type {Highcharts.Axis}
+ *//**
+ * Cumulative value of the stacked data points
+ * @name Highcharts.StackItemObject#cumulative
+ * @type {number}
+ *//**
+ * True if on the negative side
+ * @name Highcharts.StackItemObject#isNegative
+ * @type {boolean}
+ *//**
+ * Related SVG element
+ * @name Highcharts.StackItemObject#label
+ * @type {Highcharts.SVGElement}
+ *//**
+ * Related stack options
+ * @name Highcharts.StackItemObject#options
+ * @type {Highcharts.YAxisStackLabelsOptions}
+ *//**
+ * Total value of the stacked data points
+ * @name Highcharts.StackItemObject#total
+ * @type {number}
+ *//**
+ * Shared x value of the stack
+ * @name Highcharts.StackItemObject#x
+ * @type {number}
  */
 
 'use strict';
@@ -108,7 +148,7 @@ H.StackItem.prototype = {
             formatOption = options.format,
             str = formatOption ?
                 format(formatOption, this, chart.time) :
-                options.formatter.call(this);  // format the text in the label
+                options.formatter.call(this); // format the text in the label
 
         // Change the text to reflect the new total and set visibility to hidden
         // in case the serie is hidden
@@ -214,11 +254,11 @@ H.StackItem.prototype = {
         return { // this is the box for the complete stack
             x: inverted ? (neg ? y : y - h) : x,
             y: inverted ?
-                    axisPos - x - xWidth :
-                    (neg ?
-                        (axisPos - y - h) :
-                        axisPos - y
-                    ),
+                axisPos - x - xWidth :
+                (neg ?
+                    (axisPos - y - h) :
+                    axisPos - y
+                ),
             width: inverted ? h : xWidth,
             height: inverted ? xWidth : h
         };
@@ -263,6 +303,7 @@ Axis.prototype.buildStacks = function () {
         reversedStacks = pick(this.options.reversedStacks, true),
         len = axisSeries.length,
         i;
+
     if (!this.isXAxis) {
         this.usePercentage = false;
         i = len;
@@ -320,6 +361,7 @@ Axis.prototype.renderStackTotals = function () {
 Axis.prototype.resetStacks = function () {
     var axis = this,
         stacks = axis.stacks;
+
     if (!axis.isXAxis) {
         objectEach(stacks, function (type) {
             objectEach(type, function (stack, key) {
@@ -556,6 +598,7 @@ Series.prototype.modifyStacks = function () {
  */
 Series.prototype.percentStacker = function (pointExtremes, stack, i) {
     var totalFactor = stack.total ? 100 / stack.total : 0;
+
     // Y bottom value
     pointExtremes[0] = correctFloat(pointExtremes[0] * totalFactor);
     // Y value

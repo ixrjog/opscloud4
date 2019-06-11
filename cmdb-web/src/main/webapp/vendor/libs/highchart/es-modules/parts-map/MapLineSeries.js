@@ -1,8 +1,10 @@
-/**
- * (c) 2010-2018 Torstein Honsi
+/* *
  *
- * License: www.highcharts.com/license
- */
+ *  (c) 2010-2019 Torstein Honsi
+ *
+ *  License: www.highcharts.com/license
+ *
+ * */
 
 'use strict';
 
@@ -22,42 +24,42 @@ var seriesType = H.seriesType,
  */
 seriesType('mapline', 'map'
 
-/**
- * A mapline series is a special case of the map series where the value colors
- * are applied to the strokes rather than the fills. It can also be used for
- * freeform drawing, like dividers, in the map.
- *
- * @sample maps/demo/mapline-mappoint/
- *         Mapline and map-point chart
- *
- * @extends      plotOptions.map
- * @product      highmaps
- * @optionparent plotOptions.mapline
- */
-, {
     /**
-     * The width of the map line.
-     */
-    lineWidth: 1,
-
-    /**
-     * Fill color for the map line shapes
+     * A mapline series is a special case of the map series where the value
+     * colors are applied to the strokes rather than the fills. It can also be
+     * used for freeform drawing, like dividers, in the map.
      *
-     * @type {Highcharts.ColorString}
+     * @sample maps/demo/mapline-mappoint/
+     *         Mapline and map-point chart
+     *
+     * @extends      plotOptions.map
+     * @product      highmaps
+     * @optionparent plotOptions.mapline
      */
-    fillColor: 'none'
-}, {
+    , {
+        /**
+         * The width of the map line.
+         */
+        lineWidth: 1,
 
-    type: 'mapline',
+        /**
+         * Fill color for the map line shapes
+         *
+         * @type {Highcharts.ColorString}
+         */
+        fillColor: 'none'
+    }, {
 
-    colorProp: 'stroke',
+        type: 'mapline',
 
-    pointAttrToOptions: {
-        'stroke': 'color',
-        'stroke-width': 'lineWidth'
-    },
+        colorProp: 'stroke',
 
-    /**
+        pointAttrToOptions: {
+            'stroke': 'color',
+            'stroke-width': 'lineWidth'
+        },
+
+        /**
      * Get presentational attributes
      *
      * @private
@@ -69,23 +71,23 @@ seriesType('mapline', 'map'
      *
      * @return {Highcharts.Dictionary<*>}
      */
-    pointAttribs: function (point, state) {
-        var attr = seriesTypes.map.prototype.pointAttribs.call(
-            this,
-            point,
-            state
-        );
+        pointAttribs: function (point, state) {
+            var attr = seriesTypes.map.prototype.pointAttribs.call(
+                this,
+                point,
+                state
+            );
 
-        // The difference from a map series is that the stroke takes the point
-        // color
-        attr.fill = this.options.fillColor;
+            // The difference from a map series is that the stroke takes the
+            // point color
+            attr.fill = this.options.fillColor;
 
-        return attr;
-    },
+            return attr;
+        },
 
-    drawLegendSymbol: seriesTypes.line.prototype.drawLegendSymbol
+        drawLegendSymbol: seriesTypes.line.prototype.drawLegendSymbol
 
-});
+    });
 
 /**
  * A `mapline` series. If the [type](#series.mapline.type) option is
@@ -137,7 +139,7 @@ seriesType('mapline', 'map'
  *     }]
  *  ```
  *
- * @type      {Array<number|Array<string,number>|object>}
+ * @type      {Array<number|Array<string,(number|null)>|null|*>}
  * @product   highmaps
  * @apioption series.mapline.data
  */

@@ -193,10 +193,6 @@ public class ConfigCenterServiceImpl implements ConfigCenterService {
         return new BusinessWrapper<>(true);
     }
 
-    // 重写配置文件
-    private void saveGetwayConfig(ConfigCenterDO configCenterDO) {
-        configService.saveGetwayHostFileConfigFile(configCenterDO.getValue());
-    }
 
     @Override
     public BusinessWrapper<Boolean> delConfigCenter(long id) {

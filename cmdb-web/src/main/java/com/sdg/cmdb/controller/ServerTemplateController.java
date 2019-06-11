@@ -33,7 +33,15 @@ public class ServerTemplateController {
     @RequestMapping(value = "/ecs/create", method = RequestMethod.POST)
     @ResponseBody
     public HttpResult ecsCreate(@RequestBody CreateEcsVO createEcsVO) {
-        return ecsCreateService.create(null, createEcsVO);
+        //  ecsCreateService.create(null, createEcsVO);
+        return new HttpResult(ecsCreateService.createEcsTask(createEcsVO));
+    }
+
+    @RequestMapping(value = "/ecs/task", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getEcsTask(@RequestParam long taskId) {
+        //  ecsCreateService.create(null, createEcsVO);
+        return new HttpResult(ecsCreateService.getEcsTask(taskId));
     }
 
 

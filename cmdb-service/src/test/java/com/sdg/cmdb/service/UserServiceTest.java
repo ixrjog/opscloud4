@@ -3,12 +3,14 @@ package com.sdg.cmdb.service;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserLeaveDO;
+import com.sdg.cmdb.util.PasswdUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 
 /**
@@ -44,5 +46,16 @@ public class UserServiceTest {
     public void testEmpQueryService() {
         String mobile = userService.queryUserMobileByEmail("li.net");
         System.err.println(mobile);
+    }
+
+
+    @Test
+    public void testResetAllUserPassword() {
+        List<UserDO> userList= userDao.getAllUser();
+        for(UserDO userDO:userList){
+            userDO.setPwd(PasswdUtils.getPassword(20));
+            userDao.updateUser(userDO);
+        }
+
     }
 }

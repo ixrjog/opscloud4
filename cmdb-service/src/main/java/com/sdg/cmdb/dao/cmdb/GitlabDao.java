@@ -1,7 +1,8 @@
 package com.sdg.cmdb.dao.cmdb;
 
+import com.sdg.cmdb.domain.gitlab.GitlabGroupDO;
 import com.sdg.cmdb.domain.gitlab.GitlabProjectDO;
-import com.sdg.cmdb.domain.gitlab.GitlabWebHooksCommitsDO;
+import com.sdg.cmdb.domain.gitlab.GitlabUserDO;
 import com.sdg.cmdb.domain.gitlab.GitlabWebHooksDO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Component;
@@ -15,37 +16,30 @@ public interface GitlabDao {
 
     int addWebHooks(GitlabWebHooksDO webHooksDO);
 
+    int updateWebHooks(GitlabWebHooksDO webHooksDO);
+
     long getWebHooksSize(
             @Param("projectName") String projectName,
-            @Param("repositoryName") String repositoryName,
-            @Param("webHooksType") int webHooksType,
+            @Param("ref") String repositoryName,
             @Param("triggerBuild") int triggerBuild);
 
     List<GitlabWebHooksDO> getWebHooksPage(
             @Param("projectName") String projectName,
-            @Param("repositoryName") String repositoryName,
-            @Param("webHooksType") int webHooksType,
+            @Param("ref") String repositoryName,
             @Param("triggerBuild") int triggerBuild,
             @Param("pageStart") long pageStart, @Param("length") int length);
 
     GitlabWebHooksDO queryWebHooksById(@Param("id") long id);
 
-    int delCommits(@Param("id") long id);
-
-    int addCommits(GitlabWebHooksCommitsDO commitsDO);
-
-    List<GitlabWebHooksCommitsDO> queryCommitsByWebHooksId(@Param("webHooksId") long webHooksId);
-
-    List<GitlabWebHooksCommitsDO> queryCommitsByCommit(@Param("commitsId") String commitsId);
 
     int addGitlabProject(GitlabProjectDO gitlabProjectDO);
 
     int updateGitlabProject(GitlabProjectDO gitlabProjectDO);
+    int delGitlabProject(@Param("projectId") int projectId);
 
     GitlabProjectDO getGitlabProjectByProjectId(@Param("projectId") int projectId);
 
     GitlabProjectDO getGitlabProjectByName(@Param("name") String name);
-
 
     long getGitlabProjectSize(
             @Param("name") String name,
@@ -56,6 +50,25 @@ public interface GitlabDao {
             @Param("username") String username,
             @Param("pageStart") long pageStart, @Param("length") int length);
 
-    // List<GitlabProjectDO> queryGitlabProject(GitlabProjectDO gitlabProjectDO);
+    int addGitlabGroup(GitlabGroupDO gitlabGroupDO);
+    int delGitlabGroup(@Param("groupId") int groupId);
+
+    int updateGitlabGroup(GitlabGroupDO gitlabGroupDO);
+    GitlabGroupDO getGitlabGroupByGroupId(@Param("groupId") int groupId);
+    long getGitlabGroupSize(
+            @Param("name") String name);
+
+    List<GitlabGroupDO> getGitlabGroupPage(
+            @Param("name") String name,
+            @Param("pageStart") long pageStart, @Param("length") int length);
+
+
+    int addGitlabUser(GitlabUserDO gitlabUserDO);
+
+    int updateGitlabUser(GitlabUserDO gitlabUserDO);
+
+    GitlabUserDO getGitlabUserByUsername(@Param("username") String username);
+
+    int delGitlabUser(@Param("id") String id);
 
 }

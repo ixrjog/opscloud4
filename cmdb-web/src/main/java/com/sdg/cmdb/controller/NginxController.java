@@ -160,7 +160,7 @@ public class NginxController {
     @ResponseBody
     public HttpResult queryPlaybookPage() {
         return new HttpResult(
-                nginxService.getPlaybookPage(),true
+                nginxService.getPlaybookPage(), true
         );
     }
 
@@ -184,8 +184,57 @@ public class NginxController {
     @ResponseBody
     public HttpResult doPlaybook(@RequestParam long id) {
         return new HttpResult(
-                nginxService.doPlaybook(id,1)
+                nginxService.doPlaybook(id, 1)
         );
+    }
+
+
+    @RequestMapping(value = "/tcp/page", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getNginxTcpPage(@RequestParam String serviceName,
+                                      @RequestParam int envType,
+                                      @RequestParam int page, @RequestParam int length) {
+        return new HttpResult(nginxService.getNginxTcpPage(serviceName, envType, page, length)
+        );
+    }
+
+    @RequestMapping(value = "/tcp/query", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult queryNginxTcp(@RequestParam long serverGroupId,
+                                    @RequestParam int envType,
+                                    @RequestParam String portName) {
+        return new HttpResult(nginxService.getNginxTcp(serverGroupId, envType, portName));
+    }
+
+    @RequestMapping(value = "/tcp/create", method = RequestMethod.POST)
+    @ResponseBody
+    public HttpResult createNginxTcp(@RequestBody NginxTcpVO nginxTcpVO) {
+        return new HttpResult(nginxService.createNginxTcp(nginxTcpVO));
+    }
+
+    @RequestMapping(value = "/tcp/del", method = RequestMethod.DELETE)
+    @ResponseBody
+    public HttpResult createNginxTcp(@RequestParam long id) {
+        return new HttpResult(nginxService.delNginxTcp(id));
+    }
+
+    @RequestMapping(value = "/tcp/auto", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult autoNginxTcp() {
+        return new HttpResult(nginxService.autoNginxTcp());
+    }
+
+
+    @RequestMapping(value = "/tcp/scan", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult scanNginxTcp() {
+        return new HttpResult(nginxService.scanNginxTcp());
+    }
+
+    @RequestMapping(value = "/dubbo/scan", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult scanNginxTcpDubbo() {
+        return new HttpResult(nginxService.scanNginxTcpDubbo());
     }
 
 

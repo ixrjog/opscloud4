@@ -1,7 +1,5 @@
 package com.sdg.cmdb.domain.logService.logServiceQuery;
 
-import com.sdg.cmdb.domain.logService.logServiceQuery.LogServiceQueryCfg;
-
 import java.io.Serializable;
 
 public class LogServiceServerGroupCfgDO implements LogServiceQueryCfg,Serializable {

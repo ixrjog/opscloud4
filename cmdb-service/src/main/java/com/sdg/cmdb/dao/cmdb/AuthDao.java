@@ -17,6 +17,7 @@ public interface AuthDao {
 
     /**
      * 记录登录信息与对应此次登录的唯一标识
+     *
      * @param userDO
      * @return
      */
@@ -24,6 +25,7 @@ public interface AuthDao {
 
     /**
      * 重置指定用户所有token为无效
+     *
      * @param username
      * @return
      */
@@ -31,12 +33,14 @@ public interface AuthDao {
 
     /**
      * 重置所有用户token为无效
+     *
      * @return
      */
     int updateTokenInvalid();
 
     /**
      * 检查token是否失效
+     *
      * @param token
      * @return
      */
@@ -44,6 +48,7 @@ public interface AuthDao {
 
     /**
      * 获取指定token对应的username
+     *
      * @param token
      * @return
      */
@@ -51,6 +56,7 @@ public interface AuthDao {
 
     /**
      * 获取指定用户被授权的资源列表
+     *
      * @param username
      * @param resourceGroup
      * @return
@@ -59,6 +65,7 @@ public interface AuthDao {
 
     /**
      * 判断用户是否可访问某个资源
+     *
      * @param token
      * @param resourceName
      * @return
@@ -67,12 +74,14 @@ public interface AuthDao {
 
     /**
      * 获取当前登录有效的用户列表
+     *
      * @return
      */
     List<UserDO> getLoginUsers();
 
     /**
      * 获取资源组数目
+     *
      * @param groupCode
      * @return
      */
@@ -80,6 +89,7 @@ public interface AuthDao {
 
     /**
      * 获取资源组分页数据
+     *
      * @param groupCode
      * @param pageStart
      * @param pageLength
@@ -90,6 +100,7 @@ public interface AuthDao {
 
     /**
      * 新增资源组信息
+     *
      * @param resourceGroupDO
      * @return
      */
@@ -97,6 +108,7 @@ public interface AuthDao {
 
     /**
      * 更新资源组信息
+     *
      * @param resourceGroupDO
      * @return
      */
@@ -104,6 +116,7 @@ public interface AuthDao {
 
     /**
      * 获取指定资源组映射的资源数目
+     *
      * @param id
      * @return
      */
@@ -111,6 +124,7 @@ public interface AuthDao {
 
     /**
      * 删除指定的资源组信息
+     *
      * @param id
      * @return
      */
@@ -118,6 +132,7 @@ public interface AuthDao {
 
     /**
      * 获取指定groupid的group信息
+     *
      * @param groupId
      * @return
      */
@@ -125,6 +140,7 @@ public interface AuthDao {
 
     /**
      * 获取指定条件的资源数目
+     *
      * @param groupId
      * @param resourceName
      * @param authType
@@ -134,6 +150,7 @@ public interface AuthDao {
 
     /**
      * 获取指定条件的资源分页数据
+     *
      * @param groupId
      * @param resourceName
      * @param authType
@@ -147,6 +164,7 @@ public interface AuthDao {
 
     /**
      * 新增资源信息
+     *
      * @param resourceDO
      * @return
      */
@@ -154,6 +172,7 @@ public interface AuthDao {
 
     /**
      * 新增资源&资源组关系
+     *
      * @param groupId
      * @param resourceId
      * @return
@@ -162,6 +181,7 @@ public interface AuthDao {
 
     /**
      * 更新资源名称
+     *
      * @param resourceDO
      * @return
      */
@@ -169,6 +189,7 @@ public interface AuthDao {
 
     /**
      * 删除指定的资源
+     *
      * @param id
      * @return
      */
@@ -176,6 +197,7 @@ public interface AuthDao {
 
     /**
      * 删除指定的资源&资源组关系
+     *
      * @param resourceId
      * @return
      */
@@ -183,6 +205,7 @@ public interface AuthDao {
 
     /**
      * 获取指定资源的角色使用情况
+     *
      * @param resourceId
      * @return
      */
@@ -190,6 +213,7 @@ public interface AuthDao {
 
     /**
      * 获取指定资源所在的资源组
+     *
      * @param resourceId
      * @return
      */
@@ -197,6 +221,7 @@ public interface AuthDao {
 
     /**
      * 获取指定资源名称的资源信息
+     *
      * @param resourceName
      * @return
      */
@@ -204,6 +229,7 @@ public interface AuthDao {
 
     /**
      * 获取指定条件的角色数目
+     *
      * @param resourceId
      * @param roleName
      * @return
@@ -212,6 +238,7 @@ public interface AuthDao {
 
     /**
      * 获取指定条件的角色分页数据
+     *
      * @param resourceId
      * @param roleName
      * @param pageStart
@@ -224,6 +251,7 @@ public interface AuthDao {
 
     /**
      * 新增角色
+     *
      * @param roleDO
      * @return
      */
@@ -231,6 +259,7 @@ public interface AuthDao {
 
     /**
      * 更新角色
+     *
      * @param roleDO
      * @return
      */
@@ -238,6 +267,7 @@ public interface AuthDao {
 
     /**
      * 删除指定角色
+     *
      * @param id
      * @return
      */
@@ -245,6 +275,7 @@ public interface AuthDao {
 
     /**
      * 获取指定角色使用用户数
+     *
      * @param roleId
      * @return
      */
@@ -252,49 +283,61 @@ public interface AuthDao {
 
     /**
      * 获取单一条件下的role数据
+     *
      * @param roleDO
      * @return
      */
     RoleDO getRole(RoleDO roleDO);
 
     /**
+     * 获取允许工作流申请的角色信息
+     * @return
+     */
+    List<RoleDO> getRoleByWorkflow();
+
+    /**
      * 获取指定角色绑定的资源列表数目
+     *
      * @param roleId
      * @return
      */
-    long getRoleBindResourceSize(@Param("roleId") long roleId, @Param("resourceGroupId")long resourceGroupId);
+    long getRoleBindResourceSize(@Param("roleId") long roleId, @Param("resourceGroupId") long resourceGroupId);
 
     /**
      * 获取指定角色绑定资源列表分页数据
+     *
      * @param roleId
      * @param pageStart
      * @param pageLength
      * @return
      */
     List<ResourceDO> getRoleBindResourcePage(
-            @Param("roleId") long roleId, @Param("resourceGroupId")long resourceGroupId,
+            @Param("roleId") long roleId, @Param("resourceGroupId") long resourceGroupId,
             @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
 
     /**
      * 获取指定角色未绑定的资源列表数目
+     *
      * @param roleId
      * @return
      */
-    long getRoleUnbindResourceSize(@Param("roleId") long roleId, @Param("resourceGroupId")long resourceGroupId);
+    long getRoleUnbindResourceSize(@Param("roleId") long roleId, @Param("resourceGroupId") long resourceGroupId);
 
     /**
      * 获取指定角色未绑定的资源列表分页数据
+     *
      * @param roleId
      * @param pageStart
      * @param pageLength
      * @return
      */
     List<ResourceDO> getRoleUnbindResourcePage(
-            @Param("roleId") long roleId, @Param("resourceGroupId")long resourceGroupId,
+            @Param("roleId") long roleId, @Param("resourceGroupId") long resourceGroupId,
             @Param("pageStart") long pageStart, @Param("pageLength") int pageLength);
 
     /**
      * 新增角色资源的绑定关系
+     *
      * @param roleId
      * @param resourceId
      * @return
@@ -303,6 +346,7 @@ public interface AuthDao {
 
     /**
      * 解除角色资源的绑定关系
+     *
      * @param roleId
      * @param resourceId
      * @return
@@ -311,6 +355,7 @@ public interface AuthDao {
 
     /**
      * 获取用户数目
+     *
      * @param username
      * @param roleId
      * @return
@@ -319,6 +364,7 @@ public interface AuthDao {
 
     /**
      * 获取用户分页数据
+     *
      * @param username
      * @param roleId
      * @param pageStart
@@ -331,6 +377,7 @@ public interface AuthDao {
 
     /**
      * getUser
+     *
      * @param username
      * @return
      */
@@ -339,6 +386,7 @@ public interface AuthDao {
 
     /**
      * 建立用户角色绑定关系
+     *
      * @param username
      * @param roleId
      * @return
@@ -347,6 +395,7 @@ public interface AuthDao {
 
     /**
      * 解除用户角色绑定关系
+     *
      * @param username
      * @param roleId
      * @return
@@ -355,6 +404,7 @@ public interface AuthDao {
 
     /**
      * 获取用户的角色列表
+     *
      * @param username
      * @return
      */
@@ -362,6 +412,7 @@ public interface AuthDao {
 
     /**
      * 获取用户的角色Id列表
+     *
      * @param username
      * @return
      */
@@ -369,6 +420,7 @@ public interface AuthDao {
 
     /**
      * 获取拥有指定角色的用户集合
+     *
      * @param roleId
      * @return
      */
@@ -376,9 +428,10 @@ public interface AuthDao {
 
     /**
      * 获取指定资源组下指定用户被授权的资源集合
+     *
      * @param token
      * @param authGroupList
      * @return
      */
-    List<ResourceDO> getUserAuthResources(@Param("token") String token, @Param("list")List<String> authGroupList);
+    List<ResourceDO> getUserAuthResources(@Param("token") String token, @Param("list") List<String> authGroupList);
 }

@@ -4,13 +4,11 @@ package com.sdg.cmdb.service.impl;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.sdg.cmdb.dao.cmdb.ConfigDao;
-import com.sdg.cmdb.dao.cmdb.LogCleanupDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
 import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.config.ServerGroupPropertiesDO;
-import com.sdg.cmdb.domain.logCleanup.LogCleanupPropertyDO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.domain.zabbix.ZabbixResult;
 import com.sdg.cmdb.plugin.cache.CacheZabbixService;
@@ -51,9 +49,6 @@ public class ServerPerfServiceImpl implements ServerPerfService, InitializingBea
 
     @Resource
     private ServerGroupService serverGroupService;
-
-    @Resource
-    private LogCleanupDao logCleanupDao;
 
     @Resource
     private AuthService authService;
@@ -99,7 +94,7 @@ public class ServerPerfServiceImpl implements ServerPerfService, InitializingBea
         float cpuUser = 0;
         int cnt = 0;
         for (ServerPerfVO serverPerfVO : voList) {
-            if (serverPerfVO.getEnvType() == ServerDO.EnvTypeEnum.prod.getCode()) {
+            if (serverPerfVO.getEnvType() == EnvType.EnvTypeEnum.prod.getCode()) {
                 memoryRate += Integer.parseInt(serverPerfVO.getMemoryRate());
                 load += Float.parseFloat(serverPerfVO.getLoad1());
                 cpuUser += Float.parseFloat(serverPerfVO.getCpuUser());
@@ -199,7 +194,7 @@ public class ServerPerfServiceImpl implements ServerPerfService, InitializingBea
 
             //String cpuUser = zabbixHistoryService.acqResultValue(zabbixHistoryService.queryCpuUser(serverDO, 1));
             //BigDecimal bigDecimal = new BigDecimal(Float.valueOf(cpuUser));
-            System.err.println("cpuUserMax:" + cpuUserMax);
+            // System.err.println("cpuUserMax:" + cpuUserMax);
             BigDecimal bigDecimal = new BigDecimal(Float.valueOf(cpuUserMax));
             serverPerfVO.setCpuUser(bigDecimal.setScale(1, BigDecimal.ROUND_HALF_UP).toString());
         } catch (Exception e) {
@@ -481,11 +476,11 @@ public class ServerPerfServiceImpl implements ServerPerfService, InitializingBea
         List<ServerDO> servers = serverDao.getAllServer();
         for (ServerDO serverDO : servers) {
             ServerPerfVO serverPerfVO = cache(serverDO);
-            LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverDO.getId());
-            if (logCleanupPropertyDO != null) {
-                logCleanupPropertyDO.setDiskRate(Float.valueOf(serverPerfVO.getDiskRate()).intValue());
-                logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
-            }
+            //LogCleanupPropertyDO logCleanupPropertyDO = logCleanupDao.getLogCleanupPropertyByServerId(serverDO.getId());
+            //if (logCleanupPropertyDO != null) {
+            //    logCleanupPropertyDO.setDiskRate(Float.valueOf(serverPerfVO.getDiskRate()).intValue());
+            //    logCleanupDao.updateLogCleanupProperty(logCleanupPropertyDO);
+            //}
         }
     }
 

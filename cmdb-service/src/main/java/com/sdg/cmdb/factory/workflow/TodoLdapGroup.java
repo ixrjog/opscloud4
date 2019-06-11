@@ -50,7 +50,7 @@ public class TodoLdapGroup extends TodoAbs implements Serializable {
     @Override
     public WorkflowTodoVO saveTodo(WorkflowTodoVO workflowTodoVO) {
         List<WorkflowTodoDetailVO> todoDetails = workflowTodoVO.getTodoDetails();
-        String notice = "外部平台权限组(Ldap)：";
+        String notice = "外部平台权限组(Ldap): ";
         for (WorkflowTodoDetailVO workflowTodoDetailVO : todoDetails) {
             WorkflowTodoDetailDO workflowTodoDetailDO = getTodoDetailDO(workflowTodoDetailVO);
             if (!saveTodoDetail(workflowTodoDetailDO)) return workflowTodoVO;

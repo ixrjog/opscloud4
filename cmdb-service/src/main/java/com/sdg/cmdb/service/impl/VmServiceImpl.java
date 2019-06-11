@@ -3,7 +3,6 @@ package com.sdg.cmdb.service.impl;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.configCenter.itemEnum.VcsaItemEnum;
 import com.sdg.cmdb.domain.esxi.EsxiHostDO;
 import com.sdg.cmdb.domain.esxi.HostDatastoreInfoVO;
@@ -18,6 +17,7 @@ import com.vmware.vim25.*;
 import com.vmware.vim25.mo.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -42,28 +42,23 @@ public class VmServiceImpl implements VmService {
 
     private String[] excludeEsxiDatastores = {"esxi", "nfs0"};
 
+    @Value(value = "${vcsa.host}")
+    private String vcsaHost;
+
+    @Value(value = "${vcsa.user}")
+    private String vcsaUser;
+
+    @Value(value = "${vcsa.passwd}")
+    private String vcsaPasswd;
+
     @Resource
     private ServerDao serverDao;
 
     @Resource
-    private ConfigCenterService configCenterService;
-
-    @Resource
     private CacheEsxiHostService cacheEsxiHostService;
 
-    private HashMap<String, String> configMap;
-
-    private HashMap<String, String> acqConifMap() {
-        if (configMap != null) return configMap;
-        return configCenterService.getItemGroup(ConfigCenterItemGroupEnum.VCSA.getItemKey());
-    }
 
     private void login() {
-
-        HashMap<String, String> configMap = acqConifMap();
-        String vcsaHost = configMap.get(VcsaItemEnum.VCSA_HOST.getItemKey());
-        String vcsaUser = configMap.get(VcsaItemEnum.VCSA_USER.getItemKey());
-        String vcsaPasswd = configMap.get(VcsaItemEnum.VCSA_PASSWD.getItemKey());
 
         if (serviceInstance != null) return;
 

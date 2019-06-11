@@ -18,6 +18,8 @@
     <link rel="stylesheet" href="vendor/modules/angular-resizable/angular-resizable.min.css" type="text/css"/>
 
     <link rel="stylesheet" href="vendor/angular/angular-highlightjs/github.min.css"/>
+
+    <link rel="stylesheet" href="vendor/modules/angular-bootstrap-nav-tree/abn_tree.css"/>
 </head>
 <body ng-controller="AppCtrl">
   <div class="app" id="app" ng-class="{'app-header-fixed':app.settings.headerFixed, 'app-aside-fixed':app.settings.asideFixed, 'app-aside-folded':app.settings.asideFolded, 'app-aside-dock':app.settings.asideDock, 'container':app.settings.container}" ui-view></div>
@@ -28,7 +30,7 @@
   <script src="vendor/jquery/xterm/xterm.js"></script>
   <script src="vendor/angular/angular-highlightjs/highlight.min.js"></script>
   <script src="vendor/libs/qrcode/qrcode.js"></script>
-
+  <script src="vendor/libs/ace-noconflict/ace.js"></script>
   <!-- Angular -->
   <script src="vendor/angular/angular.min.js"></script>
   <script src="vendor/angular/angular-qrcode/angular-qrcode.js"></script>
@@ -38,7 +40,7 @@
   <script src="vendor/angular/angular-resource/angular-resource.min.js"></script>
   <script src="vendor/angular/angular-sanitize/angular-sanitize.min.js"></script>
   <script src="vendor/angular/angular-touch/angular-touch.js"></script>
-<!-- Vendor -->
+  <!-- Vendor -->
   <script src="vendor/angular/angular-ui-router/angular-ui-router.js"></script>
   <script src="vendor/modules/angular-websocket/angular-websocket.js"></script>
   <script src="vendor/angular/ngstorage/ngStorage.js"></script>
@@ -56,6 +58,12 @@
   <script src="vendor/modules/angular-resizable/angular-resizable.min.js"></script>
 
   <script src="vendor/angular/angular-highlightjs/angular-highlightjs.min.js"></script>
+  <script src="vendor/angular/ui-ace/ui-ace.js"></script>
+  <script src="vendor/libs/marked/marked.js"></script>
+  <script src="vendor/libs/editormd/editormd.js"></script>
+
+  <!--abn_tree-->
+  <script src="vendor/modules/angular-bootstrap-nav-tree/abn_tree_directive.js"></script>
 
   <!-- App -->
   <script src="js/app.js"></script>

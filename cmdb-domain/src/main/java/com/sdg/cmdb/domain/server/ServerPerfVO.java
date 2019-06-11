@@ -447,7 +447,7 @@ public class ServerPerfVO implements Serializable {
     }
 
     public String perfInfo() {
-        return serverName + "-" + serialNumber + ":" + ServerDO.EnvTypeEnum.getEnvTypeName(envType) +
+        return serverName + "-" + serialNumber + ":" + EnvType.EnvTypeEnum.getEnvTypeName(envType) +
                 "{cpuUser=" + cpuUser +
                 ",load1=" + load1 +
                 ",load5=" + load5 +

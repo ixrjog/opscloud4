@@ -1,6 +1,7 @@
 package com.sdg.cmdb.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.offbytwo.jenkins.model.Build;
 import com.offbytwo.jenkins.model.BuildWithDetails;
 import com.offbytwo.jenkins.model.JobWithDetails;
@@ -17,21 +18,19 @@ public class JenkinsServiceTest {
     @Autowired
     private JenkinsService jenkinsService;
 
-
     @Test
     public void test() {
-        JobWithDetails jd = jenkinsService.getJobDetails("java_opscloud_prod");
-        Build build =  jd.getBuildByNumber(128);
+        JobWithDetails jd = jenkinsService.getJobDetails("pipeline_oc_prod");
+        Build build =  jd.getBuildByNumber(5);
         try{
             BuildWithDetails bd= build.details();
-            System.err.println(bd);
+            System.err.println(JSON.toJSONString(bd));
         }catch (Exception e){
             e.printStackTrace();
         }
 
         System.err.println(jd);
     }
-
 
     @Test
     public void testUpdatJob() {

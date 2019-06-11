@@ -14,7 +14,7 @@ public class PlaybookTaskHostDO implements Serializable {
 
     public PlaybookTaskHostDO(long playbookTaskId, PlaybookHostPattern hostPattern, long logId) {
         this.playbookTaskId = playbookTaskId;
-        this.setHostPattern(hostPattern.getHostPatternSelected());
+        this.setHostPattern(hostPattern.getHostPattern());
         this.logId = logId;
     }
 

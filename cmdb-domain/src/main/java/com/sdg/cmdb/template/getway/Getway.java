@@ -3,6 +3,7 @@ package com.sdg.cmdb.template.getway;
 import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.config.ServerGroupPropertiesDO;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.template.format.BashLine;
@@ -191,15 +192,13 @@ public class Getway {
         //排序
         Collections.sort(hosts, new Comparator<ServerDO>() {
             public int compare(ServerDO arg0, ServerDO arg1) {
-                // return arg0.getEnvType().compareTo(arg1.getEnvType());
-               // return ServerDO.EnvTypeEnum.getEnvTypeName(arg0.getEnvType()).compareTo(ServerDO.EnvTypeEnum.getEnvTypeName(arg1.getEnvType()));
                 return new Double(String.valueOf(arg0.getEnvType())).compareTo(new Double(String.valueOf(arg1.getEnvType())));
             }
         });
 
         String hostgroup = "";
         for (ServerDO host : hosts) {
-            hostgroup = hostgroup + "'" + host.getInsideIp() + "' '" + host.getServerName() + "-" + host.getSerialNumber() + "' '" + group.getName() + "' '" + ServerDO.EnvTypeEnum.getEnvTypeName(host.getEnvType()) + "' 'KEY'\n";
+            hostgroup = hostgroup + "'" + host.getInsideIp() + "' '" + host.getServerName() + "-" + host.getSerialNumber() + "' '" + group.getName() + "' '" + EnvType.EnvTypeEnum.getEnvTypeName(host.getEnvType()) + "' 'KEY'\n";
         }
         hostgroup = "HOSTGROUP_" + convertGroupname(group.getName()) + "=(\n" + hostgroup + ")\n\n";
         this.hostgroups = this.hostgroups + hostgroup;

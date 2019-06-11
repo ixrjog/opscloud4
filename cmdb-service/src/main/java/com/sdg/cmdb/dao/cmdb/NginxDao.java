@@ -79,5 +79,38 @@ public interface NginxDao {
 
     int delPlaybook(@Param("id") long id);
 
+    int addNginxTcp(NginxTcpDO nginxTcpDO);
+
+
+    NginxTcpDO checkNginxTcp(NginxTcpDO nginxTcpDO);
+
+    NginxTcpDO getNginxTcp(@Param("id") long id);
+
+    int updateNginxTcpFinished(NginxTcpDO nginxTcpDO);
+
+    List<NginxTcpDO> queryNginxTcpAll(@Param("envType") int envType);
+
+    int getNginxTcpSize(
+            @Param("isAdmin") boolean isAdmin,
+            @Param("username") String username,
+            @Param("serviceName") String serviceName,
+            @Param("envType") int envType);
+
+    List<NginxTcpDO> getNginxTcpPage(
+            @Param("isAdmin") boolean isAdmin,
+            @Param("username") String username,
+            @Param("serviceName") String serviceName,
+            @Param("envType") int envType,
+            @Param("pageStart") long pageStart, @Param("length") int length);
+
+
+    NginxTcpDubboDO getNginxTcpDubboByKey(@Param("clusterKey") String clusterKey, @Param("dubbo") String dubbo);
+
+    int addNginxTcpDubbo(NginxTcpDubboDO nginxTcpDubboDO);
+
+    List<NginxTcpDubboDO> queryNginxTcpDubbo(@Param("clusterKey") String clusterKey);
+
+    int delNginxTcpDubbo(@Param("id") long id);
+
 
 }

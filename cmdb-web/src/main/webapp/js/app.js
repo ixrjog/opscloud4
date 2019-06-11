@@ -18,5 +18,6 @@ angular.module('app', [
     'ngWebSocket',
     'angularResizable',
     'hljs',
-    'monospaced.qrcode'
+    'monospaced.qrcode',
+    'ui.ace'
 ]);

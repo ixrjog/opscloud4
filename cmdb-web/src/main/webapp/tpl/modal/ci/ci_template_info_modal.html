@@ -2,23 +2,9 @@
     .build-params .popover {
         max-width: 400px !important;
     }
-
     .projectName .popover {
         max-width: 400px !important;
     }
-
-    .environmentVariables .popover {
-        max-width: 400px !important;
-    }
-
-    .zoneType .popover {
-        max-width: 500px !important;
-    }
-
-    .tomcatWebAppsPath .popover {
-        max-width: 500px !important;
-    }
-
     .httpStatus .popover {
         max-width: 500px !important;
     }
@@ -36,8 +22,6 @@
             <!-- toaster directive -->
             <toaster-container
                     toaster-options="{'position-class': 'toast-top-right', 'close-button':true}"></toaster-container>
-
-
             <!--<div style="font-size:1em;">&nbsp;</div>-->
 
             <div style="margin-top: 5px;" ng-show="templateItem.id == 0">
@@ -68,7 +52,6 @@
                     </tbody>
                 </table>
             </div>
-
 
             <div class="form-group">
                 <div class="col-md-6">
@@ -112,16 +95,16 @@
             </div>
 
             <div class="form-group">
-                <div class="col-md-6">
-                    <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>回滚类型</label>
-                    <div class="col-lg-8">
-                        <!--required-->
-                        <select class="form-control" ng-model="templateItem.rollbackType"
-                                ng-options="rollback.code as rollback.name for rollback in rollbackType">
-                            <option value="">--请选择--</option>
-                        </select>
-                    </div>
-                </div>
+                <!--<div class="col-md-6">-->
+                    <!--<label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>回滚类型</label>-->
+                    <!--<div class="col-lg-8">-->
+                        <!--&lt;!&ndash;required&ndash;&gt;-->
+                        <!--<select class="form-control" ng-model="templateItem.rollbackType"-->
+                                <!--ng-options="rollback.code as rollback.name for rollback in rollbackType">-->
+                            <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                        <!--</select>-->
+                    <!--</div>-->
+                <!--</div>-->
 
                 <div class="col-md-6">
                     <label class="col-lg-4 control-label">环境类型</label>

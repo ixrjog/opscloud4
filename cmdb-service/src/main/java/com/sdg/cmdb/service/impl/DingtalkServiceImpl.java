@@ -1,26 +1,33 @@
 package com.sdg.cmdb.service.impl;
 
+import com.google.common.base.Joiner;
 import com.sdg.cmdb.dao.cmdb.CiDao;
 import com.sdg.cmdb.dao.cmdb.DingtalkDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.aliyunMQ.AliyunMqGroupUserVO;
 import com.sdg.cmdb.domain.aliyunMQ.AliyunMqGroupVO;
+import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.ci.*;
 import com.sdg.cmdb.domain.dingtalk.DingTalkContent;
 import com.sdg.cmdb.domain.dingtalk.DingtalkDO;
+import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import com.sdg.cmdb.handler.DingTalkHandler;
 import com.sdg.cmdb.service.*;
 import com.sdg.cmdb.service.configurationProcessor.AnsibleFileProcessorService;
+import com.sdg.cmdb.util.RegexUtils;
+import com.sdg.cmdb.util.StringFilterUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.text.StrSubstitutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -41,6 +48,9 @@ public class DingtalkServiceImpl implements DingtalkService {
     @Resource
     private UserDao userDao;
 
+    @Autowired
+    private UserService userService;
+
     @Resource
     private ServerGroupDao serverGroupDao;
 
@@ -59,9 +69,6 @@ public class DingtalkServiceImpl implements DingtalkService {
     @Resource
     private DingtalkDao dingtalkDao;
 
-    @Resource
-    private ConfigCenterService configCenterService;
-
 
     // TODO 构建图标网站 https://shields.io/#/examples/build
     public static final String BUILD_PASSING = "https://img.shields.io/badge/build-passing-brightgreen.jpg";
@@ -70,10 +77,10 @@ public class DingtalkServiceImpl implements DingtalkService {
     public static final String DEPLOYMENT_PASSING = "https://img.shields.io/badge/deployment-passing-brightgreen.jpg";
     public static final String DEPLOYMENT_FAILING = "https://img.shields.io/badge/deployment-failing-red.jpg";
 
+    public static final String MQ_HELP = "https://github.com/ixrjog/opsCloud/wiki/AliyunMQ";
+
     @Resource
     private DingTalkHandler dingTalkHandler;
-
-
 
 
     private String acqCiDeployMsg(CiDeployStatisticsDO ciDeployStatisticsDO) {
@@ -180,7 +187,7 @@ public class DingtalkServiceImpl implements DingtalkService {
 
         Map<String, String> valuesMap = new HashMap<String, String>();
         valuesMap.put("projectName", ciAppDO.getProjectName());
-        valuesMap.put("envName", ServerDO.EnvTypeEnum.getEnvTypeName(ciJobDO.getEnvType()));
+        valuesMap.put("envName", EnvType.EnvTypeEnum.getEnvTypeName(ciJobDO.getEnvType()));
         valuesMap.put("buildPhase", buildNotifyDO.getBuildPhase());
         String buildStatus = "";
         if (!StringUtils.isEmpty(buildNotifyDO.getBuildStatus()))
@@ -198,7 +205,12 @@ public class DingtalkServiceImpl implements DingtalkService {
         valuesMap.put("hostPattern", hostPattern);
         String branch = ciService.getBuildParamValue(ciBuildDO, CiServiceImpl.PARAM_BRANCH);
         valuesMap.put("branch", branch);
-        valuesMap.put("commit", buildNotifyDO.getScmCommit().substring(0, 10));
+        if (!StringUtils.isEmpty(buildNotifyDO.getScmCommit())) {
+            valuesMap.put("commit", buildNotifyDO.getScmCommit().substring(0, 10));
+        } else {
+            valuesMap.put("commit", "Null");
+        }
+
         // https://oc.ops.yangege.cn/#/access/ciJob?appId=1&jobId=1
         valuesMap.put("ciJobUrl", "https://oc.ops.yangege.cn/#/access/ciJob?appId=" + ciAppDO.getId() + "&jobId=" + ciJobDO.getId());
 
@@ -220,6 +232,13 @@ public class DingtalkServiceImpl implements DingtalkService {
             }
         }
 
+        List<UserVO> atUserList = new ArrayList<>();
+        if (ciJobDO.isAtAll()) {
+            atUserList = userService.queryUserByApp(ciAppDO.getId());
+        } else {
+            atUserList.add(new UserVO(userService.getUserByDisplayName(ciBuildDO.getDisplayName()), true));
+        }
+
         String templateString = "{ " +
                 "\"msgtype\": \"markdown\", " +
                 "\"markdown\": {" +
@@ -229,7 +248,6 @@ public class DingtalkServiceImpl implements DingtalkService {
                 "环境 : ${envName}\\n\\n" +
                 "任务名称 : ${jobName}\\n\\n" +
                 "任务阶段 : ${buildPhase}\\n\\n" +
-
                 "[控制台日志](${console})\\n\\n" +
                 buildStatus +
                 "版本名称 : ${versionName}\\n\\n" +
@@ -244,13 +262,11 @@ public class DingtalkServiceImpl implements DingtalkService {
                 getServerDeployInfo(serverList) + "\\n" +
                 getOtherServerDeployInfo(serverList, buildNumber) + "\\n\\n" +
                 "[任务详情](${ciJobUrl})\\n" +
-                "\"}" + getAt(ciBuildDO) +
+                "\"}" + getAt(atUserList) +
                 "}";
 
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String resolvedString = sub.replace(templateString);
-        System.err.println(resolvedString);
-
         try {
             if (ciAppDO.getDingtalkId() == 0) return;
             DingtalkDO dingtalkDO = dingtalkDao.getDingtalk(ciAppDO.getDingtalkId());
@@ -268,8 +284,198 @@ public class DingtalkServiceImpl implements DingtalkService {
 
     }
 
+
+    @Override
+    public void notifyCiAndroid(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO) {
+        logger.info("Dingtalk build notify buiildId : {}", ciBuildDO.getId());
+        // 排除通知
+        if (buildNotifyDO.getBuildPhase().equals("QUEUED")) return;
+        if (buildNotifyDO.getBuildPhase().equals("COMPLETED")) return;
+        CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        // 判断是否设置消息通知
+        if (ciAppDO.getDingtalkId() == 0) return;
+        int buildNumber = buildNotifyDO.getBuildNumber();
+        Map<String, String> valuesMap = new HashMap<String, String>();
+        valuesMap.put("projectName", ciAppDO.getProjectName());
+        valuesMap.put("envName", EnvType.EnvTypeEnum.getEnvTypeName(ciJobDO.getEnvType()));
+        valuesMap.put("buildPhase", buildNotifyDO.getBuildPhase());
+        String buildStatus = "";
+        if (!StringUtils.isEmpty(buildNotifyDO.getBuildStatus()))
+            buildStatus = "执行结果 : " + buildNotifyDO.getBuildStatus() + "\\n\\n";
+        valuesMap.put("versionDesc", ciBuildDO.getVersionDesc());
+        valuesMap.put("jobName", ciBuildDO.getJobName());
+        valuesMap.put("console", buildNotifyDO.getBuildFullUrl() + CiServiceImpl.BUILD_CONSOLE);
+        valuesMap.put("buildNumber", buildNumber + "");
+        valuesMap.put("username", ciBuildDO.getDisplayName());
+        String branch = ciService.getBuildParamValue(ciBuildDO, CiServiceImpl.PARAM_BRANCH);
+        valuesMap.put("branch", branch);
+        String envBuild = ciService.getBuildParamValue(ciBuildDO, "ENVIRONMENT_BUILD");
+        valuesMap.put("ENVIRONMENT_BUILD", envBuild);
+        String productFlavorBuild = ciService.getBuildParamValue(ciBuildDO, "PRODUCT_FLAVOR_BUILD");
+        valuesMap.put("PRODUCT_FLAVOR_BUILD", productFlavorBuild);
+        if (StringUtils.isEmpty(buildNotifyDO.getScmCommit())) {
+            valuesMap.put("commit", ciBuildDO.getCommit().substring(0, 10));
+        } else {
+            valuesMap.put("commit", buildNotifyDO.getScmCommit().substring(0, 10));
+        }
+        String buildFinalized = "";
+        String downloadPage = "";
+
+        if (buildNotifyDO.getBuildPhase().equals("FINALIZED")) {
+            if (buildNotifyDO.getBuildStatus().equals("SUCCESS")) {
+                buildFinalized = " ![](" + this.BUILD_PASSING + ")\\n\\n";
+                String downloadUrl = "https://oc.ops.yangege.cn/#/access/androidArtifact?buildId=" + ciBuildDO.getId();
+                downloadPage = "[下载页面](" + downloadUrl + ")\\n\\n";
+            } else {
+                buildFinalized = " ![](" + this.BUILD_FAILING + ")\\n\\n";
+            }
+        }
+        List<UserVO> atUserList = new ArrayList<>();
+        if (ciJobDO.isAtAll()) {
+            atUserList = userService.queryUserByApp(ciAppDO.getId());
+        } else {
+            atUserList.add(new UserVO(userService.getUserByDisplayName(ciBuildDO.getDisplayName()), true));
+        }
+
+        String templateString = "{ " +
+                "\"msgtype\": \"markdown\", " +
+                "\"markdown\": {" +
+                "\"title\": \"部署消息\"," +
+                "\"text\": \"### ${projectName}\\n" +
+                buildFinalized +
+                "环境 : ${envName}\\n\\n" +
+                "任务名称 : ${jobName}\\n\\n" +
+                "任务阶段 : ${buildPhase}\\n\\n" +
+                "[控制台日志](${console})\\n\\n" +
+                buildStatus +
+                "构建环境 : ${ENVIRONMENT_BUILD}\\n\\n" +
+                "构建渠道 : ${PRODUCT_FLAVOR_BUILD}\\n\\n" +
+                "任务编号 : ${buildNumber}\\n\\n" +
+                "分支 : ${branch}\\n\\n" +
+                "COMMIT : ${commit}\\n\\n" +
+                getCommitInfo(ciBuildDO.getId()) + "\\n" +
+                "操作人 : ${username}\\n\\n" +
+                getAtUser(atUserList) + "\\n\\n" +
+                downloadPage +
+                "\"}" + getAt(atUserList) +
+                "}";
+
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        String resolvedString = sub.replace(templateString);
+
+        try {
+            DingtalkDO dingtalkDO = dingtalkDao.getDingtalk(ciAppDO.getDingtalkId());
+            DingTalkContent dingTalkContent = new DingTalkContent();
+            dingTalkContent.setWebHook(dingtalkDO.getWebhook());
+            dingTalkContent.setMsg(resolvedString);
+            if (dingTalkHandler.doNotify(dingTalkContent)) ;
+            buildNotifyDO.setDingtalk(true);
+            ciDao.updateBuildNotify(buildNotifyDO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void notifyCiTest(CiBuildDO ciBuildDO, BuildNotifyDO buildNotifyDO) {
+        logger.info("Dingtalk build notify buiildId : {}", ciBuildDO.getId());
+        // TODO 排除通知
+        if (buildNotifyDO.getBuildPhase().equals("QUEUED")) return;
+        if (buildNotifyDO.getBuildPhase().equals("COMPLETED")) return;
+        CiJobDO ciJobDO = ciDao.getCiJob(ciBuildDO.getJobId());
+        CiAppDO ciAppDO = ciDao.getCiApp(ciJobDO.getAppId());
+        // TODO 判断是否设置消息通知
+        if (ciAppDO.getDingtalkId() == 0) return;
+
+        int buildNumber = buildNotifyDO.getBuildNumber();
+
+        Map<String, String> valuesMap = new HashMap<String, String>();
+        valuesMap.put("projectName", ciAppDO.getProjectName());
+        valuesMap.put("envName", EnvType.EnvTypeEnum.getEnvTypeName(ciJobDO.getEnvType()));
+        valuesMap.put("buildPhase", buildNotifyDO.getBuildPhase());
+        String buildStatus = "";
+        if (!StringUtils.isEmpty(buildNotifyDO.getBuildStatus()))
+            buildStatus = "执行结果 : " + buildNotifyDO.getBuildStatus() + "\\n\\n";
+        valuesMap.put("versionName", ciBuildDO.getVersionName());
+        String versionDesc = "";
+        if (!StringUtils.isEmpty(ciBuildDO.getVersionDesc()))
+            versionDesc = "versionDesc : " + ciBuildDO.getVersionDesc() + "\\n\\n";
+
+        valuesMap.put("versionDesc", ciBuildDO.getVersionDesc());
+        valuesMap.put("jobName", ciBuildDO.getJobName());
+        valuesMap.put("console", buildNotifyDO.getBuildFullUrl() + CiServiceImpl.BUILD_CONSOLE);
+        valuesMap.put("buildNumber", buildNumber + "");
+        valuesMap.put("username", ciBuildDO.getDisplayName());
+        String branch = ciService.getBuildParamValue(ciBuildDO, CiServiceImpl.PARAM_BRANCH);
+        valuesMap.put("branch", branch);
+        valuesMap.put("commit", buildNotifyDO.getScmCommit().substring(0, 10));
+        // https://oc.ops.yangege.cn/#/access/ciJob?appId=1&jobId=1
+        valuesMap.put("ciJobUrl", "https://oc.ops.yangege.cn/#/access/ciJob?appId=" + ciAppDO.getId() + "&jobId=" + ciJobDO.getId());
+        valuesMap.put("ciJobTestNGUrl", buildNotifyDO.getBuildFullUrl() + CiServiceImpl.BUILD_TEST_NGREPORTS);
+        valuesMap.put("ciJobCoverageReportUrl", buildNotifyDO.getBuildFullUrl() + CiServiceImpl.BUILD_TEST_JACOCO);
+
+        String buildFinalized = "";
+        if (buildNotifyDO.getBuildPhase().equals("FINALIZED")) {
+            if (buildNotifyDO.getBuildStatus().equals("SUCCESS"))
+                buildFinalized = " ![](" + CiServiceImpl.BUILD_TEST_PASSING + ")\\n\\n";
+            if (buildNotifyDO.getBuildStatus().equals("UNSTABLE"))
+                buildFinalized = " ![](" + CiServiceImpl.BUILD_TEST_UNSTABLE + ")\\n\\n";
+        } else {
+            buildFinalized = " ![](" + CiServiceImpl.BUILD_TEST_STARTED + ")\\n\\n";
+        }
+
+        List<UserVO> atUserList = userService.queryUserByApp(ciAppDO.getId());
+
+        String templateString = "{ " +
+                "\"msgtype\": \"markdown\", " +
+                "\"markdown\": {" +
+                "\"title\": \"部署消息\"," +
+                "\"text\": \"### ${projectName}\\n" +
+                buildFinalized +
+                "环境 : ${envName}\\n\\n" +
+                "任务名称 : ${jobName}\\n\\n" +
+                "任务阶段 : ${buildPhase}\\n\\n" +
+                "[控制台日志](${console})\\n\\n" +
+                buildStatus +
+                "版本名称 : ${versionName}\\n\\n" +
+                versionDesc +
+                "任务编号 : ${buildNumber}\\n\\n" +
+                "分支 : ${branch}\\n\\n" +
+                "COMMIT : ${commit}\\n\\n" +
+                getCommitInfo(ciBuildDO.getId()) + "\\n" +
+                "操作人 : ${username}\\n\\n" +
+                "@" + ciBuildDO.getMobile() + "\\n\\n" +
+                "[TestNG Results](${ciJobTestNGUrl})\\n\\n" +
+                "[Coverage Report](${ciJobCoverageReportUrl})\\n\\n" +
+                "[任务详情](${ciJobUrl})\\n" +
+                "\"}" + getAt(atUserList) +
+                "}";
+
+        StrSubstitutor sub = new StrSubstitutor(valuesMap);
+        String resolvedString = sub.replace(templateString);
+
+        try {
+            if (ciAppDO.getDingtalkId() == 0) return;
+            DingtalkDO dingtalkDO = dingtalkDao.getDingtalk(ciAppDO.getDingtalkId());
+
+            DingTalkContent dingTalkContent = new DingTalkContent();
+            dingTalkContent.setWebHook(dingtalkDO.getWebhook());
+            dingTalkContent.setMsg(resolvedString);
+
+            if (dingTalkHandler.doNotify(dingTalkContent)) ;
+            buildNotifyDO.setDingtalk(true);
+            ciDao.updateBuildNotify(buildNotifyDO);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
     private String getServerDeployInfo(List<ServerDO> serverList) {
-        String serversInfo = "";
+        if (serverList.size() == 0) return "";
+
+        String serversInfo = "主机组 : ${hostPattern} \\n\\n";
         for (ServerDO serverDO : serverList) {
             serversInfo += "- " + serverDO.acqServerName() + " " + serverDO.getInsideIp() + "\\n";
         }
@@ -310,14 +516,26 @@ public class DingtalkServiceImpl implements DingtalkService {
         String commitInfoHeader = "变更记录:\\n\\n";
         String commitInfo = "";
         List<CiBuildCommitDO> commitList = ciDao.queryCiBuildCommitByBuildId(buildId);
-
-        // List<GitlabCommit> commitList = gitlabService.getProjectChanges(projectName,branch, commitHash);
-        for (CiBuildCommitDO ciBuildCommitDO : commitList) {
-            commitInfo += "- " + ciBuildCommitDO.getMessage() + "\\n";
-        }
+        for (CiBuildCommitDO ciBuildCommitDO : commitList)
+            commitInfo += "-" + StringFilterUtils.commitFilter(ciBuildCommitDO.getMessage()) + "\\n";
         if (!StringUtils.isEmpty(commitInfo))
             commitInfo = commitInfoHeader + commitInfo;
         return commitInfo;
+    }
+
+
+    /**
+     * @param atUserList
+     * @return
+     * @134567890,@2345678
+     */
+    private String getAtUser(List<UserVO> atUserList) {
+        String mobileList = null;
+        for (UserVO userVO : atUserList)
+            if (!StringUtils.isEmpty(userVO.getMobile()) && RegexUtils.isPhone(userVO.getMobile()))
+                mobileList = Joiner.on(",").skipNulls().join(mobileList, "@" + userVO.getMobile());
+        if (StringUtils.isEmpty(mobileList)) return "";
+        return mobileList;
     }
 
     /**
@@ -331,11 +549,15 @@ public class DingtalkServiceImpl implements DingtalkService {
      *
      * @return
      */
-    private String getAt(CiBuildDO ciBuildDO) {
-        if (StringUtils.isEmpty(ciBuildDO.getMobile())) return "";
+    private String getAt(List<UserVO> atUserList) {
+        String mobileList = null;
+        for (UserVO userVO : atUserList)
+            if (!StringUtils.isEmpty(userVO.getMobile()) && RegexUtils.isPhone(userVO.getMobile()))
+                mobileList = Joiner.on(",").skipNulls().join(mobileList, "\"" + userVO.getMobile() + "\"");
+        if (StringUtils.isEmpty(mobileList)) return "";
         String at = "," +
                 "\"at\": {" +
-                "\"atMobiles\": [\"" + ciBuildDO.getMobile() + "\"]" +
+                "\"atMobiles\": [" + mobileList + "]" +
                 "}";
         return at;
     }
@@ -363,7 +585,7 @@ public class DingtalkServiceImpl implements DingtalkService {
 
         Map<String, String> valuesMap = new HashMap<String, String>();
         valuesMap.put("projectName", ciAppDO.getProjectName());
-        valuesMap.put("envName", ServerDO.EnvTypeEnum.getEnvTypeName(ciJobDO.getEnvType()));
+        valuesMap.put("envName", EnvType.EnvTypeEnum.getEnvTypeName(ciJobDO.getEnvType()));
         valuesMap.put("buildPhase", buildNotifyDO.getBuildPhase());
         String buildStatus = "";
         if (!StringUtils.isEmpty(buildNotifyDO.getBuildStatus()))
@@ -401,6 +623,7 @@ public class DingtalkServiceImpl implements DingtalkService {
             }
         }
 
+        List<UserVO> atUserList = userService.queryUserByApp(ciAppDO.getId());
         String templateString = "{ " +
                 "\"msgtype\": \"markdown\", " +
                 "\"markdown\": {" +
@@ -418,17 +641,14 @@ public class DingtalkServiceImpl implements DingtalkService {
                 "OSS路径 : ${ossPath}\\n\\n" +
                 "操作人 : ${username}\\n\\n" +
                 "@" + ciBuildDO.getMobile() + "\\n\\n" +
-                "主机组 : ${hostPattern} \\n\\n" +
                 getServerDeployInfo(serverList) + "\\n" +
                 getOtherServerDeployInfo(serverList, buildNumber) + "\\n\\n" +
                 "[任务详情](${ciJobUrl})\\n" +
-                "\"}" + getAt(ciBuildDO) +
+                "\"}" + getAt(atUserList) +
                 "}";
 
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String resolvedString = sub.replace(templateString);
-        System.err.println(resolvedString);
-
         try {
             if (ciAppDO.getDingtalkId() == 0) return;
             DingtalkDO dingtalkDO = dingtalkDao.getDingtalk(ciAppDO.getDingtalkId());
@@ -451,11 +671,17 @@ public class DingtalkServiceImpl implements DingtalkService {
         Map<String, String> valuesMap = new HashMap<String, String>();
 
         valuesMap.put("groupId", aliyunMqGroupVO.getGroupId());
-        valuesMap.put("totalDiff", aliyunMqGroupVO.getLastTotalDiff() + "/" + aliyunMqGroupVO.getTotalDiff());
-        valuesMap.put("delayTime", aliyunMqGroupVO.getLastDelayTime() + "/" + aliyunMqGroupVO.getDelayTime());
-        valuesMap.put("online", aliyunMqGroupVO.isLastOnline()+ "");
-        valuesMap.put("rebalanceOK", aliyunMqGroupVO.isLastRebalanceOK() + "");
-
+        String isTotalDiff = "";
+        if (aliyunMqGroupVO.getTotalDiff() != 0 && aliyunMqGroupVO.getTotalDiff() <= aliyunMqGroupVO.getLastTotalDiff())
+            isTotalDiff = "**";
+        valuesMap.put("totalDiff", isTotalDiff + aliyunMqGroupVO.getLastTotalDiff() + "(堆积条数)/" + aliyunMqGroupVO.getTotalDiff() + "(告警条数)" + isTotalDiff);
+        String isDelayTime = "";
+        if (aliyunMqGroupVO.getDelayTime() != 0 && aliyunMqGroupVO.getDelayTime() <= aliyunMqGroupVO.getLastDelayTime())
+            isDelayTime = "**";
+        valuesMap.put("delayTime", isDelayTime + aliyunMqGroupVO.getLastDelayTime() + "(当前延迟ms)/" + aliyunMqGroupVO.getDelayTime() + "(告警延迟ms)" + isDelayTime);
+        valuesMap.put("online", aliyunMqGroupVO.isLastOnline() ? "是" : "**否**");
+        valuesMap.put("rebalanceOK", aliyunMqGroupVO.isLastRebalanceOK() ? "是" : "**否**");
+        valuesMap.put("mqHelp", MQ_HELP);
         String users = "";
         String mobiles = "";
 
@@ -477,17 +703,17 @@ public class DingtalkServiceImpl implements DingtalkService {
                 "\"title\": \"阿里云MQ告警\"," +
                 "\"text\": \"### 阿里云MQ告警\\n" +
                 "${groupId}\\n\\n" +
-                "堆积 : ${totalDiff}\\n\\n" +
-                "延迟 : ${delayTime}\\n\\n" +
-                "在线 : ${online}\\n\\n" +
-                "一致 : ${rebalanceOK}\\n\\n" +
+                "消息堆积 : ${totalDiff}\\n\\n" +
+                "消息延迟 : ${delayTime}\\n\\n" +
+                "GID是否在线 : ${online}\\n\\n" +
+                "订阅关系是否一致(Tag值) : ${rebalanceOK}\\n\\n" +
+                "[指标帮助](${mqHelp})\\n\\n" +
                 "接收人 : ${users}\\n\\n" +
                 "\"}" + at +
                 "}";
 
         StrSubstitutor sub = new StrSubstitutor(valuesMap);
         String resolvedString = sub.replace(templateString);
-        //System.err.println(resolvedString);
         try {
             DingtalkDO dingtalkDO = dingtalkDao.getDingtalkByType(1);
             DingTalkContent dingTalkContent = new DingTalkContent();
@@ -498,7 +724,6 @@ public class DingtalkServiceImpl implements DingtalkService {
             e.printStackTrace();
         }
     }
-
 
 
     public void notifyTest() {
@@ -519,12 +744,11 @@ public class DingtalkServiceImpl implements DingtalkService {
                 "    \"msgtype\": \"actionCard\"\n" +
                 "}";
 
-        //System.err.println(resolvedString);
         try {
             DingtalkDO dingtalkDO = dingtalkDao.getDingtalk(1);
             DingTalkContent dingTalkContent = new DingTalkContent();
             dingTalkContent.setWebHook(dingtalkDO.getWebhook());
-            dingTalkContent.setMsg( dingtalkString);
+            dingTalkContent.setMsg(dingtalkString);
             if (dingTalkHandler.doNotify(dingTalkContent)) ;
         } catch (Exception e) {
             e.printStackTrace();

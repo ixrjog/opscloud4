@@ -25,7 +25,7 @@ public class AliyunLogManageServiceImplTest {
     private ServerGroupDao serverGroupDao;
 
     @Test
-    public void testQuerListProject() {
+    public void testQuerListProjects() {
         List<String> projects = aliyunLogManageServiceImpl.queryListProject();
         System.err.println("Projects:" + projects.toString() + "\n");
     }
@@ -35,6 +35,12 @@ public class AliyunLogManageServiceImplTest {
     public void testQuerListLogStores() {
         List<String> logStores = aliyunLogManageServiceImpl.queryListLogStores("collect-web-service-logs");
         System.err.println("ListLogs:" + logStores.toString() + "\n");
+    }
+
+    @Test
+    public void testQuerListConfigs() {
+        List<String> configs = aliyunLogManageServiceImpl.queryListConfig("apps-logs","gateway");
+        System.err.println("configs :" + configs.toString() + "\n");
     }
 
 

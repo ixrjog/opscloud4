@@ -9,7 +9,6 @@ import com.sdg.cmdb.domain.ansible.AnsibleCopyReslut;
 import com.sdg.cmdb.domain.ansible.AnsibleReslut;
 import com.sdg.cmdb.domain.ansible.AnsibleScriptReslut;
 import com.sdg.cmdb.domain.ansibleTask.TaskScriptDO;
-import com.sdg.cmdb.domain.configCenter.ConfigCenterItemGroupEnum;
 import com.sdg.cmdb.domain.copy.*;
 import com.sdg.cmdb.domain.nginx.VhostDO;
 import com.sdg.cmdb.domain.nginx.VhostEnvDO;

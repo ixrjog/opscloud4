@@ -32,9 +32,7 @@ public class SynchrodataTask implements BaseJob {
     public void execute() {
         log.info("Synchrodata : Zabbix refresh");
         zabbixService.refresh();
-
         log.info("Synchrodata : Aliyun ECS refresh");
         ecsService.ecsRefresh();
-
     }
 }

@@ -1,7 +1,10 @@
 package com.sdg.cmdb.domain.workflow;
 
+import lombok.Data;
+
 import java.io.Serializable;
 
+@Data
 public class WorkflowVO extends WorkflowDO implements Serializable {
     private static final long serialVersionUID = 2288172905163524843L;
 

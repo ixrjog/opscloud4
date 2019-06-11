@@ -1,8 +1,5 @@
 package com.sdg.cmdb.service.impl;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.alibaba.fastjson.serializer.SerializerFeature;
 import com.sdg.cmdb.dao.cmdb.KeyboxDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
@@ -58,27 +55,34 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     @Resource
     private UserDao userDao;
 
+    /**
+     * 查询服务器组所有的
+     * @param page
+     * @param length
+     * @param name
+     * @param useType
+     * @return
+     */
     @Override
     public TableVO<List<ServerGroupVO>> queryServerGroupPage(int page, int length, String name, int useType) {
         List<String> filterGroups = authService.getUserGroup(SessionUtils.getUsername());
-
         long size = serverGroupDao.queryServerGroupSize(filterGroups, name, useType);
         List<ServerGroupDO> list = serverGroupDao.queryServerGroupPage(filterGroups, page * length, length, name, useType);
-
         List<ServerGroupVO> groupVOList = acqServerGroupVOList(list);
-
         return new TableVO<>(size, groupVOList);
     }
 
     @Override
-    public TableVO<List<ServerGroupVO>> queryUnauthServerGroupPage(int page, int length, String name, int useType){
-
-        long size = serverGroupDao.queryUnauthServerGroupSize( name, useType);
-        List<ServerGroupDO> list = serverGroupDao.queryUnauthServerGroupPage( page * length, length, name, useType);
-
+    public TableVO<List<ServerGroupVO>> queryUnauthServerGroupPage(int page, int length, String name, int useType) {
+        long size = serverGroupDao.queryUnauthServerGroupSize(name, useType);
+        List<ServerGroupDO> list = serverGroupDao.queryUnauthServerGroupPage(page * length, length, name, useType);
         List<ServerGroupVO> groupVOList = acqServerGroupVOList(list);
-
         return new TableVO<>(size, groupVOList);
+    }
+
+    @Override
+    public List<ServerGroupDO> queryLogServiceMemberPage(String name, long groupCfgId) {
+        return serverGroupDao.queryLogServiceMemberPage(name, groupCfgId);
     }
 
 
@@ -122,6 +126,8 @@ public class ServerGroupServiceImpl implements ServerGroupService {
                 }
                 users.add(user.getUsername() + "<" + userMap.get(user.getUsername()) + ">");
             }
+            ServerGroupUseTypeDO useTypeDO = getUseType(groupVO.getUseType());
+            groupVO.setServerGroupUseTypeDO(useTypeDO);
             groupVO.setUsers(users);
         }
         return new TableVO<>(size, list);
@@ -204,6 +210,11 @@ public class ServerGroupServiceImpl implements ServerGroupService {
         return serverGroupDao.getGroupsByName(username);
     }
 
+    @Override
+    public List<ServerGroupDO> getServerGroupsAll() {
+        return serverGroupDao.queryServerGroup();
+    }
+
 
     @Override
     public TableVO<List<ServerGroupUseTypeDO>> queryServerGroupUseTypePage(String typeName, int page, int length) {
@@ -276,11 +287,61 @@ public class ServerGroupServiceImpl implements ServerGroupService {
         return map;
     }
 
+    /**
+     * 去除空组
+     *
+     * @param name
+     * @return
+     */
+    @Override
+    public List<GroupTree> queryMyServerGroupList(String name) {
+        TableVO<List<ServerGroupVO>> tableVO = queryServerGroupPage(0, 1000, name, 0);
+        List<ServerGroupVO> serverGroupList = tableVO.getData();
+        List<GroupTree> myTree = new ArrayList<>();
+        for (ServerGroupVO serverGroup : serverGroupList) {
+            if (serverDao.getServersByGroupId(serverGroup.getId()) == 0) continue; // Skip空服务器组
+            Map<String, List<ServerDO>> serverMap = getHostPatternMap(serverGroup.getId());
+            List<ServerGroupHostPattern> children = getTree(serverMap);
+            GroupTree groupTree = new GroupTree(serverGroup.getName(), children);
+            myTree.add(groupTree);
+        }
+        return myTree;
+    }
 
+    private List<ServerGroupHostPattern> getTree(Map<String, List<ServerDO>> serverMap) {
+        List<ServerGroupHostPattern> list = new ArrayList<>();
+        for (String key : serverMap.keySet()) {
+            List<ServerDO> serverList = serverMap.get(key);
+            List<String> children = new ArrayList<>();
+            for (ServerDO server : serverList)
+                children.add(server.acqServerName() + "@" + server.getInsideIp());
+            ServerGroupHostPattern pattern = new ServerGroupHostPattern(key, children);
+            list.add(pattern);
+        }
+        return list;
+    }
+
+
+    @Override
+    public Map<String, List<ServerDO>> getHostPatternFilterMap(long groupId) {
+        Map<String, List<ServerDO>> map = getHostPatternMap(groupId);
+        Map<String, List<ServerDO>> filterMap = new HashMap<>();
+        for (String key : map.keySet())
+            if (!map.containsKey(key + "-1"))
+                filterMap.put(key, map.get(key));
+        return filterMap;
+    }
+
+    @Override
     public ServerGroupUseTypeDO getUseType(int useType) {
         ServerGroupUseTypeDO useTypeDO = serverGroupDao.getServerGroupUseTypeByUseType(useType);
         if (useTypeDO == null)
             return new ServerGroupUseTypeDO();
         return useTypeDO;
+    }
+
+    @Override
+    public int getMyGroupSize() {
+        return serverGroupDao.getMyGroupSize(SessionUtils.getUsername());
     }
 }

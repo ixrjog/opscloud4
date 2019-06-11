@@ -1,7 +1,11 @@
 /* *
- * (c) 2010-2018 Torstein Honsi
+ * (c) 2010-2019 Torstein Honsi
  *
  * License: www.highcharts.com/license
+ */
+
+/**
+ * @typedef {"arc"|"circle"|"solid"} Highcharts.PaneBackgroundShapeValue
  */
 
 'use strict';
@@ -38,7 +42,7 @@ extend(Pane.prototype, {
     coll: 'pane', // Member of chart.pane
 
     /**
-     * Initiate the Pane object
+     * Initialize the Pane object
      *
      * @private
      * @function Highcharts.Pane#init
@@ -261,10 +265,9 @@ extend(Pane.prototype, {
          * is circular. When `arc`, the background extends only from the min
          * to the max of the value axis.
          *
-         * @type       {string}
-         * @since      2.3.0
-         * @validvalue ["arc", "circle", "solid"]
-         * @product    highcharts
+         * @type    {Highcharts.PaneBackgroundShapeValue}
+         * @since   2.3.0
+         * @product highcharts
          */
         shape: 'circle',
 
@@ -295,14 +298,10 @@ extend(Pane.prototype, {
          */
         backgroundColor: {
 
-            /**
-             * @ignore
-             */
+            /** @ignore-option */
             linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 },
 
-            /**
-             * @ignore
-             */
+            /** @ignore-option */
             stops: [
                 [0, '#ffffff'],
                 [1, '#e6e6e6']
@@ -323,9 +322,7 @@ extend(Pane.prototype, {
          */
         innerRadius: 0,
 
-        /**
-         * @ignore-option
-         */
+        /** @ignore-option */
         to: Number.MAX_VALUE, // corrected to axis max
 
         /**
@@ -382,8 +379,9 @@ extend(Pane.prototype, {
      * @param {boolean} redraw
      */
     update: function (options, redraw) {
-
         merge(true, this.options, options);
+        merge(true, this.chart.options.pane, options); // #9917
+
         this.setOptions(this.options);
         this.render();
         this.chart.axes.forEach(function (axis) {
@@ -393,7 +391,6 @@ extend(Pane.prototype, {
             }
         }, this);
     }
-
 });
 
 H.Pane = Pane;

@@ -1,8 +1,10 @@
-/**
- * (c) 2010-2018 Torstein Honsi
+/* *
  *
- * License: www.highcharts.com/license
- */
+ *  (c) 2010-2019 Torstein Honsi
+ *
+ *  License: www.highcharts.com/license
+ *
+ * */
 
 'use strict';
 
@@ -49,14 +51,14 @@ defaultOptions.mapNavigation = {
          * What box to align the buttons to. Possible values are `plotBox`
          * and `spacingBox`.
          *
-         * @validvalue ["plotBox", "spacingBox"]
+         * @type {Highcharts.ButtonRelativeToValue}
          */
         alignTo: 'plotBox',
 
         /**
          * The alignment of the navigation buttons.
          *
-         * @validvalue ["left", "center", "right"]
+         * @type {Highcharts.AlignValue}
          */
         align: 'left',
 
@@ -64,7 +66,7 @@ defaultOptions.mapNavigation = {
          * The vertical alignment of the buttons. Individual alignment can
          * be adjusted by each button's `y` offset.
          *
-         * @validvalue ["top", "middle", "bottom"]
+         * @type {Highcharts.VerticalAlignValue}
          */
         verticalAlign: 'top',
 
@@ -323,9 +325,6 @@ H.splitPath = function (path) {
 H.maps = {};
 
 
-
-
-
 // Create symbols for the zoom buttons
 function selectiveRoundedRect(
     x,
@@ -407,7 +406,7 @@ if (Renderer === VMLRenderer) {
  *        chart object will not be finished synchronously. As a consequence,
  *        code that relies on the newly built Chart object should always run in
  *        the callback. Defining a
- *        [chart.event.load](https://api.highcharts.com/highstock/chart.events.load)
+ *        [chart.events.load](https://api.highcharts.com/highstock/chart.events.load)
  *        handler is equivalent.
  *
  * @return {Highcharts.Chart}

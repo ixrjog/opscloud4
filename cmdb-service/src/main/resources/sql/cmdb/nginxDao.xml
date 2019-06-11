@@ -52,7 +52,6 @@
         WHERE id = #{id}
     </update>
 
-
     <select id="queryVhostEnvByVhostId" parameterType="_long" resultType="VhostEnvDO">
         SELECT * FROM oc_nginx_vhost_env WHERE vhostId = #{vhostId}
     </select>
@@ -127,7 +126,8 @@
         WHERE id = #{id}
     </update>
 
-    <insert id="addVhostServerGroup" parameterType="VhostServerGroupDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+    <insert id="addVhostServerGroup" parameterType="VhostServerGroupDO" useGeneratedKeys="true" keyColumn="id"
+            keyProperty="id">
         INSERT INTO oc_nginx_vhost_servergroup (
         vhostId,
         serverGroupId,
@@ -201,5 +201,123 @@
     <select id="getPlaybook" parameterType="object" resultType="NginxPlaybookDO">
         SELECT * FROM oc_nginx_playbook WHERE id = #{id}
     </select>
+
+    <insert id="addNginxTcp" parameterType="NginxTcpDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_tcp (
+        serviceName,
+        content,
+        serverGroupId,
+        serverGroupName,
+        envType,
+        serverPort,
+        portName,
+        nginxPort,
+        gmtExpired,
+        userId,
+        displayName,
+        finished
+        ) VALUES (
+        #{serviceName},
+        #{content},
+        #{serverGroupId},
+        #{serverGroupName},
+        #{envType},
+        #{serverPort},
+        #{portName},
+        #{nginxPort},
+        #{gmtExpired},
+        #{userId},
+        #{displayName},
+        #{finished}
+        );
+    </insert>
+
+    <select id="checkNginxTcp" parameterType="NginxTcpDO" resultType="NginxTcpDO">
+        SELECT * FROM oc_nginx_tcp
+        WHERE serviceName = #{serviceName} AND envType = #{envType} AND portName = #{portName}
+              AND finished = false
+    </select>
+
+    <select id="getNginxTcp" parameterType="_long" resultType="NginxTcpDO">
+        SELECT * FROM oc_nginx_tcp
+        WHERE id = #{id}
+    </select>
+
+    <update id="updateNginxTcpFinished" parameterType="NginxTcpDO">
+        UPDATE oc_nginx_tcp
+        SET finished = true
+        WHERE id = #{id}
+    </update>
+
+    <select id="queryNginxTcpAll" parameterType="_int" resultType="NginxTcpDO">
+        SELECT * FROM oc_nginx_tcp
+        WHERE finished = false AND envType = #{envType}
+    </select>
+
+
+    <select id="getNginxTcpSize" parameterType="object" resultType="_int">
+        SELECT COUNT(*) FROM oc_nginx_tcp
+        <where>
+            finished = 0
+            <if test="!isAdmin">
+                AND serverGroupId IN ( SELECT serverGroupId FROM keybox_user_server WHERE username = #{username} )
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="serviceName != null and serviceName != ''">
+                AND serviceName LIKE "%"#{serviceName}"%"
+            </if>
+        </where>
+    </select>
+
+    <select id="getNginxTcpPage" parameterType="object" resultType="NginxTcpDO">
+        SELECT * FROM oc_nginx_tcp
+        <where>
+            finished = 0
+            <if test="!isAdmin">
+                AND serverGroupId IN ( SELECT serverGroupId FROM keybox_user_server WHERE username = #{username} )
+            </if>
+            <if test="envType != -1">
+                AND envType = #{envType}
+            </if>
+            <if test="serviceName != null and serviceName != ''">
+                AND serviceName LIKE "%"#{serviceName}"%"
+            </if>
+        </where>
+        ORDER BY serviceName DESC
+        limit #{pageStart}, #{length}
+    </select>
+
+
+    <select id="getNginxTcpDubboByKey" parameterType="object" resultType="NginxTcpDubboDO">
+        SELECT * FROM oc_nginx_tcp_dubbo
+        WHERE clusterKey = #{clusterKey} AND dubbo = #{dubbo}
+    </select>
+
+    <insert id="addNginxTcpDubbo" parameterType="NginxTcpDubboDO" useGeneratedKeys="true" keyColumn="id" keyProperty="id">
+        INSERT INTO oc_nginx_tcp_dubbo (
+        clusterKey,
+        dubbo,
+        kubernetesServiceId,
+        podIp,
+        servicePort
+        ) VALUES (
+        #{clusterKey},
+        #{dubbo},
+        #{kubernetesServiceId},
+        #{podIp},
+        #{servicePort}
+        );
+    </insert>
+
+    <select id="queryNginxTcpDubbo" parameterType="string" resultType="NginxTcpDubboDO">
+        SELECT * FROM oc_nginx_tcp_dubbo
+        WHERE clusterKey = #{clusterKey}
+    </select>
+
+    <delete id="delNginxTcpDubbo" parameterType="_long">
+        DELETE FROM oc_nginx_tcp_dubbo WHERE id = #{id}
+    </delete>
 
 </mapper>

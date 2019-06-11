@@ -42,12 +42,7 @@ public class JobNoteVO implements Serializable {
     public JobNoteVO(JobNoteDO jobNoteDO, String jenkinsHost, int envType) {
         this.name = jobNoteDO.getJobName();
         this.buildUrl = jobNoteDO.getBuildFullUrl();
-        if (envType == GitlabWebHooksDO.HooksTypeEnum.ft.getCode())
-            this.buildConsoleUrl = jenkinsHost + "/" + jobNoteDO.getJobUrl() + "default/" + jobNoteDO.getBuildNumber() + "/console";
-        if (envType == GitlabWebHooksDO.HooksTypeEnum.android.getCode())
-            this.buildConsoleUrl = jenkinsHost + "/" + jobNoteDO.getJobUrl() + jobNoteDO.getBuildNumber() + "/console";
-        if (envType == GitlabWebHooksDO.HooksTypeEnum.ios.getCode())
-            this.buildConsoleUrl = jenkinsHost + "/" + jobNoteDO.getJobUrl() + jobNoteDO.getBuildNumber() + "/console";
+        this.buildConsoleUrl = jenkinsHost + "/" + jobNoteDO.getJobUrl() + jobNoteDO.getBuildNumber() + "/console";
         this.buildPhase = jobNoteDO.getBuildPhase();
         this.buildStatus = jobNoteDO.getBuildStatus();
         this.gmtCreate = jobNoteDO.getGmtCreate();

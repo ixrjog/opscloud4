@@ -1,7 +1,9 @@
 /**
  * @license @product.name@ JS v@product.version@ (@product.date@)
+ * @module highcharts/modules/venn
+ * @requires highcharts
  *
- * (c) 2017-2018 Highsoft AS
+ * (c) 2017-2019 Highsoft AS
  * Authors: Jon Arild Nygard
  *
  * License: www.highcharts.com/license

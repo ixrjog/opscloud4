@@ -2,7 +2,7 @@
  *
  *  Plugin for displaying a message when there is no data visible in chart.
  *
- *  (c) 2010-2018 Highsoft AS
+ *  (c) 2010-2019 Highsoft AS
  *
  *  Author: Oystein Moseng
  *
@@ -17,13 +17,13 @@ import '../parts/Utilities.js';
 import '../parts/Series.js';
 import '../parts/Options.js';
 
-var seriesTypes = H.seriesTypes,
-    chartPrototype = H.Chart.prototype,
+var chartPrototype = H.Chart.prototype,
     defaultOptions = H.getOptions(),
     extend = H.extend;
 
 // Add language option
-extend(defaultOptions.lang,
+extend(
+    defaultOptions.lang,
     /**
      * @optionparent lang
      */
@@ -82,6 +82,7 @@ defaultOptions.noData = {
     /**
      * The position of the no-data label, relative to the plot area.
      *
+     * @type  {Highcharts.AlignObject}
      * @since 3.0.8
      */
     position: {
@@ -99,14 +100,14 @@ defaultOptions.noData = {
         /**
          * Horizontal alignment of the label.
          *
-         * @validvalue ["left", "center", "right"]
+         * @type {Highcharts.AlignValue}
          */
         align: 'center',
 
         /**
          * Vertical alignment of the label.
          *
-         * @validvalue ["top", "middle", "bottom"]
+         * @type {Highcharts.VerticalAlignValue}
          */
         verticalAlign: 'middle'
     },
@@ -128,41 +129,6 @@ defaultOptions.noData = {
         color: '#666666'
     }
 
-};
-
-// Define hasData function for non-cartesian seris. Returns true if the series
-// has points at all.
-[
-    'bubble',
-    'gauge',
-    'heatmap',
-    'pie',
-    'sankey',
-    'treemap',
-    'waterfall'
-].forEach(function (type) {
-    if (seriesTypes[type]) {
-        seriesTypes[type].prototype.hasData = function () {
-            return !!this.points.length; // != 0
-        };
-    }
-});
-
-/**
- * Define hasData functions for series. These return true if there are data
- * points on this series within the plot area.
- *
- * @private
- * @function Highcharts.Series#hasData
- *
- * @return {boolean}
- */
-H.Series.prototype.hasData = function () {
-    return (
-        this.visible &&
-        this.dataMax !== undefined &&
-        this.dataMin !== undefined // #3703
-    );
 };
 
 /**
@@ -218,6 +184,7 @@ chartPrototype.showNoData = function (str) {
  */
 chartPrototype.hideNoData = function () {
     var chart = this;
+
     if (chart.noDataLabel) {
         chart.noDataLabel = chart.noDataLabel.destroy();
     }

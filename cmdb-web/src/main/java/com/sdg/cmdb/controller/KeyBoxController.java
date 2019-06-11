@@ -1,21 +1,17 @@
 package com.sdg.cmdb.controller;
 
-import com.sdg.cmdb.dao.cmdb.UserDao;
+
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.HttpResult;
-import com.sdg.cmdb.domain.TableVO;
-import com.sdg.cmdb.domain.auth.UserDO;
 import com.sdg.cmdb.domain.auth.UserVO;
 import com.sdg.cmdb.domain.keybox.ApplicationKeyVO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerVO;
 import com.sdg.cmdb.service.*;
-import com.sdg.cmdb.util.schedule.SchedulerManager;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.Resource;
-import java.util.List;
+
 
 /**
  * Created by zxxiao on 2016/11/20.
@@ -28,22 +24,11 @@ public class KeyBoxController {
     private KeyBoxService keyBoxService;
 
     @Resource
-    private ConfigService configService;
-
-    @Resource
     private AuthService authService;
 
     @Resource
     private LdapService ldapService;
 
-//    @Resource
-//    private ZabbixService zabbixService;
-
-    @Resource
-    private UserDao userDao;
-
-    @Resource
-    private SchedulerManager schedulerManager;
 
     /**
      * 堡垒机分页数据查询
@@ -208,6 +193,13 @@ public class KeyBoxController {
         } else {
             return new HttpResult(wrapper.getCode(), wrapper.getMsg());
         }
+    }
+
+
+    @RequestMapping(value = "/user/getPassword", method = RequestMethod.GET)
+    @ResponseBody
+    public HttpResult getPassword() {
+        return new HttpResult(authService.getPassword());
     }
 
     /**

@@ -5,7 +5,13 @@
        xmlns:util="http://www.springframework.org/schema/util"
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
 
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+    <!--<bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">-->
+        <!--<property name="location">-->
+            <!--<value>classpath:server.properties</value>-->
+        <!--</property>-->
+    <!--</bean>-->
+
+    <bean class="com.sdg.cmdb.util.encryptProperty.EncryptPropertyPlaceholderConfigurer">
         <property name="location">
             <value>classpath:server.properties</value>
         </property>

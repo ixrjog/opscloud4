@@ -1,5 +1,8 @@
 package com.sdg.cmdb.domain.ci;
 
+import com.sdg.cmdb.domain.ci.jobParametersYaml.JobParameterYaml;
+import org.springframework.util.StringUtils;
+
 import java.io.Serializable;
 
 public class CiJobParamDO implements Serializable {
@@ -28,6 +31,15 @@ public class CiJobParamDO implements Serializable {
         this.jobId = jobId;
         this.paramName = paramName;
         this.paramValue = paramValue;
+    }
+
+
+    public CiJobParamDO(long jobId, JobParameterYaml jobParameterYaml) {
+        this.jobId = jobId;
+        this.paramName = jobParameterYaml.getName();
+        this.paramValue = jobParameterYaml.getValue();
+        if (!StringUtils.isEmpty(jobParameterYaml.getDescription()))
+            this.content = jobParameterYaml.getDescription();
     }
 
     public long getId() {

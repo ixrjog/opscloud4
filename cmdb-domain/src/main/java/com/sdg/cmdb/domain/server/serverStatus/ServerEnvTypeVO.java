@@ -1,7 +1,6 @@
 package com.sdg.cmdb.domain.server.serverStatus;
 
-import com.sdg.cmdb.domain.server.ServerDO;
-import org.springframework.util.StringUtils;
+import com.sdg.cmdb.domain.server.EnvType;
 
 import java.io.Serializable;
 
@@ -29,7 +28,7 @@ public class ServerEnvTypeVO implements Serializable {
 
     public void setEnvType(int envType) {
         this.envType = envType;
-        this.name = ServerDO.EnvTypeEnum.getEnvTypeName(envType);
+        this.name = EnvType.EnvTypeEnum.getEnvTypeName(envType);
     }
 
     public int getCnt() {
