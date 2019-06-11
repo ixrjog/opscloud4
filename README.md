@@ -50,6 +50,40 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 支持配置文件加密
   + 支持Markdown格式帮助
 
+### 功能预览
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-01.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-02.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-03.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-04.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-05.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-06.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-07.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-08.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-09.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-10.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-11.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-12.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-13.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-14.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-15.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-16.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-17.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-18.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-19.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-20.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-21.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-22.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-23.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-24.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-25.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-26.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-27.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-28.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-29.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-30.png)
+![sec](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/png/oc-31.png)
+
+
 ### 开发环境
 + MacOS10.13.5
 + JRE1.8.0_144(Java8)
@@ -330,129 +364,3 @@ accelerate_multi_key = yes
 [selinux]
 
 ```
-
-### 配置 Aliyun(ECS）
-* 配置Aliyun AccessKey(登录阿里云，右上角头像菜单中找到accessKeys)
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG50.jpeg)
-* 常用模版（各Zone的实例规格）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG51.jpeg)
-* 配置常用模版（阿里云共有302种实例规格，每个Zone可能有60多种规格可选，所以只添加常用的实例规格，简化ECS开通）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
-* 配置/同步ECS镜像，VPC，安全组等信息
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG53.jpeg)
-* 同步ECS服务器（需配置AccessKey）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/aliyun/WechatIMG52.jpeg)
-
-### 配置 VCSA(VMware vCenter Server)
-* 配置VCSA登录信息
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG55.jpeg)
-* 配置VCSA服务器版本信息
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG56.jpeg)
-* 同步VM服务器(vm命名规则 IP:服务器名称，例如 192.168.1.10:demo-daily)
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/vcsa/WechatIMG57.jpeg)
-
-
-### 配置 Getway(终端跳板机)
->前提安装和配置完成ansible
-
-配置管理-Getway配置管理
-* 全局配置文件管理：无需修改
-* 用户配置文件管理：用户查看用户授权的服务器组
-* 远程同步配置：用于推送本地配置文件到getway服务器（支持多台）
-  - 首先配置开通服务器加入group_getway
-  - 新增（选择服务器，其它配置默认即可）
-  - 批量同步（首次需要手动同步，以后服务器修改和授权，配置会自动同步）
-  - 私匙id_rsa放到opscloud服务器的/data/www/getway/keys/manage/id_rsa(${GETWAY_KEY_PATH}/id_rsa)
-  - 任务管理-TaskScript-选择getway服务器，执行脚本getway_set_login
-  
-* 配置私钥id_rsa（加密后的私钥,非原文）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG35.jpeg)
-* KeyBox(WebShell)
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG36.jpeg)
-* Getway全局服务器列表配置
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG37.jpeg)
-* Getway用户配置
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG38.jpeg)
-* Getway多服务器同步配置（需配置ansbile）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG39.jpeg)
-* Getway服务器一键初始化（需配置ansbile）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG58.jpeg)
-* Getway界面
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/keybox/WechatIMG41.jpeg)
-
-
-
-### 配置 Zabbix
-* 支持 Zabbix API Version : 3.0
-https://www.zabbix.com/documentation/3.0/manual/api
-* 支持 Zabbix API Version : 3.4
-https://www.zabbix.com/documentation/3.4/manual/api
-* 未知 Zabbix API Version : 4.0
-https://www.zabbix.com/documentation/4.0/manual/api
-
-* API URL
-http://${ZABBIX_HOST}/api_jsonrpc.php
-
-* Zabbix API配置
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG29.jpeg)
-* Zabbix API测试
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG30.jpeg)
-* 获取Zabbix模版，并启用需要的模版（配置主机监控只显示启用的模版）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG31.jpeg)
-* 主机监控管理界面（服务器表中的服务器数据）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG32.jpeg)
-* 添加主机监控，可选择已启用的模版和ZabbixProxy
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG33.jpeg)
-* 服务器组属性中可以预先配置服务器的Zabbix模版和ZabbixProxy,让添加主机监控更加快捷
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/zabbix/WechatIMG34.jpeg)
-
-## Task
-* 批量执行命令
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG44.jpeg)
-* 批量执行脚本（opscloud上配置的Script）
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG46.jpeg)
-* 脚本配置/查看
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG47.jpeg)
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG48.jpeg)
-* 查询执行历史
-![sec](https://cmdbstore.oss-cn-hangzhou.aliyuncs.com/github/opscloud/task/WechatIMG49.jpeg)
-
-
-
-### 服务器管理
-* 服务器管理
-* 阿里云ECS主机管理(自动获取ECS主机信息）
-* 阿里云模版管理(自动创建ECS主机&项目扩容)
-* 服务器属性管理／服务器组属性管理
-
-### 监控管理
-* 托管zabbix服务器，通过zabbix api控制
-1. 一键添加主机监控（通过服务器表数据）
-2. 自动添加主机组
-3. 自动添加用户（sms/email告警配置）及用户组
-4. 自动配置动作（Action）
-
-* 服务器监控仪表盘
-
-### 任务管理
-* 批量命令执行
-* 批量脚本执行（可保存自定义脚本）
-
-### IP管理
-* IP段&IP管理
-
-### 配置管理
-* shadowsocks用户配置管理；
-* terminal堡垒机配置管理（内部功能）
-* ansible主机文件管理（自动分组）
-
-### 跳板机（不支持操作审计）
-* Web版跳板机KeyBox（支持多服务器同时操作）
-* Terminal跳板机Getway
-
-
-
-
-
-
-
