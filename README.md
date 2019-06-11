@@ -209,9 +209,8 @@ Starting ApacheDS - default...
 4. 启动Tomcat：/usr/local/tomcat/bin/startup.sh  (关闭/usr/local/tomcat/bin/shutdown.sh)
 
 * 修改相关配置内容
-   - 管理数据库配置修改：jdbc_url, jdbc_user, jdbc_password
-   - LDAP登陆认证配置修改：ldapUrl, ldapUserDn, ldapPwd
-   - Redis 配置修改：redis.host, redis.port, redis.pwd
+  + 配置文件路径 war包解压路径/WEB-INF/classes/server.properties.example
+  + 修改配置后将文件改名为server.properties
 * 启动Tomcat 首次登录使用admin/opscloud
 * 如果启用了Nginx反向代理Tomcat(opscloud)，需要配置nginx支持websocket（KeyBox）
 ```
