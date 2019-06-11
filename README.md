@@ -4,7 +4,7 @@ Welcome to the opsCloud wiki!
 ![](https://img.shields.io/badge/version-2.0.1-brightgreen.svg)
 ![](https://img.shields.io/badge/java-8-brightgreen.svg)
 <br>
-OpsCloud是云时代的全工具链集成自动化运维平台(DevOps)
+OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 开源协议：<a style="color:#2b669a" href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank">GNU General Public License v2</a>
 
@@ -48,6 +48,7 @@ OpsCloud是云时代的全工具链集成自动化运维平台(DevOps)
   + 支持多集群扫描服务
 + 其他
   + 支持配置文件加密
+  + 支持Markdown格式帮助
 
 ### 开发环境
 + MacOS10.13.5
@@ -63,6 +64,11 @@ OpsCloud是云时代的全工具链集成自动化运维平台(DevOps)
 * Redis3.0.3
 * LDAP(最新版本apacheDS http://directory.apache.org)
 * Ansible2.4
+
+### 安装资源下载
++ version 2.0.1
+  + 安装包(war):<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/version/2.0.1/opscloud-2.0.1-SNAPSHOT.war" target="_blank">opscloud-2.0.1-SNAPSHOT.war</a>
+  + 数据库文件:<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/version/2.0.1/opscloud.sql" target="_blank">opscloud.sql</a>
 
 ### 构建(编译打包)
 ```
@@ -155,17 +161,8 @@ Starting ApacheDS - default...
 > 如果只使用admin账户可以不安装apacheDS，其他账户都会存储在LDAP中，cn=liangjian,ou=users,ou=system
 强烈推荐使用LDAP来存储和管理用户和用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Grafana ...)
 
-
-
-### Tomcat版本问题
+### TOMCAT 版本问题
 推荐使用Tomcat 8.0.36(更高版本会导致权限校验接口访问400错误)
-
-Tomcat8.0.39添加了RFC 3986这个规范。
-RFC 3986文档对Url的编解码问题做出了详细的建议，指出了哪些字符需要被编码才不会引起Url语义的转变，以及对为什么这些字符需要编码做出了相应的解释。
-RFC 3986文档规定，Url中只允许包含英文字母（a-zA-Z）、数字（0-9）、-_.~4个特殊字符以及所有保留字符（! * ' ( ) ; : @ & = + $ , / ? # [ ]）。
-还有一些字符当直接放在Url中的时候，可能会引起解析程序的歧义，这些字符被视为不安全字符。
-空格：Url在传输的过程，或者用户在排版的过程，或者文本处理程序在处理Url的过程，都有可能引入无关紧要的空格，或者将那些有意义的空格给去掉。
-引号以及<>：引号和尖括号通常用于在普通文本中起到分隔Url的作用
 
 
 ### 安装步骤5 部署
