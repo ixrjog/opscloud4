@@ -17,13 +17,13 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 工作流支持用户自动授权
 + 批量运维
   + Jumpserver全自动配置
-  + AnsilbePlaybook支持
+  + Ansilbe-Playbook支持
   + 日志弹性清理
 + Jenkins持续集成
   + 支持参数化构建，参数配置支持YAML格式，克隆参数配置
   + 支持模版注入静态变量（jacoco插件不支持变量）
-  + 按模版生成job,支持从模版更新job（大批量job自动化运维）
-  + 支持ci/cd任务分离(仿Bamboo)
+  + 校验模版Hash生成版本，按模版生成job,支持从模版更新job（大批量job自动化运维）
+  + 支持CI/CD任务分离(仿Bamboo),多批次滚动发布
   + 支持AliyunOSS文件校验
   + 支持在运维的约束下由研发自主配置持续集成应用+任务
   + 支持钉钉任务通知
@@ -44,6 +44,7 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 阿里云RAM子账户管理
   + 阿里云MQ管理（需要购买铂金版，铂金版才支持API）
   + ECS管理
+  + 日志服务同步主机组
 + Kubernetes
   + 支持多集群扫描服务
 + 其他
@@ -193,7 +194,8 @@ $ /etc/init.d/apacheds-2.0.0-M24-default start
 Starting ApacheDS - default...
 ```
 > 如果只使用admin账户可以不安装apacheDS，其他账户都会存储在LDAP中，cn=liangjian,ou=users,ou=system
-强烈推荐使用LDAP来存储和管理用户和用户组，本人在运维实践中各平台都已经接入LDAP(Nexus,Zabbix,Jenkins,Stash,Gitlab,Jira,Grafana ...)
+<a style="color:#2b669a" href="https://github.com/ixrjog/opsCloud/wiki/LDAP(ApacheDS)%E5%85%A8%E5%B9%B3%E5%8F%B0%E6%8E%A5%E5%85%A5%E6%8C%87%E5%8D%97" target="_blank">ApacheDS配置指南</a>
+
 
 ### TOMCAT 版本问题
 推荐使用Tomcat 8.0.36(更高版本会导致权限校验接口访问400错误)
