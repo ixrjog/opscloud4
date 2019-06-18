@@ -42,7 +42,7 @@ public class DubboTest {
         // String servers = getProperties("zk.servers");
 //        String roopath = getProperties("zk.rootpath");
 
-        ZkClient zkClient = new ZkClient("47.99.2.51", 2181);
+        ZkClient zkClient = new ZkClient("47.99.0.1", 2181);
 
 
         zkClient.subscribeChildChanges(path, new IZkChildListener() {
@@ -196,7 +196,7 @@ public class DubboTest {
 
         try {
             System.out.println("启动Telnet...");
-            String ip = "47.99.131.239";
+            String ip = "1.1.1.1";
             int port = 10008;
             String user = "admin";
             String password = "****";

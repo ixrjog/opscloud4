@@ -35,6 +35,10 @@ ldap.user.object=inetorgperson
 ldap.group.object=groupOfUniqueNames
 ldap.group.member=uniqueMember
 
+# LDAP多从服务器配置（同步变更数据，用于3方认证）
+ldap.slave.url=ldap://ldap-2.ops.cn:10389,ldap://ldap-3.ops.cn:10389
+
+
 # 配置文件环境: dev=开发环境，online=线上环境
 invoke.env=online
 

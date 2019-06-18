@@ -25,10 +25,10 @@
                             <table class="table table-hover table-bordered table-striped">
                                 <thead>
                                 <tr>
-                                    <th>Ecs服务器总数</th>
-                                    <th>EcsCpu总核数</th>
-                                    <th>Ecs内存总数</th>
-                                    <th>Ecs带宽总数</th>
+                                    <th>ECS服务器总数</th>
+                                    <th>ECSCpu总核数</th>
+                                    <th>ECS内存总数</th>
+                                    <th>ECS带宽总数</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -93,7 +93,7 @@
                                             ng-disabled="butSyncDisabled">
                                         <i class="fa fa-spin fa-spinner" ng-show="butSyncSpinDisabled"></i>
                                         <i class="glyphicon glyphicon-refresh" ng-show="!butSyncSpinDisabled"></i>
-                                        SyncAliyun
+                                        同步
                                     </button>
 
                                     <button type="button" class="btn btn-success" ng-show="false"
@@ -115,6 +115,7 @@
                                             <thead>
                                             <tr>
                                                 <td>服务器</td>
+                                                <td>instanceId</td>
                                                 <td>IP</td>
                                                 <td>规格</td>
                                                 <td>可用区(ZoneId)</td>
@@ -125,9 +126,11 @@
                                             </thead>
                                             <tbody>
                                             <tr ng-repeat="item in pageData">
-                                                <td>{{item.serverName}}
-
-                                                    <!--<span class="glyphicon glyphicon-cloud-upload" ng-click="ecsRename(item)"></span>-->
+                                                <td>
+                                                    <b style="color:#2b669a">{{item.serverName}}</b>
+                                                </td>
+                                                <td>
+                                                    <b style="color:#2b669a">{{item.instanceId}}</b>
                                                 </td>
                                                 <td>
                                                     <span ng-show="item.publicIp != ''">
@@ -163,7 +166,7 @@
                                                     <span class="label label-default" ng-if="item.status == 3">删除</span>
                                                 </td>
                                                 <td>
-                                                    <span class="label" style="background-color: #00a8f3; color: white;">{{item.creationTime}}</span>
+                                                    {{item.creationTime}}
                                                 </td>
                                                 <td ng-if="contains(authPoint, '/server/ecsSave')">
 
@@ -177,7 +180,8 @@
 
                                                     <button ng-click="setDelEcs(item)"
                                                             class="btn btn-xs"
-                                                            style="margin-left: 5px; background-color: #f89406; color: white;">
+                                                            popover-trigger="'mouseenter'" uib-popover-html="'标记ECS状态为下线，并不删除ECS信息'"
+                                                            style="margin-left: 5px; background-color: #2b669a; color: white;">
                                                         <span class="glyphicon glyphicon-ban-circle"></span>下线
                                                     </button>
 
@@ -186,16 +190,16 @@
                                                             class="btn btn-xs"
                                                             popover-trigger="'mouseenter'"
                                                             uib-popover-html="'推送主机名'"
-                                                            style="background-color: #00a8f3; color: white;">
-                                                        <i class="glyphicon glyphicon-repeat"></i>Name
+                                                            style="background-color: #2b669a; color: white;">
+                                                        <i class="glyphicon glyphicon-repeat"></i>更名
                                                     </button>
 
                                                     <button ng-click="allocateIp(item)" ng-show="item.publicIp == ''"
                                                             class="btn btn-xs"
                                                             popover-trigger="'mouseenter'"
                                                             uib-popover-html="'开通公网IP,需要重启服务器'"
-                                                            style="background-color: #eea236; color: white;">
-                                                        <span class="glyphicon glyphicon-plus"></span>IP
+                                                            style="background-color: #2b669a; color: white;">
+                                                        <span class="glyphicon glyphicon-plus"></span>开通公网
                                                     </button>
 
                                                     <button ng-click="postPaid(item)"
@@ -219,7 +223,7 @@
                                             </tbody>
                                             <tfoot>
                                             <tr>
-                                                <td colspan="7">
+                                                <td colspan="8">
                                                     <ul style="margin: 0px; float: right;" uib-pagination
                                                         total-items="totalItems" ng-model="currentPage"
                                                         items-per-page="pageLength" max-size="10"

@@ -2,17 +2,15 @@ package com.sdg.cmdb.handler;
 
 
 import com.sdg.cmdb.plugin.ldap.LDAPFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 
-
+@Slf4j
 @Service
 public class LdapHandler implements InitializingBean {
-    private static final Logger logger = LoggerFactory.getLogger(LdapHandler.class);
 
     @Resource
     private LDAPFactory ldapFactory;

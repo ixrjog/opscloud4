@@ -2,6 +2,7 @@ package com.sdg.cmdb.service;
 
 
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
+import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 import org.junit.Test;
@@ -40,6 +41,11 @@ public class NginxServiceTest {
     public void test2() {
       String r=  nginxService.getNginxTcpServerConf(EnvType.EnvTypeEnum.test.getCode());
       System.err.println(r);
+    }
+
+    @Test
+    public void test3() {
+        nginxService.scanNginxTcp();
     }
 
 }

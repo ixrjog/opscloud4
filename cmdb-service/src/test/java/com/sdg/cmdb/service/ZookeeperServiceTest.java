@@ -1,6 +1,7 @@
 package com.sdg.cmdb.service;
 
 
+import com.alibaba.fastjson.JSON;
 import com.sdg.cmdb.domain.dubbo.DubboProvider;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -21,9 +22,15 @@ public class ZookeeperServiceTest {
 
     @Test
     public void test() {
-        HashMap<String,DubboProvider> map=  zookeeperService.getProviderMap();
-        for(String key:map.keySet())
-            System.err.println(map.get(key));
+        HashMap<String, DubboProvider> map = zookeeperService.getProviderMap();
+
+        System.err.println(JSON.toJSONString(map.get("172.20.17.215")));
+
+        for (String key : map.keySet()) {
+            //com.ggj.umc.api.BizOpLogApi
+            if (key.equals("172.20.17.215"))
+                System.err.println(map.get(key));
+        }
     }
 
 }

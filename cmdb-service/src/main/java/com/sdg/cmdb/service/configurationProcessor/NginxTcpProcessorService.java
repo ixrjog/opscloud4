@@ -33,7 +33,6 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
     @Value("#{cmdb['dubbo.resolve.path']}")
     private String dubboResolvePath;
 
-
     @Autowired
     private CacheKeyService cacheKeyService;
 
@@ -52,49 +51,47 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
         return cacheKeyService.getKeyByString(key);
     }
 
-
-    public void cleanTcpDubboCache(String clusterKey){
+    public void cleanTcpDubboCache(String clusterKey) {
         cacheKeyService.del(getTcpDubboFileCacheKey(clusterKey));
     }
 
-
+    /**
+     * 取dubbo直连配置
+     * @param clusterKey
+     * @return
+     */
     public String getTcpDubboFile(String clusterKey) {
         String cache = getTcpDubboFileByCache(clusterKey);
         if (!StringUtils.isEmpty(cache)) return cache;
         List<NginxTcpDubboDO> list = nginxDao.queryNginxTcpDubbo(clusterKey);
         HashMap<Integer, List<NginxTcpDubboDO>> map = new HashMap<>();
         for (NginxTcpDubboDO tcpDubboDO : list) {
-            List<NginxTcpDubboDO> dubbos;
+            List<NginxTcpDubboDO> dubboList;
             if (map.containsKey(tcpDubboDO.getServicePort())) {
-                dubbos = map.get(tcpDubboDO.getServicePort());
+                dubboList = map.get(tcpDubboDO.getServicePort());
             } else {
-                dubbos = new ArrayList<>();
+                dubboList = new ArrayList<>();
             }
-            dubbos.add(tcpDubboDO);
-            map.put(tcpDubboDO.getServicePort(), dubbos);
+            dubboList.add(tcpDubboDO);
+            map.put(tcpDubboDO.getServicePort(), dubboList);
         }
-
         String dubboFile = getHeadInfo();
-        // key serviceId
-       // HashMap<Long, ServerGroupDO> groupMap = new HashMap<>();
         for (Integer port : map.keySet()) {
             List<NginxTcpDubboDO> tcpDubboList = map.get(port);
-            dubboFile += getDubbodAPI(tcpDubboList);
+            dubboFile += getDubboAPI(tcpDubboList);
         }
-
         cacheKeyService.set(getTcpDubboFileCacheKey(clusterKey), dubboFile, 30);
         IOUtils.writeFile(dubboFile, dubboResolvePath + "/" + DUBBO_RESOLVE_FILE);
         return dubboFile;
-
     }
 
-
-    private String getDubbodAPI(List<NginxTcpDubboDO> list) {
+    private String getDubboAPI(List<NginxTcpDubboDO> list) {
         ServerGroupDO serverGroupDO = null;
+        KubernetesServiceDO kubernetesServiceDO = null;
         String body = "";
         for (NginxTcpDubboDO nginxTcpDubboDO : list) {
             if (serverGroupDO == null) {
-                KubernetesServiceDO kubernetesServiceDO = kubernetesDao.getServiceById(nginxTcpDubboDO.getKubernetesServiceId());
+                kubernetesServiceDO = kubernetesDao.getServiceById(nginxTcpDubboDO.getKubernetesServiceId());
                 serverGroupDO = serverGroupDao.queryServerGroupById(kubernetesServiceDO.getServerGroupId());
             }
             body += nginxTcpDubboDO.getDubbo() + "=dubbo://" + NginxTcpVO.DomainEnum.test.getDesc() + ":" + nginxTcpDubboDO.getServicePort() + "\n";
@@ -102,6 +99,8 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
         String head = "";
         if (serverGroupDO != null) {
             head = "# " + serverGroupDO.getName() + "\n";
+            if(kubernetesServiceDO != null)
+                head += "# Kubernetes appName : " + kubernetesServiceDO.getAppName() + "\n";
             if (!StringUtils.isEmpty(serverGroupDO.getContent()))
                 head += "# " + serverGroupDO.getContent() + "\n";
             head += "\n";
@@ -109,13 +108,11 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
         return head + body + "\n\n";
     }
 
-
     public String getTcpFile(KubernetesServiceDO kubernetesServiceDO, NginxTcpDO nginxTcpDO) {
         return getTcpFile(kubernetesServiceDO, nginxTcpDO.getEnvType(), nginxTcpDO.getPortName());
     }
 
     public String getTcpFile(KubernetesServiceDO kubernetesServiceDO, int envType, String portName) {
-        //   KubernetesServiceCluster getServerList(long serverGroupId, int env, String portName, int size);
         if (kubernetesServiceDO == null || kubernetesServiceDO.getServerGroupId() == 0) {
             log.error("kubernetesServiceDO = null");
             return "";
@@ -124,9 +121,7 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
         if (serviceCluster == null || serviceCluster.getServerList().size() == 0)
             return "";
         ServerGroupDO serverGroupDO = serverGroupDao.queryServerGroupById(kubernetesServiceDO.getServerGroupId());
-
         String upstreamName = getUpstreamName(kubernetesServiceDO, portName, envType);
-        //String tcpFile = getHeadInfo();
         String tcpFile = "# " + serverGroupDO.getName() + "/" + kubernetesServiceDO.getName() + "\n";
         tcpFile += getTcpUpstream(serviceCluster, upstreamName);
         tcpFile += "\n";
@@ -139,7 +134,6 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
         String upstreamHead = indent + "upstream " + upstreamName + " {\n";
         String tcpUpstream = upstreamHead;
         tcpUpstream += getTcpUpstreamServerList(serviceCluster) + "\n";
-        //tcpUpstream += indent + indent + "check interval=3000 rise=2 fall=5 timeout=1000;\n";
         tcpUpstream += indent + "}\n";
         return tcpUpstream;
     }
@@ -165,6 +159,5 @@ public class NginxTcpProcessorService extends ConfigurationProcessorAbs {
         String envName = EnvType.EnvTypeEnum.getEnvTypeName(envType);
         return "upstream." + envName + '.' + kubernetesServiceDO.getName() + "." + portName;
     }
-
 
 }

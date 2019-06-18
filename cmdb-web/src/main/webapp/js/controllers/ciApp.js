@@ -1,7 +1,6 @@
 'use strict';
 
-
-app.controller('labelCtrl', function ($scope, $rootScope, $uibModal, $state, $sce, toaster, httpService, staticModel) {
+app.controller('labelCtrl', function ($scope, $rootScope, $uibModal, $state, $sce, toaster, httpService) {
         $scope.authPoint = $state.current.data.authPoint;
 
         $scope.labelList = [];
@@ -16,7 +15,7 @@ app.controller('labelCtrl', function ($scope, $rootScope, $uibModal, $state, $sc
                     if (labelName == $scope.labelList[i].labelName) {
                         $scope.labelList[i].active = true;
                         $scope.labelList[i].color = $scope.labelActiveColor;
-                        $rootScope.$emit("callQueryMyCiApp",$scope.labelList[i].id);
+                        $rootScope.$emit("callQueryMyCiApp", $scope.labelList[i].id);
                     } else {
                         $scope.labelList[i].active = false;
                         $scope.labelList[i].color = $scope.labelDefColor;
@@ -339,7 +338,9 @@ app.controller('ciJobCtrl', function ($scope, $rootScope, $uibModal, $state, $sc
                 jobEnvType: -1,
                 deployJobName: "",
                 deployJobTemplate: "",
-                deployJobVersion: 0
+                deployJobVersion: 0,
+                atAll: false,
+                autoBuild: false
             }
             jobModal(jobItem);
         }
@@ -811,6 +812,32 @@ app.controller('ciJobInstanceCtrl', function ($scope, $uibModalInstance, toaster
         if ($scope.jobItem.buildType == -1) {
             $scope.alert.type = 'warning';
             $scope.alert.msg = "构建类型未指定!";
+            return;
+        }
+
+        if ($scope.jobItem.jobTemplate == null || $scope.jobItem.jobTemplate == '') {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "任务模版未指定!";
+            return;
+        }
+
+        if ($scope.jobItem.branch == null || $scope.jobItem.branch == '') {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "分支未指定!";
+            return;
+        }
+
+        // autoBuild
+        if ($scope.jobItem.autoBuild == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "AutoBuild未指定!";
+            return;
+        }
+
+        // autoBuild
+        if ($scope.jobItem.atAll == null) {
+            $scope.alert.type = 'warning';
+            $scope.alert.msg = "任务通知未指定!";
             return;
         }
 

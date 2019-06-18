@@ -6,6 +6,7 @@ import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
 import com.sdg.cmdb.domain.BusinessWrapper;
 import com.sdg.cmdb.domain.ErrorCode;
+import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.keybox.KeyboxUserServerDO;
 import com.sdg.cmdb.domain.server.*;
 import com.sdg.cmdb.domain.TableVO;
@@ -41,6 +42,9 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     private ConfigService configService;
 
     @Resource
+    private ConfigServerGroupService configServerGroupService;
+
+    @Resource
     private KeyBoxService keyBoxService;
 
     @Resource
@@ -57,6 +61,7 @@ public class ServerGroupServiceImpl implements ServerGroupService {
 
     /**
      * 查询服务器组所有的
+     *
      * @param page
      * @param length
      * @param name
@@ -104,6 +109,10 @@ public class ServerGroupServiceImpl implements ServerGroupService {
             groupVO.setKeyboxCnt(keyboxDao.getServerGroupSize(groupDO.getId()));
             ServerGroupUseTypeDO useTypeDO = getUseType(groupDO.getUseType());
             groupVO.setServerGroupUseTypeDO(useTypeDO);
+            //设置标签Label
+            List<ConfigPropertyDO> label = configServerGroupService.getLable(groupDO);
+            if(label != null && label.size() !=0)
+                groupVO.setLabel(label);
             groupVOList.add(groupVO);
         }
         return groupVOList;

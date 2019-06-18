@@ -735,7 +735,8 @@ public class ZabbixServerServiceImpl implements ZabbixServerService, Initializin
     public boolean deleteHost(ServerDO serverDO) {
         if (serverDO == null) return false;
         ZabbixResponseHost host = getHost(serverDO);
-        if (host == null) return true;
+        if (host == null || host.getHostid() == null) return true;
+
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("host.delete").paramEntry("params", new String[]{host.getHostid()}).build();
         try {

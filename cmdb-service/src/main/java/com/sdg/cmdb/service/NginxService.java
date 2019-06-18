@@ -82,7 +82,6 @@ public interface NginxService {
 
     BusinessWrapper<Boolean> scanNginxTcp();
 
-
     NginxTcpVO getNginxTcp(long serverGroupId, int env, String portName);
 
     String getNginxTcpServerConf(int envType);

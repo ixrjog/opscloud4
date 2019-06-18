@@ -1,7 +1,6 @@
 package com.sdg.cmdb.domain.server;
 
 
-
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,7 +9,7 @@ import java.io.Serializable;
 /**
  * Created by liangjian on 2017/6/6.
  */
-@EqualsAndHashCode(callSuper=false)
+@EqualsAndHashCode(callSuper = false)
 @Data
 public class EcsServerVO extends EcsServerDO implements Serializable {
     private static final long serialVersionUID = 5610868520720405528L;
@@ -64,6 +63,8 @@ public class EcsServerVO extends EcsServerDO implements Serializable {
     private EcsPropertyDO vswitchPropertyDO;
 
     private EcsPropertyDO securityGroupPropertyDO;
+
+    private String localName;
 
     private int envType;
 

@@ -67,7 +67,6 @@ public class LdapServiceImpl implements LdapService {
     @Value("#{cmdb['ldap.user.object']}")
     private String userObject;
 
-
     // LDAP 配置 groupOfUniqueNames
     @Value("#{cmdb['ldap.group.object']}")
     private String groupObject;
@@ -133,22 +132,33 @@ public class LdapServiceImpl implements LdapService {
      */
     @Override
     public boolean addLdapGroup(String cn) {
-
         String dn = userId + "=" + cn + "," + getGroupDn();
+        BasicAttribute ocattr = new BasicAttribute("objectClass");
+        ocattr.add("top");
+        ocattr.add(groupObject);
+        // 用户属性
+        Attributes attrs = new BasicAttributes();
+        attrs.put(ocattr);
+        attrs.put(userId, cn);
+        // "uid=admin,ou=system"
+        attrs.put(groupMember, manageDn);
+        // ldapFactory.getLdapTemplateInstance().bind(dn, null, attrs);
+
+        if (!ldapBind(dn, null, attrs, ldapFactory.getLdapTemplateInstance()))
+            return false;
+        // 更新LDAP Slave
+        List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+        for (LdapTemplate ldapSlave : slaveList)
+            ldapBind(dn, null, attrs, ldapSlave);
+        return true;
+    }
+
+    private boolean ldapBind(String dn, Object obj, Attributes attrs, LdapTemplate ldapTemplate) {
         try {
-            BasicAttribute ocattr = new BasicAttribute("objectClass");
-            ocattr.add("top");
-            ocattr.add(groupObject);
-            // 用户属性
-            Attributes attrs = new BasicAttributes();
-            attrs.put(ocattr);
-            attrs.put(userId, cn);
-            // "uid=admin,ou=system"
-            attrs.put(groupMember, manageDn);
-            ldapFactory.getLdapTemplateInstance().bind(dn, null, attrs);
+            ldapTemplate.bind(dn, obj, attrs);
             return true;
-        } catch (Exception ex) {
-            ex.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
             return false;
         }
     }
@@ -163,41 +173,39 @@ public class LdapServiceImpl implements LdapService {
     public BusinessWrapper<Boolean> updateUser(UserVO userVO) {
         if (StringUtils.isEmpty(userVO.getUsername()))
             return new BusinessWrapper<>(ErrorCode.usernameIsNull);
-        // TODO check 非本人必须为管理员
+        // check 非本人必须为管理员
         String username = SessionUtils.getUsername();
         if (!username.equals(userVO.getUsername())) {
             if (!authService.isRole(username, RoleDO.roleAdmin))
                 return new BusinessWrapper<>(false);
         }
-        // TODO 判断密码强度是否符合要求
+        // 判断密码强度是否符合要求
         if (!StringUtils.isEmpty(userVO.getUserpassword())) {
             if (!RegexUtils.checkPassword(userVO.getUserpassword()))
                 return new BusinessWrapper<>(ErrorCode.userpasswordNonConformity);
         }
-        return updateUserBase(userVO,false);
+        return updateUserBase(userVO, false);
     }
 
     /**
-     *
      * @param userVO
      * @param safe   true：不允许修改管理员账户信息
      * @return
      */
     @Override
     public BusinessWrapper<Boolean> updateUserBase(UserVO userVO, boolean safe) {
-        // TODO 插入主键
+        // 插入主键
         if (userVO.getId() <= 0) {
             UserDO userDO = userDao.getUserByName(userVO.getUsername());
             if (userDO == null)
                 return new BusinessWrapper<>(ErrorCode.usernameIsNull);
             userVO.setId(userDO.getId());
         }
-        // TODO 判断管理员
-        if(safe){
-          if(authService.isRole(userVO.getUsername(),RoleDO.roleAdmin))
-              return new BusinessWrapper<>(ErrorCode.userpasswordNonConformity);
+        // 判断管理员
+        if (safe) {
+            if (authService.isRole(userVO.getUsername(), RoleDO.roleAdmin))
+                return new BusinessWrapper<>(ErrorCode.userpasswordNonConformity);
         }
-
         // 判断LDAP是否存在此用户
         UserDO userDO = getUserByName(userVO.getUsername());
         if (userDO != null) {
@@ -208,36 +216,44 @@ public class LdapServiceImpl implements LdapService {
             if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getMobile()))
                 userDO.setMobile(userVO.getMobile());
             userDao.saveUserInfo(userDO);
-            //HashMap<String, String> configMap = acqConfigMap();
-            //String userDN = configMap.get(LdapItemEnum.LDAP_USER_DN.getItemKey());
-            String dn = userId + "=" + userDO.getUsername() + "," + getUserDn();
-            try {
-                LdapTemplate ldapTemplate = ldapFactory.getLdapTemplateInstance();
-                if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getDisplayName()))
-                    ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
-                            new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("displayName", userVO.getDisplayName()))
-                    });
-                if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getMail()))
-                    ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
-                            new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mail", userVO.getMail()))
-                    });
-                if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getMobile()))
-                    ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
-                            new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mobile", userVO.getMobile()))
-                    });
-                if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getUserpassword()))
-                    ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
-                            new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userpassword", userVO.getUserpassword()))
-                    });
-            } catch (Exception e) {
-                e.printStackTrace();
+            // 更新LDAP Master
+            if (!updateUserBase(userVO, ldapFactory.getLdapTemplateInstance()))
                 return new BusinessWrapper<>(false);
-            }
+            // 更新LDAP Slave
+            List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+            for (LdapTemplate ldapSlave : slaveList)
+                updateUserBase(userVO, ldapSlave);
             return new BusinessWrapper<>(true);
         } else {
             return new BusinessWrapper<>(false);
         }
 
+    }
+
+    private boolean updateUserBase(UserVO userVO, LdapTemplate ldapTemplate) {
+        try {
+            String dn = userId + "=" + userVO.getUsername() + "," + getUserDn();
+            if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getDisplayName()))
+                ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
+                        new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("displayName", userVO.getDisplayName()))
+                });
+            if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getMail()))
+                ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
+                        new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mail", userVO.getMail()))
+                });
+            if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getMobile()))
+                ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
+                        new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("mobile", userVO.getMobile()))
+                });
+            if (!org.apache.commons.lang3.StringUtils.isEmpty(userVO.getUserpassword()))
+                ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
+                        new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute("userpassword", userVO.getUserpassword()))
+                });
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
@@ -360,7 +376,6 @@ public class LdapServiceImpl implements LdapService {
 
     @Override
     public boolean delUser(String username) {
-
         try {
             //删除ldap
             LdapTemplate ldapTemplate = ldapFactory.getLdapTemplateInstance();
@@ -372,14 +387,28 @@ public class LdapServiceImpl implements LdapService {
             });
             if (!list.isEmpty()) {
                 String dn = userId + "=" + username + "," + getUserDn();
-                ldapTemplate.unbind(dn);
+                // LDAP Master 解除绑定
+                ldapUnbind(dn, ldapTemplate);
+                List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+                // LDAP Slave 解除绑定
+                for (LdapTemplate ldapSlave : slaveList)
+                    ldapUnbind(dn, ldapSlave);
             }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
+    }
 
+    private boolean ldapUnbind(String dn, LdapTemplate ldapTemplate) {
+        try {
+            ldapTemplate.unbind(dn);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 
@@ -402,8 +431,19 @@ public class LdapServiceImpl implements LdapService {
     public boolean removeMember2Group(String username, String groupName) {
         String groupDn = userId + "=" + groupName + "," + getGroupDn();
         String userDn = userId + "=" + username + "," + getUserDn();
+
+        if (!removeMember2Group(userDn, groupDn, ldapFactory.getLdapTemplateInstance()))
+            return false;
+        // 更新LDAP Slave
+        List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+        for (LdapTemplate ldapSlave : slaveList)
+            removeMember2Group(userDn, groupDn, ldapSlave);
+        return true;
+    }
+
+    private boolean removeMember2Group(String userDn, String groupDn, LdapTemplate ldapTemplate) {
         try {
-            ldapFactory.getLdapTemplateInstance().modifyAttributes(groupDn, new ModificationItem[]{
+            ldapTemplate.modifyAttributes(groupDn, new ModificationItem[]{
                     new ModificationItem(DirContext.REMOVE_ATTRIBUTE, new BasicAttribute(groupMember, userDn))
             });
             return true;
@@ -563,8 +603,19 @@ public class LdapServiceImpl implements LdapService {
     private boolean chgMemberToGroup(String username, String groupName, int type) {
         String groupDn = userId + "=" + groupName + "," + getGroupDn();
         String userDn = userId + "=" + username + "," + getUserDn();
+        LdapTemplate ldapTemplate = ldapFactory.getLdapTemplateInstance();
+        // 更新LDAP Master
+        if (!chgMemberToGroup(groupDn, userDn, type, ldapTemplate))
+            return false;
+        // 更新LDAP Slave
+        List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+        for (LdapTemplate ldapSlave : slaveList)
+            chgMemberToGroup(groupDn, userDn, type, ldapSlave);
+        return true;
+    }
+
+    private boolean chgMemberToGroup(String groupDn, String userDn, int type, LdapTemplate ldapTemplate) {
         try {
-            LdapTemplate ldapTemplate = ldapFactory.getLdapTemplateInstance();
             ldapTemplate.modifyAttributes(groupDn, new ModificationItem[]{
                     new ModificationItem(type, new BasicAttribute(groupMember, userDn))
             });
@@ -574,6 +625,7 @@ public class LdapServiceImpl implements LdapService {
             return false;
         }
     }
+
 
     /**
      * LDAP 删除组内用户的其它写法
@@ -630,7 +682,12 @@ public class LdapServiceImpl implements LdapService {
             });
             if (!list.isEmpty()) {
                 String dn = userId + "=" + ldapGroupDO.getCn() + "," + getGroupDn();
-                ldapTemplate.unbind(dn);
+                // LDAP Master 解除绑定
+                ldapUnbind(dn, ldapTemplate);
+                List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+                // LDAP Slave 解除绑定
+                for (LdapTemplate ldapSlave : slaveList)
+                    ldapUnbind(dn, ldapSlave);
             }
             ldapDao.delLdapGroup(id);
             return new BusinessWrapper<Boolean>(true);
@@ -689,8 +746,13 @@ public class LdapServiceImpl implements LdapService {
                 } else {
                     attrs.put("mobile", userVO.getMobile());
                 }
-                ldapFactory.getLdapTemplateInstance().bind(dn, null, attrs);
-                // return new BusinessWrapper<>(true);
+
+                if (!ldapBind(dn, null, attrs, ldapFactory.getLdapTemplateInstance()))
+                    return false;
+                // 更新LDAP Slave
+                List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+                for (LdapTemplate ldapSlave : slaveList)
+                    ldapBind(dn, null, attrs, ldapSlave);
             } catch (Exception ex) {
                 ex.printStackTrace();
                 return false;
@@ -705,10 +767,14 @@ public class LdapServiceImpl implements LdapService {
         //HashMap<String, String> configMap = acqConfigMap();
         //String userDN = configMap.get(LdapItemEnum.LDAP_USER_DN.getItemKey());
         String dn = "cn=" + username + "," + getUserDn();
+        // LDAP Master 解除绑定
+        ldapUnbind(dn, ldapTemplate);
+        List<LdapTemplate> slaveList = ldapFactory.getLdapTemplateSlaveInstance();
+        // LDAP Slave 解除绑定
+        for (LdapTemplate ldapSlave : slaveList)
+            ldapUnbind(dn, ldapSlave);
         //删除ldap
         try {
-            // 解除绑定的用户
-            ldapTemplate.unbind(dn);
             // 解除绑定的组
             removeMember(username);
             return new BusinessWrapper<>(true);

@@ -98,52 +98,55 @@
                         </div>
                     </div>
 
-                    <div class="form-group artifactDetails"
-                         ng-show="nowArtifact.selected != null">
-                        <div class="col-md-12">
-                            <label class="col-md-2 control-label">构件详情</label>
-                            <div class="col-md-10" style="box-shadow: 0 0 5px #ddd;padding: 10px">
-                                <div style="margin-top: 5px" class="col-md-12"
-                                     ng-repeat="commit in nowArtifact.selected.commitList">
-                                     <span style="background-color: #777777; color: white;"
-                                           uib-popover-html="commit.commit"
-                                           popover-trigger="'mouseenter'"
-                                           class="label"><i class="fa fa-share-alt"></i>{{commit.message}}</span>
-                                </div>
-
-                                <div style="margin-top: 5px" class="col-md-12"
-                                     ng-repeat="param in nowArtifact.selected.jobParams.params">
-                                     <span style="background-color: #286090; color: white;"
-                                           uib-popover-html="'参数名称'"
-                                           popover-trigger="'mouseenter'"
-                                           class="label">
-                                                   <i ng-show="param.name =='branch'" class="fa fa-code-fork"></i>
-                                                   <i ng-show="param.name =='sshUrl'" class="fa fa-git"></i>{{param.name}}</span>
-                                    <b style="color: #20a03f;">{{param.value}}</b>
-                                </div>
-
-                                <div style="margin-top: 5px" class="col-md-12">
-
-                                    <span style="background-color: #c9302c; color: white;"
-                                          ng-show="artifact.ossPath != ''"
-                                          uib-popover-html="'OSS://opscloud'"
-                                          popover-trigger="'mouseenter'"
-                                          class="label"><i class="fa fa-codepen"></i>OSS</span>
-
-                                    <span style="background-color: #ff5f87; color: white;"
-                                          ng-show="artifact.ossPath != ''"
-                                          uib-popover-html="'构件路径'"
-                                          popover-trigger="'mouseenter'"
-                                          class="label">{{nowArtifact.selected.artifactList[0].ossPath}}</span>
-
-                                    <span style="background-color: #737373; color: white;"
-                                          ng-show="artifact.ossPath != ''"
-                                          class="label">{{nowArtifact.selected.artifactList[0].size}}</span>
-
-                                </div>
-                            </div>
-                        </div>
+                    <div class="form-group artifactDetails" ng-show="nowArtifact.selected != null">
+                        <div ng-include="'tpl/modal/ci/include/artifact_details.html'"></div>
                     </div>
+
+                    <!--<div class="form-group artifactDetails" ng-show="nowArtifact.selected != null">-->
+                        <!--<div class="col-md-12">-->
+                            <!--<label class="col-md-2 control-label">构件详情</label>-->
+                            <!--<div class="col-md-10" style="box-shadow: 0 0 5px #ddd;padding: 10px">-->
+                                <!--<div style="margin-top: 5px" class="col-md-12"-->
+                                     <!--ng-repeat="commit in nowArtifact.selected.commitList">-->
+                                     <!--<span style="background-color: #777777; color: white;"-->
+                                           <!--uib-popover-html="commit.commit"-->
+                                           <!--popover-trigger="'mouseenter'"-->
+                                           <!--class="label"><i class="fa fa-share-alt"></i>{{commit.message}}</span>-->
+                                <!--</div>-->
+
+                                <!--<div style="margin-top: 5px" class="col-md-12"-->
+                                     <!--ng-repeat="param in nowArtifact.selected.jobParams.params">-->
+                                     <!--<span style="background-color: #286090; color: white;"-->
+                                           <!--uib-popover-html="'参数名称'"-->
+                                           <!--popover-trigger="'mouseenter'"-->
+                                           <!--class="label">-->
+                                                   <!--<i ng-show="param.name =='branch'" class="fa fa-code-fork"></i>-->
+                                                   <!--<i ng-show="param.name =='sshUrl'" class="fa fa-git"></i>{{param.name}}</span>-->
+                                    <!--<b style="color: #20a03f;">{{param.value}}</b>-->
+                                <!--</div>-->
+
+                                <!--<div style="margin-top: 5px" class="col-md-12">-->
+
+                                    <!--<span style="background-color: #c9302c; color: white;"-->
+                                          <!--ng-show="artifact.ossPath != ''"-->
+                                          <!--uib-popover-html="'OSS://opscloud'"-->
+                                          <!--popover-trigger="'mouseenter'"-->
+                                          <!--class="label"><i class="fa fa-codepen"></i>OSS</span>-->
+
+                                    <!--<span style="background-color: #ff5f87; color: white;"-->
+                                          <!--ng-show="artifact.ossPath != ''"-->
+                                          <!--uib-popover-html="'构件路径'"-->
+                                          <!--popover-trigger="'mouseenter'"-->
+                                          <!--class="label">{{nowArtifact.selected.artifactList[0].ossPath}}</span>-->
+
+                                    <!--<span style="background-color: #737373; color: white;"-->
+                                          <!--ng-show="artifact.ossPath != ''"-->
+                                          <!--class="label">{{nowArtifact.selected.artifactList[0].size}}</span>-->
+
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                    <!--</div>-->
 
                     <div class="form-group">
                         <div style="text-align:center;">
@@ -190,7 +193,7 @@
                     <!--</div>-->
 
                 </uib-tab>
-                <uib-tab index="2" heading="BuildHistory">
+                <uib-tab index="2" heading="部署历史">
 
                     <div style="font-size:1em;">&nbsp;</div>
                     <div class="panel-body">
@@ -210,103 +213,8 @@
                                         <b style="color: #286090" ng-if="item.buildNumber > 0">{{item.buildNumber}}</b>
                                     </td>
                                     <td>
-                                        <div ng-show="item.badgeIcon != ''"><img src="{{item.badgeIcon}}"></div>
-                                        <b style="color: #286090">{{item.displayName}}</b>
-                                        <span class="pull pull-right">
-                                            {{(item.gmtModify == null || item.gmtModify == '') ? item.gmtCreate :
-                                            item.gmtModify}}
-                                        </span>
-                                        <div class="col-md-12" style="margin-top:5px;"
-                                             ng-repeat="param in item.jobParams.params">
-                                               <span style="background-color: #286090; color: white;"
-                                                     uib-popover-html="'参数名称'"
-                                                     popover-trigger="'mouseenter'"
-                                                     class="label">
-                                                   <i ng-show="param.name =='branch'" class="fa fa-code-fork"></i>
-                                                   <i ng-show="param.name =='sshUrl'" class="fa fa-git"></i>{{param.name}}</span>
-                                            <b style="color: #20a03f;">{{param.value}}</b>
-                                        </div>
-                                        <!--margin: 0 auto  ;  height: 100px; margin-top:5px;-->
-                                        <div class="col-md-12" style="margin-top:5px;"
-                                             ng-repeat="commit in item.commitList">
-                                               <span style="background-color: #777777; color: white;"
-                                                     uib-popover-html="'COMMIT'"
-                                                     popover-trigger="'mouseenter'"
-                                                     class="label">
-                                                  {{commit.commit}}</span>
-                                            <span style="background-color: #8278c2; color: white;" class="label">{{commit.message}}</span>
-                                        </div>
-                                        <div class="col-md-12" style="margin-top:5px;"
-                                             ng-repeat="notify in item.notifyList">
-                                            <span style="background-color: #00b3ee; color: white;"
-                                                  uib-popover-html="'阶段'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="col-md-2 label">
-                                                   <i class="fa fa-codepen"></i>{{notify.buildPhase}}</span>
-                                            <span style="background-color: #2a2a2b; color: white;"
-                                                  uib-popover-html="'时间'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="col-md-4 label">
-                                                   <i class="glyphicon glyphicon-time"></i>{{notify.gmtCreate}}</span>
-                                            <span style="background-color: #20a03f; color: white;"
-                                                  ng-if="notify.buildStatus =='SUCCESS'"
-                                                  uib-popover-html="'状态'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="col-md-4 label">
-                                                   <i class="glyphicon glyphicon-ok"></i>{{notify.buildStatus}}</span>
-                                            <span style="background-color: red; color: white;"
-                                                  ng-if="notify.buildStatus != '' && notify.buildStatus !='SUCCESS'"
-                                                  uib-popover-html="'状态'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="col-md-4 label">
-                                                   <i class="glyphicon glyphicon-remove"></i>{{notify.buildStatus}}</span>
-                                            <span style="background-color: #737373; color: white;"
-                                                  ng-show="notify.dingtalk == true"
-                                                  class="label pull-right">
-                                                   <i class="fa fa-bell"></i>Dingtalk消息</span>
-                                        </div>
-
-                                        <div class="col-md-12" style="margin-top:5px;"
-                                             ng-repeat="artifact in item.artifactList">
-                                               <span style="background-color: #c9302c; color: white;"
-                                                     ng-show="artifact.ossPath != ''"
-                                                     uib-popover-html="'OSS://opscloud'"
-                                                     popover-trigger="'mouseenter'"
-                                                     class="label">
-                                                   <i class="fa fa-codepen"></i>OSS</span>
-
-                                            <span style="background-color: #ff5f87; color: white;"
-                                                  ng-show="artifact.ossPath != ''"
-                                                  uib-popover-html="'构件路径'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="label">{{artifact.ossPath}}</span>
-
-                                            <span style="background-color: #737373; color: white;"
-                                                  ng-show="artifact.ossPath != ''"
-                                                  class="label pull-right">{{artifact.size}}</span>
-
-                                            <span style="background-color: #ff8700; color: white;"
-                                                  ng-show="artifact.ossPath == ''"
-                                                  uib-popover-html="'构件'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="label">
-                                                   <i class="fa fa-dropbox"></i>{{artifact.artifactName}}</span>
-                                        </div>
-
-
-                                        <div class="col-md-12" style="margin-top:5px;"
-                                             ng-repeat="server in item.serverList">
-                                            <span style="background-color:#286090; color: white" class="label"
-                                               uib-popover-html="'服务器'"
-                                               popover-trigger="'mouseenter'">
-                                                {{server.serverName}}-{{server.serialNumber}}&nbsp;{{server.insideIp}}</span>
-                                            <span style="background-color: #ff8700; color: white;"
-                                                  uib-popover-html="'构件版本'"
-                                                  popover-trigger="'mouseenter'"
-                                                  class="label"><i class="fa fa-dropbox"></i>{{server.versionName}}</span>
-                                        </div>
-
-
+                                        <!--部署细节-->
+                                        <div ng-include="'tpl/modal/ci/include/deploy_details.html'"></div>
                                     </td>
                                     <td>
                                         <button ng-click="rebuildJob(item.id)"

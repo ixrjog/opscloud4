@@ -111,9 +111,6 @@ public class ConfigServiceImpl implements ConfigService {
     @Value("#{cmdb['invoke.env']}")
     private String invokeEnv;
 
-    @Resource
-    private ConfigCenterService configCenterService;
-
     @Override
     public TableVO<List<ConfigPropertyVO>> getConfigPropertyPage(String proName, long groupId, int page, int length) {
         long size = configDao.getConfigSize(proName, groupId);
@@ -157,6 +154,15 @@ public class ConfigServiceImpl implements ConfigService {
             logger.error(e.getMessage(), e);
             return new BusinessWrapper<>(ErrorCode.serverFailure);
         }
+    }
+
+    @Override
+    public List<ConfigPropertyDO> getConfigProperty(String groupName) {
+        ConfigPropertyGroupDO configPropertyGroupDO = configDao.getConfigGroupByName(groupName);
+        if(configPropertyGroupDO == null)
+            return Collections.EMPTY_LIST;
+        List<ConfigPropertyDO> list = configDao.getConfigPropertyByGroupId(configPropertyGroupDO.getId());
+        return list;
     }
 
     @Override
@@ -243,9 +249,9 @@ public class ConfigServiceImpl implements ConfigService {
     }
 
     @Override
-    public TableVO<List<ServerGroupPropertiesVO>> getGroupPropertyPageByServer(long groupId, long serverId, String queryIp,int page, int length) {
-        long size = configDao.getServerPropertyGroupByServerSize(groupId, serverId,queryIp);
-        List<Long> serverList = configDao.getServerPropertyGroupByServerPage(groupId, serverId,queryIp, page * length, length);
+    public TableVO<List<ServerGroupPropertiesVO>> getGroupPropertyPageByServer(long groupId, long serverId, String queryIp, int page, int length) {
+        long size = configDao.getServerPropertyGroupByServerSize(groupId, serverId, queryIp);
+        List<Long> serverList = configDao.getServerPropertyGroupByServerPage(groupId, serverId, queryIp, page * length, length);
         List<ServerGroupPropertiesVO> propertiesVOList = new ArrayList<>();
         for (long tmpId : serverList) {
             ServerGroupPropertiesDO queryPropertyDO = new ServerGroupPropertiesDO();
@@ -809,9 +815,9 @@ public class ConfigServiceImpl implements ConfigService {
 
     private boolean saveServerGroupProperty(ServerGroupPropertiesDO serverGroupPropertiesDO) {
         try {
-            if(serverGroupPropertiesDO.getId() == 0){
+            if (serverGroupPropertiesDO.getId() == 0) {
                 configDao.addServerPropertyData(serverGroupPropertiesDO);
-            }else{
+            } else {
                 configDao.updateServerGroupProperty(serverGroupPropertiesDO);
             }
             return true;

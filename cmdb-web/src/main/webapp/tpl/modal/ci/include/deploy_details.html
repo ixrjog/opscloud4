@@ -47,39 +47,12 @@
 </div>
 
 <div>
-    <span style="background-color: #777; color: white;" class="col-md-2 label">Jiagu Artifacts</span>
-    <div class="col-md-12" style="margin-top:5px;"
-         ng-repeat="artifact in item.artifactList">
-        <li>
-            <span style="color: #777;"
-                  ng-show="artifact.ossPath != ''"
-                  uib-popover-html="'OSS://opscloud'"
-                  popover-trigger="'mouseenter'"
-                  class="fa fa-codepen">OSS</span>
-            <span ng-show="artifact.badge != ''" uib-popover-html="'制品'"
-                  popover-trigger="'mouseenter'"><img
-                    src="{{artifact.badge}}"></span>
-            <span style="color: #2b669a;"
-                  ng-show="artifact.ossPath == ''"
-                  uib-popover-html="'制品'"
-                  popover-trigger="'mouseenter'"><i class="fa fa-dropbox"></i>{{artifact.artifactName}}</span>
-        </li>
-    </div>
-</div>
-
-<div ng-if="item.serverList.length != 0">
     <span style="background-color: #777; color: white;" class="col-md-2 label">Servers</span>
-    <div class="col-md-12" style="margin-top:5px;"
-         ng-repeat="server in item.serverList">
+    <div class="col-md-12" style="margin-top:5px;" ng-repeat="server in item.serverList">
         <li>
-            <span style="color: #777;"
-                  uib-popover-html="'服务器'"
-                  popover-trigger="'mouseenter'"
-                  class="fa fa-codepen">{{server.serverName}}-{{server.serialNumber}}&nbsp;{{server.insideIp}}</span>
-            <span style="color: #777;"
-                  uib-popover-html="'构件版本'"
-                  popover-trigger="'mouseenter'">{{server.versionName}}</span>
+            <b uib-popover-html="'服务器'" popover-trigger="'mouseenter'">{{server.serverName}}-{{server.serialNumber}}&nbsp;{{server.insideIp}}</b>
+            <span style="background-color: #2ea8e5; color: white;" uib-popover-html="'构件版本'" popover-trigger="'mouseenter'"
+                  class="label"><i class="fa fa-dropbox"></i>{{server.versionName}}</span>
         </li>
     </div>
 </div>
-

@@ -461,6 +461,16 @@ public class NginxServiceImpl implements NginxService {
 
     @Override
     public BusinessWrapper<Boolean> scanNginxTcp() {
+        cleanNginxTcpDubbo();
+        // 重新生成dubbo直连配置
+        scanNginxTcpDubbo();
+        return new BusinessWrapper<Boolean>(true);
+    }
+
+    /**
+     * 清理所有NginxTcpDubbo配置
+     */
+    private void cleanNginxTcpDubbo(){
         String clusterName = KubernetesServiceImpl.DUBBO_CLUSTER + ":" + KubernetesServiceImpl.DUBBO_CLUSTER_NAMESPACE;
         List<NginxTcpDubboDO> list = nginxDao.queryNginxTcpDubbo(clusterName);
         // 删除所有dubbo配置缓存
@@ -469,9 +479,6 @@ public class NginxServiceImpl implements NginxService {
         autoNginxTcp();
         // 清理缓存
         nginxTcpProcessorService.cleanTcpDubboCache(clusterName);
-        // 重新生成dubbo直连配置
-        scanNginxTcpDubbo();
-        return new BusinessWrapper<Boolean>(true);
     }
 
     @Override

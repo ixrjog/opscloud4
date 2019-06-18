@@ -44,6 +44,13 @@ public interface ConfigService {
     BusinessWrapper<Boolean> delConfigProperty(long id);
 
     /**
+     * 查询属性组中的所有属性
+     * @param groupName
+     * @return
+     */
+    List<ConfigPropertyDO> getConfigProperty(String groupName);
+
+    /**
      * 获取合适条件分页属性组数据
      *
      * @param groupName
@@ -320,20 +327,11 @@ public interface ConfigService {
     void invokeConfig(long configPropertyGroupId, long serverGroupId, boolean isAddConfig);
 
     /**
-     * 保存Getway主机配置文件
-     *
-     * @param file
-     * @return
-     */
-    // boolean saveGetwayHostFileConfigFile(String file);
-
-    /**
      * 获取ansible所有主机列表文件
      *
      * @return
      */
     String getAnsibleHostsAllPath();
-
 
     BusinessWrapper<Boolean> saveFilePlaybook(ConfigFilePlaybookDO configFilePlaybookDO);
 

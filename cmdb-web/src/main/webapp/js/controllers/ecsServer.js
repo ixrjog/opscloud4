@@ -164,7 +164,6 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
         $scope.doQuery();
     };
 
-
     $scope.doQuery = function () {
         var url = "/server/ecsPage?"
             + "&serverName=" + $scope.queryName
@@ -204,15 +203,15 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
             if (item.networkTypePropertyDO != null && item.networkTypePropertyDO.propertyValue != null) {
                 network = "网络类型:  " + item.networkTypePropertyDO.propertyValue + "<br/>";
                 if (item.networkTypePropertyDO.propertyValue == 'vpc') {
-                    network += ">VPC:  " + item.vpcPropertyDO.propertyValue + "<br/>";
-                    network += ">VSW:  " + item.vswitchPropertyDO.propertyValue + "<br/>";
+                    network += "vpcId:  " + item.vpcPropertyDO.propertyValue + "<br/>";
+                    network += "swId:  " + item.vswitchPropertyDO.propertyValue + "<br/>";
                 }
             }
             if (item.securityGroupPropertyDO != null) {
                 network += "安全组:  " + item.securityGroupPropertyDO.propertyValue + "<br/>";
             }
             if (item.imagePropertyDO != null) {
-                network += "镜像:  " + item.imagePropertyDO.propertyValue + "<br/>";
+                network += "镜像名称:  " + item.imagePropertyDO.propertyValue + "<br/>";
             }
 
             var memory = item.memory / 1024;
@@ -241,7 +240,7 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
                 default:
             }
 
-            disk += "数据盘:" + item.dataDiskSize + "GB";
+            disk += "<br/>数据盘:" + item.dataDiskSize + "GB";
             switch (item.dataDiskCategory) {
                 case 'cloud':
                     disk += "(普通云盘)<br/>";
@@ -260,9 +259,11 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
             }
 
             item.info = $sce.trustAsHtml(
-                "CPU:  " + item.cpu + "核<br/>"
-                + "内存:   " + memory
-                + "带宽:    " + item.internetMaxBandwidthOut + "Mbps<br/>"
+                '<b style="color: #286090">ECS</b>(' +item.instanceId+')'
+                + '<div style="margin-top:5px;width: 100%; height: 1px; border: 0.5px solid #eee;"></div>'
+                + "CPU: " + item.cpu + "核<br/>"
+                + "内存: " + memory
+                + "带宽: " + item.internetMaxBandwidthOut + "Mbps<br/>"
                 + ioOptimized
                 + network
                 + disk
@@ -273,11 +274,6 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
     ///////////////////////////////////////////////////////////
 
     $scope.addServer = function (item) {
-
-        //$scope.queryInternalIPGroup();
-
-        //$scope.queryPublicIPGroup();
-
         var serverItem = {
             id: 0,
             serverGroupDO: "",
@@ -293,7 +289,6 @@ app.controller('ecsServerCtrl', function ($scope, $state, $uibModal, $sce, httpS
             ciGroup: "",
             content: ""
         }
-
         saveItem(serverItem, item);
     }
 

@@ -163,7 +163,7 @@
 
                         <div class="form-group">
                             <div class="col-md-8">
-                                <label class="col-md-3 control-label">RAM角色</label>
+                                <label class="col-md-3 control-label">RAM授权策略</label>
                                 <div class="col-md-9" style="box-shadow: 0 0 5px #ddd;padding: 10px">
                                     <div class="col-md-12" ng-repeat="policy in userDetail.policyList">
                                         <b class="pull-left" style="color: #286090">{{policy.policyName}}</b>
@@ -190,7 +190,7 @@
 
                         <div class="form-group" ng-if="userDetail.ciAppList != null && userDetail.ciAppList.length !=0">
                             <div class="col-md-8">
-                                <label class="col-md-3 control-label">持续集成项目</label>
+                                <label class="col-md-3 control-label">持续集成应用</label>
                                 <div class="col-md-9" style="box-shadow: 0 0 5px #ddd;padding: 10px">
                                     <div class="col-md-12" ng-repeat="ciApp in userDetail.ciAppList">
                                         <embed ng-if="ciApp.appType == 0" class="pull-left" style="margin-top:2px;"

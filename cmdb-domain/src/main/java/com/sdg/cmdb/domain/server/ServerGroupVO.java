@@ -1,6 +1,7 @@
 package com.sdg.cmdb.domain.server;
 
 import com.alibaba.fastjson.JSON;
+import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.config.ConfigPropertyGroupDO;
 import lombok.Data;
 
@@ -39,6 +40,8 @@ public class ServerGroupVO implements Serializable {
     private List<String> users;
 
     private List<ConfigPropertyGroupDO> groupDOList;
+
+    private List<ConfigPropertyDO> label;
 
     public ServerGroupVO() {
     }

@@ -73,16 +73,6 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CiService ciService;
 
-    @Resource
-    private LDAPFactory ldapFactory;
-
-    private LdapTemplate acqLdapTemplate(String ldapType) {
-
-        if (ldapType.equalsIgnoreCase(LdapDO.LdapTypeEnum.cmdb.getDesc()))
-            return ldapFactory.buildLdapTemplate();
-        return null;
-    }
-
     @Override
     public TableVO<List<UserDO>> getUserPage(String username, int page, int length) {
         long size = userDao.getUserSize(username);
@@ -102,7 +92,6 @@ public class UserServiceImpl implements UserService {
         }
         return new TableVO<>(size, listVO);
     }
-
 
     @Override
     public TableVO<List<UserVO>> getCmdbUserPage(String username, int page, int length) {
@@ -216,12 +205,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDO getUserDOByName(String username) {
-        LdapTemplate ldapTemplate = acqLdapTemplate(LdapDO.LdapTypeEnum.cmdb.getDesc());
-
-        String dn = "cn=" + username + ",ou=users,ou=system";
         try {
-            DirContextAdapter adapter = (DirContextAdapter) ldapTemplate.lookup(dn);
-            if (adapter == null) {
+            UserDO userDO = ldapService.getUserByName(username);
+            if (userDO == null) {
                 userDao.delUser(username);
                 return null;
             }

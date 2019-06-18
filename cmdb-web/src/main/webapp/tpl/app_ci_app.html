@@ -188,8 +188,8 @@
                                                 <tbody>
                                                 <tr ng-repeat="ciJob in ciJobList">
                                                     <td>
-                                                        <b style="color: #286090"
-                                                           class="pull-left">{{ciJob.jobName}}</b>
+                                                        <b style="color: #286090" class="pull-left"
+                                                           uib-popover-html="ciJob.content" popover-trigger="'mouseenter'">{{ciJob.jobName}}</b>
                                                     <td>
                                                         <div class="col-md-1" ng-repeat="bd in ciJob.buildDetails">
                                                                 <span class="badge"

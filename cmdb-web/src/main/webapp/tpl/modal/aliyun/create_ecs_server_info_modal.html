@@ -9,7 +9,6 @@
             <tr>
                 <td>区域ID</td>
                 <td>名称</td>
-                <!--<td>instance类型</td>-->
                 <td>网络类型</td>
                 <td>cpu</td>
                 <td>memory</td>
@@ -23,7 +22,6 @@
             <tr>
                 <td>{{template.zoneId}}</td>
                 <td>{{template.name}}</td>
-                <!--<td>{{template.instanceType}}</td>-->
                 <td>
                     <b style="color: #449d44" ng-if="template.networkSupport == 0">经典</b>
                     <b style="color: #286090" ng-if="template.networkSupport == 1">全部</b>
@@ -34,7 +32,6 @@
                     <span ng-if="template.memory < 8">{{template.memory}}GB</span>
                     <b style="color: #449d44" ng-if="template.memory >= 8">{{template.memory}}GB</b>
                 </td>
-                <!--<td>{{template.dataDiskSize}}</td>-->
                 <td>
                     <b style="color: #449d44" ng-if="template.ioOptimized == 'optimized'">是</b>
                     <span ng-if="template.ioOptimized == 'none'">否</span>
@@ -81,6 +78,20 @@
                 </div>
             </div>
         </div>
+
+        <div class="form-group" ng-show="nowServerGroup.selected != null && nowServerGroup.selected.label.size != 0">
+            <div class="col-md-12">
+                <label class="col-md-2 control-label">LABEL</label>
+                <div class="col-md-10" style="box-shadow: 0 0 5px #ddd;padding: 10px">
+                    <div class="col-md-6" ng-repeat="label in nowServerGroup.selected.label">
+                         <span class="label" style="color: white; background-color: #00a8f3 ;"
+                               uib-popover-html="label.proDesc" popover-trigger="'mouseenter'">{{label.proName}}</span>
+                        <span class="label" style="color: white; background-color: #20a03f ;">{{label.proValue}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <div class="col-md-6">
                 <label class="col-lg-4 control-label"><span style="color: #ec2121;">*</span>登录类型</label>
@@ -210,7 +221,6 @@
                 </div>
             </div>
 
-
             <div class="col-md-6" ng-show="templateItem.chargeType == 'PrePaid'">
                 <label class="col-lg-4 control-label">包月时长</label>
                 <div class="col-lg-8">
@@ -265,7 +275,7 @@
             <div class="col-md-6" style="margin-top:5px;"
                  ng-show="nowVswitch.selected != null && nowVswitch.selected.vSwitch != null">
                 <span class="label" style="color: white; background-color: #00a8f3 ;">
-                    网段:{{nowVswitch.selected.vSwitch.cidrBlock}}/可用IP:{{nowVswitch.selected.vSwitch.availableIpAddressCount}}
+                    网段:{{nowVswitch.selected.vSwitch.cidrBlock}}(可用IP:{{nowVswitch.selected.vSwitch.availableIpAddressCount}})
                 </span>
             </div>
 

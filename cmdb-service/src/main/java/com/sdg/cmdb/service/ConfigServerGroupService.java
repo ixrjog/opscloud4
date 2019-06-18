@@ -1,5 +1,6 @@
 package com.sdg.cmdb.service;
 
+import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
 
@@ -10,6 +11,8 @@ import java.util.List;
  */
 public interface ConfigServerGroupService {
 
+
+    List<ConfigPropertyDO> getLable(ServerGroupDO serverGroupDO);
 
     /**
      * 查询服务器组属性-项目名称

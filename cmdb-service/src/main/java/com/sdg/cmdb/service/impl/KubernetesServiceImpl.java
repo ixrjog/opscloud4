@@ -256,6 +256,10 @@ public class KubernetesServiceImpl implements KubernetesService, InitializingBea
         return new BusinessWrapper<Boolean>(true);
     }
 
+    /**
+     * 同步集群中所有服务
+     * @param clusterName
+     */
     public void syncCluster(String clusterName) {
         KubernetesClusterDO kubernetesClusterDO = kubernetesDao.getClusterByName(clusterName);
         NamespaceList namespaceList = getNamespaceList(clusterName);
@@ -267,15 +271,22 @@ public class KubernetesServiceImpl implements KubernetesService, InitializingBea
         }
     }
 
+    /**
+     * 同步服务
+     * @param clusterName
+     * @param kubernetesNamespaceDO
+     */
     public void syncService(String clusterName, KubernetesNamespaceDO kubernetesNamespaceDO) {
         ServiceList serviceList = getServiceList(clusterName);
         for (io.fabric8.kubernetes.api.model.Service service : serviceList.getItems()) {
+            // 过滤 namespace
             if (!service.getMetadata().getNamespace().equals(kubernetesNamespaceDO.getNamespace())) continue;
             KubernetesServiceDO kubernetesServiceDO = new KubernetesServiceDO(kubernetesNamespaceDO.getId(), service);
             KubernetesServiceDO check = kubernetesDao.getService(kubernetesServiceDO);
-            if(check != null) continue;
-            invokeServerGroup(kubernetesServiceDO); // 绑定服务器组
-            kubernetesServiceDO = saveService(kubernetesServiceDO);
+            if (check == null) {
+                invokeServerGroup(kubernetesServiceDO); // 绑定服务器组
+                kubernetesServiceDO = saveService(kubernetesServiceDO);
+            }
             saveServicePort(kubernetesServiceDO, service);
         }
     }
@@ -415,38 +426,39 @@ public class KubernetesServiceImpl implements KubernetesService, InitializingBea
 
     @Override
     public KubernetesServiceVO getService(String dubbo, String cluster, String namespace) {
-        HashMap<String, String> map = getPodMap(cluster, namespace);
+        HashMap<String, List<String>> map = getPodMap(cluster, namespace);
         return getService(dubbo, map);
     }
 
-    private KubernetesServiceVO getService(String dubbo, HashMap<String, String> podMap) {
+    private KubernetesServiceVO getService(String dubbo, HashMap<String, List<String>> podMap) {
         List<DubboProvider> providers = zookeeperService.queryProviders(dubbo);
         for (DubboProvider provider : providers) {
             if (podMap.containsKey(provider.getIp())) {
-                String containerName = podMap.get(provider.getIp());
-                KubernetesServiceDO kubernetesServiceDO = kubernetesDao.getServiceByAppName(containerName);
-                KubernetesServiceVO kubernetesServiceVO = kubernetesDao.queryServiceByPort(kubernetesServiceDO.getNamespaceId(), kubernetesServiceDO.getServerGroupId(), "dubbo");
-                if (kubernetesServiceVO.getNodePort() == 0) continue;
-                kubernetesServiceVO.setPodIp(provider.getIp());
-                return kubernetesServiceVO;
+                List<String> containerListName = podMap.get(provider.getIp());
+                for (String containerName : containerListName) {
+                    KubernetesServiceDO kubernetesServiceDO = kubernetesDao.getServiceByAppName(containerName);
+                    if (kubernetesServiceDO == null) continue;
+                    KubernetesServiceVO kubernetesServiceVO = kubernetesDao.queryServiceByPort(kubernetesServiceDO.getNamespaceId(), kubernetesServiceDO.getServerGroupId(), "dubbo");
+                    if (kubernetesServiceVO.getNodePort() == 0) continue;
+                    kubernetesServiceVO.setPodIp(provider.getIp());
+                    return kubernetesServiceVO;
+                }
             }
         }
         return null;
     }
 
-
     @Override
     public void syncDubbo() {
         String clusterKey = DUBBO_CLUSTER + ":" + DUBBO_CLUSTER_NAMESPACE;
         List<String> dubboList = zookeeperService.getDubboInfo(ZookeeperServiceImpl.DUBBO);
-        HashMap<String, String> map = getPodMap(DUBBO_CLUSTER, DUBBO_CLUSTER_NAMESPACE);
+        HashMap<String, List<String>> map = getPodMap(DUBBO_CLUSTER, DUBBO_CLUSTER_NAMESPACE);
         for (String dubbo : dubboList) {
             try {
                 NginxTcpDubboDO nginxTcpDubboDO = nginxDao.getNginxTcpDubboByKey(clusterKey, dubbo);
                 if (nginxTcpDubboDO != null) continue; // 已录入则跳过
                 KubernetesServiceVO kubernetesServiceVO = getService(dubbo, map);
                 if (kubernetesServiceVO == null) continue; // 服务不存在
-
                 nginxTcpDubboDO = new NginxTcpDubboDO(clusterKey, kubernetesServiceVO, dubbo);
                 nginxDao.addNginxTcpDubbo(nginxTcpDubboDO);
             } catch (Exception e) {
@@ -455,21 +467,23 @@ public class KubernetesServiceImpl implements KubernetesService, InitializingBea
         }
     }
 
-
     /**
      * @param cluster
      * @param namespace
      * @return Map< podIp,容器名:containerName></>
      */
-    private HashMap<String, String> getPodMap(String cluster, String namespace) {
+    private HashMap<String, List<String>> getPodMap(String cluster, String namespace) {
         PodList list = listPods(cluster);
-        HashMap<String, String> map = new HashMap<>();
+        HashMap<String, List<String>> map = new HashMap<>();
         for (Pod p : list.getItems()) {
             if (!p.getMetadata().getNamespace().equals(namespace)) continue;
             List<Container> containers = p.getSpec().getContainers();
             // 遍历 Pod中的容器
-            for (Container c : containers)
-                map.put(p.getStatus().getPodIP(), c.getName());
+            List<String> containerNameList = new ArrayList<>();
+            for (Container c : containers) {
+                containerNameList.add(c.getName());
+            }
+            map.put(p.getStatus().getPodIP(), containerNameList);
         }
         return map;
     }
@@ -510,6 +524,7 @@ public class KubernetesServiceImpl implements KubernetesService, InitializingBea
 
     /**
      * 往服务器组属性写入标签
+     *
      * @param map
      */
     private void invokeKubernetsLabel(HashMap<String, String> map) {
@@ -518,8 +533,6 @@ public class KubernetesServiceImpl implements KubernetesService, InitializingBea
             if (serverDO == null) continue;
             configService.saveConfigServerValue(serverDO, ConfigServerGroupServiceImpl.KUBERNETES_LABEL, map.get(ip));
         }
-
-
     }
 
 }

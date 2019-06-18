@@ -4,6 +4,7 @@ import com.sdg.cmdb.dao.cmdb.ConfigDao;
 import com.sdg.cmdb.dao.cmdb.ServerDao;
 import com.sdg.cmdb.dao.cmdb.ServerGroupDao;
 import com.sdg.cmdb.dao.cmdb.UserDao;
+import com.sdg.cmdb.domain.config.ConfigPropertyDO;
 import com.sdg.cmdb.domain.server.EnvType;
 import com.sdg.cmdb.domain.server.ServerDO;
 import com.sdg.cmdb.domain.server.ServerGroupDO;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -80,7 +83,6 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     public static final String nginx_locaton_indent = "    ";
 
-
     public static final String ZABBIX_TEMPLATES = "ZABBIX_TEMPLATES";
 
     public static final String ZABBIX_PROXY = "ZABBIX_PROXY";
@@ -100,7 +102,9 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     // 日志服务
     public static final String LOGSERVICE_SERVERGROUP_TOPIC = "LOGSERVICE_SERVERGROUP_TOPIC";
 
-    public static final String  KUBERNETES_LABEL ="KUBERNETES_LABEL";
+    public static final String KUBERNETES_LABEL = "KUBERNETES_LABEL";
+
+    public static final String GROUP_LABEL = "Label";
 
     @Resource
     protected ServerDao serverDao;
@@ -109,13 +113,26 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     protected ServerGroupDao serverGroupDao;
 
     @Resource
-    protected ConfigDao configDao;
-
-    @Resource
     protected UserDao userDao;
 
     @Resource
     protected ConfigService configService;
+
+    @Override
+    public List<ConfigPropertyDO> getLable(ServerGroupDO serverGroupDO) {
+        List<ConfigPropertyDO> configPropertyList = configService.getConfigProperty(GROUP_LABEL);
+
+        List<ConfigPropertyDO> list = new ArrayList<>();
+        // filterEmpty
+        for(ConfigPropertyDO configPropertyDO:configPropertyList){
+            String value = configService.acqConfigByServerGroupAndKey(serverGroupDO, configPropertyDO.getProName());
+            if(!StringUtils.isEmpty(value)){
+                configPropertyDO.setProValue(value);
+                list.add(configPropertyDO);
+            }
+        }
+        return list;
+    }
 
     @Override
     public String queryProjectName(ServerGroupDO serverGroupDO) {
@@ -424,7 +441,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
 
     @Override
     public String queryGatewayAdminAppName(ServerGroupDO serverGroupDO) {
-        return  configService.acqConfigByServerGroupAndKey(serverGroupDO, GETWAYADMIN_APP_NAME);
+        return configService.acqConfigByServerGroupAndKey(serverGroupDO, GETWAYADMIN_APP_NAME);
 
     }
 
@@ -460,7 +477,7 @@ public class ConfigServerGroupServiceImpl implements ConfigServerGroupService {
     @Override
     public String queryLogServiceTopic(ServerGroupDO serverGroupDO) {
         String result = configService.acqConfigByServerGroupAndKey(serverGroupDO, LOGSERVICE_SERVERGROUP_TOPIC);
-        if(!StringUtils.isEmpty(result))
+        if (!StringUtils.isEmpty(result))
             return result;
         return serverGroupDO.getName();
     }

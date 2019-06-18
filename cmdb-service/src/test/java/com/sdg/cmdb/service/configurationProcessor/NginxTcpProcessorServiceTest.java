@@ -40,7 +40,6 @@ public class NginxTcpProcessorServiceTest {
 
     @Test
     public void testDubboConfig() {
-
         String r = nginxTcpProcessorService.getTcpDubboFile("k8s-test:test");
         System.err.println(r);
     }
