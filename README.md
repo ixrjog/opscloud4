@@ -11,25 +11,21 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 ### 开发者
 * 白衣（liangjian）
 
-### 公司招聘（杭州-城西，简历发邮箱ixrjog#qq.com）
+### 自动化运维规模/效率
++ ECS/EC2 1700实例
++ 配置文件生成（nginx,ansible） 秒级
++ 阿里云ECS数据同步 分钟级
++ K8S数据同步 分钟级
++ JMS全量同步/校验 分钟级
 
-#### 岗位职责
-
-+ 负责公司云上业务的运维安全保障工作，持续保障公司业务没有安全隐患，并形成定期业务安全报告。
-+ 根据公司安全现状，自主制定安全工作计划，包含但不限于系统级安全加固、阿里云安全策略的配置和维护、云盾产品的运营管理、安全记录追溯等。
-+ 参与公司运维体系的建设，包含但不限于稳定性、运维效率、资源成本、容量压测、链路优化。
-
-#### 岗位要求
-+ 3年以上运维安全工作经验。
-+ 精通阿里云安全产品的使用和配置。
-+ 熟悉网络安全技术，端口、服务漏洞检测、入侵和攻击分析追踪、网站渗透、病毒木马防范等。
-+ 精通linux，熟练掌握shell和python，具备运维开发能力。
 
 ### 开发版
 + 阿里云SLB管理 （已完成）
-+ 阿里云DDoS管理，支持用户关闭CC防护（PTS压测），1小时后自动开启CC防护 （已完成）
++ 阿里云DDoS管理（BGP），支持用户关闭CC防护（PTS压测），1小时后自动开启CC防护 （已完成）
 + 阿里云VPC优化 （已完成）
-+ 服务器管理增加AWS-EC2,腾讯云-CVM可通过API自动同步数据 （开发中）
++ 主流云厂商支持
+  + AWS-EC2
+  + 腾讯云-CVM
 
 
 ### 最新版本说明 2.0.2
@@ -43,15 +39,22 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + LDAP用户/用户组管理
   + 工作流支持用户自动授权
 + 批量运维
-  + Jumpserver全自动配置
+  + Jumpserver
+    + 服务器变更自动推送JMS
+    + 用户在工作流申请服务器组权限，JMS自动授权(包括创建用户)
+    + OC保存公钥自动推送JMS
+    + JMS配置页面，在线会话查看
+    + 校验数据（离职，下线资产）
   + Ansilbe-Playbook支持
   + 日志弹性清理
+    + 从Zabbix获取磁盘使用率
+    + 阈值80%自动运行脚本清理磁盘（会传递日期参数）
 + Jenkins持续集成
   + 支持参数化构建，参数配置支持YAML格式，克隆参数配置
   + 支持模版注入静态变量（jacoco插件不支持变量）
   + 校验模版Hash生成版本，按模版生成job,支持从模版更新job（大批量job自动化运维）
   + 支持CI/CD任务分离(仿Bamboo),多批次滚动发布
-  + 支持AliyunOSS文件校验
+  + 支持制品上传阿里云OSS并校验(OSSAPI)
   + 支持在运维的约束下由研发自主配置持续集成应用+任务
   + 支持钉钉任务通知
   + 应用权限封装
@@ -62,8 +65,9 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 支持push代码触发持续集成任务
   + 持续集成中可选项目/分支
 + Zabbix管理
-  + 用户授权绑定服务器组
-  + 支持Zabbix自动化运维
+  + 大量使用Zabbix-API(4.0),自动创建用户，用户群组，主机，主机群组，action
+  + 工作流申请服务器组权限，自动创建用户并建立用户和主机组的精确绑定关系
+  
 + Nginx配置管理优化
   + 自动化配置location,upstream
   + 自动同步配置，并重启服务
@@ -71,6 +75,8 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 阿里云RAM子账户管理
   + 阿里云MQ管理（需要购买铂金版，铂金版才支持API）
   + ECS管理
+    + 自定义ECS模版
+    + OC直接创建ECS，批量续费
   + 日志服务同步主机组
 + Kubernetes
   + 支持多集群扫描服务
@@ -128,6 +134,8 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 * Ansible2.4
 
 ### 安装资源下载
++ Tomcat8.0.36
+  + <a style="color:#2b669a" href="https://archive.apache.org/dist/tomcat/tomcat-8/v8.0.36/bin/apache-tomcat-8.0.36.zip" target="_blank">apache-tomcat-8.0.36.zip</a>
 + version 2.0.1
   + 安装包(war):<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/version/2.0.1/opscloud-2.0.1-SNAPSHOT.war" target="_blank">opscloud-2.0.1-SNAPSHOT.war</a>
   + 数据库文件:<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/version/2.0.1/opscloud.sql" target="_blank">opscloud.sql</a>
