@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.OcServerMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.OcServer">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId" />
+    <result column="login_type" jdbcType="INTEGER" property="loginType" />
+    <result column="login_user" jdbcType="VARCHAR" property="loginUser" />
+    <result column="env_type" jdbcType="INTEGER" property="envType" />
+    <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
+    <result column="private_ip" jdbcType="VARCHAR" property="privateIp" />
+    <result column="server_type" jdbcType="INTEGER" property="serverType" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="serial_number" jdbcType="INTEGER" property="serialNumber" />
+    <result column="monitor_status" jdbcType="INTEGER" property="monitorStatus" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+</mapper>

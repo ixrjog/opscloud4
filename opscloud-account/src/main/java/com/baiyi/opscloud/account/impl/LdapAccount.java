@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.account.impl;
 
+
 import com.baiyi.opscloud.account.Account;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
 import com.baiyi.opscloud.common.util.PasswordUtils;
@@ -20,7 +21,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component("LdapAccount")
-public class LdapAccount extends Account {
+public class LdapAccount extends BaseAccount implements Account {
 
     @Resource
     private StringEncryptor stringEncryptor;
@@ -68,6 +69,11 @@ public class LdapAccount extends Account {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public  Boolean active(OcUser user, boolean active){
+        return Boolean.TRUE;
     }
 
     @Override

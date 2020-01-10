@@ -14,34 +14,34 @@ public class ZabbixAccountTest  extends BaseUnit {
 
     private static final String key = "ZabbixAccount";
 
+    private Account getAccount(){
+        return  AccountFactory.getAccountByKey(key);
+    }
+
     @Test
     void testRsync() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.sync();
+        getAccount().sync();
     }
 
     @Test
     void testCreateUser() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.create(getOcUser());
+        getAccount().create(getOcUser());
     }
 
     @Test
     void testDeleteUser() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.delete(getOcUser());
+        getAccount().delete(getOcUser());
     }
 
     @Test
     void testUpdateUser() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.update(getOcUser());
+        getAccount().update(getOcUser());
     }
 
     private OcUser getOcUser() {
         OcUser user = new OcUser();
         user.setUsername("oc3-test");
-        user.setDisplayName("oc3测试用户2");
+        user.setDisplayName("oc3测试用户3");
         user.setEmail("oc3-test2@gegejia.com");
         user.setPhone("13456768043");
         return user;

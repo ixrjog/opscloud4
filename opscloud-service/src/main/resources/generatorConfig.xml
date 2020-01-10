@@ -93,7 +93,9 @@
 <!--        oc_user-->
 <!--        oc_server_group_permission-->
 <!--        oc_cloudserver-->
-        <table tableName="oc_cloudserver">
+<!--        oc_server-->
+<!--        oc_env-->
+        <table tableName="oc_env">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

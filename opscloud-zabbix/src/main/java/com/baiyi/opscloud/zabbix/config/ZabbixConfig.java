@@ -22,13 +22,14 @@ import java.net.URISyntaxException;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "zabbix",ignoreInvalidFields = true)
+@ConfigurationProperties(prefix = "zabbix", ignoreInvalidFields = true)
 public class ZabbixConfig {
 
     private String version = "4.0";
     private String url;
     private String user;
     private String password;
+    private String zone;
 
     public ZabbixRequest buildLoginRequest() {
         return ZabbixRequestBuilder.newBuilder()

@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.zabbix.server.impl;
 
+import com.baiyi.opscloud.zabbix.builder.ZabbixHostgroupBO;
+import com.baiyi.opscloud.zabbix.builder.ZabbixHostgroupBuilder;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostgroup;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHandler;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
@@ -35,10 +37,10 @@ public class ZabbixHostgroupServerImpl implements ZabbixHostgroupServer {
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
-            zabbixHostgroup = new ZabbixHostgroup();
-            zabbixHostgroup.setGroupid(new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("groupids")).get(0));
-            zabbixHostgroup.setName(hostgroup);
-            return zabbixHostgroup;
+            return ZabbixHostgroupBuilder.buildOcCloudserver(ZabbixHostgroupBO.builder()
+                    .groupid(new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("groupids")).get(0))
+                    .name(hostgroup)
+                    .build());
         } catch (Exception e) {
             e.printStackTrace();
         }

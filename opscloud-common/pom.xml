@@ -11,5 +11,11 @@
 
     <artifactId>opscloud-common</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-domain</artifactId>
+        </dependency>
+    </dependencies>
 
 </project>

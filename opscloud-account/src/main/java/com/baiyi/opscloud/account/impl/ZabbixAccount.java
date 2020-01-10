@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component("ZabbixAccount")
-public class ZabbixAccount extends Account {
+public class ZabbixAccount extends BaseAccount implements Account {
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
     public static final String ZABBIX_DEFAULT_HOSTGROUP = "group_default";
@@ -126,5 +126,9 @@ public class ZabbixAccount extends Account {
         return update(user);
     }
 
+    @Override
+    public  Boolean active(OcUser user, boolean active){
+        return Boolean.TRUE;
+    }
 
 }

@@ -15,22 +15,23 @@ public class LdapAccountTest extends BaseUnit {
 
     private static final String key = "LdapAccount";
 
+    private Account getAccount(){
+        return  AccountFactory.getAccountByKey(key);
+    }
+
     @Test
     void testRsync() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.sync();
+        getAccount().sync();
     }
 
     @Test
     void testCreateUser() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.create(getOcUser());
+        getAccount().create(getOcUser());
     }
 
     @Test
     void testDeleteUser() {
-        Account account = AccountFactory.getAccountByKey(key);
-        account.delete(getOcUser());
+        getAccount().delete(getOcUser());
     }
 
     /**
@@ -38,12 +39,11 @@ public class LdapAccountTest extends BaseUnit {
      */
     @Test
     void testUpdateUser() {
-        Account account = AccountFactory.getAccountByKey(key);
         OcUser ocUser = getOcUser();
         String password = PasswordUtils.getPW(16);
         ocUser.setPassword(password);
         System.err.println(password);
-        account.update(ocUser);
+        getAccount().update(ocUser);
     }
 
     private OcUser getOcUser() {

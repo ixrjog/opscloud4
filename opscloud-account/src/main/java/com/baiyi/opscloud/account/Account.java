@@ -1,200 +1,40 @@
 package com.baiyi.opscloud.account;
 
-
-import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
 import com.baiyi.opscloud.domain.generator.OcUser;
-import com.baiyi.opscloud.service.OcServerGroupPermissionService;
-import com.baiyi.opscloud.service.OcServerGroupService;
-import com.baiyi.opscloud.service.OcUserService;
-import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.InitializingBean;
-import org.springframework.scheduling.annotation.Async;
-import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
-
 
 /**
  * @Author baiyi
- * @Date 2019/12/31 1:43 下午
+ * @Date 2020/1/10 4:38 下午
  * @Version 1.0
  */
-@Slf4j
-public abstract class Account implements InitializingBean {
-
-    public static final int PASSWORD_LENGTH = 16; // 初始密码长度
-
-    @Resource
-    protected OcUserService ocUserService;
-
-    @Resource
-    protected OcServerGroupPermissionService ocServerGroupPermissionService;
-
-    @Resource
-    protected OcServerGroupService ocServerGroupService;
-
-    private Boolean saveOcUserList(List<OcUser> ocUserList) {
-        Boolean result = true;
-        for (OcUser ocUser : ocUserList) {
-            if (!saveOcUser(ocUser))
-                result = false;
-        }
-        return result;
-    }
+public interface Account {
 
     /**
-     * 只更新ldap源，其它源只添加条目
-     *
-     * @param ocUser
+     * 同步账户
      * @return
      */
-    private Boolean saveOcUser(OcUser ocUser) {
-        try {
-            if (ocUser.getId() != null && ocUser.getId() != 0) {
-                if (!StringUtils.isEmpty(ocUser.getSource()) && ocUser.getSource().equals("ldap")) {
-                    ocUserService.updateOcUser(ocUser);
-                } else {
-                    return true;
-                }
-            } else {
-                OcUser checkUser = ocUserService.queryOcUserByUsername(ocUser.getUsername());
-                if (checkUser == null) {
-                    ocUserService.addOcUser(ocUser);
-                } else {
-                    ocUser.setId(checkUser.getId());
-                    return saveOcUser(ocUser);
-                }
-            }
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
-    }
+    Boolean sync();
 
     /**
-     * 全量同步
-     *
-     * @return
-     */
-    public Boolean sync() {
-        List<OcUser> userList = getUserList();
-        return saveOcUserList(userList);
-    }
-
-    protected abstract List<OcUser> getUserList();
-
-    /**
-     * 异步任务
-     *
-     * @return
-     */
-    @Async
-    public void async() {
-        sync();
-    }
-
-    public Boolean active(OcUser user, boolean active) {
-        return true;
-    }
-
-    /**
-     * 创建
-     *
-     * @return
-     */
-    abstract public Boolean create(OcUser user);
-
-    /**
-     * 移除
-     *
-     * @return
-     */
-    abstract public Boolean delete(OcUser user);
-
-    /**
-     * 更新
-     *
-     * @return
-     */
-    public Boolean update(OcUser user) {
-        return true;
-    }
-
-
-    public Boolean isServerGroupResource() {
-        return false;
-    }
-
-    /**
-     * 授权
-     * @param user
-     * @param resource
-     * @return
-     */
-    public Boolean grant(OcUser user, String resource) {
-        return Boolean.TRUE;
-    }
-
-    /**
-     * 吊销
-     * @param user
-     * @param resource
-     * @return
-     */
-    public Boolean revoke(OcUser user, String resource) {
-        return Boolean.TRUE;
-    }
-
-    /**
-     * 推送用户公钥 PubKey
-     *
+     * 创建账户
      * @param user
      * @return
      */
-    public Boolean pushSSHKey(OcUser user) {
-        return Boolean.TRUE;
-    }
+    Boolean create(OcUser user);
 
-    protected Boolean doPushKey(OcUser user) {
-        return Boolean.TRUE;
-    }
-
-    public String getKey() {
-        return this.getClass().getSimpleName();
-    }
+    void async();
 
     /**
-     * 查询用户的服务器组授权
-     *
-     * @param ocUser
+     * 是否激活
+     * @param user
+     * @param active
      * @return
      */
-    protected List<OcServerGroup> queryUserServerGroupPermission(OcUser ocUser) {
-        if (ocUser.getId() == null)
-            ocUser = ocUserService.queryOcUserByUsername(ocUser.getUsername());
-        List<OcServerGroupPermission> permissionList = ocServerGroupPermissionService.queryUserServerGroupPermission(ocUser.getId());
-        if (permissionList.isEmpty()) return Collections.emptyList();
-        return permissionList.stream().map(e -> {
-            return ocServerGroupService.queryOcServerGroupById(e.getServerGroupId());
-        }).collect(Collectors.toList());
-    }
+    Boolean active(OcUser user, boolean active);
 
+    Boolean delete(OcUser user);
 
-    /**
-     * 注册
-     *
-     * @throws Exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        AccountFactory.register(this);
-    }
+    Boolean update(OcUser user);
 
-
+    String getKey();
 }
