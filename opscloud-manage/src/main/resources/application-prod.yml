@@ -1,0 +1,29 @@
+logging:
+  path: ./log
+
+# 白名单配置
+white:
+  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
+
+spring:
+  profiles:
+    include: common-prod
+  datasource:
+    url: 'jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=GMT+8&allowMultiQueries=true'
+    username: opscloud
+    password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
+  redis:
+    host: opscloud.redis.test
+    port: 16379
+    password: ENC(BlkW2eBkOqohgQ87JEdD7ciFuAc5X248)
+    jedis:
+      pool:
+        max-wait: 5000
+        max-idle: 20
+        max-active: 100
+        min-idle: 0
+
+# java -jar -Djasypt.encryptor.password=${password}
+#jasypt:
+#  encryptor:
+#    password: ${password}

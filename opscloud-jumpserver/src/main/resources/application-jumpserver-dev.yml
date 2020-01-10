@@ -1,0 +1,16 @@
+# version : API版本目前支持4.0
+jumpserver:
+  version: 4.0
+  url: https://jms.ops.yangege.cn
+  user: admin
+  password: ENC(rpmkDYGobkaAqjNM2E+sg9C0F6J1Egf229Jzdj2HeSzMqKR55Flzl/ExPTFJ94ON)
+  coco: oc.ops.yangege.cn
+
+
+spring:
+  datasource:
+    jumpserver:
+      url: jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/opscloud
+      username: opscloud
+      password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
+
