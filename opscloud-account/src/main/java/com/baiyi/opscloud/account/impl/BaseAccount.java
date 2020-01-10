@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.account.impl;
 
 
-import com.baiyi.opscloud.account.IAccount;
+import com.baiyi.opscloud.account.Account;
 import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.domain.generator.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
@@ -26,7 +26,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class Account implements InitializingBean, IAccount {
+public abstract class BaseAccount implements InitializingBean, Account {
 
     public static final int PASSWORD_LENGTH = 16; // 初始密码长度
 
