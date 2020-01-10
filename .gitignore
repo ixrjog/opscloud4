@@ -8,6 +8,7 @@ target/
 *.db
 .mvn
 application-dev.yml
+application.properties
 
 ### STS ###
 .apt_generated
