@@ -58,6 +58,7 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
         return Boolean.TRUE;
     }
 
+
     abstract protected String getInstanceId(T instance) throws Exception;
 
     /**
@@ -176,6 +177,27 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
                 ocCloudserver.setServerName(ServerUtils.toServerName(ocServerFacde.getOcServerBO(ocServer)));
             }
         }
+    }
+
+    @Override
+    public Boolean powerOn(OcCloudserver ocCloudserver) {
+        if (!checkAuth(ocCloudserver.getId()))
+            return Boolean.FALSE;
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean powerOff(OcCloudserver ocCloudserver) {
+        if (!checkAuth(ocCloudserver.getId()))
+            return Boolean.FALSE;
+        return Boolean.TRUE;
+    }
+
+    private Boolean checkAuth(int cloudserverId) {
+        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserver(cloudserverId);
+        if (!ocCloudserver.getPowerMgmt())
+            return Boolean.FALSE;
+        return Boolean.TRUE;
     }
 
     /**

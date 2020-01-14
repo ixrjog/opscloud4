@@ -18,6 +18,7 @@
         <module>opscloud-aliyun-ecs</module>
         <module>opscloud-aws-ec2</module>
         <module>opscloud-aws-core</module>
+        <module>opscloud-gitlab</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -193,6 +194,11 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-aws-ec2</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-gitlab</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -37,6 +37,11 @@ public class OcCloudserverServiceImpl implements OcCloudserverService {
     }
 
 
+    @Override
+    public  OcCloudserver queryOcCloudserver(int id){
+        return ocCloudserverMapper.selectByPrimaryKey(id);
+    }
+
 
     @Override
     public void addOcCloudserver(OcCloudserver ocCloudserver) {

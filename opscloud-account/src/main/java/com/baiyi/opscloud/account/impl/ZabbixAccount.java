@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
+import com.baiyi.opscloud.account.base.AccountType;
+import com.baiyi.opscloud.account.builder.OcAccountBuilder;
 import com.baiyi.opscloud.account.convert.ZabbixUserConvert;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.ZabbixUtils;
+import com.baiyi.opscloud.domain.generator.OcAccount;
 import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserMedia;
@@ -37,6 +40,16 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
         return zabbixUserServer.getAllZabbixUser().stream().map(e -> {
             return ZabbixUserConvert.convertZabbixUser(e);
         }).collect(Collectors.toList());
+    }
+
+    @Override
+    protected  List<OcAccount> getOcAccountList(){
+        return zabbixUserServer.getAllZabbixUser().stream().map(e -> OcAccountBuilder.build(e)).collect(Collectors.toList());
+    }
+
+    @Override
+    protected int getAccountType() {
+        return AccountType.ZABBIX.getType();
     }
 
     /**
@@ -127,7 +140,7 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
     }
 
     @Override
-    public  Boolean active(OcUser user, boolean active){
+    public Boolean active(OcUser user, boolean active) {
         return Boolean.TRUE;
     }
 

@@ -2,11 +2,14 @@ package com.baiyi.opscloud.account.impl;
 
 
 import com.baiyi.opscloud.account.IAccount;
+import com.baiyi.opscloud.account.base.AccountType;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
 import com.baiyi.opscloud.common.util.PasswordUtils;
+import com.baiyi.opscloud.domain.generator.OcAccount;
 import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.ldap.entry.Person;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
+import com.google.common.collect.Lists;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -35,6 +38,18 @@ public class LdapAccount extends BaseAccount implements IAccount {
             return LdapPersonConvert.convertPerson(e);
         }).collect(Collectors.toList());
     }
+
+
+    @Override
+    protected int getAccountType(){
+        return AccountType.LDAP.getType();
+    }
+
+    @Override
+    protected  List<OcAccount> getOcAccountList(){
+        return Lists.newArrayList();
+    }
+
 
     /**
      * 创建

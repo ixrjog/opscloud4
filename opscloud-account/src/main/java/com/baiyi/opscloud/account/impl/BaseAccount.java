@@ -3,20 +3,21 @@ package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.*;
+import com.baiyi.opscloud.service.OcAccountService;
 import com.baiyi.opscloud.service.OcServerGroupPermissionService;
 import com.baiyi.opscloud.service.OcServerGroupService;
 import com.baiyi.opscloud.service.OcUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -34,12 +35,15 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
     protected OcUserService ocUserService;
 
     @Resource
+    protected OcAccountService ocAccountService;
+
+    @Resource
     protected OcServerGroupPermissionService ocServerGroupPermissionService;
 
     @Resource
     protected OcServerGroupService ocServerGroupService;
 
-    private Boolean saveOcUserList(List<OcUser> ocUserList) {
+    private Boolean saveOcUserListByLdap(List<OcUser> ocUserList) {
         Boolean result = true;
         for (OcUser ocUser : ocUserList) {
             if (!saveOcUser(ocUser))
@@ -47,6 +51,35 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
         }
         return result;
     }
+
+    private Boolean saveOcAccount(OcAccount preOcAccount, Map<String, OcAccount> map) {
+        if (map.containsKey(preOcAccount.getAccountId())) {
+            OcAccount account = map.get(preOcAccount.getAccountId());
+            updateOcAccount(preOcAccount, account);
+            map.remove(preOcAccount.getAccountId());
+        } else {
+            ocAccountService.addOcAccount(preOcAccount);
+        }
+        return true;
+    }
+
+    /**
+     * @param preOcAccount
+     * @param ocAccount
+     */
+    protected void updateOcAccount(OcAccount preOcAccount, OcAccount ocAccount) {
+        preOcAccount.setId(ocAccount.getId());
+        ocAccountService.updateOcAccount(preOcAccount);
+    }
+
+    protected Map<String, OcAccount> getAccountMap(List<OcAccount> ocAccountList) {
+        if (CollectionUtils.isEmpty(ocAccountList))
+            ocAccountList = ocAccountService.queryOcAccountByAccountType(getAccountType());
+        return ocAccountList.stream().collect(Collectors.toMap(OcAccount::getAccountId, a -> a, (k1, k2) -> k1));
+    }
+
+    abstract protected int getAccountType();
+
 
     /**
      * 只更新ldap源，其它源只添加条目
@@ -85,11 +118,29 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      */
     @Override
     public Boolean sync() {
-        List<OcUser> userList = getUserList();
-        return saveOcUserList(userList);
+        if (getKey().equals("LdapAccoun"))
+            return saveOcUserListByLdap(getUserList());
+        List<OcAccount> accountList = getOcAccountList();
+        Map<String, OcAccount> map = getAccountMap(null);
+        for (OcAccount account : accountList)
+            saveOcAccount(account, map);
+        delAccountByMap(map);
+        return Boolean.TRUE;
     }
 
+
+    private void delAccountByMap(Map<String, OcAccount> accountMap) {
+        if (accountMap.isEmpty()) return;
+        for (String key : accountMap.keySet()) {
+            OcAccount ocAccount = accountMap.get(key);
+            ocAccountService.delOcAccount(ocAccount.getId());
+        }
+    }
+
+
     protected abstract List<OcUser> getUserList();
+
+    protected abstract List<OcAccount> getOcAccountList();
 
     /**
      * 异步任务
@@ -101,9 +152,6 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
     public void async() {
         sync();
     }
-
-
-
 
 
     /**
@@ -129,6 +177,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
 
     /**
      * 授权
+     *
      * @param user
      * @param resource
      * @return
@@ -139,6 +188,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
 
     /**
      * 吊销
+     *
      * @param user
      * @param resource
      * @return
