@@ -305,6 +305,15 @@ public class TimeUtils {
 
     }
 
+    public static Date acqGmtDate(String time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");
+        try {
+            return format.parse(time);
+        } catch (ParseException e) {
+            return new Date();
+        }
+    }
+
     //转换时间
     public static String acqGmtTime(String time) {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm'Z'");

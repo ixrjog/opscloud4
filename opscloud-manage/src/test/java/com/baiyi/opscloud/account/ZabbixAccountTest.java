@@ -14,7 +14,7 @@ public class ZabbixAccountTest  extends BaseUnit {
 
     private static final String key = "ZabbixAccount";
 
-    private Account getAccount(){
+    private IAccount getAccount(){
         return  AccountFactory.getAccountByKey(key);
     }
 

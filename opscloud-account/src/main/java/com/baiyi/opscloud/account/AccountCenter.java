@@ -17,17 +17,17 @@ public class AccountCenter {
     public static final String LDAP_ACCOUNT_KEY = "LdapAccount";
 
     public Boolean create(String key, OcUser user) {
-        Account account = AccountFactory.getAccountByKey(key);
+        IAccount account = AccountFactory.getAccountByKey(key);
         return account.create(user);
     }
 
     public Boolean create(OcUser user) {
         Boolean result = create(LDAP_ACCOUNT_KEY, user);
         if (result) {
-            Map<String, Account> accountContainer = AccountFactory.getAccountContainer();
+            Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
             for (String key : accountContainer.keySet()) {
                 if (key.equals(LDAP_ACCOUNT_KEY)) continue;
-                Account account = accountContainer.get(key);
+                IAccount account = accountContainer.get(key);
                 if (!account.create(user))
                     return Boolean.FALSE;
             }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.account.impl;
 
-import com.baiyi.opscloud.account.Account;
+import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.convert.ZabbixUserConvert;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.ZabbixUtils;
@@ -24,7 +24,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component("ZabbixAccount")
-public class ZabbixAccount extends BaseAccount implements Account {
+public class ZabbixAccount extends BaseAccount implements IAccount {
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
     public static final String ZABBIX_DEFAULT_HOSTGROUP = "group_default";

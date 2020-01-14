@@ -14,6 +14,10 @@
         <module>opscloud-common</module>
         <module>opscloud-jumpserver</module>
         <module>opscloud-cloudserver</module>
+        <module>opscloud-aliyun-core</module>
+        <module>opscloud-aliyun-ecs</module>
+        <module>opscloud-aws-ec2</module>
+        <module>opscloud-aws-core</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -167,6 +171,28 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-jumpserver</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-ecs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aws-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aws-ec2</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

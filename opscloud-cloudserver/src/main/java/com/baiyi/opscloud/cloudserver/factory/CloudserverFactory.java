@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.cloudserver.factory;
 
-import com.baiyi.opscloud.cloudserver.Cloudserver;
+import com.baiyi.opscloud.cloudserver.ICloudserver;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -12,17 +12,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class CloudserverFactory {
 
-    static Map<String, Cloudserver> context = new ConcurrentHashMap<>();
+    static Map<String, ICloudserver> context = new ConcurrentHashMap<>();
 
-    public static Cloudserver getCloudserverByKey(String key) {
+    public static ICloudserver getCloudserverByKey(String key) {
         return context.get(key);
     }
 
-    public static void register(Cloudserver bean) {
+    public static void register(ICloudserver bean) {
         context.put(bean.getKey(), bean);
     }
 
-    public static Map<String, Cloudserver> getCloudserverContainer() {
+    public static Map<String, ICloudserver> getCloudserverContainer() {
         return context;
     }
 

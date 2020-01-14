@@ -21,4 +21,6 @@ public interface ZabbixHostServer {
 
     List<ZabbixHostInterface> getHostInterfaceList(String hostid);
 
+    ZabbixHost updateHostStatus(String hostid, int status);
+
 }

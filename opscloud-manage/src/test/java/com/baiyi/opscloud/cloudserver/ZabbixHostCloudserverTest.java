@@ -13,13 +13,18 @@ public class ZabbixHostCloudserverTest extends BaseUnit {
 
     private static final String key = "ZabbixHostCloudserver";
 
-    private Cloudserver getCloudserver() {
+    private ICloudserver getICloudserver() {
         return CloudserverFactory.getCloudserverByKey(key);
     }
 
     @Test
+    void testUpdate() {
+        getICloudserver().update("NULL", "13157");
+    }
+
+    @Test
     void testRsync() {
-        getCloudserver().sync();
+        getICloudserver().sync();
     }
 
 }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.account.impl;
 
 
-import com.baiyi.opscloud.account.Account;
+import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.domain.generator.OcUser;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component("LdapAccount")
-public class LdapAccount extends BaseAccount implements Account {
+public class LdapAccount extends BaseAccount implements IAccount {
 
     @Resource
     private StringEncryptor stringEncryptor;

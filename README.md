@@ -1,4 +1,4 @@
-Welcome to the opsCloud wiki!
+Welcome to the opscloud wiki!
 
 # OpsCloud简介
 ![](https://img.shields.io/badge/version-3.0.0-brightgreen.svg)
@@ -27,6 +27,6 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   
 + 操作审计
   + 堡垒机
-  + DMS
+  + DMS（有计划开发RDS操作审计）
 
 

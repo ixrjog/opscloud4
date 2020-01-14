@@ -1,0 +1,16 @@
+# 阿里云AK配置
+# uid 企业别名（主账户id）
+# regionIds 数组可以写多个
+
+aliyun:
+  uid: 1255805305757185
+  accessKeyId: LTAI4FoXNYYr7jeRtH5XkoRy
+  secret: ENC(fSKtDCmkLBtszyTVR2sxAJvOSsVeP+5qrxRJiCdT3LaVOLg0gJxbiA==)
+  regionId: cn-hangzhou
+  regionIds:
+    - cn-hangzhou
+    - cn-hongkong
+    - us-west-1
+    - cn-shanghai
+
+

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.OcUser;
  * @Date 2020/1/10 4:38 下午
  * @Version 1.0
  */
-public interface Account {
+public interface IAccount {
 
     /**
      * 同步账户

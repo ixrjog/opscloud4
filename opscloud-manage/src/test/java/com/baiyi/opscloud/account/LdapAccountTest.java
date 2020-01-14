@@ -15,7 +15,7 @@ public class LdapAccountTest extends BaseUnit {
 
     private static final String key = "LdapAccount";
 
-    private Account getAccount(){
+    private IAccount getAccount(){
         return  AccountFactory.getAccountByKey(key);
     }
 

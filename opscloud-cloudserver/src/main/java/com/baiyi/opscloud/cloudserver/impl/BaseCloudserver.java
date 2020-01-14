@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.cloudserver.impl;
 
-import com.baiyi.opscloud.cloudserver.Cloudserver;
+import com.baiyi.opscloud.cloudserver.ICloudserver;
 import com.baiyi.opscloud.cloudserver.base.CloudserverStatus;
 import com.baiyi.opscloud.cloudserver.factory.CloudserverFactory;
 import com.baiyi.opscloud.common.util.JSONUtils;
@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseCloudserver<T> implements InitializingBean, Cloudserver {
+public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserver {
 
     @Resource
     private OcCloudserverService ocCloudserverService;
@@ -82,6 +82,9 @@ public abstract class BaseCloudserver<T> implements InitializingBean, Cloudserve
                         // pushInstanceName(instance, cloudServerDO.getServerName());
                     }
                 }
+                updateCloudserver(instance, ocCloudserver);
+                // TODO 更新 server 表 public_ip
+
                 // saveServerPublicIP(updateCloudServerByInstance(instance, cloudServerDO)); // 已录入(更新数据)
                 map.remove(instanceId);
             } else {
@@ -91,7 +94,18 @@ public abstract class BaseCloudserver<T> implements InitializingBean, Cloudserve
         }
     }
 
-    abstract protected void addOcCloudserver(T instance);
+    @Override
+    public Boolean update(String regionId, String instanceId) {
+        T instance = getInstance(regionId, instanceId);
+        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserverByInstanceId(instanceId);
+        return updateCloudserver(instance, ocCloudserver) != null;
+    }
+
+    abstract protected T getInstance(String regionId, String instanceId);
+
+    protected void addOcCloudserver(T instance) {
+        addOcCloudserver(getCloudserver(instance));
+    }
 
     protected Map<String, OcCloudserver> getCloudserverMap(List<OcCloudserver> cloudserverList) {
         if (CollectionUtils.isEmpty(cloudserverList))
@@ -115,9 +129,35 @@ public abstract class BaseCloudserver<T> implements InitializingBean, Cloudserve
     }
 
     protected void addOcCloudserver(OcCloudserver ocCloudserver) {
+        if (ocCloudserver == null) return;
         invokeCloudserverStatus(ocCloudserver, CloudserverStatus.CREATE.getStatus());
         ocCloudserverService.addOcCloudserver(ocCloudserver);
     }
+
+
+    /**
+     * 更新
+     *
+     * @param instance
+     * @param ocCloudserver
+     * @return
+     */
+    protected OcCloudserver updateCloudserver(T instance, OcCloudserver ocCloudserver) {
+        OcCloudserver preCloudserver = getCloudserver(instance);
+        preCloudserver.setId(ocCloudserver.getId());
+        invokeCloudserverStatus(preCloudserver, ocCloudserver.getServerStatus());
+        if (preCloudserver != null)
+            ocCloudserverService.updateOcCloudserver(preCloudserver);
+        return preCloudserver;
+    }
+
+    /**
+     * 获取预更新 Cloudserver
+     *
+     * @param instance
+     * @return
+     */
+    abstract protected OcCloudserver getCloudserver(T instance);
 
     /**
      * 设置云服务器状态
@@ -137,7 +177,6 @@ public abstract class BaseCloudserver<T> implements InitializingBean, Cloudserve
             }
         }
     }
-
 
     /**
      * 注册

@@ -22,6 +22,14 @@
         </dependency>
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aliyun-ecs</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aws-ec2</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-jumpserver</artifactId>
         </dependency>
         <dependency>

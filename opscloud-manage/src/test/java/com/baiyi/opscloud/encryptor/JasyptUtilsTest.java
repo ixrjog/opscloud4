@@ -19,9 +19,12 @@ public class JasyptUtilsTest extends BaseUnit {
     @Resource
     private StringEncryptor stringEncryptor;
 
+    /**
+     * 加密
+     */
     @Test
     void testEncrypt() {
-        System.err.println(stringEncryptor.encrypt("123456"));
+        System.err.println(stringEncryptor.encrypt("Cw4AznAajNWb/vBNolmsE1vhaCJPITVDZPi5JiT/"));
     }
 
     @Test

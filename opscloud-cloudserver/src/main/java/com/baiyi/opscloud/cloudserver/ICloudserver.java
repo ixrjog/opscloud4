@@ -5,7 +5,7 @@ package com.baiyi.opscloud.cloudserver;
  * @Date 2020/1/10 4:21 下午
  * @Version 1.0
  */
-public interface Cloudserver {
+public interface ICloudserver {
 
     /**
      * 同步
@@ -19,6 +19,13 @@ public interface Cloudserver {
      * @return
      */
     Boolean sync(boolean pushName);
+
+    /**
+     * 更新Cloudserver by instanceId
+     * @param instanceId
+     * @return
+     */
+    Boolean update(String regionId,String instanceId);
 
     String getKey();
 }

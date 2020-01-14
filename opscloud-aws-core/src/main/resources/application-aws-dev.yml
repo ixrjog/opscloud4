@@ -1,0 +1,16 @@
+# AWS配置
+# uid 企业别名（主账户id）
+# apRegionId API接入点
+
+aws:
+  uid: 015068651246
+  accessKeyId: AKIAJSNNI5PRQHQEH4WA
+  secretKey: ENC(M/2Bydge/ub9COH+lPX4wdZbF3JvOk7WTazpg7HoNvfq+o4cuqxNxCAWtheEOWL1ZsnaiuZlAJo=)
+  apRegionId: ap-northeast-1
+  custom:  { ec2InstancesJson: "https://tedivm.github.io/ec2details/api/ec2instances.json"}
+
+
+
+
+
+

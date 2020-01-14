@@ -26,6 +26,9 @@ import java.util.Map;
 @Component("ZabbixHostServer")
 public class ZabbixHostServerImpl implements ZabbixHostServer {
 
+    public static final int HOST_STATUS_ENABLE = 0;
+    public static final int HOST_STATUS_DISABLE = 1;
+
     @Resource
     private ZabbixHandler zabbixHandler;
 
@@ -46,7 +49,7 @@ public class ZabbixHostServerImpl implements ZabbixHostServer {
     }
 
     @Override
-    public List<ZabbixHost> getHostList(){
+    public List<ZabbixHost> getHostList() {
         try {
             ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                     .method("host.get")
@@ -59,7 +62,7 @@ public class ZabbixHostServerImpl implements ZabbixHostServer {
     }
 
     @Override
-    public  List<ZabbixHostInterface> getHostInterfaceList(String hostid){
+    public List<ZabbixHostInterface> getHostInterfaceList(String hostid) {
         ZabbixRequestParamsMap request = ZabbixRequestBuilder.newBuilder()
                 .method("hostinterface.get")
                 .paramEntry("output", "extend")
@@ -87,4 +90,20 @@ public class ZabbixHostServerImpl implements ZabbixHostServer {
         }
         return null;
     }
+
+    @Override
+    public ZabbixHost updateHostStatus(String hostid, int status) {
+        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+                .method("host.update")
+                .paramEntry("hostid", hostid)
+                .paramEntry("status", status)
+                .build();
+        try {
+            JsonNode jsonNode = zabbixHandler.api(request);
+            return new ZabbixHostMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
+        } catch (Exception e) {
+        }
+        return null;
+    }
+
 }

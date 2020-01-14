@@ -10,6 +10,7 @@ target/
 ### 含隐私
 application-dev.yml
 application.properties
+JasyptUtilsTest.java
 
 ### STS ###
 .apt_generated
