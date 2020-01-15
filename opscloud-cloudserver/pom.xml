@@ -34,6 +34,10 @@
         </dependency>
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-vmware-vcsa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-service</artifactId>
         </dependency>
         <dependency>

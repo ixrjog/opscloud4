@@ -10,7 +10,11 @@ import com.baiyi.opscloud.cloudserver.util.AwsUtils;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;
+import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostInterface;
+import com.google.common.base.Joiner;
+import com.vmware.vim25.*;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -30,8 +34,86 @@ public class OcCloudserverBuilder {
     public static final String ECS_DATA_DISK_TYPE = "data";
 
 
+    public static OcCloudserver build(VMInstance instance, String zone) {
+        OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
+                .instanceName(instance.getConfigInfoName())
+                .serverName(instance.getConfigInfoName())
+                .zone(zone)
+                .instanceId(instance.getConfigInfoInstanceUuid())
+                .cpu(instance.getConfigInfoHardwareNumCPU())
+                .memory(instance.getConfigInfoHardwareMemoryMB())
+                .comment(instance.getConfigInfoAnnotation())
+                .imageId(instance.getConfigInfoGuestFullName())
+                .instanceType("VirtualMachine")
+                .cloudserverType(CloudserverType.VM.getType())
+                .build();
+        try {
+            if (instance.getVmSummary() != null) {
+                VirtualMachineSummary vmSummary = instance.getVmSummary();
+                if (!StringUtils.isEmpty(vmSummary.getGuest().getIpAddress()))
+                    ocCloudserverBO.setPrivateIp(vmSummary.getGuest().getIpAddress());
+            }
+        } catch (Exception e) {
+        }
+
+        // Disk只记录总容量
+        VirtualMachineStorageInfo vmStorageInfo = instance.getVmStorageInfo();
+        for (VirtualMachineUsageOnDatastore vmUsageOnDatastore : vmStorageInfo.getPerDatastoreUsage()) {
+            // committed 用量/  uncommitted 限制
+            int size = (int) (vmUsageOnDatastore.getUncommitted() / 1024 / 1024 / 1024);
+            if (ocCloudserverBO.getSystemDiskSize() == 0) {
+                ocCloudserverBO.setSystemDiskSize(size);
+            } else {
+                ocCloudserverBO.setDataDiskSize(ocCloudserverBO.getDataDiskSize() + size);
+            }
+        }
+        return covert(ocCloudserverBO);
+    }
+
+
+    /**
+     * VMware VCSA ESXi
+     *
+     * @param esxiInstance
+     * @param zone
+     * @return
+     */
+    public static OcCloudserver buildOcCloudserver(ESXiInstance esxiInstance, String zone) {
+        OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
+                .instanceName(esxiInstance.getHostSummary().config.name)
+                .serverName(esxiInstance.getHostSummary().config.name)
+                .zone(zone)
+                .instanceId(esxiInstance.getHostHardwareInfo().systemInfo.uuid)
+                .cpu((int) esxiInstance.getHostHardwareInfo().cpuInfo.numCpuCores)
+                .memory((int) (esxiInstance.getHostHardwareInfo().memorySize / 1024 / 1024))
+                .comment(Joiner.on(" ").join(esxiInstance.getHostHardwareInfo().systemInfo.vendor, esxiInstance.getHostHardwareInfo().systemInfo.model))
+                .imageId(esxiInstance.getHostSummary().getConfig().getProduct().getFullName())
+                .instanceType("ESXiHostSystem")
+                .cloudserverType(CloudserverType.ESXI.getType())
+                .instanceDetail(esxiInstance.getHostHardwareInfo().systemInfo.uuid)
+                .build();
+
+        if (!esxiInstance.getDatastoreSummaryList().isEmpty()) {
+            long capacityTotal = 0;
+            for (DatastoreSummary datastoreSummary : esxiInstance.getDatastoreSummaryList())
+                capacityTotal += datastoreSummary.getCapacity();
+            ocCloudserverBO.setSystemDiskSize((int) (capacityTotal / 1024 / 1024 / 1024));
+        }
+        // 查询管理IP
+        try {
+            for (VirtualNicManagerNetConfig virtualNicManagerNetConfig : esxiInstance.getHostConfigInfo().getVirtualNicManagerInfo().netConfig)
+                for (HostVirtualNic hostVirtualNic : virtualNicManagerNetConfig.getCandidateVnic())
+                    if (!StringUtils.isEmpty(hostVirtualNic.getSpec().ip.ipAddress))
+                        ocCloudserverBO.setPrivateIp(hostVirtualNic.getSpec().ip.ipAddress);
+        } catch (Exception ignored) {
+        }
+        return covert(ocCloudserverBO);
+    }
+
+
     /**
      * EC2
+     *
      * @param awsEC2Instance
      * @param instanceDetail
      * @return
@@ -56,7 +138,7 @@ public class OcCloudserverBuilder {
                 .cloudserverType(CloudserverType.EC2.getType())
                 .instanceDetail(instanceDetail)
                 .build();
-        return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudserver.class);
+        return covert(ocCloudserverBO);
     }
 
     /**
@@ -124,7 +206,7 @@ public class OcCloudserverBuilder {
             e.printStackTrace();
         }
 
-        return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudserver.class);
+        return covert(ocCloudserverBO);
     }
 
     /**
@@ -154,6 +236,10 @@ public class OcCloudserverBuilder {
                 .createdTime(new Date())
                 .zone(zone)
                 .build();
+        return covert(ocCloudserverBO);
+    }
+
+    private static OcCloudserver covert(OcCloudserverBO ocCloudserverBO){
         return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudserver.class);
     }
 

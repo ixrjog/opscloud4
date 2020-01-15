@@ -22,14 +22,7 @@ public class ZabbixUserConvert {
         return zabbixUser;
     }
 
-    public static OcUser convertZabbixUser(ZabbixUser zabbixUser) {
-        OcUser ocUser = new OcUser();
-        ocUser.setUsername(zabbixUser.getAlias());
-        ocUser.setDisplayName(zabbixUser.getName());
-        ocUser.setIsActive(true);
-        ocUser.setSource("zabbix");
-        return ocUser;
-    }
+
 
 
 }

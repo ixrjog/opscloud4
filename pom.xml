@@ -19,6 +19,7 @@
         <module>opscloud-aws-ec2</module>
         <module>opscloud-aws-core</module>
         <module>opscloud-gitlab</module>
+        <module>opscloud-vmware-vcsa</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -194,6 +195,11 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-aws-ec2</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-vmware-vcsa</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

@@ -20,15 +20,5 @@ public class LdapPersonConvert {
         return person;
     }
 
-    public static OcUser convertPerson(Person person) {
-        OcUser ocUser = new OcUser();
-        ocUser.setUsername(person.getUsername());
-        ocUser.setDisplayName(person.getDisplayName());
-        ocUser.setEmail(person.getEmail());
-        ocUser.setPhone(person.getMobile());
-        ocUser.setIsActive(true);
-        ocUser.setSource("ldap");
-        return ocUser;
-    }
 
 }

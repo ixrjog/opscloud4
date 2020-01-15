@@ -13,7 +13,6 @@ import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
  */
 public class OcAccountBuilder {
 
-
     public static OcAccount build(ZabbixUser user) {
         OcAccountBO ocAccountBO = OcAccountBO.builder()
                 .accountId(user.getUserid())
@@ -22,8 +21,11 @@ public class OcAccountBuilder {
                 .isActive(true)
                 .accountType(AccountType.ZABBIX.getType())
                 .build();
-        return BeanCopierUtils.copyProperties(ocAccountBO, OcAccount.class);
+        return convert(ocAccountBO);
     }
 
+    private static OcAccount convert(OcAccountBO ocAccountBO) {
+        return BeanCopierUtils.copyProperties(ocAccountBO, OcAccount.class);
+    }
 
 }

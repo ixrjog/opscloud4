@@ -3,6 +3,7 @@ package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.base.AccountType;
+import com.baiyi.opscloud.account.builder.OcUserBuilder;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.domain.generator.OcAccount;
@@ -34,9 +35,7 @@ public class LdapAccount extends BaseAccount implements IAccount {
 
     @Override
     protected List<OcUser> getUserList() {
-        return personRepo.getPersonList().stream().map(e -> {
-            return LdapPersonConvert.convertPerson(e);
-        }).collect(Collectors.toList());
+        return personRepo.getPersonList().stream().map(e -> OcUserBuilder.build(e)).collect(Collectors.toList());
     }
 
 

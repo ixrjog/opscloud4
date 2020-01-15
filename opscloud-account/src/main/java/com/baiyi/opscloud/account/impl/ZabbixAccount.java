@@ -3,6 +3,7 @@ package com.baiyi.opscloud.account.impl;
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.base.AccountType;
 import com.baiyi.opscloud.account.builder.OcAccountBuilder;
+import com.baiyi.opscloud.account.builder.OcUserBuilder;
 import com.baiyi.opscloud.account.convert.ZabbixUserConvert;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.ZabbixUtils;
@@ -37,13 +38,11 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
 
     @Override
     protected List<OcUser> getUserList() {
-        return zabbixUserServer.getAllZabbixUser().stream().map(e -> {
-            return ZabbixUserConvert.convertZabbixUser(e);
-        }).collect(Collectors.toList());
+        return zabbixUserServer.getAllZabbixUser().stream().map(e -> OcUserBuilder.build(e)).collect(Collectors.toList());
     }
 
     @Override
-    protected  List<OcAccount> getOcAccountList(){
+    protected List<OcAccount> getOcAccountList() {
         return zabbixUserServer.getAllZabbixUser().stream().map(e -> OcAccountBuilder.build(e)).collect(Collectors.toList());
     }
 

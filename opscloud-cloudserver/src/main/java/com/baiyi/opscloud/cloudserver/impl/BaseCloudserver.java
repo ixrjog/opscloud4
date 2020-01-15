@@ -30,7 +30,7 @@ import java.util.stream.Collectors;
 public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserver {
 
     @Resource
-    private OcCloudserverService ocCloudserverService;
+    protected OcCloudserverService ocCloudserverService;
 
     @Resource
     private OcServerService ocServerService;
@@ -147,6 +147,8 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
         OcCloudserver preCloudserver = getCloudserver(instance);
         preCloudserver.setId(ocCloudserver.getId());
         invokeCloudserverStatus(preCloudserver, ocCloudserver.getServerStatus());
+        if (StringUtils.isEmpty(preCloudserver.getPrivateIp())) // VM-Tools可能导致获取不到ip
+            preCloudserver.setPrivateIp(ocCloudserver.getPrivateIp());
         if (preCloudserver != null)
             ocCloudserverService.updateOcCloudserver(preCloudserver);
         return preCloudserver;

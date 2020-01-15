@@ -27,8 +27,10 @@ public class OcCloudserverBO {
     private String vpcId;
     private String instanceType;
     private String imageId;
-    private Integer systemDiskSize;
-    private Integer dataDiskSize;
+    @Builder.Default
+    private Integer systemDiskSize = 0;
+    @Builder.Default
+    private Integer dataDiskSize = 0;
     private Date createdTime;
     private Date expiredTime;
     private String chargeType;
