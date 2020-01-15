@@ -69,7 +69,7 @@ public class AliyunECSCloudserver<T> extends BaseCloudserver<T> implements IClou
     protected OcCloudserver getCloudserver(T instance) {
         if (!(instance instanceof AliyunECSInstance)) return null;
         AliyunECSInstance i = (AliyunECSInstance) instance;
-        return OcCloudserverBuilder.buildOcCloudserver(i, getInstanceDetail(instance));
+        return OcCloudserverBuilder.build(i, getInstanceDetail(instance));
     }
 
 }

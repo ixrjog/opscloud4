@@ -58,7 +58,7 @@ public class VcsaESXiCloudserver<T> extends BaseCloudserver<T> implements ICloud
     protected OcCloudserver getCloudserver(T instance) {
         if (!(instance instanceof ESXiInstance)) return null;
         ESXiInstance i = (ESXiInstance) instance;
-        return OcCloudserverBuilder.buildOcCloudserver(i, vcsaESXi.getZone());
+        return OcCloudserverBuilder.build(i, vcsaESXi.getZone());
     }
 
 }

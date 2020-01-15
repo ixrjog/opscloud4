@@ -63,7 +63,7 @@ public class AwsEC2Cloudserver<T> extends BaseCloudserver<T> implements ICloudse
     protected OcCloudserver getCloudserver(T instance) {
         if (!(instance instanceof AwsEC2Instance)) return null;
         AwsEC2Instance i = (AwsEC2Instance) instance;
-        return OcCloudserverBuilder.buildOcCloudserver(i, getInstanceDetail(instance));
+        return OcCloudserverBuilder.build(i, getInstanceDetail(instance));
     }
 
 

@@ -76,7 +76,7 @@ public class ZabbixHostCloudserver<T> extends BaseCloudserver<T> implements IClo
     protected OcCloudserver getCloudserver(T instance) {
         if (!(instance instanceof ZabbixHostInstance)) return null;
         ZabbixHostInstance i = (ZabbixHostInstance) instance;
-        return OcCloudserverBuilder.buildOcCloudserver(i, getInstanceDetail(instance), zabbixConfig.getZone());
+        return OcCloudserverBuilder.build(i, getInstanceDetail(instance), zabbixConfig.getZone());
     }
 
 }

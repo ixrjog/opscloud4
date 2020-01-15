@@ -78,7 +78,7 @@ public class OcCloudserverBuilder {
      * @param zone
      * @return
      */
-    public static OcCloudserver buildOcCloudserver(ESXiInstance esxiInstance, String zone) {
+    public static OcCloudserver build(ESXiInstance esxiInstance, String zone) {
         OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
                 .instanceName(esxiInstance.getHostSummary().config.name)
                 .serverName(esxiInstance.getHostSummary().config.name)
@@ -118,7 +118,7 @@ public class OcCloudserverBuilder {
      * @param instanceDetail
      * @return
      */
-    public static OcCloudserver buildOcCloudserver(AwsEC2Instance awsEC2Instance, String instanceDetail) {
+    public static OcCloudserver build(AwsEC2Instance awsEC2Instance, String instanceDetail) {
         com.amazonaws.services.ec2.model.Instance instance = awsEC2Instance.getInstance();
         Map<String, Integer> volumeSizeMap = AwsUtils.getEC2VolumeSizeMap(awsEC2Instance.getVolumeList());
         OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
@@ -148,7 +148,7 @@ public class OcCloudserverBuilder {
      * @param instanceDetail
      * @return
      */
-    public static OcCloudserver buildOcCloudserver(AliyunECSInstance aliyunECSInstance, String instanceDetail) {
+    public static OcCloudserver build(AliyunECSInstance aliyunECSInstance, String instanceDetail) {
         DescribeInstancesResponse.Instance instance = aliyunECSInstance.getInstance();
         List<ECSDisk> diskList = aliyunECSInstance.getDiskList();
 
@@ -215,7 +215,7 @@ public class OcCloudserverBuilder {
      * @param hostInstance
      * @return
      */
-    public static OcCloudserver buildOcCloudserver(ZabbixHostInstance hostInstance, String instanceDetail, String zone) {
+    public static OcCloudserver build(ZabbixHostInstance hostInstance, String instanceDetail, String zone) {
         String privateIp = "";
         if (!CollectionUtils.isEmpty(hostInstance.getInterfaceList()))
             for (ZabbixHostInterface hostInterface : hostInstance.getInterfaceList()) {
