@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import com.baiyi.opscloud.domain.generator.OcServer;
-import com.baiyi.opscloud.facade.OcServerFacde;
+import com.baiyi.opscloud.facade.OcServerFacade;
 import com.baiyi.opscloud.service.OcCloudserverService;
 import com.baiyi.opscloud.service.OcServerService;
 import com.google.common.collect.Lists;
@@ -36,7 +36,7 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
     private OcServerService ocServerService;
 
     @Resource
-    private OcServerFacde ocServerFacde;
+    private OcServerFacade ocServerFacde;
 
     /**
      * 同步接口

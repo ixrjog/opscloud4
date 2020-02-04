@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.domain.bo.OcServerBO;
 import com.baiyi.opscloud.domain.generator.OcServer;
-import com.baiyi.opscloud.facade.OcServerFacde;
+import com.baiyi.opscloud.facade.OcServerFacade;
 import com.baiyi.opscloud.service.OcEnvService;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
-public class OcServerFacdeImpl implements OcServerFacde {
+public class OcServerFacdeImpl implements OcServerFacade {
 
     @Resource
     private OcEnvService ocEnvService;

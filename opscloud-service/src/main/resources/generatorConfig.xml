@@ -96,7 +96,7 @@
         <!--        oc_server-->
         <!--        oc_env-->
         <!--        oc_account-->
-        <table tableName="oc_account">
+        <table tableName="oc_user_token">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
