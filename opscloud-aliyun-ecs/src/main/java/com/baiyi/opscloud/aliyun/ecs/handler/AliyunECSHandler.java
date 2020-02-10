@@ -6,8 +6,11 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.common.util.JSONUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Collection;
@@ -105,6 +108,60 @@ public class AliyunECSHandler {
             //cacheInstanceRenewAttribute(regionId, response);
         }
         return instanceList;
+    }
+
+    public BusinessWrapper<Boolean> start(String regionId,String instanceId) {
+        try {
+            StartInstanceRequest describe = new StartInstanceRequest();
+            describe.setInstanceId(instanceId);
+            StartInstanceResponse response = startInstanceResponse(regionId, describe);
+            if (response != null && !StringUtils.isEmpty(response.getRequestId()))
+                return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+        }
+        return new BusinessWrapper<Boolean>(ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED);
+    }
+
+
+    public BusinessWrapper<Boolean> stop(String regionId,String instanceId) {
+        try {
+            StopInstanceRequest describe = new StopInstanceRequest();
+            describe.setInstanceId(instanceId);
+            StopInstanceResponse response = stopInstanceResponse(regionId, describe);
+            if (response != null && !StringUtils.isEmpty(response.getRequestId()))
+                return new BusinessWrapper<Boolean>(true);
+        } catch (Exception e) {
+        }
+        return new BusinessWrapper<Boolean>(ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED);
+    }
+
+
+    private StopInstanceResponse stopInstanceResponse(String regionId, StopInstanceRequest describe) {
+        IAcsClient client = acqAcsClient(regionId);
+        try {
+            StopInstanceResponse response = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private StartInstanceResponse startInstanceResponse(String regionId, StartInstanceRequest describe) {
+        IAcsClient client = acqAcsClient(regionId);
+        try {
+            StartInstanceResponse response = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 

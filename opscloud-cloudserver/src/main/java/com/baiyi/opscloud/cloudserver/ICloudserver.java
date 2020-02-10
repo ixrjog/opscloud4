@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.cloudserver;
 
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 
 /**
  * @Author baiyi
@@ -34,9 +34,19 @@ public interface ICloudserver {
      */
     Boolean update(String regionId, String instanceId);
 
-    Boolean powerOn(OcCloudserver ocCloudserver);
+    /**
+     * 开机
+     * @param id
+     * @return
+     */
+    BusinessWrapper<Boolean> start(Integer id);
 
-    Boolean powerOff(OcCloudserver ocCloudserver);
+    /**
+     * 关机
+     * @param id
+     * @return
+     */
+    BusinessWrapper<Boolean> stop(Integer id);
 
 
 }

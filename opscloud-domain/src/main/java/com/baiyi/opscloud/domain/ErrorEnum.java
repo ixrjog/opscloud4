@@ -9,6 +9,15 @@ public enum ErrorEnum {
 
     // ----------------------- 系统级错误 -----------------------
     SYSTEM_ERROR(10001, "系统错误"),
+    // 权限
+    AUTHENTICATION_FAILUER(20001,"鉴权失败"),
+
+
+    CLOUDSERVER_POWER_MGMT_FAILED(30001,"云服务器启停失败"),
+
+
+
+    // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),
     CREATE_TABLE_ERROR(10003, "创建表失败！"),
     INVOKE_QUERY_ERROR(10004, "执行查询失败！"),

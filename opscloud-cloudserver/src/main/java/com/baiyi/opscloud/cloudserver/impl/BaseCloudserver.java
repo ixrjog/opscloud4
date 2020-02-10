@@ -5,6 +5,8 @@ import com.baiyi.opscloud.cloudserver.base.CloudserverStatus;
 import com.baiyi.opscloud.cloudserver.factory.CloudserverFactory;
 import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import com.baiyi.opscloud.domain.generator.OcServer;
 import com.baiyi.opscloud.facade.OcServerFacade;
@@ -38,6 +40,9 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
     @Resource
     private OcServerFacade ocServerFacde;
 
+    public static final boolean POWER_ON = true;
+    public static final boolean POWER_OFF = false;
+
     /**
      * 同步接口
      *
@@ -57,7 +62,6 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
 
         return Boolean.TRUE;
     }
-
 
     abstract protected String getInstanceId(T instance) throws Exception;
 
@@ -85,7 +89,6 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
                 }
                 updateCloudserver(instance, ocCloudserver);
                 // TODO 更新 server 表 public_ip
-
                 // saveServerPublicIP(updateCloudServerByInstance(instance, cloudServerDO)); // 已录入(更新数据)
                 map.remove(instanceId);
             } else {
@@ -114,10 +117,26 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
         return cloudserverList.stream().collect(Collectors.toMap(OcCloudserver::getInstanceId, a -> a, (k1, k2) -> k1));
     }
 
+    /**
+     * 取云服务器类型
+     *
+     * @return
+     */
     abstract protected int getCloudserverType();
 
+    /**
+     * 取云服务器name
+     *
+     * @param instance
+     * @return
+     */
     abstract protected String getInstanceName(T instance);
 
+    /**
+     * 全量查询实例信息
+     *
+     * @return
+     */
     abstract protected List<T> getInstanceList();
 
     @Override
@@ -181,22 +200,44 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
         }
     }
 
+    /**
+     * 开机
+     *
+     * @param id
+     * @return
+     */
     @Override
-    public Boolean powerOn(OcCloudserver ocCloudserver) {
-        if (!checkAuth(ocCloudserver.getId()))
-            return Boolean.FALSE;
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> start(Integer id) {
+        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserver(id);
+        if (!checkAuth(ocCloudserver))
+            return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
+        return power(ocCloudserver,POWER_ON);
     }
 
+    /**
+     * 关机
+     *
+     * @param id
+     * @return
+     */
     @Override
-    public Boolean powerOff(OcCloudserver ocCloudserver) {
-        if (!checkAuth(ocCloudserver.getId()))
-            return Boolean.FALSE;
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> stop(Integer id) {
+        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserver(id);
+        if (!checkAuth(ocCloudserver))
+            return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
+        return power(ocCloudserver,POWER_OFF);
     }
 
-    private Boolean checkAuth(int cloudserverId) {
-        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserver(cloudserverId);
+    /**
+     * 如果支持电源管理请重写
+     * @param action
+     * @return
+     */
+    protected BusinessWrapper<Boolean> power(OcCloudserver ocCloudserver,Boolean action) {
+        return new BusinessWrapper(Boolean.TRUE);
+    }
+
+    private Boolean checkAuth(OcCloudserver ocCloudserver) {
         if (!ocCloudserver.getPowerMgmt())
             return Boolean.FALSE;
         return Boolean.TRUE;

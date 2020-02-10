@@ -7,6 +7,7 @@ import com.baiyi.opscloud.cloudserver.base.CloudserverType;
 import com.baiyi.opscloud.cloudserver.builder.OcCloudserverBuilder;
 import com.baiyi.opscloud.cloudserver.decorator.AliyunECSInstanceDecorator;
 import com.baiyi.opscloud.cloudserver.instance.AliyunECSInstance;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -71,5 +72,13 @@ public class AliyunECSCloudserver<T> extends BaseCloudserver<T> implements IClou
         AliyunECSInstance i = (AliyunECSInstance) instance;
         return OcCloudserverBuilder.build(i, getInstanceDetail(instance));
     }
+
+    @Override
+    protected BusinessWrapper<Boolean> power(OcCloudserver ocCloudserver,Boolean action){
+        return aliyunECS.power(ocCloudserver.getZone(),ocCloudserver.getInstanceId(),action);
+    }
+
+
+
 
 }

@@ -6,6 +6,7 @@ import com.baiyi.opscloud.aliyun.ecs.AliyunECS;
 import com.baiyi.opscloud.aliyun.ecs.base.ECSDisk;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunECSHandler;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.google.common.collect.Lists;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
@@ -41,8 +42,8 @@ public class AliyunECSImpl implements AliyunECS {
     }
 
     @Override
-    public  DescribeInstancesResponse.Instance getInstance(String regionId, String instanceId){
-        return aliyunECSHandler.getInstance(regionId,  instanceId);
+    public DescribeInstancesResponse.Instance getInstance(String regionId, String instanceId) {
+        return aliyunECSHandler.getInstance(regionId, instanceId);
     }
 
     @Cacheable(cacheNames = "aliyunECSDisk")
@@ -69,7 +70,14 @@ public class AliyunECSImpl implements AliyunECS {
         }
     }
 
-
+    @Override
+    public BusinessWrapper<Boolean> power(String regionId,String instanceId, Boolean action) {
+        if (action) {
+            return aliyunECSHandler.start(regionId,instanceId);
+        } else {
+            return aliyunECSHandler.stop(regionId,instanceId);
+        }
+    }
 
 
 }
