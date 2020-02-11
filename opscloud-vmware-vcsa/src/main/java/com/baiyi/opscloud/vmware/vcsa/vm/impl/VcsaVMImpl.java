@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.vmware.vcsa.vm.impl;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.vmware.vcsa.handler.VcsaHandler;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.vmware.vcsa.vm.VcsaVM;
@@ -11,6 +13,7 @@ import com.vmware.vim25.mo.ManagedEntity;
 import com.vmware.vim25.mo.VirtualMachine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -56,6 +59,25 @@ public class VcsaVMImpl implements VcsaVM {
     @Override
     public String getZone() {
         return vcsaHandler.getZone();
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> power(String instanceName, Boolean action) {
+        if (StringUtils.isEmpty(instanceName))
+            return new BusinessWrapper<>(false);
+        //ServiceInstance serviceInstance = getAPI();
+        try {
+            ManagedEntity me = vcsaHandler.searchManagedEntity(SEARCH_VIRTUALMACHINE_TYPE, instanceName);
+            if (action) {
+                ((VirtualMachine) me).powerOnVM_Task(null);
+            } else {
+                ((VirtualMachine) me).powerOffVM_Task();
+            }
+        } catch (Exception e) {
+            log.error("VM {} {}",instanceName,ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED.getMessage());
+            return new BusinessWrapper<Boolean>(ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED);
+        }
+        return new BusinessWrapper<>(true);
     }
 
     private List<VMInstance> convert(ManagedEntity[] mes) {

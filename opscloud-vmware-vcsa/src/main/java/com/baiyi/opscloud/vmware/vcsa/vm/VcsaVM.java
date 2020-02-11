@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.vmware.vcsa.vm;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 
 import java.util.List;
@@ -17,5 +18,7 @@ public interface VcsaVM {
     VMInstance getInstance(String serverName);
 
     String getZone();
+
+    BusinessWrapper<Boolean> power(String instanceName, Boolean action);
 
 }
