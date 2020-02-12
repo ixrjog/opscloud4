@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
+import com.baiyi.opscloud.service.server.OcServerGroupPermissionService;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;

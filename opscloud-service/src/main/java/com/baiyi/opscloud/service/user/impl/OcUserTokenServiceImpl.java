@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.service.impl;
+package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.generator.OcUserToken;
 import com.baiyi.opscloud.mapper.OcUserTokenMapper;
-import com.baiyi.opscloud.service.OcUserTokenService;
+import com.baiyi.opscloud.service.user.OcUserTokenService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -33,6 +33,10 @@ public class OcUserTokenServiceImpl implements OcUserTokenService {
         return ocUserTokenMapper.selectOneByExample(example);
     }
 
+    @Override
+    public int checkUserHasResourceAuthorize(String token, String resourceName){
+        return ocUserTokenMapper.checkUserHasResourceAuthorize(token,resourceName);
+    }
 
 
 }

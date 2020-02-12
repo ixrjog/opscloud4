@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.service;
+package com.baiyi.opscloud.service.server;
 
 import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
 

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.service;
+package com.baiyi.opscloud.service.user;
 
 import com.baiyi.opscloud.domain.generator.OcUserToken;
 
@@ -13,8 +13,18 @@ public interface OcUserTokenService {
 
     /**
      * 查询有效的Token
+     *
      * @param token
      * @return
      */
     OcUserToken queryOcUserTokenByTokenAndValid(String token);
+
+    /**
+     * 判断用户是否可访问某个资源
+     *
+     * @param token
+     * @param resourceName
+     * @return
+     */
+    int checkUserHasResourceAuthorize(String token, String resourceName);
 }

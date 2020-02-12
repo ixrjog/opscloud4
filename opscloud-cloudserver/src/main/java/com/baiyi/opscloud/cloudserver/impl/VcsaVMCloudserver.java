@@ -35,7 +35,7 @@ public class VcsaVMCloudserver<T> extends BaseCloudserver<T> implements ICloudse
         OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserverByInstanceId(instanceId);
         return (T) vcsaVM.getInstance(ocCloudserver.getServerName());
     }
-    
+
     @Override
     protected int getCloudserverType() {
         return CloudserverType.VM.getType();

@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.service.impl;
+package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.domain.generator.OcEnv;
 import com.baiyi.opscloud.mapper.OcEnvMapper;
-import com.baiyi.opscloud.service.OcEnvService;
+import com.baiyi.opscloud.service.server.OcEnvService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 

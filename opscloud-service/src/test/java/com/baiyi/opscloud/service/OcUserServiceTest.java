@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service;
 
+import com.baiyi.opscloud.service.user.OcUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.test.context.ActiveProfiles;

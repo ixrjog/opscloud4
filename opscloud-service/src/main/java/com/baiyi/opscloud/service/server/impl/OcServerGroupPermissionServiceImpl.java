@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.service.impl;
+package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
 import com.baiyi.opscloud.mapper.OcServerGroupPermissionMapper;
-import com.baiyi.opscloud.service.OcServerGroupPermissionService;
+import com.baiyi.opscloud.service.server.OcServerGroupPermissionService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

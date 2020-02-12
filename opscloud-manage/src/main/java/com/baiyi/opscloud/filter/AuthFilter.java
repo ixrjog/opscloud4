@@ -16,9 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * Created by zxxiao on 16/9/22.
- */
+
 @Component
 public class AuthFilter extends OncePerRequestFilter {
 
@@ -54,13 +52,12 @@ public class AuthFilter extends OncePerRequestFilter {
             String token = request.getHeader(TOKEN);
             if (StringUtils.isEmpty(token))
                 token = request.getParameter(TOKEN);
-
+            // 鉴权
             BusinessWrapper<Boolean> wrapper = authFacade.checkUserHasResourceAuthorize(token, resourceName);
+
             if (!wrapper.isSuccess()) {
                 HttpResult result = new HttpResult(wrapper.getCode(), wrapper.getDesc());
-
                 setHeaders(request, response);
-
                 response.setContentType("application/json;UTF-8");
                 response.getWriter().println(JSON.toJSONString(result));
             } else {

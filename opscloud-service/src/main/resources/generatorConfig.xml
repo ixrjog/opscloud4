@@ -96,11 +96,16 @@
         <!--        oc_server-->
         <!--        oc_env-->
         <!--        oc_account-->
-        <table tableName="oc_user_token">
+<!--        oc_user_token-->
+<!--        oc_auth_group-->
+<!--        oc_auth_resource-->
+<!--        oc_auth_resource_group-->
+<!--        oc_auth_role-->
+<!--        oc_auth_role_resource-->
+<!--        oc_auth_user_role-->
+        <table tableName="oc_auth_user_role">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
-
-
     </context>
 
 </generatorConfiguration>
