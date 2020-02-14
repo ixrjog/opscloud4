@@ -7,7 +7,8 @@ target/
 *.log
 *.db
 .mvn
-.gz
+*.gz
+
 ### 含隐私
 application-dev.yml
 application.properties
