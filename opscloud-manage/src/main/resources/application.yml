@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /
+    context-path: /oc3
 
 spring:
   profiles:

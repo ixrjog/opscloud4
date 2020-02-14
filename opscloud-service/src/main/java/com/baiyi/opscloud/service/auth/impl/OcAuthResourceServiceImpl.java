@@ -1,12 +1,17 @@
 package com.baiyi.opscloud.service.auth.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcAuthResource;
+import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.mapper.OcAuthResourceMapper;
 import com.baiyi.opscloud.service.auth.OcAuthResourceService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,4 +31,32 @@ public class OcAuthResourceServiceImpl implements OcAuthResourceService {
         criteria.andEqualTo("resourceName",resourceName);
         return ocAuthResourceMapper.selectOneByExample(example);
     }
+
+    @Override
+    public  DataTable<OcAuthResource> queryOcAuthResourceByParam(ResourceParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcAuthResource> ocAuthResourceList = ocAuthResourceMapper.queryOcAuthResourceByParam(pageQuery);
+        return new DataTable<>(ocAuthResourceList, page.getTotal());
+    }
+
+    @Override
+    public void addOcAuthResource(OcAuthResource ocAuthResource) {
+        ocAuthResourceMapper.insert(ocAuthResource);
+    }
+
+    @Override
+    public void updateOcAuthResource(OcAuthResource ocAuthResource) {
+        ocAuthResourceMapper.updateByPrimaryKey(ocAuthResource);
+    }
+
+    @Override
+    public void deleteOcAuthResourceById(int id) {
+        ocAuthResourceMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public OcAuthResource queryOcAuthResourceById(int id) {
+        return ocAuthResourceMapper.selectByPrimaryKey(id);
+    }
+
 }

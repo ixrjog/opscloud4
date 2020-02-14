@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.param;
+package com.baiyi.opscloud.domain.param.auth;
 
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;

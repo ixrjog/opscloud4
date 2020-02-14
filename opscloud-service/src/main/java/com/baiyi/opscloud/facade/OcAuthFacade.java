@@ -19,4 +19,6 @@ public interface OcAuthFacade {
     BusinessWrapper<Boolean> checkUserHasResourceAuthorize(String token, String resourceName);
 
     String getUserByToken(String token);
+
+    void setUserToken(String username, String token);
 }

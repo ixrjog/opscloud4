@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_auth_role")
 public class OcAuthRole {
@@ -20,7 +20,7 @@ public class OcAuthRole {
      */
     private String comment;
 
-    private Boolean workflow;
+    private Integer workflow;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -81,14 +81,14 @@ public class OcAuthRole {
     /**
      * @return workflow
      */
-    public Boolean getWorkflow() {
+    public Integer getWorkflow() {
         return workflow;
     }
 
     /**
      * @param workflow
      */
-    public void setWorkflow(Boolean workflow) {
+    public void setWorkflow(Integer workflow) {
         this.workflow = workflow;
     }
 

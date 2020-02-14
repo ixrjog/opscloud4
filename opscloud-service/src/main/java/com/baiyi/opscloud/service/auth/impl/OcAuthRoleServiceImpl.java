@@ -1,10 +1,16 @@
 package com.baiyi.opscloud.service.auth.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.OcAuthRole;
+import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.mapper.OcAuthRoleMapper;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -16,5 +22,32 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
 
     @Resource
     private OcAuthRoleMapper ocAuthRoleMapper;
+
+    @Override
+    public DataTable<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcAuthRole> ocAuthRoleList = ocAuthRoleMapper.queryOcAuthRoleByParam(pageQuery);
+        return new DataTable<>(ocAuthRoleList, page.getTotal());
+    }
+
+    @Override
+    public void addOcAuthRole(OcAuthRole ocAuthRole) {
+        ocAuthRoleMapper.insert(ocAuthRole);
+    }
+
+    @Override
+    public void updateOcAuthRole(OcAuthRole ocAuthRole) {
+        ocAuthRoleMapper.updateByPrimaryKey(ocAuthRole);
+    }
+
+    @Override
+    public void deleteOcAuthRoleById(int id) {
+        ocAuthRoleMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public OcAuthRole queryOcAuthRoleById(int id) {
+        return ocAuthRoleMapper.selectByPrimaryKey(id);
+    }
 
 }

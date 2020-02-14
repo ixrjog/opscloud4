@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -33,7 +34,7 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         if (ocAuthResource == null) // 资源不存在
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
 
-        if (!ocAuthResource.getNeedAuth()) // 此接口不需要鉴权
+        if (ocAuthResource.getNeedAuth() == 0) // 此接口不需要鉴权
             return new BusinessWrapper<>(true);
 
         if (StringUtils.isEmpty(token))  // request请求中没有Token
@@ -58,5 +59,24 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         if (ocUserToken == null)
             return "";
         return ocUserToken.getUsername();
+    }
+
+    /**
+     * 设置用户Token
+     *
+     * @param username
+     * @param token
+     */
+    @Override
+    public void setUserToken(String username, String token) {
+        List<OcUserToken> ocUserTokenList = ocUserTokenService.queryOcUserTokenByUsername(username);
+        // 吊销Token
+        if (!ocUserTokenList.isEmpty())
+            for (OcUserToken ocUserToken : ocUserTokenList) ocUserTokenService.updateOcUserTokenInvalid(ocUserToken);
+        OcUserToken ocUserToken = new OcUserToken();
+        ocUserToken.setValid(true);
+        ocUserToken.setUsername(username);
+        ocUserToken.setToken(token);
+        ocUserTokenService.addOcUserToken(ocUserToken);
     }
 }

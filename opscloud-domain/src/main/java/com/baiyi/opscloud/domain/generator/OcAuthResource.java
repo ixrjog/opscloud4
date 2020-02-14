@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_auth_resource")
 public class OcAuthResource {
@@ -15,7 +15,7 @@ public class OcAuthResource {
     private String comment;
 
     @Column(name = "need_auth")
-    private Boolean needAuth;
+    private Integer needAuth;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -68,14 +68,14 @@ public class OcAuthResource {
     /**
      * @return need_auth
      */
-    public Boolean getNeedAuth() {
+    public Integer getNeedAuth() {
         return needAuth;
     }
 
     /**
      * @param needAuth
      */
-    public void setNeedAuth(Boolean needAuth) {
+    public void setNeedAuth(Integer needAuth) {
         this.needAuth = needAuth;
     }
 

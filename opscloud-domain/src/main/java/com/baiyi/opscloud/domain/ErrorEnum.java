@@ -15,9 +15,14 @@ public enum ErrorEnum {
     AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌Token"),
     AUTHENTICATION_TOKEN_INVALID(20004,"令牌Token无效"),
 
+    // auth
+    AUTH_ROLE_HAS_USED(11001, "用户角色正在使用！"),
+    AUTH_ROLE_NOT_EXIST(11002, "用户角色配置不存在！"),
+    AUTH_RESOURCE_HAS_USED(11003, "资源正在使用！"),
+    AUTH_RESOURCE_NOT_EXIST(11004, "资源配置不存在！"),
 
+    // cloudserver
     CLOUDSERVER_POWER_MGMT_FAILED(30001,"云服务器启停失败"),
-
 
 
     // ----------------------- 例子 -----------------------
@@ -25,7 +30,6 @@ public enum ErrorEnum {
     CREATE_TABLE_ERROR(10003, "创建表失败！"),
     INVOKE_QUERY_ERROR(10004, "执行查询失败！"),
     ROW_TIME_FORMAT_ERROR(10005, "行数据时间格式转换失败！"),
-
 
     BINLOG_CONFIG_NOT_EXIST(10101, "binlog配置不存在！"),
     BINLOG_CONFIG_HAS_USED(10102, "binlog配置正在使用！"),

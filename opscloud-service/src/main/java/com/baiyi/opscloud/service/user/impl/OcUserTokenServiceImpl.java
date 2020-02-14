@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,7 +27,7 @@ public class OcUserTokenServiceImpl implements OcUserTokenService {
 
     @Override
     public OcUserToken queryOcUserTokenByTokenAndValid(String token) {
-        Example example = new Example( OcUserToken .class);
+        Example example = new Example(OcUserToken.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("valid", true);
         criteria.andEqualTo("token", token);
@@ -34,8 +35,23 @@ public class OcUserTokenServiceImpl implements OcUserTokenService {
     }
 
     @Override
-    public int checkUserHasResourceAuthorize(String token, String resourceName){
-        return ocUserTokenMapper.checkUserHasResourceAuthorize(token,resourceName);
+    public List<OcUserToken> queryOcUserTokenByUsername(String username) {
+        Example example = new Example(OcUserToken.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("valid", true);
+        criteria.andEqualTo("username", username);
+        return ocUserTokenMapper.selectByExample(example);
+    }
+
+    @Override
+    public void updateOcUserTokenInvalid(OcUserToken ocUserToken){
+        ocUserToken.setValid(false);
+        ocUserTokenMapper.updateByPrimaryKey(ocUserToken);
+    }
+
+    @Override
+    public int checkUserHasResourceAuthorize(String token, String resourceName) {
+        return ocUserTokenMapper.checkUserHasResourceAuthorize(token, resourceName);
     }
 
 

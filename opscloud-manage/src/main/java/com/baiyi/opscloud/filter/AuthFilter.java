@@ -27,6 +27,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+
+        //   if (!request.getMethod().equalsIgnoreCase("options")) {
         if (!request.getMethod().equalsIgnoreCase("options")) {
             String resourceName = request.getServletPath();
             //单页不拦截页面,只拦截协议请求
@@ -54,7 +56,6 @@ public class AuthFilter extends OncePerRequestFilter {
                 token = request.getParameter(TOKEN);
             // 鉴权
             BusinessWrapper<Boolean> wrapper = authFacade.checkUserHasResourceAuthorize(token, resourceName);
-
             if (!wrapper.isSuccess()) {
                 HttpResult result = new HttpResult(wrapper.getCode(), wrapper.getDesc());
                 setHeaders(request, response);
@@ -69,6 +70,8 @@ public class AuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
             }
         } else {
+            setHeaders(request, response);
+            response.setContentType("application/json;UTF-8");
             filterChain.doFilter(request, response);
         }
     }

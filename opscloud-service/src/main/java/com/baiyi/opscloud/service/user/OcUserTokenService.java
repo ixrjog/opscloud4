@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.user;
 
 import com.baiyi.opscloud.domain.generator.OcUserToken;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/1/16 10:22 上午
@@ -18,6 +20,19 @@ public interface OcUserTokenService {
      * @return
      */
     OcUserToken queryOcUserTokenByTokenAndValid(String token);
+
+    /**
+     * 查询用户有效的Token
+     * @param username
+     * @return
+     */
+    List<OcUserToken> queryOcUserTokenByUsername(String username);
+
+    /**
+     * 吊销Token
+     * @param ocUserToken
+     */
+    void updateOcUserTokenInvalid(OcUserToken ocUserToken);
 
     /**
      * 判断用户是否可访问某个资源

@@ -8,8 +8,21 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
-    <result column="need_auth" jdbcType="BIT" property="needAuth" />
+    <result column="need_auth" jdbcType="INTEGER" property="needAuth" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <select id="queryOcAuthResourceByParam" parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$PageQuery" resultMap="BaseResultMap">
+    select * from oc_auth_resource
+    <where>
+      <if test="resourceName != null and resourceName != ''">
+        resource_name like "%" #{resourceName} "%"
+      </if>
+      <if test="needAuth != null and needAuth != -1">
+        and need_auth = #{needAuth}
+      </if>
+    </where>
+  </select>
+
 </mapper>
