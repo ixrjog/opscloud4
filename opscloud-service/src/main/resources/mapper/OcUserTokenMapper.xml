@@ -18,8 +18,8 @@
         SELECT count(*)
         FROM oc_user_token a0
           JOIN oc_auth_user_role a1 ON a0.username = a1.username AND a0.token = #{token}
-          JOIN oc_auth_role_resource a2 ON a1.role_id = a2.role_id
-          JOIN oc_auth_resource a3 ON a2.resource_idd = a3.id AND a3.resource_name = #{resourceName}
+          JOIN oc_auth_role_resource a2 ON a1.id = a2.role_id
+          JOIN oc_auth_resource a3 ON a2.group_id = a3.group_id AND a3.resource_name = #{resourceName}
     </select>
 
 

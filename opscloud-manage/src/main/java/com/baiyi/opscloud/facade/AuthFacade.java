@@ -2,8 +2,10 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
 
@@ -29,5 +31,14 @@ public interface AuthFacade {
     void updateResource(OcResourceVO.OcResource ocResource);
 
     BusinessWrapper<Boolean> deleteResourceById(int id);
+
+    // resource group
+    DataTable<OcGroupVO.OcGroup> queryGroupPage(GroupParam.PageQuery pageQuery);
+
+    void addGroup(OcGroupVO.OcGroup ocGroup);
+
+    void updateGroup(OcGroupVO.OcGroup ocGroup);
+
+    BusinessWrapper<Boolean> deleteGroupById(int id);
 
 }

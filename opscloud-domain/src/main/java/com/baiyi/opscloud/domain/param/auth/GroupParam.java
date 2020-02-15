@@ -8,23 +8,18 @@ import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
- * @Date 2020/2/14 9:56 下午
+ * @Date 2020/2/15 5:20 下午
  * @Version 1.0
  */
-public class ResourceParam {
+public class GroupParam {
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class PageQuery extends PageParam {
 
-        @ApiModelProperty(value = "资源组id")
-        private Integer groupId;
+        @ApiModelProperty(value = "资源组名称")
+        private String groupCode;
 
-        @ApiModelProperty(value = "资源路径")
-        private String resourceName;
-
-        @ApiModelProperty(value = "鉴权")
-        private Integer needAuth;
     }
 }

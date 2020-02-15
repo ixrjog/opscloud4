@@ -9,6 +9,9 @@ public class OcAuthResource {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "group_id")
+    private Integer groupId;
+
     @Column(name = "resource_name")
     private String resourceName;
 
@@ -35,6 +38,14 @@ public class OcAuthResource {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
     }
 
     /**

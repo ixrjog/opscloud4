@@ -2,8 +2,10 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
 import com.baiyi.opscloud.facade.AuthFacade;
@@ -53,7 +55,7 @@ public class AuthController {
         return new HttpResult<>(authFacade.deleteRoleById(id));
     }
 
-
+    // resource
     @ApiOperation(value = "分页查询resource列表")
     @GetMapping(value = "/resource/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcResourceVO.OcResource>> queryResourcePage(@Valid ResourceParam.PageQuery pageQuery) {
@@ -78,6 +80,33 @@ public class AuthController {
     @DeleteMapping(value = "/resource/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteResourceById(@RequestParam int id) {
         return new HttpResult<>(authFacade.deleteResourceById(id));
+    }
+
+    // resource group
+    @ApiOperation(value = "分页查询resource group列表")
+    @GetMapping(value = "/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcGroupVO.OcGroup>> queryGroupPage(@Valid GroupParam.PageQuery pageQuery) {
+        return new HttpResult<>(authFacade.queryGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "新增resource group")
+    @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addGroup(@RequestBody @Valid OcGroupVO.OcGroup ocGroup) {
+        authFacade.addGroup(ocGroup);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "更新resource group")
+    @PutMapping(value = "/group/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateGroup(@RequestBody @Valid OcGroupVO.OcGroup ocGroup) {
+        authFacade.updateGroup(ocGroup);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除指定的resource group")
+    @DeleteMapping(value = "/group/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteGroupById(@RequestParam int id) {
+        return new HttpResult<>(authFacade.deleteGroupById(id));
     }
 
 

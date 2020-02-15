@@ -1,10 +1,16 @@
 package com.baiyi.opscloud.service.auth.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.OcAuthGroup;
+import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.mapper.OcAuthGroupMapper;
 import com.baiyi.opscloud.service.auth.OcAuthGroupService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -16,5 +22,32 @@ public class OcAuthGroupServiceImpl implements OcAuthGroupService {
 
     @Resource
     private OcAuthGroupMapper ocAuthGroupMapper;
+
+    @Override
+    public OcAuthGroup queryOcAuthGroupById(int id) {
+        return ocAuthGroupMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public DataTable<OcAuthGroup> queryOcAuthGroupByParam(GroupParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcAuthGroup> ocAuthGroupList = ocAuthGroupMapper.queryOcAuthGroupByParam(pageQuery);
+        return new DataTable<>(ocAuthGroupList, page.getTotal());
+    }
+
+    @Override
+    public void addOcAuthGroup(OcAuthGroup ocAuthGroup) {
+        ocAuthGroupMapper.insert(ocAuthGroup);
+    }
+
+    @Override
+    public void updateOcAuthGroup(OcAuthGroup ocAuthGroup) {
+        ocAuthGroupMapper.updateByPrimaryKey(ocAuthGroup);
+    }
+
+    @Override
+    public void deleteOcAuthGroupById(int id) {
+        ocAuthGroupMapper.deleteByPrimaryKey(id);
+    }
 
 }
