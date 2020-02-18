@@ -76,6 +76,13 @@ public class AuthController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "更新resource-needAuth")
+    @PutMapping(value = "/resource/updateNeedAuth", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateResourceNeedAuth(@RequestBody @Valid OcResourceVO.OcResource ocResource) {
+        authFacade.updateResourceNeedAuth(ocResource);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "删除指定的resource")
     @DeleteMapping(value = "/resource/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteResourceById(@RequestParam int id) {

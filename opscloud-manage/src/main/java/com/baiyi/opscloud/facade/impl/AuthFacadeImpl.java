@@ -16,6 +16,7 @@ import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import com.baiyi.opscloud.service.auth.OcAuthGroupService;
 import com.baiyi.opscloud.service.auth.OcAuthResourceService;
+import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Resource
     private OcAuthGroupService ocAuthGroupService;
+
+    @Resource
+    private OcAuthRoleResourceService ocAuthRoleResourceService;
 
     @Override
     public DataTable<OcRoleVO.OcRole> queryRolePage(RoleParam.PageQuery pageQuery) {
@@ -87,6 +91,7 @@ public class AuthFacadeImpl implements AuthFacade {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryOcAuthResourceByParam(pageQuery);
         List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
         DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page.stream().map(e -> invokeOcResource(e)).collect(Collectors.toList()), table.getTotalNum());
+        //DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
@@ -97,7 +102,7 @@ public class AuthFacadeImpl implements AuthFacade {
      * @return
      */
     private OcResourceVO.OcResource invokeOcResource(OcResourceVO.OcResource ocResource) {
-        if (ocResource.getGroupId() == 0)
+        if (ocResource.getGroupId() == null)
             return ocResource;
         OcAuthGroup ocAuthGroup = ocAuthGroupService.queryOcAuthGroupById(ocResource.getGroupId());
         ocResource.setGroupCode(ocAuthGroup.getGroupCode());
@@ -117,17 +122,20 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
+    public void updateResourceNeedAuth(OcResourceVO.OcResource ocResource) {
+        OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceById(ocResource.getId());
+        ocAuthResource.setNeedAuth(ocResource.getNeedAuth());
+        ocAuthResourceService.updateOcAuthResource(ocAuthResource);
+    }
+
+    @Override
     public BusinessWrapper<Boolean> deleteResourceById(int id) {
         // 此处要判断是否有用户绑定role
         OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceById(id);
         if (ocAuthResource == null)
             return new BusinessWrapper<>(ErrorEnum.AUTH_RESOURCE_NOT_EXIST);
-//        BinlogConfig binlogConfig = binlogConfigService.queryById(binlogConfigId);
-//        if (binlogConfig == null) {
-//            return new BusinessWrapper<>(ErrorEnum.BINLOG_CONFIG_NOT_EXIST);
-//        }
-//        int count = ruleDetailService.countByDbTable(binlogConfig.getTopic(), binlogConfig.getTable());
-        int count = 0;
+        // 判断role绑定的资源
+        int count = ocAuthRoleResourceService.countByResourceId(id);
         if (count == 0) {
             ocAuthResourceService.deleteOcAuthResourceById(id);
             return BusinessWrapper.SUCCESS;
@@ -151,13 +159,13 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public void updateGroup(OcGroupVO.OcGroup ocGroup){
+    public void updateGroup(OcGroupVO.OcGroup ocGroup) {
         OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(ocGroup, OcAuthGroup.class);
         ocAuthGroupService.updateOcAuthGroup(ocAuthGroup);
     }
 
     @Override
-    public BusinessWrapper<Boolean> deleteGroupById(int id){
+    public BusinessWrapper<Boolean> deleteGroupById(int id) {
         // 此处要判断是否有用户绑定role
         OcAuthGroup ocAuthGroup = ocAuthGroupService.queryOcAuthGroupById(id);
         if (ocAuthGroup == null)

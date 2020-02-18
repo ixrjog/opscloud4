@@ -1,8 +1,12 @@
 package com.baiyi.opscloud.service.server.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.domain.param.cloudserver.CloudserverParam;
 import com.baiyi.opscloud.mapper.OcCloudserverMapper;
 import com.baiyi.opscloud.service.server.OcCloudserverService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -19,6 +23,13 @@ public class OcCloudserverServiceImpl implements OcCloudserverService {
 
     @Resource
     private OcCloudserverMapper ocCloudserverMapper;
+
+    @Override
+    public DataTable<OcCloudserver> queryOcCloudserverByParam(CloudserverParam.PageQuery pageQuery){
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcCloudserver> ocCloudserverList =  ocCloudserverMapper.queryOcCloudserverByParam(pageQuery);
+        return new DataTable<>(ocCloudserverList, page.getTotal());
+    }
 
     @Override
     public List<OcCloudserver> queryOcCloudserverByType(int cloudserverType) {
@@ -38,7 +49,7 @@ public class OcCloudserverServiceImpl implements OcCloudserverService {
 
 
     @Override
-    public  OcCloudserver queryOcCloudserver(int id){
+    public  OcCloudserver queryOcCloudserverById(int id){
         return ocCloudserverMapper.selectByPrimaryKey(id);
     }
 
@@ -54,7 +65,7 @@ public class OcCloudserverServiceImpl implements OcCloudserverService {
     }
 
     @Override
-    public void delOcCloudserver(int id) {
+    public void deleteOcCloudserverById(int id) {
         ocCloudserverMapper.deleteByPrimaryKey(id);
     }
 }

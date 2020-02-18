@@ -30,6 +30,8 @@ public interface AuthFacade {
 
     void updateResource(OcResourceVO.OcResource ocResource);
 
+    void updateResourceNeedAuth(OcResourceVO.OcResource ocResource);
+
     BusinessWrapper<Boolean> deleteResourceById(int id);
 
     // resource group

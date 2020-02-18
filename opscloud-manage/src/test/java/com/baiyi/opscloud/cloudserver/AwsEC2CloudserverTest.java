@@ -23,7 +23,7 @@ public class AwsEC2CloudserverTest  extends BaseUnit {
     }
 
     @Test
-    void testRsync() {
+    void testSync() {
         getICloudserver().sync();
     }
 

@@ -32,4 +32,23 @@
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="instance_detail" jdbcType="LONGVARCHAR" property="instanceDetail" />
   </resultMap>
+
+  <select id="queryOcCloudserverByParam" parameterType="com.baiyi.opscloud.domain.param.cloudserver.CloudserverParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_cloudserver
+    <where>
+      <if test="cloudserverType != null and cloudserverType != -1">
+        and cloudserver_type = #{cloudserverType}
+      </if>
+      <if test="serverName != null and serverName != ''">
+        and server_name like "%" #{serverName} "%"
+      </if>
+      <if test="queryIp != null and queryIp != ''">
+        and private_ip like "%" #{queryIp} "%" or public_ip like "%" #{queryIp} "%"
+      </if>
+      <if test="serverStatus != null and serverStatus != -1">
+        and server_status = #{serverStatus}
+      </if>
+    </where>
+  </select>
 </mapper>

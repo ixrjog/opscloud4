@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.server;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.domain.param.cloudserver.CloudserverParam;
 
 import java.util.List;
 
@@ -11,15 +13,17 @@ import java.util.List;
  */
 public interface OcCloudserverService {
 
+    DataTable<OcCloudserver> queryOcCloudserverByParam(CloudserverParam.PageQuery pageQuery);
+
     List<OcCloudserver> queryOcCloudserverByType(int cloudserverType);
 
     OcCloudserver queryOcCloudserverByInstanceId(String instanceId);
 
-    OcCloudserver queryOcCloudserver(int id);
+    OcCloudserver queryOcCloudserverById(int id);
 
     void addOcCloudserver(OcCloudserver ocCloudserver);
 
     void updateOcCloudserver(OcCloudserver ocCloudserver);
 
-    void delOcCloudserver(int id);
+    void deleteOcCloudserverById(int id);
 }

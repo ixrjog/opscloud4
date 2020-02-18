@@ -208,7 +208,7 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
      */
     @Override
     public BusinessWrapper<Boolean> start(Integer id) {
-        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserver(id);
+        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserverById(id);
         if (!checkAuth(ocCloudserver))
             return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
         return power(ocCloudserver,POWER_ON);
@@ -222,7 +222,7 @@ public abstract class BaseCloudserver<T> implements InitializingBean, ICloudserv
      */
     @Override
     public BusinessWrapper<Boolean> stop(Integer id) {
-        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserver(id);
+        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserverById(id);
         if (!checkAuth(ocCloudserver))
             return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
         return power(ocCloudserver,POWER_OFF);

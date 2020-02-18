@@ -24,8 +24,8 @@ public enum ErrorEnum {
     AUTH_GROUP_NOT_EXIST(11004, "资源组配置不存在！"),
 
     // cloudserver
-    CLOUDSERVER_POWER_MGMT_FAILED(30001,"云服务器启停失败"),
-
+    CLOUDSERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),
+    CLOUDSERVER_NOT_EXIST(30002, "云主机不存在！"),
 
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),

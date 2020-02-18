@@ -6,4 +6,11 @@ package com.baiyi.opscloud.service.auth;
  * @Version 1.0
  */
 public interface OcAuthRoleResourceService {
+
+    /**
+     * 统计被引用的资源条目
+     * @param resourceId
+     * @return
+     */
+    int countByResourceId(int resourceId);
 }

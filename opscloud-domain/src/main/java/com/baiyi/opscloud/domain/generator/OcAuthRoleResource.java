@@ -18,8 +18,8 @@ public class OcAuthRoleResource {
     /**
      * 资源id
      */
-    @Column(name = "group_id")
-    private Integer groupId;
+    @Column(name = "resource_id")
+    private Integer resourceId;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -60,21 +60,21 @@ public class OcAuthRoleResource {
     }
 
     /**
-     * 获取资源组id
+     * 获取资源id
      *
-     * @return group_id - 资源组id
+     * @return resource_id - 资源组id
      */
-    public Integer getGroupId() {
-        return groupId;
+    public Integer getResourceId() {
+        return resourceId;
     }
 
     /**
-     * 设置资源组id
+     * 设置资源id
      *
-     * @param groupId 资源组id
+     * @param resourceId 资源id
      */
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    public void setResourceId(Integer resourceId) {
+        this.resourceId = resourceId;
     }
 
     /**

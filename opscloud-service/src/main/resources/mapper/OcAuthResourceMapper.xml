@@ -17,7 +17,7 @@
   <select id="queryOcAuthResourceByParam" parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$PageQuery" resultMap="BaseResultMap">
     select * from oc_auth_resource
     <where>
-      <if test="groupId != null and groupId != 0">
+      <if test="groupId != null and groupId > 0">
         and group_id = #{groupId}
       </if>
       <if test="resourceName != null and resourceName != ''">
@@ -28,5 +28,21 @@
       </if>
     </where>
   </select>
+
+<!--  <select id="queryOcAuthResourceByParam" parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$PageQuery" resultMap="BaseResultMap">-->
+<!--    select a0.* from oc_auth_resource a0-->
+<!--    <if test="groupId != null and groupId > 0">-->
+<!--      JOIN oc_auth_resource_group a1 on a0.id = a1.resource_id-->
+<!--      and a1.group_id = #{groupId}-->
+<!--    </if>-->
+<!--    <where>-->
+<!--      <if test="resourceName != null and resourceName != ''">-->
+<!--        and a0.resource_name like "%" #{resourceName} "%"-->
+<!--      </if>-->
+<!--      <if test="needAuth != null and needAuth != -1">-->
+<!--        and a0.need_auth = #{needAuth}-->
+<!--      </if>-->
+<!--    </where>-->
+<!--  </select>-->
 
 </mapper>
