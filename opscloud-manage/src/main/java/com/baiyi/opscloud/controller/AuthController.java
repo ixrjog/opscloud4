@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
+import com.baiyi.opscloud.domain.vo.auth.OcRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import io.swagger.annotations.Api;
@@ -29,6 +30,7 @@ public class AuthController {
     @Resource
     private AuthFacade authFacade;
 
+    // role
     @ApiOperation(value = "分页查询role列表")
     @GetMapping(value = "/role/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcRoleVO.OcRole>> queryRolePage(@Valid RoleParam.PageQuery pageQuery) {
@@ -53,6 +55,33 @@ public class AuthController {
     @DeleteMapping(value = "/role/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteRoleById(@RequestParam int id) {
         return new HttpResult<>(authFacade.deleteRoleById(id));
+    }
+
+    // role resourcbe
+    @ApiOperation(value = "分页查询角色已绑定的资源列表")
+    @GetMapping(value = "/role/resource/bind/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcResourceVO.OcResource>> queryRoleBindResourcePage(@Valid ResourceParam.BindResourcePageQuery pageQuery) {
+        return new HttpResult<>(authFacade.queryRoleBindResourcePage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询角色未绑定的资源列表")
+    @GetMapping(value = "/role/resource/unbind/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcResourceVO.OcResource>> queryRoleUnbindResourcePage(@Valid ResourceParam.BindResourcePageQuery pageQuery) {
+        return new HttpResult<>(authFacade.queryRoleUnbindResourcePage(pageQuery));
+    }
+
+    @ApiOperation(value = "角色绑定资源")
+    @PostMapping(value = "/role/resource/bind", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> bindRoleResource(@RequestBody @Valid OcRoleResourceVO.OcRoleResource ocRoleResource) {
+        authFacade.bindRoleResource(ocRoleResource);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "角色解除绑定资源")
+    @DeleteMapping(value = "/role/resource/unbind", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> unbindRoleResource(@RequestParam int id) {
+        authFacade.unbindRoleResource(id);
+        return HttpResult.SUCCESS;
     }
 
     // resource

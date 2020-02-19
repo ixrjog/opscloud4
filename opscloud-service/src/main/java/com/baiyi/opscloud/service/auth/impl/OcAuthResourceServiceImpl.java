@@ -28,16 +28,31 @@ public class OcAuthResourceServiceImpl implements OcAuthResourceService {
     public OcAuthResource queryOcAuthResourceByName(String resourceName) {
         Example example = new Example(OcAuthResource.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("resourceName",resourceName);
+        criteria.andEqualTo("resourceName", resourceName);
         return ocAuthResourceMapper.selectOneByExample(example);
     }
 
     @Override
-    public  DataTable<OcAuthResource> queryOcAuthResourceByParam(ResourceParam.PageQuery pageQuery) {
+    public DataTable<OcAuthResource> queryOcAuthResourceByParam(ResourceParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcAuthResource> ocAuthResourceList = ocAuthResourceMapper.queryOcAuthResourceByParam(pageQuery);
         return new DataTable<>(ocAuthResourceList, page.getTotal());
     }
+
+    @Override
+    public DataTable<OcAuthResource> queryRoleBindOcAuthResourceByParam(ResourceParam.BindResourcePageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcAuthResource> ocAuthResourceList = ocAuthResourceMapper.queryOcAuthRoleBindResourceByParam(pageQuery);
+        return new DataTable<>(ocAuthResourceList, page.getTotal());
+    }
+
+    @Override
+    public DataTable<OcAuthResource> queryRoleUnbindOcAuthResourceByParam(ResourceParam.BindResourcePageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcAuthResource> ocAuthResourceList = ocAuthResourceMapper.queryOcAuthRoleUnbindResourceByParam(pageQuery);
+        return new DataTable<>(ocAuthResourceList, page.getTotal());
+    }
+
 
     @Override
     public void addOcAuthResource(OcAuthResource ocAuthResource) {

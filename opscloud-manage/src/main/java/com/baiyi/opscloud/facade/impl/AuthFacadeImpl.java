@@ -7,11 +7,13 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcAuthGroup;
 import com.baiyi.opscloud.domain.generator.OcAuthResource;
 import com.baiyi.opscloud.domain.generator.OcAuthRole;
+import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
 import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
+import com.baiyi.opscloud.domain.vo.auth.OcRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import com.baiyi.opscloud.service.auth.OcAuthGroupService;
@@ -57,7 +59,6 @@ public class AuthFacadeImpl implements AuthFacade {
     public void addRole(OcRoleVO.OcRole ocRole) {
         OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(ocRole, OcAuthRole.class);
         ocAuthRoleService.addOcAuthRole(ocAuthRole);
-
     }
 
     @Override
@@ -85,6 +86,34 @@ public class AuthFacadeImpl implements AuthFacade {
             return new BusinessWrapper<>(ErrorEnum.AUTH_ROLE_HAS_USED);
         }
     }
+
+    @Override
+    public DataTable<OcResourceVO.OcResource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
+        DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleBindOcAuthResourceByParam(pageQuery);
+        List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
+        DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public DataTable<OcResourceVO.OcResource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
+        DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleUnbindOcAuthResourceByParam(pageQuery);
+        List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
+        DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public void bindRoleResource(OcRoleResourceVO.OcRoleResource ocRoleResource) {
+        OcAuthRoleResource ocAuthRoleResource = BeanCopierUtils.copyProperties(ocRoleResource, OcAuthRoleResource.class);
+        ocAuthRoleResourceService.addOcAuthRoleResource(ocAuthRoleResource);
+    }
+
+    @Override
+    public void unbindRoleResource(int ocRoleResourceId) {
+        ocAuthRoleResourceService.delOcAuthRoleResourceById(ocRoleResourceId);
+    }
+
 
     @Override
     public DataTable<OcResourceVO.OcResource> queryResourcePage(ResourceParam.PageQuery pageQuery) {

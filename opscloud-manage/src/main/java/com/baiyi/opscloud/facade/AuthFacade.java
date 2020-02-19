@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
+import com.baiyi.opscloud.domain.vo.auth.OcRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
 
 /**
@@ -23,6 +24,21 @@ public interface AuthFacade {
     void updateRole(OcRoleVO.OcRole ocRole);
 
     BusinessWrapper<Boolean> deleteRoleById(int id);
+
+   // DataTable<OcRoleResourceVO.OcRoleResource> queryRoleResourcePage(RoleResourceParam.PageQuery pageQuery);
+
+    /**
+     * 角色绑定的资源
+     * @param pageQuery
+     * @return
+     */
+    DataTable<OcResourceVO.OcResource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery);
+
+    DataTable<OcResourceVO.OcResource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery);
+
+    void bindRoleResource(OcRoleResourceVO.OcRoleResource ocRoleResource);
+
+    void unbindRoleResource(int ocRoleResourceId);
 
     DataTable<OcResourceVO.OcResource> queryResourcePage(ResourceParam.PageQuery pageQuery);
 

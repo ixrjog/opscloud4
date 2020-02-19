@@ -23,4 +23,9 @@ public interface OcAuthResourceService {
 
     OcAuthResource queryOcAuthResourceById(int id);
 
+    // 角色绑定的资源
+    DataTable<OcAuthResource> queryRoleBindOcAuthResourceByParam(ResourceParam.BindResourcePageQuery pageQuery);
+
+    DataTable<OcAuthResource> queryRoleUnbindOcAuthResourceByParam(ResourceParam.BindResourcePageQuery pageQuery);
+
 }

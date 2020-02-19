@@ -10,4 +10,8 @@ public interface OcAuthResourceMapper extends Mapper<OcAuthResource> {
 
     List<OcAuthResource> queryOcAuthResourceByParam(ResourceParam.PageQuery pageQuery);
 
+    List<OcAuthResource> queryOcAuthRoleBindResourceByParam(ResourceParam.BindResourcePageQuery pageQuery);
+
+    List<OcAuthResource> queryOcAuthRoleUnbindResourceByParam(ResourceParam.BindResourcePageQuery pageQuery);
+
 }

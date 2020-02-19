@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.auth.impl;
 
 import com.baiyi.opscloud.domain.generator.OcAuthResource;
+import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
 import com.baiyi.opscloud.mapper.OcAuthRoleResourceMapper;
 import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,16 @@ public class OcAuthRoleResourceServiceImpl implements OcAuthRoleResourceService 
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("resourceId",resourceId);
         return ocAuthRoleResourceMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public void addOcAuthRoleResource(OcAuthRoleResource ocAuthRoleResource){
+        ocAuthRoleResourceMapper.insert(ocAuthRoleResource);
+    }
+
+    @Override
+    public void delOcAuthRoleResourceById(int id){
+        ocAuthRoleResourceMapper.deleteByPrimaryKey(id);
     }
 
 }

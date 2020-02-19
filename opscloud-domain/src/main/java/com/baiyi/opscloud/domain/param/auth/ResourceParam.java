@@ -27,4 +27,17 @@ public class ResourceParam {
         @ApiModelProperty(value = "鉴权")
         private Integer needAuth;
     }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class BindResourcePageQuery extends PageParam {
+
+        @ApiModelProperty(value = "资源组id")
+        private Integer groupId;
+
+        @ApiModelProperty(value = "资源id")
+        private Integer roleId;
+
+    }
 }

@@ -23,7 +23,8 @@ public class AuthFilter extends OncePerRequestFilter {
     @Resource
     private OcAuthFacade authFacade;
 
-    public static final String TOKEN = "token";
+    // vue x-token
+    public static final String TOKEN = "x-token";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {

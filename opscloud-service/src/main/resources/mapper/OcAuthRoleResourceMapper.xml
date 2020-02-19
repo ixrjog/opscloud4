@@ -11,4 +11,17 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+
+<!--  SELECT a1.* FROM new_auth_role_resources a0 JOIN new_auth_resources a1-->
+<!--  ON a0.resourceId = a1.id-->
+<!--  <if test="resourceGroupId != 0">-->
+<!--    JOIN new_auth_resource_group a2 ON a1.id = a2.resourceId AND a2.groupId = #{resourceGroupId}-->
+<!--  </if>-->
+<!--  WHERE a0.roleId = #{roleId}-->
+<!--  ORDER BY a0.gmtCreate DESC-->
+<!--  limit #{pageStart}, #{pageLength}-->
+
+
+
 </mapper>

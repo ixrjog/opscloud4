@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.service.auth;
 
+import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
+
 /**
  * @Author baiyi
  * @Date 2020/2/12 2:12 下午
@@ -13,4 +15,9 @@ public interface OcAuthRoleResourceService {
      * @return
      */
     int countByResourceId(int resourceId);
+
+    void addOcAuthRoleResource(OcAuthRoleResource ocAuthRoleResource);
+
+    void delOcAuthRoleResourceById(int id);
+
 }
