@@ -8,6 +8,5 @@ import java.util.List;
 
 public interface OcAuthRoleMapper extends Mapper<OcAuthRole> {
 
-
     List<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery);
 }

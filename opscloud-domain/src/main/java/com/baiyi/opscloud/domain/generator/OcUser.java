@@ -36,7 +36,7 @@ public class OcUser {
     private Boolean isActive;
 
     @Column(name = "last_login")
-    private Integer lastLogin;
+    private Date lastLogin;
 
     private String wechat;
 
@@ -181,17 +181,11 @@ public class OcUser {
         this.isActive = isActive;
     }
 
-    /**
-     * @return last_login
-     */
-    public Integer getLastLogin() {
+    public Date getLastLogin() {
         return lastLogin;
     }
 
-    /**
-     * @param lastLogin
-     */
-    public void setLastLogin(Integer lastLogin) {
+    public void setLastLogin(Date lastLogin) {
         this.lastLogin = lastLogin;
     }
 

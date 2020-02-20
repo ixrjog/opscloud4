@@ -5,10 +5,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
-import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
-import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
+import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
+import com.baiyi.opscloud.domain.vo.auth.*;
 
 /**
  * @Author baiyi
@@ -58,5 +56,11 @@ public interface AuthFacade {
     void updateGroup(OcGroupVO.OcGroup ocGroup);
 
     BusinessWrapper<Boolean> deleteGroupById(int id);
+
+    DataTable<OcUserRoleVO.OcUserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery);
+
+    void addUserRole(OcUserRoleVO.OcUserRole ocUserRole);
+
+    BusinessWrapper<Boolean> deleteUserRoleById(int id);
 
 }

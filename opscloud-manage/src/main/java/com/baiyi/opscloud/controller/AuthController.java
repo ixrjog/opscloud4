@@ -5,10 +5,8 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
-import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
-import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
+import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
+import com.baiyi.opscloud.domain.vo.auth.*;
 import com.baiyi.opscloud.facade.AuthFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -118,7 +116,7 @@ public class AuthController {
         return new HttpResult<>(authFacade.deleteResourceById(id));
     }
 
-    // resource group
+    // resource-group
     @ApiOperation(value = "分页查询resource group列表")
     @GetMapping(value = "/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcGroupVO.OcGroup>> queryGroupPage(@Valid GroupParam.PageQuery pageQuery) {
@@ -143,6 +141,26 @@ public class AuthController {
     @DeleteMapping(value = "/group/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteGroupById(@RequestParam int id) {
         return new HttpResult<>(authFacade.deleteGroupById(id));
+    }
+
+    // user-role
+    @ApiOperation(value = "分页查询user role列表")
+    @GetMapping(value = "/user/role/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcUserRoleVO.OcUserRole>> queryUserRolePage(@Valid UserRoleParam.PageQuery pageQuery) {
+        return new HttpResult<>(authFacade.queryUserRolePage(pageQuery));
+    }
+
+    @ApiOperation(value = "新增user role")
+    @PostMapping(value = "/user/role/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addUserRole(@RequestBody @Valid OcUserRoleVO.OcUserRole ocUserRole) {
+        authFacade.addUserRole(ocUserRole);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除指定的user role")
+    @DeleteMapping(value = "/user/role/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteUserRoleById(@RequestParam int id) {
+        return new HttpResult<>(authFacade.deleteUserRoleById(id));
     }
 
 

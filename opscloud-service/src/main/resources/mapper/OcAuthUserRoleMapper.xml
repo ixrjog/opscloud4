@@ -11,4 +11,17 @@
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
+
+  <select id="queryOcAuthUserRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.UserRoleParam$PageQuery" resultMap="BaseResultMap">
+    select * from oc_auth_user_role
+    <where>
+      <if test="username != null and username != ''">
+        and username like "%" #{username} "%"
+      </if>
+      <if test="roleId != null and roleId > 0">
+        and role_id = #{roleId}
+      </if>
+    </where>
+  </select>
+
 </mapper>

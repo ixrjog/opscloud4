@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.service.auth.impl;
 
-import com.baiyi.opscloud.domain.generator.OcAuthResource;
 import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
 import com.baiyi.opscloud.mapper.OcAuthRoleResourceMapper;
 import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
@@ -22,7 +21,7 @@ public class OcAuthRoleResourceServiceImpl implements OcAuthRoleResourceService 
 
     @Override
     public int countByResourceId(int resourceId){
-        Example example = new Example(OcAuthResource.class);
+        Example example = new Example(OcAuthRoleResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("resourceId",resourceId);
         return ocAuthRoleResourceMapper.selectCountByExample(example);

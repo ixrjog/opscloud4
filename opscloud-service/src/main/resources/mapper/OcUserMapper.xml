@@ -12,7 +12,7 @@
         <result column="display_name" jdbcType="VARCHAR" property="displayName"/>
         <result column="email" jdbcType="VARCHAR" property="email"/>
         <result column="is_active" jdbcType="BIT" property="isActive"/>
-        <result column="last_login" jdbcType="INTEGER" property="lastLogin"/>
+        <result column="last_login" jdbcType="TIMESTAMP" property="lastLogin"/>
         <result column="wechat" jdbcType="VARCHAR" property="wechat"/>
         <result column="phone" jdbcType="VARCHAR" property="phone"/>
         <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
@@ -25,5 +25,15 @@
     <select id="queryByUsername" resultMap="BaseResultMap">
         select * from oc_user where username = #{username}
     </select>
+
+    <select id="queryOcUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery" resultMap="BaseResultMap">
+        select * from oc_user
+        <where>
+            <if test="username != null and username != ''">
+                username like "%" #{username} "%"
+            </if>
+        </where>
+    </select>
+
 
 </mapper>

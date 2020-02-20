@@ -25,6 +25,14 @@ public class OcAuthResourceServiceImpl implements OcAuthResourceService {
     private OcAuthResourceMapper ocAuthResourceMapper;
 
     @Override
+    public int countByGroupId(int groupId){
+        Example example = new Example(OcAuthResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("groupId",groupId);
+        return ocAuthResourceMapper.selectCountByExample(example);
+    }
+
+    @Override
     public OcAuthResource queryOcAuthResourceByName(String resourceName) {
         Example example = new Example(OcAuthResource.class);
         Example.Criteria criteria = example.createCriteria();

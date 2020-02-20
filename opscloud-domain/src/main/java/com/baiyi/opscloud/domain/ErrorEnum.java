@@ -20,8 +20,10 @@ public enum ErrorEnum {
     AUTH_ROLE_NOT_EXIST(11002, "用户角色配置不存在！"),
     AUTH_RESOURCE_HAS_USED(11003, "资源正在使用！"),
     AUTH_RESOURCE_NOT_EXIST(11004, "资源配置不存在！"),
-    AUTH_GROUP_HAS_USED(11003, "资源组正在使用！"),
-    AUTH_GROUP_NOT_EXIST(11004, "资源组配置不存在！"),
+    AUTH_GROUP_HAS_USED(11005, "资源组正在使用！"),
+    AUTH_GROUP_NOT_EXIST(11006, "资源组配置不存在！"),
+    AUTH_USER_ROLE_NOT_EXIST(11007, "用户角色配置不存在！"),
+
 
     // cloudserver
     CLOUDSERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),

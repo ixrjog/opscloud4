@@ -4,22 +4,15 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcAuthGroup;
-import com.baiyi.opscloud.domain.generator.OcAuthResource;
-import com.baiyi.opscloud.domain.generator.OcAuthRole;
-import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
+import com.baiyi.opscloud.domain.generator.*;
 import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
-import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
-import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleResourceVO;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
+import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
+import com.baiyi.opscloud.domain.vo.auth.*;
 import com.baiyi.opscloud.facade.AuthFacade;
-import com.baiyi.opscloud.service.auth.OcAuthGroupService;
-import com.baiyi.opscloud.service.auth.OcAuthResourceService;
-import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
-import com.baiyi.opscloud.service.auth.OcAuthRoleService;
+import com.baiyi.opscloud.service.auth.*;
+import com.baiyi.opscloud.service.user.OcUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -45,6 +38,12 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Resource
     private OcAuthRoleResourceService ocAuthRoleResourceService;
+
+    @Resource
+    private OcAuthUserRoleService ocAuthUserRoleService;
+
+    @Resource
+    private OcUserService ocUserService;
 
     @Override
     public DataTable<OcRoleVO.OcRole> queryRolePage(RoleParam.PageQuery pageQuery) {
@@ -73,12 +72,7 @@ public class AuthFacadeImpl implements AuthFacade {
         OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(id);
         if (ocAuthRole == null)
             return new BusinessWrapper<>(ErrorEnum.AUTH_ROLE_NOT_EXIST);
-//        BinlogConfig binlogConfig = binlogConfigService.queryById(binlogConfigId);
-//        if (binlogConfig == null) {
-//            return new BusinessWrapper<>(ErrorEnum.BINLOG_CONFIG_NOT_EXIST);
-//        }
-//        int count = ruleDetailService.countByDbTable(binlogConfig.getTopic(), binlogConfig.getTable());
-        int count = 0;
+        int count = ocAuthUserRoleService.countByRoleId(id);
         if (count == 0) {
             ocAuthRoleService.deleteOcAuthRoleById(id);
             return BusinessWrapper.SUCCESS;
@@ -120,7 +114,6 @@ public class AuthFacadeImpl implements AuthFacade {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryOcAuthResourceByParam(pageQuery);
         List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
         DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page.stream().map(e -> invokeOcResource(e)).collect(Collectors.toList()), table.getTotalNum());
-        //DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
@@ -199,12 +192,7 @@ public class AuthFacadeImpl implements AuthFacade {
         OcAuthGroup ocAuthGroup = ocAuthGroupService.queryOcAuthGroupById(id);
         if (ocAuthGroup == null)
             return new BusinessWrapper<>(ErrorEnum.AUTH_GROUP_NOT_EXIST);
-//        BinlogConfig binlogConfig = binlogConfigService.queryById(binlogConfigId);
-//        if (binlogConfig == null) {
-//            return new BusinessWrapper<>(ErrorEnum.BINLOG_CONFIG_NOT_EXIST);
-//        }
-//        int count = ruleDetailService.countByDbTable(binlogConfig.getTopic(), binlogConfig.getTable());
-        int count = 0;
+        int count = ocAuthResourceService.countByGroupId(id);
         if (count == 0) {
             ocAuthGroupService.deleteOcAuthGroupById(id);
             return BusinessWrapper.SUCCESS;
@@ -212,4 +200,46 @@ public class AuthFacadeImpl implements AuthFacade {
             return new BusinessWrapper<>(ErrorEnum.AUTH_GROUP_HAS_USED);
         }
     }
+
+    @Override
+    public DataTable<OcUserRoleVO.OcUserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery) {
+        DataTable<OcAuthUserRole> table = ocAuthUserRoleService.queryOcAuthUserRoleByParam(pageQuery);
+        List<OcUserRoleVO.OcUserRole> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserRoleVO.OcUserRole.class);
+        DataTable<OcUserRoleVO.OcUserRole> dataTable = new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
+        return dataTable;
+    }
+
+    /**
+     * 插入用户信息
+     *
+     * @param ocUserRole
+     * @return
+     */
+    private OcUserRoleVO.OcUserRole invokeOcUser(OcUserRoleVO.OcUserRole ocUserRole) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(ocUserRole.getUsername());
+        ocUserRole.setDisplayName(ocUser.getDisplayName());
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(ocUserRole.getRoleId());
+        ocUserRole.setRoleName(ocAuthRole.getRoleName());
+        ocUserRole.setRoleComment(ocAuthRole.getComment());
+        return ocUserRole;
+    }
+
+    @Override
+    public void addUserRole(OcUserRoleVO.OcUserRole ocUserRole) {
+        try {
+            OcAuthUserRole ocAuthUserRole = BeanCopierUtils.copyProperties(ocUserRole, OcAuthUserRole.class);
+            ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteUserRoleById(int id) {
+        OcAuthUserRole ocAuthUserRole = ocAuthUserRoleService.queryOcAuthUserRoleById(id);
+        if (ocAuthUserRole == null)
+            return new BusinessWrapper<>(ErrorEnum.AUTH_USER_ROLE_NOT_EXIST);
+        ocAuthUserRoleService.deleteOcAuthUserRoleById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
 }

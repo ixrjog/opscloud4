@@ -11,6 +11,8 @@ import com.baiyi.opscloud.domain.param.auth.ResourceParam;
  */
 public interface OcAuthResourceService {
 
+    int countByGroupId(int groupId);
+
     OcAuthResource queryOcAuthResourceByName(String resourceName);
 
     DataTable<OcAuthResource> queryOcAuthResourceByParam(ResourceParam.PageQuery pageQuery);

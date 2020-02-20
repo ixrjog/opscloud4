@@ -40,7 +40,7 @@
   <!--  查询角色未绑定资源-->
   <select id="queryOcAuthRoleUnbindResourceByParam" parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$BindResourcePageQuery" resultMap="BaseResultMap">
     select * from oc_auth_resource
-      where id not in
+        where id not in
         ( select resource_id FROM oc_auth_role_resource WHERE role_id = #{roleId} GROUP BY resource_id )
         and group_id = #{groupId}
         and need_auth = 1

@@ -1,11 +1,16 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.mapper.OcUserMapper;
 import com.baiyi.opscloud.service.user.OcUserService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -43,6 +48,13 @@ public class OcUserServiceImpl implements OcUserService {
         OcUser ocUser = queryOcUserByUsername(username);
         if (ocUser != null)
             ocUserMapper.deleteByPrimaryKey(ocUser.getId());
+    }
+
+    @Override
+    public DataTable<OcUser> queryOcUserByParam(UserParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcUser> ocUserList = ocUserMapper.queryOcUserByParam(pageQuery);
+        return new DataTable<>(ocUserList, page.getTotal());
     }
 
 }
