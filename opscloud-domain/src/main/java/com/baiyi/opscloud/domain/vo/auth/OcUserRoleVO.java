@@ -20,7 +20,7 @@ public class OcUserRoleVO {
     @ApiModel
     public static class OcUserRole {
 
-        @ApiModelProperty(value = "主键")
+        @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 
         @ApiModelProperty(value = "用户名")
@@ -29,7 +29,7 @@ public class OcUserRoleVO {
         @ApiModelProperty(value = "显示名")
         private String displayName;
 
-        @ApiModelProperty(value = "角色id")
+        @ApiModelProperty(value = "角色id",example="1")
         private Integer roleId;
 
         @ApiModelProperty(value = "角色名")

@@ -20,10 +20,10 @@ public class OcResourceVO {
     @ApiModel
     public static class OcResource {
 
-        @ApiModelProperty(value = "主键")
+        @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 
-        @ApiModelProperty(value = "资源组id")
+        @ApiModelProperty(value = "资源组id",example="1")
         private Integer groupId;
 
         @ApiModelProperty(value = "资源组名称")
@@ -35,7 +35,7 @@ public class OcResourceVO {
         @ApiModelProperty(value = "资源描述")
         private String comment;
 
-        @ApiModelProperty(value = "鉴权")
+        @ApiModelProperty(value = "鉴权",example="1")
         private Integer needAuth;
 
         @ApiModelProperty(value = "创建时间")

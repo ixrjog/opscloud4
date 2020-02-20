@@ -17,6 +17,10 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 ### 最新版本说明 3.0.0
 
++ API
+  + Swagger2
+  + http://example.org/oc3/v2/api-docs
+
 + 重要数据加密支持
   + 配置文件加密（密码，Token, AK）
   + 数据库密码字段加密

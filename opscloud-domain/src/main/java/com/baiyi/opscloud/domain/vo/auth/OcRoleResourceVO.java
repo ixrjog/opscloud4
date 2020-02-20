@@ -17,14 +17,14 @@ public class OcRoleResourceVO {
     @ApiModel
     public static class OcRoleResource {
 
-        @ApiModelProperty(value = "主键")
+        @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 
-        @ApiModelProperty(value = "role主键")
+        @ApiModelProperty(value = "role主键",example="1")
         private Integer roleId;
 
 
-        @ApiModelProperty(value = "资源主键")
+        @ApiModelProperty(value = "资源主键",example="1")
         private Integer resourceId;
 
     }

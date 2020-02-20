@@ -26,14 +26,26 @@ public class AuthFilter extends OncePerRequestFilter {
     // vue x-token
     public static final String TOKEN = "x-token";
 
+    private static final String[] AUTH_WHITELIST = {
+            // -- swagger ui
+            "/swagger-resources",
+            "/swagger-ui.html",
+            "/v2/api-docs",
+            "/webjars"
+    };
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
-        //   if (!request.getMethod().equalsIgnoreCase("options")) {
         if (!request.getMethod().equalsIgnoreCase("options")) {
             String resourceName = request.getServletPath();
-            //单页不拦截页面,只拦截协议请求
+            // 单页不拦截页面,只拦截协议请求
             if (resourceName.equalsIgnoreCase("/dashboard")) {
+                filterChain.doFilter(request, response);
+                return;
+            }
+            // 跳过白名单
+            if (checkWhitelist(resourceName)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -75,6 +87,13 @@ public class AuthFilter extends OncePerRequestFilter {
             response.setContentType("application/json;UTF-8");
             filterChain.doFilter(request, response);
         }
+    }
+
+    private boolean checkWhitelist(String resourceName) {
+        for (String resource : AUTH_WHITELIST)
+            if (resourceName.indexOf(resource) == 0)
+                return true;
+        return false;
     }
 
     public void setHeaders(HttpServletRequest request, HttpServletResponse response) {

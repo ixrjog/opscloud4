@@ -21,7 +21,7 @@ public class OcGroupVO {
     @ApiModel
     public static class OcGroup {
 
-        @ApiModelProperty(value = "主键")
+        @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 
         @ApiModelProperty(value = "资源组名称")
