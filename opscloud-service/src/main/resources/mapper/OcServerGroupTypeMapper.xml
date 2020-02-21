@@ -14,7 +14,6 @@
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
 
-
   <select id="queryOcServerGroupTypeByParam"
           parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam$PageQuery"
           resultMap="BaseResultMap">
@@ -28,4 +27,5 @@
       </if>
     </where>
   </select>
+
 </mapper>

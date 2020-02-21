@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.server;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcServer;
+import com.baiyi.opscloud.domain.param.server.ServerParam;
 
 /**
  * @Author baiyi
@@ -12,5 +14,15 @@ public interface OcServerService {
     OcServer queryOcServerByPrivateIp(String privateIp);
 
     int countByServerGroupId(int id);
+
+    int countByEnvType(int envType);
+
+    DataTable<OcServer> queryOcServerByParam(ServerParam.PageQuery pageQuery);
+
+    void addOcServer(OcServer ocServer);
+
+    void updateOcServer(OcServer ocServer);
+
+    void deleteOcServerById(int id);
 
 }

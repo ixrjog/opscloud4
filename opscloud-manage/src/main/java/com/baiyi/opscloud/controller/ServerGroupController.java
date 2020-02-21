@@ -22,7 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/server/group")
-@Api(tags = "服务器组配置")
+@Api(tags = "服务器组管理")
 public class ServerGroupController {
 
     @Resource

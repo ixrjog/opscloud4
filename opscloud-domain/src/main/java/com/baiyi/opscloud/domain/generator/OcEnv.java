@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_env")
 public class OcEnv {
@@ -11,6 +11,9 @@ public class OcEnv {
 
     @Column(name = "env_name")
     private String envName;
+
+    @Column(name = "env_type")
+    private Integer envType;
 
     private String color;
 
@@ -48,6 +51,20 @@ public class OcEnv {
      */
     public void setEnvName(String envName) {
         this.envName = envName;
+    }
+
+    /**
+     * @return env_type
+     */
+    public Integer getEnvType() {
+        return envType;
+    }
+
+    /**
+     * @param envType
+     */
+    public void setEnvType(Integer envType) {
+        this.envType = envType;
     }
 
     /**

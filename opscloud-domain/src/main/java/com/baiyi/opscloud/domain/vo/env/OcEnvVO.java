@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.vo.server;
+package com.baiyi.opscloud.domain.vo.env;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -10,27 +10,27 @@ import java.util.Date;
 
 /**
  * @Author baiyi
- * @Date 2020/2/21 1:22 下午
+ * @Date 2020/2/21 5:33 下午
  * @Version 1.0
  */
-public class OcServerGroupTypeVO {
+public class OcEnvVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ServerGroupType {
+    public static class Env {
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 
-        @ApiModelProperty(value = "组类型名称")
-        private String name;
+        @ApiModelProperty(value = "环境名称")
+        private String envName;
 
         @ApiModelProperty(value = "颜色值")
         private String color;
 
-        @ApiModelProperty(value = "组类型值",example="1")
-        private Integer grpType;
+        @ApiModelProperty(value = "环境值",example="1")
+        private Integer envType;
 
         @ApiModelProperty(value = "描述")
         private String comment;
