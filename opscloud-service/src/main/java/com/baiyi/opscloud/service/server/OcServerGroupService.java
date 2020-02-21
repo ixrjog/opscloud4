@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.server;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcServerGroup;
+import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 
 /**
  * @Author baiyi
@@ -9,5 +11,17 @@ import com.baiyi.opscloud.domain.generator.OcServerGroup;
  */
 public interface OcServerGroupService {
 
+    int countByGrpType(int grpType);
+
     OcServerGroup queryOcServerGroupById(Integer id);
+
+    OcServerGroup queryOcServerGroupByName(String name);
+
+    DataTable<OcServerGroup> queryOcServerGroupByParam(ServerGroupParam.PageQuery pageQuery);
+
+    void addOcServerGroup(OcServerGroup ocServerGroup);
+
+    void updateOcServerGroup(OcServerGroup ocServerGroup);
+
+    void deleteOcServerGroupById(int id);
 }

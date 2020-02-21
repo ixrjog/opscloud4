@@ -92,6 +92,7 @@
         <!--        oc_server_group-->
         <!--        oc_user-->
         <!--        oc_server_group_permission-->
+<!--        oc_server_group_type-->
         <!--        oc_cloudserver-->
         <!--        oc_server-->
         <!--        oc_env-->
@@ -103,7 +104,7 @@
 <!--        oc_auth_role-->
 <!--        oc_auth_role_resource-->
 <!--        oc_auth_user_role-->
-        <table tableName="oc_auth_user_role">
+        <table tableName="oc_server_group_type">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

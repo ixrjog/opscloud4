@@ -11,4 +11,6 @@ public interface OcServerService {
 
     OcServer queryOcServerByPrivateIp(String privateIp);
 
+    int countByServerGroupId(int id);
+
 }

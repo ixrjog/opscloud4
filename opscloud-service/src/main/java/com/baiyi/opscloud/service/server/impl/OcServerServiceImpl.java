@@ -26,4 +26,14 @@ public class OcServerServiceImpl implements OcServerService {
         criteria.andEqualTo("privateIp", privateIp);
         return ocServerMapper.selectOneByExample(example);
     }
+
+    @Override
+    public int countByServerGroupId(int id){
+        Example example = new Example(OcServer.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverGroupId",id);
+        return ocServerMapper.selectCountByExample(example);
+    }
+
+
 }

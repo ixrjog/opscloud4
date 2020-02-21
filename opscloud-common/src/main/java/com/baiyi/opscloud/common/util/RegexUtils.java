@@ -31,7 +31,12 @@ public class RegexUtils {
         return appName.matches("[a-z][\\d0-9a-z-]{2,24}");
     }
 
-    public static boolean isServerGroupName(String serverGroupName){
+    /**
+     * 校验服务器组名称
+     * @param serverGroupName
+     * @return
+     */
+    public static boolean isServerGroupNameRule(String serverGroupName){
         return serverGroupName.matches("group_[a-z][\\d0-9a-z-]{2,24}");
     }
 
