@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.service.server;
+package com.baiyi.opscloud.service.cloudserver;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
+import com.baiyi.opscloud.decorator.ServerGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -38,6 +39,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     @Resource
     private OcServerService ocServerService;
 
+    @Resource
+    private ServerGroupDecorator serverGroupDecorator;
+
     public static final boolean ACTION_ADD = true;
     public static final boolean ACTION_UPDATE = false;
 
@@ -45,15 +49,8 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public DataTable<OcServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryOcServerGroupByParam(pageQuery);
         List<OcServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupVO.ServerGroup.class);
-        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> invokeOcServerGroup(e)).collect(Collectors.toList()), table.getTotalNum());
+        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
-    }
-
-    private OcServerGroupVO.ServerGroup invokeOcServerGroup(OcServerGroupVO.ServerGroup serverGroup ){
-        OcServerGroupType ocServerGroupType = ocServerGroupTypeService.queryOcServerGroupTypeByGrpType(serverGroup.getGrpType());
-        OcServerGroupTypeVO.ServerGroupType serverGroupType = BeanCopierUtils.copyProperties(ocServerGroupType, OcServerGroupTypeVO.ServerGroupType.class);
-        serverGroup.setServerGroupType(serverGroupType);
-        return serverGroup;
     }
 
     @Override

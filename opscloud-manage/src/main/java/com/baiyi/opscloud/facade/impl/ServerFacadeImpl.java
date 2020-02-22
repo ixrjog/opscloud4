@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.decorator.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcServer;
@@ -25,19 +26,15 @@ public class ServerFacadeImpl implements ServerFacade {
     @Resource
     private OcServerService ocServerService;
 
+    @Resource
+    private ServerDecorator serverDecorator;
+
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
         List<OcServerVO.Server> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerVO.Server.class);
-        DataTable<OcServerVO.Server> dataTable = new DataTable<>(page.stream().map(e -> invokeOcServer(e)).collect(Collectors.toList()), table.getTotalNum());
+        DataTable<OcServerVO.Server> dataTable = new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
-    }
-
-    private OcServerVO.Server invokeOcServer(OcServerVO.Server server ){
-//        OcServerGroupType ocServerGroupType = ocServerGroupTypeService.queryOcServerGroupTypeByGrpType(serverGroup.getGrpType());
-//        OcServerGroupTypeVO.ServerGroupType serverGroupType = BeanCopierUtils.copyProperties(ocServerGroupType, OcServerGroupTypeVO.ServerGroupType.class);
-//        serverGroup.setServerGroupType(serverGroupType);
-        return server;
     }
 
     @Override
@@ -54,6 +51,5 @@ public class ServerFacadeImpl implements ServerFacade {
     public BusinessWrapper<Boolean> deleteServerById(int id) {
         return BusinessWrapper.SUCCESS;
     }
-
 
 }

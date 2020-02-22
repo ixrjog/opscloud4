@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import com.baiyi.opscloud.domain.param.cloudserver.CloudserverParam;
 import com.baiyi.opscloud.domain.vo.cloudserver.OcCloudserverVO;
 import com.baiyi.opscloud.facade.CloudserverFacade;
-import com.baiyi.opscloud.service.server.OcCloudserverService;
+import com.baiyi.opscloud.service.cloudserver.OcCloudserverService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.service.server;
+package com.baiyi.opscloud.service.env;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcEnv;
@@ -12,6 +12,8 @@ import com.baiyi.opscloud.domain.param.env.EnvParam;
 public interface OcEnvService {
 
     OcEnv queryOcEnvById(Integer id);
+
+    OcEnv queryOcEnvByType(Integer type);
 
     OcEnv queryOcEnvByName(String name);
 

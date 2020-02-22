@@ -49,4 +49,6 @@ public class ServerController {
     public HttpResult<Boolean> deleteServerById(@RequestParam int id) {
         return new HttpResult<>(serverFacade.deleteServerById(id));
     }
+
+
 }

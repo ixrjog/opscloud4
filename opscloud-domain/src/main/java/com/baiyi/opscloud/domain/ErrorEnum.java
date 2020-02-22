@@ -33,6 +33,14 @@ public enum ErrorEnum {
     SERVERGROUP_TYPE_NAME_ALREADY_EXIST(12001, "服务器组类型名称已存在！"),
     SERVERGROUP_TYPE_NOT_EXIST(12003, "服务器组类型不存在！"),
     SERVERGROUP_TYPE_HAS_USED(12004, "服务器组类型正在使用！"),
+    // env
+    ENV_NAME_ALREADY_EXIST(12001, "环境名称已存在！"),
+    ENV_NOT_EXIST(12003, "环境类型不存在！"),
+    ENV_HAS_USED(12004, "环境类型正在使用！"),
+    // tag
+    TAG_KEY_ALREADY_EXIST(12001, "标签key已存在！"),
+    TAG_NOT_EXIST(12003, "标签不存在！"),
+    TAG_HAS_USED(12004, "标签正在使用！"),
 
     // cloudserver
     CLOUDSERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),

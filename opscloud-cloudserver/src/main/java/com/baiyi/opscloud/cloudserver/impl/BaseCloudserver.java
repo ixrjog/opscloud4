@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.cloudserver.impl;
 
 import com.baiyi.opscloud.cloudserver.ICloudserver;
-import com.baiyi.opscloud.cloudserver.base.CloudserverStatus;
 import com.baiyi.opscloud.cloudserver.factory.CloudserverFactory;
+import com.baiyi.opscloud.common.base.CloudserverStatus;
 import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import com.baiyi.opscloud.domain.generator.OcServer;
 import com.baiyi.opscloud.facade.OcServerFacade;
-import com.baiyi.opscloud.service.server.OcCloudserverService;
+import com.baiyi.opscloud.service.cloudserver.OcCloudserverService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;

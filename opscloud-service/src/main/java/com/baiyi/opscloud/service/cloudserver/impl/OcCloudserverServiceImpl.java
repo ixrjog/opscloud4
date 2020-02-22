@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.service.server.impl;
+package com.baiyi.opscloud.service.cloudserver.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import com.baiyi.opscloud.domain.param.cloudserver.CloudserverParam;
 import com.baiyi.opscloud.mapper.OcCloudserverMapper;
-import com.baiyi.opscloud.service.server.OcCloudserverService;
+import com.baiyi.opscloud.service.cloudserver.OcCloudserverService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;

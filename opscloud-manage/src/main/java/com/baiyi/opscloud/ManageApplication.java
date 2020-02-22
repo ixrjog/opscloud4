@@ -7,6 +7,7 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.EnableAspectJAutoProxy;
 import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 import tk.mybatis.spring.annotation.MapperScan;
 
 /**
@@ -14,6 +15,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @Date 2019/12/25 4:00 下午
  * @Version 1.0
  */
+@EnableTransactionManagement
 @MapperScan(basePackages = "com.baiyi.opscloud.mapper")
 @SpringBootApplication
 @EnableAspectJAutoProxy(exposeProxy = true)

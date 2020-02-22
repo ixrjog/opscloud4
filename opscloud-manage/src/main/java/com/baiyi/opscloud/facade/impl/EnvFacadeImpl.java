@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
 import com.baiyi.opscloud.facade.EnvFacade;
-import com.baiyi.opscloud.service.server.OcEnvService;
+import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +55,7 @@ public class EnvFacadeImpl implements EnvFacade {
         OcEnv ocEnv = BeanCopierUtils.copyProperties(env, OcEnv.class);
         // 对象存在 && 新增
         if (checkOcEnvName != null && action) {
-            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_NAME_ALREADY_EXIST);
+            return new BusinessWrapper<>(ErrorEnum.ENV_NAME_ALREADY_EXIST);
         }
         if (action) {
             ocEnvService.addOcEnv(ocEnv);
@@ -69,14 +69,14 @@ public class EnvFacadeImpl implements EnvFacade {
     public BusinessWrapper<Boolean> deleteEnvById(int id) {
         OcEnv ocEnv = ocEnvService.queryOcEnvById(id);
         if (ocEnv == null)
-            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_NOT_EXIST);
+            return new BusinessWrapper<>(ErrorEnum.ENV_NOT_EXIST);
         // 判断server绑定的资源
         int count = ocServerService.countByEnvType(ocEnv.getEnvType());
         if (count == 0) {
             ocEnvService.deleteOcEnvById(id);
             return BusinessWrapper.SUCCESS;
         } else {
-            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_HAS_USED);
+            return new BusinessWrapper<>(ErrorEnum.ENV_HAS_USED);
         }
     }
 }

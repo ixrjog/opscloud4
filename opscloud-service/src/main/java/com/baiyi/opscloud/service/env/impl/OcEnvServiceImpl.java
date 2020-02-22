@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.service.server.impl;
+package com.baiyi.opscloud.service.env.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
 import com.baiyi.opscloud.mapper.OcEnvMapper;
-import com.baiyi.opscloud.service.server.OcEnvService;
+import com.baiyi.opscloud.service.env.OcEnvService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
@@ -27,6 +27,14 @@ public class OcEnvServiceImpl implements OcEnvService {
     @Override
     public OcEnv queryOcEnvById(Integer id) {
         return ocEnvMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public  OcEnv queryOcEnvByType(Integer type){
+        Example example = new Example(OcEnv.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("envType", type);
+        return ocEnvMapper.selectOneByExample(example);
     }
 
     @Override

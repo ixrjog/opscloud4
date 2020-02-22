@@ -2,11 +2,11 @@ package com.baiyi.opscloud.cloudserver.builder;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.aliyun.ecs.base.ECSDisk;
-import com.baiyi.opscloud.cloudserver.base.CloudserverType;
 import com.baiyi.opscloud.cloudserver.instance.AliyunECSInstance;
 import com.baiyi.opscloud.cloudserver.instance.AwsEC2Instance;
 import com.baiyi.opscloud.cloudserver.instance.ZabbixHostInstance;
 import com.baiyi.opscloud.cloudserver.util.AwsUtils;
+import com.baiyi.opscloud.common.base.CloudserverType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;

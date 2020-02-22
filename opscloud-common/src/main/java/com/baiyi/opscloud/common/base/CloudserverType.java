@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.cloudserver.base;
+package com.baiyi.opscloud.common.base;
 
 
 /**

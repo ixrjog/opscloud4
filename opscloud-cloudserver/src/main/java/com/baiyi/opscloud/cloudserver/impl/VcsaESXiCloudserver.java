@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.cloudserver.impl;
 
 import com.baiyi.opscloud.cloudserver.ICloudserver;
-import com.baiyi.opscloud.cloudserver.base.CloudserverType;
 import com.baiyi.opscloud.cloudserver.builder.OcCloudserverBuilder;
+import com.baiyi.opscloud.common.base.CloudserverType;
 import com.baiyi.opscloud.domain.generator.OcCloudserver;
 import com.baiyi.opscloud.vmware.vcsa.esxi.VcsaESXi;
 import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;

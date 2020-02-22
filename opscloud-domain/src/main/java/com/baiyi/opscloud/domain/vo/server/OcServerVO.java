@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.domain.vo.server;
 
+import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -19,6 +22,12 @@ public class OcServerVO {
     @NoArgsConstructor
     @ApiModel
     public static class Server {
+
+        private List<OcTagVO.Tag> tags;
+
+        private OcEnvVO.Env env;
+
+        private OcServerGroupVO.ServerGroup serverGroup;
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;
