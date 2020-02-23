@@ -18,13 +18,16 @@ public class OcUserVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class OcUser {
+    public static class User {
 
         @ApiModelProperty(value = "主键")
         private Integer id;
 
         @ApiModelProperty(value = "用户名")
         private String username;
+
+        @ApiModelProperty(value = "密码")
+        private String password;
 
         @ApiModelProperty(value = "显示名")
         private String displayName;
@@ -53,6 +56,9 @@ public class OcUserVO {
 
         @ApiModelProperty(value = "数据源")
         private String source;
+
+        @ApiModelProperty(value = "留言")
+        private String comment;
 
         @ApiModelProperty(value = "创建时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

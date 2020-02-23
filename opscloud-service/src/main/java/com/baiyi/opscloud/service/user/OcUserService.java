@@ -15,6 +15,8 @@ public interface OcUserService {
 
     void updateOcUser(OcUser ocUser);
 
+    void updateBaseOcUser(OcUser ocUser);
+
     OcUser queryOcUserById(Integer id);
 
     OcUser queryOcUserByUsername(String username);
@@ -23,5 +25,6 @@ public interface OcUserService {
 
     DataTable<OcUser> queryOcUserByParam(UserParam.PageQuery pageQuery);
 
+    DataTable<OcUser> fuzzyQueryUserByParam(UserParam.PageQuery pageQuery);
 
 }

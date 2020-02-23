@@ -24,6 +24,15 @@ public enum ErrorEnum {
     AUTH_GROUP_NOT_EXIST(11006, "资源组配置不存在！"),
     AUTH_USER_ROLE_NOT_EXIST(11007, "用户角色配置不存在！"),
 
+    // user
+    USER_PASSWORD_NON_COMPLIANCE_WITH_RULES(12002, "用户密码不合规！"),
+    USER_PHONE_NON_COMPLIANCE_WITH_RULES(12002, "用户手机号不合规！"),
+    USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
+
+    // server
+    SERVER_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器名称不合规！"),
+    SERVER_GROUP_NOT_SELECTED(12003, "服务器组未选择！"),
+
     // serverGrooup
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),
     SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器组名称不合规！"),

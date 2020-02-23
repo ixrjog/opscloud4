@@ -35,5 +35,46 @@
         </where>
     </select>
 
+    <select id="fuzzyQueryUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery" resultMap="BaseResultMap">
+        select * from oc_user
+        <where>
+            <if test="queryName != null and queryName != ''">
+                username like "%" #{queryName} "%"
+                or name like "%" #{queryName} "%"
+                or display_name like "%" #{queryName} "%"
+                or email like "%" #{queryName} "%"
+                or phone like "%" #{queryName} "%"
+                or wechat like "%" #{queryName} "%"
+            </if>
+        </where>
+    </select>
+
+    <update id="updateBaseUser">
+        update oc_user
+        <trim prefix="set" suffixOverrides=",">
+        <if test="name != null">
+            name = #{name},
+        </if>
+        <if test="password != null and password != ''">
+            password = #{password},
+        </if>
+        <if test="displayName != null and displayName != ''">
+            display_name = #{displayName},
+        </if>
+        <if test="email != null and email != ''">
+            email = #{email},
+        </if>
+        <if test="phone != null and phone != ''">
+            phone = #{phone},
+        </if>
+        <if test="comment != null and comment != ''">
+            comment = #{comment},
+        </if>
+        </trim>
+        where id = #{id}
+  </update>
+
+
+
 
 </mapper>

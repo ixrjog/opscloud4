@@ -39,6 +39,11 @@ public class OcUserServiceImpl implements OcUserService {
     }
 
     @Override
+    public void updateBaseOcUser(OcUser ocUser) {
+        ocUserMapper.updateBaseUser(ocUser);
+    }
+
+    @Override
     public OcUser queryOcUserByUsername(String username) {
         return ocUserMapper.queryByUsername(username);
     }
@@ -56,5 +61,13 @@ public class OcUserServiceImpl implements OcUserService {
         List<OcUser> ocUserList = ocUserMapper.queryOcUserByParam(pageQuery);
         return new DataTable<>(ocUserList, page.getTotal());
     }
+
+    @Override
+    public DataTable<OcUser> fuzzyQueryUserByParam(UserParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcUser> ocUserList = ocUserMapper.fuzzyQueryUserByParam(pageQuery);
+        return new DataTable<>(ocUserList, page.getTotal());
+    }
+
 
 }

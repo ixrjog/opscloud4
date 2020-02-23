@@ -7,7 +7,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
- * Created by zxxiao on 2016/10/20.
+ * @Author baiyi
+ * @Date 2020/1/7 1:52 下午
+ * @Version 1.0
  */
 @Slf4j
 public class TimeUtils {

@@ -13,4 +13,8 @@ public interface OcUserMapper extends Mapper<OcUser> {
 
     List<OcUser> queryOcUserByParam(UserParam.PageQuery pageQuery);
 
+    List<OcUser> fuzzyQueryUserByParam(UserParam.PageQuery pageQuery);
+
+    int updateBaseUser(OcUser ocUser);
+
 }

@@ -18,6 +18,9 @@ public class UserParam {
     @ApiModel
     public static class PageQuery extends PageParam {
 
+        @ApiModelProperty(value = "模糊查询")
+        private String queryName;
+
         @ApiModelProperty(value = "用户名")
         private String username;
 

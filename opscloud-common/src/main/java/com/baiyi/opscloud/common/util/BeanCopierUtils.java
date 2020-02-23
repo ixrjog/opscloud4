@@ -9,7 +9,9 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author feixue
+ * @Author baiyi
+ * @Date 2020/1/7 1:52 下午
+ * @Version 1.0
  */
 public class BeanCopierUtils {
 

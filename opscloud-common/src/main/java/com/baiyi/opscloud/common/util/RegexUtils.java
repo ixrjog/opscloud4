@@ -3,6 +3,11 @@ package com.baiyi.opscloud.common.util;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * @Author baiyi
+ * @Date 2020/1/7 1:52 下午
+ * @Version 1.0
+ */
 public class RegexUtils {
 
     /**
@@ -23,11 +28,11 @@ public class RegexUtils {
      * @param username
      * @return
      */
-    public static boolean isUsername(String username) {
+    public static boolean isUsernameRule(String username) {
         return username.matches("[a-zA-Z][\\w]{3,15}");
     }
 
-    public static boolean isApplicationName(String appName){
+    public static boolean isApplicationNameRule(String appName){
         return appName.matches("[a-z][\\d0-9a-z-]{2,24}");
     }
 
@@ -37,11 +42,11 @@ public class RegexUtils {
      * @return
      */
     public static boolean isServerGroupNameRule(String serverGroupName){
-        return serverGroupName.matches("group_[a-z][\\d0-9a-z-]{2,24}");
+        return serverGroupName.matches("group_[a-z][\\d0-9a-z-]{8,64}");
     }
 
-    public static boolean isServerName(String serverName){
-        return serverName.matches("[a-z][\\d0-9a-z-]{2,24}");
+    public static boolean isServerNameRule(String serverName){
+        return serverName.matches("[a-z][\\d0-9a-z-]{1,32}");
     }
 
     public static boolean isEmail(String email) {
@@ -55,7 +60,7 @@ public class RegexUtils {
      * @param password
      * @return
      */
-    public static boolean checkPassword(String password) {
+    public static boolean checkPasswordRule(String password) {
         String repx = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
         return password.matches(repx);
     }

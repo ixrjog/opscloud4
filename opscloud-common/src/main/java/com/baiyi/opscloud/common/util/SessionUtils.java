@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.common.util;
 
 /**
- * Created by zxxiao on 16/9/28.
+ * @Author baiyi
+ * @Date 2020/1/7 1:52 下午
+ * @Version 1.0
  */
 public class SessionUtils {
 

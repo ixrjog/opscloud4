@@ -29,5 +29,8 @@ public class ServerParam {
 
         @ApiModelProperty(value = "环境类型")
         private Integer envType;
+
+        @ApiModelProperty(value = "标签id")
+        private Integer tagId;
     }
 }
