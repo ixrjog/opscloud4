@@ -38,7 +38,7 @@ public class CloudserverController {
         return new HttpResult<>(cloudserverFacade.deleteCloudserverById(id));
     }
 
-    @ApiOperation(value = "删除指定的云主机")
+    @ApiOperation(value = "同步指定的云主机")
     @GetMapping(value = "/server/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncCloudserverByKey(@RequestParam String key) {
         return new HttpResult<>(cloudserverFacade.syncCloudserverByKey(key));

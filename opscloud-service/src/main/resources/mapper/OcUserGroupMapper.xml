@@ -14,4 +14,20 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
+
+  <select id="queryOcUserGroupByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserGroupParam$PageQuery" resultMap="BaseResultMap">
+    select * from oc_user_group
+    <where>
+      <if test="name != null and name != ''">
+        and name like "%" #{name} "%"
+      </if>
+      <if test="grpType != null">
+        and grp_type = #{grpType}
+      </if>
+      <if test="workflow != null">
+        and workflow = #{workflow}
+      </if>
+    </where>
+  </select>
+
 </mapper>

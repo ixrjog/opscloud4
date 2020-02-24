@@ -15,11 +15,11 @@ import com.baiyi.opscloud.domain.vo.auth.*;
  */
 public interface AuthFacade {
 
-    DataTable<OcRoleVO.OcRole> queryRolePage(RoleParam.PageQuery pageQuery);
+    DataTable<OcRoleVO.Role> queryRolePage(RoleParam.PageQuery pageQuery);
 
-    void addRole(OcRoleVO.OcRole ocRole);
+    void addRole(OcRoleVO.Role role);
 
-    void updateRole(OcRoleVO.OcRole ocRole);
+    void updateRole(OcRoleVO.Role role);
 
     BusinessWrapper<Boolean> deleteRoleById(int id);
 
@@ -30,36 +30,36 @@ public interface AuthFacade {
      * @param pageQuery
      * @return
      */
-    DataTable<OcResourceVO.OcResource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery);
+    DataTable<OcResourceVO.Resource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery);
 
-    DataTable<OcResourceVO.OcResource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery);
+    DataTable<OcResourceVO.Resource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery);
 
-    void bindRoleResource(OcRoleResourceVO.OcRoleResource ocRoleResource);
+    void bindRoleResource(OcRoleResourceVO.RoleResource roleResource);
 
-    void unbindRoleResource(int ocRoleResourceId);
+    void unbindRoleResource(int roleResourceId);
 
-    DataTable<OcResourceVO.OcResource> queryResourcePage(ResourceParam.PageQuery pageQuery);
+    DataTable<OcResourceVO.Resource> queryResourcePage(ResourceParam.PageQuery pageQuery);
 
-    void addResource(OcResourceVO.OcResource ocResource);
+    void addResource(OcResourceVO.Resource resource);
 
-    void updateResource(OcResourceVO.OcResource ocResource);
+    void updateResource(OcResourceVO.Resource resource);
 
-    void updateResourceNeedAuth(OcResourceVO.OcResource ocResource);
+    void updateResourceNeedAuth(OcResourceVO.Resource resource);
 
     BusinessWrapper<Boolean> deleteResourceById(int id);
 
     // resource group
-    DataTable<OcGroupVO.OcGroup> queryGroupPage(GroupParam.PageQuery pageQuery);
+    DataTable<OcGroupVO.Group> queryGroupPage(GroupParam.PageQuery pageQuery);
 
-    void addGroup(OcGroupVO.OcGroup ocGroup);
+    void addGroup(OcGroupVO.Group group);
 
-    void updateGroup(OcGroupVO.OcGroup ocGroup);
+    void updateGroup(OcGroupVO.Group group);
 
     BusinessWrapper<Boolean> deleteGroupById(int id);
 
-    DataTable<OcUserRoleVO.OcUserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery);
+    DataTable<OcUserRoleVO.UserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery);
 
-    void addUserRole(OcUserRoleVO.OcUserRole ocUserRole);
+    void addUserRole(OcUserRoleVO.UserRole userRole);
 
     BusinessWrapper<Boolean> deleteUserRoleById(int id);
 

@@ -18,7 +18,7 @@ public class OcResourceVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class OcResource {
+    public static class Resource {
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;

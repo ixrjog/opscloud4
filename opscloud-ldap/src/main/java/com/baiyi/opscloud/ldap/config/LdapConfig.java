@@ -35,6 +35,9 @@ public class LdapConfig {
     public static final String USER_ID = "userId";
     public static final String USER_BASE_DN = "userBaseDN";
     public static final String USER_OBJECT_CLASS = "userObjectClass";
+    public static final String GROUP_OBJECT_CLASS = "groupObjectClass";
+    public static final String GROUP_MEMBER = "groupMember";
+    public static final String GROUP_BASE_DN = "groupBaseDN";
 
     public String getCustomByKey(String key) {
         return custom.get(key);

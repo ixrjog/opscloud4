@@ -2,7 +2,9 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.UserFacade;
 import io.swagger.annotations.Api;
@@ -32,6 +34,7 @@ public class UserController {
      * @param pageQuery
      * @return
      */
+    // user
     @ApiOperation(value = "分页查询user列表")
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcUserVO.User>> queryUserPage(@Valid UserParam.PageQuery pageQuery) {
@@ -54,6 +57,25 @@ public class UserController {
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateUser(@RequestBody @Valid OcUserVO.User user) {
         return new HttpResult<>(userFacade.updateBaseUser(user));
+    }
+
+    // user group
+    @ApiOperation(value = "分页查询user group列表")
+    @GetMapping(value = "/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserGroupPage(@Valid UserGroupParam.PageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryUserGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "新增user group")
+    @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addTag(@RequestBody @Valid OcUserGroupVO.UserGroup userGroup) {
+        return new HttpResult<>(userFacade.addUserGroup(userGroup));
+    }
+
+    @ApiOperation(value = "同步user group")
+    @GetMapping(value = "/group/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> syncUserGroup() {
+        return new HttpResult<>(userFacade.syncUserGroup());
     }
 
 }

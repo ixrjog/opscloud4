@@ -18,7 +18,7 @@ public class OcUserRoleVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class OcUserRole {
+    public static class UserRole {
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;

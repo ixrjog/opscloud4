@@ -45,6 +45,10 @@ public class RegexUtils {
         return serverGroupName.matches("group_[a-z][\\d0-9a-z-]{8,64}");
     }
 
+    public static boolean isUserGroupNameRule(String userGroupName){
+        return isServerNameRule(userGroupName);
+    }
+
     public static boolean isServerNameRule(String serverName){
         return serverName.matches("[a-z][\\d0-9a-z-]{1,32}");
     }

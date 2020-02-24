@@ -2,11 +2,15 @@ package com.baiyi.opscloud.ldap.handler;
 
 
 import com.baiyi.opscloud.ldap.config.LdapConfig;
+import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.entry.Person;
+import com.baiyi.opscloud.ldap.mapper.GroupAttributesMapper;
 import com.baiyi.opscloud.ldap.mapper.PersonAttributesMapper;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ldap.core.AttributesMapper;
+import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
@@ -15,6 +19,7 @@ import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import javax.naming.directory.*;
+import java.util.Collections;
 import java.util.List;
 
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
@@ -59,7 +64,7 @@ public class LdapHandler {
      * @return
      */
     public List<Person> queryPersonList() {
-        return ldapTemplate.search(query().where("objectclass").is( ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS)), new PersonAttributesMapper());
+        return ldapTemplate.search(query().where("objectclass").is(ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS)), new PersonAttributesMapper());
     }
 
     /**
@@ -133,7 +138,7 @@ public class LdapHandler {
     public boolean bindPerson(Person person) {
         String userId = ldapConfig.getCustomByKey(LdapConfig.USER_ID);
         String userBaseDN = ldapConfig.getCustomByKey(LdapConfig.USER_BASE_DN);
-        String userObjectClass =ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS);
+        String userObjectClass = ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS);
 
         try {
             String rdn = Joiner.on("=").join(userId, person.getUsername());
@@ -163,7 +168,7 @@ public class LdapHandler {
     }
 
     public boolean updatePerson(Person person) {
-        String rdn = Joiner.on("=").join( ldapConfig.getCustomByKey(LdapConfig.USER_ID), person.getUsername());
+        String rdn = Joiner.on("=").join(ldapConfig.getCustomByKey(LdapConfig.USER_ID), person.getUsername());
         String dn = Joiner.on(",").skipNulls().join(rdn, ldapConfig.getCustomByKey(LdapConfig.USER_BASE_DN));
         Person checkPerson = getPersonWithDn(dn);
         if (checkPerson == null) return false;
@@ -181,6 +186,35 @@ public class LdapHandler {
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * 查询所有Group
+     *
+     * @return
+     */
+    public List<Group> queryGroupList() {
+        return ldapTemplate.search(query().where("objectclass").is(ldapConfig.getCustomByKey(LdapConfig.GROUP_OBJECT_CLASS)), new GroupAttributesMapper());
+    }
+
+    public List<String> queryGroupMember(String groupName) {
+        try {
+            String dn = Joiner.on("").join("cn=", groupName, ",", ldapConfig.getCustomByKey(LdapConfig.GROUP_BASE_DN));
+            DirContextAdapter adapter = (DirContextAdapter) ldapTemplate.lookup(dn);
+            //"uniqueMember"
+            // LdapConfig.GROUP_MEMBER
+            String[] members = adapter.getStringAttributes(ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER));
+            List<String> usernameList = Lists.newArrayList();
+            for (String member : members) {
+                String[] m = member.split("=|,");
+                if (m.length > 2 && !m[1].equals("admin"))
+                    usernameList.add(m[1]);
+            }
+            return usernameList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 
     private void modifyAttributes(String dn, String attrId, String value) {

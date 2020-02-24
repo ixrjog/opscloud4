@@ -2,7 +2,9 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 
 /**
@@ -19,5 +21,11 @@ public interface UserFacade {
     String getRandomPassword();
 
     BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user);
+
+    DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.PageQuery pageQuery);
+
+    BusinessWrapper<Boolean> addUserGroup(OcUserGroupVO.UserGroup userGroup);
+
+    BusinessWrapper<Boolean> syncUserGroup();
 
 }

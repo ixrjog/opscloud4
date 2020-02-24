@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.decorator.ResourceDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -45,24 +46,26 @@ public class AuthFacadeImpl implements AuthFacade {
     @Resource
     private OcUserService ocUserService;
 
-    @Override
-    public DataTable<OcRoleVO.OcRole> queryRolePage(RoleParam.PageQuery pageQuery) {
-        DataTable<OcAuthRole> table = ocAuthRoleService.queryOcAuthRoleByParam(pageQuery);
+    @Resource
+    private ResourceDecorator resourceDecorator;
 
-        List<OcRoleVO.OcRole> page = BeanCopierUtils.copyListProperties(table.getData(), OcRoleVO.OcRole.class);
-        DataTable<OcRoleVO.OcRole> dataTable = new DataTable<>(page, table.getTotalNum());
+    @Override
+    public DataTable<OcRoleVO.Role> queryRolePage(RoleParam.PageQuery pageQuery) {
+        DataTable<OcAuthRole> table = ocAuthRoleService.queryOcAuthRoleByParam(pageQuery);
+        List<OcRoleVO.Role> page = BeanCopierUtils.copyListProperties(table.getData(), OcRoleVO.Role.class);
+        DataTable<OcRoleVO.Role> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public void addRole(OcRoleVO.OcRole ocRole) {
-        OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(ocRole, OcAuthRole.class);
+    public void addRole(OcRoleVO.Role role) {
+        OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(role, OcAuthRole.class);
         ocAuthRoleService.addOcAuthRole(ocAuthRole);
     }
 
     @Override
-    public void updateRole(OcRoleVO.OcRole ocRole) {
-        OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(ocRole, OcAuthRole.class);
+    public void updateRole(OcRoleVO.Role role) {
+        OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(role, OcAuthRole.class);
         ocAuthRoleService.updateOcAuthRole(ocAuthRole);
     }
 
@@ -82,24 +85,24 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public DataTable<OcResourceVO.OcResource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
+    public DataTable<OcResourceVO.Resource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleBindOcAuthResourceByParam(pageQuery);
-        List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
-        DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<OcResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.Resource.class);
+        DataTable<OcResourceVO.Resource> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public DataTable<OcResourceVO.OcResource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
+    public DataTable<OcResourceVO.Resource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleUnbindOcAuthResourceByParam(pageQuery);
-        List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
-        DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<OcResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.Resource.class);
+        DataTable<OcResourceVO.Resource> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public void bindRoleResource(OcRoleResourceVO.OcRoleResource ocRoleResource) {
-        OcAuthRoleResource ocAuthRoleResource = BeanCopierUtils.copyProperties(ocRoleResource, OcAuthRoleResource.class);
+    public void bindRoleResource(OcRoleResourceVO.RoleResource roleResource) {
+        OcAuthRoleResource ocAuthRoleResource = BeanCopierUtils.copyProperties(roleResource, OcAuthRoleResource.class);
         ocAuthRoleResourceService.addOcAuthRoleResource(ocAuthRoleResource);
     }
 
@@ -108,45 +111,30 @@ public class AuthFacadeImpl implements AuthFacade {
         ocAuthRoleResourceService.delOcAuthRoleResourceById(ocRoleResourceId);
     }
 
-
     @Override
-    public DataTable<OcResourceVO.OcResource> queryResourcePage(ResourceParam.PageQuery pageQuery) {
+    public DataTable<OcResourceVO.Resource> queryResourcePage(ResourceParam.PageQuery pageQuery) {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryOcAuthResourceByParam(pageQuery);
-        List<OcResourceVO.OcResource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.OcResource.class);
-        DataTable<OcResourceVO.OcResource> dataTable = new DataTable<>(page.stream().map(e -> invokeOcResource(e)).collect(Collectors.toList()), table.getTotalNum());
+        List<OcResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), OcResourceVO.Resource.class);
+        DataTable<OcResourceVO.Resource> dataTable = new DataTable<>(page.stream().map(e -> resourceDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }
 
-    /**
-     * 插入groupCode
-     *
-     * @param ocResource
-     * @return
-     */
-    private OcResourceVO.OcResource invokeOcResource(OcResourceVO.OcResource ocResource) {
-        if (ocResource.getGroupId() == null)
-            return ocResource;
-        OcAuthGroup ocAuthGroup = ocAuthGroupService.queryOcAuthGroupById(ocResource.getGroupId());
-        ocResource.setGroupCode(ocAuthGroup.getGroupCode());
-        return ocResource;
-    }
-
     @Override
-    public void addResource(OcResourceVO.OcResource ocResource) {
-        OcAuthResource ocAuthResource = BeanCopierUtils.copyProperties(ocResource, OcAuthResource.class);
+    public void addResource(OcResourceVO.Resource resource) {
+        OcAuthResource ocAuthResource = BeanCopierUtils.copyProperties(resource, OcAuthResource.class);
         ocAuthResourceService.addOcAuthResource(ocAuthResource);
     }
 
     @Override
-    public void updateResource(OcResourceVO.OcResource ocResource) {
-        OcAuthResource ocAuthResource = BeanCopierUtils.copyProperties(ocResource, OcAuthResource.class);
+    public void updateResource(OcResourceVO.Resource resource) {
+        OcAuthResource ocAuthResource = BeanCopierUtils.copyProperties(resource, OcAuthResource.class);
         ocAuthResourceService.updateOcAuthResource(ocAuthResource);
     }
 
     @Override
-    public void updateResourceNeedAuth(OcResourceVO.OcResource ocResource) {
-        OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceById(ocResource.getId());
-        ocAuthResource.setNeedAuth(ocResource.getNeedAuth());
+    public void updateResourceNeedAuth(OcResourceVO.Resource resource) {
+        OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceById(resource.getId());
+        ocAuthResource.setNeedAuth(resource.getNeedAuth());
         ocAuthResourceService.updateOcAuthResource(ocAuthResource);
     }
 
@@ -167,22 +155,22 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public DataTable<OcGroupVO.OcGroup> queryGroupPage(GroupParam.PageQuery pageQuery) {
+    public DataTable<OcGroupVO.Group> queryGroupPage(GroupParam.PageQuery pageQuery) {
         DataTable<OcAuthGroup> table = ocAuthGroupService.queryOcAuthGroupByParam(pageQuery);
-        List<OcGroupVO.OcGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcGroupVO.OcGroup.class);
-        DataTable<OcGroupVO.OcGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<OcGroupVO.Group> page = BeanCopierUtils.copyListProperties(table.getData(), OcGroupVO.Group.class);
+        DataTable<OcGroupVO.Group> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public void addGroup(OcGroupVO.OcGroup ocGroup) {
-        OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(ocGroup, OcAuthGroup.class);
+    public void addGroup(OcGroupVO.Group group) {
+        OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(group, OcAuthGroup.class);
         ocAuthGroupService.addOcAuthGroup(ocAuthGroup);
     }
 
     @Override
-    public void updateGroup(OcGroupVO.OcGroup ocGroup) {
-        OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(ocGroup, OcAuthGroup.class);
+    public void updateGroup(OcGroupVO.Group group) {
+        OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(group, OcAuthGroup.class);
         ocAuthGroupService.updateOcAuthGroup(ocAuthGroup);
     }
 
@@ -202,32 +190,32 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public DataTable<OcUserRoleVO.OcUserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery) {
+    public DataTable<OcUserRoleVO.UserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery) {
         DataTable<OcAuthUserRole> table = ocAuthUserRoleService.queryOcAuthUserRoleByParam(pageQuery);
-        List<OcUserRoleVO.OcUserRole> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserRoleVO.OcUserRole.class);
-        DataTable<OcUserRoleVO.OcUserRole> dataTable = new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
+        List<OcUserRoleVO.UserRole> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserRoleVO.UserRole.class);
+        DataTable<OcUserRoleVO.UserRole> dataTable = new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }
 
     /**
      * 插入用户信息
      *
-     * @param ocUserRole
+     * @param userRole
      * @return
      */
-    private OcUserRoleVO.OcUserRole invokeOcUser(OcUserRoleVO.OcUserRole ocUserRole) {
-        OcUser ocUser = ocUserService.queryOcUserByUsername(ocUserRole.getUsername());
-        ocUserRole.setDisplayName(ocUser.getDisplayName());
-        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(ocUserRole.getRoleId());
-        ocUserRole.setRoleName(ocAuthRole.getRoleName());
-        ocUserRole.setRoleComment(ocAuthRole.getComment());
-        return ocUserRole;
+    private OcUserRoleVO.UserRole invokeOcUser(OcUserRoleVO.UserRole userRole) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(userRole.getUsername());
+        userRole.setDisplayName(ocUser.getDisplayName());
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(userRole.getRoleId());
+        userRole.setRoleName(ocAuthRole.getRoleName());
+        userRole.setRoleComment(ocAuthRole.getComment());
+        return userRole;
     }
 
     @Override
-    public void addUserRole(OcUserRoleVO.OcUserRole ocUserRole) {
+    public void addUserRole(OcUserRoleVO.UserRole userRole) {
         try {
-            OcAuthUserRole ocAuthUserRole = BeanCopierUtils.copyProperties(ocUserRole, OcAuthUserRole.class);
+            OcAuthUserRole ocAuthUserRole = BeanCopierUtils.copyProperties(userRole, OcAuthUserRole.class);
             ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
         } catch (Exception e) {
         }
