@@ -67,7 +67,7 @@
         <if test="phone != null and phone != ''">
             phone = #{phone},
         </if>
-        <if test="comment != null and comment != ''">
+        <if test="comment != null">
             comment = #{comment},
         </if>
         </trim>
