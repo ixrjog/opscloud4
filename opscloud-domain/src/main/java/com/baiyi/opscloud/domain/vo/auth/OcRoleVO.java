@@ -22,6 +22,9 @@ public class OcRoleVO {
         @ApiModelProperty(value = "角色名称")
         private String roleName;
 
+        @ApiModelProperty(value = "资源路径")
+        private String resourceName;
+
         @ApiModelProperty(value = "角色描述")
         private String comment;
 

@@ -20,7 +20,16 @@ public class OcAuthRole {
      */
     private String comment;
 
+    /**
+     * 允许工作流申请
+     */
     private Integer workflow;
+
+    /**
+     * api允许访问的资源路径(用于公共接口2次鉴权)
+     */
+    @Column(name = "resource_name")
+    private String resourceName;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -90,6 +99,14 @@ public class OcAuthRole {
      */
     public void setWorkflow(Integer workflow) {
         this.workflow = workflow;
+    }
+
+    public String getResourceName() {
+        return resourceName;
+    }
+
+    public void setResourceName(String resourceName) {
+        this.resourceName = resourceName;
     }
 
     /**

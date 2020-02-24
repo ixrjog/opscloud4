@@ -41,7 +41,6 @@ public class AliyunECSCloudserver<T> extends BaseCloudserver<T> implements IClou
         return (T) aliyunECSInstanceDecorator.decorator(aliyunECS.getInstance(regionId, instanceId));
     }
 
-
     private List<T> getInstanceList(List<DescribeInstancesResponse.Instance> instanceList) {
         return instanceList.stream().map(e -> (T) aliyunECSInstanceDecorator.decorator(e)).collect(Collectors.toList());
     }

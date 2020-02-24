@@ -18,6 +18,9 @@ public class RoleParam {
         @ApiModelProperty(value = "角色名称")
         private String roleName;
 
+        @ApiModelProperty(value = "资源名称")
+        private String resourceName;
+
     }
 
 

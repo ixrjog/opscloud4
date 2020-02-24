@@ -104,10 +104,11 @@
 <!--        oc_auth_role-->
 <!--        oc_auth_role_resource-->
 <!--        oc_auth_user_role-->
+<!--        oc_business_tag-->
 <!--        <table tableName="oc_tag">-->
 <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="oc_business_tag">
+        <table tableName="oc_user_group">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

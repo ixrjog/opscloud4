@@ -7,6 +7,7 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="workflow" jdbcType="INTEGER" property="workflow" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
@@ -18,6 +19,9 @@
     <where>
       <if test="roleName != null and roleName != ''">
           role_name like "%" #{roleName} "%"
+      </if>
+      <if test="resourceName != null and resourceName != ''">
+         and resource_name like "%" #{resourceName} "%"
       </if>
     </where>
   </select>
