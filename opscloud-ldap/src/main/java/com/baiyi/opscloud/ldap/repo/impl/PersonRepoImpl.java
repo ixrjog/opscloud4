@@ -77,5 +77,15 @@ public class PersonRepoImpl implements PersonRepo {
         return true;
     }
 
+    @Override
+    public  Boolean checkPersonInLdap(String username){
+       return ldapHandler.checkPersonInLdap(username);
+    }
+
+    @Override
+    public List<String> searchUserGroupByUsername(String username){
+       return   ldapHandler.searchLdapGroup(username);
+    }
+
 
 }

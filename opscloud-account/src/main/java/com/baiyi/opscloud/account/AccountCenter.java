@@ -73,4 +73,34 @@ public class AccountCenter {
         return Boolean.TRUE;
     }
 
+    public Boolean update(String key, OcUser user) {
+        IAccount account = AccountFactory.getAccountByKey(key);
+        return account.update(user);
+    }
+
+    /**
+     * 更新用户信息
+     *
+     * @param user
+     * @return
+     */
+    public Boolean update(OcUser user) {
+        Boolean result = update(LDAP_ACCOUNT_KEY, user);
+        if (result) {
+            Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+            for (String key : accountContainer.keySet()) {
+                if (key.equals(LDAP_ACCOUNT_KEY)) continue;
+                IAccount account = accountContainer.get(key);
+                if (!account.update(user))
+                    return Boolean.FALSE;
+            }
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean sync(String key) {
+        IAccount account = AccountFactory.getAccountByKey(key);
+        return account.sync();
+    }
+
 }

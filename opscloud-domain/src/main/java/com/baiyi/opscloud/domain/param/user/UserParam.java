@@ -21,6 +21,9 @@ public class UserParam {
         @ApiModelProperty(value = "模糊查询")
         private String queryName;
 
+        @ApiModelProperty(value = "扩展属性",example = "0")
+        private Integer extend;
+
         @ApiModelProperty(value = "用户名")
         private String username;
 

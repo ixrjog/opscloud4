@@ -43,4 +43,9 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
         criteria.andEqualTo("name", name);
         return ocUserGroupMapper.selectOneByExample(example);
     }
+
+    @Override
+    public List<OcUserGroup> queryOcUserGroupByUserId(int userId){
+        return ocUserGroupMapper.queryOcUserGroupByUserId(userId);
+    }
 }

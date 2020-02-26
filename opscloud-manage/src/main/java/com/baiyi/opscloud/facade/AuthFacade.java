@@ -63,4 +63,11 @@ public interface AuthFacade {
 
     BusinessWrapper<Boolean> deleteUserRoleById(int id);
 
+    /**
+     * 公共接口2次鉴权
+     * @param resourceName
+     * @return
+     */
+    BusinessWrapper<Boolean> authenticationByResourceName(String resourceName);
+
 }

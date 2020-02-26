@@ -20,4 +20,6 @@ public interface OcAuthUserRoleService {
     void deleteOcAuthUserRoleById(int id);
 
     OcAuthUserRole queryOcAuthUserRoleById(int id);
+
+    boolean authenticationByUsernameAndResourceName(String username, String resourceName);
 }

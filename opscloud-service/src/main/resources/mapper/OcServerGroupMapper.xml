@@ -26,4 +26,11 @@
             </if>
         </where>
     </select>
+
+    <!--    business_type = 2 serverGroup-->
+    <select id="queryUerPermissionOcServerGroupByUserId" resultMap="BaseResultMap">
+    select * from oc_server_group where id in
+    ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
+  </select>
+
 </mapper>

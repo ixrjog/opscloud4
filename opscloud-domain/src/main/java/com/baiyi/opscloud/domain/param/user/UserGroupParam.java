@@ -27,5 +27,8 @@ public class UserGroupParam {
         @ApiModelProperty(value = "允许工作流申请",example = "1")
         private Integer workflow;
 
+        @ApiModelProperty(value = "扩展属性",example = "0")
+        private Integer extend;
+
     }
 }

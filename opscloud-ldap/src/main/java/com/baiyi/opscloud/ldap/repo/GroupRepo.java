@@ -19,4 +19,15 @@ public interface GroupRepo {
      * @return
      */
     List<String> queryGroupMember(String groupName);
+
+
+    /**
+     * 移除group中的用户
+     * @param groupName
+     * @param username
+     * @return
+     */
+    Boolean removeGroupMember(String groupName,String username);
+
+    Boolean addGroupMember(String groupName,String username);
 }

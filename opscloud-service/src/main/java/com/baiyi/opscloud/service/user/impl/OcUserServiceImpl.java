@@ -69,5 +69,10 @@ public class OcUserServiceImpl implements OcUserService {
         return new DataTable<>(ocUserList, page.getTotal());
     }
 
+    @Override
+    public List<OcUser> queryOcUserByUserGroupId(int userGroupId) {
+        return ocUserMapper.queryOcUserByUserGroupId(userGroupId);
+    }
+
 
 }

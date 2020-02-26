@@ -23,4 +23,8 @@ public interface PersonRepo {
 
     Boolean delete(String username);
 
+    Boolean checkPersonInLdap(String username);
+
+    List<String> searchUserGroupByUsername(String username);
+
 }

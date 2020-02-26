@@ -16,6 +16,8 @@ public interface UserFacade {
 
     DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery);
 
+    OcUserVO.User queryUserDetail();
+
     DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
     String getRandomPassword();
@@ -27,5 +29,7 @@ public interface UserFacade {
     BusinessWrapper<Boolean> addUserGroup(OcUserGroupVO.UserGroup userGroup);
 
     BusinessWrapper<Boolean> syncUserGroup();
+
+    BusinessWrapper<Boolean> syncUser();
 
 }

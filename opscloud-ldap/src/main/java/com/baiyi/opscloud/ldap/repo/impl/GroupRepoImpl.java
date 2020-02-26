@@ -30,4 +30,14 @@ public class GroupRepoImpl implements GroupRepo {
     public List<String> queryGroupMember(String groupName) {
         return ldapHandler.queryGroupMember(groupName);
     }
+
+    @Override
+    public Boolean removeGroupMember(String groupName,String username){
+        return ldapHandler.removeGroupMember(groupName, username);
+    }
+
+    @Override
+    public Boolean addGroupMember(String groupName,String username){
+        return ldapHandler.addGroupMember(groupName, username);
+    }
 }

@@ -65,4 +65,9 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     public void deleteOcServerGroupById(int id) {
         ocServerGroupMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId){
+        return ocServerGroupMapper.queryUerPermissionOcServerGroupByUserId(userId);
+    }
 }

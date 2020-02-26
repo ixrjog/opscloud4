@@ -3,10 +3,11 @@ package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.domain.generator.*;
-import com.baiyi.opscloud.service.user.OcAccountService;
-import com.baiyi.opscloud.service.server.OcServerGroupPermissionService;
+import com.baiyi.opscloud.domain.generator.OcAccount;
+import com.baiyi.opscloud.domain.generator.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
+import com.baiyi.opscloud.service.user.OcAccountService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -15,7 +16,6 @@ import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -36,9 +36,6 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
 
     @Resource
     protected OcAccountService ocAccountService;
-
-    @Resource
-    protected OcServerGroupPermissionService ocServerGroupPermissionService;
 
     @Resource
     protected OcServerGroupService ocServerGroupService;
@@ -118,7 +115,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      */
     @Override
     public Boolean sync() {
-        if (getKey().equals("LdapAccoun"))
+        if (getKey().equals("LdapAccount"))
             return saveOcUserListByLdap(getUserList());
         List<OcAccount> accountList = getOcAccountList();
         Map<String, OcAccount> map = getAccountMap(null);
@@ -225,11 +222,12 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
     protected List<OcServerGroup> queryUserServerGroupPermission(OcUser ocUser) {
         if (ocUser.getId() == null)
             ocUser = ocUserService.queryOcUserByUsername(ocUser.getUsername());
-        List<OcServerGroupPermission> permissionList = ocServerGroupPermissionService.queryUserServerGroupPermission(ocUser.getId());
-        if (permissionList.isEmpty()) return Collections.emptyList();
-        return permissionList.stream().map(e -> {
-            return ocServerGroupService.queryOcServerGroupById(e.getServerGroupId());
-        }).collect(Collectors.toList());
+//        List<OcServerGroupPermission> permissionList = ocServerGroupPermissionService.queryUserServerGroupPermissionByUserId(ocUser.getId());
+//        if (permissionList.isEmpty()) return Collections.emptyList();
+//        return permissionList.stream().map(e -> {
+//            return ocServerGroupService.queryOcServerGroupById(e.getServerGroupId());
+//        }).collect(Collectors.toList());
+        return ocServerGroupService.queryUerPermissionOcServerGroupByUserId(ocUser.getId());
     }
 
 

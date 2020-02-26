@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.decorator.ResourceDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
@@ -228,6 +229,14 @@ public class AuthFacadeImpl implements AuthFacade {
             return new BusinessWrapper<>(ErrorEnum.AUTH_USER_ROLE_NOT_EXIST);
         ocAuthUserRoleService.deleteOcAuthUserRoleById(id);
         return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> authenticationByResourceName(String resourceName) {
+        String username = SessionUtils.getUsername();
+        if(ocAuthUserRoleService.authenticationByUsernameAndResourceName(username,resourceName))
+            return BusinessWrapper.SUCCESS;
+        return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
     }
 
 }

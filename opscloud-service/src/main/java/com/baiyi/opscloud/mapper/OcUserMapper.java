@@ -17,4 +17,6 @@ public interface OcUserMapper extends Mapper<OcUser> {
 
     int updateBaseUser(OcUser ocUser);
 
+    List<OcUser> queryOcUserByUserGroupId(int userGroupId);
+
 }

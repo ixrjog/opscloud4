@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.user;
 
+import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -7,6 +8,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -19,6 +21,10 @@ public class OcUserVO {
     @NoArgsConstructor
     @ApiModel
     public static class User {
+
+        private List<OcUserGroupVO.UserGroup> userGroups;
+
+        private List<OcServerGroupVO.ServerGroup> serverGroups;
 
         @ApiModelProperty(value = "主键")
         private Integer id;

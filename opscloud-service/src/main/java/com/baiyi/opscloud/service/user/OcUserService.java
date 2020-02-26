@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/1/3 6:51 下午
@@ -26,5 +28,8 @@ public interface OcUserService {
     DataTable<OcUser> queryOcUserByParam(UserParam.PageQuery pageQuery);
 
     DataTable<OcUser> fuzzyQueryUserByParam(UserParam.PageQuery pageQuery);
+
+    List<OcUser> queryOcUserByUserGroupId(int userGroupId);
+
 
 }

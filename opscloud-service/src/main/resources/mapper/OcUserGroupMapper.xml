@@ -30,4 +30,10 @@
     </where>
   </select>
 
+  <!--  business_type = 4 userGroup-->
+  <select id="queryOcUserGroupByUserId" resultMap="BaseResultMap">
+    select * from oc_user_group where id in
+    ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId} )
+  </select>
+
 </mapper>

@@ -3,17 +3,29 @@ package com.baiyi.opscloud.domain.generator;
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_server_group_permission")
-public class OcServerGroupPermission {
+@Table(name = "oc_user_permission")
+public class OcUserPermission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    /**
+     * 用户id
+     */
     @Column(name = "user_id")
     private Integer userId;
 
-    @Column(name = "server_group_id")
-    private Integer serverGroupId;
+    /**
+     * 业务id
+     */
+    @Column(name = "business_id")
+    private Integer businessId;
+
+    /**
+     * 业务类型
+     */
+    @Column(name = "business_type")
+    private Integer businessType;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -36,31 +48,57 @@ public class OcServerGroupPermission {
     }
 
     /**
-     * @return user_id
+     * 获取用户id
+     *
+     * @return user_id - 用户id
      */
     public Integer getUserId() {
         return userId;
     }
 
     /**
-     * @param userId
+     * 设置用户id
+     *
+     * @param userId 用户id
      */
     public void setUserId(Integer userId) {
         this.userId = userId;
     }
 
     /**
-     * @return server_group_id
+     * 获取业务id
+     *
+     * @return business_id - 业务id
      */
-    public Integer getServerGroupId() {
-        return serverGroupId;
+    public Integer getBusinessId() {
+        return businessId;
     }
 
     /**
-     * @param serverGroupId
+     * 设置业务id
+     *
+     * @param businessId 业务id
      */
-    public void setServerGroupId(Integer serverGroupId) {
-        this.serverGroupId = serverGroupId;
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
+    }
+
+    /**
+     * 获取业务类型
+     *
+     * @return business_type - 业务类型
+     */
+    public Integer getBusinessType() {
+        return businessType;
+    }
+
+    /**
+     * 设置业务类型
+     *
+     * @param businessType 业务类型
+     */
+    public void setBusinessType(Integer businessType) {
+        this.businessType = businessType;
     }
 
     /**

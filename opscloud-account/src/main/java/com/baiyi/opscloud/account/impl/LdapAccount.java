@@ -9,6 +9,7 @@ import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.domain.generator.OcAccount;
 import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.ldap.entry.Person;
+import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.google.common.collect.Lists;
 import org.jasypt.encryption.StringEncryptor;
@@ -33,6 +34,9 @@ public class LdapAccount extends BaseAccount implements IAccount {
     @Resource
     private PersonRepo personRepo;
 
+    @Resource
+    private GroupRepo groupRepo;
+
     @Override
     protected List<OcUser> getUserList() {
         return personRepo.getPersonList().stream().map(e -> OcUserBuilder.build(e)).collect(Collectors.toList());
@@ -40,12 +44,12 @@ public class LdapAccount extends BaseAccount implements IAccount {
 
 
     @Override
-    protected int getAccountType(){
+    protected int getAccountType() {
         return AccountType.LDAP.getType();
     }
 
     @Override
-    protected  List<OcAccount> getOcAccountList(){
+    protected List<OcAccount> getOcAccountList() {
         return Lists.newArrayList();
     }
 
@@ -86,44 +90,71 @@ public class LdapAccount extends BaseAccount implements IAccount {
     }
 
     @Override
-    public  Boolean active(OcUser user, boolean active){
+    public Boolean active(OcUser user, boolean active) {
         return Boolean.TRUE;
     }
 
     @Override
     public Boolean update(OcUser user) {
         // 校验用户
-        if (StringUtils.isEmpty(user.getUsername()))
-            return Boolean.FALSE;
-        OcUser ocUser = ocUserService.queryOcUserByUsername(user.getUsername());
+        OcUser ocUser;
+        if (!StringUtils.isEmpty(user.getUsername())) {
+            ocUser = ocUserService.queryOcUserByUsername(user.getUsername());
+        } else {
+            ocUser = ocUserService.queryOcUserById(user.getId());
+        }
         if (ocUser == null) return Boolean.FALSE;
-
         Person person = new Person();
-        person.setUsername(user.getUsername());
+        person.setUsername(ocUser.getUsername());
         if (!StringUtils.isEmpty(user.getDisplayName())) {
-            ocUser.setDisplayName(user.getDisplayName());
+            //ocUser.setDisplayName(user.getDisplayName());
             person.setDisplayName(user.getDisplayName());
         }
         if (!StringUtils.isEmpty(user.getEmail())) {
-            ocUser.setEmail(user.getEmail());
+            //ocUser.setEmail(user.getEmail());
             person.setEmail(user.getEmail());
         }
         if (!StringUtils.isEmpty(user.getPhone())) {
-            ocUser.setPhone(user.getPhone());
+            //ocUser.setPhone(user.getPhone());
             person.setMobile(user.getPhone());
         }
 
         if (!StringUtils.isEmpty(user.getPassword())) {
-            ocUser.setPassword(stringEncryptor.encrypt(user.getPassword())); // 加密
+            //ocUser.setPassword(stringEncryptor.encrypt(user.getPassword())); // 加密
             person.setUserPassword(user.getPassword());
         }
         try {
-            ocUserService.updateOcUser(ocUser);
+            //ocUserService.updateOcUser(ocUser);
             personRepo.update(person);
             return Boolean.TRUE;
         } catch (Exception e) {
         }
         return Boolean.FALSE;
     }
+
+    /**
+     * 授权
+     *
+     * @param user
+     * @param resource
+     * @return
+     */
+    @Override
+    public Boolean grant(OcUser user, String resource) {
+        return groupRepo.addGroupMember(resource, user.getUsername());
+    }
+
+    /**
+     * 吊销
+     *
+     * @param user
+     * @param resource
+     * @return
+     */
+    @Override
+    public Boolean revoke(OcUser user, String resource) {
+        return groupRepo.removeGroupMember(resource, user.getUsername());
+    }
+
 
 }

@@ -25,22 +25,22 @@ public class OcAuthUserRoleServiceImpl implements OcAuthUserRoleService {
     private OcAuthUserRoleMapper ocAuthUserRoleMapper;
 
     @Override
-    public  int countByRoleId(int roleId){
+    public int countByRoleId(int roleId) {
         Example example = new Example(OcAuthUserRole.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("roleId",roleId);
+        criteria.andEqualTo("roleId", roleId);
         return ocAuthUserRoleMapper.selectCountByExample(example);
     }
 
     @Override
-    public DataTable<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.PageQuery pageQuery){
+    public DataTable<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcAuthUserRole> ocAuthUserRoleList = ocAuthUserRoleMapper.queryOcAuthUserRoleByParam(pageQuery);
         return new DataTable<>(ocAuthUserRoleList, page.getTotal());
     }
 
     @Override
-    public void addOcAuthUserRole(OcAuthUserRole ocAuthUserRole){
+    public void addOcAuthUserRole(OcAuthUserRole ocAuthUserRole) {
         ocAuthUserRoleMapper.insert(ocAuthUserRole);
     }
 
@@ -50,7 +50,12 @@ public class OcAuthUserRoleServiceImpl implements OcAuthUserRoleService {
     }
 
     @Override
-    public OcAuthUserRole queryOcAuthUserRoleById(int id){
-        return  ocAuthUserRoleMapper.selectByPrimaryKey(id);
+    public OcAuthUserRole queryOcAuthUserRoleById(int id) {
+        return ocAuthUserRoleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public boolean authenticationByUsernameAndResourceName(String username, String resourceName) {
+        return ocAuthUserRoleMapper.authenticationByUsernameAndResourceName(username, resourceName) >= 1;
     }
 }

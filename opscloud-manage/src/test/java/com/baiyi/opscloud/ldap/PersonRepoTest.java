@@ -16,7 +16,7 @@ import java.util.List;
  * @Date 2019/12/27 3:12 下午
  * @Version 1.0
  */
-public class PersonRepoTest  extends BaseUnit {
+public class PersonRepoTest extends BaseUnit {
 
     @Resource
     private LdapHandler ldapHandler;
@@ -46,8 +46,22 @@ public class PersonRepoTest  extends BaseUnit {
                 .username("baiyi")
                 .password("password")
                 .build();
-        boolean checkAuth = ldapHandler.loginCheck(credential );
+        boolean checkAuth = ldapHandler.loginCheck(credential);
         System.err.println(checkAuth);
+    }
+
+    @Test
+    void testCheckPersonInLdap() {
+        boolean check = personRepo.checkPersonInLdap("baiyi");
+        System.err.println(check);
+    }
+
+    @Test
+    void testSearchUserGroupByUsername() {
+        List<String> list = personRepo.searchUserGroupByUsername("baiyi");
+        for (String group : list) {
+            System.err.println(group);
+        }
     }
 
 }

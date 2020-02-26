@@ -1,9 +1,14 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.account.AccountCenter;
+import com.baiyi.opscloud.builder.UserGroupBO;
+import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.base.Ressource;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
+import com.baiyi.opscloud.common.util.SessionUtils;
+import com.baiyi.opscloud.decorator.UserDecorator;
 import com.baiyi.opscloud.decorator.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
@@ -14,9 +19,12 @@ import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.facade.AuthFacade;
 import com.baiyi.opscloud.facade.UserFacade;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
+import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.jasypt.encryption.StringEncryptor;
@@ -51,22 +59,42 @@ public class UserFacadeImpl implements UserFacade {
     private GroupRepo groupRepo;
 
     @Resource
+    private PersonRepo personRepo;
+
+    @Resource
     private UserGroupDecorator userGroupDecorator;
+
+    @Resource
+    private UserDecorator userDecorator;
+
+    @Resource
+    private UserPermissionFacade userPermissionFacade;
+
+    @Resource
+    private AuthFacade authFacade;
 
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
-        List<OcUserVO.User> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserVO.User.class);
-        DataTable<OcUserVO.User> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return toUserPage(table, pageQuery.getExtend());
+    }
+
+    @Override
+    public OcUserVO.User queryUserDetail() {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
+        OcUserVO.User user = BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class);
+        return userDecorator.decorator(user, 1);
     }
 
     @Override
     public DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery) {
         DataTable<OcUser> table = ocUserService.fuzzyQueryUserByParam(pageQuery);
+        return toUserPage(table, pageQuery.getExtend());
+    }
+
+    private DataTable<OcUserVO.User> toUserPage(DataTable<OcUser> table, Integer extend) {
         List<OcUserVO.User> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserVO.User.class);
-        DataTable<OcUserVO.User> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> userDecorator.decorator(e, extend)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -76,8 +104,17 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user) {
+        // 公共接口需要2次鉴权
+        String username = SessionUtils.getUsername();
+        OcUser checkOcUser = ocUserService.queryOcUserById(user.getId());
+        if (!username.equals(checkOcUser.getUsername())) {
+            BusinessWrapper<Boolean> wrapper = authFacade.authenticationByResourceName(Ressource.USER_UPDATE);
+            if (!wrapper.isSuccess())
+                return wrapper;
+        }
+
         OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
-        String password; // 用户密码原文
+        String password = ""; // 用户密码原文
         // 用户尝试修改密码
         if (!StringUtils.isEmpty(ocUser.getPassword())) {
             if (!RegexUtils.checkPasswordRule(ocUser.getPassword()))
@@ -96,7 +133,10 @@ public class UserFacadeImpl implements UserFacade {
             if (!RegexUtils.isEmail(ocUser.getEmail()))
                 return new BusinessWrapper<>(ErrorEnum.USER_EMAIL_NON_COMPLIANCE_WITH_RULES);
         }
-        ocUserService.updateBaseOcUser(ocUser);
+        ocUserService.updateBaseOcUser(ocUser); // 更新数据库
+        if (!StringUtils.isEmpty(password))
+            ocUser.setPassword(password);
+        accountCenter.update(ocUser); // 更新账户中心所有实例
         return BusinessWrapper.SUCCESS;
     }
 
@@ -104,7 +144,7 @@ public class UserFacadeImpl implements UserFacade {
     public DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.PageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryOcUserGroupByParam(pageQuery);
         List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
-        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
         //DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
@@ -121,21 +161,55 @@ public class UserFacadeImpl implements UserFacade {
         return BusinessWrapper.SUCCESS;
     }
 
+    /**
+     * 同步用户组（会同步用户成员关系）
+     *
+     * @return
+     */
     @Override
     public BusinessWrapper<Boolean> syncUserGroup() {
         List<Group> groupList = groupRepo.getGroupList();
         for (Group group : groupList) {
             try {
-                OcUserGroupVO.UserGroup userGroup = new OcUserGroupVO.UserGroup();
-                userGroup.setName(group.getGroupName());
-                userGroup.setSource("ldap");
-                userGroup.setWorkflow(0); // 不允许工作流申请
-                userGroup.setGrpType(0);  // 默认组类型
+                UserGroupBO userGroupBO = UserGroupBO.builder()
+                        .name(group.getGroupName())
+                        .build();
+                OcUserGroupVO.UserGroup userGroup = BeanCopierUtils.copyProperties(userGroupBO, OcUserGroupVO.UserGroup.class);
                 addUserGroup(userGroup);
+                syncUserGroupPermission(userGroup);
             } catch (Exception e) {
             }
         }
         return BusinessWrapper.SUCCESS;
+    }
+
+    /**
+     * 同步用户（会同步用户组关系）
+     *
+     * @return
+     */
+    @Override
+    public BusinessWrapper<Boolean> syncUser() {
+        accountCenter.sync(AccountCenter.LDAP_ACCOUNT_KEY); // 同步Ldap用户数据
+        List<String> usernameList = personRepo.getAllPersonNames();
+        for (String username : usernameList) {
+            OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+            if (ocUser == null) continue;
+            syncUserPermission(BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class));
+        }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    private void syncUserPermission(OcUserVO.User user) {
+        // OcUser ocUser= ocUserService.queryOcUserByUsername(user.getUsername());
+        List<OcUserGroupVO.UserGroup> userGroups = userDecorator.decoratorFromLdapRepo(user, 1).getUserGroups();
+        userPermissionFacade.syncUserBusinessPermission(user.getId(), BusinessType.USERGROUP.getType(), userGroups.stream().map(e -> e.getId()).collect(Collectors.toList()));
+    }
+
+
+    private void syncUserGroupPermission(OcUserGroupVO.UserGroup userGroup) {
+        OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupByName(userGroup.getName());
+        userPermissionFacade.syncUserBusinessPermission(userGroupDecorator.decoratorFromLdapRepo(userGroup, 1).getUsers(), BusinessType.USERGROUP.getType(), ocUserGroup.getId());
     }
 
 }

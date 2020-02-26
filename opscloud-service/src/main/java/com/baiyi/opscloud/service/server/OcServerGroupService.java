@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/1/8 10:12 上午
@@ -24,4 +26,11 @@ public interface OcServerGroupService {
     void updateOcServerGroup(OcServerGroup ocServerGroup);
 
     void deleteOcServerGroupById(int id);
+
+    /**
+     * 查询用户授权的服务器组信息
+     * @param userId
+     * @return
+     */
+    List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId);
 }

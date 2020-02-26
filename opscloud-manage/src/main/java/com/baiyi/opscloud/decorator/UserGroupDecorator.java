@@ -26,16 +26,27 @@ public class UserGroupDecorator {
     @Resource
     private GroupRepo groupRepo;
 
-    public OcUserGroupVO.UserGroup decorator(OcUserGroupVO.UserGroup userGroup) {
-        List<String> usernameList = groupRepo.queryGroupMember(userGroup.getName());
-        //Map<String, OcUserVO.User> userMap = Maps.newHashMap();
-        List<OcUserVO.User> users = Lists.newArrayList();
-        for (String username : usernameList) {
-            OcUser ocUser = ocUserService.queryOcUserByUsername(username);
-            if (ocUser != null)
-                users.add(BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class));
+    // from mysql
+    public OcUserGroupVO.UserGroup decorator(OcUserGroupVO.UserGroup userGroup, Integer extend) {
+        if (extend != null && extend == 1) {
+            List<OcUser> userList = ocUserService.queryOcUserByUserGroupId(userGroup.getId());
+            userGroup.setUsers(BeanCopierUtils.copyListProperties(userList, OcUserVO.User.class));
         }
-        userGroup.setUsers(users);
+        return userGroup;
+    }
+
+    public OcUserGroupVO.UserGroup decoratorFromLdapRepo(OcUserGroupVO.UserGroup userGroup, Integer extend) {
+        if (extend != null && extend == 1) {
+            List<String> usernameList = groupRepo.queryGroupMember(userGroup.getName());
+            //Map<String, OcUserVO.User> userMap = Maps.newHashMap();
+            List<OcUserVO.User> users = Lists.newArrayList();
+            for (String username : usernameList) {
+                OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+                if (ocUser != null)
+                    users.add(BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class));
+            }
+            userGroup.setUsers(users);
+        }
         return userGroup;
     }
 }

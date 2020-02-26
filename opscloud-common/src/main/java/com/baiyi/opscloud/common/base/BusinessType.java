@@ -6,7 +6,10 @@ package com.baiyi.opscloud.common.base;
  * @Version 1.0
  */
 public enum BusinessType {
-    SERVER(1);
+    SERVER(1),
+    SERVERGROUP(2),
+    USER(3),
+    USERGROUP(4);
 
     private int type;
 

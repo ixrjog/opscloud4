@@ -28,17 +28,24 @@ public class UserController {
     @Resource
     private UserFacade userFacade;
 
+    // user
+
     /**
      * 管理员查询
      *
      * @param pageQuery
      * @return
      */
-    // user
     @ApiOperation(value = "分页查询user列表")
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcUserVO.User>> queryUserPage(@Valid UserParam.PageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserPage(pageQuery));
+    }
+
+    @ApiOperation(value = "查询user详情")
+    @GetMapping(value = "/detail", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcUserVO.User> queryUserDetail() {
+        return new HttpResult<>(userFacade.queryUserDetail());
     }
 
     @ApiOperation(value = "分页查询user列表")
@@ -57,6 +64,12 @@ public class UserController {
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateUser(@RequestBody @Valid OcUserVO.User user) {
         return new HttpResult<>(userFacade.updateBaseUser(user));
+    }
+
+    @ApiOperation(value = "同步user")
+    @GetMapping(value = "/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> syncUser() {
+        return new HttpResult<>(userFacade.syncUser());
     }
 
     // user group

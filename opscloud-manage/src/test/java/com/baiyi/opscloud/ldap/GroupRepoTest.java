@@ -34,4 +34,20 @@ public class GroupRepoTest extends BaseUnit {
             System.err.println(username);
         }
     }
+
+    /**
+     * nexus-developer
+     * bigdata-group-platform
+     */
+    @Test
+    void testRemoveGroupMember() {
+        Boolean result = groupRepo.removeGroupMember("bigdata-group-platform", "baiyi");
+        System.err.println(result);
+    }
+
+    @Test
+    void testAddGroupMember() {
+        Boolean result = groupRepo.addGroupMember("bigdata-group-platform", "baiyi");
+        System.err.println(result);
+    }
 }

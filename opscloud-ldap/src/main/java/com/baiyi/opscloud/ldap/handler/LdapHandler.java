@@ -14,10 +14,12 @@ import org.springframework.ldap.core.DirContextAdapter;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.filter.AndFilter;
 import org.springframework.ldap.filter.EqualsFilter;
+import org.springframework.ldap.query.LdapQueryBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import javax.naming.NamingException;
 import javax.naming.directory.*;
 import java.util.Collections;
 import java.util.List;
@@ -199,8 +201,8 @@ public class LdapHandler {
 
     public List<String> queryGroupMember(String groupName) {
         try {
-            String dn = Joiner.on("").join("cn=", groupName, ",", ldapConfig.getCustomByKey(LdapConfig.GROUP_BASE_DN));
-            DirContextAdapter adapter = (DirContextAdapter) ldapTemplate.lookup(dn);
+            //String dn = Joiner.on("").join("cn=", groupName, ",", ldapConfig.getCustomByKey(LdapConfig.GROUP_BASE_DN));
+            DirContextAdapter adapter = (DirContextAdapter) ldapTemplate.lookup(ldapConfig.buildGroupDN(groupName));
             //"uniqueMember"
             // LdapConfig.GROUP_MEMBER
             String[] members = adapter.getStringAttributes(ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER));
@@ -217,10 +219,66 @@ public class LdapHandler {
         return Collections.emptyList();
     }
 
+    public boolean removeGroupMember(String groupName, String username) {
+        return modificationGroupMember(groupName,username,DirContext.REMOVE_ATTRIBUTE);
+    }
+
+    public boolean addGroupMember(String groupName, String username) {
+        return modificationGroupMember(groupName,username,DirContext.ADD_ATTRIBUTE);
+    }
+
+    private boolean modificationGroupMember(String groupName, String username, int modificationType) {
+        String groupDN = ldapConfig.buildGroupDN(groupName);
+        String groupMember = ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER);
+        String userDN = ldapConfig.buildUserFullDN(username);
+        try {
+            ldapTemplate.modifyAttributes(groupDN, new ModificationItem[]{
+                    new ModificationItem(modificationType, new BasicAttribute(groupMember, userDN))
+            });
+            return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return false;
+        }
+    }
+
+
     private void modifyAttributes(String dn, String attrId, String value) {
         ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
                 new ModificationItem(DirContext.REPLACE_ATTRIBUTE, new BasicAttribute(attrId, value))
         });
+    }
+
+    public boolean checkPersonInLdap(String username) {
+        try {
+            DirContextAdapter adapter = (DirContextAdapter) ldapTemplate.lookup(ldapConfig.buildUserDN(username));
+            String cn = adapter.getStringAttribute(ldapConfig.getCustomByKey(LdapConfig.USER_ID));
+            if (username.equalsIgnoreCase(cn)) return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
+    public List<String> searchLdapGroup(String username) {
+        List<String> groupList = Lists.newArrayList();
+        try {
+            String groupBaseDN = ldapConfig.getCustomByKey(LdapConfig.GROUP_BASE_DN);
+            String groupMember = ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER);
+            String userId = ldapConfig.getCustomByKey(LdapConfig.USER_ID);
+            String userDN = ldapConfig.buildUserFullDN(username);
+            groupList = ldapTemplate.search(LdapQueryBuilder.query().base(groupBaseDN)
+                            .where(groupMember).is(userDN).and(userId).like("*"),
+                    new AttributesMapper<String>() {
+                        @Override
+                        public String mapFromAttributes(Attributes attributes) throws NamingException {
+                            return attributes.get(userId).get(0).toString();
+                        }
+                    }
+            );
+        } catch (Exception e) {
+            log.warn("username={} search ldap group error={}", username, e.getMessage(), e);
+        }
+        return groupList;
     }
 
 }

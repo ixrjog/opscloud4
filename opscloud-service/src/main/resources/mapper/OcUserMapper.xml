@@ -26,7 +26,8 @@
         select * from oc_user where username = #{username}
     </select>
 
-    <select id="queryOcUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery" resultMap="BaseResultMap">
+    <select id="queryOcUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery"
+            resultMap="BaseResultMap">
         select * from oc_user
         <where>
             <if test="username != null and username != ''">
@@ -35,7 +36,8 @@
         </where>
     </select>
 
-    <select id="fuzzyQueryUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery" resultMap="BaseResultMap">
+    <select id="fuzzyQueryUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery"
+            resultMap="BaseResultMap">
         select * from oc_user
         <where>
             <if test="queryName != null and queryName != ''">
@@ -52,29 +54,33 @@
     <update id="updateBaseUser">
         update oc_user
         <trim prefix="set" suffixOverrides=",">
-        <if test="name != null">
-            name = #{name},
-        </if>
-        <if test="password != null and password != ''">
-            password = #{password},
-        </if>
-        <if test="displayName != null and displayName != ''">
-            display_name = #{displayName},
-        </if>
-        <if test="email != null and email != ''">
-            email = #{email},
-        </if>
-        <if test="phone != null and phone != ''">
-            phone = #{phone},
-        </if>
-        <if test="comment != null">
-            comment = #{comment},
-        </if>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="displayName != null and displayName != ''">
+                display_name = #{displayName},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
         </trim>
         where id = #{id}
-  </update>
+    </update>
 
-
+    <!--  business_type = 4 userGroup-->
+    <select id="queryOcUserByUserGroupId" resultMap="BaseResultMap">
+    select * from oc_user where id in
+    ( select user_id from oc_user_permission where business_type = 4 and business_id = #{userGroupId} )
+    </select>
 
 
 </mapper>

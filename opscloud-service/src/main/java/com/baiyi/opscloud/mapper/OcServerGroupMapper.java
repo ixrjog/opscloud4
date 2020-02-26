@@ -9,4 +9,6 @@ import java.util.List;
 public interface OcServerGroupMapper extends Mapper<OcServerGroup> {
 
     List<OcServerGroup> queryOcServerGroupByParam(ServerGroupParam.PageQuery pageQuery);
+
+    List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId);
 }
