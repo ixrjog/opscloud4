@@ -106,10 +106,11 @@
 <!--        oc_auth_user_role-->
 <!--        oc_business_tag-->
 <!--        oc_user_group-->
+<!--        oc_user_permission-->
 <!--        <table tableName="oc_tag">-->
 <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="oc_user_permission">
+        <table tableName="oc_user_api_token">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

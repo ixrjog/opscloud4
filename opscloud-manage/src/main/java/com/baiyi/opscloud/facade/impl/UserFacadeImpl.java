@@ -99,7 +99,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public String getRandomPassword() {
-        return PasswordUtils.getRandomPW(20);
+        return PasswordUtils.getPW(20);
     }
 
     @Override

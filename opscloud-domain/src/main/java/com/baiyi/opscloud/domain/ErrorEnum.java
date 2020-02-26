@@ -11,9 +11,11 @@ public enum ErrorEnum {
     SYSTEM_ERROR(10001, "系统错误"),
     // 权限
     AUTHENTICATION_FAILUER(20001,"鉴权失败"),
+    AUTHENTICATION_API_FAILUER(20001,"Api鉴权失败"),
     AUTHENTICATION_RESOURCE_NOT_EXIST(20002,"资源路径不存在"),
     AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌Token"),
     AUTHENTICATION_TOKEN_INVALID(20004,"令牌Token无效"),
+    AUTHENTICATION_API_TOKEN_INVALID(20004,"Api令牌Token无效"),
 
     // auth
     AUTH_ROLE_HAS_USED(11001, "用户角色正在使用！"),

@@ -98,7 +98,7 @@ public class TimeUtils {
      * @param endTime
      * @return
      */
-    public static Long calculateDateDiff4Day(String startTime,String endTime) {
+    public static Long calculateDateDiff4Day(String startTime, String endTime) {
         try {
             long time = TimeUtils.dateToStamp2(endTime) - TimeUtils.dateToStamp2(startTime);
             if (time < 0) {
@@ -139,6 +139,15 @@ public class TimeUtils {
     public static boolean calculateDateExpired(String expired) {
         try {
             long subTime = dateToStamp(expired) - new Date().getTime();
+            return subTime <= 0;
+        } catch (Exception e) {
+            return true;
+        }
+    }
+
+    public static boolean calculateDateExpired(Date date) {
+        try {
+            long subTime = date.getTime() - new Date().getTime();
             return subTime <= 0;
         } catch (Exception e) {
             return true;
@@ -238,7 +247,8 @@ public class TimeUtils {
     }
 
     /**
-     *  将时间戳转换为时间去零到分钟
+     * 将时间戳转换为时间去零到分钟
+     *
      * @param s
      * @return
      */
