@@ -15,6 +15,8 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 ### 开发者
 * 白衣
 
+QQ交流群: 630913972 
+
 ### 2.0使用请跳转
   + https://github.com/ixrjog/opsCloud/tree/2.0.1
 
