@@ -7,7 +7,7 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="tokenId" jdbcType="VARCHAR" property="tokenid" />
+    <result column="token_id" jdbcType="VARCHAR" property="tokenId" />
     <result column="token" jdbcType="VARCHAR" property="token" />
     <result column="valid" jdbcType="BIT" property="valid" />
     <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />

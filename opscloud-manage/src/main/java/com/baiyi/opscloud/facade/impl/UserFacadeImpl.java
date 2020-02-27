@@ -14,9 +14,11 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.OcUserApiToken;
 import com.baiyi.opscloud.domain.generator.OcUserGroup;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.AuthFacade;
@@ -25,6 +27,7 @@ import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.jasypt.encryption.StringEncryptor;
@@ -71,6 +74,9 @@ public class UserFacadeImpl implements UserFacade {
     private UserPermissionFacade userPermissionFacade;
 
     @Resource
+    private OcUserApiTokenService ocUserApiTokenService;
+
+    @Resource
     private AuthFacade authFacade;
 
     @Override
@@ -90,6 +96,24 @@ public class UserFacadeImpl implements UserFacade {
     public DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery) {
         DataTable<OcUser> table = ocUserService.fuzzyQueryUserByParam(pageQuery);
         return toUserPage(table, pageQuery.getExtend());
+    }
+
+    @Override
+    public OcUserApiTokenVO.UserApiToken applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken) {
+        if(StringUtils.isEmpty(userApiToken.getComment()))
+            return userApiToken;
+        if(userApiToken.getExpiredTime() == null)
+            return userApiToken;
+
+        OcUserApiToken ocUserApiToken = new OcUserApiToken();
+        ocUserApiToken.setValid(true);
+        ocUserApiToken.setComment(userApiToken.getComment());
+        ocUserApiToken.setUsername(SessionUtils.getUsername());
+        ocUserApiToken.setTokenId(PasswordUtils.getRandomPW(20)); // 不含特殊字符
+        ocUserApiToken.setToken(PasswordUtils.getPW(20)); //高强度
+        ocUserApiToken.setExpiredTime(userApiToken.getExpiredTime());
+        ocUserApiTokenService.addOcUserApiToken(ocUserApiToken);
+        return BeanCopierUtils.copyProperties(ocUserApiToken , OcUserApiTokenVO.UserApiToken.class);
     }
 
     private DataTable<OcUserVO.User> toUserPage(DataTable<OcUser> table, Integer extend) {

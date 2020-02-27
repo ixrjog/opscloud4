@@ -26,6 +26,9 @@ public class OcUserVO {
 
         private List<OcServerGroupVO.ServerGroup> serverGroups;
 
+        // 只显示有效的ApiToken
+        private List<OcUserApiTokenVO.UserApiToken> apiTokens;
+
         @ApiModelProperty(value = "主键")
         private Integer id;
 

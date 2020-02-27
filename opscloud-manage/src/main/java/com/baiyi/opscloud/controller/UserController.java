@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.UserFacade;
@@ -58,6 +59,12 @@ public class UserController {
     @GetMapping(value = "/password/random", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<String> queryUserRandomPassword() {
         return new HttpResult<>(userFacade.getRandomPassword());
+    }
+
+    @ApiOperation(value = "用户申请ApiToken")
+    @PostMapping(value = "/apply/token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcUserApiTokenVO.UserApiToken> applyUserApiToken(@RequestBody @Valid  OcUserApiTokenVO.UserApiToken userApiToken) {
+        return new HttpResult<>(userFacade.applyUserApiToken(userApiToken));
     }
 
     @ApiOperation(value = "更新user信息")

@@ -69,7 +69,6 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
             ocUserApiTokenService.updateOcUserApiToken(ocUserApiToken);
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_TOKEN_INVALID);
         }
-        
         int nums =  ocUserApiTokenService.checkUserHasResourceAuthorize(token, resourceName);
         if (nums == 0) {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_FAILUER);

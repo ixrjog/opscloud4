@@ -110,7 +110,7 @@
 <!--        <table tableName="oc_tag">-->
 <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
 <!--        </table>-->
-        <table tableName="oc_user_api_token">
+        <table tableName="oc_user_credential">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

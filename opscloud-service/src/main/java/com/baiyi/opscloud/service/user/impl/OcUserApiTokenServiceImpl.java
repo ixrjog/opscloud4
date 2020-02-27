@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,6 +27,21 @@ public class OcUserApiTokenServiceImpl implements OcUserApiTokenService {
         criteria.andEqualTo("valid", true);
         criteria.andEqualTo("token", token);
         return ocUserApiTokenMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public OcUserApiToken addOcUserApiToken(OcUserApiToken ocUserApiToken) {
+        ocUserApiTokenMapper.insert(ocUserApiToken);
+        return ocUserApiToken;
+    }
+
+    @Override
+    public List<OcUserApiToken> queryOcUserApiTokenByUsername(String username) {
+        Example example = new Example(OcUserApiToken.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("valid", true);
+        criteria.andEqualTo("username", username);
+        return ocUserApiTokenMapper.selectByExample(example);
     }
 
     @Override

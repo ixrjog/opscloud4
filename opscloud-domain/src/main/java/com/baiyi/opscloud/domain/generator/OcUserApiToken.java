@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_user_api_token")
 public class OcUserApiToken {
@@ -14,8 +14,8 @@ public class OcUserApiToken {
      */
     private String username;
 
-    @Column(name = "tokenId")
-    private String tokenid;
+    @Column(name = "token_id")
+    private String tokenId;
 
     /**
      * 登录唯一标识
@@ -79,15 +79,15 @@ public class OcUserApiToken {
     /**
      * @return tokenId
      */
-    public String getTokenid() {
-        return tokenid;
+    public String getTokenId() {
+        return tokenId;
     }
 
     /**
-     * @param tokenid
+     * @param tokenId
      */
-    public void setTokenid(String tokenid) {
-        this.tokenid = tokenid;
+    public void setTokenId(String tokenId) {
+        this.tokenId = tokenId;
     }
 
     /**
