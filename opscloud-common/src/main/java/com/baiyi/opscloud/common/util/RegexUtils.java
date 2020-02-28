@@ -42,7 +42,7 @@ public class RegexUtils {
      * @return
      */
     public static boolean isServerGroupNameRule(String serverGroupName){
-        return serverGroupName.matches("group_[a-z][\\d0-9a-z-]{8,64}");
+        return serverGroupName.matches("group_[a-z][\\d0-9a-z-]{2,64}");
     }
 
     public static boolean isUserGroupNameRule(String userGroupName){

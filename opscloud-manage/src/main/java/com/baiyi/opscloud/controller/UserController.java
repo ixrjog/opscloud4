@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.UserFacade;
@@ -63,8 +64,14 @@ public class UserController {
 
     @ApiOperation(value = "用户申请ApiToken")
     @PostMapping(value = "/apply/token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcUserApiTokenVO.UserApiToken> applyUserApiToken(@RequestBody @Valid  OcUserApiTokenVO.UserApiToken userApiToken) {
+    public HttpResult<OcUserApiTokenVO.UserApiToken> applyUserApiToken(@RequestBody @Valid OcUserApiTokenVO.UserApiToken userApiToken) {
         return new HttpResult<>(userFacade.applyUserApiToken(userApiToken));
+    }
+
+    @ApiOperation(value = "用户保存凭据")
+    @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcUserCredentialVO.UserCredential> saveUserCredential(@RequestBody @Valid OcUserCredentialVO.UserCredential userCredential) {
+        return new HttpResult<>(userFacade.saveUserCredentia(userCredential));
     }
 
     @ApiOperation(value = "更新user信息")

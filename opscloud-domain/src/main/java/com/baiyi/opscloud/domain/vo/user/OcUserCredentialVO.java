@@ -18,7 +18,7 @@ public class OcUserCredentialVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public class  UserCredential{
+    public static class UserCredential {
         @ApiModelProperty(value = "主键")
         private Integer id;
 

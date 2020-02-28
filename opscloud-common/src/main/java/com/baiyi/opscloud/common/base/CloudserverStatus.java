@@ -8,6 +8,7 @@ package com.baiyi.opscloud.common.base;
  * DELETE( 服务器表未删除但云服务器已销毁（脏数据）
  */
 public enum CloudserverStatus {
+
     CREATE(0),
     REGISTER(1),
     OFFLINE(2),

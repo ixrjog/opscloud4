@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 
@@ -22,6 +23,8 @@ public interface UserFacade {
     DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
     OcUserApiTokenVO.UserApiToken applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);
+
+    OcUserCredentialVO.UserCredential saveUserCredentia(OcUserCredentialVO.UserCredential userCredential);
 
     String getRandomPassword();
 

@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -21,6 +22,8 @@ public class OcUserVO {
     @NoArgsConstructor
     @ApiModel
     public static class User {
+
+        private Map<String, OcUserCredentialVO.UserCredential> credentialMap;
 
         private List<OcUserGroupVO.UserGroup> userGroups;
 

@@ -8,6 +8,8 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
+import com.baiyi.opscloud.convert.UserApiTokenConvert;
+import com.baiyi.opscloud.convert.UserCredentialConvert;
 import com.baiyi.opscloud.decorator.UserDecorator;
 import com.baiyi.opscloud.decorator.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -15,10 +17,12 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.domain.generator.OcUserApiToken;
+import com.baiyi.opscloud.domain.generator.OcUserCredential;
 import com.baiyi.opscloud.domain.generator.OcUserGroup;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.AuthFacade;
@@ -28,6 +32,7 @@ import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
+import com.baiyi.opscloud.service.user.OcUserCredentialService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.jasypt.encryption.StringEncryptor;
@@ -79,6 +84,9 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private AuthFacade authFacade;
 
+    @Resource
+    private OcUserCredentialService ocUserCredentialService;
+
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
@@ -100,20 +108,35 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public OcUserApiTokenVO.UserApiToken applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken) {
-        if(StringUtils.isEmpty(userApiToken.getComment()))
+        if (StringUtils.isEmpty(userApiToken.getComment()))
             return userApiToken;
-        if(userApiToken.getExpiredTime() == null)
+        if (userApiToken.getExpiredTime() == null)
             return userApiToken;
-
-        OcUserApiToken ocUserApiToken = new OcUserApiToken();
-        ocUserApiToken.setValid(true);
-        ocUserApiToken.setComment(userApiToken.getComment());
-        ocUserApiToken.setUsername(SessionUtils.getUsername());
-        ocUserApiToken.setTokenId(PasswordUtils.getRandomPW(20)); // 不含特殊字符
-        ocUserApiToken.setToken(PasswordUtils.getPW(20)); //高强度
-        ocUserApiToken.setExpiredTime(userApiToken.getExpiredTime());
+        UserApiTokenConvert.convertOcUserApiToken(userApiToken);
+        OcUserApiToken ocUserApiToken = UserApiTokenConvert.convertOcUserApiToken(userApiToken);
         ocUserApiTokenService.addOcUserApiToken(ocUserApiToken);
-        return BeanCopierUtils.copyProperties(ocUserApiToken , OcUserApiTokenVO.UserApiToken.class);
+        return BeanCopierUtils.copyProperties(ocUserApiToken, OcUserApiTokenVO.UserApiToken.class);
+    }
+
+    @Override
+    public OcUserCredentialVO.UserCredential saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
+        if (userCredential.getCredentialType() == null)
+            return userCredential;
+        if (StringUtils.isEmpty(userCredential.getCredential()))
+            return userCredential;
+        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
+        userCredential.setUserId(ocUser.getId());
+        userCredential.setUsername(ocUser.getUsername());
+        OcUserCredential ocUserCredential = UserCredentialConvert.convertOcUserCredential(userCredential);
+
+        OcUserCredential check = ocUserCredentialService.queryOcUserCredentialByUniqueKey(ocUserCredential);
+        if (check == null) {
+            ocUserCredentialService.addOcUserCredential(ocUserCredential);
+        } else {
+            ocUserCredential.setId(check.getId());
+            ocUserCredentialService.updateOcUserCredential(ocUserCredential);
+        }
+        return BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class);
     }
 
     private DataTable<OcUserVO.User> toUserPage(DataTable<OcUser> table, Integer extend) {
