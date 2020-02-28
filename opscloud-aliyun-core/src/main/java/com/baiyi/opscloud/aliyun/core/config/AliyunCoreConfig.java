@@ -16,10 +16,6 @@ import java.util.List;
 @ConfigurationProperties(prefix = "aliyun", ignoreInvalidFields = true)
 public class AliyunCoreConfig {
 
-    private String uid;
-    private String accessKeyId;
-    private String secret;
-    private String regionId;
-    private List<String> regionIds;
+    private List<AliyunAccount> accounts;
 
 }

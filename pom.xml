@@ -20,6 +20,8 @@
         <module>opscloud-aws-core</module>
         <module>opscloud-gitlab</module>
         <module>opscloud-vmware-vcsa</module>
+        <module>opscloud-aliyun-rds-mysql</module>
+        <module>opscloud-clouddb</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

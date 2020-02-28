@@ -3,14 +3,25 @@
 # regionIds 数组可以写多个
 
 aliyun:
-  uid: 1255805305757185
-  accessKeyId: LTAI4FoXNYYr7jeRtH5XkoRy
-  secret: ENC(fSKtDCmkLBtszyTVR2sxAJvOSsVeP+5qrxRJiCdT3LaVOLg0gJxbiA==)
-  regionId: cn-hangzhou
-  regionIds:
-    - cn-hangzhou
-    - cn-hongkong
-    - us-west-1
-    - cn-shanghai
-
-
+  accounts:
+    -
+      uid: 1255805305757185
+      master: true
+      name: '主账户'
+      accessKeyId: LTAI4FoXNYYr7jeRtH5XkoRy
+      secret: ENC(fSKtDCmkLBtszyTVR2sxAJvOSsVeP+5qrxRJiCdT3LaVOLg0gJxbiA==)
+      regionId: cn-hangzhou
+      regionIds:
+        - cn-hangzhou
+        - cn-hongkong
+        - us-west-1
+        - cn-shanghai
+    -
+      uid: 1267986359450069
+      master: false
+      name: 'MS账户'
+      accessKeyId: LTAI4FjGFzmW1DdDre7W9W4e
+      secret: ENC(hd1oN863sBJbYIQKwqMNVLFWBrHgY+9BlLv/3K6JTb38z0ZHTp5VWg==)
+      regionId: cn-hangzhou
+      regionIds:
+        - cn-hangzhou

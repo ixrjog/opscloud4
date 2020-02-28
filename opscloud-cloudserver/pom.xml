@@ -12,10 +12,10 @@
     <artifactId>opscloud-cloudserver</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-ldap</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>com.baiyi</groupId>-->
+<!--            <artifactId>opscloud-ldap</artifactId>-->
+<!--        </dependency>-->
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-zabbix</artifactId>
