@@ -26,9 +26,14 @@ public class AliyunCoreImpl implements AliyunCore {
     private AliyunCoreConfig aliyunCoreConfig;
 
     @Override
+    public List<AliyunAccount> getAccounts() {
+        return aliyunCoreConfig.getAccounts();
+    }
+
+    @Override
     public List<String> getRegionIds() {
         for (AliyunAccount aliyunAccount : aliyunCoreConfig.getAccounts())
-            if(aliyunAccount.getMaster())
+            if (aliyunAccount.getMaster())
                 return aliyunAccount.getRegionIds();
         return Collections.emptyList();
     }
@@ -36,17 +41,29 @@ public class AliyunCoreImpl implements AliyunCore {
     @Override
     public IAcsClient getAcsClient(String regionId) {
         for (AliyunAccount aliyunAccount : aliyunCoreConfig.getAccounts())
-            if(aliyunAccount.getMaster()){
-                String defRegionId;
-                if (StringUtils.isEmpty(regionId)) {
-                    defRegionId = aliyunAccount.getRegionId();
-                } else {
-                    defRegionId = regionId;
-                }
-                IClientProfile profile = DefaultProfile.getProfile(defRegionId, aliyunAccount.getAccessKeyId(), aliyunAccount.getSecret());
-                IAcsClient client = new DefaultAcsClient(profile);
-                return client;
-            }
+            if (aliyunAccount.getMaster())
+                return getAcsClient(regionId, aliyunAccount);
+        return null;
+    }
+
+    @Override
+    public IAcsClient getAcsClient(String regionId, AliyunAccount aliyunAccount) {
+        String defRegionId;
+        if (StringUtils.isEmpty(aliyunAccount.getRegionId())) {
+            defRegionId = aliyunAccount.getRegionId();
+        } else {
+            defRegionId = regionId;
+        }
+        IClientProfile profile = DefaultProfile.getProfile(defRegionId, aliyunAccount.getAccessKeyId(), aliyunAccount.getSecret());
+        IAcsClient client = new DefaultAcsClient(profile);
+        return client;
+    }
+
+    @Override
+    public AliyunAccount getAliyunAccountByUid(String uid) {
+        for (AliyunAccount aliyunAccount : aliyunCoreConfig.getAccounts())
+            if (aliyunAccount.getUid().equals(uid))
+                return aliyunAccount;
         return null;
     }
 

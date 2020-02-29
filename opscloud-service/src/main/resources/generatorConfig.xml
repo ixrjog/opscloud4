@@ -107,10 +107,11 @@
 <!--        oc_business_tag-->
 <!--        oc_user_group-->
 <!--        oc_user_permission-->
-<!--        <table tableName="oc_tag">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
-<!--        </table>-->
-        <table tableName="oc_user_credential">
+<!--        oc_user_credential-->
+<!--        oc_cloud_db-->
+<!--        oc_cloud_db_attribute-->
+
+        <table tableName="oc_cloud_db_attribute">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

@@ -13,7 +13,7 @@
         <module>opscloud-account</module>
         <module>opscloud-common</module>
         <module>opscloud-jumpserver</module>
-        <module>opscloud-cloudserver</module>
+        <module>opscloud-cloud</module>
         <module>opscloud-aliyun-core</module>
         <module>opscloud-aliyun-ecs</module>
         <module>opscloud-aws-ec2</module>
@@ -21,7 +21,6 @@
         <module>opscloud-gitlab</module>
         <module>opscloud-vmware-vcsa</module>
         <module>opscloud-aliyun-rds-mysql</module>
-        <module>opscloud-clouddb</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -167,7 +166,7 @@
             </dependency>
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>opscloud-cloudserver</artifactId>
+                <artifactId>opscloud-cloud</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
@@ -210,6 +209,11 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-vmware-vcsa</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-rds-mysql</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>

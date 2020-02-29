@@ -71,11 +71,11 @@ public class AliyunECSImpl implements AliyunECS {
     }
 
     @Override
-    public BusinessWrapper<Boolean> power(String regionId,String instanceId, Boolean action) {
+    public BusinessWrapper<Boolean> power(String regionId, String instanceId, Boolean action) {
         if (action) {
-            return aliyunECSHandler.start(regionId,instanceId);
+            return aliyunECSHandler.start(regionId, instanceId);
         } else {
-            return aliyunECSHandler.stop(regionId,instanceId);
+            return aliyunECSHandler.stop(regionId, instanceId);
         }
     }
 

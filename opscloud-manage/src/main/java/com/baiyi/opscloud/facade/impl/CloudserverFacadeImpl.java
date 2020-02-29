@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
-import com.baiyi.opscloud.cloudserver.ICloudserver;
-import com.baiyi.opscloud.cloudserver.factory.CloudserverFactory;
+import com.baiyi.opscloud.cloud.server.ICloudserver;
+import com.baiyi.opscloud.cloud.server.factory.CloudserverFactory;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;

@@ -22,7 +22,6 @@
             <artifactId>opscloud-aliyun-core</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-ecs</artifactId>

@@ -29,7 +29,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-cloudserver</artifactId>
+            <artifactId>opscloud-cloud</artifactId>
         </dependency>
 
         <dependency>
