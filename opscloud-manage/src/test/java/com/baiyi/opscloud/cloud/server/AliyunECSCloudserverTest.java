@@ -3,7 +3,7 @@ package com.baiyi.opscloud.cloud.server;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.aliyun.ecs.AliyunECS;
 import com.baiyi.opscloud.aliyun.ecs.base.ECSDisk;
-import com.baiyi.opscloud.cloud.server.factory.CloudserverFactory;
+import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
 import com.baiyi.opscloud.common.util.JSONUtils;
 import org.junit.jupiter.api.Test;
 
@@ -22,18 +22,18 @@ public class AliyunECSCloudserverTest extends BaseUnit {
 
     private static final String key = "AliyunECSCloudserver";
 
-    private ICloudserver getICloudserver() {
-        return CloudserverFactory.getCloudserverByKey(key);
+    private ICloudServer getICloudServer() {
+        return CloudCerverFactory.getCloudServerByKey(key);
     }
 
     @Test
     void testRsync() {
-        getICloudserver().sync();
+        getICloudServer().sync();
     }
 
     @Test
     void testUpdate() {
-        getICloudserver().update("cn-hangzhou", "i-bp18mr52zr792unc1kxd");
+        getICloudServer().update("cn-hangzhou", "i-bp18mr52zr792unc1kxd");
     }
 
     @Test

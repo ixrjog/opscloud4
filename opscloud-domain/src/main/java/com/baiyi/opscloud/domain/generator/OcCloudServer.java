@@ -3,8 +3,8 @@ package com.baiyi.opscloud.domain.generator;
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_cloudserver")
-public class OcCloudserver {
+@Table(name = "oc_cloud_server")
+public class OcCloudServer {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -20,8 +20,8 @@ public class OcCloudserver {
 
     private String zone;
 
-    @Column(name = "cloudserver_type")
-    private Integer cloudserverType;
+    @Column(name = "cloud_server_type")
+    private Integer cloudServerType;
 
     /**
      * 私有IP
@@ -168,15 +168,15 @@ public class OcCloudserver {
     /**
      * @return cloudserver_type
      */
-    public Integer getCloudserverType() {
-        return cloudserverType;
+    public Integer getCloudServerType() {
+        return cloudServerType;
     }
 
     /**
-     * @param cloudserverType
+     * @param cloudServerType
      */
-    public void setCloudserverType(Integer cloudserverType) {
-        this.cloudserverType = cloudserverType;
+    public void setCloudServerType(Integer cloudServerType) {
+        this.cloudServerType = cloudServerType;
     }
 
     /**

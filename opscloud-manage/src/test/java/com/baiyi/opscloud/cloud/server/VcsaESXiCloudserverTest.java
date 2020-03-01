@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.cloud.server.factory.CloudserverFactory;
+import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
 import com.baiyi.opscloud.vmware.vcsa.esxi.VcsaESXi;
 import org.junit.jupiter.api.Test;
 
@@ -19,18 +19,18 @@ public class VcsaESXiCloudserverTest extends BaseUnit {
 
     private static final String key = "VcsaESXiCloudserver";
 
-    private ICloudserver getICloudserver() {
-        return CloudserverFactory.getCloudserverByKey(key);
+    private ICloudServer getICloudServer() {
+        return CloudCerverFactory.getCloudServerByKey(key);
     }
 
     @Test
     void testRsync() {
-        getICloudserver().sync();
+        getICloudServer().sync();
     }
 
     @Test
     void testUpdate() {
-        getICloudserver().update("cn-hangzhou", "i-bp18mr52zr792unc1kxd");
+        getICloudServer().update("cn-hangzhou", "i-bp18mr52zr792unc1kxd");
     }
 
 

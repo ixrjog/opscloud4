@@ -6,10 +6,10 @@ import com.baiyi.opscloud.cloud.server.instance.AliyunECSInstance;
 import com.baiyi.opscloud.cloud.server.instance.AwsEC2Instance;
 import com.baiyi.opscloud.cloud.server.instance.ZabbixHostInstance;
 import com.baiyi.opscloud.cloud.server.util.AwsUtils;
-import com.baiyi.opscloud.common.base.CloudserverType;
+import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostInterface;
@@ -34,7 +34,7 @@ public class OcCloudserverBuilder {
     public static final String ECS_DATA_DISK_TYPE = "data";
 
 
-    public static OcCloudserver build(VMInstance instance, String zone) {
+    public static OcCloudServer build(VMInstance instance, String zone) {
         OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
                 .instanceName(instance.getConfigInfoName())
                 .serverName(instance.getConfigInfoName())
@@ -45,7 +45,7 @@ public class OcCloudserverBuilder {
                 .comment(instance.getConfigInfoAnnotation())
                 .imageId(instance.getConfigInfoGuestFullName())
                 .instanceType("VirtualMachine")
-                .cloudserverType(CloudserverType.VM.getType())
+                .cloudserverType(CloudServerType.VM.getType())
                 .build();
         try {
             if (instance.getVmSummary() != null) {
@@ -78,7 +78,7 @@ public class OcCloudserverBuilder {
      * @param zone
      * @return
      */
-    public static OcCloudserver build(ESXiInstance esxiInstance, String zone) {
+    public static OcCloudServer build(ESXiInstance esxiInstance, String zone) {
         OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
                 .instanceName(esxiInstance.getHostSummary().config.name)
                 .serverName(esxiInstance.getHostSummary().config.name)
@@ -89,7 +89,7 @@ public class OcCloudserverBuilder {
                 .comment(Joiner.on(" ").join(esxiInstance.getHostHardwareInfo().systemInfo.vendor, esxiInstance.getHostHardwareInfo().systemInfo.model))
                 .imageId(esxiInstance.getHostSummary().getConfig().getProduct().getFullName())
                 .instanceType("ESXiHostSystem")
-                .cloudserverType(CloudserverType.ESXI.getType())
+                .cloudserverType(CloudServerType.ESXI.getType())
                 .instanceDetail(esxiInstance.getHostHardwareInfo().systemInfo.uuid)
                 .build();
 
@@ -118,7 +118,7 @@ public class OcCloudserverBuilder {
      * @param instanceDetail
      * @return
      */
-    public static OcCloudserver build(AwsEC2Instance awsEC2Instance, String instanceDetail) {
+    public static OcCloudServer build(AwsEC2Instance awsEC2Instance, String instanceDetail) {
         com.amazonaws.services.ec2.model.Instance instance = awsEC2Instance.getInstance();
         Map<String, Integer> volumeSizeMap = AwsUtils.getEC2VolumeSizeMap(awsEC2Instance.getVolumeList());
         OcCloudserverBO ocCloudserverBO = OcCloudserverBO.builder()
@@ -135,7 +135,7 @@ public class OcCloudserverBuilder {
                 .privateIp(instance.getPrivateIpAddress())
                 .publicIp(instance.getPublicIpAddress())
                 .imageId(instance.getImageId())
-                .cloudserverType(CloudserverType.EC2.getType())
+                .cloudserverType(CloudServerType.EC2.getType())
                 .instanceDetail(instanceDetail)
                 .build();
         return covert(ocCloudserverBO);
@@ -148,7 +148,7 @@ public class OcCloudserverBuilder {
      * @param instanceDetail
      * @return
      */
-    public static OcCloudserver build(AliyunECSInstance aliyunECSInstance, String instanceDetail) {
+    public static OcCloudServer build(AliyunECSInstance aliyunECSInstance, String instanceDetail) {
         DescribeInstancesResponse.Instance instance = aliyunECSInstance.getInstance();
         List<ECSDisk> diskList = aliyunECSInstance.getDiskList();
 
@@ -175,7 +175,7 @@ public class OcCloudserverBuilder {
                 .instanceId(instance.getInstanceId())
                 .serverName(instance.getHostName())
                 .instanceDetail(instanceDetail)
-                .cloudserverType(CloudserverType.ECS.getType())
+                .cloudserverType(CloudServerType.ECS.getType())
                 .publicIp(publicIp)
                 .privateIp(privateIp)
                 .cpu(instance.getCpu())
@@ -215,7 +215,7 @@ public class OcCloudserverBuilder {
      * @param hostInstance
      * @return
      */
-    public static OcCloudserver build(ZabbixHostInstance hostInstance, String instanceDetail, String zone) {
+    public static OcCloudServer build(ZabbixHostInstance hostInstance, String instanceDetail, String zone) {
         String privateIp = "";
         if (!CollectionUtils.isEmpty(hostInstance.getInterfaceList()))
             for (ZabbixHostInterface hostInterface : hostInstance.getInterfaceList()) {
@@ -230,7 +230,7 @@ public class OcCloudserverBuilder {
                 .instanceId(hostInstance.getHost().getHostid())
                 .serverName(hostInstance.getHost().getName())
                 .instanceDetail(hostInstance.getHost().getHostid())
-                .cloudserverType(CloudserverType.ZH.getType())
+                .cloudserverType(CloudServerType.ZH.getType())
                 .privateIp(privateIp)
                 .instanceDetail(instanceDetail)
                 .createdTime(new Date())
@@ -239,8 +239,8 @@ public class OcCloudserverBuilder {
         return covert(ocCloudserverBO);
     }
 
-    private static OcCloudserver covert(OcCloudserverBO ocCloudserverBO){
-        return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudserver.class);
+    private static OcCloudServer covert(OcCloudserverBO ocCloudserverBO){
+        return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudServer.class);
     }
 
 

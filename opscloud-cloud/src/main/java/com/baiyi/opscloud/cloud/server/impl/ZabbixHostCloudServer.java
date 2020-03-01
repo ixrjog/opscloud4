@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
-import com.baiyi.opscloud.cloud.server.ICloudserver;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.ZabbixHostDecorator;
 import com.baiyi.opscloud.cloud.server.instance.ZabbixHostInstance;
-import com.baiyi.opscloud.common.base.CloudserverType;
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import com.baiyi.opscloud.zabbix.config.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostServer;
@@ -24,8 +24,8 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-@Component("ZabbixHostCloudserver")
-public class ZabbixHostCloudserver<T> extends BaseCloudserver<T> implements ICloudserver {
+@Component("ZabbixHostCloudServer")
+public class ZabbixHostCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private ZabbixHostServer zabbixHostServer;
@@ -54,8 +54,8 @@ public class ZabbixHostCloudserver<T> extends BaseCloudserver<T> implements IClo
     }
 
     @Override
-    protected int getCloudserverType() {
-        return CloudserverType.ZH.getType();
+    protected int getCloudServerType() {
+        return CloudServerType.ZH.getType();
     }
 
     @Override
@@ -73,7 +73,7 @@ public class ZabbixHostCloudserver<T> extends BaseCloudserver<T> implements IClo
     }
 
     @Override
-    protected OcCloudserver getCloudserver(T instance) {
+    protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof ZabbixHostInstance)) return null;
         ZabbixHostInstance i = (ZabbixHostInstance) instance;
         return OcCloudserverBuilder.build(i, getInstanceDetail(instance), zabbixConfig.getZone());

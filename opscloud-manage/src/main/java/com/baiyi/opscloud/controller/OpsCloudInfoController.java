@@ -15,7 +15,7 @@ import io.swagger.annotations.Api;
 @RestController
 @RequestMapping("/opscloud")
 @Api(tags = "opscloudInfo")
-public class OpscloudInfoController {
+public class OpsCloudInfoController {
 
 
     @ApiOperation(value = "opscloud版本详情")

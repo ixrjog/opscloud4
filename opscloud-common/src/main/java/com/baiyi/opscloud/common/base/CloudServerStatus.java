@@ -7,7 +7,7 @@ package com.baiyi.opscloud.common.base;
  * OFFLINE 存在但未销毁（手动标记）
  * DELETE( 服务器表未删除但云服务器已销毁（脏数据）
  */
-public enum CloudserverStatus {
+public enum CloudServerStatus {
 
     CREATE(0),
     REGISTER(1),
@@ -16,7 +16,7 @@ public enum CloudserverStatus {
 
     private int status;
 
-    CloudserverStatus(int status) {
+    CloudServerStatus(int status) {
         this.status = status;
     }
 

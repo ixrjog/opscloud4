@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.cloud.server.factory.CloudserverFactory;
+import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -13,18 +13,18 @@ public class ZabbixHostCloudserverTest extends BaseUnit {
 
     private static final String key = "ZabbixHostCloudserver";
 
-    private ICloudserver getICloudserver() {
-        return CloudserverFactory.getCloudserverByKey(key);
+    private ICloudServer getICloudServer() {
+        return CloudCerverFactory.getCloudServerByKey(key);
     }
 
     @Test
     void testUpdate() {
-        getICloudserver().update("NULL", "13157");
+        getICloudServer().update("NULL", "13157");
     }
 
     @Test
     void testRsync() {
-        getICloudserver().sync();
+        getICloudServer().sync();
     }
 
 }

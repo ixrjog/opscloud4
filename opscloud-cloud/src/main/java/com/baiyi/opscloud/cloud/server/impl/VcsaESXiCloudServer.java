@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
-import com.baiyi.opscloud.cloud.server.ICloudserver;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
-import com.baiyi.opscloud.common.base.CloudserverType;
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.esxi.VcsaESXi;
 import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;
 import lombok.extern.slf4j.Slf4j;
@@ -18,8 +18,8 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-@Component("VcsaESXiCloudserver")
-public class VcsaESXiCloudserver<T> extends BaseCloudserver<T> implements ICloudserver {
+@Component("VcsaESXiCloudServer")
+public class VcsaESXiCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private VcsaESXi vcsaESXi;
@@ -31,13 +31,13 @@ public class VcsaESXiCloudserver<T> extends BaseCloudserver<T> implements ICloud
 
     @Override
     protected T getInstance(String regionId, String instanceId) {
-        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserverByInstanceId(instanceId);
+        OcCloudServer ocCloudserver = ocCloudServerService.queryOcCloudServerByInstanceId(instanceId);
         return (T) vcsaESXi.getInstance(ocCloudserver.getServerName());
     }
 
     @Override
-    protected int getCloudserverType() {
-        return CloudserverType.ESXI.getType();
+    protected int getCloudServerType() {
+        return CloudServerType.ESXI.getType();
     }
 
     @Override
@@ -55,7 +55,7 @@ public class VcsaESXiCloudserver<T> extends BaseCloudserver<T> implements ICloud
     }
 
     @Override
-    protected OcCloudserver getCloudserver(T instance) {
+    protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof ESXiInstance)) return null;
         ESXiInstance i = (ESXiInstance) instance;
         return OcCloudserverBuilder.build(i, vcsaESXi.getZone());

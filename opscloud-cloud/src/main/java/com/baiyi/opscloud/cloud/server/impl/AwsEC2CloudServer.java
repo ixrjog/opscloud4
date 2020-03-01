@@ -2,13 +2,13 @@ package com.baiyi.opscloud.cloud.server.impl;
 
 import com.amazonaws.services.ec2.model.Instance;
 import com.baiyi.opscloud.aws.ec2.AwsEC2;
-import com.baiyi.opscloud.cloud.server.ICloudserver;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.EC2InstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AwsEC2Instance;
 import com.baiyi.opscloud.cloud.server.util.AwsUtils;
-import com.baiyi.opscloud.common.base.CloudserverType;
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-@Component("AwsEC2Cloudserver")
-public class AwsEC2Cloudserver<T> extends BaseCloudserver<T> implements ICloudserver {
+@Component("AwsEC2CloudServer")
+public class AwsEC2CloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private AwsEC2 awsEC2;
@@ -60,7 +60,7 @@ public class AwsEC2Cloudserver<T> extends BaseCloudserver<T> implements ICloudse
     }
 
     @Override
-    protected OcCloudserver getCloudserver(T instance) {
+    protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof AwsEC2Instance)) return null;
         AwsEC2Instance i = (AwsEC2Instance) instance;
         return OcCloudserverBuilder.build(i, getInstanceDetail(instance));
@@ -68,8 +68,8 @@ public class AwsEC2Cloudserver<T> extends BaseCloudserver<T> implements ICloudse
 
 
     @Override
-    protected int getCloudserverType() {
-        return CloudserverType.EC2.getType();
+    protected int getCloudServerType() {
+        return CloudServerType.EC2.getType();
     }
 
 }

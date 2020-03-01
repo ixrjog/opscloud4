@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.cloud.server.factory.CloudserverFactory;
+import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -13,18 +13,18 @@ public class AwsEC2CloudserverTest  extends BaseUnit {
 
     private static final String key = "AwsEC2Cloudserver";
 
-    private ICloudserver getICloudserver() {
-        return CloudserverFactory.getCloudserverByKey(key);
+    private ICloudServer getICloudServer() {
+        return CloudCerverFactory.getCloudServerByKey(key);
     }
 
     @Test
     void testUpdate() {
-        getICloudserver().update("NULL", "i-0553886d8d43a3ea1");
+        getICloudServer().update("NULL", "i-0553886d8d43a3ea1");
     }
 
     @Test
     void testSync() {
-        getICloudserver().sync();
+        getICloudServer().sync();
     }
 
 

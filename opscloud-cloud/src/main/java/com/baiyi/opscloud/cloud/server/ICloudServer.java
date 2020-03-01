@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
  * @Date 2020/1/10 4:21 下午
  * @Version 1.0
  */
-public interface ICloudserver {
+public interface ICloudServer {
 
     String getKey();
 

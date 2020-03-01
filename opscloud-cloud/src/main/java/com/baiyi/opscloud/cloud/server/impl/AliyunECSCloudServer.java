@@ -2,13 +2,13 @@ package com.baiyi.opscloud.cloud.server.impl;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.aliyun.ecs.AliyunECS;
-import com.baiyi.opscloud.cloud.server.ICloudserver;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.AliyunECSInstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AliyunECSInstance;
-import com.baiyi.opscloud.common.base.CloudserverType;
+import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,8 +22,8 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
-@Component("AliyunECSCloudserver")
-public class AliyunECSCloudserver<T> extends BaseCloudserver<T> implements ICloudserver {
+@Component("AliyunECSCloudServer")
+public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private AliyunECS aliyunECS;
@@ -46,8 +46,8 @@ public class AliyunECSCloudserver<T> extends BaseCloudserver<T> implements IClou
     }
 
     @Override
-    protected int getCloudserverType() {
-        return CloudserverType.ECS.getType();
+    protected int getCloudServerType() {
+        return CloudServerType.ECS.getType();
     }
 
     @Override
@@ -66,14 +66,14 @@ public class AliyunECSCloudserver<T> extends BaseCloudserver<T> implements IClou
 
 
     @Override
-    protected OcCloudserver getCloudserver(T instance) {
+    protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof AliyunECSInstance)) return null;
         AliyunECSInstance i = (AliyunECSInstance) instance;
         return OcCloudserverBuilder.build(i, getInstanceDetail(instance));
     }
 
     @Override
-    protected BusinessWrapper<Boolean> power(OcCloudserver ocCloudserver,Boolean action){
+    protected BusinessWrapper<Boolean> power(OcCloudServer ocCloudserver, Boolean action){
         return aliyunECS.power(ocCloudserver.getZone(),ocCloudserver.getInstanceId(),action);
     }
 

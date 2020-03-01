@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.vo.cloudserver;
+package com.baiyi.opscloud.domain.vo.cloud;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -13,12 +13,12 @@ import java.util.Date;
  * @Date 2020/2/17 9:43 上午
  * @Version 1.0
  */
-public class OcCloudserverVO {
+public class OcCloudServerVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class OcCloudserver {
+    public static class OcCloudServer {
 
         @ApiModelProperty(value = "主键")
         private Integer id;
@@ -36,7 +36,7 @@ public class OcCloudserverVO {
         private String zone;
 
         @ApiModelProperty(value = "云主机类型")
-        private Integer cloudserverType;
+        private Integer cloudServerType;
 
         @ApiModelProperty(value = "私有ip")
         private String privateIp;

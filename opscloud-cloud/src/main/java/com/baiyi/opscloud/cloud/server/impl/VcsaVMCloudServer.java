@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
-import com.baiyi.opscloud.cloud.server.ICloudserver;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
-import com.baiyi.opscloud.common.base.CloudserverType;
+import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudserver;
+import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.vmware.vcsa.vm.VcsaVM;
 import lombok.extern.slf4j.Slf4j;
@@ -19,8 +19,8 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-@Component("VcsaVMCloudserver")
-public class VcsaVMCloudserver<T> extends BaseCloudserver<T> implements ICloudserver {
+@Component("VcsaVMCloudServer")
+public class VcsaVMCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private VcsaVM vcsaVM;
@@ -32,13 +32,13 @@ public class VcsaVMCloudserver<T> extends BaseCloudserver<T> implements ICloudse
 
     @Override
     protected T getInstance(String regionId, String instanceId) {
-        OcCloudserver ocCloudserver = ocCloudserverService.queryOcCloudserverByInstanceId(instanceId);
+        OcCloudServer ocCloudserver = ocCloudServerService.queryOcCloudServerByInstanceId(instanceId);
         return (T) vcsaVM.getInstance(ocCloudserver.getServerName());
     }
 
     @Override
-    protected int getCloudserverType() {
-        return CloudserverType.VM.getType();
+    protected int getCloudServerType() {
+        return CloudServerType.VM.getType();
     }
 
     @Override
@@ -56,14 +56,14 @@ public class VcsaVMCloudserver<T> extends BaseCloudserver<T> implements ICloudse
     }
 
     @Override
-    protected OcCloudserver getCloudserver(T instance) {
+    protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof VMInstance)) return null;
         VMInstance i = (VMInstance) instance;
         return OcCloudserverBuilder.build(i, vcsaVM.getZone());
     }
 
     @Override
-    protected BusinessWrapper<Boolean> power(OcCloudserver ocCloudserver, Boolean action){
+    protected BusinessWrapper<Boolean> power(OcCloudServer ocCloudserver, Boolean action){
         return vcsaVM.power(ocCloudserver.getInstanceName(),action);
     }
 

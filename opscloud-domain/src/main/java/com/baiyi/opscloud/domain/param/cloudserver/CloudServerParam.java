@@ -7,7 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-public class CloudserverParam {
+public class CloudServerParam {
 
     @Data
     @NoArgsConstructor
@@ -15,7 +15,7 @@ public class CloudserverParam {
     public static class PageQuery extends PageParam {
 
         @ApiModelProperty(value = "云主机类型")
-        private Integer cloudserverType;
+        private Integer cloudServerType;
 
         @ApiModelProperty(value = "服务器名称")
         private String serverName;
