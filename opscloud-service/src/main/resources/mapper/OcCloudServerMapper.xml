@@ -33,7 +33,7 @@
     <result column="instance_detail" jdbcType="LONGVARCHAR" property="instanceDetail" />
   </resultMap>
 
-  <select id="queryOcCloudServerByParam" parameterType="com.baiyi.opscloud.domain.param.cloudserver.CloudServerParam$PageQuery"
+  <select id="queryOcCloudServerByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.CloudServerParam$PageQuery"
           resultMap="BaseResultMap">
     select * from oc_cloud_server
     <where>

@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.OcServer;
 import com.baiyi.opscloud.facade.OcServerFacade;
-import com.baiyi.opscloud.service.cloudserver.OcCloudServerService;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;

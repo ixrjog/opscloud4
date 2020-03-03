@@ -2,6 +2,7 @@ package com.baiyi.opscloud.cloud.db.impl;
 
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstanceAttributeResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
+import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.aliyun.rds.mysql.AliyunRDSMysql;
@@ -9,10 +10,12 @@ import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.cloud.db.ICloudDB;
 import com.baiyi.opscloud.cloud.db.builder.CloudDbAttributeBuilder;
 import com.baiyi.opscloud.cloud.db.builder.CloudDbBuilder;
+import com.baiyi.opscloud.cloud.db.builder.CloudDbDatabaseBuilder;
 import com.baiyi.opscloud.common.base.CloudDBType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
+import com.baiyi.opscloud.domain.generator.OcCloudDbDatabase;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -47,6 +51,19 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
     }
 
     @Override
+    protected Boolean syncDatabase(String uid, OcCloudDb ocCloudDb) {
+        List<DescribeDatabasesResponse.Database> databaseList =
+                aliyunRDSMysql.getDatabaseList(aliyunCore.getAliyunAccountByUid(uid), ocCloudDb.getDbInstanceId());
+        List<OcCloudDbDatabase> ocCloudDbDatabaseList = getOcCloudDbDatabaseList(ocCloudDb.getId(), databaseList);
+        return saveOcCloudDbDatabaseList(ocCloudDbDatabaseList);
+    }
+
+    private List<OcCloudDbDatabase> getOcCloudDbDatabaseList(int ocCloudDbId, List<DescribeDatabasesResponse.Database> databaseList) {
+        return databaseList.stream().map(e -> CloudDbDatabaseBuilder.build(ocCloudDbId, e)).collect(Collectors.toList());
+    }
+
+
+    @Override
     protected void saveDBInstanceAttribute(Map<String, List<T>> dbInstanceMap) {
         Map<String, List<DescribeDBInstancesResponse.DBInstance>> map = Maps.newHashMap();
         for (String uid : dbInstanceMap.keySet())
@@ -61,7 +78,7 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
     private void saveDBInstanceAttributeList(List<DescribeDBInstanceAttributeResponse.DBInstanceAttribute> dbInstanceAttributeList) {
         for (DescribeDBInstanceAttributeResponse.DBInstanceAttribute attribute : dbInstanceAttributeList) {
             List<OcCloudDbAttribute> attributeList = getOcCloudDbAttribute(attribute);
-            saveOcCloudDbAttributeList(attribute.getDBInstanceId(),  attributeList);
+            saveOcCloudDbAttributeList(attribute.getDBInstanceId(), attributeList);
         }
     }
 

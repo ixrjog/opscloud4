@@ -2,6 +2,7 @@ package com.baiyi.opscloud.aliyun.rds.mysql.impl;
 
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstanceAttributeResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
+import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.aliyun.rds.mysql.AliyunRDSMysql;
@@ -31,6 +32,14 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     private AliyunRDSMysqlHandler aliyunRDSMysqlHandler;
 
     public static final int DB_INSTANCE_ID_MAX = 30; // API限制最大查询30个id
+
+    @Override
+    public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunAccount aliyunAccount, String dbInstanceId) {
+        List<DescribeDatabasesResponse.Database> databaseList =
+                aliyunRDSMysqlHandler.getDatabaseList(aliyunAccount, dbInstanceId);
+        return databaseList;
+    }
+
 
     @Override
     public Map<String, List<DescribeDBInstancesResponse.DBInstance>> getDBInstanceMap() {

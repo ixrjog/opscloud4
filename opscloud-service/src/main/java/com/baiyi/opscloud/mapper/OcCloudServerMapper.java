@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.mapper;
 
 import com.baiyi.opscloud.domain.generator.OcCloudServer;
-import com.baiyi.opscloud.domain.param.cloudserver.CloudServerParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 import tk.mybatis.mapper.common.Mapper;
 
 import java.util.List;

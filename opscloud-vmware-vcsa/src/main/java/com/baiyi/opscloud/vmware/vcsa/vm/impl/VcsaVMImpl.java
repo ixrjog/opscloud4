@@ -74,8 +74,8 @@ public class VcsaVMImpl implements VcsaVM {
                 ((VirtualMachine) me).powerOffVM_Task();
             }
         } catch (Exception e) {
-            log.error("VM {} {}",instanceName,ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED.getMessage());
-            return new BusinessWrapper<Boolean>(ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED);
+            log.error("VM {} {}",instanceName,ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED.getMessage());
+            return new BusinessWrapper<Boolean>(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
         }
         return new BusinessWrapper<>(true);
     }

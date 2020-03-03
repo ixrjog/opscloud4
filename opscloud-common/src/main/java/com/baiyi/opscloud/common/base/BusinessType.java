@@ -9,7 +9,8 @@ public enum BusinessType {
     SERVER(1),
     SERVERGROUP(2),
     USER(3),
-    USERGROUP(4);
+    USERGROUP(4),
+    CLOUD_DATABASE(5);
 
     private int type;
 

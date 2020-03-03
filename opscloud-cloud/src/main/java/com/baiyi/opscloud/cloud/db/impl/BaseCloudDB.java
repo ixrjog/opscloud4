@@ -5,8 +5,10 @@ import com.baiyi.opscloud.cloud.db.ICloudDB;
 import com.baiyi.opscloud.cloud.db.factory.CloudDBFactory;
 import com.baiyi.opscloud.domain.generator.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
-import com.baiyi.opscloud.service.cloudDB.OcCloudDBAttributeService;
-import com.baiyi.opscloud.service.cloudDB.OcCloudDBService;
+import com.baiyi.opscloud.domain.generator.OcCloudDbDatabase;
+import com.baiyi.opscloud.service.cloud.OcCloudDBAttributeService;
+import com.baiyi.opscloud.service.cloud.OcCloudDBDatabaseService;
+import com.baiyi.opscloud.service.cloud.OcCloudDBService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -24,6 +26,9 @@ public abstract class BaseCloudDB<T> implements InitializingBean, ICloudDB {
 
     @Resource
     private OcCloudDBService ocCloudDBService;
+
+    @Resource
+    private OcCloudDBDatabaseService ocCloudDBDatabaseService;
 
     @Resource
     private OcCloudDBAttributeService ocCloudDBAttributeService;
@@ -45,6 +50,36 @@ public abstract class BaseCloudDB<T> implements InitializingBean, ICloudDB {
         } catch (Exception e) {
             return Boolean.FALSE;
         }
+    }
+
+    @Override
+    public Boolean syncDatabase(int cloudDbId) {
+        OcCloudDb ocCloudDb = ocCloudDBService.queryOcCloudDbById(cloudDbId);
+        if (ocCloudDb == null) return Boolean.FALSE;
+        //CloudAccount cloudAccount = getCloudAccountByUid(ocCloudDb.getUid());
+        return syncDatabase(ocCloudDb.getUid(), ocCloudDb);
+    }
+
+    abstract protected Boolean syncDatabase(String uid, OcCloudDb ocCloudDb);
+
+    /**
+     * 只新增不更新
+     *
+     * @param ocCloudDbDatabaseList
+     * @return
+     */
+    protected Boolean saveOcCloudDbDatabaseList(List<OcCloudDbDatabase> ocCloudDbDatabaseList) {
+        for (OcCloudDbDatabase pre : ocCloudDbDatabaseList) {
+            String dbName = pre.getDbName();
+            if (dbName.indexOf("__") == 0) continue; // 过滤内部数据库
+            try {
+                OcCloudDbDatabase ocCloudDbDatabase = ocCloudDBDatabaseService.queryOcCloudDbDatabaseByUniqueKey(pre.getCloudDbId(), pre.getDbName());
+                if (ocCloudDbDatabase == null)
+                    ocCloudDBDatabaseService.addOcCloudDbDatabase(pre);
+            } catch (Exception e) {
+            }
+        }
+        return Boolean.TRUE;
     }
 
     protected void saveOcCloudDbAttributeList(String dbInstanceId, List<OcCloudDbAttribute> attributeList) {

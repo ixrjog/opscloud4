@@ -110,8 +110,9 @@
 <!--        oc_user_credential-->
 <!--        oc_cloud_db-->
 <!--        oc_cloud_db_attribute-->
+<!--        oc_cloud_db_database-->
 
-        <table tableName="oc_cloud_db_attribute">
+        <table tableName="oc_cloud_db_database">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

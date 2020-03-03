@@ -30,4 +30,23 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
+
+  <select id="fuzzyQueryOcCloudDbByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.CloudDBParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_cloud_db
+    <where>
+      <if test="cloudDbType != null">
+        cloud_db_type = #{cloudDbType}
+      </if>
+      <if test="queryName != null and queryName != ''">
+        and uid like "%" #{queryName} "%"
+        or account_name like "%" #{queryName} "%"
+        or db_instance_id like "%" #{queryName} "%"
+        or db_instance_description like "%" #{queryName} "%"
+        or engine_version like "%" #{queryName} "%"
+        or zone like "%" #{queryName} "%"
+      </if>
+    </where>
+  </select>
+
 </mapper>

@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.service.cloudserver;
+package com.baiyi.opscloud.service.cloud;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudServer;
-import com.baiyi.opscloud.domain.param.cloudserver.CloudServerParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 
 import java.util.List;
 

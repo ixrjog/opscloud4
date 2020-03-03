@@ -1,11 +1,19 @@
 package com.baiyi.opscloud.controller;
 
-import com.baiyi.opscloud.facade.CloudServerFacade;
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
+import com.baiyi.opscloud.facade.CloudDBFacade;
 import io.swagger.annotations.Api;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiOperation;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -17,25 +25,43 @@ import javax.annotation.Resource;
 @Api(tags = "云数据库")
 public class CloudDBController {
 
-
     @Resource
-    private CloudServerFacade cloudserverFacade;
+    private CloudDBFacade cloudDBFacade;
 
-//    @ApiOperation(value = "分页查询云数据库列表")
-//    @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public HttpResult<DataTable<OcCloudDBVO>> queryCloudDBPage(@Valid CloudServerParam.PageQuery pageQuery) {
-//        return new HttpResult<>(cloudserverFacade.queryCloudserverPage(pageQuery));
-//    }
-//
-//    @ApiOperation(value = "删除指定的云主机")
-//    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public HttpResult<Boolean> deleteCloudserverById(@RequestParam int id) {
-//        return new HttpResult<>(cloudserverFacade.deleteCloudserverById(id));
-//    }
-//
-//    @ApiOperation(value = "同步指定的云主机")
-//    @GetMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
-//    public HttpResult<Boolean> syncCloudserverByKey(@RequestParam String key) {
-//        return new HttpResult<>(cloudserverFacade.syncCloudserverByKey(key));
-//    }
+    @ApiOperation(value = "分页查询云数据库实例列表")
+    @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcCloudDBVO.CloudDB>> fuzzyQueryCloudDBPage(@RequestBody @Valid CloudDBParam.PageQuery pageQuery) {
+        return new HttpResult<>(cloudDBFacade.fuzzyQueryCloudDBPage(pageQuery));
+    }
+
+    @ApiOperation(value = "删除指定的云数据库实例")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteCloudDBById(@RequestParam int id) {
+        return new HttpResult<>(cloudDBFacade.deleteCloudDBById(id));
+    }
+
+    @ApiOperation(value = "同步云数据库实例")
+    @GetMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> syncCloudDBByKey() {
+        return new HttpResult<>(cloudDBFacade.syncCloudDB());
+    }
+
+    @ApiOperation(value = "同步云数据库实例")
+    @GetMapping(value = "/database/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> syncCloudDBByKey(@RequestParam int id) {
+        return new HttpResult<>(cloudDBFacade.syncCloudDatabase(id));
+    }
+
+    @ApiOperation(value = "分页查询云数据库列表")
+    @PostMapping(value = "/database/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcCloudDBDatabaseVO.CloudDBDatabase>> fuzzyQueryCloudDBDatabasePage(@RequestBody @Valid CloudDBDatabaseParam.PageQuery pageQuery) {
+        return new HttpResult<>(cloudDBFacade.fuzzyQueryCloudDBDatabasePage(pageQuery));
+    }
+
+    @ApiOperation(value = "更新云数据库信息")
+    @PutMapping(value = "/database/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateCloudDBDatabase(@RequestBody @Valid OcCloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase) {
+        return new HttpResult<>(cloudDBFacade.updateBaseCloudDBDatabase(cloudDBDatabase));
+    }
+
 }

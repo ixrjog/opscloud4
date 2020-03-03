@@ -56,9 +56,16 @@ public enum ErrorEnum {
     TAG_NOT_EXIST(12003, "标签不存在！"),
     TAG_HAS_USED(12004, "标签正在使用！"),
 
-    // cloudserver
-    CLOUDSERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),
-    CLOUDSERVER_NOT_EXIST(30002, "云主机不存在！"),
+    // cloudServer
+    CLOUD_SERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),
+    CLOUD_SERVER_NOT_EXIST(30002, "云主机不存在！"),
+
+    // cloudDB
+    CLOUD_DB_NOT_EXIST(30002, "云数据库实例不存在！"),
+
+    // cloudDBDatbase
+    CLOUD_DB_DATABASE_NOT_EXIST(30002, "云数据库不存在！"),
+
 
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),

@@ -23,4 +23,12 @@ public class AliyunRDSMysqlTest extends BaseUnit {
     }
 
 
+    @Test
+    void testDBName() {
+        String dbName = "__recycle_bin__";
+        System.err.println(dbName.indexOf("__"));
+    }
+
+
+
 }

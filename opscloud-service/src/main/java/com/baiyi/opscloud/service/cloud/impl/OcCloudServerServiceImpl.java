@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.service.cloudserver.impl;
+package com.baiyi.opscloud.service.cloud.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudServer;
-import com.baiyi.opscloud.domain.param.cloudserver.CloudServerParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 import com.baiyi.opscloud.mapper.OcCloudServerMapper;
-import com.baiyi.opscloud.service.cloudserver.OcCloudServerService;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
@@ -46,7 +46,6 @@ public class OcCloudServerServiceImpl implements OcCloudServerService {
         criteria.andEqualTo("instanceId",instanceId);
         return ocCloudServerMapper.selectOneByExample(example);
     }
-
 
     @Override
     public OcCloudServer queryOcCloudServerById(int id){

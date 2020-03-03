@@ -1,12 +1,13 @@
-package com.baiyi.opscloud.service.cloudDB.impl;
+package com.baiyi.opscloud.service.cloud.impl;
 
 import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
 import com.baiyi.opscloud.mapper.OcCloudDbAttributeMapper;
-import com.baiyi.opscloud.service.cloudDB.OcCloudDBAttributeService;
+import com.baiyi.opscloud.service.cloud.OcCloudDBAttributeService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -29,6 +30,14 @@ public class OcCloudDBAttributeServiceImpl implements OcCloudDBAttributeService 
     }
 
     @Override
+    public List<OcCloudDbAttribute> queryOcCloudDbAttributeByCloudDbId(int cloudDbId) {
+        Example example = new Example(OcCloudDbAttribute.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("cloudDbId", cloudDbId);
+        return ocCloudDbAttributeMapper.selectByExample(example);
+    }
+
+    @Override
     public void addOcCloudDbAttribute(OcCloudDbAttribute ocCloudDbAttribute) {
         ocCloudDbAttributeMapper.insert(ocCloudDbAttribute);
     }
@@ -36,6 +45,11 @@ public class OcCloudDBAttributeServiceImpl implements OcCloudDBAttributeService 
     @Override
     public void updateOcCloudDbAttribute(OcCloudDbAttribute ocCloudDbAttribute) {
         ocCloudDbAttributeMapper.updateByPrimaryKey(ocCloudDbAttribute);
+    }
+
+    @Override
+    public void delOcCloudDbAttributeById(int id) {
+        ocCloudDbAttributeMapper.deleteByPrimaryKey(id);
     }
 
 }

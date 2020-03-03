@@ -11,6 +11,6 @@ public interface OcAuthUserRoleMapper extends Mapper<OcAuthUserRole> {
 
     List<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.PageQuery pageQuery);
 
-    int authenticationByUsernameAndResourceName(@Param("username") String username,@Param("resourceName") String resourceName);
+    int authenticationByUsernameAndResourceName(@Param("username") String username, @Param("resourceName") String resourceName);
 
 }

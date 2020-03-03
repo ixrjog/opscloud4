@@ -1,6 +1,6 @@
 server:
   servlet:
-    context-path: /opscloud-cloudserver
+    context-path: /opscloud-cloud
 
 spring:
   profiles:

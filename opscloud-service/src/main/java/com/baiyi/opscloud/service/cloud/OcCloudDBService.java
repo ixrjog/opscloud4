@@ -1,6 +1,8 @@
-package com.baiyi.opscloud.service.cloudDB;
+package com.baiyi.opscloud.service.cloud;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudDb;
+import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
 
 /**
  * @Author baiyi
@@ -9,9 +11,15 @@ import com.baiyi.opscloud.domain.generator.OcCloudDb;
  */
 public interface OcCloudDBService {
 
+    DataTable<OcCloudDb> fuzzyQueryOcCloudDBByParam(CloudDBParam.PageQuery pageQuery);
+
     OcCloudDb queryOcCloudDbByUniqueKey(int cloudDbType, String dbInstanceId);
 
     void addOcCloudDb(OcCloudDb ocCloudDb);
 
     void updateOcCloudDb(OcCloudDb ocCloudDb);
+
+    OcCloudDb queryOcCloudDbById(int id);
+
+    void deleteOcCloudDbById(int id);
 }

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.generator.OcCloudServer;
-import com.baiyi.opscloud.service.cloudserver.OcCloudServerService;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;

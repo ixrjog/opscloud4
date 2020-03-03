@@ -1,6 +1,8 @@
-package com.baiyi.opscloud.service.cloudDB;
+package com.baiyi.opscloud.service.cloud;
 
 import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -11,7 +13,11 @@ public interface OcCloudDBAttributeService {
 
     OcCloudDbAttribute queryOcCloudDbAttributeByUniqueKey(int cloudDbId, String attributeName);
 
+    List<OcCloudDbAttribute> queryOcCloudDbAttributeByCloudDbId(int cloudDbId);
+
     void addOcCloudDbAttribute(OcCloudDbAttribute ocCloudDbAttribute);
 
     void updateOcCloudDbAttribute(OcCloudDbAttribute ocCloudDbAttribute);
+
+    void delOcCloudDbAttributeById(int id);
 }

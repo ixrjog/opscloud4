@@ -7,10 +7,10 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcCloudServer;
-import com.baiyi.opscloud.domain.param.cloudserver.CloudServerParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
-import com.baiyi.opscloud.service.cloudserver.OcCloudServerService;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -28,11 +28,11 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     private OcCloudServerService ocCloudServerService;
 
     @Override
-    public DataTable<OcCloudServerVO.OcCloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
+    public DataTable<OcCloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
         DataTable<OcCloudServer> table = ocCloudServerService.queryOcCloudServerByParam(pageQuery);
 
-        List<OcCloudServerVO.OcCloudServer> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudServerVO.OcCloudServer.class);
-        DataTable<OcCloudServerVO.OcCloudServer> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<OcCloudServerVO.CloudServer> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudServerVO.CloudServer.class);
+        DataTable<OcCloudServerVO.CloudServer> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
@@ -40,7 +40,7 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     public BusinessWrapper<Boolean> deleteCloudServerById(int id) {
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerById(id);
         if (ocCloudServer == null)
-            return new BusinessWrapper<>(ErrorEnum.CLOUDSERVER_NOT_EXIST);
+            return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_NOT_EXIST);
         ocCloudServerService.deleteOcCloudServerById(id);
         return BusinessWrapper.SUCCESS;
     }

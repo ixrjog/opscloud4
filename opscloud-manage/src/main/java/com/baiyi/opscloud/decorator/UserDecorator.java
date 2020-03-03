@@ -70,7 +70,7 @@ public class UserDecorator {
             List<OcUserCredential> credentials = ocUserCredentialService.queryOcUserCredentialByUserId(user.getId());
             Map<String, OcUserCredentialVO.UserCredential> credentialMap = Maps.newHashMap();
             for (OcUserCredential credential : credentials)
-                credentialMap.put( CredentialType.getName(credential.getCredentialType()),  BeanCopierUtils.copyProperties(credential, OcUserCredentialVO.UserCredential.class));
+                credentialMap.put(CredentialType.getName(credential.getCredentialType()), BeanCopierUtils.copyProperties(credential, OcUserCredentialVO.UserCredential.class));
             user.setCredentialMap(credentialMap);
         }
         return user;

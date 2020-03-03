@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.param.cloudserver;
+package com.baiyi.opscloud.domain.param.cloud;
 
 import com.baiyi.opscloud.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;

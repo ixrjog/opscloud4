@@ -18,7 +18,7 @@ public class OcCloudServerVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class OcCloudServer {
+    public static class CloudServer {
 
         @ApiModelProperty(value = "主键")
         private Integer id;

@@ -119,7 +119,7 @@ public class AliyunECSHandler {
                 return new BusinessWrapper<Boolean>(true);
         } catch (Exception e) {
         }
-        return new BusinessWrapper<Boolean>(ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED);
+        return new BusinessWrapper<Boolean>(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
     }
 
 
@@ -132,7 +132,7 @@ public class AliyunECSHandler {
                 return new BusinessWrapper<Boolean>(true);
         } catch (Exception e) {
         }
-        return new BusinessWrapper<Boolean>(ErrorEnum.CLOUDSERVER_POWER_MGMT_FAILED);
+        return new BusinessWrapper<Boolean>(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
     }
 
 
