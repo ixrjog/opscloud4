@@ -3,7 +3,9 @@ package com.baiyi.opscloud.sshKey;
 import com.baiyi.opscloud.BaseUnit;
 import com.jcraft.jsch.HASH;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.KeyPair;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -20,6 +22,35 @@ import java.util.Map;
  * @Version 1.0
  */
 public class SSHKeyTest extends BaseUnit {
+
+
+    /**
+     * returns public key fingerprint
+     *
+     * @param publicKey public key
+     * @return fingerprint of public key
+     */
+    public static String getFingerprint(String publicKey) {
+        String fingerprint = null;
+        if (StringUtils.isNotEmpty(publicKey)) {
+            if (publicKey.contains("ssh-")) {
+                publicKey = publicKey.substring(publicKey.indexOf("ssh-"));
+            } else if (publicKey.contains("ecdsa-")) {
+                publicKey = publicKey.substring(publicKey.indexOf("ecdsa-"));
+            }
+            try {
+                KeyPair keyPair = KeyPair.load(new JSch(), null, publicKey.getBytes());
+                if (keyPair != null) {
+                    fingerprint = keyPair.getFingerPrint();
+                }
+            } catch (JSchException ex) {
+            }
+
+        }
+        return fingerprint;
+
+    }
+
 
 
     public static Map<String, String> getKeyMap(String comment) {
@@ -122,16 +153,21 @@ public class SSHKeyTest extends BaseUnit {
 
     @Test
     void aaa() {
-        try {
-            byte[] kblob = fromFile("/Users/liangjian/.ssh/id_rsa.pub");
-            Class c = Class.forName(JSch.getConfig("md5"));
-            HASH hash = (HASH) ((HASH) c.newInstance());
-            hash.init();
+        String a = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDtVLKSMBSDxFBApa+1fmcGG0OHizL6kPfrFY7KMScoILNrhf5y2GoV5WxSSSd73c56YYd5HbfK3CFIjwZ54swDhKEiGkSDA7FOlriv1TTyvhknkDSsnsABibPKtRkP9XT3EzznolwikqWCbANTu1XiIR6EaX5r+rL54mtwE2xqOEKdkbU9wkkd41dEIMcwqcgazzTb3hrUunVFF5JrZXukCkLRRDGtYcXKA4vFOILpqLZiTMW7hPto3F9NGdBIy7ZphD2QUEuVmFgnwpCUb2ps0Ud3uLqdIF+folEHC4rqDBB2Nqgx/vbIB94U3bIJED9zkfOtubC5eUq7IFPrZvPb liangjian@51xianqu.net";
+        String f= getFingerprint(a);
+        System.err.println(f);
 
-            System.err.println(getFingerPrint(hash, kblob));
-        } catch (Exception e) {
-           e.printStackTrace();
-        }
+
+//        try {
+//            byte[] kblob = fromFile("/Users/liangjian/.ssh/id_rsa.pub");
+//            Class c = Class.forName(JSch.getConfig("md5"));
+//            HASH hash = (HASH) ((HASH) c.newInstance());
+//            hash.init();
+//
+//            System.err.println(getFingerPrint(hash, kblob));
+//        } catch (Exception e) {
+//           e.printStackTrace();
+//        }
 
 
 //        Map<String, String> map = getKeyMap("baiyi@gegejia.com");

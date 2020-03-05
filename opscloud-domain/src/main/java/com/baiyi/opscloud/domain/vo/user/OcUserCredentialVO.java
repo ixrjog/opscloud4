@@ -37,6 +37,9 @@ public class OcUserCredentialVO {
         @ApiModelProperty(value = "凭据内容")
         private String credential;
 
+        @ApiModelProperty(value = "凭据指纹")
+        private String fingerprint;
+
         @ApiModelProperty(value = "创建时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date createTime;

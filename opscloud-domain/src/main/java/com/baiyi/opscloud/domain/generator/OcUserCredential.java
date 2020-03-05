@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_user_credential")
 public class OcUserCredential {
@@ -38,6 +38,11 @@ public class OcUserCredential {
      * 凭据内容
      */
     private String credential;
+
+    /**
+     * 指纹
+     */
+    private String fingerprint;
 
     /**
      * @return id
@@ -165,5 +170,13 @@ public class OcUserCredential {
      */
     public void setCredential(String credential) {
         this.credential = credential;
+    }
+
+    public String getFingerprint() {
+        return fingerprint;
+    }
+
+    public void setFingerprint(String fingerprint) {
+        this.fingerprint = fingerprint;
     }
 }
