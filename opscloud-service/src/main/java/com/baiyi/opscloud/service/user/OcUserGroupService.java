@@ -15,9 +15,15 @@ public interface OcUserGroupService {
 
     DataTable<OcUserGroup> queryOcUserGroupByParam(UserGroupParam.PageQuery pageQuery);
 
+    DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
+
+    DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
+
     void addOcUserGroup(OcUserGroup ocUserGroup);
 
     OcUserGroup queryOcUserGroupByName(String name);
+
+    OcUserGroup queryOcUserGroupById(int id);
 
     List<OcUserGroup> queryOcUserGroupByUserId(int userId);
 }

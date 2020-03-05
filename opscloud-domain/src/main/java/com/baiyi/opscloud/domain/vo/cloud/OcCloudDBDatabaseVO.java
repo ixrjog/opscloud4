@@ -70,7 +70,6 @@ public class OcCloudDBDatabaseVO {
         @ApiModelProperty(value = "备注")
         private String comment;
 
-
     }
 
 

@@ -13,7 +13,9 @@ import com.baiyi.opscloud.cloud.db.builder.CloudDbBuilder;
 import com.baiyi.opscloud.cloud.db.builder.CloudDbDatabaseBuilder;
 import com.baiyi.opscloud.common.base.CloudDBType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.OcCloudDb;
+import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
 import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
 import com.baiyi.opscloud.domain.generator.OcCloudDbDatabase;
 import com.google.common.collect.Lists;
@@ -98,7 +100,6 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
         return attributeList;
     }
 
-
     @Override
     protected CloudAccount getCloudAccountByUid(String uid) {
         AliyunAccount account = aliyunCore.getAliyunAccountByUid(uid);
@@ -122,6 +123,24 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
     @Override
     protected int getCloudDBType() {
         return CloudDBType.ALIYUN_RDS_MYSQL.getType();
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> createAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount, String privilege) {
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        return aliyunRDSMysql.createAccount(aliyunAccount, ocCloudDbAccount, privilege);
+    }
+
+    @Override
+    public  BusinessWrapper<Boolean> deleteAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount){
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        return aliyunRDSMysql.deleteAccount(aliyunAccount,ocCloudDb,ocCloudDbAccount);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> reokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        return aliyunRDSMysql.reokeAccountPrivilege(aliyunAccount,ocCloudDbAccount);
     }
 
 }

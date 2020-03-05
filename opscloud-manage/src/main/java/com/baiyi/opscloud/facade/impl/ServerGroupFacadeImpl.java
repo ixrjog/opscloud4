@@ -133,6 +133,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         OcServerGroupType ocServerGroupType = ocServerGroupTypeService.queryOcServerGroupTypeById(id);
         if (ocServerGroupType == null)
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_NOT_EXIST);
+        // 判断默认值
+        if(ocServerGroupType.getGrpType() == 0)
+            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_IS_DEFAULT);
         // 判断server绑定的资源
         int count = ocServerGroupService.countByGrpType(ocServerGroupType.getGrpType());
         if (count == 0) {

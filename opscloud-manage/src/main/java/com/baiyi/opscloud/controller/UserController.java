@@ -64,13 +64,13 @@ public class UserController {
 
     @ApiOperation(value = "用户申请ApiToken")
     @PostMapping(value = "/apply/token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcUserApiTokenVO.UserApiToken> applyUserApiToken(@RequestBody @Valid OcUserApiTokenVO.UserApiToken userApiToken) {
+    public HttpResult<Boolean> applyUserApiToken(@RequestBody @Valid OcUserApiTokenVO.UserApiToken userApiToken) {
         return new HttpResult<>(userFacade.applyUserApiToken(userApiToken));
     }
 
     @ApiOperation(value = "用户保存凭据")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcUserCredentialVO.UserCredential> saveUserCredential(@RequestBody @Valid OcUserCredentialVO.UserCredential userCredential) {
+    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid OcUserCredentialVO.UserCredential userCredential) {
         return new HttpResult<>(userFacade.saveUserCredentia(userCredential));
     }
 
@@ -80,17 +80,48 @@ public class UserController {
         return new HttpResult<>(userFacade.updateBaseUser(user));
     }
 
+    @ApiOperation(value = "创建user")
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> createUser(@RequestBody @Valid OcUserVO.User user) {
+        return new HttpResult<>(userFacade.createUser(user));
+    }
+
     @ApiOperation(value = "同步user")
     @GetMapping(value = "/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncUser() {
         return new HttpResult<>(userFacade.syncUser());
     }
 
-    // user group
-    @ApiOperation(value = "分页查询user group列表")
+
+    @ApiOperation(value = "分页查询user授权的用户组列表")
+    @GetMapping(value = "/include/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserIncludeUserGroupPage(@Valid UserGroupParam.UserUserGroupPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryUserIncludeUserGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询user未授权的用户组列表")
+    @GetMapping(value = "/exclude/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserExcludeUserGroupPage(@Valid UserGroupParam.UserUserGroupPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryUserExcludeUserGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询用户组列表")
     @GetMapping(value = "/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserGroupPage(@Valid UserGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserGroupPage(pageQuery));
+    }
+
+    // user group
+    @ApiOperation(value = "用户组授权给用户")
+    @GetMapping(value = "/group/grant", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> grantUserUserGroup(@Valid UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+        return new HttpResult<>(userFacade.grantUserUserGroup(userUserGroupPermission));
+    }
+
+    @ApiOperation(value = "用户解除用户组授权")
+    @DeleteMapping(value = "/group/revoke", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> revokeUserUserGroup(@Valid UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+        return new HttpResult<>(userFacade.revokeUserUserGroup(userUserGroupPermission));
     }
 
     @ApiOperation(value = "新增user group")

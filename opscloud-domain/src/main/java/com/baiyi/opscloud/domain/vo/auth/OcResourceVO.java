@@ -20,6 +20,9 @@ public class OcResourceVO {
     @ApiModel
     public static class Resource {
 
+        // 资源组
+        private OcGroupVO.Group group;
+
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 

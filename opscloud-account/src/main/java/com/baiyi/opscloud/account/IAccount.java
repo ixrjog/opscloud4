@@ -37,4 +37,21 @@ public interface IAccount {
     Boolean update(OcUser user);
 
     String getKey();
+
+    /**
+     * 授权
+     * @param user
+     * @param resource
+     * @return
+     */
+    Boolean grant(OcUser user, String resource);
+
+    /**
+     * 撤销授权
+     * @param user
+     * @param resource
+     * @return
+     */
+    Boolean revoke(OcUser user, String resource);
+
 }

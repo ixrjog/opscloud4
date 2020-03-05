@@ -69,6 +69,9 @@
             <if test="phone != null and phone != ''">
                 phone = #{phone},
             </if>
+            <if test="wechat != null">
+                wechat = #{wechat},
+            </if>
             <if test="comment != null">
                 comment = #{comment},
             </if>

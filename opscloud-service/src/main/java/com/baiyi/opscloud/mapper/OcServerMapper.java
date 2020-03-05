@@ -9,4 +9,7 @@ import java.util.List;
 public interface OcServerMapper extends Mapper<OcServer> {
 
     List<OcServer> queryOcServerByParam(ServerParam.PageQuery pageQuery);
+
+    List<OcServer> fuzzyQueryOcServerByParam(ServerParam.PageQuery pageQuery);
+
 }

@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.facade;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.OcUserPermission;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 
 import java.util.List;
@@ -14,4 +16,8 @@ public interface UserPermissionFacade {
     void syncUserBusinessPermission(List<OcUserVO.User> userList, int businessType, int businessId);
 
     void syncUserBusinessPermission(int userId, int businessType, List<Integer> businessIds);
+
+    BusinessWrapper<Boolean> addOcUserPermission(OcUserPermission ocUserPermission);
+
+    BusinessWrapper<Boolean> delOcUserPermission(OcUserPermission ocUserPermission);
 }

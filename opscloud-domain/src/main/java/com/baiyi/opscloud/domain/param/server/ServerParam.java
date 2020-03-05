@@ -18,14 +18,17 @@ public class ServerParam {
     @ApiModel
     public static class PageQuery extends PageParam {
 
+        @ApiModelProperty(value = "模糊查询专用")
+        private String queryName;
+
         @ApiModelProperty(value = "服务器名")
         private String name;
 
-        @ApiModelProperty(value = "服务器组id")
-        private Integer serverGroupId;
-
         @ApiModelProperty(value = "查询ip")
         private String queryIp;
+
+        @ApiModelProperty(value = "服务器组id")
+        private Integer serverGroupId;
 
         @ApiModelProperty(value = "环境类型")
         private Integer envType;

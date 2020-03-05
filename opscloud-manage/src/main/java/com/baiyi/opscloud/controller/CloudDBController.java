@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
 import com.baiyi.opscloud.facade.CloudDBFacade;
@@ -44,6 +45,12 @@ public class CloudDBController {
     @GetMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncCloudDBByKey() {
         return new HttpResult<>(cloudDBFacade.syncCloudDB());
+    }
+
+    @ApiOperation(value = "云数据库实例账户授权")
+    @PutMapping(value = "/account/privilege", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> privilegeCloudDBAccount(@RequestBody @Valid OcCloudDBAccountVO.PrivilegeAccount privilegeAccount) {
+        return new HttpResult<>(cloudDBFacade.privilegeAccount(privilegeAccount));
     }
 
     @ApiOperation(value = "同步云数据库实例")

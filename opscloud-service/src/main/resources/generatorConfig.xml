@@ -112,7 +112,7 @@
 <!--        oc_cloud_db_attribute-->
 <!--        oc_cloud_db_database-->
 
-        <table tableName="oc_cloud_db_database">
+        <table tableName="oc_cloud_db_account">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

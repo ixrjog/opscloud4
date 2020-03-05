@@ -22,6 +22,11 @@ public class OcCloudDBVO {
     @ApiModel
     public static class CloudDB {
 
+        // 账户权限关键字 ['ReadOnly', 'ReadWrite', 'DDLOnly', 'DMLOnly']
+        private List<String> privileges;
+
+        private List<OcCloudDBAccountVO.CloudDBAccount> accounts;
+
         private List<OcCloudDBDatabaseVO.CloudDBDatabase> databases;
 
         // 属性 attributeName,attributeValue

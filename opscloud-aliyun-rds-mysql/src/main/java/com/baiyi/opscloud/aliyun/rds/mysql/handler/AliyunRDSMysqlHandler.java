@@ -6,8 +6,12 @@ import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.rds.model.v20140815.*;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -24,6 +28,127 @@ public class AliyunRDSMysqlHandler {
     private AliyunCore aliyunCore;
 
     public static final int QUERY_PAGE_SIZE = 50; // 默默值30 最大值100
+
+    public BusinessWrapper<Boolean> deleteAccount(AliyunAccount aliyunAccount, String dbInstanceId, String accountName) {
+        DeleteAccountRequest request = new DeleteAccountRequest();
+        request.setDBInstanceId(dbInstanceId);
+        request.setAccountName(accountName);
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        try {
+            DeleteAccountResponse response = client.getAcsResponse(request);
+            if (!StringUtils.isEmpty(response.getRequestId()))
+                return BusinessWrapper.SUCCESS;
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_DELETE_ACCOUNT_ERROR); // 授权错误
+    }
+
+    /**
+     * 撤销账号对数据库的访问权限
+     *
+     * @param aliyunAccount
+     * @param ocCloudDbAccount
+     * @param dbName
+     * @return
+     */
+    public BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
+        RevokeAccountPrivilegeRequest request = new RevokeAccountPrivilegeRequest();
+        request.setAccountName(ocCloudDbAccount.getAccountName());
+        request.setDBInstanceId(ocCloudDbAccount.getDbInstanceId());
+        request.setDBName(dbName);
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        try {
+            RevokeAccountPrivilegeResponse response = client.getAcsResponse(request);
+            if (!StringUtils.isEmpty(response.getRequestId()))
+                return BusinessWrapper.SUCCESS;
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_REVOKE_ACCOUNT_PRIVILEGE_ERROR); // 授权错误
+    }
+
+    /**
+     * 授权账号访问数据库
+     *
+     * @param aliyunAccount
+     * @param ocCloudDbAccount
+     * @param dbName
+     * @return
+     */
+    public BusinessWrapper<Boolean> grantAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
+        GrantAccountPrivilegeRequest request = new GrantAccountPrivilegeRequest();
+        request.setAccountName(ocCloudDbAccount.getAccountName());
+        request.setAccountPrivilege(ocCloudDbAccount.getAccountPrivilege());
+        request.setDBInstanceId(ocCloudDbAccount.getDbInstanceId());
+        request.setDBName(dbName);
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        try {
+            GrantAccountPrivilegeResponse response = client.getAcsResponse(request);
+            if (!StringUtils.isEmpty(response.getRequestId()))
+                return BusinessWrapper.SUCCESS;
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_GRANT_ACCOUNT_PRIVILEGE_ERROR); // 授权错误
+    }
+
+    /**
+     * 创建账户
+     *
+     * @param aliyunAccount
+     * @param ocCloudDbAccount
+     * @return
+     */
+    public BusinessWrapper<Boolean> createAccount(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
+        CreateAccountRequest request = new CreateAccountRequest();
+        request.setAccountName(ocCloudDbAccount.getAccountName());
+        request.setAccountPassword(ocCloudDbAccount.getAccountPassword());
+        request.setDBInstanceId(ocCloudDbAccount.getDbInstanceId());
+        request.setAccountDescription(ocCloudDbAccount.getComment());
+        request.setAccountType(ocCloudDbAccount.getAccountType());
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        try {
+            CreateAccountResponse response = client.getAcsResponse(request);
+            if (!StringUtils.isEmpty(response.getRequestId()))
+                return BusinessWrapper.SUCCESS;
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR); // 创建账户错误
+    }
+
+    /**
+     * 查询单个账户详情
+     *
+     * @param aliyunAccount
+     * @param ocCloudDbAccount
+     */
+    public DescribeAccountsResponse.DBInstanceAccount getAccount(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
+        DescribeAccountsRequest request = new DescribeAccountsRequest();
+        request.setDBInstanceId(ocCloudDbAccount.getDbInstanceId());
+        request.setAccountName(ocCloudDbAccount.getAccountName());
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        try {
+            DescribeAccountsResponse response = client.getAcsResponse(request);
+            if (response.getAccounts() == null || response.getAccounts().size() == 0)
+                return null;
+            return response.getAccounts().get(0);
+        } catch (ServerException e) {
+            e.printStackTrace();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
     public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunAccount aliyunAccount, String dbInstanceId) {
         DescribeDatabasesRequest describe = new DescribeDatabasesRequest();

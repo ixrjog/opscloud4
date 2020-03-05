@@ -4,6 +4,9 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstanceAttributeResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.OcCloudDb;
+import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
 
 import java.util.List;
 import java.util.Map;
@@ -26,4 +29,25 @@ public interface AliyunRDSMysql {
     getDBInstanceAttributeMap(Map<String, List<DescribeDBInstancesResponse.DBInstance>> dbInstanceMap);
 
     List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunAccount aliyunAccount, String dbInstanceId);
+
+    BusinessWrapper<Boolean> createAccount(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String privilege);
+
+    /**
+     * 全库授权
+     * @param aliyunAccount
+     * @param ocCloudDbAccount
+     * @param privilege
+     * @return
+     */
+    BusinessWrapper<Boolean> grantAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String privilege);
+
+    /**
+     * 全库撤销授权
+     * @param aliyunAccount
+     * @param ocCloudDbAccount
+     * @return
+     */
+    BusinessWrapper<Boolean> reokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount);
+
+    BusinessWrapper<Boolean> deleteAccount(AliyunAccount aliyunAccount, OcCloudDb ocCloudDb,  OcCloudDbAccount ocCloudDbAccount);
 }

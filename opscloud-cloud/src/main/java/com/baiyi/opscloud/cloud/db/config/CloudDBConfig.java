@@ -1,11 +1,8 @@
 package com.baiyi.opscloud.cloud.db.config;
 
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 /**
  * @Author baiyi
@@ -17,11 +14,7 @@ import java.util.List;
 @ConfigurationProperties(prefix = "cloud.db", ignoreInvalidFields = true)
 public class CloudDBConfig {
 
-//    cloud:
-//    db:
-//    account:
-//    prefix: oc_account
-//    type: Normal
+  private String prefix;
+  private String type;
 
-    private List<AliyunAccount> accounts;
 }

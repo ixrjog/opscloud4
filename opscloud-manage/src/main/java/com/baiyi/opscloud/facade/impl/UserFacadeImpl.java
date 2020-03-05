@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.account.AccountCenter;
+import com.baiyi.opscloud.account.IAccount;
+import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.builder.UserGroupBO;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.Ressource;
@@ -15,10 +17,7 @@ import com.baiyi.opscloud.decorator.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcUser;
-import com.baiyi.opscloud.domain.generator.OcUserApiToken;
-import com.baiyi.opscloud.domain.generator.OcUserCredential;
-import com.baiyi.opscloud.domain.generator.OcUserGroup;
+import com.baiyi.opscloud.domain.generator.*;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
@@ -107,23 +106,24 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public OcUserApiTokenVO.UserApiToken applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken) {
+    public BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken) {
         if (StringUtils.isEmpty(userApiToken.getComment()))
-            return userApiToken;
+            return new BusinessWrapper(ErrorEnum.USER_APPLY_API_TOKEN_COMMENT_IS_NULL);
         if (userApiToken.getExpiredTime() == null)
-            return userApiToken;
+            return new BusinessWrapper(ErrorEnum.USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR);
         UserApiTokenConvert.convertOcUserApiToken(userApiToken);
         OcUserApiToken ocUserApiToken = UserApiTokenConvert.convertOcUserApiToken(userApiToken);
         ocUserApiTokenService.addOcUserApiToken(ocUserApiToken);
-        return BeanCopierUtils.copyProperties(ocUserApiToken, OcUserApiTokenVO.UserApiToken.class);
+        return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserApiToken, OcUserApiTokenVO.UserApiToken.class));
     }
 
     @Override
-    public OcUserCredentialVO.UserCredential saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
+    public BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
+        // OcUserCredentialVO.UserCredential
         if (userCredential.getCredentialType() == null)
-            return userCredential;
+            return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_TYPE_ERROR);
         if (StringUtils.isEmpty(userCredential.getCredential()))
-            return userCredential;
+            return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_ERROR);
         OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
         userCredential.setUserId(ocUser.getId());
         userCredential.setUsername(ocUser.getUsername());
@@ -136,7 +136,7 @@ public class UserFacadeImpl implements UserFacade {
             ocUserCredential.setId(check.getId());
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
         }
-        return BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class);
+        return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
     }
 
     private DataTable<OcUserVO.User> toUserPage(DataTable<OcUser> table, Integer extend) {
@@ -188,11 +188,90 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> createUser(OcUserVO.User user) {
+        if (StringUtils.isEmpty(user.getUsername()))
+            return new BusinessWrapper(ErrorEnum.USER_USERNAME_IS_NULL);
+        if (StringUtils.isEmpty(user.getPassword()))
+            return new BusinessWrapper(ErrorEnum.USER_PASSWORD_IS_NULL);
+        if (StringUtils.isEmpty(user.getDisplayName()))
+            return new BusinessWrapper(ErrorEnum.USER_DISPLAYNAME_IS_NULL);
+        if (StringUtils.isEmpty(user.getEmail()))
+            return new BusinessWrapper(ErrorEnum.USER_EMAIL_IS_NULL);
+        if (!RegexUtils.isUsernameRule(user.getUsername())) {
+            return new BusinessWrapper(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
+        }
+        if (!RegexUtils.checkPasswordRule(user.getPassword()))
+            return new BusinessWrapper<>(ErrorEnum.USER_PASSWORD_NON_COMPLIANCE_WITH_RULES);
+        OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
+        ocUser.setIsActive(true);
+        ocUser.setSource("ldap");
+        accountCenter.create(AccountCenter.LDAP_ACCOUNT_KEY, ocUser);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
     public DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.PageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryOcUserGroupByParam(pageQuery);
         List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
         DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
-        //DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> grantUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+        OcUserPermission ocUserPermission = new OcUserPermission();
+        ocUserPermission.setUserId(userUserGroupPermission.getUserId());
+        ocUserPermission.setBusinessId(userUserGroupPermission.getUserGroupId());
+        ocUserPermission.setBusinessType(BusinessType.USERGROUP.getType());
+        BusinessWrapper<Boolean> wrapper = userPermissionFacade.addOcUserPermission(ocUserPermission);
+        if (!wrapper.isSuccess())
+            return wrapper;
+        try {
+            OcUser ocUser = ocUserService.queryOcUserById(userUserGroupPermission.getUserId());
+            OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupById(userUserGroupPermission.getUserGroupId());
+            IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
+            boolean result = iAccount.grant(ocUser, ocUserGroup.getName());
+            if(result)
+                return BusinessWrapper.SUCCESS;
+        } catch (Exception e) {
+        }
+        return new  BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> revokeUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+        OcUserPermission ocUserPermission = new OcUserPermission();
+        ocUserPermission.setUserId(userUserGroupPermission.getUserId());
+        ocUserPermission.setBusinessId(userUserGroupPermission.getUserGroupId());
+        ocUserPermission.setBusinessType(BusinessType.USERGROUP.getType());
+        BusinessWrapper<Boolean> wrapper = userPermissionFacade.delOcUserPermission(ocUserPermission);
+        if (!wrapper.isSuccess())
+            return wrapper;
+        try {
+            OcUser ocUser = ocUserService.queryOcUserById(userUserGroupPermission.getUserId());
+            OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupById(userUserGroupPermission.getUserGroupId());
+            IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
+            boolean result = iAccount.revoke(ocUser, ocUserGroup.getName());
+            if(result)
+                return BusinessWrapper.SUCCESS;
+        } catch (Exception e) {
+        }
+        return new  BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
+    }
+
+    @Override
+    public DataTable<OcUserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+        DataTable<OcUserGroup> table = ocUserGroupService.queryUserIncludeOcUserGroupByParam(pageQuery);
+        List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
+        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public DataTable<OcUserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+        DataTable<OcUserGroup> table = ocUserGroupService.queryUserExcludeOcUserGroupByParam(pageQuery);
+        List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
+        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 

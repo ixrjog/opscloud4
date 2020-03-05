@@ -22,15 +22,25 @@ public interface UserFacade {
 
     DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
-    OcUserApiTokenVO.UserApiToken applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);
+    BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);
 
-    OcUserCredentialVO.UserCredential saveUserCredentia(OcUserCredentialVO.UserCredential userCredential);
+    BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential);
 
     String getRandomPassword();
 
     BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user);
 
+    BusinessWrapper<Boolean> createUser(OcUserVO.User user);
+
     DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.PageQuery pageQuery);
+
+    BusinessWrapper<Boolean> grantUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission);
+
+    BusinessWrapper<Boolean> revokeUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission);
+
+    DataTable<OcUserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserGroupParam.UserUserGroupPageQuery pageQuery);
+
+    DataTable<OcUserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserGroupParam.UserUserGroupPageQuery pageQuery);
 
     BusinessWrapper<Boolean> addUserGroup(OcUserGroupVO.UserGroup userGroup);
 

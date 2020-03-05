@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.decorator;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.OcAuthGroup;
+import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
 import com.baiyi.opscloud.service.auth.OcAuthGroupService;
 import org.springframework.stereotype.Component;
@@ -19,10 +21,12 @@ public class ResourceDecorator {
     private OcAuthGroupService ocAuthGroupService;
 
     public OcResourceVO.Resource decorator(OcResourceVO.Resource resource) {
+        // 装饰资源组
         if (resource.getGroupId() == null)
             return resource;
         OcAuthGroup ocAuthGroup = ocAuthGroupService.queryOcAuthGroupById(resource.getGroupId());
         resource.setGroupCode(ocAuthGroup.getGroupCode());
+        resource.setGroup( BeanCopierUtils.copyProperties(ocAuthGroup, OcGroupVO.Group.class));
         return resource;
     }
 }

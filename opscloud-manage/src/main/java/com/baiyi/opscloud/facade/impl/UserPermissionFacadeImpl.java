@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcUserPermission;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
@@ -48,11 +50,22 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
         }
     }
 
-    public void addOcUserPermission(OcUserPermission ocUserPermission){
+    @Override
+    public BusinessWrapper<Boolean> addOcUserPermission(OcUserPermission ocUserPermission) {
         OcUserPermission checkOcUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
-        if (checkOcUserPermission == null)
-            ocUserPermissionService.addOcUserPermission(ocUserPermission);
+        if (checkOcUserPermission != null)
+            return new BusinessWrapper<>(ErrorEnum.USER_PERMISSION_EXIST);
+        ocUserPermissionService.addOcUserPermission(ocUserPermission);
+        return BusinessWrapper.SUCCESS;
     }
 
+
+    @Override
+    public BusinessWrapper<Boolean> delOcUserPermission(OcUserPermission ocUserPermission) {
+        OcUserPermission permission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
+        if (permission != null)
+            ocUserPermissionService.delOcUserPermissionById(permission.getId());
+        return BusinessWrapper.SUCCESS;
+    }
 
 }

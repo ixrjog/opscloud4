@@ -38,6 +38,16 @@ public class ServerFacadeImpl implements ServerFacade {
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
+        return toServerDataTable(table);
+    }
+
+    @Override
+    public DataTable<OcServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
+        DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
+        return toServerDataTable(table);
+    }
+
+    private DataTable<OcServerVO.Server> toServerDataTable(DataTable<OcServer> table) {
         List<OcServerVO.Server> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerVO.Server.class);
         DataTable<OcServerVO.Server> dataTable = new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
@@ -59,7 +69,7 @@ public class ServerFacadeImpl implements ServerFacade {
                 || ocServerGroupService.queryOcServerGroupById(server.getServerGroupId()) == null) {
             return new BusinessWrapper<>(ErrorEnum.SERVER_GROUP_NOT_SELECTED);
         }
-        OcServer ocServer =  BeanCopierUtils.copyProperties(server, OcServer.class);
+        OcServer ocServer = BeanCopierUtils.copyProperties(server, OcServer.class);
         ocServerService.updateOcServer(ocServer);
         return BusinessWrapper.SUCCESS;
     }

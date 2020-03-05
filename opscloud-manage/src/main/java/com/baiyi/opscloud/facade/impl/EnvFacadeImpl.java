@@ -70,6 +70,9 @@ public class EnvFacadeImpl implements EnvFacade {
         OcEnv ocEnv = ocEnvService.queryOcEnvById(id);
         if (ocEnv == null)
             return new BusinessWrapper<>(ErrorEnum.ENV_NOT_EXIST);
+        // 判断是否位基本数据
+        if (ocEnv.getEnvType() == 0)
+            new BusinessWrapper<>(ErrorEnum.ENV_IS_DEFAULT);
         // 判断server绑定的资源
         int count = ocServerService.countByEnvType(ocEnv.getEnvType());
         if (count == 0) {

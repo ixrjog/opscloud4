@@ -32,12 +32,26 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     }
 
     @Override
-    public void addOcUserGroup(OcUserGroup ocUserGroup){
+    public DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryOcUserUserGroupByParam(pageQuery);
+        return new DataTable<>(ocUserGroupList, page.getTotal());
+    }
+
+    @Override
+    public DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryOcUserExcludeUserGroupByParam(pageQuery);
+        return new DataTable<>(ocUserGroupList, page.getTotal());
+    }
+
+    @Override
+    public void addOcUserGroup(OcUserGroup ocUserGroup) {
         ocUserGroupMapper.insert(ocUserGroup);
     }
 
     @Override
-    public OcUserGroup queryOcUserGroupByName(String name){
+    public OcUserGroup queryOcUserGroupByName(String name) {
         Example example = new Example(OcUserGroup.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", name);
@@ -45,7 +59,12 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     }
 
     @Override
-    public List<OcUserGroup> queryOcUserGroupByUserId(int userId){
+    public OcUserGroup queryOcUserGroupById(int id) {
+        return ocUserGroupMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<OcUserGroup> queryOcUserGroupByUserId(int userId) {
         return ocUserGroupMapper.queryOcUserGroupByUserId(userId);
     }
 }

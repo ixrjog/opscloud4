@@ -179,6 +179,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @param resource
      * @return
      */
+    @Override
     public Boolean grant(OcUser user, String resource) {
         return Boolean.TRUE;
     }
@@ -190,6 +191,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @param resource
      * @return
      */
+    @Override
     public Boolean revoke(OcUser user, String resource) {
         return Boolean.TRUE;
     }

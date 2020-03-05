@@ -27,12 +27,31 @@ public enum ErrorEnum {
     AUTH_USER_ROLE_NOT_EXIST(11007, "用户角色配置不存在！"),
 
     // user
+    USER_USERNAME_IS_NULL(12002, "用户名为空！"),
+    USER_PASSWORD_IS_NULL(12002, "用户密码为空！"),
+    USER_DISPLAYNAME_IS_NULL(12002, "用户显示名为空！"),
+    USER_EMAIL_IS_NULL(12002, "用户显示名为空！"),
+    USER_USERNAME_NON_COMPLIANCE_WITH_RULES(12002, "用户名不合规！"),
     USER_PASSWORD_NON_COMPLIANCE_WITH_RULES(12002, "用户密码不合规！"),
     USER_PHONE_NON_COMPLIANCE_WITH_RULES(12002, "用户手机号不合规！"),
     USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
+    //applyUserApiToken
+    USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003,"申请ApiToken描述不能为空"),
+    USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003,"申请ApiToken过期时间为空或格式错误"),
+    USER_CREDENTIAL_TYPE_ERROR(12003,"用户凭据类型为空或类型错误"),
+    USER_CREDENTIAL_ERROR(12003,"用户凭据为空或凭据格式错误!"),
+
+    // UserPermission
+    USER_PERMISSION_EXIST(12003,"用户授权已存在!"),
+
+
     // userGroup
     USERGROUP_NAME_ALREADY_EXIST(12001, "用户组名称已存在！"),
     USERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "用户组名称不合规！"),
+
+
+    USER_GRANT_USERGROUP_ERROR(12002, "授权用户组错误！"),
+    USER_REVOKE_USERGROUP_ERROR(12002, "撤销用户组授权错误！"),
 
     // server
     SERVER_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器名称不合规！"),
@@ -47,10 +66,12 @@ public enum ErrorEnum {
     SERVERGROUP_TYPE_NAME_ALREADY_EXIST(12001, "服务器组类型名称已存在！"),
     SERVERGROUP_TYPE_NOT_EXIST(12003, "服务器组类型不存在！"),
     SERVERGROUP_TYPE_HAS_USED(12004, "服务器组类型正在使用！"),
+    SERVERGROUP_TYPE_IS_DEFAULT(12005, "不能删除默认服务器组类型！"),
     // env
     ENV_NAME_ALREADY_EXIST(12001, "环境名称已存在！"),
     ENV_NOT_EXIST(12003, "环境类型不存在！"),
     ENV_HAS_USED(12004, "环境类型正在使用！"),
+    ENV_IS_DEFAULT(12005, "不能删除默认环境类型！"),
     // tag
     TAG_KEY_ALREADY_EXIST(12001, "标签key已存在！"),
     TAG_NOT_EXIST(12003, "标签不存在！"),
@@ -66,6 +87,12 @@ public enum ErrorEnum {
     // cloudDBDatbase
     CLOUD_DB_DATABASE_NOT_EXIST(30002, "云数据库不存在！"),
 
+    // aliyunRDSMysql
+    ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR(30002, "创建云数据库账户错误！"),
+    ALIYUN_RDS_MYSQL_DESCRIBE_ACCOUNT_ERROR(30002, "查询云数据库账户错误！"),
+    ALIYUN_RDS_MYSQL_GRANT_ACCOUNT_PRIVILEGE_ERROR(30002, "云数据库账户授权错误！"),
+    ALIYUN_RDS_MYSQL_REVOKE_ACCOUNT_PRIVILEGE_ERROR(30002, "云数据库账户撤销授权错误！"),
+    ALIYUN_RDS_MYSQL_DELETE_ACCOUNT_ERROR(30002, "云数据库账户删除错误！"),
 
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),

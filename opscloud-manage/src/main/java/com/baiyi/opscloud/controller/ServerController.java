@@ -32,6 +32,12 @@ public class ServerController {
         return new HttpResult<>(serverFacade.queryServerPage(pageQuery));
     }
 
+    @ApiOperation(value = "分页模糊查询server列表")
+    @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcServerVO.Server>> fuzzyQueryServerPage(@RequestBody @Valid ServerParam.PageQuery pageQuery) {
+        return new HttpResult<>(serverFacade.fuzzyQueryServerPage(pageQuery));
+    }
+
     @ApiOperation(value = "新增server")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addServer(@RequestBody @Valid OcServerVO.Server server) {

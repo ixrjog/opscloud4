@@ -32,7 +32,7 @@ public class JasyptUtilsTest extends BaseUnit {
      */
     @Test
     void testDecrypt() {
-        System.err.println(stringEncryptor.decrypt("11111"));
+        System.err.println(stringEncryptor.decrypt(""));
     }
 
     @Test

@@ -38,7 +38,7 @@ public abstract class BaseCloudDB<T> implements InitializingBean, ICloudDB {
         try {
             Map<String, List<T>> dbInstanceMap = getDBInstanceMap();
             for (String uid : dbInstanceMap.keySet()) {
-                CloudAccount cloudAccount = getCloudAccountByUid(uid);
+                com.baiyi.opscloud.cloud.account.CloudAccount cloudAccount = getCloudAccountByUid(uid);
                 if (cloudAccount == null) continue;
                 List<T> dbInstanceList = dbInstanceMap.get(uid);
                 for (T dbInstance : dbInstanceList)
@@ -70,8 +70,8 @@ public abstract class BaseCloudDB<T> implements InitializingBean, ICloudDB {
      */
     protected Boolean saveOcCloudDbDatabaseList(List<OcCloudDbDatabase> ocCloudDbDatabaseList) {
         for (OcCloudDbDatabase pre : ocCloudDbDatabaseList) {
-            String dbName = pre.getDbName();
-            if (dbName.indexOf("__") == 0) continue; // 过滤内部数据库
+//            String dbName = pre.getDbName();
+//            if (dbName.indexOf("__") == 0) continue; // 过滤内部数据库
             try {
                 OcCloudDbDatabase ocCloudDbDatabase = ocCloudDBDatabaseService.queryOcCloudDbDatabaseByUniqueKey(pre.getCloudDbId(), pre.getDbName());
                 if (ocCloudDbDatabase == null)

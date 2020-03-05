@@ -14,6 +14,8 @@ public interface ServerFacade {
 
     DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery);
 
+    DataTable<OcServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
+
     BusinessWrapper<Boolean> addServer(OcServerVO.Server server);
 
     BusinessWrapper<Boolean> updateServer(OcServerVO.Server server);
