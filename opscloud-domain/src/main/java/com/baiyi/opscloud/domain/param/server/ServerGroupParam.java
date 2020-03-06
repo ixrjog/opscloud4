@@ -24,6 +24,27 @@ public class ServerGroupParam {
 
         @ApiModelProperty(value = "组类型")
         private Integer grpType;
+    }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserServerGroupPageQuery extends PageParam {
+        @ApiModelProperty(value = "用户id")
+        private Integer userId;
+
+        @ApiModelProperty(value = "查询名称")
+        private String queryName;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserServerGroupPermission {
+        @ApiModelProperty(value = "用户id")
+        private Integer userId;
+
+        @ApiModelProperty(value = "服务器组id")
+        private Integer serverGroupId;
     }
 }

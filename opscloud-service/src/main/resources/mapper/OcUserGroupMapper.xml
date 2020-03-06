@@ -31,12 +31,12 @@
   </select>
 
   <!--  oc_user_permission  4-->
-  <select id="queryOcUserUserGroupByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserGroupParam$UserUserGroupPageQuery" resultMap="BaseResultMap">
+  <select id="queryUserOcUserGroupByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserGroupParam$UserUserGroupPageQuery" resultMap="BaseResultMap">
     select * from oc_user_group
     where id in ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId})
   </select>
 
-  <select id="queryOcUserExcludeUserGroupByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserGroupParam$UserUserGroupPageQuery" resultMap="BaseResultMap">
+  <select id="queryUserExcludeOcUserGroupByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserGroupParam$UserUserGroupPageQuery" resultMap="BaseResultMap">
     select * from oc_user_group
     where id not in ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId})
     <if test="queryName != null and queryName != ''">

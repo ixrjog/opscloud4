@@ -70,4 +70,20 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     public List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId){
         return ocServerGroupMapper.queryUerPermissionOcServerGroupByUserId(userId);
     }
+
+    @Override
+    public DataTable<OcServerGroup> queryUserIncludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserOcServerGroupByParam(pageQuery);
+        return new DataTable<>(ocServerGroupList, page.getTotal());
+    }
+
+    @Override
+    public DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery  pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserExcludeOcServerGroupByParam(pageQuery);
+        return new DataTable<>(ocServerGroupList, page.getTotal());
+    }
+
+
 }

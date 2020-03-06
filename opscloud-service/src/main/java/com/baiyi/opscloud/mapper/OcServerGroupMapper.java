@@ -11,5 +11,9 @@ public interface OcServerGroupMapper extends Mapper<OcServerGroup> {
 
     List<OcServerGroup> queryOcServerGroupByParam(ServerGroupParam.PageQuery pageQuery);
 
+    List<OcServerGroup> queryUserOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
+
+    List<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
+
     List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(@Param("userId") int userId);
 }

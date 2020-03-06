@@ -29,8 +29,13 @@ public interface OcServerGroupService {
 
     /**
      * 查询用户授权的服务器组信息
+     *
      * @param userId
      * @return
      */
     List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId);
+
+    DataTable<OcServerGroup> queryUserIncludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
+
+    DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
 }

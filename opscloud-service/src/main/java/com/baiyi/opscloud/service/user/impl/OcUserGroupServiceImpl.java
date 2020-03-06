@@ -34,14 +34,14 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     @Override
     public DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
-        List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryOcUserUserGroupByParam(pageQuery);
+        List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryUserOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
 
     @Override
     public DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
-        List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryOcUserExcludeUserGroupByParam(pageQuery);
+        List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryUserExcludeOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
 

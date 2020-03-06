@@ -3,7 +3,8 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.account.AccountCenter;
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.builder.UserGroupBO;
+import com.baiyi.opscloud.bo.UserGroupBO;
+import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.Ressource;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
@@ -219,10 +220,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public BusinessWrapper<Boolean> grantUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
-        OcUserPermission ocUserPermission = new OcUserPermission();
-        ocUserPermission.setUserId(userUserGroupPermission.getUserId());
-        ocUserPermission.setBusinessId(userUserGroupPermission.getUserGroupId());
-        ocUserPermission.setBusinessType(BusinessType.USERGROUP.getType());
+        OcUserPermission ocUserPermission = UserPermissionBuilder.build(userUserGroupPermission);
         BusinessWrapper<Boolean> wrapper = userPermissionFacade.addOcUserPermission(ocUserPermission);
         if (!wrapper.isSuccess())
             return wrapper;
@@ -240,10 +238,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public BusinessWrapper<Boolean> revokeUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
-        OcUserPermission ocUserPermission = new OcUserPermission();
-        ocUserPermission.setUserId(userUserGroupPermission.getUserId());
-        ocUserPermission.setBusinessId(userUserGroupPermission.getUserGroupId());
-        ocUserPermission.setBusinessType(BusinessType.USERGROUP.getType());
+        OcUserPermission ocUserPermission = UserPermissionBuilder.build(userUserGroupPermission);
         BusinessWrapper<Boolean> wrapper = userPermissionFacade.delOcUserPermission(ocUserPermission);
         if (!wrapper.isSuccess())
             return wrapper;

@@ -13,9 +13,9 @@ public interface OcUserGroupMapper extends Mapper<OcUserGroup> {
     List<OcUserGroup> queryOcUserGroupByUserId(int userId);
 
     // 用户授权用户组
-    List<OcUserGroup> queryOcUserUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
+    List<OcUserGroup> queryUserOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
 
     // 用户未授权用户组
-    List<OcUserGroup> queryOcUserExcludeUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
+    List<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
 
 }

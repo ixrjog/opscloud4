@@ -77,4 +77,29 @@ public class ServerGroupController {
         return new HttpResult<>(serverGroupFacade.deleteServerGroupTypeById(id));
     }
 
+    @ApiOperation(value = "分页查询user授权的服务器组列表")
+    @GetMapping(value = "/user/include/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcServerGroupVO.ServerGroup>> queryUserIncludeUserGroupPage(@Valid ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+        return new HttpResult<>(serverGroupFacade.queryUserIncludeServerGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询user未授权的服务器组列表")
+    @GetMapping(value = "/user/exclude/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcServerGroupVO.ServerGroup>> queryUserExcludeUserGroupPage(@Valid ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+        return new HttpResult<>(serverGroupFacade.queryUserExcludeServerGroupPage(pageQuery));
+    }
+
+    // user group
+    @ApiOperation(value = "用户组授权给用户")
+    @GetMapping(value = "/grant", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> grantUserServerGroup(@Valid ServerGroupParam.UserServerGroupPermission userServerGroupPermission) {
+        return new HttpResult<>(serverGroupFacade.grantUserServerGroup(userServerGroupPermission));
+    }
+
+    @ApiOperation(value = "用户解除用户组授权")
+    @DeleteMapping(value = "/revoke", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> revokeUserServerGroup(@Valid ServerGroupParam.UserServerGroupPermission userServerGroupPermission) {
+        return new HttpResult<>(serverGroupFacade.revokeUserServerGroup(userServerGroupPermission));
+    }
+
 }

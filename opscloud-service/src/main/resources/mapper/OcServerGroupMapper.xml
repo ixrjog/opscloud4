@@ -27,6 +27,23 @@
         </where>
     </select>
 
+    <!--  oc_user_permission  2-->
+    <select id="queryUserOcServerGroupByParam" parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$UserServerGroupPageQuery"
+            resultMap="BaseResultMap">
+    select * from oc_server_group
+    where id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId})
+  </select>
+
+    <select id="queryUserExcludeOcServerGroupByParam" parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$UserServerGroupPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        where id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId})
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
+    </select>
+
+
     <!--    business_type = 2 serverGroup-->
     <select id="queryUerPermissionOcServerGroupByUserId" resultMap="BaseResultMap">
     select * from oc_server_group where id in

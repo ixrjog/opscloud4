@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.decorator.ServerGroupDecorator;
@@ -8,14 +9,17 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.OcServerGroupType;
+import com.baiyi.opscloud.domain.generator.OcUserPermission;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;
 import com.baiyi.opscloud.service.server.OcServerService;
+import com.baiyi.opscloud.service.user.OcUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -41,6 +45,12 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
 
     @Resource
     private ServerGroupDecorator serverGroupDecorator;
+
+    @Resource
+    private UserPermissionFacade userPermissionFacade;
+
+    @Resource
+    private OcUserService ocUserService;
 
     public static final boolean ACTION_ADD = true;
     public static final boolean ACTION_UPDATE = false;
@@ -134,7 +144,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         if (ocServerGroupType == null)
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_NOT_EXIST);
         // 判断默认值
-        if(ocServerGroupType.getGrpType() == 0)
+        if (ocServerGroupType.getGrpType() == 0)
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_IS_DEFAULT);
         // 判断server绑定的资源
         int count = ocServerGroupService.countByGrpType(ocServerGroupType.getGrpType());
@@ -145,4 +155,53 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_TYPE_HAS_USED);
         }
     }
+
+    @Override
+    public DataTable<OcServerGroupVO.ServerGroup> queryUserIncludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+        DataTable<OcServerGroup> table = ocServerGroupService.queryUserIncludeOcServerGroupByParam(pageQuery);
+        List<OcServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupVO.ServerGroup.class);
+        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public DataTable<OcServerGroupVO.ServerGroup> queryUserExcludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+        DataTable<OcServerGroup> table = ocServerGroupService.queryUserExcludeOcServerGroupByParam(pageQuery);
+        List<OcServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupVO.ServerGroup.class);
+        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> grantUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission) {
+        OcUserPermission ocUserPermission = UserPermissionBuilder.build(userServerGroupPermission);
+        BusinessWrapper<Boolean> wrapper = userPermissionFacade.addOcUserPermission(ocUserPermission);
+        if (!wrapper.isSuccess())
+            return wrapper;
+        try {
+//            OcUser ocUser = ocUserService.queryOcUserById(userServerGroupPermission.getUserId());
+//            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(userServerGroupPermission.getServerGroupId());
+            //IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
+//            boolean result = iAccount.grant(ocUser, ocServerGroup.getName());
+//            if (result)
+            return BusinessWrapper.SUCCESS;
+        } catch (Exception e) {
+        }
+        return new BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> revokeUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission) {
+        OcUserPermission ocUserPermission = UserPermissionBuilder.build(userServerGroupPermission);
+        BusinessWrapper<Boolean> wrapper = userPermissionFacade.delOcUserPermission(ocUserPermission);
+        if (!wrapper.isSuccess())
+            return wrapper;
+        try {
+//
+            return BusinessWrapper.SUCCESS;
+        } catch (Exception e) {
+        }
+        return new BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
+    }
+
 }

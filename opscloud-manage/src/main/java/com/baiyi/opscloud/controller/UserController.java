@@ -92,7 +92,6 @@ public class UserController {
         return new HttpResult<>(userFacade.syncUser());
     }
 
-
     @ApiOperation(value = "分页查询user授权的用户组列表")
     @GetMapping(value = "/include/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserIncludeUserGroupPage(@Valid UserGroupParam.UserUserGroupPageQuery pageQuery) {

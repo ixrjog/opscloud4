@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.builder;
+package com.baiyi.opscloud.bo;
 
 import lombok.Builder;
 import lombok.Data;
