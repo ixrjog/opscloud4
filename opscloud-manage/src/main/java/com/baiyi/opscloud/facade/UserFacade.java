@@ -24,6 +24,8 @@ public interface UserFacade {
 
     BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);
 
+    BusinessWrapper<Boolean> delUserApiToken(int id);
+
     BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential);
 
     String getRandomPassword();

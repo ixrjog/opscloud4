@@ -119,6 +119,15 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> delUserApiToken(int id) {
+        OcUserApiToken ocUserApiToken = ocUserApiTokenService.queryOcUserApiTokenById(id);
+        if(!SessionUtils.getUsername().equals(ocUserApiToken.getUsername()))
+            return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
+        ocUserApiTokenService.delOcUserApiTokenById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
     public BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
         // OcUserCredentialVO.UserCredential
         if (userCredential.getCredentialType() == null)
@@ -229,11 +238,11 @@ public class UserFacadeImpl implements UserFacade {
             OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupById(userUserGroupPermission.getUserGroupId());
             IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
             boolean result = iAccount.grant(ocUser, ocUserGroup.getName());
-            if(result)
+            if (result)
                 return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
-        return new  BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
+        return new BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
     }
 
     @Override
@@ -247,11 +256,11 @@ public class UserFacadeImpl implements UserFacade {
             OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupById(userUserGroupPermission.getUserGroupId());
             IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
             boolean result = iAccount.revoke(ocUser, ocUserGroup.getName());
-            if(result)
+            if (result)
                 return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
-        return new  BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
+        return new BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
     }
 
     @Override

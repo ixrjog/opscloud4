@@ -15,6 +15,10 @@ public interface OcUserApiTokenService {
 
     OcUserApiToken queryOcUserApiTokenByTokenAndValid(String token);
 
+    OcUserApiToken queryOcUserApiTokenById(int id);
+
+    void delOcUserApiTokenById(int id);
+
     OcUserApiToken addOcUserApiToken(OcUserApiToken ocUserApiToken);
 
     void  updateOcUserApiToken(OcUserApiToken ocUserApiToken);

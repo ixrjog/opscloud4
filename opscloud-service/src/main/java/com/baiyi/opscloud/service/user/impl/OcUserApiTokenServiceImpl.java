@@ -30,6 +30,16 @@ public class OcUserApiTokenServiceImpl implements OcUserApiTokenService {
     }
 
     @Override
+    public OcUserApiToken queryOcUserApiTokenById(int id) {
+        return ocUserApiTokenMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void delOcUserApiTokenById(int id) {
+        ocUserApiTokenMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public OcUserApiToken addOcUserApiToken(OcUserApiToken ocUserApiToken) {
         ocUserApiTokenMapper.insert(ocUserApiToken);
         return ocUserApiToken;

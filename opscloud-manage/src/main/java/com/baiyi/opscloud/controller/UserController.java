@@ -63,9 +63,15 @@ public class UserController {
     }
 
     @ApiOperation(value = "用户申请ApiToken")
-    @PostMapping(value = "/apply/token", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @PostMapping(value = "/token/apply", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> applyUserApiToken(@RequestBody @Valid OcUserApiTokenVO.UserApiToken userApiToken) {
         return new HttpResult<>(userFacade.applyUserApiToken(userApiToken));
+    }
+
+    @ApiOperation(value = "用户删除ApiToken")
+    @DeleteMapping(value = "/token/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> delUserApiToken(@RequestParam int id) {
+        return new HttpResult<>(userFacade.delUserApiToken(id));
     }
 
     @ApiOperation(value = "用户保存凭据")
