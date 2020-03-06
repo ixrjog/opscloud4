@@ -26,4 +26,10 @@ public class OcCloudServerServiceTest extends BaseUnit {
         System.err.println(JSON.toJSONString(list));
     }
 
+    @Test
+    void test() {
+        String s ="GID_GGJ_TRAFFIC_IMPORT_CENTER_PLATFORM_TB_FULL_SHOP_ORDER_INFO_TEST";
+        System.err.println(s.length());
+    }
+
 }

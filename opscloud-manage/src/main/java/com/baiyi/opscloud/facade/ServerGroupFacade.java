@@ -4,8 +4,11 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -37,5 +40,7 @@ public interface ServerGroupFacade {
     BusinessWrapper<Boolean> grantUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission);
 
     BusinessWrapper<Boolean> revokeUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission);
+
+    List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
 
 }

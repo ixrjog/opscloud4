@@ -89,14 +89,14 @@
             注意：大小写敏感问题。
          -->
 
-        <!--        oc_server_group-->
-        <!--        oc_user-->
-        <!--        oc_server_group_permission-->
+<!--        oc_server_group-->
+<!--        oc_user-->
+<!--        oc_server_group_permission-->
 <!--        oc_server_group_type-->
-        <!--        oc_cloudserver-->
-        <!--        oc_server-->
-        <!--        oc_env-->
-        <!--        oc_account-->
+<!--        oc_cloudserver-->
+<!--        oc_server-->
+<!--        oc_env-->
+<!--        oc_account-->
 <!--        oc_user_token-->
 <!--        oc_auth_group-->
 <!--        oc_auth_resource-->
@@ -111,8 +111,10 @@
 <!--        oc_cloud_db-->
 <!--        oc_cloud_db_attribute-->
 <!--        oc_cloud_db_database-->
+<!--        oc_cloud_db_account-->
+<!--        oc_server_attribute-->
 
-        <table tableName="oc_cloud_db_account">
+        <table tableName="oc_server_attribute">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

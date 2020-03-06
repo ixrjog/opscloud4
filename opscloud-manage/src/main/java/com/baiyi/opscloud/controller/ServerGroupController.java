@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -102,4 +104,10 @@ public class ServerGroupController {
         return new HttpResult<>(serverGroupFacade.revokeUserServerGroup(userServerGroupPermission));
     }
 
+    // attribute
+    @ApiOperation(value = "用户组授权给用户")
+    @GetMapping(value = "/attribute", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OcServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(@RequestParam int id) {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupAttribute(id));
+    }
 }

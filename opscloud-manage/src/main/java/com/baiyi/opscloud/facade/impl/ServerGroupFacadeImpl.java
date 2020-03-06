@@ -1,25 +1,32 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.builder.ServerAttributeBuilder;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
+import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.config.ServerAttributeConfig;
+import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.decorator.ServerGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.generator.OcServerAttribute;
 import com.baiyi.opscloud.domain.generator.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.OcServerGroupType;
 import com.baiyi.opscloud.domain.generator.OcUserPermission;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
+import com.baiyi.opscloud.service.server.OcServerAttributeService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;
 import com.baiyi.opscloud.service.server.OcServerService;
-import com.baiyi.opscloud.service.user.OcUserService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -50,7 +57,13 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     private UserPermissionFacade userPermissionFacade;
 
     @Resource
-    private OcUserService ocUserService;
+    private OcServerAttributeService ocServerAttributeService;
+
+//    @Resource
+//    private OcUserService ocUserService;
+
+    @Resource
+    private ServerAttributeConfig serverAttributeConfig;
 
     public static final boolean ACTION_ADD = true;
     public static final boolean ACTION_UPDATE = false;
@@ -202,6 +215,25 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         } catch (Exception e) {
         }
         return new BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
+    }
+
+    @Override
+    public List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id) {
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(id);
+        List<OcServerAttribute> serverAttributeList = Lists.newArrayList();
+        List<AttributeGroup> attributeGroups = serverAttributeConfig.getGroups();
+        for (AttributeGroup attributeGroup : attributeGroups) {
+            OcServerAttribute ocServerAttribute = new OcServerAttribute();
+            ocServerAttribute.setBusinessId(id);
+            ocServerAttribute.setBusinessType(BusinessType.SERVERGROUP.getType());
+            ocServerAttribute.setGroupName(attributeGroup.getName());
+            ocServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(ocServerAttribute);
+            if (ocServerAttribute == null) {
+                serverAttributeList.add(ServerAttributeBuilder.build(attributeGroup, ocServerGroup));
+            } else {
+            }
+        }
+        return BeanCopierUtils.copyListProperties(serverAttributeList, OcServerAttributeVO.ServerAttribute.class);
     }
 
 }
