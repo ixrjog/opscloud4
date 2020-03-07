@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.mapper;
+package com.baiyi.opscloud.mapper.opscloud;
 
 import com.baiyi.opscloud.domain.generator.OcServerGroup;
 import tk.mybatis.mapper.common.Mapper;

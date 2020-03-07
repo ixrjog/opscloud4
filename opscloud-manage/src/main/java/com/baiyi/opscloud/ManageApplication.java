@@ -13,7 +13,7 @@ import tk.mybatis.spring.annotation.MapperScan;
  * @Date 2019/12/25 4:00 下午
  * @Version 1.0
  */
-@MapperScan(basePackages = "com.baiyi.opscloud.mapper")
+//@MapperScan(basePackages = "com.baiyi.opscloud.mapper")
 @SpringBootApplication
 @EnableAspectJAutoProxy(exposeProxy = true)
 @EnableScheduling

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.impl;
 
 import com.baiyi.opscloud.domain.generator.OcUser;
-import com.baiyi.opscloud.mapper.OcUserMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcUserMapper;
 import com.baiyi.opscloud.service.OcUserService;
 import org.springframework.stereotype.Service;
 

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.mapper;
+package com.baiyi.opscloud.mapper.opscloud;
 
 import com.baiyi.opscloud.domain.generator.OcServerGroupPermission;
 import org.apache.ibatis.annotations.Param;
