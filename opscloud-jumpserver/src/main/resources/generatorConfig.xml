@@ -24,9 +24,9 @@
         <!--jdbc的数据库连接 -->
         <jdbcConnection
                 driverClass="com.mysql.cj.jdbc.Driver"
-                connectionURL="${db.example.url}"
-                userId="${db.example.username}"
-                password="${db.example.password}">
+                connectionURL="jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/opscloud"
+                userId="opscloud"
+                password="ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)">
         </jdbcConnection>
 
         <!-- java类型处理器
@@ -39,7 +39,7 @@
             targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
             targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
          -->
-        <javaModelGenerator targetPackage="com.baiyi.opscloud.domain.generator"
+        <javaModelGenerator targetPackage="com.baiyi.opscloud.domain.generator.jumpserver"
                             targetProject="../opscloud-domain/src/main/java">
             <!-- 是否对model添加 构造函数 -->
             <property name="constructorBased" value="false"/>
@@ -63,7 +63,7 @@
                 所以，如果 javaClientGenerator配置中配置了需要生成XML的话，这个元素就必须配置
             targetPackage/targetProject:同javaModelGenerator
          -->
-        <sqlMapGenerator targetPackage="mapper.opscloud" targetProject="../opscloud-service/src/main/resources">
+        <sqlMapGenerator targetPackage="mapper.jumpserver" targetProject="../opscloud-service/src/main/resources">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
             <property name="enableSubPackages" value="false"/>
         </sqlMapGenerator>
@@ -77,7 +77,7 @@
                 3，XMLMAPPER：会生成Mapper接口，接口完全依赖XML；
             注意，如果context是MyBatis3Simple：只支持ANNOTATEDMAPPER和XMLMAPPER
         -->
-        <javaClientGenerator targetPackage="com.baiyi.opscloud.mapper.opscloud" type="XMLMAPPER"
+        <javaClientGenerator targetPackage="com.baiyi.opscloud.mapper.jumpserver" type="XMLMAPPER"
                              targetProject="../opscloud-service/src/main/java">
             <!-- 在targetPackage的基础上，根据数据库的schema再生成一层package，最终生成的类放在这个package下，默认为false -->
             <property name="enableSubPackages" value="false"/>
@@ -92,31 +92,13 @@
 <!--        oc_server_group-->
 <!--        oc_user-->
 <!--        oc_server_group_permission-->
-<!--        oc_server_group_type-->
 <!--        oc_cloudserver-->
-<!--        oc_server-->
-<!--        oc_env-->
-<!--        oc_account-->
-<!--        oc_user_token-->
-<!--        oc_auth_group-->
-<!--        oc_auth_resource-->
-<!--        oc_auth_resource_group-->
-<!--        oc_auth_role-->
-<!--        oc_auth_role_resource-->
-<!--        oc_auth_user_role-->
-<!--        oc_business_tag-->
-<!--        oc_user_group-->
-<!--        oc_user_permission-->
-<!--        oc_user_credential-->
-<!--        oc_cloud_db-->
-<!--        oc_cloud_db_attribute-->
-<!--        oc_cloud_db_database-->
-<!--        oc_cloud_db_account-->
-<!--        oc_server_attribute-->
+<!--        <table tableName="oc_cloudserver">-->
+<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
+<!--        </table>-->
 
-        <table tableName="oc_server_attribute">
-            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-        </table>
+
+
     </context>
 
 </generatorConfiguration>

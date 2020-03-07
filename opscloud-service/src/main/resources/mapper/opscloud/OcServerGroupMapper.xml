@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<<<<<<< HEAD:opscloud-service/src/main/resources/mapper/OcServerGroupMapper.xml
 <mapper namespace="com.baiyi.opscloud.mapper.OcServerGroupMapper">
     <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.OcServerGroup">
         <!--
@@ -50,4 +51,18 @@
     ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
   </select>
 
+=======
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerGroupMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.OcServerGroup">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="grp_type" jdbcType="INTEGER" property="grpType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+>>>>>>> 4b52d713737030f5a65980e2fc9211aa76377f25:opscloud-service/src/main/resources/mapper/opscloud/OcServerGroupMapper.xml
 </mapper>

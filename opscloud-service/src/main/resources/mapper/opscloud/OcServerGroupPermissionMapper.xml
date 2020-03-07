@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerGroupPermissionMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.OcServerGroupPermission">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryUserServerGroupPermission" resultMap="BaseResultMap">
+        select * from oc_server_group_permission where user_id = #{userId}
+    </select>
+
+</mapper>

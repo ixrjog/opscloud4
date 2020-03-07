@@ -48,8 +48,14 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
                 serverAttributeList.add(ServerAttributeBuilder.build(ag, ocServerGroup));
             } else {
                 // db中的配置项
-                AttributeGroup attributeGroup = ServerAttributeUtils.convert(preServerAttribute.getAttributes());
-                serverAttributeList.add(ServerAttributeBuilder.build(preServerAttribute.getId(), ServerAttributeDecorator.decorator(ag, attributeGroup), ocServerGroup));
+                try {
+                    AttributeGroup attributeGroup = ServerAttributeUtils.convert(preServerAttribute.getAttributes());
+                    serverAttributeList.add(ServerAttributeBuilder.build(preServerAttribute.getId(), ServerAttributeDecorator.decorator(ag, attributeGroup), ocServerGroup));
+                } catch (Exception e) {
+                    // 数据格式错误，删除数据后生成默认配置项
+                    ocServerAttributeService.deleteOcServerAttributeById(preServerAttribute.getId());
+                    serverAttributeList.add(ServerAttributeBuilder.build(ag, ocServerGroup));
+                }
             }
         }
         return BeanCopierUtils.copyListProperties(serverAttributeList, OcServerAttributeVO.ServerAttribute.class);

@@ -28,11 +28,14 @@ public class ServerAttributeDecorator {
             List<ServerAttribute> list = dest.getAttributes();
             for (ServerAttribute serverAttribute : list) {
                 String key = serverAttribute.getName();
+                // 源属性不存在
                 if (!originalAttributeMap.containsKey(key)) continue;
-                if (StringUtils.isEmpty(serverAttribute.getValue())) continue;
-                serverAttribute.setValue(originalAttributeMap.get(key).getValue());
+                // 目标属性未配置，从源属性读取
+                if (StringUtils.isEmpty(serverAttribute.getValue()))
+                    serverAttribute.setValue(originalAttributeMap.get(key).getValue());
                 originalAttributeMap.remove(key);
             }
+            // 补全缺少的属性配置项
             if (!originalAttributeMap.isEmpty()) {
                 for (String key : originalAttributeMap.keySet())
                     list.add(originalAttributeMap.get(key));
