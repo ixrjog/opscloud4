@@ -10,4 +10,10 @@ import com.baiyi.opscloud.domain.generator.OcServerAttribute;
 public interface OcServerAttributeService {
 
     OcServerAttribute queryOcServerAttributeByUniqueKey(OcServerAttribute ocServerAttribute);
+
+    void addOcServerAttribute(OcServerAttribute ocServerAttribute);
+
+    void updateOcServerAttribute(OcServerAttribute ocServerAttribute);
+
+    void deleteOcServerAttributeById(int id);
 }

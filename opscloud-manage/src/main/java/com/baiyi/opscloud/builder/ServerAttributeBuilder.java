@@ -29,6 +29,12 @@ public class ServerAttributeBuilder {
         return covert(serverAttributeBO);
     }
 
+    public static OcServerAttribute build(int id, AttributeGroup attributeGroup, OcServerGroup ocServerGroup) {
+        OcServerAttribute ocServerAttribute = build(attributeGroup, ocServerGroup);
+        ocServerAttribute.setId(id);
+        return ocServerAttribute;
+    }
+
 
     private static OcServerAttribute covert(ServerAttributeBO serverAttributeBO) {
         return BeanCopierUtils.copyProperties(serverAttributeBO, OcServerAttribute.class);

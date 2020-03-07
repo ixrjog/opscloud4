@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
+import com.baiyi.opscloud.common.util.ServerAttributeUtils;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -39,5 +40,17 @@ public class ServerAttributeTest extends BaseUnit {
         }
     }
 
+    @Test
+    void testYamlJsonParser2() {
+        String s = "attributes:\n" +
+                "- content: 启用公网ip管理，此配置将作用于:zabbix,jumpserver,keybox\n" +
+                "  name: global_enable_public_ip_mgmt\n" +
+                "  value: 'false'\n" +
+                "comment: 全局通用配置\n" +
+                "name: global";
+        AttributeGroup ag =  ServerAttributeUtils.convert(s);
+        System.err.println(JSON.toJSONString(ag));
+
+    }
 
 }

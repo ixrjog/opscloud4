@@ -43,4 +43,6 @@ public interface ServerGroupFacade {
 
     List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
 
+    BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
+
 }

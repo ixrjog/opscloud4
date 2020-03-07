@@ -105,9 +105,18 @@ public class ServerGroupController {
     }
 
     // attribute
-    @ApiOperation(value = "用户组授权给用户")
-    @GetMapping(value = "/attribute", produces = MediaType.APPLICATION_JSON_VALUE)
+    @ApiOperation(value = "查询服务器组属性")
+    @GetMapping(value = "/attribute/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<OcServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(@RequestParam int id) {
         return new HttpResult<>(serverGroupFacade.queryServerGroupAttribute(id));
     }
+
+    @ApiOperation(value = "保存服务器组属性")
+    @PutMapping(value = "/attribute/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveServerGroupAttribute(@RequestBody @Valid OcServerAttributeVO.ServerAttribute serverAttribute) {
+        return new HttpResult<>(serverGroupFacade.saveServerGroupAttribute(serverAttribute));
+    }
+
+
+
 }

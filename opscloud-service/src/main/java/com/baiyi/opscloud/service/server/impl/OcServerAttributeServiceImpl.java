@@ -27,4 +27,19 @@ public class OcServerAttributeServiceImpl implements OcServerAttributeService {
         criteria.andEqualTo("groupName", ocServerAttribute.getGroupName());
         return ocServerAttributeMapper.selectOneByExample(example);
     }
+
+    @Override
+    public void addOcServerAttribute(OcServerAttribute ocServerAttribute) {
+        ocServerAttributeMapper.insert(ocServerAttribute);
+    }
+
+    @Override
+    public void updateOcServerAttribute(OcServerAttribute ocServerAttribute) {
+        ocServerAttributeMapper.updateByPrimaryKey(ocServerAttribute);
+    }
+
+    @Override
+    public void deleteOcServerAttributeById(int id) {
+        ocServerAttributeMapper.deleteByPrimaryKey(id);
+    }
 }
