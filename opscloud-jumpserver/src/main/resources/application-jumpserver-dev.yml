@@ -7,9 +7,3 @@ jumpserver:
   coco: oc.ops.yangege.cn
 
 # jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/jumpserver
-spring:
-  datasource:
-    jumpserver:
-      url: jdbc:mysql://rm-bp15in4n827sceu6j8o.mysql.rds.aliyuncs.com:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
-      username: jumpserver
-      password: 123456

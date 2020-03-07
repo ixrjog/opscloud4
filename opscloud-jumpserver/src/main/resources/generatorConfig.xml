@@ -24,9 +24,9 @@
         <!--jdbc的数据库连接 -->
         <jdbcConnection
                 driverClass="com.mysql.cj.jdbc.Driver"
-                connectionURL="jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/opscloud"
-                userId="opscloud"
-                password="ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)">
+                connectionURL="${db.jumpserver.url}"
+                userId="${db.jumpserver.username}"
+                password="${db.jumpserver.password}">
         </jdbcConnection>
 
         <!-- java类型处理器
@@ -93,9 +93,9 @@
 <!--        oc_user-->
 <!--        oc_server_group_permission-->
 <!--        oc_cloudserver-->
-<!--        <table tableName="oc_cloudserver">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
-<!--        </table>-->
+        <table tableName="assets_asset">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+        </table>
 
 
 
