@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.auth.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcAuthResource;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
-import com.baiyi.opscloud.mapper.OcAuthResourceMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcAuthResourceMapper;
 import com.baiyi.opscloud.service.auth.OcAuthResourceService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

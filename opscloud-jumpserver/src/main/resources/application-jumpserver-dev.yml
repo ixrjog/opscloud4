@@ -6,11 +6,10 @@ jumpserver:
   password: ENC(rpmkDYGobkaAqjNM2E+sg9C0F6J1Egf229Jzdj2HeSzMqKR55Flzl/ExPTFJ94ON)
   coco: oc.ops.yangege.cn
 
-
+# jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/jumpserver
 spring:
   datasource:
     jumpserver:
-      url: jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/opscloud
-      username: opscloud
-      password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
-
+      url: jdbc:mysql://rm-bp15in4n827sceu6j8o.mysql.rds.aliyuncs.com:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      username: jumpserver
+      password: 123456

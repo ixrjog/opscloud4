@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
 import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
-import com.baiyi.opscloud.mapper.OcCloudDbAttributeMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcCloudDbAttributeMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudDBAttributeService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;

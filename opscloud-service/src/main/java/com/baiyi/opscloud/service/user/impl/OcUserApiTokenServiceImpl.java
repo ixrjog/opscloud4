@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.generator.OcUserApiToken;
-import com.baiyi.opscloud.mapper.OcUserApiTokenMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcUserApiTokenMapper;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;

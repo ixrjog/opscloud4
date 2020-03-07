@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.tag.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcTag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.mapper.OcTagMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcTagMapper;
 import com.baiyi.opscloud.service.tag.OcTagService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

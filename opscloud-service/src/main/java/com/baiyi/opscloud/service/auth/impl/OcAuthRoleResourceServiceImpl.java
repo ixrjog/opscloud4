@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.auth.impl;
 
 import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
-import com.baiyi.opscloud.mapper.OcAuthRoleResourceMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcAuthRoleResourceMapper;
 import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;

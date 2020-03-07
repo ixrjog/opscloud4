@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.server.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.mapper.OcServerMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcServerMapper;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

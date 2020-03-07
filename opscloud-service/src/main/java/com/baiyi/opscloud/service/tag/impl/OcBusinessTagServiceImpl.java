@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.tag.impl;
 
 import com.baiyi.opscloud.domain.generator.OcBusinessTag;
 import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
-import com.baiyi.opscloud.mapper.OcBusinessTagMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcBusinessTagMapper;
 import com.baiyi.opscloud.service.tag.OcBusinessTagService;
 import org.springframework.stereotype.Service;
 

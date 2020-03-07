@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.user.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcUser;
 import com.baiyi.opscloud.domain.param.user.UserParam;
-import com.baiyi.opscloud.mapper.OcUserMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcUserMapper;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

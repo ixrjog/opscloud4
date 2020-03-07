@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.env.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
-import com.baiyi.opscloud.mapper.OcEnvMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcEnvMapper;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;

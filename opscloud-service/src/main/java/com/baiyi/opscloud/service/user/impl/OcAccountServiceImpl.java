@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.generator.OcAccount;
-import com.baiyi.opscloud.mapper.OcAccountMapper;
+import com.baiyi.opscloud.mapper.opscloud.OcAccountMapper;
 import com.baiyi.opscloud.service.user.OcAccountService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
