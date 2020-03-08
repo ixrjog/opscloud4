@@ -25,19 +25,19 @@ import javax.sql.DataSource;
 )
 public class DatasourceOpscloudConfig {
 
-    @Bean(name="opscloudSqlSessionTemplate")
+    @Bean
     @Primary
     public SqlSessionTemplate opscloudSqlSessionTemplate(SqlSessionFactory opscloudDataSourceSqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(opscloudDataSourceSqlSessionFactory);
     }
 
-    @Bean(name="opscloudTransactionManager")
+    @Bean
     @Primary
     public DataSourceTransactionManager opscloudTransactionManager(DataSource opscloudDataSource) {
         return new DataSourceTransactionManager(opscloudDataSource);
     }
 
-    @Bean(name="opscloudDataSourceSqlSessionFactory")
+    @Bean
     @Primary
     public SqlSessionFactory opscloudDataSourceSqlSessionFactory(DataSource opscloudDataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
@@ -48,14 +48,14 @@ public class DatasourceOpscloudConfig {
         return factoryBean.getObject();
     }
 
-    @Bean(name="opscloudDataSourceProperties")
+    @Bean
     @Primary
     @ConfigurationProperties("app.datasource.opscloud")
     public DataSourceProperties opscloudDataSourceProperties() {
         return new DataSourceProperties();
     }
 
-    @Bean(name="opscloud")
+    @Bean
     @Primary
     @ConfigurationProperties("app.datasource.opscloud.configuration")
     public DataSource opscloudDataSource(DataSourceProperties opscloudDataSourceProperties) {

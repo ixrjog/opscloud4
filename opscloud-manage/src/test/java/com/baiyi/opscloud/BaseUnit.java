@@ -11,6 +11,6 @@ import org.springframework.test.context.ActiveProfiles;
  */
 @SpringBootTest(classes = ManageApplication.class)
 @AutoConfigureMockMvc
-@ActiveProfiles(profiles = "dev")
+@ActiveProfiles(profiles = "prod")
 public class BaseUnit {
 }
