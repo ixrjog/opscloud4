@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.user;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 
 import java.util.List;

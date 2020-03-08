@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.cloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
 
 import java.util.List;
 

@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.cloud.db;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudDb;
-import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
 
 /**
  * @Author baiyi

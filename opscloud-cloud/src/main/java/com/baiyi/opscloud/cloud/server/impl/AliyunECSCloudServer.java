@@ -8,7 +8,7 @@ import com.baiyi.opscloud.cloud.server.decorator.AliyunECSInstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AliyunECSInstance;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

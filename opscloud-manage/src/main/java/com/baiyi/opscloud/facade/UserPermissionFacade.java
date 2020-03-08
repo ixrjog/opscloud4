@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcUserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 
 import java.util.List;

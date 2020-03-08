@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.domain.bo.OcServerBO;
-import com.baiyi.opscloud.domain.generator.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.facade.OcServerFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import org.springframework.stereotype.Service;

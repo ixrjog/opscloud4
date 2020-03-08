@@ -1,30 +1,28 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_auth_user_role")
-public class OcAuthUserRole {
+@Table(name = "oc_server_group_type")
+public class OcServerGroupType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /**
-     * 用户登录名
-     */
-    private String username;
+    private String name;
 
-    /**
-     * 角色id
-     */
-    @Column(name = "role_id")
-    private Integer roleId;
+    @Column(name = "grp_type")
+    private Integer grpType;
+
+    private String color;
 
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;
+
+    private String comment;
 
     /**
      * @return id
@@ -41,39 +39,45 @@ public class OcAuthUserRole {
     }
 
     /**
-     * 获取用户登录名
-     *
-     * @return username - 用户登录名
+     * @return name
      */
-    public String getUsername() {
-        return username;
+    public String getName() {
+        return name;
     }
 
     /**
-     * 设置用户登录名
-     *
-     * @param username 用户登录名
+     * @param name
      */
-    public void setUsername(String username) {
-        this.username = username;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * 获取角色id
-     *
-     * @return role_id - 角色id
+     * @return grp_type
      */
-    public Integer getRoleId() {
-        return roleId;
+    public Integer getGrpType() {
+        return grpType;
     }
 
     /**
-     * 设置角色id
-     *
-     * @param roleId 角色id
+     * @param grpType
      */
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setGrpType(Integer grpType) {
+        this.grpType = grpType;
+    }
+
+    /**
+     * @return color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * @param color
+     */
+    public void setColor(String color) {
+        this.color = color;
     }
 
     /**
@@ -102,5 +106,19 @@ public class OcAuthUserRole {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * @return comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

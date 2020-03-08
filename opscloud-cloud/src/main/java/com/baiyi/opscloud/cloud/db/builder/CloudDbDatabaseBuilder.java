@@ -2,7 +2,7 @@ package com.baiyi.opscloud.cloud.db.builder;
 
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudDbDatabase;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase;
 
 /**
  * @Author baiyi

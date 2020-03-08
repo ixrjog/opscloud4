@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.db.builder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAttribute;
 
 /**
  * @Author baiyi

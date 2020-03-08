@@ -1,26 +1,30 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
-@Table(name = "oc_server_group")
-public class OcServerGroup {
+@Table(name = "oc_auth_user_role")
+public class OcAuthUserRole {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    /**
+     * 用户登录名
+     */
+    private String username;
 
-    @Column(name = "grp_type")
-    private Integer grpType;
+    /**
+     * 角色id
+     */
+    @Column(name = "role_id")
+    private Integer roleId;
 
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;
-
-    private String comment;
 
     /**
      * @return id
@@ -37,31 +41,39 @@ public class OcServerGroup {
     }
 
     /**
-     * @return name
+     * 获取用户登录名
+     *
+     * @return username - 用户登录名
      */
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * @param name
+     * 设置用户登录名
+     *
+     * @param username 用户登录名
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
-     * @return grp_type
+     * 获取角色id
+     *
+     * @return role_id - 角色id
      */
-    public Integer getGrpType() {
-        return grpType;
+    public Integer getRoleId() {
+        return roleId;
     }
 
     /**
-     * @param grpType
+     * 设置角色id
+     *
+     * @param roleId 角色id
      */
-    public void setGrpType(Integer grpType) {
-        this.grpType = grpType;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     /**
@@ -90,19 +102,5 @@ public class OcServerGroup {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    /**
-     * @return comment
-     */
-    public String getComment() {
-        return comment;
-    }
-
-    /**
-     * @param comment
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 }

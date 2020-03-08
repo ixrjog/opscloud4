@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.account.builder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.ldap.entry.Person;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 

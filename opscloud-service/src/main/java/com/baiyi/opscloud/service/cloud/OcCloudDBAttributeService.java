@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.cloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAttribute;
 
 import java.util.List;
 

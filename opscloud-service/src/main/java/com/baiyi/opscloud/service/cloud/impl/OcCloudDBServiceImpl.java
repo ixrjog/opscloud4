@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcCloudDb;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
 import com.baiyi.opscloud.mapper.opscloud.OcCloudDbMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudDBService;

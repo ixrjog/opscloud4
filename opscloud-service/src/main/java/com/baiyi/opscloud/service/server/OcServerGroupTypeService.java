@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.server;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcServerGroupType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroupType;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 
 /**

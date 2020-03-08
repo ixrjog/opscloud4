@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.server;
 
-import com.baiyi.opscloud.domain.generator.OcServerAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 
 /**
  * @Author baiyi

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcUserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;

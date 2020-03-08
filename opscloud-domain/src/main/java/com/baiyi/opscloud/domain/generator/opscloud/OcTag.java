@@ -1,28 +1,35 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_server_group_type")
-public class OcServerGroupType {
+@Table(name = "oc_tag")
+public class OcTag {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    private String name;
+    /**
+     * 标签Key,全局唯一
+     */
+    @Column(name = "tag_key")
+    private String tagKey;
 
-    @Column(name = "grp_type")
-    private Integer grpType;
-
+    /**
+     * 颜色值
+     */
     private String color;
+
+    /**
+     * 描述
+     */
+    private String comment;
 
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;
-
-    private String comment;
 
     /**
      * @return id
@@ -39,45 +46,57 @@ public class OcServerGroupType {
     }
 
     /**
-     * @return name
+     * 获取标签Key,全局唯一
+     *
+     * @return tag_key - 标签Key,全局唯一
      */
-    public String getName() {
-        return name;
+    public String getTagKey() {
+        return tagKey;
     }
 
     /**
-     * @param name
+     * 设置标签Key,全局唯一
+     *
+     * @param tagKey 标签Key,全局唯一
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setTagKey(String tagKey) {
+        this.tagKey = tagKey;
     }
 
     /**
-     * @return grp_type
-     */
-    public Integer getGrpType() {
-        return grpType;
-    }
-
-    /**
-     * @param grpType
-     */
-    public void setGrpType(Integer grpType) {
-        this.grpType = grpType;
-    }
-
-    /**
-     * @return color
+     * 获取颜色值
+     *
+     * @return color - 颜色值
      */
     public String getColor() {
         return color;
     }
 
     /**
-     * @param color
+     * 设置颜色值
+     *
+     * @param color 颜色值
      */
     public void setColor(String color) {
         this.color = color;
+    }
+
+    /**
+     * 获取描述
+     *
+     * @return comment - 描述
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * 设置描述
+     *
+     * @param comment 描述
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**
@@ -106,19 +125,5 @@ public class OcServerGroupType {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    /**
-     * @return comment
-     */
-    public String getComment() {
-        return comment;
-    }
-
-    /**
-     * @param comment
-     */
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 }

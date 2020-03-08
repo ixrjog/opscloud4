@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
-import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAttribute;
 import com.baiyi.opscloud.mapper.opscloud.OcCloudDbAttributeMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudDBAttributeService;
 import org.springframework.stereotype.Service;

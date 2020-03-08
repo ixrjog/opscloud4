@@ -5,8 +5,8 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudDb;
-import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
 
 import java.util.List;
 import java.util.Map;

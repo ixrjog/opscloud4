@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudDbDatabase;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import tk.mybatis.mapper.common.Mapper;
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcEnv;
+import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
 import tk.mybatis.mapper.common.Mapper;
 

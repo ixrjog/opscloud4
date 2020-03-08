@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.user.impl;
 
-import com.baiyi.opscloud.domain.generator.OcUserToken;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserToken;
 import com.baiyi.opscloud.mapper.opscloud.OcUserTokenMapper;
 import com.baiyi.opscloud.service.user.OcUserTokenService;
 import org.springframework.stereotype.Service;

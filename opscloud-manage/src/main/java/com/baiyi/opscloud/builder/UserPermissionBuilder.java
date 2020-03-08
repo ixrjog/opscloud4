@@ -3,7 +3,7 @@ package com.baiyi.opscloud.builder;
 import com.baiyi.opscloud.bo.UserPermissionBO;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcUserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 

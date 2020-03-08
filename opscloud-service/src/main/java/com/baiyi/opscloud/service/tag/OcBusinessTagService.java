@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.tag;
 
-import com.baiyi.opscloud.domain.generator.OcBusinessTag;
+import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
 import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
 
 /**

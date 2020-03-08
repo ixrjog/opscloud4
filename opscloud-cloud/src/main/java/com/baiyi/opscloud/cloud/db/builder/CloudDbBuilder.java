@@ -5,7 +5,7 @@ import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.common.base.CloudDBType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudDb;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 
 /**
  * @Author baiyi

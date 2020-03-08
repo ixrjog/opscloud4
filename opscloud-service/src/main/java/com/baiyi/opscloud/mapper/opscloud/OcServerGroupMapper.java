@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;

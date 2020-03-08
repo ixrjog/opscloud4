@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
 import com.baiyi.opscloud.facade.JumpserverFacade;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;

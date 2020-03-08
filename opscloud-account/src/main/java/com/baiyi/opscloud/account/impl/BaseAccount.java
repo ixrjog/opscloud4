@@ -3,9 +3,9 @@ package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.domain.generator.OcAccount;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.user.OcAccountService;
 import com.baiyi.opscloud.service.user.OcUserService;

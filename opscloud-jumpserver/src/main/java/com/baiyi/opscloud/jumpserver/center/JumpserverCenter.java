@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.jumpserver.center;
 
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
 
 /**

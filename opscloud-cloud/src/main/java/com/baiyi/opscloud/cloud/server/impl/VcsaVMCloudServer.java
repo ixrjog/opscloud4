@@ -4,7 +4,7 @@ import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.vmware.vcsa.vm.VcsaVM;
 import lombok.extern.slf4j.Slf4j;

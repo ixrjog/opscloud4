@@ -1,18 +1,25 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
-@Table(name = "oc_auth_group")
-public class OcAuthGroup {
+@Table(name = "oc_auth_role_resource")
+public class OcAuthRoleResource {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "group_code")
-    private String groupCode;
+    /**
+     * 角色id
+     */
+    @Column(name = "role_id")
+    private Integer roleId;
 
-    private String comment;
+    /**
+     * 资源id
+     */
+    @Column(name = "resource_id")
+    private Integer resourceId;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -35,31 +42,39 @@ public class OcAuthGroup {
     }
 
     /**
-     * @return group_code
+     * 获取角色id
+     *
+     * @return role_id - 角色id
      */
-    public String getGroupCode() {
-        return groupCode;
+    public Integer getRoleId() {
+        return roleId;
     }
 
     /**
-     * @param groupCode
+     * 设置角色id
+     *
+     * @param roleId 角色id
      */
-    public void setGroupCode(String groupCode) {
-        this.groupCode = groupCode;
+    public void setRoleId(Integer roleId) {
+        this.roleId = roleId;
     }
 
     /**
-     * @return comment
+     * 获取资源id
+     *
+     * @return resource_id - 资源组id
      */
-    public String getComment() {
-        return comment;
+    public Integer getResourceId() {
+        return resourceId;
     }
 
     /**
-     * @param comment
+     * 设置资源id
+     *
+     * @param resourceId 资源id
      */
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setResourceId(Integer resourceId) {
+        this.resourceId = resourceId;
     }
 
     /**

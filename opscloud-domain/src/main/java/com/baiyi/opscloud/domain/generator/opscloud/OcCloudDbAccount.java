@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import java.util.Date;
 import javax.persistence.*;

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcAuthRole;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import tk.mybatis.mapper.common.Mapper;
 

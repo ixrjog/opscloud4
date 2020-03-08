@@ -3,7 +3,7 @@ package com.baiyi.opscloud.jumpserver.builder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
 import com.baiyi.opscloud.jumpserver.bo.UsersUserBO;
 import com.baiyi.opscloud.jumpserver.center.impl.JumpserverCenterImpl;

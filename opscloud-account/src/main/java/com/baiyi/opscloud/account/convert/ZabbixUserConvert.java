@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.account.convert;
 
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import org.springframework.util.StringUtils;
 

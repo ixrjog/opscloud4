@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.bo.OcServerBO;
-import com.baiyi.opscloud.domain.generator.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 
 /**
  * @Author baiyi

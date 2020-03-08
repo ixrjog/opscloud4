@@ -2,7 +2,7 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcEnv;
+import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;

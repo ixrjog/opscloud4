@@ -2,7 +2,7 @@ package com.baiyi.opscloud.account;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -1,13 +1,37 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
-@Table(name = "oc_user")
-public class OcUser {
+@Table(name = "oc_account")
+public class OcAccount {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * 多实例主账户id
+     */
+    @Column(name = "account_uid")
+    private String accountUid;
+
+    /**
+     * id
+     */
+    @Column(name = "account_id")
+    private String accountId;
+
+    /**
+     * 账户类型
+     */
+    @Column(name = "account_type")
+    private Integer accountType;
+
+    /**
+     * user表pk
+     */
+    @Column(name = "user_id")
+    private Integer userId;
 
     /**
      * 用户名
@@ -36,7 +60,7 @@ public class OcUser {
     private Boolean isActive;
 
     @Column(name = "last_login")
-    private Date lastLogin;
+    private Integer lastLogin;
 
     private String wechat;
 
@@ -44,14 +68,6 @@ public class OcUser {
      * 手机
      */
     private String phone;
-
-    @Column(name = "created_by")
-    private String createdBy;
-
-    /**
-     * 数据源
-     */
-    private String source;
 
     /**
      * 创建时间
@@ -79,6 +95,78 @@ public class OcUser {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    /**
+     * 获取多实例主账户id
+     *
+     * @return account_uid - 多实例主账户id
+     */
+    public String getAccountUid() {
+        return accountUid;
+    }
+
+    /**
+     * 设置多实例主账户id
+     *
+     * @param accountUid 多实例主账户id
+     */
+    public void setAccountUid(String accountUid) {
+        this.accountUid = accountUid;
+    }
+
+    /**
+     * 获取id
+     *
+     * @return account_id - id
+     */
+    public String getAccountId() {
+        return accountId;
+    }
+
+    /**
+     * 设置id
+     *
+     * @param accountId id
+     */
+    public void setAccountId(String accountId) {
+        this.accountId = accountId;
+    }
+
+    /**
+     * 获取账户类型
+     *
+     * @return account_type - 账户类型
+     */
+    public Integer getAccountType() {
+        return accountType;
+    }
+
+    /**
+     * 设置账户类型
+     *
+     * @param accountType 账户类型
+     */
+    public void setAccountType(Integer accountType) {
+        this.accountType = accountType;
+    }
+
+    /**
+     * 获取user表pk
+     *
+     * @return user_id - user表pk
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+
+    /**
+     * 设置user表pk
+     *
+     * @param userId user表pk
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
     }
 
     /**
@@ -181,11 +269,17 @@ public class OcUser {
         this.isActive = isActive;
     }
 
-    public Date getLastLogin() {
+    /**
+     * @return last_login
+     */
+    public Integer getLastLogin() {
         return lastLogin;
     }
 
-    public void setLastLogin(Date lastLogin) {
+    /**
+     * @param lastLogin
+     */
+    public void setLastLogin(Integer lastLogin) {
         this.lastLogin = lastLogin;
     }
 
@@ -219,38 +313,6 @@ public class OcUser {
      */
     public void setPhone(String phone) {
         this.phone = phone;
-    }
-
-    /**
-     * @return created_by
-     */
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    /**
-     * @param createdBy
-     */
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    /**
-     * 获取数据源
-     *
-     * @return source - 数据源
-     */
-    public String getSource() {
-        return source;
-    }
-
-    /**
-     * 设置数据源
-     *
-     * @param source 数据源
-     */
-    public void setSource(String source) {
-        this.source = source;
     }
 
     /**

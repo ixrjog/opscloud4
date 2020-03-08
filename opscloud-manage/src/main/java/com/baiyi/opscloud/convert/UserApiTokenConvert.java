@@ -2,7 +2,7 @@ package com.baiyi.opscloud.convert;
 
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
-import com.baiyi.opscloud.domain.generator.OcUserApiToken;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserApiToken;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 
 /**

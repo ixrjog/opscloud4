@@ -1,31 +1,26 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
-@Table(name = "oc_auth_role_resource")
-public class OcAuthRoleResource {
+@Table(name = "oc_server_group")
+public class OcServerGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /**
-     * 角色id
-     */
-    @Column(name = "role_id")
-    private Integer roleId;
+    private String name;
 
-    /**
-     * 资源id
-     */
-    @Column(name = "resource_id")
-    private Integer resourceId;
+    @Column(name = "grp_type")
+    private Integer grpType;
 
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;
+
+    private String comment;
 
     /**
      * @return id
@@ -42,39 +37,31 @@ public class OcAuthRoleResource {
     }
 
     /**
-     * 获取角色id
-     *
-     * @return role_id - 角色id
+     * @return name
      */
-    public Integer getRoleId() {
-        return roleId;
+    public String getName() {
+        return name;
     }
 
     /**
-     * 设置角色id
-     *
-     * @param roleId 角色id
+     * @param name
      */
-    public void setRoleId(Integer roleId) {
-        this.roleId = roleId;
+    public void setName(String name) {
+        this.name = name;
     }
 
     /**
-     * 获取资源id
-     *
-     * @return resource_id - 资源组id
+     * @return grp_type
      */
-    public Integer getResourceId() {
-        return resourceId;
+    public Integer getGrpType() {
+        return grpType;
     }
 
     /**
-     * 设置资源id
-     *
-     * @param resourceId 资源id
+     * @param grpType
      */
-    public void setResourceId(Integer resourceId) {
-        this.resourceId = resourceId;
+    public void setGrpType(Integer grpType) {
+        this.grpType = grpType;
     }
 
     /**
@@ -103,5 +90,19 @@ public class OcAuthRoleResource {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * @return comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 }

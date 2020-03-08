@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.auth;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcAuthRole;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 
 /**

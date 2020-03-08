@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.user.impl;
 
-import com.baiyi.opscloud.domain.generator.OcUserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.mapper.opscloud.OcUserPermissionMapper;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import org.springframework.stereotype.Service;

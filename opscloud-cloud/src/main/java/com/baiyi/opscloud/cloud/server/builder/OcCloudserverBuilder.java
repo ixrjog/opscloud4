@@ -9,7 +9,7 @@ import com.baiyi.opscloud.cloud.server.util.AwsUtils;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostInterface;

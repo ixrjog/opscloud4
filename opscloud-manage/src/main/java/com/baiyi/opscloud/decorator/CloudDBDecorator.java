@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudDbAccount;
-import com.baiyi.opscloud.domain.generator.OcCloudDbAttribute;
-import com.baiyi.opscloud.domain.generator.OcCloudDbDatabase;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;

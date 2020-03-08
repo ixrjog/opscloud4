@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.user;
 
-import com.baiyi.opscloud.domain.generator.OcUserToken;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserToken;
 
 import java.util.List;
 

@@ -1,25 +1,25 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_business_tag")
-public class OcBusinessTag {
+@Table(name = "oc_user_permission")
+public class OcUserPermission {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * 用户id
+     */
+    @Column(name = "user_id")
+    private Integer userId;
 
     /**
      * 业务id
      */
     @Column(name = "business_id")
     private Integer businessId;
-
-    /**
-     * 标签id
-     */
-    @Column(name = "tag_id")
-    private Integer tagId;
 
     /**
      * 业务类型
@@ -48,6 +48,24 @@ public class OcBusinessTag {
     }
 
     /**
+     * 获取用户id
+     *
+     * @return user_id - 用户id
+     */
+    public Integer getUserId() {
+        return userId;
+    }
+
+    /**
+     * 设置用户id
+     *
+     * @param userId 用户id
+     */
+    public void setUserId(Integer userId) {
+        this.userId = userId;
+    }
+
+    /**
      * 获取业务id
      *
      * @return business_id - 业务id
@@ -63,24 +81,6 @@ public class OcBusinessTag {
      */
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
-    }
-
-    /**
-     * 获取标签id
-     *
-     * @return tag_id - 标签id
-     */
-    public Integer getTagId() {
-        return tagId;
-    }
-
-    /**
-     * 设置标签id
-     *
-     * @param tagId 标签id
-     */
-    public void setTagId(Integer tagId) {
-        this.tagId = tagId;
     }
 
     /**

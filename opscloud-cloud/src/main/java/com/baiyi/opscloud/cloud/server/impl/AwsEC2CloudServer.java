@@ -8,7 +8,7 @@ import com.baiyi.opscloud.cloud.server.decorator.EC2InstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AwsEC2Instance;
 import com.baiyi.opscloud.cloud.server.util.AwsUtils;
 import com.baiyi.opscloud.common.base.CloudServerType;
-import com.baiyi.opscloud.domain.generator.OcCloudServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 

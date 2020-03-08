@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcAuthGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthGroup;
 import com.baiyi.opscloud.domain.vo.auth.OcGroupVO;
 import com.baiyi.opscloud.domain.vo.auth.OcResourceVO;
 import com.baiyi.opscloud.service.auth.OcAuthGroupService;

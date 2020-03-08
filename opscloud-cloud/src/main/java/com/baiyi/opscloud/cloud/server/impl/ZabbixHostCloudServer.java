@@ -5,7 +5,7 @@ import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.ZabbixHostDecorator;
 import com.baiyi.opscloud.cloud.server.instance.ZabbixHostInstance;
 import com.baiyi.opscloud.common.base.CloudServerType;
-import com.baiyi.opscloud.domain.generator.OcCloudServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.zabbix.config.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostServer;

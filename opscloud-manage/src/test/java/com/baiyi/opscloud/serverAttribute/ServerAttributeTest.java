@@ -5,7 +5,8 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.util.ServerAttributeUtils;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.DumperOptions;
@@ -56,6 +57,14 @@ public class ServerAttributeTest extends BaseUnit {
         AttributeGroup ag = ServerAttributeUtils.convert(s);
         System.err.println(JSON.toJSONString(ag));
 
+    }
+
+    @Test
+    void testGetServerGroupAttribute() {
+        OcServerGroup ocServerGroup = new OcServerGroup();
+        ocServerGroup.setId(1);
+        List<OcServerAttributeVO.ServerAttribute> list = serverAttributeFacade.queryServerGroupAttribute(ocServerGroup);
+        System.err.println(JSON.toJSONString(list));
     }
 
     @Test

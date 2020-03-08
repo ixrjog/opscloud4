@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcUserGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import tk.mybatis.mapper.common.Mapper;
 

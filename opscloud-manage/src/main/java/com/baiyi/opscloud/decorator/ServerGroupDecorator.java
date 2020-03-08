@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcServerGroupType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroupType;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;

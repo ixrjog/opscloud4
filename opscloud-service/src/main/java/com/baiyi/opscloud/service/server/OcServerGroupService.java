@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.server;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 
 import java.util.List;

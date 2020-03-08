@@ -2,7 +2,7 @@ package com.baiyi.opscloud.account;
 
 import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.common.util.UUIDUtils;
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.auth.LogParam;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.OcAuthFacade;

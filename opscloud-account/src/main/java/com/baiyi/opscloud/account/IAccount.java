@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.account;
 
-import com.baiyi.opscloud.domain.generator.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 
 /**
  * @Author baiyi

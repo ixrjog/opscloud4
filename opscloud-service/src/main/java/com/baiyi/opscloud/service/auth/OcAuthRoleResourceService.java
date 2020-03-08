@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.auth;
 
-import com.baiyi.opscloud.domain.generator.OcAuthRoleResource;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRoleResource;
 
 /**
  * @Author baiyi

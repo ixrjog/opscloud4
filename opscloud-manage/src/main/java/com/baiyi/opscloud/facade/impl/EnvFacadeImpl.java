@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcEnv;
+import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
 import com.baiyi.opscloud.facade.EnvFacade;

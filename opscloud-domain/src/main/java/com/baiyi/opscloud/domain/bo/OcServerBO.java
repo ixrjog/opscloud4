@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.bo;
 
-import com.baiyi.opscloud.domain.generator.OcEnv;
-import com.baiyi.opscloud.domain.generator.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import lombok.Builder;
 import lombok.Data;
 

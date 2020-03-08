@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.env;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcEnv;
+import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
 
 /**

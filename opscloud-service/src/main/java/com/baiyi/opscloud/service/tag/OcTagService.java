@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.tag;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcTag;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 
 import java.util.List;

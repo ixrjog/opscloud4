@@ -1,24 +1,23 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "oc_auth_resource")
-public class OcAuthResource {
+@Table(name = "oc_env")
+public class OcEnv {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "group_id")
-    private Integer groupId;
+    @Column(name = "env_name")
+    private String envName;
 
-    @Column(name = "resource_name")
-    private String resourceName;
+    @Column(name = "env_type")
+    private Integer envType;
+
+    private String color;
 
     private String comment;
-
-    @Column(name = "need_auth")
-    private Integer needAuth;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -40,26 +39,46 @@ public class OcAuthResource {
         this.id = id;
     }
 
-    public Integer getGroupId() {
-        return groupId;
-    }
-
-    public void setGroupId(Integer groupId) {
-        this.groupId = groupId;
+    /**
+     * @return env_name
+     */
+    public String getEnvName() {
+        return envName;
     }
 
     /**
-     * @return resource_name
+     * @param envName
      */
-    public String getResourceName() {
-        return resourceName;
+    public void setEnvName(String envName) {
+        this.envName = envName;
     }
 
     /**
-     * @param resourceName
+     * @return env_type
      */
-    public void setResourceName(String resourceName) {
-        this.resourceName = resourceName;
+    public Integer getEnvType() {
+        return envType;
+    }
+
+    /**
+     * @param envType
+     */
+    public void setEnvType(Integer envType) {
+        this.envType = envType;
+    }
+
+    /**
+     * @return color
+     */
+    public String getColor() {
+        return color;
+    }
+
+    /**
+     * @param color
+     */
+    public void setColor(String color) {
+        this.color = color;
     }
 
     /**
@@ -74,20 +93,6 @@ public class OcAuthResource {
      */
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    /**
-     * @return need_auth
-     */
-    public Integer getNeedAuth() {
-        return needAuth;
-    }
-
-    /**
-     * @param needAuth
-     */
-    public void setNeedAuth(Integer needAuth) {
-        this.needAuth = needAuth;
     }
 
     /**

@@ -1,28 +1,17 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_tag")
-public class OcTag {
+@Table(name = "oc_auth_group")
+public class OcAuthGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    /**
-     * 标签Key,全局唯一
-     */
-    @Column(name = "tag_key")
-    private String tagKey;
+    @Column(name = "group_code")
+    private String groupCode;
 
-    /**
-     * 颜色值
-     */
-    private String color;
-
-    /**
-     * 描述
-     */
     private String comment;
 
     @Column(name = "create_time")
@@ -46,54 +35,28 @@ public class OcTag {
     }
 
     /**
-     * 获取标签Key,全局唯一
-     *
-     * @return tag_key - 标签Key,全局唯一
+     * @return group_code
      */
-    public String getTagKey() {
-        return tagKey;
+    public String getGroupCode() {
+        return groupCode;
     }
 
     /**
-     * 设置标签Key,全局唯一
-     *
-     * @param tagKey 标签Key,全局唯一
+     * @param groupCode
      */
-    public void setTagKey(String tagKey) {
-        this.tagKey = tagKey;
+    public void setGroupCode(String groupCode) {
+        this.groupCode = groupCode;
     }
 
     /**
-     * 获取颜色值
-     *
-     * @return color - 颜色值
-     */
-    public String getColor() {
-        return color;
-    }
-
-    /**
-     * 设置颜色值
-     *
-     * @param color 颜色值
-     */
-    public void setColor(String color) {
-        this.color = color;
-    }
-
-    /**
-     * 获取描述
-     *
-     * @return comment - 描述
+     * @return comment
      */
     public String getComment() {
         return comment;
     }
 
     /**
-     * 设置描述
-     *
-     * @param comment 描述
+     * @param comment
      */
     public void setComment(String comment) {
         this.comment = comment;

@@ -2,10 +2,10 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.OcUserApiToken;
-import com.baiyi.opscloud.domain.generator.OcUserCredential;
-import com.baiyi.opscloud.domain.generator.OcUserGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserApiToken;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserCredential;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
