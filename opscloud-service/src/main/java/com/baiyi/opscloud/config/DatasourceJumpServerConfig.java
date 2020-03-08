@@ -24,17 +24,17 @@ import javax.sql.DataSource;
 )
 public class DatasourceJumpServerConfig {
 
-    @Bean
+    @Bean(name="jumpServerSqlSessionTemplate")
     public SqlSessionTemplate jumpServerSqlSessionTemplate(SqlSessionFactory jumpServerDataSourceSqlSessionFactory) throws Exception {
         return new SqlSessionTemplate(jumpServerDataSourceSqlSessionFactory);
     }
 
-    @Bean
+    @Bean(name="jumpServerTransactionManager")
     public DataSourceTransactionManager jumpServerTransactionManager(DataSource jumpServerDataSource) {
         return new DataSourceTransactionManager(jumpServerDataSource);
     }
 
-    @Bean
+    @Bean(name="jumpServerDataSourceSqlSessionFactory")
     public SqlSessionFactory jumpServerDataSourceSqlSessionFactory(DataSource jumpServerDataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(jumpServerDataSource);
@@ -44,13 +44,14 @@ public class DatasourceJumpServerConfig {
         return factoryBean.getObject();
     }
 
-    @Bean
+    @Bean(name="jumpServerDataSourceProperties")
     @ConfigurationProperties("app.datasource.jumpserver")
     public DataSourceProperties jumpServerDataSourceProperties() {
         return new DataSourceProperties();
     }
 
-    @Bean
+
+    @Bean(name="jumpserver")
     @ConfigurationProperties("app.datasource.jumpserver.configuration")
     public DataSource jumpServerDataSource(DataSourceProperties jumpServerDataSourceProperties) {
         return jumpServerDataSourceProperties
