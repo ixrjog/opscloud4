@@ -8,4 +8,15 @@ package com.baiyi.opscloud.common.base;
 public class Global {
 
     public static final String CREATED_BY = "Created by opscloud";
+
+    public static final String SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT = "global_enable_public_ip_mgmt";
+
+    public static final String SERVER_ATTRIBUTE_ANSIBLE_SUBGROUP = "ansible_subgroup";
+
+    public static final String SERVER_ATTRIBUTE_ZABBIX_BIDIRECTIONAL_SYNC = "zabbix_bidirectional_sync";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_PROXY ="zabbix_proxy";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_TEMPLATES ="zabbix_templates";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_SYSDISK_VOLUME_NAME ="zabbix_sysdisk_volume_name";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_DATADISK_VOLUME_NAME ="zabbix_datadisk_volume_name";
+
 }

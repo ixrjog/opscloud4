@@ -9,5 +9,4 @@ public class Luna {
     private String asset;
     private String system_user;
 
-
 }

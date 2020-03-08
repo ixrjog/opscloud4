@@ -221,7 +221,6 @@ public class TimeUtils {
         }
     }
 
-
     /**
      * 将时间戳(秒)转换为时间
      */
@@ -315,6 +314,15 @@ public class TimeUtils {
             return false;
         }
 
+    }
+
+    public static Date gmtToDate(String time) {
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            return format.parse(time);
+        } catch (ParseException e) {
+            return new Date();
+        }
     }
 
     public static Date acqGmtDate(String time) {

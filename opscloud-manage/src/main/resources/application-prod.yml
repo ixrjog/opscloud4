@@ -13,10 +13,11 @@ app:
       password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
       driver-class-name: com.mysql.jdbc.Driver
     jumpserver:
-      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=GMT+8&allowMultiQueries=true
-      username: opscloud
-      password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
-      driver-class-name: com.mysql.jdbc.Driver
+      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      username: jumpserver
+      password: ENC(2+aPVsEyxrSghJXhePHzmo4AY5fG53lp2Ym8apkV6sU=)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
 
 spring:
   profiles:

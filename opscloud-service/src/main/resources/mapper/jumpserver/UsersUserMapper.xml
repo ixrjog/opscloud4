@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.jumpserver.UsersUserMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.jumpserver.UsersUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="last_login" jdbcType="TIMESTAMP" property="lastLogin" />
+    <result column="first_name" jdbcType="VARCHAR" property="firstName" />
+    <result column="last_name" jdbcType="VARCHAR" property="lastName" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="date_joined" jdbcType="TIMESTAMP" property="dateJoined" />
+    <result column="id" jdbcType="CHAR" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="email" jdbcType="VARCHAR" property="email" />
+    <result column="role" jdbcType="VARCHAR" property="role" />
+    <result column="avatar" jdbcType="VARCHAR" property="avatar" />
+    <result column="wechat" jdbcType="VARCHAR" property="wechat" />
+    <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="_private_key" jdbcType="VARCHAR" property="privateKey" />
+    <result column="_public_key" jdbcType="VARCHAR" property="publicKey" />
+    <result column="is_first_login" jdbcType="BIT" property="isFirstLogin" />
+    <result column="date_expired" jdbcType="TIMESTAMP" property="dateExpired" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="otp_level" jdbcType="SMALLINT" property="otpLevel" />
+    <result column="_otp_secret_key" jdbcType="VARCHAR" property="otpSecretKey" />
+    <result column="source" jdbcType="VARCHAR" property="source" />
+    <result column="date_password_last_updated" jdbcType="TIMESTAMP" property="datePasswordLastUpdated" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+</mapper>

@@ -89,11 +89,12 @@
             注意：大小写敏感问题。
          -->
 
-<!--        oc_server_group-->
-<!--        oc_user-->
-<!--        oc_server_group_permission-->
-<!--        oc_cloudserver-->
-        <table tableName="assets_asset">
+
+<!--        assets_asset   资产表(服务器)-->
+<!--        users_user     用户-->
+<!--        users_usergroup  用户组-->
+<!--        users_user_groups  用户-用户组 关系-->
+        <table tableName="users_user_groups">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

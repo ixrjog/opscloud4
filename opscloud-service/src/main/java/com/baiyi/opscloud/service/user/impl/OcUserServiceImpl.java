@@ -8,6 +8,7 @@ import com.baiyi.opscloud.service.user.OcUserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -74,5 +75,12 @@ public class OcUserServiceImpl implements OcUserService {
         return ocUserMapper.queryOcUserByUserGroupId(userGroupId);
     }
 
+    @Override
+    public List<OcUser> queryOcUserActive() {
+        Example example = new Example(OcUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", 1);
+        return ocUserMapper.selectByExample(example);
+    }
 
 }

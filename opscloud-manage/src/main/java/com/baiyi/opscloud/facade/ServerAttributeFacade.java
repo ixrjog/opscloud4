@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.generator.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -16,4 +17,8 @@ public interface ServerAttributeFacade {
     List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(OcServerGroup ocServerGroup);
 
     BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
+
+    Map<String, String> getServerGroupAttributeMap(OcServerGroup ocServerGroup);
+
+   // Map<String, String> getServerAttributeMap(int serverId);
 }

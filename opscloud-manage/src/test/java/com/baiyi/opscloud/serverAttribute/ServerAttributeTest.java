@@ -5,6 +5,8 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.util.ServerAttributeUtils;
+import com.baiyi.opscloud.domain.generator.OcServerGroup;
+import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -12,6 +14,7 @@ import org.yaml.snakeyaml.nodes.Tag;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -22,6 +25,8 @@ public class ServerAttributeTest extends BaseUnit {
 
     @Resource
     private ServerAttributeConfig serverAttributeConfig;
+    @Resource
+    private ServerAttributeFacade serverAttributeFacade;
 
     @Test
     void testAttributeGroups() {
@@ -48,9 +53,17 @@ public class ServerAttributeTest extends BaseUnit {
                 "  value: 'false'\n" +
                 "comment: 全局通用配置\n" +
                 "name: global";
-        AttributeGroup ag =  ServerAttributeUtils.convert(s);
+        AttributeGroup ag = ServerAttributeUtils.convert(s);
         System.err.println(JSON.toJSONString(ag));
 
+    }
+
+    @Test
+    void testGetServerGroupAttributeMap() {
+        OcServerGroup ocServerGroup = new OcServerGroup();
+        ocServerGroup.setId(1);
+        Map<String, String> map = serverAttributeFacade.getServerGroupAttributeMap(ocServerGroup);
+        System.err.println(JSON.toJSONString(map));
     }
 
 }

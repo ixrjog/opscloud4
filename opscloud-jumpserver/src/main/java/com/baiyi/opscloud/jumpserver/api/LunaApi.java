@@ -12,7 +12,6 @@ import java.util.Map;
 
 public class LunaApi extends BaseApi {
 
-
     public LunaApi(String url, String username, String password) {
         super(url, username, password);
     }

@@ -31,5 +31,11 @@ public interface OcUserService {
 
     List<OcUser> queryOcUserByUserGroupId(int userGroupId);
 
+    /**
+     * 查询所有激活的账户
+     * @return
+     */
+    List<OcUser> queryOcUserActive();
+
 
 }
