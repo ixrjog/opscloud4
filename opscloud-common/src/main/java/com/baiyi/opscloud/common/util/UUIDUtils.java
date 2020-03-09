@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.common.util;
 
+import com.google.common.base.Joiner;
+
 import java.util.UUID;
 
 /**
@@ -12,9 +14,10 @@ public class UUIDUtils {
 
     /**
      * 获得一个UUID   不含-
+     *
      * @return String UUID
      */
-    public static String getUUID(){
+    public static String getUUID() {
         String uuid = UUID.randomUUID().toString();
         return uuid.replaceAll("-", "");
     }
@@ -27,7 +30,7 @@ public class UUIDUtils {
      */
     public static String convertUUID(String uuid) {
         if (uuid.length() != 32) return uuid;
-        return uuid.substring(0, 8) + "-" + uuid.substring(8, 12) + "-" + uuid.substring(12, 16) + "-" + uuid.substring(16, 20) + "-" + uuid.substring(20, 32);
+        return Joiner.on("-").join(uuid.substring(0, 8), uuid.substring(8, 12), uuid.substring(12, 16), uuid.substring(16, 20), uuid.substring(20, 32));
     }
 
 }

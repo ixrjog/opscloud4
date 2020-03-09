@@ -191,6 +191,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         if (!wrapper.isSuccess())
             return wrapper;
         try {
+            // TODO
 //            OcUser ocUser = ocUserService.queryOcUserById(userServerGroupPermission.getUserId());
 //            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(userServerGroupPermission.getServerGroupId());
             //IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
@@ -224,7 +225,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
 
     @Override
     public BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
-        return serverAttributeFacade.saveServerGroupAttribute(serverAttribute);
+        return serverAttributeFacade.saveServerAttribute(serverAttribute);
     }
 
 }

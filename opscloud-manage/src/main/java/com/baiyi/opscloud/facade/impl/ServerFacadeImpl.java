@@ -9,7 +9,9 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -41,6 +43,9 @@ public class ServerFacadeImpl implements ServerFacade {
     @Resource
     private OcEnvService ocEnvService;
 
+    @Resource
+    private ServerAttributeFacade serverAttributeFacade;
+
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
@@ -51,6 +56,17 @@ public class ServerFacadeImpl implements ServerFacade {
     public DataTable<OcServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
         return toServerDataTable(table);
+    }
+
+    @Override
+    public List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(int id){
+        OcServer ocServer = ocServerService.queryOcServerById(id);
+        return serverAttributeFacade.queryServerAttribute(ocServer);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
+        return serverAttributeFacade.saveServerAttribute(serverAttribute);
     }
 
     private DataTable<OcServerVO.Server> toServerDataTable(DataTable<OcServer> table) {

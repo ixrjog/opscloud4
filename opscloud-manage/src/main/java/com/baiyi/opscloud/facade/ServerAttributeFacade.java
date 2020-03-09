@@ -17,7 +17,9 @@ public interface ServerAttributeFacade {
 
     List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(OcServerGroup ocServerGroup);
 
-    BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
+    List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(OcServer ocServer);
+
+    BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
 
     Map<String, String> getServerGroupAttributeMap(OcServerGroup ocServerGroup);
 

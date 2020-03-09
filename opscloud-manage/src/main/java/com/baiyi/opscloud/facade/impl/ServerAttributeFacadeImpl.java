@@ -46,13 +46,48 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
 
     @Override
     public List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(OcServerGroup ocServerGroup) {
+        return BeanCopierUtils.copyListProperties(getServerGroupAttribute(ocServerGroup), OcServerAttributeVO.ServerAttribute.class);
+    }
+
+    public List<OcServerAttribute> getServerAttribute(OcServer ocServer) {
+        List<OcServerAttribute> serverAttributeList = Lists.newArrayList();
+        // 服务器组属性
+        List<OcServerAttribute> list = getServerGroupAttribute(getOcServerGroup(ocServer));
+        for (OcServerAttribute serverGroupAttribute : list) {
+            // serverGroup的属性配置
+            AttributeGroup ag = ServerAttributeUtils.convert(serverGroupAttribute.getAttributes());
+
+            OcServerAttribute ocServerAttribute = ServerAttributeBuilder.build(ag.getName(), BusinessType.SERVER.getType(), ocServer.getId());
+            OcServerAttribute preServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(ocServerAttribute);
+            if (preServerAttribute == null) {
+                // 从配置获取
+                serverAttributeList.add(ServerAttributeBuilder.build(ag, ocServer));
+            } else {
+                // db中的配置项
+                try {
+                    AttributeGroup attributeGroup = ServerAttributeUtils.convert(preServerAttribute.getAttributes());
+                    serverAttributeList.add(ServerAttributeBuilder.build(preServerAttribute.getId(), ServerAttributeDecorator.decorator(ag, attributeGroup), ocServer));
+                } catch (Exception e) {
+                    // 数据格式错误，删除数据后生成默认配置项
+                    ocServerAttributeService.deleteOcServerAttributeById(preServerAttribute.getId());
+                    serverAttributeList.add(ServerAttributeBuilder.build(ag, ocServer));
+                }
+            }
+        }
+        return serverAttributeList;
+    }
+
+    private OcServerGroup getOcServerGroup(OcServer ocServer){
+        OcServerGroup ocServerGroup = new OcServerGroup();
+        ocServerGroup.setId(ocServer.getServerGroupId());
+        return ocServerGroup;
+    }
+
+    public List<OcServerAttribute> getServerGroupAttribute(OcServerGroup ocServerGroup) {
         List<OcServerAttribute> serverAttributeList = Lists.newArrayList();
         List<AttributeGroup> attributeGroups = attributeConfig.getGroups();
         for (AttributeGroup ag : attributeGroups) {
-            OcServerAttribute ocServerAttribute = new OcServerAttribute();
-            ocServerAttribute.setBusinessId(ocServerGroup.getId());
-            ocServerAttribute.setBusinessType(BusinessType.SERVERGROUP.getType());
-            ocServerAttribute.setGroupName(ag.getName());
+            OcServerAttribute ocServerAttribute = ServerAttributeBuilder.build(ag.getName(), BusinessType.SERVERGROUP.getType(), ocServerGroup.getId());
             OcServerAttribute preServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(ocServerAttribute);
             if (preServerAttribute == null) {
                 // 从配置获取
@@ -69,11 +104,16 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
                 }
             }
         }
-        return BeanCopierUtils.copyListProperties(serverAttributeList, OcServerAttributeVO.ServerAttribute.class);
+        return serverAttributeList;
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
+    public List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(OcServer ocServer) {
+        return BeanCopierUtils.copyListProperties(getServerAttribute(ocServer), OcServerAttributeVO.ServerAttribute.class);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
         OcServerAttribute preServerAttribute = BeanCopierUtils.copyProperties(serverAttribute, OcServerAttribute.class);
         OcServerAttribute checkServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(preServerAttribute);
         if (checkServerAttribute == null) {
@@ -113,9 +153,9 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     }
 
     @Override
-    public String getManageIp(OcServer ocServer){
+    public String getManageIp(OcServer ocServer) {
         // TODO
-      return "";
+        return "";
     }
 
 }

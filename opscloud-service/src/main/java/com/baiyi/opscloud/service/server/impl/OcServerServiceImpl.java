@@ -33,6 +33,11 @@ public class OcServerServiceImpl implements OcServerService {
     }
 
     @Override
+    public OcServer queryOcServerById(int id){
+        return ocServerMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public int countByServerGroupId(int id) {
         Example example = new Example(OcServer.class);
         Example.Criteria criteria = example.createCriteria();

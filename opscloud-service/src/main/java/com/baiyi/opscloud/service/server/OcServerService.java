@@ -13,6 +13,8 @@ public interface OcServerService {
 
     OcServer queryOcServerByPrivateIp(String privateIp);
 
+    OcServer queryOcServerById(int id);
+
     int countByServerGroupId(int id);
 
     int countByEnvType(int envType);
