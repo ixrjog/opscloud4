@@ -29,8 +29,18 @@ public class UsersUserServiceImpl implements UsersUserService {
     }
 
     @Override
-    public  void addUsersUser(UsersUser usersUser){
+    public void addUsersUser(UsersUser usersUser) {
         usersUserMapper.insert(usersUser);
+    }
+
+    @Override
+    public void updateUsersUser(UsersUser usersUser) {
+        usersUserMapper.updateByPrimaryKey(usersUser);
+    }
+
+    @Override
+    public void delUsersUserById(String id) {
+        usersUserMapper.deleteByPrimaryKey(id);
     }
 
 }

@@ -11,6 +11,7 @@ import com.baiyi.opscloud.common.util.ServerAttributeUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.decorator.ServerAttributeDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
@@ -109,6 +110,12 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
 
     private String getCacheKey(int id) {
         return Joiner.on(":").join("servergroup", "attribute", "server_group_id", id);
+    }
+
+    @Override
+    public String getManageIp(OcServer ocServer){
+        // TODO
+      return "";
     }
 
 }

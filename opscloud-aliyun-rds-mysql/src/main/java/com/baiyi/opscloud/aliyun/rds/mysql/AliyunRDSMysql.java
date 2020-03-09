@@ -47,7 +47,7 @@ public interface AliyunRDSMysql {
      * @param ocCloudDbAccount
      * @return
      */
-    BusinessWrapper<Boolean> reokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount);
+    BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount);
 
     BusinessWrapper<Boolean> deleteAccount(AliyunAccount aliyunAccount, OcCloudDb ocCloudDb,  OcCloudDbAccount ocCloudDbAccount);
 }

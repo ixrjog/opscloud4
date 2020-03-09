@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
 
@@ -21,4 +22,18 @@ public interface ServerFacade {
     BusinessWrapper<Boolean> updateServer(OcServerVO.Server server);
 
     BusinessWrapper<Boolean> deleteServerById(int id);
+
+    /**
+     * 带列号
+     *
+     * @return
+     */
+    String acqServerName(OcServer ocServer);
+
+    /**
+     * 不带列号
+     *
+     * @return
+     */
+    String acqHostname(OcServer ocServer);
 }

@@ -63,6 +63,14 @@ public class OcServerServiceImpl implements OcServerService {
     }
 
     @Override
+    public int countOcServerByServerGroupId(int serverGroupId) {
+        Example example = new Example(OcServer.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverGroupId", serverGroupId);
+        return ocServerMapper.selectCountByExample(example);
+    }
+
+    @Override
     public void addOcServer(OcServer ocServer) {
         ocServerMapper.insert(ocServer);
     }

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -33,4 +34,24 @@ public class UsersUserGroupsServiceImpl implements UsersUserGroupsService {
         usersUserGroupsMapper.insert(usersUserGroups);
     }
 
+    @Override
+    public void delUsersUserGroupsById(int id) {
+        usersUserGroupsMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public List<UsersUserGroups> queryUsersUserGroupsByUserId(String userId){
+        Example example = new Example(UsersUserGroups.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        return usersUserGroupsMapper.selectByExample(example);
+    }
+
+    @Override
+    public void delUsersUserGroupsByUserId(String userId){
+        Example example = new Example(UsersUserGroups.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        usersUserGroupsMapper.deleteByExample(example);
+    }
 }

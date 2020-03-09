@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 
@@ -20,5 +21,7 @@ public interface ServerAttributeFacade {
 
     Map<String, String> getServerGroupAttributeMap(OcServerGroup ocServerGroup);
 
-   // Map<String, String> getServerAttributeMap(int serverId);
+    String getManageIp(OcServer ocServer);
+
+    // Map<String, String> getServerAttributeMap(int serverId);
 }

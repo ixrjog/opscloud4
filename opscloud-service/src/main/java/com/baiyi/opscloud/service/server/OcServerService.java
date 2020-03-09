@@ -21,6 +21,8 @@ public interface OcServerService {
 
     DataTable<OcServer> fuzzyQueryOcServerByParam(ServerParam.PageQuery pageQuery);
 
+    int countOcServerByServerGroupId(int serverGroupId);
+
     void addOcServer(OcServer ocServer);
 
     void updateOcServer(OcServer ocServer);

@@ -6,12 +6,15 @@ import com.baiyi.opscloud.decorator.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
 import com.baiyi.opscloud.facade.ServerFacade;
+import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
+import com.google.common.base.Joiner;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -34,6 +37,9 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Resource
     private OcServerGroupService ocServerGroupService;
+
+    @Resource
+    private OcEnvService ocEnvService;
 
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
@@ -79,4 +85,34 @@ public class ServerFacadeImpl implements ServerFacade {
         return BusinessWrapper.SUCCESS;
     }
 
+
+    /**
+     * 带列号
+     *
+     * @return
+     */
+    @Override
+    public String acqServerName(OcServer ocServer) {
+        OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
+        if(ocEnv == null || ocEnv.getEnvName().equals("prod")) {
+            return Joiner.on("-").join(ocServer.getName(), ocServer.getSerialNumber());
+        }else{
+            return Joiner.on("-").join(ocServer.getName(),ocEnv.getEnvName() , ocServer.getSerialNumber());
+        }
+    }
+
+    /**
+     * 不带列号
+     *
+     * @return
+     */
+    @Override
+    public String acqHostname(OcServer ocServer) {
+        OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
+        if(ocEnv == null || ocEnv.getEnvName().equals("prod")) {
+            return ocServer.getName();
+        }else{
+            return Joiner.on("-").join(ocServer.getName(),ocEnv.getEnvName() );
+        }
+    }
 }

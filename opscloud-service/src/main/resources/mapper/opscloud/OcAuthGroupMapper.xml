@@ -12,7 +12,6 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-
     <select id="queryOcAuthGroupByParam" parameterType="com.baiyi.opscloud.domain.param.auth.GroupParam$PageQuery"
             resultMap="BaseResultMap">
         select * from oc_auth_group

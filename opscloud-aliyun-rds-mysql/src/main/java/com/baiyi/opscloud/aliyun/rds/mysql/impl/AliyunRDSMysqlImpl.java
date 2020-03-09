@@ -122,7 +122,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     }
 
     @Override
-    public BusinessWrapper<Boolean> reokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
+    public BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
         List<DescribeDatabasesResponse.Database> databaseList = getDatabaseList(aliyunAccount, ocCloudDbAccount.getDbInstanceId());
         if (databaseList.isEmpty())
             return BusinessWrapper.SUCCESS;

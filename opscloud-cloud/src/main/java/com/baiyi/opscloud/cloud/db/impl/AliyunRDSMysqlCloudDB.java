@@ -138,9 +138,9 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
     }
 
     @Override
-    public BusinessWrapper<Boolean> reokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
+    public BusinessWrapper<Boolean> revokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
         AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
-        return aliyunRDSMysql.reokeAccountPrivilege(aliyunAccount,ocCloudDbAccount);
+        return aliyunRDSMysql.revokeAccountPrivilege(aliyunAccount,ocCloudDbAccount);
     }
 
 }

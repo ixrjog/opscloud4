@@ -1,0 +1,51 @@
+package com.baiyi.opscloud.service.jumpserver.impl;
+
+import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
+import com.baiyi.opscloud.mapper.jumpserver.AssetsAssetMapper;
+import com.baiyi.opscloud.service.jumpserver.AssetsAssetService;
+import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import javax.annotation.Resource;
+import java.util.List;
+
+/**
+ * @Author baiyi
+ * @Date 2020/3/9 1:29 下午
+ * @Version 1.0
+ */
+@Service
+public class AssetsAssetServiceImpl implements AssetsAssetService {
+
+    @Resource
+    private AssetsAssetMapper assetsAssetMapper;
+
+    @Override
+    public AssetsAsset queryAssetsAssetByIp(String ip) {
+        Example example = new Example(AssetsAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ip", ip);
+        return assetsAssetMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public AssetsAsset queryAssetsAssetByHostname(String hostname) {
+        Example example = new Example(AssetsAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("hostname", hostname);
+        List<AssetsAsset> list = assetsAssetMapper.selectByExample(example);
+        if (list != null && !list.isEmpty())
+            return list.get(0);
+        return null;
+    }
+
+    @Override
+    public void updateAssetsAsset(AssetsAsset assetsAsset) {
+        assetsAssetMapper.updateByPrimaryKey(assetsAsset);
+    }
+
+    @Override
+    public  void addAssetsAsset(AssetsAsset assetsAsset){
+        assetsAssetMapper.insert(assetsAsset);
+    }
+}

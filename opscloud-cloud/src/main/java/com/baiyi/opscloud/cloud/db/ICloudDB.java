@@ -36,7 +36,7 @@ public interface ICloudDB {
      */
     BusinessWrapper<Boolean> createAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount, String privilege);
 
-    BusinessWrapper<Boolean> reokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount);
+    BusinessWrapper<Boolean> revokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount);
 
     BusinessWrapper<Boolean> deleteAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount);
 

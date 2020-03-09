@@ -94,10 +94,21 @@
 <!--        users_user     用户-->
 <!--        users_usergroup  用户组-->
 <!--        users_user_groups  用户-用户组 关系-->
-        <table tableName="users_user_groups">
+<!--        assets_node 树形标签-->
+
+<!--        perms_assetpermission-->
+<!--        assets_asset_nodes-->
+<!--        perms_assetpermission_user_groups-->
+
+<!--        perms_assetpermission_nodes-->
+<!--        perms_assetpermission_system_users-->
+<!--        assets_adminuser-->
+<!--        assets_systemuser-->
+
+<!--        assets_systemuser_assets-->
+        <table tableName="assets_systemuser_assets">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
-
 
 
     </context>

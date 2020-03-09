@@ -11,4 +11,8 @@ public interface UsersUserService {
     UsersUser queryUsersUserByUsername(String username);
 
     void addUsersUser(UsersUser usersUser);
+
+    void updateUsersUser(UsersUser usersUser);
+
+    void delUsersUserById(String id);
 }
