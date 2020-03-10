@@ -19,7 +19,7 @@ public class OcCloudserverBO {
     private String instanceId;
     private String instanceName;
     private String zone;
-    private Integer cloudserverType;
+    private Integer cloudServerType;
     private String privateIp;
     private String publicIp;
     private Integer cpu;

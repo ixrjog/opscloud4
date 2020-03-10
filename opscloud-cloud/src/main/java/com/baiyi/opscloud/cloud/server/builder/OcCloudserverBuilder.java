@@ -45,7 +45,7 @@ public class OcCloudserverBuilder {
                 .comment(instance.getConfigInfoAnnotation())
                 .imageId(instance.getConfigInfoGuestFullName())
                 .instanceType("VirtualMachine")
-                .cloudserverType(CloudServerType.VM.getType())
+                .cloudServerType(CloudServerType.VM.getType())
                 .build();
         try {
             if (instance.getVmSummary() != null) {
@@ -89,7 +89,7 @@ public class OcCloudserverBuilder {
                 .comment(Joiner.on(" ").join(esxiInstance.getHostHardwareInfo().systemInfo.vendor, esxiInstance.getHostHardwareInfo().systemInfo.model))
                 .imageId(esxiInstance.getHostSummary().getConfig().getProduct().getFullName())
                 .instanceType("ESXiHostSystem")
-                .cloudserverType(CloudServerType.ESXI.getType())
+                .cloudServerType(CloudServerType.ESXI.getType())
                 .instanceDetail(esxiInstance.getHostHardwareInfo().systemInfo.uuid)
                 .build();
 
@@ -135,7 +135,7 @@ public class OcCloudserverBuilder {
                 .privateIp(instance.getPrivateIpAddress())
                 .publicIp(instance.getPublicIpAddress())
                 .imageId(instance.getImageId())
-                .cloudserverType(CloudServerType.EC2.getType())
+                .cloudServerType(CloudServerType.EC2.getType())
                 .instanceDetail(instanceDetail)
                 .build();
         return covert(ocCloudserverBO);
@@ -175,7 +175,7 @@ public class OcCloudserverBuilder {
                 .instanceId(instance.getInstanceId())
                 .serverName(instance.getHostName())
                 .instanceDetail(instanceDetail)
-                .cloudserverType(CloudServerType.ECS.getType())
+                .cloudServerType(CloudServerType.ECS.getType())
                 .publicIp(publicIp)
                 .privateIp(privateIp)
                 .cpu(instance.getCpu())
@@ -230,7 +230,7 @@ public class OcCloudserverBuilder {
                 .instanceId(hostInstance.getHost().getHostid())
                 .serverName(hostInstance.getHost().getName())
                 .instanceDetail(hostInstance.getHost().getHostid())
-                .cloudserverType(CloudServerType.ZH.getType())
+                .cloudServerType(CloudServerType.ZH.getType())
                 .privateIp(privateIp)
                 .instanceDetail(instanceDetail)
                 .createdTime(new Date())
