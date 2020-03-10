@@ -21,8 +21,9 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
 + API
-  + Swagger2
+  + knife4j接口文档（ https://doc.xiaominfo.com/knife4j ）
   + example.org/oc3/swagger-ui.html
+  + example.org/oc3/doc.html
 
 + 重要数据加密支持
   + 配置文件加密（密码, AK）
