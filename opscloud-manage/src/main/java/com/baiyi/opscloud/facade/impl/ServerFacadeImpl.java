@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.decorator.ServerDecorator;
@@ -11,6 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.facade.CloudServerFacade;
 import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
@@ -18,6 +20,7 @@ import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -46,6 +49,9 @@ public class ServerFacadeImpl implements ServerFacade {
     @Resource
     private ServerAttributeFacade serverAttributeFacade;
 
+    @Resource
+    private CloudServerFacade cloudServerFacade;
+
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
@@ -59,7 +65,7 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
-    public List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(int id){
+    public List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(int id) {
         OcServer ocServer = ocServerService.queryOcServerById(id);
         return serverAttributeFacade.queryServerAttribute(ocServer);
     }
@@ -77,6 +83,31 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Override
     public BusinessWrapper<Boolean> addServer(OcServerVO.Server server) {
+        if (StringUtils.isEmpty(server.getPrivateIp()))
+            return new BusinessWrapper<>(ErrorEnum.SERVER_PRIVATE_IP_IS_NAME);
+        if (ocServerService.queryOcServerByPrivateIp(server.getPrivateIp()) != null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_PRIVATE_IP_CONFLICT);
+        if (StringUtils.isEmpty(server.getName()) || !RegexUtils.isServerNameRule(server.getName()))
+            return new BusinessWrapper<>(ErrorEnum.SERVER_NAME_NON_COMPLIANCE_WITH_RULES);
+        if (server.getServerGroupId() == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_GROUP_NOT_SELECTED);
+        if (ocServerGroupService.queryOcServerGroupById(server.getServerGroupId()) == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
+        // 校验SN
+        Integer serialNumber = 0;
+        try {
+            serialNumber = Integer.valueOf(server.getSerialNumber());
+        } catch (Exception e) {
+            // 序号错误
+        }
+        if (serialNumber == 0)
+            serialNumber = ocServerService.queryOcServerMaxSerialNumber(server.getServerGroupId());
+        server.setSerialNumber(serialNumber + 1);
+        OcServer ocServer = BeanCopierUtils.copyProperties(server, OcServer.class);
+        ocServerService.addOcServer(ocServer);
+        // 云主机绑定
+        if (server.getCloudServerId() != null && server.getCloudServerId() > 0)
+            cloudServerFacade.updateCloudServerStatus(server.getServerGroupId(), ocServer.getId(), CloudServerStatus.REGISTER.getStatus());
         return BusinessWrapper.SUCCESS;
     }
 
@@ -110,10 +141,10 @@ public class ServerFacadeImpl implements ServerFacade {
     @Override
     public String acqServerName(OcServer ocServer) {
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
-        if(ocEnv == null || ocEnv.getEnvName().equals("prod")) {
+        if (ocEnv == null || ocEnv.getEnvName().equals("prod")) {
             return Joiner.on("-").join(ocServer.getName(), ocServer.getSerialNumber());
-        }else{
-            return Joiner.on("-").join(ocServer.getName(),ocEnv.getEnvName() , ocServer.getSerialNumber());
+        } else {
+            return Joiner.on("-").join(ocServer.getName(), ocEnv.getEnvName(), ocServer.getSerialNumber());
         }
     }
 
@@ -125,10 +156,10 @@ public class ServerFacadeImpl implements ServerFacade {
     @Override
     public String acqHostname(OcServer ocServer) {
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
-        if(ocEnv == null || ocEnv.getEnvName().equals("prod")) {
+        if (ocEnv == null || ocEnv.getEnvName().equals("prod")) {
             return ocServer.getName();
-        }else{
-            return Joiner.on("-").join(ocServer.getName(),ocEnv.getEnvName() );
+        } else {
+            return Joiner.on("-").join(ocServer.getName(), ocEnv.getEnvName());
         }
     }
 }

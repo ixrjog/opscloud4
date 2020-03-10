@@ -18,4 +18,6 @@ public interface CloudServerFacade {
 
     BusinessWrapper<Boolean> syncCloudServerByKey(String key);
 
+    void updateCloudServerStatus(int id, int serverId, int cloudServerStatus);
+
 }

@@ -28,7 +28,7 @@ spring:
 app:
   datasource:
     opscloud:
-      url: jdbc:mysql://rm-bp1x04709pb2t44p4vo.mysql.rds.aliyuncs.com:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=GMT+8&allowMultiQueries=true
+      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=GMT+8&allowMultiQueries=true
       username: opscloud
       password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
       driver-class-name: com.mysql.jdbc.Driver

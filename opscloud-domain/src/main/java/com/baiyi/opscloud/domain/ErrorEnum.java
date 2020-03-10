@@ -56,6 +56,8 @@ public enum ErrorEnum {
     // server
     SERVER_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器名称不合规！"),
     SERVER_GROUP_NOT_SELECTED(12003, "服务器组未选择！"),
+    SERVER_PRIVATE_IP_IS_NAME(12002, "服务器私有Ip不能为空！"),
+    SERVER_PRIVATE_IP_CONFLICT(12002, "服务器私有Ip冲突！"),
 
     // serverGrooup
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),

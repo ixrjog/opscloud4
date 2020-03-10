@@ -33,7 +33,7 @@ public class OcServerServiceImpl implements OcServerService {
     }
 
     @Override
-    public OcServer queryOcServerById(int id){
+    public OcServer queryOcServerById(int id) {
         return ocServerMapper.selectByPrimaryKey(id);
     }
 
@@ -88,6 +88,14 @@ public class OcServerServiceImpl implements OcServerService {
     @Override
     public void deleteOcServerById(int id) {
         ocServerMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public int queryOcServerMaxSerialNumber(int serverGroupId) {
+        OcServer ocServer = ocServerMapper.queryOcServerMaxSerialNumber(serverGroupId);
+        if (ocServer == null)
+            return 0;
+        return ocServer.getSerialNumber();
     }
 
 

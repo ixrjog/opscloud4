@@ -68,6 +68,9 @@ public class OcServerVO {
         @ApiModelProperty(value = "资源描述")
         private String comment;
 
+        @ApiModelProperty(value = "云主机id,云主机录入专用")
+        private Integer cloudServerId;
+
         @ApiModelProperty(value = "创建时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date createTime;

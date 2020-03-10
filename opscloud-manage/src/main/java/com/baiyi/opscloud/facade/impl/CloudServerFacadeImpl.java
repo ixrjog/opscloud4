@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
+import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
@@ -50,5 +51,17 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
         ICloudServer cloudServer = CloudCerverFactory.getCloudServerByKey(key);
         cloudServer.sync();
         return new BusinessWrapper<>(true);
+    }
+
+    @Override
+    public void updateCloudServerStatus(int id, int serverId, int cloudServerStatus) {
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerById(id);
+        if (cloudServerStatus == CloudServerStatus.REGISTER.getStatus()) {
+            ocCloudServer.setServerId(serverId);
+        } else {
+            ocCloudServer.setServerId(0);
+        }
+        ocCloudServer.setServerStatus(cloudServerStatus);
+        ocCloudServerService.updateOcCloudServer(ocCloudServer);
     }
 }

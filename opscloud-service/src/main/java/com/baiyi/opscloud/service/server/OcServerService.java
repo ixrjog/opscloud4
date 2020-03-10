@@ -31,4 +31,6 @@ public interface OcServerService {
 
     void deleteOcServerById(int id);
 
+    int queryOcServerMaxSerialNumber(int serverGroupId);
+
 }
