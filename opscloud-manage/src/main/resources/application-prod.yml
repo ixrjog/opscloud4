@@ -15,9 +15,9 @@ spring:
   profiles:
     include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod
   redis:
-    host: opscloud.redis.test
-    port: 16379
-    password: ENC(BlkW2eBkOqohgQ87JEdD7ciFuAc5X248)
+    host: r-bp1f8fcc3c1a6f84.redis.rds.aliyuncs.com
+    port: 6379
+    password: ENC(9UKYRdhJ4j1RUBbuiJJRwefDjwWmgjvrMI1h+xYZvvA=)
     jedis:
       pool:
         max-wait: 5000

@@ -24,7 +24,7 @@ public class JasyptUtilsTest extends BaseUnit {
      */
     @Test
     void testEncrypt() {
-        System.err.println(stringEncryptor.encrypt("6565aad8ae469d#B"));
+        System.err.println(stringEncryptor.encrypt("738c4f5386d01aa#V"));
     }
 
     /**
