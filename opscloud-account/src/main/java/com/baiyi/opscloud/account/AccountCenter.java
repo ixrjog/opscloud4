@@ -45,7 +45,7 @@ public class AccountCenter {
             OcUser ocUser = ocUserService.queryOcUserByUsername(loginParam.getUsername());
             LogVO.LoginVO loginVO = new LogVO.LoginVO();
             loginVO.setName(ocUser.getDisplayName());
-            loginVO.setUuid(UUIDUtils.getUUID());
+            loginVO.setUuid(ocUser.getUuid());
             loginVO.setToken(token);
             return loginVO;
         } else {

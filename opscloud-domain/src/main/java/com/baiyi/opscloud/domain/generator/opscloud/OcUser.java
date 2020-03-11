@@ -14,6 +14,11 @@ public class OcUser {
      */
     private String username;
 
+    /**
+     * 前端框架用户专用
+     */
+    private String uuid;
+
     private String password;
 
     /**
@@ -97,6 +102,14 @@ public class OcUser {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     /**

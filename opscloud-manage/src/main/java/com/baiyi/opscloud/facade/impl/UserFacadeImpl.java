@@ -7,10 +7,7 @@ import com.baiyi.opscloud.bo.UserGroupBO;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.Ressource;
-import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.common.util.PasswordUtils;
-import com.baiyi.opscloud.common.util.RegexUtils;
-import com.baiyi.opscloud.common.util.SessionUtils;
+import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
 import com.baiyi.opscloud.convert.UserCredentialConvert;
 import com.baiyi.opscloud.decorator.UserDecorator;
@@ -207,14 +204,14 @@ public class UserFacadeImpl implements UserFacade {
             return new BusinessWrapper(ErrorEnum.USER_DISPLAYNAME_IS_NULL);
         if (StringUtils.isEmpty(user.getEmail()))
             return new BusinessWrapper(ErrorEnum.USER_EMAIL_IS_NULL);
-        if (!RegexUtils.isUsernameRule(user.getUsername())) {
+        if (!RegexUtils.isUsernameRule(user.getUsername()))
             return new BusinessWrapper(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
-        }
         if (!RegexUtils.checkPasswordRule(user.getPassword()))
             return new BusinessWrapper<>(ErrorEnum.USER_PASSWORD_NON_COMPLIANCE_WITH_RULES);
         OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
         ocUser.setIsActive(true);
         ocUser.setSource("ldap");
+        ocUser.setUuid(UUIDUtils.getUUID());
         accountCenter.create(AccountCenter.LDAP_ACCOUNT_KEY, ocUser);
         return BusinessWrapper.SUCCESS;
     }

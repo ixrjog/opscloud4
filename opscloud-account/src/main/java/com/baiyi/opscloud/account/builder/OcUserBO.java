@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.account.builder;
 
+import com.baiyi.opscloud.common.util.UUIDUtils;
 import lombok.Builder;
 import lombok.Data;
 
@@ -16,6 +17,8 @@ public class OcUserBO {
 
     private Integer id;
     private String username;
+    @Builder.Default
+    private String uuid = UUIDUtils.getUUID();
     private String password;
     private String name;
     private String displayName;
