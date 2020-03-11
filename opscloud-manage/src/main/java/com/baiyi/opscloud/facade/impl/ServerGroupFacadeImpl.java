@@ -136,6 +136,8 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     private BusinessWrapper<Boolean> saveServerGroupType(OcServerGroupTypeVO.ServerGroupType serverGroupType, boolean action) {
+
+
         OcServerGroupType checkOcServerGroupTypeName = ocServerGroupTypeService.queryOcServerGroupTypeByName(serverGroupType.getName());
         OcServerGroupType ocServerGroupType = BeanCopierUtils.copyProperties(serverGroupType, OcServerGroupType.class);
         // 对象存在 && 新增

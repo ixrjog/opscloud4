@@ -100,9 +100,10 @@ public class ServerFacadeImpl implements ServerFacade {
         } catch (Exception e) {
             // 序号错误
         }
-        if (serialNumber == 0)
+        if (serialNumber == 0) {
             serialNumber = ocServerService.queryOcServerMaxSerialNumber(server.getServerGroupId());
-        server.setSerialNumber(serialNumber + 1);
+            server.setSerialNumber(serialNumber + 1);
+        }
         OcServer ocServer = BeanCopierUtils.copyProperties(server, OcServer.class);
         ocServerService.addOcServer(ocServer);
         // 云主机绑定
@@ -131,7 +132,6 @@ public class ServerFacadeImpl implements ServerFacade {
     public BusinessWrapper<Boolean> deleteServerById(int id) {
         return BusinessWrapper.SUCCESS;
     }
-
 
     /**
      * 带列号
