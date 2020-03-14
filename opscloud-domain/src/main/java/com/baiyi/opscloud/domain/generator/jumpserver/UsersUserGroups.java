@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Table(name = "users_user_groups")
 public class UsersUserGroups {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

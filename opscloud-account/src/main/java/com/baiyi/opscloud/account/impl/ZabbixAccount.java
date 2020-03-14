@@ -78,7 +78,6 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
         return usrgrps;
     }
 
-
     /**
      * 获取用户告警媒介
      *

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.jumpserver.bo;
 
+import com.baiyi.opscloud.common.base.Global;
 import lombok.Builder;
 import lombok.Data;
 
@@ -20,7 +21,7 @@ public class PermsAssetpermissionBO {
     private Boolean isActive = true;
     private Date dateExpired;
     @Builder.Default
-    private String createdBy ="opscloud";
+    private String createdBy = Global.CREATED_BY;
     @Builder.Default
     private Date dateCreated = new Date();
     @Builder.Default
@@ -29,4 +30,6 @@ public class PermsAssetpermissionBO {
     private String orgId = "";
     @Builder.Default
     private String comment = "";
+    @Builder.Default
+    private Integer actions = 255;
 }

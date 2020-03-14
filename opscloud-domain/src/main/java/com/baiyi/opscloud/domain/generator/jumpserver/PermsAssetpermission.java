@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.domain.generator.jumpserver;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "perms_assetpermission")
 public class PermsAssetpermission {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
@@ -29,6 +30,8 @@ public class PermsAssetpermission {
     private String orgId;
 
     private String comment;
+
+    private Integer  actions;
 
     /**
      * @return id
@@ -154,5 +157,13 @@ public class PermsAssetpermission {
      */
     public void setComment(String comment) {
         this.comment = comment;
+    }
+
+    public Integer getActions() {
+        return actions;
+    }
+
+    public void setActions(Integer actions) {
+        this.actions = actions;
     }
 }

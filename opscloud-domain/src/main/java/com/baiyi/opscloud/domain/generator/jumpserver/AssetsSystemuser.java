@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.domain.generator.jumpserver;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "assets_systemuser")
 public class AssetsSystemuser {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
@@ -12,7 +13,7 @@ public class AssetsSystemuser {
 
     private String username;
 
-    @Column(name = "_password")
+    @Column(name = "password")
     private String password;
 
     @Column(name = "date_created")
@@ -39,10 +40,10 @@ public class AssetsSystemuser {
     @Column(name = "org_id")
     private String orgId;
 
-    @Column(name = "_private_key")
+    @Column(name = "private_key")
     private String privateKey;
 
-    @Column(name = "_public_key")
+    @Column(name = "public_key")
     private String publicKey;
 
     private String comment;

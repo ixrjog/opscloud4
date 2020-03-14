@@ -8,7 +8,14 @@ import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAssetNodes;
  * @Version 1.0
  */
 public interface AssetsAssetNodesService {
+
+
     AssetsAssetNodes queryAssetsAssetNodesByUniqueKey(AssetsAssetNodes assetsAssetNodes);
 
+
+    AssetsAssetNodes queryAssetsAssetNodesByAssetId(String assetId);
+
     void addAssetsAssetNodes(AssetsAssetNodes assetsAssetNodes);
+
+    void delAssetsAssetNodes(int id);
 }

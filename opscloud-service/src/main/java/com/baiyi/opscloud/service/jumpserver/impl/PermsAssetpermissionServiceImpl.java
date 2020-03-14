@@ -26,7 +26,7 @@ public class PermsAssetpermissionServiceImpl implements PermsAssetpermissionServ
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", name);
         List<PermsAssetpermission> list = permsAssetpermissionMapper.selectByExample(example);
-        if (list != null)
+        if (list != null && list.size()> 0)
             return list.get(0);
         return null;
     }

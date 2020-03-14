@@ -29,8 +29,21 @@ public class AssetsAssetNodesServiceImpl implements AssetsAssetNodesService {
     }
 
     @Override
+    public AssetsAssetNodes queryAssetsAssetNodesByAssetId(String assetId) {
+        Example example = new Example(AssetsAssetNodes.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("assetId", assetId);
+        return assetsAssetNodesMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void addAssetsAssetNodes(AssetsAssetNodes assetsAssetNodes) {
         assetsAssetNodesMapper.insert(assetsAssetNodes);
+    }
+
+    @Override
+    public void delAssetsAssetNodes(int id) {
+        assetsAssetNodesMapper.deleteByPrimaryKey(id);
     }
 
 }

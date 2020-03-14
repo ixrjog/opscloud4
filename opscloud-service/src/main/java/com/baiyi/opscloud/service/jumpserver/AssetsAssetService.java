@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.jumpserver;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
+import com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam;
 
 /**
  * @Author baiyi
@@ -8,6 +10,8 @@ import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
  * @Version 1.0
  */
 public interface AssetsAssetService {
+
+    DataTable<AssetsAsset> fuzzyQueryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery);
 
     AssetsAsset queryAssetsAssetByIp(String ip);
 

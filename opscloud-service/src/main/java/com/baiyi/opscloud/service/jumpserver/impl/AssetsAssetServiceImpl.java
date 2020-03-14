@@ -1,8 +1,12 @@
 package com.baiyi.opscloud.service.jumpserver.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
+import com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam;
 import com.baiyi.opscloud.mapper.jumpserver.AssetsAssetMapper;
 import com.baiyi.opscloud.service.jumpserver.AssetsAssetService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -29,6 +33,13 @@ public class AssetsAssetServiceImpl implements AssetsAssetService {
     }
 
     @Override
+    public DataTable<AssetsAsset> fuzzyQueryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<AssetsAsset> assetsAssetList = assetsAssetMapper.fuzzyQueryAssetsAssetPage(pageQuery);
+        return new DataTable<>(assetsAssetList, page.getTotal());
+    }
+
+    @Override
     public AssetsAsset queryAssetsAssetByHostname(String hostname) {
         Example example = new Example(AssetsAsset.class);
         Example.Criteria criteria = example.createCriteria();
@@ -45,7 +56,7 @@ public class AssetsAssetServiceImpl implements AssetsAssetService {
     }
 
     @Override
-    public  void addAssetsAsset(AssetsAsset assetsAsset){
+    public void addAssetsAsset(AssetsAsset assetsAsset) {
         assetsAssetMapper.insert(assetsAsset);
     }
 }

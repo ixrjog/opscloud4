@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.account.AccountCenter;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
@@ -10,6 +11,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroupType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
@@ -23,6 +25,7 @@ import com.baiyi.opscloud.service.server.OcServerAttributeService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;
 import com.baiyi.opscloud.service.server.OcServerService;
+import com.baiyi.opscloud.service.user.OcUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -54,6 +57,12 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
 
     @Resource
     private OcServerAttributeService ocServerAttributeService;
+
+    @Resource
+    private AccountCenter accountCenter;
+
+    @Resource
+    private OcUserService ocUserService;
 
     @Resource
     private ServerAttributeFacade serverAttributeFacade;
@@ -193,12 +202,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         if (!wrapper.isSuccess())
             return wrapper;
         try {
-            // TODO
-//            OcUser ocUser = ocUserService.queryOcUserById(userServerGroupPermission.getUserId());
-//            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(userServerGroupPermission.getServerGroupId());
-            //IAccount iAccount = AccountFactory.getAccountByKey(AccountCenter.LDAP_ACCOUNT_KEY);
-//            boolean result = iAccount.grant(ocUser, ocServerGroup.getName());
-//            if (result)
+            OcUser ocUser = ocUserService.queryOcUserById(ocUserPermission.getUserId());
+            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocUserPermission.getBusinessId());
+            accountCenter.grant(ocUser,ocServerGroup.getName());
             return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
@@ -212,7 +218,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         if (!wrapper.isSuccess())
             return wrapper;
         try {
-//
+            OcUser ocUser = ocUserService.queryOcUserById(ocUserPermission.getUserId());
+            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocUserPermission.getBusinessId());
+            accountCenter.revoke(ocUser,ocServerGroup.getName());
             return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }

@@ -23,6 +23,8 @@ public interface ServerAttributeFacade {
 
     Map<String, String> getServerGroupAttributeMap(OcServerGroup ocServerGroup);
 
+    Map<String, String> getServerAttributeMap(OcServer ocServer);
+
     String getManageIp(OcServer ocServer);
 
     // Map<String, String> getServerAttributeMap(int serverId);

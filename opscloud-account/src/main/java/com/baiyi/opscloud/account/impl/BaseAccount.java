@@ -3,11 +3,14 @@ package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
+import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUserCredential;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.user.OcAccountService;
+import com.baiyi.opscloud.service.user.OcUserCredentialService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -39,6 +42,9 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
 
     @Resource
     protected OcServerGroupService ocServerGroupService;
+
+    @Resource
+    protected OcUserCredentialService ocUserCredentialService;
 
     private Boolean saveOcUserListByLdap(List<OcUser> ocUserList) {
         Boolean result = true;
@@ -106,6 +112,14 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
             e.printStackTrace();
         }
         return false;
+    }
+
+    protected OcUserCredential getOcUserSSHPubKey(OcUser ocUser) {
+        List<OcUserCredential> credentials = ocUserCredentialService.queryOcUserCredentialByUserId(ocUser.getId());
+        for (OcUserCredential credential : credentials)
+            if (credential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType())
+                return credential;
+        return null;
     }
 
     /**
@@ -202,11 +216,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @param user
      * @return
      */
+    @Override
     public Boolean pushSSHKey(OcUser user) {
-        return Boolean.TRUE;
-    }
-
-    protected Boolean doPushKey(OcUser user) {
         return Boolean.TRUE;
     }
 
@@ -224,12 +235,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
     protected List<OcServerGroup> queryUserServerGroupPermission(OcUser ocUser) {
         if (ocUser.getId() == null)
             ocUser = ocUserService.queryOcUserByUsername(ocUser.getUsername());
-//        List<OcServerGroupPermission> permissionList = ocServerGroupPermissionService.queryUserServerGroupPermissionByUserId(ocUser.getId());
-//        if (permissionList.isEmpty()) return Collections.emptyList();
-//        return permissionList.stream().map(e -> {
-//            return ocServerGroupService.queryOcServerGroupById(e.getServerGroupId());
-//        }).collect(Collectors.toList());
-        return ocServerGroupService.queryUerPermissionOcServerGroupByUserId(ocUser.getId());
+        return ocServerGroupService.queryUserPermissionOcServerGroupByUserId(ocUser.getId());
     }
 
 

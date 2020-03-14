@@ -19,15 +19,61 @@
     <result column="avatar" jdbcType="VARCHAR" property="avatar" />
     <result column="wechat" jdbcType="VARCHAR" property="wechat" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
-    <result column="_private_key" jdbcType="VARCHAR" property="privateKey" />
-    <result column="_public_key" jdbcType="VARCHAR" property="publicKey" />
     <result column="is_first_login" jdbcType="BIT" property="isFirstLogin" />
     <result column="date_expired" jdbcType="TIMESTAMP" property="dateExpired" />
     <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
-    <result column="otp_level" jdbcType="SMALLINT" property="otpLevel" />
-    <result column="_otp_secret_key" jdbcType="VARCHAR" property="otpSecretKey" />
+    <result column="mfa_level" jdbcType="SMALLINT" property="mfaLevel" />
+    <result column="otp_secret_key" jdbcType="VARCHAR" property="otpSecretKey" />
     <result column="source" jdbcType="VARCHAR" property="source" />
     <result column="date_password_last_updated" jdbcType="TIMESTAMP" property="datePasswordLastUpdated" />
+    <result column="private_key" jdbcType="LONGVARCHAR" property="privateKey" />
+    <result column="public_key" jdbcType="LONGVARCHAR" property="publicKey" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
+
+  <select id="fuzzyQueryUsersUserPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.user.UsersUserPageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from users_user
+    <where>
+      <if test="queryName != null and queryName != ''">
+        username like "%" #{queryName} "%"
+        or name like "%" #{queryName} "%"
+        or comment like "%" #{queryName} "%"
+        or email like "%" #{queryName} "%"
+        or phone like "%" #{queryName} "%"
+        or wechat like "%" #{queryName} "%"
+        or role like "%" #{queryName} "%"
+      </if>
+      <if test="isActive != null and isActive != -1">
+        and is_active = #{isActive}
+      </if>
+        and role != "App"
+    </where>
+  </select>
+
+  <select id="fuzzyQueryAdminUsersUserPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.user.UsersUserPageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from users_user
+    <where>
+      <if test="queryName != null and queryName != ''">
+        username like "%" #{queryName} "%"
+        or name like "%" #{queryName} "%"
+        or comment like "%" #{queryName} "%"
+        or email like "%" #{queryName} "%"
+        or phone like "%" #{queryName} "%"
+        or wechat like "%" #{queryName} "%"
+      </if>
+      <choose>
+        <when test="isAdmin = 1">
+          and role = 'Admin'
+        </when>
+        <otherwise>
+          and role = 'User'
+        </otherwise>
+      </choose>
+        and is_active = 1
+    </where>
+  </select>
+
+
 </mapper>

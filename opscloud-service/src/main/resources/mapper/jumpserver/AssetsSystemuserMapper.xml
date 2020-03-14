@@ -8,7 +8,7 @@
     <result column="id" jdbcType="CHAR" property="id" />
     <result column="name" jdbcType="VARCHAR" property="name" />
     <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="_password" jdbcType="VARCHAR" property="password" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
     <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
     <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated" />
     <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
@@ -18,8 +18,8 @@
     <result column="shell" jdbcType="VARCHAR" property="shell" />
     <result column="login_mode" jdbcType="VARCHAR" property="loginMode" />
     <result column="org_id" jdbcType="VARCHAR" property="orgId" />
-    <result column="_private_key" jdbcType="LONGVARCHAR" property="privateKey" />
-    <result column="_public_key" jdbcType="LONGVARCHAR" property="publicKey" />
+    <result column="private_key" jdbcType="LONGVARCHAR" property="privateKey" />
+    <result column="public_key" jdbcType="LONGVARCHAR" property="publicKey" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="sudo" jdbcType="LONGVARCHAR" property="sudo" />
   </resultMap>

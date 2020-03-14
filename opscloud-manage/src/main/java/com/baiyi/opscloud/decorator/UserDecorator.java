@@ -56,7 +56,7 @@ public class UserDecorator {
             List<OcUserGroup> userGroupList = ocUserGroupService.queryOcUserGroupByUserId(user.getId());
             user.setUserGroups(BeanCopierUtils.copyListProperties(userGroupList, OcUserGroupVO.UserGroup.class));
             // 装饰 服务器组
-            List<OcServerGroup> serverGroupList = ocServerGroupService.queryUerPermissionOcServerGroupByUserId(user.getId());
+            List<OcServerGroup> serverGroupList = ocServerGroupService.queryUserPermissionOcServerGroupByUserId(user.getId());
             user.setServerGroups(BeanCopierUtils.copyListProperties(serverGroupList, OcServerGroupVO.ServerGroup.class));
             // 装饰 ApiToken
             List<OcUserApiToken> userApiTokens = ocUserApiTokenService.queryOcUserApiTokenByUsername(user.getUsername());

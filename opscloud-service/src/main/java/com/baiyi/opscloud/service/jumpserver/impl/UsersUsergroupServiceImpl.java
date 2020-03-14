@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,6 +27,18 @@ public class UsersUsergroupServiceImpl implements UsersUsergroupService {
         criteria.andEqualTo("name", name);
         return usersUsergroupMapper.selectOneByExample(example);
     }
+
+    /**
+     * 查询用户的用户组
+     *
+     * @param username
+     * @return
+     */
+    @Override
+    public List<UsersUsergroup> queryUsersUsergroupByUsername(String username) {
+       return usersUsergroupMapper.queryUsersUsergroupByUsername(username);
+    }
+
 
     @Override
     public void addUsersUsergroup(UsersUsergroup usersUsergroup) {

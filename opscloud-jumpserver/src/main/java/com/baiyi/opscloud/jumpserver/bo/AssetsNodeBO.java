@@ -17,9 +17,11 @@ public class AssetsNodeBO {
     private String id;
     private String key;
     private String value;
-    private Integer childMark;
+    @Builder.Default
+    private Integer childMark = 0;
     @Builder.Default
     private Date dateCreate = new Date();
-    private String orgId;
+    @Builder.Default
+    private String orgId ="";
 
 }

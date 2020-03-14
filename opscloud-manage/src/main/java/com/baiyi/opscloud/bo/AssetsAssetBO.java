@@ -50,5 +50,9 @@ public class AssetsAssetBO {
     private Integer cpuVcpus;
     @Builder.Default
     private String comment = "";
+    @Builder.Default
+    private String protocols ="ssh/22";
+    @Builder.Default
+    private Integer platformId = 1;
 
 }

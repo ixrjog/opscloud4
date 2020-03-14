@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.jumpserver;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode;
+import com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam;
 
 /**
  * @Author baiyi
@@ -8,6 +10,8 @@ import com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode;
  * @Version 1.0
  */
 public interface AssetsNodeService {
+
+    DataTable<AssetsNode> queryAssetsNodePage(AssetsNodePageParam.PageQuery pageQuery);
 
     AssetsNode queryAssetsNodeByValue(String value);
 

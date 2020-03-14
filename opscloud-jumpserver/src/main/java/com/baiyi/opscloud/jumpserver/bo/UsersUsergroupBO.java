@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.jumpserver.bo;
 
+import com.baiyi.opscloud.common.base.Global;
 import lombok.Builder;
 import lombok.Data;
 
@@ -17,7 +18,9 @@ public class UsersUsergroupBO {
     private String name;
     @Builder.Default
     private Date dateCreated = new Date();
-    private String createdBy;
-    private String orgId;
+    @Builder.Default
+    private String createdBy = Global.CREATED_BY;
+    @Builder.Default
+    private String orgId = "";
     private String comment;
 }

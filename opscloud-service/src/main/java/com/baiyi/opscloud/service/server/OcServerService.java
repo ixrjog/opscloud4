@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/1/10 1:25 下午
@@ -12,6 +14,8 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 public interface OcServerService {
 
     OcServer queryOcServerByPrivateIp(String privateIp);
+
+    List<OcServer> queryOcServerByServerGroupId(int serverGroupId);
 
     OcServer queryOcServerById(int id);
 

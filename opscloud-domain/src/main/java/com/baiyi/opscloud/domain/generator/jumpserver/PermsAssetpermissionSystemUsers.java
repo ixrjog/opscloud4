@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Table(name = "perms_assetpermission_system_users")
 public class PermsAssetpermissionSystemUsers {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

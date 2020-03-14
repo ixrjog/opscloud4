@@ -6,11 +6,11 @@
       WARNING - @mbg.generated
     -->
     <result column="id" jdbcType="CHAR" property="id" />
-    <result column="ip" jdbcType="CHAR" property="ip" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
     <result column="hostname" jdbcType="VARCHAR" property="hostname" />
     <result column="port" jdbcType="INTEGER" property="port" />
     <result column="is_active" jdbcType="BIT" property="isActive" />
-    <result column="public_ip" jdbcType="CHAR" property="publicIp" />
+    <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
     <result column="number" jdbcType="VARCHAR" property="number" />
     <result column="vendor" jdbcType="VARCHAR" property="vendor" />
     <result column="model" jdbcType="VARCHAR" property="model" />
@@ -21,7 +21,6 @@
     <result column="memory" jdbcType="VARCHAR" property="memory" />
     <result column="disk_total" jdbcType="VARCHAR" property="diskTotal" />
     <result column="disk_info" jdbcType="VARCHAR" property="diskInfo" />
-    <result column="platform" jdbcType="VARCHAR" property="platform" />
     <result column="os" jdbcType="VARCHAR" property="os" />
     <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
     <result column="os_arch" jdbcType="VARCHAR" property="osArch" />
@@ -33,6 +32,32 @@
     <result column="protocol" jdbcType="VARCHAR" property="protocol" />
     <result column="org_id" jdbcType="VARCHAR" property="orgId" />
     <result column="cpu_vcpus" jdbcType="INTEGER" property="cpuVcpus" />
+    <result column="protocols" jdbcType="VARCHAR" property="protocols" />
+    <result column="platform_id" jdbcType="INTEGER" property="platformId" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
+
+  <select id="fuzzyQueryAssetsAssetPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select a0.* from assets_asset a0
+    <if test="assetsNodeId != null and assetsNodeId != ''">
+        join assets_asset_nodes a1 on a0.id = a1.asset_id
+    </if>
+    <where>
+      <if test="assetsNodeId != null and assetsNodeId != ''">
+        a1.node_id = #{assetsNodeId}
+      </if>
+      <if test="queryName != null and queryName != ''">
+        and a0.ip like "%" #{queryName} "%"
+        or a0.hostname like "%" #{queryName} "%"
+        or a0.public_ip like "%" #{queryName} "%"
+        or a0.os like "%" #{queryName} "%"
+        or a0.os_version like "%" #{queryName} "%"
+      </if>
+      <if test="isActive != null and isActive != -1">
+        and a0.is_active = #{isActive}
+      </if>
+    </where>
+  </select>
+
 </mapper>

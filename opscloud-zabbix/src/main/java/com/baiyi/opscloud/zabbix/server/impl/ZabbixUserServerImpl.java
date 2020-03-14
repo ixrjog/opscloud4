@@ -12,6 +12,7 @@ import com.baiyi.opscloud.zabbix.http.ZabbixRequestParamsIds;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixIdsMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixUserMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixUsergroupMapper;
+import com.baiyi.opscloud.zabbix.server.ZabbixHostgroupServer;
 import com.baiyi.opscloud.zabbix.server.ZabbixUserServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
@@ -34,6 +35,10 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
 
     @Resource
     private ZabbixHandler zabbixHandler;
+
+
+    @Resource
+    private ZabbixHostgroupServer zabbixHostgroupServer;
 
     @Override
     public ZabbixUser getUser(String username) {
@@ -86,7 +91,7 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
     }
 
     @Override
-    public Boolean updateUser(ZabbixUser user,List<ZabbixUserMedia> mediaList,List<Map<String, String>> usrgrps) {
+    public Boolean updateUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps) {
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("user.update")
                 .paramEntry("userid", user.getUserid())
@@ -111,7 +116,7 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
         if (user == null) return Boolean.TRUE;
         // 数组形参数 https://www.zabbix.com/documentation/2.2/manual/api/reference/user/delete
         String[] userids = new String[]{user.getUserid()};
-        ZabbixRequestParamsIds request =new ZabbixRequestParamsIds();
+        ZabbixRequestParamsIds request = new ZabbixRequestParamsIds();
         request.setMethod("user.delete");
         request.setId(1);
         request.setParams(userids);
@@ -127,7 +132,6 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
         return Boolean.FALSE;
     }
 
-
     @Override
     public ZabbixUsergroup getUsergroup(String usergroup) {
         Map<String, String> filter = Maps.newHashMap();
@@ -141,9 +145,10 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixUsergroupMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
         } catch (Exception e) {
-            e.printStackTrace();
+            // 未取到用户组则创建  users_zookeeper  group_zookeeper
+            ZabbixHostgroup zabbixHostgroup = zabbixHostgroupServer.createHostgroup(usergroup);
+            return createUsergroup(usergroup, zabbixHostgroup);
         }
-        return null;
     }
 
     @Override
@@ -179,8 +184,6 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
         }
         return null;
     }
-
-
 
 
 }

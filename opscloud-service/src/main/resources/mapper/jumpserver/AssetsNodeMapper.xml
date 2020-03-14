@@ -19,4 +19,14 @@
        limit 1
   </select>
 
+  <select id="queryAssetsAssetPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from assets_node
+    <where>
+      <if test="value != null and value != ''">
+        value like "%" #{value} "%"
+      </if>
+    </where>
+  </select>
+
 </mapper>

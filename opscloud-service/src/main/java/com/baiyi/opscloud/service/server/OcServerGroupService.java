@@ -33,7 +33,7 @@ public interface OcServerGroupService {
      * @param userId
      * @return
      */
-    List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId);
+    List<OcServerGroup> queryUserPermissionOcServerGroupByUserId(int userId);
 
     DataTable<OcServerGroup> queryUserIncludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
 

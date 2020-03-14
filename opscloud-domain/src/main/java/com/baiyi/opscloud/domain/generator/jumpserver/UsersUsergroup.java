@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.domain.generator.jumpserver;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "users_usergroup")
 public class UsersUsergroup {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 

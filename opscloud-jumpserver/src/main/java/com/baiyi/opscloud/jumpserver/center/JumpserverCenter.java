@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.jumpserver.center;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -26,7 +27,7 @@ public interface JumpserverCenter {
      * @param ocUser
      * @return
      */
-    UsersUser createUsersUser(OcUser ocUser);
+    UsersUser saveUsersUser(OcUser ocUser);
 
     AssetsNode createAssetsNode(OcServerGroup ocServerGroup);
 
@@ -36,7 +37,7 @@ public interface JumpserverCenter {
      * @param ocServerGroup
      * @return
      */
-    UsersUsergroup createUsersUsergroup(OcServerGroup ocServerGroup);
+    UsersUsergroup saveUsersUsergroup(OcServerGroup ocServerGroup);
 
     /**
      * 创建授权策略
@@ -60,7 +61,9 @@ public interface JumpserverCenter {
 
     void bindAvssetsSystemuserAssets(String assetId);
 
-    void revoke(OcUser ocUser, OcServerGroup ocServerGroup);
+    Boolean grant(OcUser ocUser, String resource);
+
+    Boolean revoke(OcUser ocUser, String resource);
 
     boolean activeUsersUser(String username, boolean active);
 
@@ -68,6 +71,8 @@ public interface JumpserverCenter {
 
     boolean updateUsersUser(OcUser ocUser);
 
-    boolean pushKey(OcUser ocUser, OcUserCredentialVO.UserCredential  credential );
+    boolean pushKey(OcUser ocUser, OcUserCredentialVO.UserCredential credential);
+
+    BusinessWrapper<Boolean> setUserActive(String id);
 
 }

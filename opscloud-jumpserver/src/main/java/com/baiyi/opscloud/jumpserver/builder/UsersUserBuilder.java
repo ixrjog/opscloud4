@@ -3,8 +3,8 @@ package com.baiyi.opscloud.jumpserver.builder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.jumpserver.bo.UsersUserBO;
 import com.baiyi.opscloud.jumpserver.center.impl.JumpserverCenterImpl;
 
@@ -15,14 +15,13 @@ import com.baiyi.opscloud.jumpserver.center.impl.JumpserverCenterImpl;
  */
 public class UsersUserBuilder {
 
-    public static UsersUser build(OcUser ocUser){
+    public static UsersUser build(OcUser ocUser) {
         UsersUserBO usersUserBO = UsersUserBO.builder()
                 .username(ocUser.getUsername())
                 .name(ocUser.getDisplayName())
                 .email(ocUser.getEmail())
-                .phone(ocUser.getPhone())
-                .wechat(ocUser.getWechat())
-                .firstName(ocUser.getName())
+                .phone(ocUser.getPhone()== null ? "" : ocUser.getPhone())
+                .wechat(ocUser.getWechat() == null ? "" : ocUser.getWechat())
                 .id(UUIDUtils.getUUID())
                 .dateExpired(TimeUtils.gmtToDate(JumpserverCenterImpl.DATE_EXPIRED))
                 .build();

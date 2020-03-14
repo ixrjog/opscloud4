@@ -67,7 +67,7 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     }
 
     @Override
-    public List<OcServerGroup> queryUerPermissionOcServerGroupByUserId(int userId){
+    public List<OcServerGroup> queryUserPermissionOcServerGroupByUserId(int userId){
         return ocServerGroupMapper.queryUerPermissionOcServerGroupByUserId(userId);
     }
 

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.builder.ServerAttributeBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.config.serverAttribute.ServerAttribute;
@@ -21,6 +22,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -77,7 +79,7 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
         return serverAttributeList;
     }
 
-    private OcServerGroup getOcServerGroup(OcServer ocServer){
+    private OcServerGroup getOcServerGroup(OcServer ocServer) {
         OcServerGroup ocServerGroup = new OcServerGroup();
         ocServerGroup.setId(ocServer.getServerGroupId());
         return ocServerGroup;
@@ -127,7 +129,7 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
 
     @Override
     public Map<String, String> getServerGroupAttributeMap(OcServerGroup ocServerGroup) {
-        String key = getCacheKey(ocServerGroup.getId());
+        String key = getServerGroupCacheKey(ocServerGroup.getId());
         Map<String, String> serverGroupAttributeMap = (Map<String, String>) redisUtil.get(key);
         if (serverGroupAttributeMap != null && !serverGroupAttributeMap.isEmpty())
             return serverGroupAttributeMap;
@@ -142,20 +144,50 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
         return serverGroupAttributeMap;
     }
 
+    @Override
+    public Map<String, String> getServerAttributeMap(OcServer ocServer) {
+        String key = getServerCacheKey(ocServer.getId());
+        Map<String, String> serverAttributeMap = (Map<String, String>) redisUtil.get(key);
+        if (serverAttributeMap != null && !serverAttributeMap.isEmpty())
+            return serverAttributeMap;
+        serverAttributeMap = Maps.newHashMap();
+        List<OcServerAttributeVO.ServerAttribute> list = queryServerAttribute(ocServer);
+        for (OcServerAttributeVO.ServerAttribute sa : list) {
+            AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
+            serverAttributeMap.putAll(toServerAttributeMap(attributeGroup.getAttributes()));
+        }
+        redisUtil.set(key, serverAttributeMap, TimeUtils.dayTime * 7);
+        return serverAttributeMap;
+    }
+
+
     private Map<String, String> toServerAttributeMap(List<ServerAttribute> list) {
         if (list == null || list.isEmpty())
             return Maps.newHashMap();
         return list.stream().collect(Collectors.toMap(ServerAttribute::getName, ServerAttribute::getValue, (k1, k2) -> k1));
     }
 
-    private String getCacheKey(int id) {
+    private String getServerGroupCacheKey(int id) {
         return Joiner.on(":").join("servergroup", "attribute", "server_group_id", id);
+    }
+
+    private String getServerCacheKey(int id) {
+        return Joiner.on(":").join("server", "attribute", "server_id", id);
     }
 
     @Override
     public String getManageIp(OcServer ocServer) {
-        // TODO
-        return "";
+        Map<String, String> map = getServerAttributeMap(ocServer);
+        if(map == null)
+            return ocServer.getPrivateIp();
+        if(!map.containsKey(Global.SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT))
+            return ocServer.getPrivateIp();
+        String value =  map.get(Global.SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT);
+        if(value.equalsIgnoreCase("true")){
+           if(!StringUtils.isEmpty(ocServer.getPublicIp()))
+               return ocServer.getPublicIp();
+        }
+        return ocServer.getPrivateIp();
     }
 
 }

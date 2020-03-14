@@ -11,12 +11,14 @@ public interface IAccount {
 
     /**
      * 同步账户
+     *
      * @return
      */
     Boolean sync();
 
     /**
      * 创建账户
+     *
      * @param user
      * @return
      */
@@ -26,6 +28,7 @@ public interface IAccount {
 
     /**
      * 是否激活
+     *
      * @param user
      * @param active
      * @return
@@ -40,6 +43,7 @@ public interface IAccount {
 
     /**
      * 授权
+     *
      * @param user
      * @param resource
      * @return
@@ -48,10 +52,19 @@ public interface IAccount {
 
     /**
      * 撤销授权
+     *
      * @param user
      * @param resource
      * @return
      */
     Boolean revoke(OcUser user, String resource);
+
+    /**
+     * 推送用户公钥 PubKey
+     *
+     * @param user
+     * @return
+     */
+    Boolean pushSSHKey(OcUser user);
 
 }

@@ -1,9 +1,6 @@
 package com.baiyi.opscloud.domain.generator.jumpserver;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Table(name = "users_user")
@@ -25,6 +22,7 @@ public class UsersUser {
     @Column(name = "date_joined")
     private Date dateJoined;
 
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
@@ -42,12 +40,6 @@ public class UsersUser {
 
     private String phone;
 
-    @Column(name = "_private_key")
-    private String privateKey;
-
-    @Column(name = "_public_key")
-    private String publicKey;
-
     @Column(name = "is_first_login")
     private Boolean isFirstLogin;
 
@@ -57,16 +49,22 @@ public class UsersUser {
     @Column(name = "created_by")
     private String createdBy;
 
-    @Column(name = "otp_level")
-    private Short otpLevel;
+    @Column(name = "mfa_level")
+    private Short mfaLevel;
 
-    @Column(name = "_otp_secret_key")
+    @Column(name = "otp_secret_key")
     private String otpSecretKey;
 
     private String source;
 
     @Column(name = "date_password_last_updated")
     private Date datePasswordLastUpdated;
+
+    @Column(name = "private_key")
+    private String privateKey;
+
+    @Column(name = "public_key")
+    private String publicKey;
 
     private String comment;
 
@@ -267,34 +265,6 @@ public class UsersUser {
     }
 
     /**
-     * @return _private_key
-     */
-    public String getPrivateKey() {
-        return privateKey;
-    }
-
-    /**
-     * @param privateKey
-     */
-    public void setPrivateKey(String privateKey) {
-        this.privateKey = privateKey;
-    }
-
-    /**
-     * @return _public_key
-     */
-    public String getPublicKey() {
-        return publicKey;
-    }
-
-    /**
-     * @param publicKey
-     */
-    public void setPublicKey(String publicKey) {
-        this.publicKey = publicKey;
-    }
-
-    /**
      * @return is_first_login
      */
     public Boolean getIsFirstLogin() {
@@ -337,21 +307,21 @@ public class UsersUser {
     }
 
     /**
-     * @return otp_level
+     * @return mfa_level
      */
-    public Short getOtpLevel() {
-        return otpLevel;
+    public Short getMfaLevel() {
+        return mfaLevel;
     }
 
     /**
-     * @param otpLevel
+     * @param mfaLevel
      */
-    public void setOtpLevel(Short otpLevel) {
-        this.otpLevel = otpLevel;
+    public void setMfaLevel(Short mfaLevel) {
+        this.mfaLevel = mfaLevel;
     }
 
     /**
-     * @return _otp_secret_key
+     * @return otp_secret_key
      */
     public String getOtpSecretKey() {
         return otpSecretKey;
@@ -390,6 +360,34 @@ public class UsersUser {
      */
     public void setDatePasswordLastUpdated(Date datePasswordLastUpdated) {
         this.datePasswordLastUpdated = datePasswordLastUpdated;
+    }
+
+    /**
+     * @return private_key
+     */
+    public String getPrivateKey() {
+        return privateKey;
+    }
+
+    /**
+     * @param privateKey
+     */
+    public void setPrivateKey(String privateKey) {
+        this.privateKey = privateKey;
+    }
+
+    /**
+     * @return public_key
+     */
+    public String getPublicKey() {
+        return publicKey;
+    }
+
+    /**
+     * @param publicKey
+     */
+    public void setPublicKey(String publicKey) {
+        this.publicKey = publicKey;
     }
 
     /**

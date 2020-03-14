@@ -15,4 +15,9 @@ public class ZabbixUtils {
     public static String convertUsergrpName(String serverGroupName) {
         return serverGroupName.replace("group_", "users_");
     }
+
+
+    public static String convertHostgroupName(String usergrpName) {
+        return usergrpName.replace( "users_","group_");
+    }
 }

@@ -1,15 +1,18 @@
 package com.baiyi.opscloud.domain.generator.jumpserver;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "assets_node")
 public class AssetsNode {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
+    @Column(name = "`key`")
     private String key;
 
+    @Column(name = "`value`")
     private String value;
 
     @Column(name = "child_mark")

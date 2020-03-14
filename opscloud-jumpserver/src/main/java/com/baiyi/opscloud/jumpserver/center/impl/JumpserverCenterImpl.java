@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.jumpserver.center.impl;
 
+import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -23,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -69,6 +73,9 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     @Resource
     private AssetsSystemuserAssetsService assetsSystemuserAssetsService;
 
+    @Resource
+    private RedisUtil redisUtil;
+
     public static final String DATE_EXPIRED = "2089-01-01 00:00:00";
 
     @Override
@@ -77,23 +84,25 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         String usergroupName = JumpserverUtils.toUsergroupName(ocServerGroup.getName());
         UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(usergroupName);
         if (usersUsergroup == null)
-            usersUsergroup = createUsersUsergroup(ocServerGroup);
+            usersUsergroup = saveUsersUsergroup(ocServerGroup);
         bindUserGroups(usersUser, usersUsergroup);
     }
 
     private void bindUserGroups(UsersUser usersUser, UsersUsergroup usersUsergroup) {
-        // UsersUserGroups usersUserGroups = new UsersUserGroupsDO(usersUserDO.getId(), usersUsergroupDO.getId());
         UsersUserGroups pre = new UsersUserGroups();
         pre.setUserId(usersUser.getId());
         pre.setUsergroupId(usersUsergroup.getId());
         UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
         if (usersUserGroups == null)
-            usersUserGroupsService.addUsersUserGroups(usersUserGroups);
+            usersUserGroupsService.addUsersUserGroups(pre);
     }
 
     @Override
-    public UsersUsergroup createUsersUsergroup(OcServerGroup ocServerGroup) {
+    public UsersUsergroup saveUsersUsergroup(OcServerGroup ocServerGroup) {
         String usergroupName = JumpserverUtils.toUsergroupName(ocServerGroup.getName());
+        UsersUsergroup check = usersUsergroupService.queryUsersUsergroupByName(usergroupName);
+        if (check != null)
+            return check;
         return createUsersUsergroup(usergroupName, ocServerGroup.getComment());
     }
 
@@ -107,7 +116,9 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         try {
             usersUsergroupService.addUsersUsergroup(usersUsergroup);
         } catch (Exception e) {
+            e.printStackTrace();
             log.error("Jumpserver addUsersUsergroup Error {} !", name);
+            return null;
         }
         return usersUsergroup;
     }
@@ -119,12 +130,25 @@ public class JumpserverCenterImpl implements JumpserverCenter {
      * @return
      */
     @Override
-    public UsersUser createUsersUser(OcUser ocUser) {
-        UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser == null) {
-            usersUser = UsersUserBuilder.build(ocUser);
-            usersUserService.addUsersUser(usersUser);
+    public UsersUser saveUsersUser(OcUser ocUser) {
+        if (StringUtils.isEmpty(ocUser.getEmail()))
+            return null;
+        UsersUser checkUsersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
+        UsersUser checkUserEmail = usersUserService.queryUsersUserByEmail(ocUser.getEmail());
+        UsersUser usersUser = null;
+        if (checkUsersUser == null) {
+            if (checkUserEmail == null) {
+                usersUser = UsersUserBuilder.build(ocUser);
+                usersUserService.addUsersUser(usersUser);
+            }
+        } else {
+            if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
+                usersUser = UsersUserBuilder.build(ocUser);
+                usersUser.setId(checkUsersUser.getId());
+                usersUserService.updateUsersUser(usersUser);
+            }
         }
+
         return usersUser;
     }
 
@@ -172,7 +196,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         PermsAssetpermission permsAssetpermission = permsAssetpermissionService.queryPermsAssetpermissionByName(name);
         if (permsAssetpermission == null) {
             // 新增授权策略
-            PermsAssetpermissionBuilder.build(name);
+            permsAssetpermission = PermsAssetpermissionBuilder.build(name);
             permsAssetpermissionService.addPermsAssetpermission(permsAssetpermission);
         }
         // 绑定系统账户
@@ -202,10 +226,17 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             permsAssetpermissionSystemUsersService.addPermsAssetpermissionSystemUsers(pre);
     }
 
-
+    /**
+     * 查询系统账户
+     * @return
+     */
     private String getSystemuserId() {
-        // TODO return cacheKeyService.getKeyByString(this.getClass(), "SystemuserId");
-        return null;
+        Map<String, String> settingsMap = (Map<String, String>) redisUtil.get(Global.JUMPSERVER_SETTINGS_KEY);
+        if (settingsMap != null) {
+            if (settingsMap.containsKey(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY))
+                return settingsMap.get(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY);
+        }
+        return "";
     }
 
     /**
@@ -276,10 +307,14 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         AssetsAssetNodes pre = new AssetsAssetNodes();
         pre.setAssetId(assetsAsset.getId());
         pre.setNodeId(assetsNode.getId());
-
-        AssetsAssetNodes assetsAssetNodes = assetsAssetNodesService.queryAssetsAssetNodesByUniqueKey(pre);
-        if (assetsAsset == null)
+        AssetsAssetNodes assetsAssetNodes = assetsAssetNodesService.queryAssetsAssetNodesByAssetId(assetsAsset.getId());
+        if (assetsAssetNodes != null) {
+            if (assetsAssetNodes.getNodeId().equals(assetsNode.getId()))
+                return;
+            assetsAssetNodesService.delAssetsAssetNodes(assetsAssetNodes.getId());
+        } else {
             assetsAssetNodesService.addAssetsAssetNodes(pre);
+        }
     }
 
     /**
@@ -298,19 +333,37 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     }
 
     @Override
-    public void revoke(OcUser ocUser, OcServerGroup ocServerGroup) {
+    public Boolean grant(OcUser ocUser, String resource) {
+        UsersUser usersUser = saveUsersUser(ocUser);
+        //UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
+        if (usersUser == null) return Boolean.FALSE;
+        String name = JumpserverUtils.toUsergroupName(resource);
+        UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
+        if (usersUsergroup == null) return Boolean.FALSE;
+        UsersUserGroups pre = new UsersUserGroups();
+        pre.setUsergroupId(usersUsergroup.getId());
+        pre.setUserId(usersUser.getId());
+        UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
+        if (usersUserGroups == null)
+            usersUserGroupsService.addUsersUserGroups(pre);
+        return Boolean.TRUE;
+    }
+
+    @Override
+    public Boolean revoke(OcUser ocUser, String resource) {
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser == null) return;
-        String name = JumpserverUtils.toUsergroupName(ocServerGroup.getName());
+        if (usersUser == null) return Boolean.TRUE;
+        String name = JumpserverUtils.toUsergroupName(resource);
 
         UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
-        if (usersUsergroup == null) return;
+        if (usersUsergroup == null) return Boolean.TRUE;
         UsersUserGroups pre = new UsersUserGroups();
         pre.setUsergroupId(usersUsergroup.getId());
         pre.setUserId(usersUser.getId());
         UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
         if (usersUserGroups != null)
             usersUserGroupsService.delUsersUserGroupsById(usersUserGroups.getId());
+        return Boolean.TRUE;
     }
 
 
@@ -354,8 +407,8 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     }
 
     @Override
-    public boolean pushKey(OcUser ocUser, OcUserCredentialVO.UserCredential  credential) {
-        UsersUser usersUser = createUsersUser(ocUser);
+    public boolean pushKey(OcUser ocUser, OcUserCredentialVO.UserCredential credential) {
+        UsersUser usersUser = saveUsersUser(ocUser);
         if (usersUser == null)
             return false;
         try {
@@ -370,7 +423,16 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             e.printStackTrace();
         }
         return false;
+    }
 
+    @Override
+    public BusinessWrapper<Boolean> setUserActive(String id) {
+        UsersUser usersUser = usersUserService.queryUsersUserById(id);
+        if (usersUser == null)
+            return new BusinessWrapper(false);
+        usersUser.setIsActive(!usersUser.getIsActive());
+        usersUserService.updateUsersUser(usersUser);
+        return BusinessWrapper.SUCCESS;
     }
 
 }

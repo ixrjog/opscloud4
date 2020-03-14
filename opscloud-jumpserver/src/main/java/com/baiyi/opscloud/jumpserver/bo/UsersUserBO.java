@@ -17,7 +17,8 @@ public class UsersUserBO {
     @Builder.Default
     private String password = "";
     private Date lastLogin;
-    private String firstName;
+    @Builder.Default
+    private String firstName = "";
     @Builder.Default
     private String lastName = "";
     @Builder.Default
@@ -26,7 +27,8 @@ public class UsersUserBO {
     private Date dateJoined = new Date();
     private String id;
     private String username;
-    private String name;
+    @Builder.Default
+    private String name ="";
     private String email;
     @Builder.Default
     private String role = "User";
@@ -44,8 +46,9 @@ public class UsersUserBO {
     @Builder.Default
     private String createdBy = "opscloud";
     @Builder.Default
-    private Short otpLevel = 0;
+    private Short mfaLevel = 0;
     private String otpSecretKey;
+
     @Builder.Default
     private String source = "ldap";
     @Builder.Default

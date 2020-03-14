@@ -25,9 +25,9 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + example.org/oc3/swagger-ui.html
   + example.org/oc3/doc.html
 
-+ 重要数据加密支持
-  + 配置文件加密（密码, AK）
-  + 数据库密码字段加密
++ 平台特性
+  + RBAC,LDAP(完全托管)
+  + 配置文件加密（密码, AK），数据库敏感字段加密
 
 + 自动化运维特性
   + 外部平台或工具原生API调用

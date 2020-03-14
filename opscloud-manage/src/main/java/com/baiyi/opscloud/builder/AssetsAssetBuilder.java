@@ -17,6 +17,7 @@ public class AssetsAssetBuilder {
         AssetsAssetBO assetsAssetBO = AssetsAssetBO.builder()
                 .id(UUIDUtils.getUUID())
                 .ip(ip)
+                .publicIp(ocServer.getPublicIp() != null ? ocServer.getPublicIp() : "")
                 .adminUserId(adminUserId)
                 .hostname(hostname)
                 .comment(ocServer.getComment())

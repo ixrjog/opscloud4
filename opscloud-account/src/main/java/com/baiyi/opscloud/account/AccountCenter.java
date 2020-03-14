@@ -68,10 +68,46 @@ public class AccountCenter {
                 if (!account.create(user))
                     return Boolean.FALSE;
             }
-
         }
         return Boolean.TRUE;
     }
+
+    /**
+     * 授权
+     *
+     * @param user
+     * @param resource
+     * @return
+     */
+    public Boolean grant(OcUser user, String resource) {
+        Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+        for (String key : accountContainer.keySet()) {
+            if (key.equals(LDAP_ACCOUNT_KEY)) continue;
+            IAccount account = accountContainer.get(key);
+            if (!account.grant(user, resource))
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+    /**
+     * 撤销授权
+     *
+     * @param user
+     * @param resource
+     * @return
+     */
+    public Boolean revoke(OcUser user, String resource) {
+        Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+        for (String key : accountContainer.keySet()) {
+            if (key.equals(LDAP_ACCOUNT_KEY)) continue;
+            IAccount account = accountContainer.get(key);
+            if (!account.revoke(user, resource))
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
 
     public Boolean update(String key, OcUser user) {
         IAccount account = AccountFactory.getAccountByKey(key);
@@ -92,6 +128,20 @@ public class AccountCenter {
                 if (key.equals(LDAP_ACCOUNT_KEY)) continue;
                 IAccount account = accountContainer.get(key);
                 if (!account.update(user))
+                    return Boolean.FALSE;
+            }
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean pushSSHKey(OcUser user) {
+        Boolean result = update(LDAP_ACCOUNT_KEY, user);
+        if (result) {
+            Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+            for (String key : accountContainer.keySet()) {
+                if (key.equals(LDAP_ACCOUNT_KEY)) continue;
+                IAccount account = accountContainer.get(key);
+                if (!account.pushSSHKey(user))
                     return Boolean.FALSE;
             }
         }

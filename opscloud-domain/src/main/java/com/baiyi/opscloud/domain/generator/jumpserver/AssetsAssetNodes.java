@@ -4,6 +4,7 @@ import javax.persistence.*;
 
 @Table(name = "assets_asset_nodes")
 public class AssetsAssetNodes {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 

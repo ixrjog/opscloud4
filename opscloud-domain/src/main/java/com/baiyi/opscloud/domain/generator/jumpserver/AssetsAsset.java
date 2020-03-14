@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.domain.generator.jumpserver;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "assets_asset")
 public class AssetsAsset {
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private String id;
 
@@ -45,8 +46,6 @@ public class AssetsAsset {
     @Column(name = "disk_info")
     private String diskInfo;
 
-    private String platform;
-
     private String os;
 
     @Column(name = "os_version")
@@ -77,6 +76,11 @@ public class AssetsAsset {
 
     @Column(name = "cpu_vcpus")
     private Integer cpuVcpus;
+
+    private String protocols;
+
+    @Column(name = "platform_id")
+    private Integer platformId;
 
     private String comment;
 
@@ -305,20 +309,6 @@ public class AssetsAsset {
     }
 
     /**
-     * @return platform
-     */
-    public String getPlatform() {
-        return platform;
-    }
-
-    /**
-     * @param platform
-     */
-    public void setPlatform(String platform) {
-        this.platform = platform;
-    }
-
-    /**
      * @return os
      */
     public String getOs() {
@@ -470,6 +460,34 @@ public class AssetsAsset {
      */
     public void setCpuVcpus(Integer cpuVcpus) {
         this.cpuVcpus = cpuVcpus;
+    }
+
+    /**
+     * @return protocols
+     */
+    public String getProtocols() {
+        return protocols;
+    }
+
+    /**
+     * @param protocols
+     */
+    public void setProtocols(String protocols) {
+        this.protocols = protocols;
+    }
+
+    /**
+     * @return platform_id
+     */
+    public Integer getPlatformId() {
+        return platformId;
+    }
+
+    /**
+     * @param platformId
+     */
+    public void setPlatformId(Integer platformId) {
+        this.platformId = platformId;
     }
 
     /**

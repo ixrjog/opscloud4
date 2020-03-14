@@ -106,7 +106,9 @@
 <!--        assets_systemuser-->
 
 <!--        assets_systemuser_assets-->
-        <table tableName="assets_systemuser_assets">
+<!--        assets_asset-->
+<!--        terminal-->
+        <table tableName="terminal_session">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 
