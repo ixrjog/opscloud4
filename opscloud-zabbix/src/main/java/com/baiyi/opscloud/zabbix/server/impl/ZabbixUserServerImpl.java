@@ -154,8 +154,8 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
     @Override
     public ZabbixUsergroup createUsergroup(String usergroupName, ZabbixHostgroup zabbixHostgroup) {
         // 创建用户组
-        ZabbixUsergroup zabbixUsergroup = getUsergroup(usergroupName);
-        if (zabbixUsergroup != null) return zabbixUsergroup;
+//        ZabbixUsergroup zabbixUsergroup = getUsergroup(usergroupName);
+//        if (zabbixUsergroup != null) return zabbixUsergroup;
         Map<String, String> rights = Maps.newHashMap();
         /**
          * Possible values:
@@ -174,7 +174,7 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
             JsonNode jsonNode = zabbixHandler.api(request);
             String usrgrpid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("usrgrpids")).get(0);
             if (!StringUtils.isEmpty(usrgrpid)) {
-                zabbixUsergroup = new ZabbixUsergroup();
+                ZabbixUsergroup   zabbixUsergroup = new ZabbixUsergroup();
                 zabbixUsergroup.setUsrgrpid(usrgrpid);
                 zabbixUsergroup.setName(usergroupName);
                 return zabbixUsergroup;

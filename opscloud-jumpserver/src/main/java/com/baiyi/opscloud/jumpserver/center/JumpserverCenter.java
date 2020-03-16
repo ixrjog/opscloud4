@@ -69,6 +69,8 @@ public interface JumpserverCenter {
 
     boolean delUsersUser(String username);
 
+    UsersUser createUsersUser(OcUser ocUser);
+
     boolean updateUsersUser(OcUser ocUser);
 
     boolean pushKey(OcUser ocUser, OcUserCredentialVO.UserCredential credential);

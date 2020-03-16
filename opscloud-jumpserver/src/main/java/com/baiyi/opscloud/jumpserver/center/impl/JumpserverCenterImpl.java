@@ -130,6 +130,16 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         return usersUsergroup;
     }
 
+    @Override
+    public UsersUser createUsersUser(OcUser ocUser) {
+        if (StringUtils.isEmpty(ocUser.getEmail()))
+            return null;
+        UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
+        if (usersUser != null)
+            return usersUser;
+        return saveUsersUser(ocUser);
+    }
+
     /**
      * 创建Jumpserver用户
      *
@@ -155,7 +165,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
                 usersUserService.updateUsersUser(usersUser);
             }
         }
-
         return usersUser;
     }
 
@@ -342,7 +351,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
 
     @Override
     public Boolean grant(OcUser ocUser, String resource) {
-        UsersUser usersUser = saveUsersUser(ocUser);
+        UsersUser usersUser = createUsersUser(ocUser);
         //UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
         if (usersUser == null) return Boolean.FALSE;
         String name = JumpserverUtils.toUsergroupName(resource);
@@ -468,7 +477,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     public BusinessWrapper<Boolean> revokeAdmin(String usersUserId) {
         // 变更用户角色为Admin
         UsersUser usersUser = usersUserService.queryUsersUserById(usersUserId);
-        if(usersUser.getUsername().equals("admin"))
+        if (usersUser.getUsername().equals("admin"))
             return new BusinessWrapper<>(ErrorEnum.JUMPSERVER_ADMINISTRATOR_AUTHORIZATION_CANNOT_BE_REVOKED);
         usersUser.setRole("User");
         usersUserService.updateUsersUser(usersUser);
