@@ -14,10 +14,10 @@ import org.springframework.stereotype.Component;
 @ConfigurationProperties(prefix = "jumpserver", ignoreInvalidFields = true)
 public class JumpserverConfig {
 
-    private String version = "1.0";
+    private String version = "1.5.6";
     private String url;
-    private String user;
-    private String password;
+//    private String user;
+//    private String password;
     private String coco;
 
 }

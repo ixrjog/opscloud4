@@ -25,7 +25,7 @@ public class AssetsNodeServiceImpl implements AssetsNodeService {
     private AssetsNodeMapper assetsNodeMapper;
 
     @Override
-    public  DataTable<AssetsNode> queryAssetsNodePage(AssetsNodePageParam.PageQuery pageQuery){
+    public DataTable<AssetsNode> queryAssetsNodePage(AssetsNodePageParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<AssetsNode> assetsNodeList = assetsNodeMapper.queryAssetsAssetPage(pageQuery);
         return new DataTable<>(assetsNodeList, page.getTotal());
@@ -39,7 +39,7 @@ public class AssetsNodeServiceImpl implements AssetsNodeService {
         //criteria.andEqualTo("orgId", "");
         List<AssetsNode> list = assetsNodeMapper.selectByExample(example);
         //return assetsNodeMapper.selectOneByExample(example);
-        if(list != null && list.size() >0)
+        if (list != null && list.size() > 0)
             return list.get(0);
         return null;
     }
@@ -60,5 +60,10 @@ public class AssetsNodeServiceImpl implements AssetsNodeService {
     @Override
     public void addAssetsNode(AssetsNode assetsNode) {
         assetsNodeMapper.insert(assetsNode);
+    }
+
+    @Override
+    public AssetsNode queryAssetsNodeRoot() {
+        return assetsNodeMapper.queryAssetsNodeRoot();
     }
 }

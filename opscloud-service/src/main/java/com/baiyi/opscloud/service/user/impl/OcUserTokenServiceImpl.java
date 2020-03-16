@@ -44,7 +44,7 @@ public class OcUserTokenServiceImpl implements OcUserTokenService {
     }
 
     @Override
-    public void updateOcUserTokenInvalid(OcUserToken ocUserToken){
+    public void updateOcUserTokenInvalid(OcUserToken ocUserToken) {
         ocUserToken.setValid(false);
         ocUserTokenMapper.updateByPrimaryKey(ocUserToken);
     }
@@ -52,6 +52,11 @@ public class OcUserTokenServiceImpl implements OcUserTokenService {
     @Override
     public int checkUserHasResourceAuthorize(String token, String resourceName) {
         return ocUserTokenMapper.checkUserHasResourceAuthorize(token, resourceName);
+    }
+
+    @Override
+    public int checkUserHasRole(String token, String roleName) {
+        return ocUserTokenMapper.checkUserHasRole(token, roleName);
     }
 
 

@@ -14,4 +14,6 @@ public interface OcUserTokenMapper extends Mapper<OcUserToken> {
      */
     int checkUserHasResourceAuthorize(@Param("token") String token, @Param("resourceName") String resourceName);
 
+    int checkUserHasRole(@Param("token") String token, @Param("roleName") String roleName);
+
 }

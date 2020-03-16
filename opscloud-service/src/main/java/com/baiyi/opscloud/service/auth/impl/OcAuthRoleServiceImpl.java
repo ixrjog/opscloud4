@@ -8,6 +8,7 @@ import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -48,6 +49,14 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
     @Override
     public OcAuthRole queryOcAuthRoleById(int id) {
         return ocAuthRoleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public OcAuthRole queryOcAuthRoleByName(String roleName) {
+        Example example = new Example(OcAuthRole.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleName", roleName);
+        return ocAuthRoleMapper.selectOneByExample(example);
     }
 
 }

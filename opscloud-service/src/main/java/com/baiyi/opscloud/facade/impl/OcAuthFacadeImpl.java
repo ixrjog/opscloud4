@@ -3,11 +3,11 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.OcAuthResource;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUserApiToken;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUserToken;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.OcAuthFacade;
 import com.baiyi.opscloud.service.auth.OcAuthResourceService;
+import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
+import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserTokenService;
 import org.springframework.stereotype.Component;
@@ -24,6 +24,8 @@ import java.util.List;
 @Component
 public class OcAuthFacadeImpl implements OcAuthFacade {
 
+    public static final String SUPER_ADMIN = "super_admin";
+
     @Resource
     private OcAuthResourceService ocAuthResourceService;
 
@@ -32,6 +34,12 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
 
     @Resource
     private OcUserApiTokenService ocUserApiTokenService;
+
+    @Resource
+    private OcAuthRoleService ocAuthRoleService;
+
+    @Resource
+    private OcAuthRoleResourceService ocAuthRoleResourceService;
 
     @Override
     public BusinessWrapper<Boolean> checkUserHasResourceAuthorize(String token, String resourceName) {
@@ -54,10 +62,27 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         // 校验用户是否可以访问资源路径
         int nums = ocUserTokenService.checkUserHasResourceAuthorize(token, resourceName);
         if (nums == 0) {
-            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
-        } else {
-            return new BusinessWrapper<>(true);
+            if (ocUserTokenService.checkUserHasRole(token, SUPER_ADMIN) == 0) {
+                return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+            } else {
+                // 授权资源到角色
+                grantSuperAdminResource(resourceName);
+            }
         }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    private void grantSuperAdminResource(String resourceName) {
+        OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceByName(resourceName);
+        if (ocAuthResource == null) return;
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleByName(resourceName);
+        if (ocAuthRole == null) return;
+
+        OcAuthRoleResource ocAuthRoleResource = new OcAuthRoleResource();
+        ocAuthRoleResource.setResourceId(ocAuthResource.getId());
+        ocAuthRoleResource.setRoleId(ocAuthRole.getId());
+
+        ocAuthRoleResourceService.addOcAuthRoleResource(ocAuthRoleResource);
     }
 
     public BusinessWrapper<Boolean> checkUserApiHasResourceAuthorize(String token, String resourceName, BusinessWrapper<Boolean> wrapper) {
@@ -69,7 +94,7 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
             ocUserApiTokenService.updateOcUserApiToken(ocUserApiToken);
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_TOKEN_INVALID);
         }
-        int nums =  ocUserApiTokenService.checkUserHasResourceAuthorize(token, resourceName);
+        int nums = ocUserApiTokenService.checkUserHasResourceAuthorize(token, resourceName);
         if (nums == 0) {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_FAILUER);
         } else {

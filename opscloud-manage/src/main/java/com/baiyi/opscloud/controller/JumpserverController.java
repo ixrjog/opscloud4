@@ -2,11 +2,13 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.user.UsersUserPageParam;
 import com.baiyi.opscloud.domain.vo.jumpserver.*;
 import com.baiyi.opscloud.facade.JumpserverFacade;
+import com.baiyi.opscloud.jumpserver.facade.TerminalSessionFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -28,6 +30,9 @@ public class JumpserverController {
 
     @Resource
     private JumpserverFacade jumpserverFacade;
+
+    @Resource
+    private TerminalSessionFacade terminalSessionFacade;
 
     @ApiOperation(value = "分页查询jumpserver用户列表")
     @PostMapping(value = "/user/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -87,5 +92,23 @@ public class JumpserverController {
     @GetMapping(value = "/terminal/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<JumpserverTerminalVO.Terminal>> queryTerminal() {
         return new HttpResult<>(jumpserverFacade.queryTerminal());
+    }
+
+    @ApiOperation(value = "管理员授权")
+    @GetMapping(value = "/user/admin/auth", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> authAdmin(@RequestParam String id) {
+        return new HttpResult<>(jumpserverFacade.authAdmin(id));
+    }
+
+    @ApiOperation(value = "撤销管理员授权")
+    @GetMapping(value = "/user/admin/revoke", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> revokeAdmin(@RequestParam String id) {
+        return new HttpResult<>(jumpserverFacade.revokeAdmin(id));
+    }
+
+    @ApiOperation(value = "分页查询jumpserver活动会话")
+    @PostMapping(value = "/terminal/session/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<JumpserverTerminalSessionVO.TerminalSession>> queryTerminalSessionPage(@RequestBody @Valid PageParam pageQuery) {
+        return new HttpResult<>(terminalSessionFacade.queryTerminalSessionPage(pageQuery));
     }
 }

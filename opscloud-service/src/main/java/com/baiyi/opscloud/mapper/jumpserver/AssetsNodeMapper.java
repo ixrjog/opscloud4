@@ -11,4 +11,6 @@ public interface AssetsNodeMapper extends Mapper<AssetsNode> {
     AssetsNode queryAssetsNodeLastOne();
 
     List<AssetsNode> queryAssetsAssetPage(AssetsNodePageParam.PageQuery pageQuery);
+
+    AssetsNode  queryAssetsNodeRoot();
 }

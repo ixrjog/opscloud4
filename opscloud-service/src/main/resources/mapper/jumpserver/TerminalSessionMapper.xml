@@ -22,5 +22,13 @@
     <result column="asset_id" jdbcType="VARCHAR" property="assetId" />
     <result column="system_user_id" jdbcType="VARCHAR" property="systemUserId" />
     <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="terminal_name" jdbcType="VARCHAR" property="terminalName" />
   </resultMap>
+
+  <select id="queryTerminalSessionPage" resultMap="BaseResultMap"  parameterType="com.baiyi.opscloud.domain.param.PageParam">
+       select a0.* ,a1.name as terminal_name from terminal_session a0
+       join terminal a1 on a0.terminal_id = a1.id
+       where a0.is_finished = 0
+  </select>
+
 </mapper>

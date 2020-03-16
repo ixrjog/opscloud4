@@ -1,7 +1,6 @@
 # version : API版本目前支持 1.5.6
+# url填写jumpserver站点地址
 jumpserver:
   version: 1.5.6
   url: https://jump.ops.yangege.cn
-  user: admin
-  password: ENC(2T288IOnjOa3Gf57yOrTseBiqveyiNw3vBqWlGJaC0Q=)
   coco: oc.ops.yangege.cn

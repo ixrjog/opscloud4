@@ -30,7 +30,9 @@ public class JumpserverTest extends BaseUnit {
 
     @Test
     void test2(){
-        jumpserverAPI.getToken();
-
+        // jumpserverAPI.pushKey();
+      // System.err.println(jumpserverAPI.getToken());
     }
+
+
 }

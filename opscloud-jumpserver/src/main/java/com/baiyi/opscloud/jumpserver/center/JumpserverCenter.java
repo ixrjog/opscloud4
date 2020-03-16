@@ -75,4 +75,8 @@ public interface JumpserverCenter {
 
     BusinessWrapper<Boolean> setUserActive(String id);
 
+    BusinessWrapper<Boolean> authAdmin(String usersUserId);
+
+    BusinessWrapper<Boolean> revokeAdmin(String usersUserId);
+
 }

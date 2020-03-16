@@ -20,4 +20,10 @@ public interface AssetsNodeService {
     AssetsNode queryAssetsNodeByKey(String key);
 
     void addAssetsNode(AssetsNode assetsNode);
+
+    /**
+     * 查询根节点
+     * @return
+     */
+    AssetsNode queryAssetsNodeRoot();
 }

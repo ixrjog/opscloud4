@@ -69,6 +69,8 @@ public interface JumpserverFacade {
 
     List<JumpserverTerminalVO.Terminal> queryTerminal();
 
+    BusinessWrapper<Boolean> authAdmin(String usersUserId);
 
+    BusinessWrapper<Boolean> revokeAdmin(String usersUserId);
 
 }

@@ -100,10 +100,7 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     // 过期时间
     //public final String DATE_EXPIRED = "2089-01-01 00:00:00";
 
-    // 管理员用户组 绑定 根节点
-    public final String USERGROUP_ADMINISTRATORS = "usergroup_administrators";
-    // 管理员授权
-    public final String PERMS_ADMINISTRATORS = "perms_administrators";
+
 
     @Override
     public BusinessWrapper<Boolean> syncUsers() {
@@ -293,7 +290,6 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
 
     @Override
     public boolean pushKey(OcUserVO.User user) {
-        //OcUserCredential sshKeyCredential = ocUserService.queryOcUserByUsername(ocUser.getUsername());
         OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
         String key = CredentialType.SSH_PUB_KEY.getName();
         if (!user.getCredentialMap().containsKey(key))
@@ -358,6 +354,15 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
                 jumpserverTerminalDecorator.decorator(BeanCopierUtils.copyProperties(e, JumpserverTerminalVO.Terminal.class))).collect(Collectors.toList());
     }
 
+    @Override
+    public  BusinessWrapper<Boolean> authAdmin(String usersUserId){
+        return jumpserverCenter.authAdmin(usersUserId);
+    }
+
+    @Override
+    public   BusinessWrapper<Boolean> revokeAdmin(String usersUserId){
+        return jumpserverCenter.revokeAdmin(usersUserId);
+    }
 
     private String getAdminuserId() {
         JumpserverSettingsVO.Settings settings = querySettings();

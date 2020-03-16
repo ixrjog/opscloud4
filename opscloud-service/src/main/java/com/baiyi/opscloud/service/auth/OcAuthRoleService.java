@@ -20,4 +20,6 @@ public interface OcAuthRoleService {
     void deleteOcAuthRoleById(int id);
 
     OcAuthRole queryOcAuthRoleById(int id);
+
+    OcAuthRole queryOcAuthRoleByName(String roleName);
 }

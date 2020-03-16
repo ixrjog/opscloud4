@@ -42,4 +42,12 @@ public interface OcUserTokenService {
      * @return
      */
     int checkUserHasResourceAuthorize(String token, String resourceName);
+
+    /**
+     * 判断用户是否为 角色
+     * @param token
+     * @param roleName
+     * @return
+     */
+    int checkUserHasRole(String token, String roleName);
 }

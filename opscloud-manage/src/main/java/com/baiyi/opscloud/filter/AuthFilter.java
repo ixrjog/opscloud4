@@ -23,7 +23,9 @@ public class AuthFilter extends OncePerRequestFilter {
     @Resource
     private OcAuthFacade authFacade;
 
-    // vue x-token
+    /**
+     * 前端框架 token 名称
+     */
     public static final String TOKEN = "x-token";
 
     private static final String[] AUTH_WHITELIST = {

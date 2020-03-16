@@ -29,4 +29,9 @@
     </where>
   </select>
 
+  <select id="queryAssetsNodeRoot" resultMap="BaseResultMap">
+    select * from assets_node
+    where `key` = '1' limit 1
+   </select>
+
 </mapper>

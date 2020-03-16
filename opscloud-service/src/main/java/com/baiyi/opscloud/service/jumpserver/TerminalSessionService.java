@@ -1,5 +1,9 @@
 package com.baiyi.opscloud.service.jumpserver;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.jumpserver.TerminalSession;
+import com.baiyi.opscloud.domain.param.PageParam;
+
 /**
  * @Author baiyi
  * @Date 2020/3/13 6:08 下午
@@ -13,4 +17,6 @@ public interface TerminalSessionService {
      * @return
      */
     int countTerminalSession(String terminalId);
+
+    DataTable<TerminalSession> queryTerminalSessionPage(PageParam pageQuery);
 }

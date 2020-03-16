@@ -5,18 +5,18 @@ import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
+import com.baiyi.opscloud.jumpserver.api.JumpserverAPI;
 import com.baiyi.opscloud.jumpserver.bo.UsersUsergroupBO;
 import com.baiyi.opscloud.jumpserver.builder.AssetsNodeBuilder;
 import com.baiyi.opscloud.jumpserver.builder.PermsAssetpermissionBuilder;
 import com.baiyi.opscloud.jumpserver.builder.UsersUserBuilder;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.jumpserver.config.JumpserverConfig;
-import com.baiyi.opscloud.jumpserver.model.User;
-import com.baiyi.opscloud.jumpserver.service.JmsUsersService;
 import com.baiyi.opscloud.jumpserver.util.JumpserverUtils;
 import com.baiyi.opscloud.service.jumpserver.*;
 import com.google.common.base.Joiner;
@@ -76,7 +76,14 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     @Resource
     private RedisUtil redisUtil;
 
+    @Resource
+    private JumpserverAPI jumpserverAPI;
+
     public static final String DATE_EXPIRED = "2089-01-01 00:00:00";
+    // 管理员用户组 绑定 根节点
+    public final String USERGROUP_ADMINISTRATORS = "usergroup_administrators";
+    // 管理员授权
+    public final String PERMS_ADMINISTRATORS = "perms_administrators";
 
     @Override
     public void bindUserGroups(UsersUser usersUser, OcServerGroup ocServerGroup) {
@@ -228,6 +235,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
 
     /**
      * 查询系统账户
+     *
      * @return
      */
     private String getSystemuserId() {
@@ -411,18 +419,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         UsersUser usersUser = saveUsersUser(ocUser);
         if (usersUser == null)
             return false;
-        try {
-            JmsUsersService jmsUsersService = new JmsUsersService(jumpserverConfig);
-            User user = new User();
-            // 标准格式 带-
-            user.setId(UUIDUtils.convertUUID(usersUser.getId()));
-            user.setPublicKey(credential.getCredential());
-            jmsUsersService.userPubkeyReset(user);
-            return true;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+        return jumpserverAPI.pushKey(ocUser, usersUser, credential);
     }
 
     @Override
@@ -432,6 +429,62 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             return new BusinessWrapper(false);
         usersUser.setIsActive(!usersUser.getIsActive());
         usersUserService.updateUsersUser(usersUser);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> authAdmin(String usersUserId) {
+        // 变更用户角色为Admin
+        UsersUser usersUser = usersUserService.queryUsersUserById(usersUserId);
+        usersUser.setRole("Admin");
+        usersUserService.updateUsersUser(usersUser);
+        // 用户组名称
+        UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(USERGROUP_ADMINISTRATORS);
+        if (usersUsergroup == null)
+            usersUsergroup = createUsersUsergroup(USERGROUP_ADMINISTRATORS, "Administrators");
+        // 授权用户到管理员组
+        bindUserGroups(usersUser, usersUsergroup);
+
+        // 建立根节点绑定关系
+        PermsAssetpermission permsAssetpermission = permsAssetpermissionService.queryPermsAssetpermissionByName(PERMS_ADMINISTRATORS);
+        if (permsAssetpermission == null) {
+            // 新增授权策略
+            permsAssetpermission = PermsAssetpermissionBuilder.build(PERMS_ADMINISTRATORS);
+            permsAssetpermissionService.addPermsAssetpermission(permsAssetpermission);
+        }
+        // 绑定系统账户
+        bindPermsAssetpermissionSystemUsers(permsAssetpermission);
+        // 绑定用户组
+        bindPermsAssetpermissionUserGroups(permsAssetpermission, usersUsergroup);
+        // 绑定根节点
+        AssetsNode assetsNode = assetsNodeService.queryAssetsNodeRoot();
+        if (assetsNode == null)
+            return new BusinessWrapper(ErrorEnum.JUMPSERVER_ASSETS_NODE_ROOT_NOT_EXIST);
+        bindPermsAssetpermissionNodes(permsAssetpermission, assetsNode);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> revokeAdmin(String usersUserId) {
+        // 变更用户角色为Admin
+        UsersUser usersUser = usersUserService.queryUsersUserById(usersUserId);
+        if(usersUser.getUsername().equals("admin"))
+            return new BusinessWrapper<>(ErrorEnum.JUMPSERVER_ADMINISTRATOR_AUTHORIZATION_CANNOT_BE_REVOKED);
+        usersUser.setRole("User");
+        usersUserService.updateUsersUser(usersUser);
+        // 用户组名称
+        UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(USERGROUP_ADMINISTRATORS);
+        // 管理员用户组不存在
+        if (usersUsergroup == null)
+            return BusinessWrapper.SUCCESS;
+        // 查询用户&用户组绑定关系 然后删除
+        UsersUserGroups uniqueKey = new UsersUserGroups();
+        uniqueKey.setUserId(usersUser.getId());
+        uniqueKey.setUsergroupId(usersUsergroup.getId());
+
+        UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(uniqueKey);
+        if (usersUserGroups != null)
+            usersUserGroupsService.delUsersUserGroupsById(usersUserGroups.getId());
         return BusinessWrapper.SUCCESS;
     }
 
