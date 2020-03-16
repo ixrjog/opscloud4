@@ -22,6 +22,10 @@ QQ交流群: 630913972
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
++ Opscloud研发中
+  + <img src="https://github.com/ixrjog/opsCloud/blob/master/img/opscloud3-develop.jpeg"></img>
+
+
 + API
   + Swagger2
   + example.org/oc3/swagger-ui.html
