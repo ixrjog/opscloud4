@@ -2,5 +2,5 @@
 # url填写jumpserver站点地址
 jumpserver:
   version: 1.5.6
-  url: https://jms.ops.yangege.cn
+  url: https://jump.ops.yangege.cn
   coco: oc.ops.yangege.cn

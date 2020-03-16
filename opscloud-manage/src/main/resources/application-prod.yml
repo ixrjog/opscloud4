@@ -33,9 +33,9 @@ app:
       password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
       driver-class-name: com.mysql.jdbc.Driver
     jumpserver:
-      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
-      username: jumpserver
-      password: ENC(2+aPVsEyxrSghJXhePHzmo4AY5fG53lp2Ym8apkV6sU=)
+      url: jdbc:mysql://rm-bp15in4n827sceu6j.mysql.rds.aliyuncs.com:3306/jumpserver2?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      username: jumpserver2
+      password: ENC(pB1+m3990SC/Kk89SIPr7rcLyYCfBPyDB9+F/5Xa9isM6hPubAz3CUX6zUioNIkq)
       driver-class-name: com.mysql.cj.jdbc.Driver
 
 
