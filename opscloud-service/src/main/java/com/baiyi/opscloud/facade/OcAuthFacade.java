@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 
 /**
  * @Author baiyi
@@ -21,4 +22,11 @@ public interface OcAuthFacade {
     String getUserByToken(String token);
 
     void setUserToken(String username, String token);
+
+    /**
+     * 填充用户密码
+     * @param ocUser
+     * @param password
+     */
+    void setOcUserPassword(OcUser ocUser, String password);
 }

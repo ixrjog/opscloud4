@@ -115,7 +115,7 @@ public class JumpserverAPI {
         return responseText;
     }
 
-    public String httpPutWithForm(String url, Map<String, String> paramsMap,String token) {
+    public static String httpPutWithForm(String url, Map<String, String> paramsMap,String token) {
         CloseableHttpClient client = HttpClients.createDefault();
         String responseText = "";
         CloseableHttpResponse response = null;

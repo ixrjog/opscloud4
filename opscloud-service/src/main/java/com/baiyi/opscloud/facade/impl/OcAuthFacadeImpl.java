@@ -9,7 +9,9 @@ import com.baiyi.opscloud.service.auth.OcAuthResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
+import com.baiyi.opscloud.service.user.OcUserService;
 import com.baiyi.opscloud.service.user.OcUserTokenService;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -40,6 +42,12 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
 
     @Resource
     private OcAuthRoleResourceService ocAuthRoleResourceService;
+
+    @Resource
+    private StringEncryptor stringEncryptor;
+
+    @Resource
+    private OcUserService ocUserService;
 
     @Override
     public BusinessWrapper<Boolean> checkUserHasResourceAuthorize(String token, String resourceName) {
@@ -128,5 +136,16 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         ocUserToken.setUsername(username);
         ocUserToken.setToken(token);
         ocUserTokenService.addOcUserToken(ocUserToken);
+    }
+
+    @Override
+    public void setOcUserPassword(OcUser ocUser, String password) {
+        if (!StringUtils.isEmpty(ocUser.getPassword())) {
+            String pw = stringEncryptor.decrypt(ocUser.getPassword());
+            if(pw.equals(password))
+                return;
+        }
+        ocUser.setPassword(stringEncryptor.encrypt(password));
+        ocUserService.updateOcUser(ocUser);
     }
 }

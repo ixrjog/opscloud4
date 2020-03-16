@@ -6,6 +6,7 @@ import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.bo.UserGroupBO;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.base.Ressource;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
@@ -126,7 +127,6 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
-        // OcUserCredentialVO.UserCredential
         if (userCredential.getCredentialType() == null)
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_TYPE_ERROR);
         if (StringUtils.isEmpty(userCredential.getCredential()))
@@ -142,6 +142,10 @@ public class UserFacadeImpl implements UserFacade {
         } else {
             ocUserCredential.setId(check.getId());
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
+        }
+        // sshkey push
+        if(userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType()){
+            accountCenter.pushSSHKey(ocUser);
         }
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
     }

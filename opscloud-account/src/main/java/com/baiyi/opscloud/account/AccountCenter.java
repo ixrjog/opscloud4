@@ -47,6 +47,7 @@ public class AccountCenter {
             loginVO.setName(ocUser.getDisplayName());
             loginVO.setUuid(ocUser.getUuid());
             loginVO.setToken(token);
+            ocAuthFacade.setOcUserPassword(ocUser, loginParam.getPassword());
             return loginVO;
         } else {
             return null;
@@ -135,15 +136,12 @@ public class AccountCenter {
     }
 
     public Boolean pushSSHKey(OcUser user) {
-        Boolean result = update(LDAP_ACCOUNT_KEY, user);
-        if (result) {
-            Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
-            for (String key : accountContainer.keySet()) {
-                if (key.equals(LDAP_ACCOUNT_KEY)) continue;
-                IAccount account = accountContainer.get(key);
-                if (!account.pushSSHKey(user))
-                    return Boolean.FALSE;
-            }
+        Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+        for (String key : accountContainer.keySet()) {
+            if (key.equals(LDAP_ACCOUNT_KEY)) continue;
+            IAccount account = accountContainer.get(key);
+            if (!account.pushSSHKey(user))
+                return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }
