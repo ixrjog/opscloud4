@@ -1,7 +1,7 @@
 # version : API版本目前支持4.0
 zabbix:
   version: 4.0
-  url: https://zabbix.ops.yangege.cn/api_jsonrpc.php
+  url: http://zabbix.ops.yangege.cn/api_jsonrpc.php
   user: zabbix
   password: ENC(TuF9JGK3j4+ZEHmaUB3OiiOn9Vb0yRRLq92XrQQ3CwLBU2W3TrJnXX5hw8voL+ZB)
   zone: office
