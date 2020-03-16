@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 
@@ -18,6 +19,10 @@ public interface ServerAttributeFacade {
     List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(OcServerGroup ocServerGroup);
 
     List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(OcServer ocServer);
+
+    List<OcServerAttribute> queryServerAttributeById(int serverId);
+
+   void deleteServerAttributeByList(List<OcServerAttribute> serverAttributeList);
 
     BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
 

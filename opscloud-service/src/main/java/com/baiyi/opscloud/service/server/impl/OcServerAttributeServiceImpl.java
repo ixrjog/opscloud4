@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,6 +27,15 @@ public class OcServerAttributeServiceImpl implements OcServerAttributeService {
         criteria.andEqualTo("businessType", ocServerAttribute.getBusinessType());
         criteria.andEqualTo("groupName", ocServerAttribute.getGroupName());
         return ocServerAttributeMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<OcServerAttribute> queryOcServerAttributeByBusinessTypeAndBusinessId(int businessType, int businessId) {
+        Example example = new Example(OcServerAttribute.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessId", businessId);
+        criteria.andEqualTo("businessType", businessType);
+        return ocServerAttributeMapper.selectByExample(example);
     }
 
     @Override

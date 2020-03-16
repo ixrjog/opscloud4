@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
@@ -7,14 +8,17 @@ import com.baiyi.opscloud.decorator.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
 import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
+import com.baiyi.opscloud.facade.TagFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -51,6 +55,9 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Resource
     private CloudServerFacade cloudServerFacade;
+
+    @Resource
+    private TagFacade tagFacade;
 
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
@@ -130,6 +137,21 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Override
     public BusinessWrapper<Boolean> deleteServerById(int id) {
+        OcServer ocServer = ocServerService.queryOcServerById(id);
+        if (ocServer == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
+
+        // 删除server的Tag
+        List<OcBusinessTag> ocBusinessTagList = tagFacade.queryOcBusinessTagByBusinessTypeAndBusinessId(BusinessType.SERVER.getType(), id);
+        if (!ocBusinessTagList.isEmpty())
+            tagFacade.deleteTagByList(ocBusinessTagList);
+
+        // 删除server的属性
+        List<OcServerAttribute> serverAttributeList = serverAttributeFacade.queryServerAttributeById(id);
+        if(!serverAttributeList.isEmpty())
+            serverAttributeFacade.deleteServerAttributeByList(serverAttributeList);
+
+        ocServerService.deleteOcServerById(id);
         return BusinessWrapper.SUCCESS;
     }
 

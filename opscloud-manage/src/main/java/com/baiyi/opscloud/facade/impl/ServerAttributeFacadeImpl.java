@@ -115,6 +115,17 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     }
 
     @Override
+    public List<OcServerAttribute> queryServerAttributeById(int serverId) {
+        return ocServerAttributeService.queryOcServerAttributeByBusinessTypeAndBusinessId(BusinessType.SERVER.getType(), serverId);
+    }
+
+    @Override
+    public void deleteServerAttributeByList(List<OcServerAttribute> serverAttributeList) {
+        for (OcServerAttribute serverAttribute : serverAttributeList)
+            ocServerAttributeService.deleteOcServerAttributeById(serverAttribute.getId());
+    }
+
+    @Override
     public BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
         OcServerAttribute preServerAttribute = BeanCopierUtils.copyProperties(serverAttribute, OcServerAttribute.class);
         OcServerAttribute checkServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(preServerAttribute);
@@ -178,14 +189,14 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     @Override
     public String getManageIp(OcServer ocServer) {
         Map<String, String> map = getServerAttributeMap(ocServer);
-        if(map == null)
+        if (map == null)
             return ocServer.getPrivateIp();
-        if(!map.containsKey(Global.SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT))
+        if (!map.containsKey(Global.SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT))
             return ocServer.getPrivateIp();
-        String value =  map.get(Global.SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT);
-        if(value.equalsIgnoreCase("true")){
-           if(!StringUtils.isEmpty(ocServer.getPublicIp()))
-               return ocServer.getPublicIp();
+        String value = map.get(Global.SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT);
+        if (value.equalsIgnoreCase("true")) {
+            if (!StringUtils.isEmpty(ocServer.getPublicIp()))
+                return ocServer.getPublicIp();
         }
         return ocServer.getPrivateIp();
     }

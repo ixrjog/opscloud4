@@ -32,6 +32,8 @@ public class OcUserVO {
         // 只显示有效的ApiToken
         private List<OcUserApiTokenVO.UserApiToken> apiTokens;
 
+        private  Map<String, Object> attributeMap;
+
         @ApiModelProperty(value = "主键")
         private Integer id;
 

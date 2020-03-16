@@ -5,8 +5,10 @@ import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
 import com.baiyi.opscloud.mapper.opscloud.OcBusinessTagMapper;
 import com.baiyi.opscloud.service.tag.OcBusinessTagService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -22,6 +24,15 @@ public class OcBusinessTagServiceImpl implements OcBusinessTagService {
     @Override
     public OcBusinessTag queryOcBusinessTagByUniqueKey(OcBusinessTagVO.BusinessTag businessTag) {
         return ocBusinessTagMapper.queryOcBusinessTagByUniqueKey(businessTag);
+    }
+
+    @Override
+    public List<OcBusinessTag> queryOcBusinessTagByBusinessTypeAndBusinessId(int businessType, int businessId) {
+        Example example = new Example(OcBusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessId", businessId);
+        criteria.andEqualTo("businessType", businessType);
+        return ocBusinessTagMapper.selectByExample(example);
     }
 
     @Override

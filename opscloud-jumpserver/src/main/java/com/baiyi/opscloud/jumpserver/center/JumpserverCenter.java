@@ -81,4 +81,11 @@ public interface JumpserverCenter {
 
     BusinessWrapper<Boolean> revokeAdmin(String usersUserId);
 
+    /**
+     * 校验用户公钥是否存在
+     * @param username
+     * @return
+     */
+    boolean checkUserPubkeyExist(String username);
+
 }

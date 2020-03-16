@@ -154,8 +154,6 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
     @Override
     public ZabbixUsergroup createUsergroup(String usergroupName, ZabbixHostgroup zabbixHostgroup) {
         // 创建用户组
-//        ZabbixUsergroup zabbixUsergroup = getUsergroup(usergroupName);
-//        if (zabbixUsergroup != null) return zabbixUsergroup;
         Map<String, String> rights = Maps.newHashMap();
         /**
          * Possible values:

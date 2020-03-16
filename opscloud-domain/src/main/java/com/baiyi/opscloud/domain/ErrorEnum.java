@@ -58,6 +58,7 @@ public enum ErrorEnum {
     SERVER_GROUP_NOT_SELECTED(12003, "服务器组未选择！"),
     SERVER_PRIVATE_IP_IS_NAME(12002, "服务器私有Ip不能为空！"),
     SERVER_PRIVATE_IP_CONFLICT(12002, "服务器私有Ip冲突！"),
+    SERVER_NOT_EXIST(12002, "服务器不存在"),
 
     // serverGrooup
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),

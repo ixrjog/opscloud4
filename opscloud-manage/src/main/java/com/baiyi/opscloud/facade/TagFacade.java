@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
 import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
@@ -28,5 +29,9 @@ public interface TagFacade {
     List<OcTagVO.Tag> queryNotInBusinessTag(TagParam.BusinessQuery businessQuery);
 
     BusinessWrapper<Boolean> updateBusinessTag(OcBusinessTagVO.BusinessTag businessTag);
+
+    List<OcBusinessTag> queryOcBusinessTagByBusinessTypeAndBusinessId(int businessType, int businessId);
+
+    void deleteTagByList(List<OcBusinessTag> ocBusinessTagList);
 
 }

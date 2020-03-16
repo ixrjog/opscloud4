@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
@@ -45,6 +46,10 @@ public class UserDecorator {
     @Resource
     private OcUserCredentialService ocUserCredentialService;
 
+
+    @Resource
+    private JumpserverCenter jumpserverCenter;
+
     @Resource
     private PersonRepo personRepo;
 
@@ -66,12 +71,15 @@ public class UserDecorator {
             }).collect(Collectors.toList());
             user.setApiTokens(apiTokens);
             // 装饰 凭据
-            //   private Map<String, OcUserCredentialVO.UserCredential> credentialMap;
             List<OcUserCredential> credentials = ocUserCredentialService.queryOcUserCredentialByUserId(user.getId());
             Map<String, OcUserCredentialVO.UserCredential> credentialMap = Maps.newHashMap();
             for (OcUserCredential credential : credentials)
                 credentialMap.put(CredentialType.getName(credential.getCredentialType()), BeanCopierUtils.copyProperties(credential, OcUserCredentialVO.UserCredential.class));
             user.setCredentialMap(credentialMap);
+            // 用户属性
+            Map<String, Object> attributeMap = Maps.newHashMap();
+            attributeMap.put("jumpserverPubkey",jumpserverCenter.checkUserPubkeyExist(user.getUsername()));
+            user.setAttributeMap(attributeMap);
         }
         return user;
     }

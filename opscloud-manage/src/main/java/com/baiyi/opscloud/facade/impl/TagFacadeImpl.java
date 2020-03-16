@@ -108,20 +108,31 @@ public class TagFacadeImpl implements TagFacade {
         Map<Integer, OcTag> tagMap = getTagMap(tagList);
         for (Integer tagId : businessTag.getTagIds()) {
             OcBusinessTag ocBusinessTag = queryOcBusinessTag(businessTag, tagId);
-            if(ocBusinessTag == null){
-                ocBusinessTagService.addOcBusinessTag(getOcBusinessTag(businessTag,tagId));
-            }else{
+            if (ocBusinessTag == null) {
+                ocBusinessTagService.addOcBusinessTag(getOcBusinessTag(businessTag, tagId));
+            } else {
                 tagMap.remove(tagId);
             }
         }
-        for(Integer tagId: tagMap.keySet()){
+        for (Integer tagId : tagMap.keySet()) {
             businessTag.setTagId(tagId);
             ocBusinessTagService.deleteOcBusinessTagByUniqueKey(businessTag);
         }
         return BusinessWrapper.SUCCESS;
     }
 
-    private OcBusinessTag getOcBusinessTag(OcBusinessTagVO.BusinessTag businessTag, int tagId){
+    @Override
+    public List<OcBusinessTag> queryOcBusinessTagByBusinessTypeAndBusinessId(int businessType, int businessId) {
+        return ocBusinessTagService.queryOcBusinessTagByBusinessTypeAndBusinessId(businessType, businessId);
+    }
+
+    @Override
+    public void deleteTagByList(List<OcBusinessTag> ocBusinessTagList) {
+        for (OcBusinessTag ocBusinessTag : ocBusinessTagList)
+            deleteTagById(ocBusinessTag.getId());
+    }
+
+    private OcBusinessTag getOcBusinessTag(OcBusinessTagVO.BusinessTag businessTag, int tagId) {
         businessTag.setTagId(tagId);
         return BeanCopierUtils.copyProperties(businessTag, OcBusinessTag.class);
     }

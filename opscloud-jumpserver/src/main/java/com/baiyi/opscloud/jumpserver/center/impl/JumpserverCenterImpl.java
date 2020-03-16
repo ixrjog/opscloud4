@@ -497,4 +497,16 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         return BusinessWrapper.SUCCESS;
     }
 
+    @Override
+    public boolean checkUserPubkeyExist(String username) {
+        try {
+            UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);
+            if (usersUser == null) return false;
+            if (!StringUtils.isEmpty(usersUser.getPublicKey()))
+                return true;
+        } catch (Exception e) {
+        }
+        return false;
+    }
+
 }
