@@ -8,6 +8,7 @@ package com.baiyi.opscloud.common.base;
  * DELETE( 服务器表未删除但云服务器已销毁（脏数据）
  */
 public enum CloudServerType {
+
     PS(0),
     VM(1),
     ECS(2),
