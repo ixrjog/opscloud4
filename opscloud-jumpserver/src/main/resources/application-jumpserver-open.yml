@@ -1,0 +1,7 @@
+# version : API版本目前支持 1.5.6
+# url填写jumpserver站点地址
+# coco填写ssh域名
+jumpserver:
+  version: 1.5.6
+  url: https://jumpserver.opscloud.top
+  coco: oc.opscloud.top

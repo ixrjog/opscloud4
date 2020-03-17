@@ -25,7 +25,8 @@ public class JasyptUtilsTest extends BaseUnit {
      */
     @Test
     void testEncrypt() {
-        System.err.println(stringEncryptor.encrypt("a#$sf*5W&rOxZZzPH&H_"));
+        System.err.println(stringEncryptor.encrypt("ldap://47.110.37.189:10389"));
+        System.err.println(stringEncryptor.encrypt("ldap://192.168.10.152:10389"));
     }
 
     /**
@@ -33,7 +34,7 @@ public class JasyptUtilsTest extends BaseUnit {
      */
     @Test
     void testDecrypt() {
-        System.err.println(stringEncryptor.decrypt("8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek="));
+        System.err.println(stringEncryptor.decrypt("1255805305757185"));
     }
 
     @Test

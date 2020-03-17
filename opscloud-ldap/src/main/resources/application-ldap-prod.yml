@@ -7,7 +7,7 @@
 
 spring:
   ldap:
-    urls: ldap://192.168.10.152:10389
+    urls: ENC(W+aUwvSsdmps/HtysEqvAKsvauZnfrrLsHTolq33i3RrWhm2wBDJdw==)
     base: ou=system
     username: 'cn=Directory Manager'
     password: ENC(QSZbx+hCSXh68Pp0H9Z58a/psPfgeP9vMBlkj18q9BC4UcYE1u/J7NcX42LRctPl)

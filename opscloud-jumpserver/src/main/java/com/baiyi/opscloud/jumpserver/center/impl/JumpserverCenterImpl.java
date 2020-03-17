@@ -16,7 +16,6 @@ import com.baiyi.opscloud.jumpserver.builder.AssetsNodeBuilder;
 import com.baiyi.opscloud.jumpserver.builder.PermsAssetpermissionBuilder;
 import com.baiyi.opscloud.jumpserver.builder.UsersUserBuilder;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
-import com.baiyi.opscloud.jumpserver.config.JumpserverConfig;
 import com.baiyi.opscloud.jumpserver.util.JumpserverUtils;
 import com.baiyi.opscloud.service.jumpserver.*;
 import com.google.common.base.Joiner;
@@ -36,9 +35,6 @@ import java.util.Map;
 @Slf4j
 @Component("JumpserverUserCenter")
 public class JumpserverCenterImpl implements JumpserverCenter {
-
-    @Resource
-    private JumpserverConfig jumpserverConfig;
 
     @Resource
     private UsersUserService usersUserService;
