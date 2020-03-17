@@ -13,6 +13,7 @@ target/
 application-dev.yml
 application.properties
 JasyptUtilsTest.java
+opscloud-manage/src/test/java/com/baiyi/opscloud/encryptor/*
 
 ### STS ###
 .apt_generated
