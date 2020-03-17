@@ -1,0 +1,6 @@
+# version : API版本目前支持 1.5.6
+# url填写jumpserver站点地址
+jumpserver:
+  version: 1.5.6
+  url: ENC(Q/NS5sdPUQZgQfdOlwu3dArnkxmHeRby4nWFQ441SqwIYD8fJ4xd/w==)
+  coco: ENC(vOS8//iNBwzMZeNvPwy9v5J02sPSdsqT65G2fb5qCLE=)

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAuthRoleMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="role_name" jdbcType="VARCHAR" property="roleName" />
+    <result column="resource_name" jdbcType="VARCHAR" property="resourceName" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="workflow" jdbcType="INTEGER" property="workflow" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="queryOcAuthRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.RoleParam$PageQuery" resultMap="BaseResultMap">
+    select * from oc_auth_role
+    <where>
+      <if test="roleName != null and roleName != ''">
+          role_name like "%" #{roleName} "%"
+      </if>
+      <if test="resourceName != null and resourceName != ''">
+         and resource_name like "%" #{resourceName} "%"
+      </if>
+    </where>
+  </select>
+
+</mapper>

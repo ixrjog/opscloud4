@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudDbDatabaseMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cloud_db_id" jdbcType="INTEGER" property="cloudDbId"/>
+        <result column="db_instance_id" jdbcType="VARCHAR" property="dbInstanceId"/>
+        <result column="db_name" jdbcType="VARCHAR" property="dbName"/>
+        <result column="engine" jdbcType="VARCHAR" property="engine"/>
+        <result column="db_description" jdbcType="VARCHAR" property="dbDescription"/>
+        <result column="db_status" jdbcType="VARCHAR" property="dbStatus"/>
+        <result column="character_set_name" jdbcType="VARCHAR" property="characterSetName"/>
+        <result column="env_type" jdbcType="INTEGER" property="envType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="fuzzyQueryOcCloudDbDatabaseByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam$PageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from oc_cloud_db_database a0
+        <if test="tagId != null and tagId > 0">
+            join oc_business_tag a1 on a0.id = a1.business_id
+        </if>
+        <if test="cloudDbType != null or uid != null">
+            join oc_cloud_db a2 on a0.cloud_db_id = a2.id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 5 and a1.tag_id = #{tagId}
+            </if>
+            <if test="cloudDbType != null and cloudDbType >= 0">
+                and a2.cloud_db_type = #{cloudDbType}
+            </if>
+            <if test="uid != null and uid != ''">
+                and a2.uid = #{uid}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and a0.db_instance_id like "%" #{queryName} "%"
+                or a0.db_name like "%" #{queryName} "%"
+                or a0.engine like "%" #{queryName} "%"
+                or a0.db_description like "%" #{queryName} "%"
+                or a0.character_set_name like "%" #{queryName} "%"
+            </if>
+            <if test="envType != null and envType >= 0">
+                and a0.env_type = #{envType}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateBaseOcCloudDbDatabase">
+        update oc_cloud_db_database
+        <trim prefix="set" suffixOverrides=",">
+            <if test="envType != null">
+                env_type = #{envType},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+</mapper>

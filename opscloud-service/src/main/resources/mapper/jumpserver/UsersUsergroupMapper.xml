@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.jumpserver.UsersUsergroupMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.jumpserver.UsersUsergroup">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="id" jdbcType="CHAR" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="org_id" jdbcType="VARCHAR" property="orgId"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryUsersUsergroupByUsername" resultMap="BaseResultMap">
+        select * from users_usergroup a0
+           join users_user_groups a1 on  a0.id = a1.usergroup_id
+           join users_user a2 on a2.id = a1.user_id
+           where a2.username = #{username}
+    </select>
+
+
+</mapper>

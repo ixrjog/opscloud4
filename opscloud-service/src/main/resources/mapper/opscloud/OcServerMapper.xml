@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcServer">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId"/>
+        <result column="login_type" jdbcType="INTEGER" property="loginType"/>
+        <result column="login_user" jdbcType="VARCHAR" property="loginUser"/>
+        <result column="env_type" jdbcType="INTEGER" property="envType"/>
+        <result column="public_ip" jdbcType="VARCHAR" property="publicIp"/>
+        <result column="private_ip" jdbcType="VARCHAR" property="privateIp"/>
+        <result column="server_type" jdbcType="INTEGER" property="serverType"/>
+        <result column="area" jdbcType="VARCHAR" property="area"/>
+        <result column="serial_number" jdbcType="INTEGER" property="serialNumber"/>
+        <result column="monitor_status" jdbcType="INTEGER" property="monitorStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryOcServerByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$PageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from oc_server a0
+        <if test="tagId != null and tagId > 0">
+            join oc_business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 1 and a1.tag_id = #{tagId}
+            </if>
+            <if test="name != null and name != ''">
+                and a0.name like "%" #{name} "%"
+            </if>
+            <if test="serverGroupId != null and serverGroupId > 0">
+                and a0.server_group_id = #{serverGroupId}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                and a0.private_ip like "%" #{queryIp} "%" or a0.public_ip like "%" #{queryIp} "%"
+            </if>
+            <if test="envType != null and envType >= 0">
+                and a0.env_type = #{envType}
+            </if>
+        </where>
+    </select>
+
+    <select id="fuzzyQueryOcServerByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$PageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from oc_server a0
+        <if test="tagId != null and tagId > 0">
+            join oc_business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 1 and a1.tag_id = #{tagId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and a0.name like "%" #{queryName} "%"
+                and a0.private_ip like "%" #{queryName} "%" or a0.public_ip like "%" #{queryName} "%"
+                and a0.comment like "%" #{queryName} "%"
+            </if>
+            <if test="serverGroupId != null and serverGroupId > 0">
+                and a0.server_group_id = #{serverGroupId}
+            </if>
+            <if test="envType != null and envType >= 0">
+                and a0.env_type = #{envType}
+            </if>
+        </where>
+    </select>
+
+    <select id="queryOcServerMaxSerialNumber"  resultMap="BaseResultMap">
+        select * from oc_server
+        where server_group_id = #{serverGroupId}
+        order by serial_number desc limit 1
+    </select>
+</mapper>

@@ -1,0 +1,46 @@
+logging:
+  path: ./log
+  level:
+    # swagger 警告日志忽略
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+
+# 白名单配置
+white:
+  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
+
+opscloud:
+  version: 3.0
+
+spring:
+  profiles:
+    include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod
+  redis:
+    host: redis.opscloud.top
+    port: 6379
+    password: 123456
+    jedis:
+      pool:
+        max-wait: 5000
+        max-idle: 20
+        max-active: 100
+        min-idle: 0
+
+app:
+  datasource:
+    opscloud:
+      url: jdbc:mysql://mysql.opscloud.top:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=UTC&allowMultiQueries=true
+      username: opscloud
+      password: 123456
+      driver-class-name: com.mysql.jdbc.Driver
+    jumpserver:
+      url: jdbc:mysql://jumpserver.mysql.opscloud.top:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      username: jumpserver
+      password: 123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+# java -jar -Djasypt.encryptor.password=${password}
+#jasypt:
+#  encryptor:
+#    password: ${password}
+

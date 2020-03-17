@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcUserApiTokenMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcUserApiToken">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="token_id" jdbcType="VARCHAR" property="tokenId" />
+    <result column="token" jdbcType="VARCHAR" property="token" />
+    <result column="valid" jdbcType="BIT" property="valid" />
+    <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+
+  <!-- 判断用户是否可访问某个资源 -->
+  <select id="checkUserHasResourceAuthorize" parameterType="string" resultType="int">
+        select count(*) from oc_user_api_token a0
+          join oc_auth_user_role a1 on a0.username = a1.username and a0.token = #{token}
+          join oc_auth_role_resource a2 on a1.role_id = a2.role_id
+          join oc_auth_resource a3 on a3.resource_name = #{resourceName}
+    </select>
+
+</mapper>

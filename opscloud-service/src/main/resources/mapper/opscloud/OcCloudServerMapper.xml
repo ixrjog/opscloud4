@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudServerMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="server_name" jdbcType="VARCHAR" property="serverName" />
+    <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
+    <result column="instance_name" jdbcType="VARCHAR" property="instanceName" />
+    <result column="zone" jdbcType="VARCHAR" property="zone" />
+    <result column="cloud_server_type" jdbcType="INTEGER" property="cloudServerType" />
+    <result column="private_ip" jdbcType="VARCHAR" property="privateIp" />
+    <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
+    <result column="cpu" jdbcType="INTEGER" property="cpu" />
+    <result column="memory" jdbcType="INTEGER" property="memory" />
+    <result column="vpc_id" jdbcType="VARCHAR" property="vpcId" />
+    <result column="instance_type" jdbcType="VARCHAR" property="instanceType" />
+    <result column="image_id" jdbcType="VARCHAR" property="imageId" />
+    <result column="system_disk_size" jdbcType="INTEGER" property="systemDiskSize" />
+    <result column="data_disk_size" jdbcType="INTEGER" property="dataDiskSize" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
+    <result column="charge_type" jdbcType="VARCHAR" property="chargeType" />
+    <result column="server_status" jdbcType="INTEGER" property="serverStatus" />
+    <result column="renewal_status" jdbcType="VARCHAR" property="renewalStatus" />
+    <result column="server_id" jdbcType="INTEGER" property="serverId" />
+    <result column="power_mgmt" jdbcType="BIT" property="powerMgmt" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="instance_detail" jdbcType="LONGVARCHAR" property="instanceDetail" />
+  </resultMap>
+
+  <select id="queryOcCloudServerByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.CloudServerParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_cloud_server
+    <where>
+      <if test="cloudServerType != null and cloudServerType != -1">
+        and cloud_server_type = #{cloudServerType}
+      </if>
+      <if test="serverName != null and serverName != ''">
+        and server_name like "%" #{serverName} "%"
+      </if>
+      <if test="queryIp != null and queryIp != ''">
+        and private_ip like "%" #{queryIp} "%" or public_ip like "%" #{queryIp} "%"
+      </if>
+      <if test="serverStatus != null and serverStatus != -1">
+        and server_status = #{serverStatus}
+      </if>
+    </where>
+  </select>
+</mapper>

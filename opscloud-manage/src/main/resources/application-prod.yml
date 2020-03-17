@@ -1,0 +1,46 @@
+logging:
+  path: ./log
+  level:
+    # swagger 警告日志忽略
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+
+# 白名单配置
+white:
+  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
+
+opscloud:
+  version: 3.0
+
+spring:
+  profiles:
+    include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod
+  redis:
+    host: ENC(sBuaHDKOePEPRK1vHNSljfdIJ/74yA0UdxZSwHcV1v4JO72BD25l7McR88uLE6RcZPiZFhjh4Qg=)
+    port: 6379
+    password: ENC(9UKYRdhJ4j1RUBbuiJJRwefDjwWmgjvrMI1h+xYZvvA=)
+    jedis:
+      pool:
+        max-wait: 5000
+        max-idle: 20
+        max-active: 100
+        min-idle: 0
+
+app:
+  datasource:
+    opscloud:
+      url: ENC(iamzmQ8yCfJWaY7BcNdHzxGNHPXtIgFkJeglE5yellgs6hfQoqRJMo57zf6+LlBzrgLlPSC0Oidt6HNRHeE/MTMcOaT+uDq8T+7pUk+Tx6CMEAkQHiWozs9kkC2rlm1idCxVADnRNmPlLp4a3eh/puZXu1YwORPVNETO5QQUpPfR1Qjn4t1ycVs3GM7K3sQC3dmwdZwbnbCOV4/OCQ4/FGHNlpu8MLsQSuoDGJ3H1EN8+U713PgFZ6OiXLGTzvi/sh6EWszLx9j87oMmzM9g6MkZ9tAmkdsE8iJNnZO3nAfFfuv9YZoG+iilAKFuvmVPQ9/aJNSAQ2fQU285JIyBH411oHZ8bdVNL268W+2Y+LcN0m0V9fTuoIHlcXU0OzQh)
+      username: opscloud
+      password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
+      driver-class-name: com.mysql.jdbc.Driver
+    jumpserver:
+      url: ENC(Es1I9fzvijR2ExH5OQPALDWDcazs0XJz2nULeHtGJ344E1hFLHne2E4kPQqhgJYATwoX98bMhMWKBy9NtSoEB03U/aqVpskwNsKBQU9b6eujeiwnigLacHzbrEipJUtX9Pk3HCYuh1w5QP0g+AwQdxhLOu/smxsvc36yzR121IPZoDJ+FpXT64U+2BPlLnfK)
+      username: jumpserver2
+      password: ENC(pB1+m3990SC/Kk89SIPr7rcLyYCfBPyDB9+F/5Xa9isM6hPubAz3CUX6zUioNIkq)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+
+
+# java -jar -Djasypt.encryptor.password=${password}
+#jasypt:
+#  encryptor:
+#    password: ${password}
+
