@@ -114,7 +114,7 @@
 <!--        oc_cloud_db_account-->
 <!--        oc_server_attribute-->
 
-        <table tableName="oc_server_attribute">
+        <table tableName="oc_cloud_image">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

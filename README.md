@@ -20,14 +20,18 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
-+ API
++ API接口文档
   + knife4j接口文档（ https://doc.xiaominfo.com/knife4j ）
-  + example.org/oc3/swagger-ui.html
   + example.org/oc3/doc.html
+  + example.org/oc3/swagger-ui.html
 
 + 平台特性
-  + RBAC,LDAP(完全托管)
+  + 基于角色的访问控制RBAC(Role-Based Access Control),LDAP完整支持
   + 配置文件加密（密码, AK），数据库敏感字段加密
+  + 代码即文档，全接口API
+  + 前后端分离，支持跨域部署
+  + Java Springboot 开源的DevOps(CMDB)还有第二家么？
+  + 这是个人项目，基本也是个人完成，前端用了vue3(d2admin框架非常炫酷)
 
 + 自动化运维特性
   + 外部平台或工具原生API调用
@@ -35,7 +39,7 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 以用户纬度数据映射全自动配置管理
   
 + 核心功能
-  + 堡垒机(Jumpserver全自动运维)
+  + 堡垒机(Jumpserver全自动透明化，无需购买收费版就能实现增强功能)
   + 可视化数据管理DMS（支持AliyunRDS, 自建Mysql）
     + 权限申请
     + 操作审计
@@ -47,6 +51,25 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
     + 阿里云
     + AWS
     + 腾讯云
-    + 私有云Vmware-vSphere
+    + 私有云VMware-vSphere
+  + 账户对多平台自动映射（免去日常权限申请和配置）
 
+
++ 源码编译
+```$xslt
+# 安装Maven & JDK8
+# prod为当前环境配置文件，如 application-zabbix-prod.yml
+mvn -Dmaven.test.skip=true clean package -P prod -U -am -pl opscloud-manage
+```
+
++ 项目启动
+```$xslt
+# JVM内存值请自行调优（下列命令适用于4G内存服务器启动）
+# ${JASYPT_PASSWORD} 变量为opscloud加密密钥，用于数据加密/解密
+# 可将变量写入/etc/profile
+# export JASYPT_PASSWORD = '请使用高强度字符串'
+java -Xms2048m -Xmx2048m -Xmn1024m -Xss256k -XX:MaxMetaspaceSize=128M \
+-XX:MetaspaceSize=128M -XX:+DisableExplicitGC -XX:+UseConcMarkSweepGC \
+-Djasypt.encryptor.password=${JASYPT_PASSWORD} -jar ./opscloud-manage-prod.jar
+```
 
