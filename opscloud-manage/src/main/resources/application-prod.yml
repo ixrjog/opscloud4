@@ -15,7 +15,7 @@ spring:
   profiles:
     include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod
   redis:
-    host: r-bp1f8fcc3c1a6f84.redis.rds.aliyuncs.com
+    host: ENC(sBuaHDKOePEPRK1vHNSljfdIJ/74yA0UdxZSwHcV1v4JO72BD25l7McR88uLE6RcZPiZFhjh4Qg=)
     port: 6379
     password: ENC(9UKYRdhJ4j1RUBbuiJJRwefDjwWmgjvrMI1h+xYZvvA=)
     jedis:
@@ -28,12 +28,12 @@ spring:
 app:
   datasource:
     opscloud:
-      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=UTC&allowMultiQueries=true
+      url: ENC(iamzmQ8yCfJWaY7BcNdHzxGNHPXtIgFkJeglE5yellgs6hfQoqRJMo57zf6+LlBzrgLlPSC0Oidt6HNRHeE/MTMcOaT+uDq8T+7pUk+Tx6CMEAkQHiWozs9kkC2rlm1idCxVADnRNmPlLp4a3eh/puZXu1YwORPVNETO5QQUpPfR1Qjn4t1ycVs3GM7K3sQC3dmwdZwbnbCOV4/OCQ4/FGHNlpu8MLsQSuoDGJ3H1EN8+U713PgFZ6OiXLGTzvi/sh6EWszLx9j87oMmzM9g6MkZ9tAmkdsE8iJNnZO3nAfFfuv9YZoG+iilAKFuvmVPQ9/aJNSAQ2fQU285JIyBH411oHZ8bdVNL268W+2Y+LcN0m0V9fTuoIHlcXU0OzQh)
       username: opscloud
       password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
       driver-class-name: com.mysql.jdbc.Driver
     jumpserver:
-      url: jdbc:mysql://rm-bp15in4n827sceu6j.mysql.rds.aliyuncs.com:3306/jumpserver2?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      url: ENC(Es1I9fzvijR2ExH5OQPALDWDcazs0XJz2nULeHtGJ344E1hFLHne2E4kPQqhgJYATwoX98bMhMWKBy9NtSoEB03U/aqVpskwNsKBQU9b6eujeiwnigLacHzbrEipJUtX9Pk3HCYuh1w5QP0g+AwQdxhLOu/smxsvc36yzR121IPZoDJ+FpXT64U+2BPlLnfK)
       username: jumpserver2
       password: ENC(pB1+m3990SC/Kk89SIPr7rcLyYCfBPyDB9+F/5Xa9isM6hPubAz3CUX6zUioNIkq)
       driver-class-name: com.mysql.cj.jdbc.Driver
