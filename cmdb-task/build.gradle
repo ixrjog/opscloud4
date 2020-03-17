@@ -1,7 +1,0 @@
-dependencies {
-    compile project(":cmdb-util")
-    compile project(":cmdb-service")
-
-    compile group: 'org.springframework', name: 'spring-websocket', version: "${springVersion}"
-    compile group: 'org.springframework', name: 'spring-messaging', version: "${springVersion}"
-}
