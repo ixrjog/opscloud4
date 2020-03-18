@@ -3,8 +3,11 @@ package com.baiyi.opscloud.domain.param.jumpserver.user;
 import com.baiyi.opscloud.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiParam;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -21,6 +24,8 @@ public class UsersUserPageParam {
         @ApiModelProperty(value = "模糊查询")
         private String queryName;
 
+        @Valid
+        @ApiParam(required = true)
         @ApiModelProperty(value = "扩展属性",example = "0")
         private Integer extend;
 

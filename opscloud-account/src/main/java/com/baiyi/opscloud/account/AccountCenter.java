@@ -2,6 +2,8 @@ package com.baiyi.opscloud.account;
 
 import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.common.util.UUIDUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.auth.LogParam;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
@@ -33,7 +35,12 @@ public class AccountCenter {
 
     public static final String LDAP_ACCOUNT_KEY = "LdapAccount";
 
-    public LogVO.LoginVO loginCheck(LogParam.LoginParam loginParam) {
+    /**
+     * 登录接口
+     * @param loginParam
+     * @return
+     */
+    public BusinessWrapper<Boolean> loginCheck(LogParam.LoginParam loginParam) {
         com.baiyi.opscloud.ldap.credential.PersonCredential credential = PersonCredential.builder()
                 .username(loginParam.getUsername())
                 .password(loginParam.getPassword())
@@ -48,9 +55,11 @@ public class AccountCenter {
             loginVO.setUuid(ocUser.getUuid());
             loginVO.setToken(token);
             ocAuthFacade.setOcUserPassword(ocUser, loginParam.getPassword());
-            return loginVO;
+            BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
+            wrapper.setBody(loginVO);
+            return wrapper;
         } else {
-            return null;
+            return new BusinessWrapper(ErrorEnum.USER_LOGIN_FAILUER);
         }
     }
 

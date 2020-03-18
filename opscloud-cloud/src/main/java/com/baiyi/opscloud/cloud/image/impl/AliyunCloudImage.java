@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.cloud.image.impl;
 
 import com.baiyi.opscloud.cloud.image.ICloudImage;
+import com.baiyi.opscloud.common.base.CloudType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -12,4 +13,9 @@ import org.springframework.stereotype.Component;
 @Slf4j
 @Component("AliyunCloudImage")
 public class AliyunCloudImage<T> extends BaseCloudImage<T> implements ICloudImage {
+
+    @Override
+    protected int getCloudImageType(){
+        return CloudType.ALIYUN.getType();
+    }
 }
