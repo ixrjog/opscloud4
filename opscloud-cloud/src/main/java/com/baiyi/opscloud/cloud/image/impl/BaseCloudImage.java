@@ -2,8 +2,17 @@ package com.baiyi.opscloud.cloud.image.impl;
 
 import com.baiyi.opscloud.cloud.image.ICloudImage;
 import com.baiyi.opscloud.cloud.image.factory.CloudImageFactory;
+import com.baiyi.opscloud.domain.generator.OcCloudImage;
+import com.baiyi.opscloud.service.cloud.OcCloudImageService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -13,10 +22,13 @@ import org.springframework.beans.factory.InitializingBean;
 @Slf4j
 public abstract class BaseCloudImage<T> implements InitializingBean, ICloudImage {
 
+    @Resource
+    private OcCloudImageService ocCloudImageService;
+
     @Override
     public Boolean sync() {
-//        Map<String, OcCloudImage> cloudImageMap = getCloudImageMap(Lists.newArrayList());
-//        List<T> instanceList = getInstanceList();
+        Map<String, OcCloudImage> cloudImageMap = getCloudImageMap(Lists.newArrayList());
+        List<T> cloudImageList = getCloudImageList();
 //        for (T instance : instanceList)
 //            saveOcCloudServer(instance, cloudServerMap, pushName);
 
@@ -24,11 +36,13 @@ public abstract class BaseCloudImage<T> implements InitializingBean, ICloudImage
     }
 
 
-//    protected Map<String, OcCloudImage> getCloudImageMap(List<OcCloudImage> cloudImageList) {
-//        if (CollectionUtils.isEmpty(cloudImageList))
-//            cloudServerList = ocCloudServerService.queryOcCloudServerByType(getCloudServerType());
-//        return cloudServerList.stream().collect(Collectors.toMap(OcCloudServer::getInstanceId, a -> a, (k1, k2) -> k1));
-//    }
+    protected Map<String, OcCloudImage> getCloudImageMap(List<OcCloudImage> cloudImageList) {
+        if (CollectionUtils.isEmpty(cloudImageList))
+            cloudImageList = ocCloudImageService.queryOcCloudImageByType(getCloudType());
+        return cloudImageList.stream().collect(Collectors.toMap(OcCloudImage::getImageId, a -> a, (k1, k2) -> k1));
+    }
+
+    protected abstract List<T> getCloudImageList();
 
 
     /**
@@ -36,7 +50,7 @@ public abstract class BaseCloudImage<T> implements InitializingBean, ICloudImage
      *
      * @return
      */
-    abstract protected int getCloudImageType();
+    abstract protected int getCloudType();
 
     @Override
     public String getKey() {
