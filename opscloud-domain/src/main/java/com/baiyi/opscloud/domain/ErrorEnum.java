@@ -16,6 +16,7 @@ public enum ErrorEnum {
     AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌Token"),
     AUTHENTICATION_TOKEN_INVALID(20004,"令牌Token无效"),
     AUTHENTICATION_API_TOKEN_INVALID(20004,"Api令牌Token无效"),
+    USER_LOGIN_FAILUER(20001,"登录失败请检查用户名或密码是否正确，请重试！"),
 
     // auth
     AUTH_ROLE_HAS_USED(11001, "用户角色正在使用！"),

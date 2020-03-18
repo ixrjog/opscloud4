@@ -67,7 +67,7 @@ public class ServerController {
 
     @ApiOperation(value = "删除指定的server")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> deleteServerById(@RequestParam int id) {
+    public HttpResult<Boolean> deleteServerById(@Valid @RequestParam int id) {
         return new HttpResult<>(serverFacade.deleteServerById(id));
     }
 

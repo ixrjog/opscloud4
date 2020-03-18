@@ -12,6 +12,6 @@ public class PageParam {
     @ApiModelProperty(value = "分页页码")
     private Integer page;
 
-    @ApiModelProperty(value = "分页页长")
+    @ApiModelProperty(value = "分页页长",example = "10")
     private Integer length;
 }
