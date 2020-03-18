@@ -16,6 +16,12 @@ public interface AliyunCore {
 
     List<AliyunAccount> getAccounts();
 
+    /**
+     * 返回主账户
+     * @return
+     */
+    AliyunAccount getAccount();
+
     IAcsClient getAcsClient(String regionId);
 
     IAcsClient getAcsClient(String regionId, AliyunAccount aliyunAccount);

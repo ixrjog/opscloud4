@@ -27,7 +27,7 @@ public interface ICloudServer {
     Boolean sync(boolean pushName);
 
     /**
-     * 更新Cloudserver by instanceId
+     * 更新CloudServer by instanceId
      *
      * @param instanceId
      * @return

@@ -228,6 +228,22 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         String systemuserId = getSystemuserId();
         if (StringUtils.isEmpty(systemuserId))
             return;
+        bindPermsAssetpermissionAdminSystemUsers(permsAssetpermission, systemuserId);
+    }
+
+    /**
+     * 绑定 管理员系统账户
+     *
+     * @param permsAssetpermission
+     */
+    private void bindPermsAssetpermissionAdminSystemUsers(PermsAssetpermission permsAssetpermission) {
+        String adminSystemuserId = getAdminSystemuserId();
+        if (StringUtils.isEmpty(adminSystemuserId))
+            return;
+        bindPermsAssetpermissionAdminSystemUsers(permsAssetpermission, adminSystemuserId);
+    }
+
+    private void bindPermsAssetpermissionAdminSystemUsers(PermsAssetpermission permsAssetpermission, String systemuserId) {
         PermsAssetpermissionSystemUsers pre = new PermsAssetpermissionSystemUsers();
         pre.setAssetpermissionId(permsAssetpermission.getId());
         pre.setSystemuserId(systemuserId);
@@ -248,6 +264,20 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         if (settingsMap != null) {
             if (settingsMap.containsKey(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY))
                 return settingsMap.get(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY);
+        }
+        return "";
+    }
+
+    /**
+     * 查询系统账户
+     *
+     * @return
+     */
+    private String getAdminSystemuserId() {
+        Map<String, String> settingsMap = (Map<String, String>) redisUtil.get(Global.JUMPSERVER_SETTINGS_KEY);
+        if (settingsMap != null) {
+            if (settingsMap.containsKey(Global.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY))
+                return settingsMap.get(Global.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY);
         }
         return "";
     }
@@ -457,8 +487,8 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             permsAssetpermission = PermsAssetpermissionBuilder.build(PERMS_ADMINISTRATORS);
             permsAssetpermissionService.addPermsAssetpermission(permsAssetpermission);
         }
-        // 绑定系统账户
-        bindPermsAssetpermissionSystemUsers(permsAssetpermission);
+        // 绑定管理员系统账户
+        bindPermsAssetpermissionAdminSystemUsers(permsAssetpermission);
         // 绑定用户组
         bindPermsAssetpermissionUserGroups(permsAssetpermission, usersUsergroup);
         // 绑定根节点

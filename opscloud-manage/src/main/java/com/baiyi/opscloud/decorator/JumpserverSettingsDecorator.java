@@ -36,15 +36,14 @@ public class JumpserverSettingsDecorator {
                 BeanCopierUtils.copyListProperties(assetsSystemuserService.queryAllAssetsSystemuser(), JumpserverAssetsSystemuserVO.AssetsSystemuser.class));
         settings.setAssetsAdminusers(
                 BeanCopierUtils.copyListProperties(assetsAdminuserService.queryAllAssetsAdminuser(), JumpserverAssetsAdminuserVO.AssetsAdminuser.class));
-
-        // redisUtil.set(Global.JUMPSERVER_SETTINGS_KEY, serverGroupAttributeMap, TimeUtils.dayTime * 7);
-
         Map<String, String> settingsMap = (Map<String, String>) redisUtil.get(Global.JUMPSERVER_SETTINGS_KEY);
         if (settingsMap != null) {
             if(settingsMap.containsKey(Global.JUMPSERVER_ASSETS_ADMINUSER_ID_KEY))
                 settings.setAssetsAdminuserId(settingsMap.get(Global.JUMPSERVER_ASSETS_ADMINUSER_ID_KEY));
             if(settingsMap.containsKey(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY))
                 settings.setAssetsSystemuserId(settingsMap.get(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY));
+            if(settingsMap.containsKey(Global.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY))
+                settings.setAssetsAdminSystemuserId(settingsMap.get(Global.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY));
         }
 
         return settings;

@@ -30,4 +30,29 @@
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
     <result column="image_detail" jdbcType="LONGVARCHAR" property="imageDetail" />
   </resultMap>
+
+  <select id="fuzzyQueryOcCloudImageByParam"
+          parameterType="com.baiyi.opscloud.domain.param.cloud.CloudImageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_cloud_image
+    <where>
+      <if test="cloudType != null">
+        cloud_type = #{cloudType}
+      </if>
+      <if test="isActive != null and isActive != -1">
+        and is_active = #{isActive}
+      </if>
+      <if test="isDeleted != null and isDeleted != -1">
+        and is_deleted = #{isDeleted}
+      </if>
+      <if test="queryName != null and queryName != ''">
+        and ( image_id like "%" #{queryName} "%"
+        or image_name like "%" #{queryName} "%"
+        or os_name like "%" #{queryName} "%"
+        or os_name_en like "%" #{queryName} "%"
+        or platform like "%" #{queryName} "%" )
+      </if>
+    </where>
+  </select>
+
 </mapper>

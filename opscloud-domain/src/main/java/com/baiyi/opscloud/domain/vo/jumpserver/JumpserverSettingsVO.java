@@ -28,8 +28,10 @@ public class JumpserverSettingsVO {
         @ApiModelProperty(value = "全局设置默认的管理账户")
         private String assetsAdminuserId;
 
-        @ApiModelProperty(value = "全局设置默认的系统账户")
+        @ApiModelProperty(value = "全局设置默认的低权限系统账户")
         private String assetsSystemuserId;
 
+        @ApiModelProperty(value = "管理员登录系统账户的高权限账户")
+        private String assetsAdminSystemuserId;
     }
 }

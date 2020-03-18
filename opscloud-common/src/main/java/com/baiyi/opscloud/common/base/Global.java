@@ -24,6 +24,7 @@ public class Global {
     public static final String JUMPSERVER_SETTINGS_KEY = "jumpserver:settings";
     public static final String JUMPSERVER_ASSETS_ADMINUSER_ID_KEY = "assetsAdminuserId";
     public static final String JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY = "assetsSystemuserId";
+    public static final String JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY = "assetsAdminSystemuserId";
 
 
 }

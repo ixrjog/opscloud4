@@ -24,23 +24,25 @@ import javax.validation.Valid;
 public class CloudServerController {
 
     @Resource
-    private CloudServerFacade cloudserverFacade;
+    private CloudServerFacade cloudServerFacade;
 
     @ApiOperation(value = "分页查询云主机列表")
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcCloudServerVO.CloudServer>> queryCloudServerPage(@Valid CloudServerParam.PageQuery pageQuery) {
-        return new HttpResult<>(cloudserverFacade.queryCloudServerPage(pageQuery));
+        return new HttpResult<>(cloudServerFacade.queryCloudServerPage(pageQuery));
     }
 
     @ApiOperation(value = "删除指定的云主机")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteCloudServerById(@RequestParam int id) {
-        return new HttpResult<>(cloudserverFacade.deleteCloudServerById(id));
+        return new HttpResult<>(cloudServerFacade.deleteCloudServerById(id));
     }
 
     @ApiOperation(value = "同步指定的云主机")
     @GetMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncCloudServerByKey(@RequestParam String key) {
-        return new HttpResult<>(cloudserverFacade.syncCloudServerByKey(key));
+        return new HttpResult<>(cloudServerFacade.syncCloudServerByKey(key));
     }
+
+
 }

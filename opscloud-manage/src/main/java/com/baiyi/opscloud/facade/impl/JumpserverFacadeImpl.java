@@ -343,6 +343,7 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
         Map<String, String> settingsMap = Maps.newHashMap();
         settingsMap.put(Global.JUMPSERVER_ASSETS_ADMINUSER_ID_KEY, settings.getAssetsAdminuserId());
         settingsMap.put(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY, settings.getAssetsSystemuserId());
+        settingsMap.put(Global.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY, settings.getAssetsAdminSystemuserId());
         redisUtil.set(Global.JUMPSERVER_SETTINGS_KEY, settingsMap, TimeUtils.dayTime * 1000);
         return BusinessWrapper.SUCCESS;
     }

@@ -66,9 +66,11 @@ public class OcCloudServerVO {
         private Integer dataDiskSize;
 
         @ApiModelProperty(value = "云主机创建时间")
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date createdTime;
 
         @ApiModelProperty(value = "云主机过期时间")
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date expiredTime;
 
         @ApiModelProperty(value = "付费类型")
