@@ -94,6 +94,9 @@ public enum ErrorEnum {
     // cloudImage
     CLOUD_IMAGE_NOT_EXIST(30002, "云镜像不存在！"),
 
+    // cloudVPC
+    CLOUD_VPC_NOT_EXIST(30002, "云VPC不存在！"),
+
     // aliyunRDSMysql
     ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR(30002, "创建云数据库账户错误！"),
     ALIYUN_RDS_MYSQL_DESCRIBE_ACCOUNT_ERROR(30002, "查询云数据库账户错误！"),

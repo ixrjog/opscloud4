@@ -26,7 +26,6 @@ import java.util.List;
 @Component("AliyunCloudImage")
 public class AliyunCloudImage<T> extends BaseCloudImage<T> implements ICloudImage {
 
-
     @Resource
     private AliyunCore aliyunCore;
 

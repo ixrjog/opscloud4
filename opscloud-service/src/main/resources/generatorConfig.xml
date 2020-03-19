@@ -113,8 +113,11 @@
 <!--        oc_cloud_db_database-->
 <!--        oc_cloud_db_account-->
 <!--        oc_server_attribute-->
+<!--        oc_cloud_image-->
+<!--        oc_cloud_vpc-->
+<!--        oc_cloud_vpc_vswitch-->
 
-        <table tableName="oc_cloud_image">
+        <table tableName="oc_cloud_vpc_security_group">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>
