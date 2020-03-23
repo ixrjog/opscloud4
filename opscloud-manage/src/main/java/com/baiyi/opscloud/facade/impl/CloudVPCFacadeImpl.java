@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
-import com.baiyi.opscloud.cloud.image.ICloudImage;
-import com.baiyi.opscloud.cloud.image.factory.CloudImageFactory;
+import com.baiyi.opscloud.cloud.vpc.ICloudVPC;
+import com.baiyi.opscloud.cloud.vpc.factory.CloudVPCFactory;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.decorator.CloudVPCDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -43,8 +43,8 @@ public class CloudVPCFacadeImpl implements CloudVPCFacade {
 
     @Override
     public BusinessWrapper<Boolean> syncCloudVPCByKey(String key) {
-        ICloudImage cloudImage = CloudImageFactory.getCloudImageByKey(key);
-        return new BusinessWrapper<>(cloudImage.sync());
+        ICloudVPC cloudVPC = CloudVPCFactory.getCloudVPCByKey(key);
+        return new BusinessWrapper<>(cloudVPC.syncVPC());
     }
 
     @Override
@@ -53,6 +53,16 @@ public class CloudVPCFacadeImpl implements CloudVPCFacade {
         if (ocCloudVpc == null)
             return new BusinessWrapper<>(ErrorEnum.CLOUD_VPC_NOT_EXIST);
         ocCloudVpcService.deleteOcCloudVpcById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> setCloudVPCActive(int id) {
+        OcCloudVpc ocCloudVpc = ocCloudVpcService.queryOcCloudVpcById(id);
+        if (ocCloudVpc == null)
+            return new BusinessWrapper<>(ErrorEnum.CLOUD_VPC_NOT_EXIST);
+        ocCloudVpc.setIsActive(ocCloudVpc.getIsActive() == 0 ? 1 : 0);
+        ocCloudVpcService.updateOcCloudVpc(ocCloudVpc);
         return BusinessWrapper.SUCCESS;
     }
 }

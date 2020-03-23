@@ -40,8 +40,7 @@
         and ( vpc_id like "%" #{queryName} "%"
         or vpc_name like "%" #{queryName} "%"
         or cidr_block like "%" #{queryName} "%"
-        or description like "%" #{queryName} "%"
-        or platform like "%" #{queryName} "%" )
+        or description like "%" #{queryName} "%" )
       </if>
     </where>
   </select>

@@ -61,4 +61,9 @@ public class OcCloudVpcServiceImpl implements OcCloudVpcService {
     public void addOcCloudVpc(OcCloudVpc ocCloudVpc) {
         ocCloudVpcMapper.insert(ocCloudVpc);
     }
+
+    @Override
+    public void updateOcCloudVpc(OcCloudVpc ocCloudVpc) {
+        ocCloudVpcMapper.updateByPrimaryKey(ocCloudVpc);
+    }
 }

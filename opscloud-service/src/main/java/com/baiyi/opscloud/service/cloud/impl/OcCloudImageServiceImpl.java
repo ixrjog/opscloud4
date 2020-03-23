@@ -38,6 +38,11 @@ public class OcCloudImageServiceImpl implements OcCloudImageService {
     }
 
     @Override
+    public void updateOcCloudImage(OcCloudImage ocCloudImage) {
+        ocCloudImageMapper.updateByPrimaryKey(ocCloudImage);
+    }
+
+    @Override
     public DataTable<OcCloudImage> fuzzyQueryOcCloudImageByParam(CloudImageParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcCloudImage> ocCloudImageList = ocCloudImageMapper.fuzzyQueryOcCloudImageByParam(pageQuery);
@@ -46,7 +51,7 @@ public class OcCloudImageServiceImpl implements OcCloudImageService {
 
     @Override
     public OcCloudImage queryOcCloudImageById(int id) {
-       return ocCloudImageMapper.selectByPrimaryKey(id);
+        return ocCloudImageMapper.selectByPrimaryKey(id);
     }
 
     @Override

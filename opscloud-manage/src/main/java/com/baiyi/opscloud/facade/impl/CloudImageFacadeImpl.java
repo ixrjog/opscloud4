@@ -44,9 +44,19 @@ public class CloudImageFacadeImpl implements CloudImageFacade {
     @Override
     public BusinessWrapper<Boolean> deleteCloudImageById(int id) {
         OcCloudImage ocCloudImage = ocCloudImageService.queryOcCloudImageById(id);
-        if(ocCloudImage == null)
+        if (ocCloudImage == null)
             return new BusinessWrapper<>(ErrorEnum.CLOUD_IMAGE_NOT_EXIST);
         ocCloudImageService.deleteOcCloudImageById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> setCloudImageActive(int id) {
+        OcCloudImage ocCloudImage = ocCloudImageService.queryOcCloudImageById(id);
+        if (ocCloudImage == null)
+            return new BusinessWrapper<>(ErrorEnum.CLOUD_IMAGE_NOT_EXIST);
+        ocCloudImage.setIsActive(ocCloudImage.getIsActive() == 0 ? 1 : 0);
+        ocCloudImageService.updateOcCloudImage(ocCloudImage);
         return BusinessWrapper.SUCCESS;
     }
 }

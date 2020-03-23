@@ -43,4 +43,10 @@ public class CloudVPCController {
     public HttpResult<Boolean> deleteCloudVPCById(@RequestParam int id) {
         return new HttpResult<>(cloudVPCFacade.deleteCloudVPCById(id));
     }
+
+    @ApiOperation(value = "设置VPC是否有效")
+    @PutMapping(value = "/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setCloudImageActive(@RequestParam int id) {
+        return new HttpResult<>(cloudVPCFacade.setCloudVPCActive(id));
+    }
 }

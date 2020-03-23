@@ -17,6 +17,8 @@ public interface OcCloudImageService {
 
     void addOcCloudImage(OcCloudImage ocCloudImage);
 
+    void updateOcCloudImage(OcCloudImage ocCloudImage);
+
     DataTable<OcCloudImage> fuzzyQueryOcCloudImageByParam(CloudImageParam.PageQuery pageQuery);
 
     OcCloudImage queryOcCloudImageById(int id);

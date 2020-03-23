@@ -33,7 +33,7 @@ public class EC2InstanceTypeContext {
     @Resource
     private AwsCore awsCore;
 
-    @Cacheable(cacheNames = "instanceTypeContext")
+    @Cacheable(cacheNames = "instanceTypeContext",key="#root.targetClass")
     public Map<String, EC2InstanceType> getInstanceTypeContext() {
         try {
             HttpClient httpClient = HttpClients.createDefault();

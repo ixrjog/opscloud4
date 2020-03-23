@@ -43,4 +43,11 @@ public class CloudImageController {
     public HttpResult<Boolean> deleteCloudImageById(@RequestParam int id) {
         return new HttpResult<>(cloudImageFacade.deleteCloudImageById(id));
     }
+
+    @ApiOperation(value = "设置云镜像是否有效")
+    @PutMapping(value = "/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setCloudImageActive(@RequestParam int id) {
+        return new HttpResult<>(cloudImageFacade.setCloudImageActive(id));
+    }
+
 }

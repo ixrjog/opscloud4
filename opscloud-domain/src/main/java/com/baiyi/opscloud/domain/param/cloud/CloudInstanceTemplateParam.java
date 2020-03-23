@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
- * @Date 2020/3/18 11:14 上午
+ * @Date 2020/3/20 4:39 下午
  * @Version 1.0
  */
-public class CloudImageParam {
+public class CloudInstanceTemplateParam {
 
     @Data
     @NoArgsConstructor
@@ -24,11 +24,5 @@ public class CloudImageParam {
         @ApiModelProperty(value = "查询名称")
         private String queryName;
 
-        @ApiModelProperty(value = "是否有效", example = "1")
-        private Integer isActive;
-
-        @ApiModelProperty(value = "是否被删除", example = "0")
-        private Integer isDeleted;
     }
-
 }

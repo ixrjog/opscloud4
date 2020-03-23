@@ -17,4 +17,6 @@ public interface CloudVPCFacade {
     BusinessWrapper<Boolean> syncCloudVPCByKey(String key);
 
     BusinessWrapper<Boolean> deleteCloudVPCById(int id);
+
+    BusinessWrapper<Boolean> setCloudVPCActive(int id);
 }

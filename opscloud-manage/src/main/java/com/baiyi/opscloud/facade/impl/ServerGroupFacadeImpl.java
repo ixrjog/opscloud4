@@ -2,7 +2,6 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.account.AccountCenter;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
-import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.decorator.ServerGroupDecorator;
@@ -21,7 +20,6 @@ import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
-import com.baiyi.opscloud.service.server.OcServerAttributeService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -56,9 +54,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     private UserPermissionFacade userPermissionFacade;
 
     @Resource
-    private OcServerAttributeService ocServerAttributeService;
-
-    @Resource
     private AccountCenter accountCenter;
 
     @Resource
@@ -67,11 +62,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     @Resource
     private ServerAttributeFacade serverAttributeFacade;
 
-//    @Resource
-//    private OcUserService ocUserService;
-
-    @Resource
-    private ServerAttributeConfig serverAttributeConfig;
 
     public static final boolean ACTION_ADD = true;
     public static final boolean ACTION_UPDATE = false;

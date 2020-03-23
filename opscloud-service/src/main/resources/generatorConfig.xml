@@ -116,8 +116,10 @@
 <!--        oc_cloud_image-->
 <!--        oc_cloud_vpc-->
 <!--        oc_cloud_vpc_vswitch-->
+<!--        oc_cloud_vpc_security_group-->
+<!--        oc_cloud_instance_template-->
 
-        <table tableName="oc_cloud_vpc_security_group">
+        <table tableName="oc_cloud_instance_template">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

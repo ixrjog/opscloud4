@@ -24,4 +24,6 @@ public interface OcCloudVpcService {
     void deleteOcCloudVpcById(int id);
 
     void addOcCloudVpc(OcCloudVpc ocCloudVpc);
+
+    void updateOcCloudVpc(OcCloudVpc ocCloudVpc);
 }

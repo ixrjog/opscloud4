@@ -17,4 +17,6 @@ public interface CloudImageFacade {
     BusinessWrapper<Boolean> syncCloudImageByKey(String key);
 
     BusinessWrapper<Boolean> deleteCloudImageById(int id);
+
+    BusinessWrapper<Boolean> setCloudImageActive(int id);
 }
