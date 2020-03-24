@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_cloud_instance_template")
 public class OcCloudInstanceTemplate {
@@ -50,8 +50,8 @@ public class OcCloudInstanceTemplate {
 
     private String comment;
 
-    @Column(name = "template_detail")
-    private String templateDetail;
+    @Column(name = "template_yaml")
+    private String templateYaml;
 
     /**
      * @return id
@@ -253,17 +253,11 @@ public class OcCloudInstanceTemplate {
         this.comment = comment;
     }
 
-    /**
-     * @return template_detail
-     */
-    public String getTemplateDetail() {
-        return templateDetail;
+    public String getTemplateYaml() {
+        return templateYaml;
     }
 
-    /**
-     * @param templateDetail
-     */
-    public void setTemplateDetail(String templateDetail) {
-        this.templateDetail = templateDetail;
+    public void setTemplateYaml(String templateYaml) {
+        this.templateYaml = templateYaml;
     }
 }

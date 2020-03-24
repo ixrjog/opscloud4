@@ -3,6 +3,7 @@ package com.baiyi.opscloud.aliyun.ecs;
 import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
 
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author baiyi
@@ -12,4 +13,6 @@ import java.util.Map;
 public interface AliyunInstance {
 
     Map<String, AliyunInstanceTypeVO.InstanceType> getInstanceTypeMap();
+
+    Map<String, Set<String>> getInstanceTypeZoneMap(String regionId);
 }

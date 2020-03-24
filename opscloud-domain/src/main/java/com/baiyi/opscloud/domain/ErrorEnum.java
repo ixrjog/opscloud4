@@ -81,6 +81,13 @@ public enum ErrorEnum {
     TAG_NOT_EXIST(12003, "标签不存在！"),
     TAG_HAS_USED(12004, "标签正在使用！"),
 
+    // cloud
+    CLOUD_TYPE_IS_NULL(30002, "未指定云类型！"),
+
+    // cloudInstanceTemplate
+    CLOUD_INSTANCE_TEMPLATE_NOT_EXIST(30002, "云实例模版不存在！"),
+    CLOUD_INSTANCE_TEMPLATE_NAME_NON_COMPLIANCE_WITH_RULES(12002, "云实例模版名称不合规！"),
+
     // cloudServer
     CLOUD_SERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),
     CLOUD_SERVER_NOT_EXIST(30002, "云主机不存在！"),

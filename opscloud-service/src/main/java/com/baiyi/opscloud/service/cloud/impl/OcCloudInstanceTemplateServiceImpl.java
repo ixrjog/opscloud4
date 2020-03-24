@@ -29,4 +29,24 @@ public class OcCloudInstanceTemplateServiceImpl implements OcCloudInstanceTempla
         List<OcCloudInstanceTemplate> list = ocCloudInstanceTemplateMapper.fuzzyQueryOcCloudInstanceTemplateByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }
+
+    @Override
+    public void addOcCloudInstanceTemplate(OcCloudInstanceTemplate ocCloudInstanceTemplate) {
+        ocCloudInstanceTemplateMapper.insert(ocCloudInstanceTemplate);
+    }
+
+    @Override
+    public void updateOcCloudInstanceTemplate(OcCloudInstanceTemplate ocCloudInstanceTemplate) {
+        ocCloudInstanceTemplateMapper.updateByPrimaryKey(ocCloudInstanceTemplate);
+    }
+
+    @Override
+    public OcCloudInstanceTemplate queryOcCloudInstanceTemplateById(int id) {
+        return ocCloudInstanceTemplateMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void deleteOcCloudInstanceTemplateById(int id) {
+        ocCloudInstanceTemplateMapper.deleteByPrimaryKey(id);
+    }
 }

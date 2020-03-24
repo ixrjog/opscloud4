@@ -28,6 +28,9 @@ public class CloudVPCParam {
         @ApiModelProperty(value = "扩展属性",example = "1")
         private Integer extend;
 
+        @ApiModelProperty(value = "地区id")
+        private String regionId;
+
         @ApiModelProperty(value = "是否有效", example = "1")
         private Integer isActive;
 

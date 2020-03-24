@@ -12,4 +12,12 @@ import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTemplateParam;
 public interface OcCloudInstanceTemplateService {
 
     DataTable<OcCloudInstanceTemplate> fuzzyQueryOcCloudInstanceTemplateByParam(CloudInstanceTemplateParam.PageQuery pageQuery);
+
+    void addOcCloudInstanceTemplate(OcCloudInstanceTemplate ocCloudInstanceTemplate);
+
+    void updateOcCloudInstanceTemplate(OcCloudInstanceTemplate ocCloudInstanceTemplate);
+
+    OcCloudInstanceTemplate queryOcCloudInstanceTemplateById(int id);
+
+    void deleteOcCloudInstanceTemplateById(int id);
 }

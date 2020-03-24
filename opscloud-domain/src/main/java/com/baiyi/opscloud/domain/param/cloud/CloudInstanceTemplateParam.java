@@ -25,4 +25,5 @@ public class CloudInstanceTemplateParam {
         private String queryName;
 
     }
+
 }

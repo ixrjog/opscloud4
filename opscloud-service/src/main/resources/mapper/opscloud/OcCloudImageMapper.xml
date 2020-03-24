@@ -45,6 +45,9 @@
       <if test="isDeleted != null and isDeleted != -1">
         and is_deleted = #{isDeleted}
       </if>
+      <if test="regionId != null and regionId != ''">
+        and region_id = #{regionId}
+      </if>
       <if test="queryName != null and queryName != ''">
         and ( image_id like "%" #{queryName} "%"
         or image_name like "%" #{queryName} "%"

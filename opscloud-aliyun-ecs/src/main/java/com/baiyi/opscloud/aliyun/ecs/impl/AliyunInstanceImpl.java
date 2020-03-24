@@ -1,17 +1,21 @@
 package com.baiyi.opscloud.aliyun.ecs.impl;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
+import com.aliyuncs.ecs.model.v20140526.DescribeZonesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
 import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunInstanceHandler;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -37,8 +41,29 @@ public class AliyunInstanceImpl implements AliyunInstance {
     @Override
     public Map<String, AliyunInstanceTypeVO.InstanceType> getInstanceTypeMap() {
         List<DescribeInstanceTypesResponse.InstanceType> data = aliyunInstanceHandler.getInstanceTypeList(aliyunCore.getAccount().getRegionId());
-        //instanceTypeList .stream().map(e -> BeanCopierUtils.copyProperties(e, AliyunInstanceTypeVO.InstanceType.class)).collect(Collectors.toList());
         return data.stream().collect(Collectors.toMap(DescribeInstanceTypesResponse.InstanceType::getInstanceTypeId
                 , a -> BeanCopierUtils.copyProperties(a, AliyunInstanceTypeVO.InstanceType.class), (k1, k2) -> k1));
     }
+
+    @Cacheable(cacheNames = "instanceTypeContext", key = "#root.targetClass + ':' + #regionId")
+    @Override
+    public Map<String, Set<String>> getInstanceTypeZoneMap(String regionId) {
+        List<DescribeZonesResponse.Zone> list
+                = aliyunInstanceHandler.getZoneList(regionId);
+        Map<String, Set<String>> map = Maps.newHashMap();
+        for (DescribeZonesResponse.Zone zone : list) {
+            for (String type : zone.getAvailableInstanceTypes()) {
+                if (map.containsKey(type)) {
+                    map.get(type).add(zone.getZoneId());
+                } else {
+                    Set<String> set = Sets.newHashSet();
+                    set.add(zone.getZoneId());
+                    map.put(type, set);
+                }
+            }
+        }
+        return map;
+    }
+
+
 }

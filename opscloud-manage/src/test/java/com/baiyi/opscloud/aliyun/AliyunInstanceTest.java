@@ -7,6 +7,8 @@ import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
 import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunInstanceHandler;
+import com.baiyi.opscloud.common.base.CloudType;
+import com.baiyi.opscloud.facade.CloudInstanceFacade;
 import com.google.common.collect.Maps;
 import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
@@ -28,6 +30,9 @@ public class AliyunInstanceTest extends BaseUnit {
 
     @Resource
     private AliyunInstance aliyunInstance;
+
+    @Resource
+    private  CloudInstanceFacade cloudInstanceFacade;
 
     @Resource
     private AliyunCore aliyunCore;
@@ -59,6 +64,11 @@ public class AliyunInstanceTest extends BaseUnit {
             }
         }
         System.err.println(JSON.toJSONString(map));
+    }
+
+    @Test
+    void testSyncType(){
+        cloudInstanceFacade.syncInstanceType(CloudType.ALIYUN.getType());
     }
 
 
