@@ -30,8 +30,6 @@ public class UserController {
     @Resource
     private UserFacade userFacade;
 
-    // user
-
     /**
      * 管理员查询
      *
