@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTemplateParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
 import com.baiyi.opscloud.facade.CloudInstanceFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -75,6 +76,12 @@ public class CloudInstanceController {
     @GetMapping(value = "/cpu/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<Integer>> queryCloudCpuCoreList(@RequestParam int cloudType) {
         return new HttpResult<>(cloudInstanceFacade.queryCpuCoreList(cloudType));
+    }
+
+    @ApiOperation(value = "查询模版可用区中虚拟交换机详情")
+    @GetMapping(value = "/template/vswitch/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OcCloudVSwitchVO.Vswitch>> queryCloudInstanceTemplateVSwitch(@RequestParam int templateId, String zoneId) {
+        return new HttpResult<>(cloudInstanceFacade.queryCloudInstanceTemplateVSwitch(templateId, zoneId));
     }
 
 }

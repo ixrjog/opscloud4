@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.cloud;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
 
 import java.util.List;
 
@@ -10,6 +12,8 @@ import java.util.List;
  * @Version 1.0
  */
 public interface OcCloudVpcSecurityGroupService {
+
+    DataTable<OcCloudVpcSecurityGroup> queryOcCloudVPCSecurityGroupByParam(CloudVPCSecurityGroupParam.PageQuery pageQuery);
 
     void deleteOcCloudVpcSecurityGroupByVpcId(String vpcId);
 

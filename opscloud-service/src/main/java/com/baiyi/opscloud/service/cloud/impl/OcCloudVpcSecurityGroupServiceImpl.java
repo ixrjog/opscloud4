@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
 import com.baiyi.opscloud.mapper.opscloud.OcCloudVpcSecurityGroupMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -20,6 +23,13 @@ public class OcCloudVpcSecurityGroupServiceImpl implements OcCloudVpcSecurityGro
 
     @Resource
     private OcCloudVpcSecurityGroupMapper ocCloudVpcSecurityGroupMapper;
+
+    @Override
+    public DataTable<OcCloudVpcSecurityGroup> queryOcCloudVPCSecurityGroupByParam(CloudVPCSecurityGroupParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcCloudVpcSecurityGroup> ocCloudVpcSecurityGroupList = ocCloudVpcSecurityGroupMapper.queryOcCloudVPCSecurityGroupByParam(pageQuery);
+        return new DataTable<>(ocCloudVpcSecurityGroupList, page.getTotal());
+    }
 
     @Override
     public void deleteOcCloudVpcSecurityGroupByVpcId(String vpcId) {

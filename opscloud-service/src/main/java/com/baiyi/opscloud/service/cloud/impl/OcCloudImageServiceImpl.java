@@ -55,6 +55,14 @@ public class OcCloudImageServiceImpl implements OcCloudImageService {
     }
 
     @Override
+    public OcCloudImage queryOcCloudImageByImageId(String imageId) {
+        Example example = new Example(OcCloudImage.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("imageId", imageId);
+        return ocCloudImageMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void deleteOcCloudImageById(int id) {
         ocCloudImageMapper.deleteByPrimaryKey(id);
     }

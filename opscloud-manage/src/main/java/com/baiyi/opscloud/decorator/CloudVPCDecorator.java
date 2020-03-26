@@ -43,6 +43,23 @@ public class CloudVPCDecorator {
         return cloudVpc;
     }
 
+    /**
+     * 模版设置专用（按zoneIds匹配）
+     * @param cloudVpc
+     * @param zoneIds
+     * @return
+     */
+    public OcCloudVPCVO.CloudVpc decorator(OcCloudVPCVO.CloudVpc cloudVpc, List<String> zoneIds) {
+        String vpcId = cloudVpc.getVpcId();
+        // 装饰安全组
+        List<OcCloudVpcSecurityGroup> securityGroupList = ocCloudVpcSecurityGroupService.queryOcCloudVpcSecurityGroupByVpcId(vpcId);
+        cloudVpc.setSecurityGroups(BeanCopierUtils.copyListProperties(securityGroupList, OcCloudVPCSecurityGroupVO.SecurityGroup.class));
+        // 装饰虚拟交换机 by zoneId
+        List<OcCloudVpcVswitch> vswitchList = ocCloudVpcVswitchService.queryOcCloudVpcVswitchByVpcIdAndZoneIds(vpcId, zoneIds);
+        cloudVpc.setVswitchMap(getVswitchMap(vswitchList));
+        return cloudVpc;
+    }
+
     private Map<String, List<OcCloudVSwitchVO.Vswitch>> getVswitchMap(List<OcCloudVpcVswitch> vswitchList) {
         // zoneId
         Map<String, List<OcCloudVSwitchVO.Vswitch>> map = Maps.newHashMap();

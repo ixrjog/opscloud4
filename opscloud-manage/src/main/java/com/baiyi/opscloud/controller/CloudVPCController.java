@@ -3,6 +3,8 @@ package com.baiyi.opscloud.controller;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCSecurityGroupVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCVO;
 import com.baiyi.opscloud.facade.CloudVPCFacade;
 import io.swagger.annotations.Api;
@@ -28,8 +30,14 @@ public class CloudVPCController {
 
     @ApiOperation(value = "分页模糊查询云VPC列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudVPCVO.CloudVpc>> queryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<OcCloudVPCVO.CloudVpc>> fuzzyQueryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudVPCFacade.fuzzyQueryCloudVPCPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询云VPC列表(按可用区过滤)")
+    @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcCloudVPCVO.CloudVpc>> queryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
+        return new HttpResult<>(cloudVPCFacade.queryCloudVPCPage(pageQuery));
     }
 
     @ApiOperation(value = "同步指定的VPC")
@@ -48,5 +56,12 @@ public class CloudVPCController {
     @PutMapping(value = "/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> setCloudImageActive(@RequestParam int id) {
         return new HttpResult<>(cloudVPCFacade.setCloudVPCActive(id));
+    }
+
+    // security_group
+    @ApiOperation(value = "分页查询云VPC安全组列表")
+    @PostMapping(value = "/security/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcCloudVPCSecurityGroupVO.SecurityGroup>> queryCloudVPCSecurityGroupPage(@RequestBody @Valid CloudVPCSecurityGroupParam.PageQuery pageQuery) {
+        return new HttpResult<>(cloudVPCFacade.queryCloudVPCSecurityGroupPage(pageQuery));
     }
 }

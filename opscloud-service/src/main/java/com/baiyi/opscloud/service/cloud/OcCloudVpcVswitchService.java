@@ -15,6 +15,8 @@ public interface OcCloudVpcVswitchService {
 
     List<OcCloudVpcVswitch> queryOcCloudVpcVswitchByVpcId(String vpcId);
 
+    List<OcCloudVpcVswitch> queryOcCloudVpcVswitchByVpcIdAndZoneIds(String vpcId, List<String> zoneIds);
+
     OcCloudVpcVswitch queryOcCloudVpcVswitchById(int id);
 
     OcCloudVpcVswitch queryOcCloudVpcVswitchByVswitchId(String vswitchId);
@@ -22,4 +24,6 @@ public interface OcCloudVpcVswitchService {
     void deleteOcCloudVpcVswitchById(int id);
 
     void addOcCloudVpcVswitch(OcCloudVpcVswitch ocCloudVpcVswitch);
+
+    void updateOcCloudVpcVswitch(OcCloudVpcVswitch ocCloudVpcVswitch);
 }

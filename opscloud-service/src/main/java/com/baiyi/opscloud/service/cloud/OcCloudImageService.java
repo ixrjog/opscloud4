@@ -23,5 +23,7 @@ public interface OcCloudImageService {
 
     OcCloudImage queryOcCloudImageById(int id);
 
+    OcCloudImage queryOcCloudImageByImageId(String imageId);
+
     void deleteOcCloudImageById(int id);
 }

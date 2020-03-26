@@ -31,6 +31,11 @@ public class OcCloudVpcVswitchServiceImpl implements OcCloudVpcVswitchService {
     }
 
     @Override
+    public List<OcCloudVpcVswitch> queryOcCloudVpcVswitchByVpcIdAndZoneIds(String vpcId, List<String> zoneIds) {
+        return ocCloudVpcVswitchMapper.queryOcCloudVpcVswitchByVpcIdAndZoneIds(vpcId, zoneIds);
+    }
+
+    @Override
     public OcCloudVpcVswitch queryOcCloudVpcVswitchById(int id) {
         return ocCloudVpcVswitchMapper.selectByPrimaryKey(id);
     }
@@ -51,6 +56,11 @@ public class OcCloudVpcVswitchServiceImpl implements OcCloudVpcVswitchService {
     @Override
     public void addOcCloudVpcVswitch(OcCloudVpcVswitch ocCloudVpcVswitch) {
         ocCloudVpcVswitchMapper.insert(ocCloudVpcVswitch);
+    }
+
+    @Override
+    public void updateOcCloudVpcVswitch(OcCloudVpcVswitch ocCloudVpcVswitch) {
+        ocCloudVpcVswitchMapper.updateByPrimaryKey(ocCloudVpcVswitch);
     }
 
     private Example getExampleByVpcId(String vpcId) {

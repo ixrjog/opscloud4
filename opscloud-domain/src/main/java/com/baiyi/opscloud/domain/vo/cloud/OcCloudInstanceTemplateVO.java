@@ -23,7 +23,19 @@ public class OcCloudInstanceTemplateVO {
         @ApiModelProperty(value = "YAML格式配置模版")
         private String templateYAML;
 
+        @ApiModelProperty(value = "选中的虚拟交换机")
+        private List<String> vswitchChecked;
+
         private InstanceTemplate instanceTemplate;
+
+        @ApiModelProperty(value = "实例可用区")
+        private List<InstanceZone> instanceZones;
+
+        @ApiModelProperty(value = "选中的安全组")
+        private OcCloudVPCSecurityGroupVO.SecurityGroup securityGroup;
+
+        @ApiModelProperty(value = "选中的云镜像")
+        private OcCloudImageVO.CloudImage cloudImage;
 
         private Integer id;
         private Integer cloudType;
@@ -43,8 +55,7 @@ public class OcCloudInstanceTemplateVO {
     }
 
     @Data
-    public  static class InstanceTemplate {
-
+    public static class InstanceTemplate {
         // 云类型
         private Integer cloudType;
         // 模版名称
@@ -57,16 +68,23 @@ public class OcCloudInstanceTemplateVO {
         private Disk disk; // 磁盘
         // 可用区
         private List<String> zoneIds;
+        private List<VSwitch> vswitchs;
         private String vpcId;
         private String vpcName;
         private String securityGroupId;
         private String securityGroupName;
         private String imageId;
-
     }
 
     @Data
-    public  static class Instance {
+    public static class InstanceZone {
+        private String zoneId;
+        @ApiModelProperty(value = "是否有效，实例可用区&VPC虚拟交换机都存在")
+        private boolean isActive = false;
+    }
+
+    @Data
+    public static class Instance {
         private String typeFamily;
         private String typeId;
         private Integer cpuCoreCount;
@@ -74,14 +92,21 @@ public class OcCloudInstanceTemplateVO {
     }
 
     @Data
-    public  static class DiskDetail {
+    public static class DiskDetail {
         private Integer size;
         private String category;
     }
 
     @Data
-    public  static class Disk {
+    public static class Disk {
         private DiskDetail sysDisk;
         private DiskDetail dataDisk;
+    }
+
+    @Data
+    public static class VSwitch {
+        private String vswitchName;
+        private String vswitchId;
+        private String zoneId;
     }
 }

@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTemplateParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
 
 import java.util.List;
 
@@ -31,4 +32,6 @@ public interface CloudInstanceFacade {
     List<String> queryCloudRegionList(int cloudType);
 
     List<Integer> queryCpuCoreList(int cloudType);
+
+    List<OcCloudVSwitchVO.Vswitch> queryCloudInstanceTemplateVSwitch(int templateId, String zoneId);
 }

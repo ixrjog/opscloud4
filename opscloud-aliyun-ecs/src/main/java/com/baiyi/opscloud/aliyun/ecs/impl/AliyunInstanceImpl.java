@@ -1,11 +1,13 @@
 package com.baiyi.opscloud.aliyun.ecs.impl;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstanceTypesResponse;
+import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeZonesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
 import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunInstanceHandler;
+import com.baiyi.opscloud.aliyun.ecs.handler.AliyunVPCHandler;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -31,6 +33,8 @@ public class AliyunInstanceImpl implements AliyunInstance {
     @Resource
     private AliyunInstanceHandler aliyunInstanceHandler;
 
+    @Resource
+    private AliyunVPCHandler aliyunVPCHandler;
 
     /**
      * key : instanceType = ecs.t1.xsmall
@@ -65,5 +69,9 @@ public class AliyunInstanceImpl implements AliyunInstance {
         return map;
     }
 
+    @Override
+    public List<DescribeVSwitchesResponse.VSwitch> getVSwitchList(String regionId, String vpcId) {
+        return aliyunVPCHandler.getVSwitchList(regionId, vpcId);
+    }
 
 }
