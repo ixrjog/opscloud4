@@ -16,8 +16,7 @@ public class OcCloudVSwitchVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Vswitch {
-
+    public static class VSwitch {
         private Integer id;
         private String regionId;
         private String zoneId;

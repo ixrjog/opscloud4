@@ -33,5 +33,5 @@ public interface CloudInstanceFacade {
 
     List<Integer> queryCpuCoreList(int cloudType);
 
-    List<OcCloudVSwitchVO.Vswitch> queryCloudInstanceTemplateVSwitch(int templateId, String zoneId);
+    List<OcCloudVSwitchVO.VSwitch> queryCloudInstanceTemplateVSwitch(int templateId, String zoneId);
 }

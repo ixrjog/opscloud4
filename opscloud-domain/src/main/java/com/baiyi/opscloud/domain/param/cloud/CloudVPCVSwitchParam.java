@@ -8,10 +8,10 @@ import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
- * @Date 2020/3/25 10:33 上午
+ * @Date 2020/3/27 2:11 下午
  * @Version 1.0
  */
-public class CloudVPCSecurityGroupParam {
+public class CloudVPCVSwitchParam {
 
     @Data
     @NoArgsConstructor
@@ -21,13 +21,11 @@ public class CloudVPCSecurityGroupParam {
         @ApiModelProperty(value = "查询名称")
         private String queryName;
 
-        @ApiModelProperty(value = "扩展属性",example = "1")
-        private Integer extend;
-
         @ApiModelProperty(value = "可用区id")
         private String vpcId;
 
         @ApiModelProperty(value = "是否有效", example = "1")
         private Integer isActive;
+
     }
 }

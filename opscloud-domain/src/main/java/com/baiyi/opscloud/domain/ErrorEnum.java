@@ -103,6 +103,8 @@ public enum ErrorEnum {
 
     // cloudVPC
     CLOUD_VPC_NOT_EXIST(30002, "云VPC不存在！"),
+    CLOUD_VPC_SECURITY_GROUP_NOT_EXIST(30002, "云VPC安全组不存在！"),
+    CLOUD_VPC_VSWITCH_NOT_EXIST(30002, "云VPC虚拟交换机不存在！"),
 
     // aliyunRDSMysql
     ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR(30002, "创建云数据库账户错误！"),

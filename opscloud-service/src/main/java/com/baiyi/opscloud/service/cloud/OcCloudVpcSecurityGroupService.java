@@ -26,4 +26,6 @@ public interface OcCloudVpcSecurityGroupService {
     void deleteOcCloudVpcSecurityGroupById(int id);
 
     void addOcCloudVpcSecurityGroup(OcCloudVpcSecurityGroup ocCloudVpcSecurityGroup);
+
+    void updateOcCloudVpcSecurityGroup(OcCloudVpcSecurityGroup ocCloudVpcSecurityGroup);
 }

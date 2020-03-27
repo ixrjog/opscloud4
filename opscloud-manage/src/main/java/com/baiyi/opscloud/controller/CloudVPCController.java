@@ -4,8 +4,10 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCSecurityGroupVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCVO;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
 import com.baiyi.opscloud.facade.CloudVPCFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -54,7 +56,7 @@ public class CloudVPCController {
 
     @ApiOperation(value = "设置VPC是否有效")
     @PutMapping(value = "/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> setCloudImageActive(@RequestParam int id) {
+    public HttpResult<Boolean> setCloudVPCActive(@RequestParam int id) {
         return new HttpResult<>(cloudVPCFacade.setCloudVPCActive(id));
     }
 
@@ -63,5 +65,23 @@ public class CloudVPCController {
     @PostMapping(value = "/security/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcCloudVPCSecurityGroupVO.SecurityGroup>> queryCloudVPCSecurityGroupPage(@RequestBody @Valid CloudVPCSecurityGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudVPCFacade.queryCloudVPCSecurityGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "设置VPC安全组是否有效")
+    @PutMapping(value = "/security/group/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setCloudVPCSecurityGroupActive(@RequestParam int id) {
+        return new HttpResult<>(cloudVPCFacade.setCloudVPCSecurityGroupActive(id));
+    }
+
+    @ApiOperation(value = "分页查询云VPC虚拟交换机列表")
+    @PostMapping(value = "/vswitch/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcCloudVSwitchVO.VSwitch>> queryCloudVPCVSwitchPage(@RequestBody @Valid CloudVPCVSwitchParam.PageQuery pageQuery) {
+        return new HttpResult<>(cloudVPCFacade.queryCloudVPCVSwitchPage(pageQuery));
+    }
+
+    @ApiOperation(value = "设置VPC虚拟交换机是否有效")
+    @PutMapping(value = "/vswitch/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setCloudVPCVSwitchActive(@RequestParam int id) {
+        return new HttpResult<>(cloudVPCFacade.setCloudVPCVSwitchActive(id));
     }
 }

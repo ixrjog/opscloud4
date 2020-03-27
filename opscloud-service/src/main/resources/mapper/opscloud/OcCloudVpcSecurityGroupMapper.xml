@@ -25,7 +25,9 @@
             resultMap="BaseResultMap">
         select * from oc_cloud_vpc_security_group
         <where>
-            is_active = 1
+            <if test="isActive != null and isActive != -1">
+                and is_active = #{isActive}
+            </if>
             <if test="vpcId != null and vpcId != ''">
                 and vpc_id = #{vpcId}
             </if>

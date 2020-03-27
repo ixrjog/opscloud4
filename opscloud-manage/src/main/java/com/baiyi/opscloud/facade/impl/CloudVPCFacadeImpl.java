@@ -15,6 +15,7 @@ import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
 import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCSecurityGroupVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCVO;
@@ -80,6 +81,13 @@ public class CloudVPCFacadeImpl implements CloudVPCFacade {
     }
 
     @Override
+    public DataTable<OcCloudVSwitchVO.VSwitch> queryCloudVPCVSwitchPage(CloudVPCVSwitchParam.PageQuery pageQuery) {
+        DataTable<OcCloudVpcVswitch> table = ocCloudVpcVswitchService.queryOcCloudVPCVswitchByParam(pageQuery);
+        List<OcCloudVSwitchVO.VSwitch> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudVSwitchVO.VSwitch.class);
+        return new DataTable<>(page, table.getTotalNum());
+    }
+
+    @Override
     public BusinessWrapper<Boolean> syncCloudVPCByKey(String key) {
         ICloudVPC cloudVPC = CloudVPCFactory.getCloudVPCByKey(key);
         return new BusinessWrapper<>(cloudVPC.syncVPC());
@@ -105,8 +113,28 @@ public class CloudVPCFacadeImpl implements CloudVPCFacade {
     }
 
     @Override
-    public List<OcCloudVSwitchVO.Vswitch> updateOcCloudVpcVswitch(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate, List<OcCloudInstanceTemplateVO.VSwitch> vswitchList) {
-        List<OcCloudVSwitchVO.Vswitch> result = Lists.newArrayList();
+    public BusinessWrapper<Boolean> setCloudVPCSecurityGroupActive(int id) {
+        OcCloudVpcSecurityGroup ocCloudVpcSecurityGroup = ocCloudVpcSecurityGroupService.queryOcCloudVpcSecurityGroupById(id);
+        if (ocCloudVpcSecurityGroup == null)
+            return new BusinessWrapper<>(ErrorEnum.CLOUD_VPC_SECURITY_GROUP_NOT_EXIST);
+        ocCloudVpcSecurityGroup.setIsActive(ocCloudVpcSecurityGroup.getIsActive() == 0 ? 1 : 0);
+        ocCloudVpcSecurityGroupService.updateOcCloudVpcSecurityGroup(ocCloudVpcSecurityGroup);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public  BusinessWrapper<Boolean> setCloudVPCVSwitchActive(int id){
+        OcCloudVpcVswitch ocCloudVpcVswitch = ocCloudVpcVswitchService.queryOcCloudVpcVswitchById(id);
+        if (ocCloudVpcVswitch == null)
+            return new BusinessWrapper<>(ErrorEnum.CLOUD_VPC_VSWITCH_NOT_EXIST);
+        ocCloudVpcVswitch.setIsActive(ocCloudVpcVswitch.getIsActive() == 0 ? 1 : 0);
+        ocCloudVpcVswitchService.updateOcCloudVpcVswitch(ocCloudVpcVswitch);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public List<OcCloudVSwitchVO.VSwitch> updateOcCloudVpcVSwitch(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate, List<OcCloudInstanceTemplateVO.VSwitch> vswitchList) {
+        List<OcCloudVSwitchVO.VSwitch> result = Lists.newArrayList();
         Set<String> vswitchIdSet = vswitchList.stream().map(OcCloudInstanceTemplateVO.VSwitch::getVswitchId).collect(Collectors.toSet());
 
         if (instanceTemplate.getCloudType() == CloudType.ALIYUN.getType()) {
@@ -119,7 +147,7 @@ public class CloudVPCFacadeImpl implements CloudVPCFacade {
                     ocCloudVpcVswitch.setAvailableIpAddressCount(vSwitch.getAvailableIpAddressCount().intValue());
                     ocCloudVpcVswitchService.updateOcCloudVpcVswitch(ocCloudVpcVswitch);
                     if (vswitchIdSet.contains(ocCloudVpcVswitch.getVswitchId()))
-                        result.add(BeanCopierUtils.copyProperties(ocCloudVpcVswitch, OcCloudVSwitchVO.Vswitch.class));
+                        result.add(BeanCopierUtils.copyProperties(ocCloudVpcVswitch, OcCloudVSwitchVO.VSwitch.class));
                 }
             }
         }

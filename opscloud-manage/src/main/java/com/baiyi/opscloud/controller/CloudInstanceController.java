@@ -80,7 +80,7 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "查询模版可用区中虚拟交换机详情")
     @GetMapping(value = "/template/vswitch/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<OcCloudVSwitchVO.Vswitch>> queryCloudInstanceTemplateVSwitch(@RequestParam int templateId, String zoneId) {
+    public HttpResult<List<OcCloudVSwitchVO.VSwitch>> queryCloudInstanceTemplateVSwitch(@RequestParam int templateId, String zoneId) {
         return new HttpResult<>(cloudInstanceFacade.queryCloudInstanceTemplateVSwitch(templateId, zoneId));
     }
 

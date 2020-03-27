@@ -174,12 +174,12 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
     }
 
     @Override
-    public List<OcCloudVSwitchVO.Vswitch> queryCloudInstanceTemplateVSwitch(int templateId, String zoneId) {
+    public List<OcCloudVSwitchVO.VSwitch> queryCloudInstanceTemplateVSwitch(int templateId, String zoneId) {
         OcCloudInstanceTemplate ocCloudInstanceTemplate = ocCloudInstanceTemplateService.queryOcCloudInstanceTemplateById(templateId);
         OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate = CloudInstanceTemplateUtils.convert(ocCloudInstanceTemplate.getTemplateYaml());
         List<OcCloudInstanceTemplateVO.VSwitch> vswitchList = instanceTemplate.getVswitchs();
         filterVSwitchListByZoneId(zoneId, vswitchList);
-        return cloudVPCFacade.updateOcCloudVpcVswitch(instanceTemplate, vswitchList);
+        return cloudVPCFacade.updateOcCloudVpcVSwitch(instanceTemplate, vswitchList);
     }
 
     /**

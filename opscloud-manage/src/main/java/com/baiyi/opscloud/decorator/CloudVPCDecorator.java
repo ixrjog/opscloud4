@@ -60,15 +60,15 @@ public class CloudVPCDecorator {
         return cloudVpc;
     }
 
-    private Map<String, List<OcCloudVSwitchVO.Vswitch>> getVswitchMap(List<OcCloudVpcVswitch> vswitchList) {
+    private Map<String, List<OcCloudVSwitchVO.VSwitch>> getVswitchMap(List<OcCloudVpcVswitch> vswitchList) {
         // zoneId
-        Map<String, List<OcCloudVSwitchVO.Vswitch>> map = Maps.newHashMap();
+        Map<String, List<OcCloudVSwitchVO.VSwitch>> map = Maps.newHashMap();
         for (OcCloudVpcVswitch vswitch : vswitchList) {
-            OcCloudVSwitchVO.Vswitch vsw = BeanCopierUtils.copyProperties(vswitch, OcCloudVSwitchVO.Vswitch.class);
+            OcCloudVSwitchVO.VSwitch vsw = BeanCopierUtils.copyProperties(vswitch, OcCloudVSwitchVO.VSwitch.class);
             if (map.containsKey(vswitch.getZoneId())) {
                 map.get(vswitch.getZoneId()).add(vsw);
             } else {
-                List<OcCloudVSwitchVO.Vswitch> list = Lists.newArrayList();
+                List<OcCloudVSwitchVO.VSwitch> list = Lists.newArrayList();
                 list.add(vsw);
                 map.put(vswitch.getZoneId(), list);
             }

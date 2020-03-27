@@ -64,6 +64,11 @@ public class OcCloudVpcSecurityGroupServiceImpl implements OcCloudVpcSecurityGro
         ocCloudVpcSecurityGroupMapper.insert(ocCloudVpcSecurityGroup);
     }
 
+    @Override
+    public void updateOcCloudVpcSecurityGroup(OcCloudVpcSecurityGroup ocCloudVpcSecurityGroup) {
+        ocCloudVpcSecurityGroupMapper.updateByPrimaryKey(ocCloudVpcSecurityGroup);
+    }
+
     private Example getExampleByVpcId(String vpcId) {
         Example example = new Example(OcCloudVpcSecurityGroup.class);
         Example.Criteria criteria = example.createCriteria();

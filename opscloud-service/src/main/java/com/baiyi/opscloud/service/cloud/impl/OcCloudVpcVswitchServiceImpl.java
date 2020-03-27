@@ -1,8 +1,13 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
 import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
 import com.baiyi.opscloud.mapper.opscloud.OcCloudVpcVswitchMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcVswitchService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -23,6 +28,13 @@ public class OcCloudVpcVswitchServiceImpl implements OcCloudVpcVswitchService {
     @Override
     public void deleteOcCloudVpcVswitchByVpcId(String vpcId) {
         ocCloudVpcVswitchMapper.deleteByExample(getExampleByVpcId(vpcId));
+    }
+
+    @Override
+    public  DataTable<OcCloudVpcVswitch> queryOcCloudVPCVswitchByParam(CloudVPCVSwitchParam.PageQuery pageQuery){
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcCloudVpcVswitch> list = ocCloudVpcVswitchMapper.queryOcCloudVPCSecurityGroupByParam(pageQuery);
+        return new DataTable<>(list, page.getTotal());
     }
 
     @Override

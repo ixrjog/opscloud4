@@ -23,7 +23,7 @@ public class OcCloudVPCVO {
     public static class CloudVpc {
 
         private List<OcCloudVPCSecurityGroupVO.SecurityGroup> securityGroups;
-        private Map<String, List<OcCloudVSwitchVO.Vswitch>> vswitchMap;
+        private Map<String, List<OcCloudVSwitchVO.VSwitch>> vswitchMap;
 
         @ApiModelProperty(value = "主键")
         private Integer id;

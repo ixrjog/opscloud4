@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.cloud;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
+import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
 
 import java.util.List;
 
@@ -12,6 +14,8 @@ import java.util.List;
 public interface OcCloudVpcVswitchService {
 
     void deleteOcCloudVpcVswitchByVpcId(String vpcId);
+
+    DataTable<OcCloudVpcVswitch> queryOcCloudVPCVswitchByParam(CloudVPCVSwitchParam.PageQuery pageQuery);
 
     List<OcCloudVpcVswitch> queryOcCloudVpcVswitchByVpcId(String vpcId);
 
