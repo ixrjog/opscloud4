@@ -3,7 +3,7 @@ package com.baiyi.opscloud.cloud.server.impl;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.aliyun.ecs.AliyunECS;
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
+import com.baiyi.opscloud.cloud.server.builder.OcCloudServerBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.AliyunECSInstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AliyunECSInstance;
 import com.baiyi.opscloud.common.base.CloudServerType;
@@ -69,7 +69,7 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
     protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof AliyunECSInstance)) return null;
         AliyunECSInstance i = (AliyunECSInstance) instance;
-        return OcCloudserverBuilder.build(i, getInstanceDetail(instance));
+        return OcCloudServerBuilder.build(i, getInstanceDetail(instance));
     }
 
     @Override

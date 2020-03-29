@@ -27,5 +27,4 @@ public class CloudServerParam {
         private Integer serverStatus;
     }
 
-
 }

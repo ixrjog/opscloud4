@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
+import com.baiyi.opscloud.cloud.server.builder.OcCloudServerBuilder;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
@@ -59,7 +59,7 @@ public class VcsaVMCloudServer<T> extends BaseCloudServer<T> implements ICloudSe
     protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof VMInstance)) return null;
         VMInstance i = (VMInstance) instance;
-        return OcCloudserverBuilder.build(i, vcsaVM.getZone());
+        return OcCloudServerBuilder.build(i, vcsaVM.getZone());
     }
 
     @Override

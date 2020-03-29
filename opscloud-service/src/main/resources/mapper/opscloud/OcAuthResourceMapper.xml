@@ -34,11 +34,11 @@
     <select id="queryOcAuthRoleBindResourceByParam"
             parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$BindResourcePageQuery"
             resultMap="BaseResultMap">
-    select a0.id, a1.group_id, a1.resource_name, a1.comment, a1.need_auth, a1.create_time, a1.update_time
-       from oc_auth_role_resource a0
-       join oc_auth_resource a1 on a0.resource_id = a1.id
-       where a0.role_id = #{roleId}
-       and a1.group_id = #{groupId}
+        select a0.id, a1.group_id, a1.resource_name, a1.comment, a1.need_auth, a1.create_time, a1.update_time
+          from oc_auth_role_resource a0
+          join oc_auth_resource a1 on a0.resource_id = a1.id
+          where a0.role_id = #{roleId}
+          and a1.group_id = #{groupId}
   </select>
 
     <!--  查询角色未绑定资源-->

@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.cloud;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcCloudImage;
+import com.baiyi.opscloud.domain.param.cloud.CloudImageParam;
 
 import java.util.List;
 
@@ -12,4 +14,16 @@ import java.util.List;
 public interface OcCloudImageService {
 
     List<OcCloudImage> queryOcCloudImageByType(int cloudType);
+
+    void addOcCloudImage(OcCloudImage ocCloudImage);
+
+    void updateOcCloudImage(OcCloudImage ocCloudImage);
+
+    DataTable<OcCloudImage> fuzzyQueryOcCloudImageByParam(CloudImageParam.PageQuery pageQuery);
+
+    OcCloudImage queryOcCloudImageById(int id);
+
+    OcCloudImage queryOcCloudImageByImageId(String imageId);
+
+    void deleteOcCloudImageById(int id);
 }

@@ -31,7 +31,6 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     @Override
     public DataTable<OcCloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
         DataTable<OcCloudServer> table = ocCloudServerService.queryOcCloudServerByParam(pageQuery);
-
         List<OcCloudServerVO.CloudServer> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudServerVO.CloudServer.class);
         DataTable<OcCloudServerVO.CloudServer> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
@@ -64,4 +63,5 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
         ocCloudServer.setServerStatus(cloudServerStatus);
         ocCloudServerService.updateOcCloudServer(ocCloudServer);
     }
+
 }

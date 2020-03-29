@@ -50,7 +50,6 @@ public class CloudDBDecorator {
             List<OcCloudDbAccount> ocCloudDbAccountList = ocCloudDBAccountService.queryOcCloudDbAccountByCloudDbId(cloudDB.getId());
             cloudDB.setAccounts(BeanCopierUtils.copyListProperties(ocCloudDbAccountList, OcCloudDBAccountVO.CloudDBAccount.class));
             cloudDB.setPrivileges(ocCloudDbAccountList.stream().map(e -> e.getAccountPrivilege()).collect(Collectors.toList()));
-
         }
         return cloudDB;
     }

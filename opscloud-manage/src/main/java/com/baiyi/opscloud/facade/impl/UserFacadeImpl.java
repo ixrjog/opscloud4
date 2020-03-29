@@ -7,7 +7,7 @@ import com.baiyi.opscloud.bo.UserGroupBO;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CredentialType;
-import com.baiyi.opscloud.common.base.Ressource;
+import com.baiyi.opscloud.common.base.Resource;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
 import com.baiyi.opscloud.convert.UserCredentialConvert;
@@ -37,7 +37,6 @@ import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -49,40 +48,40 @@ import java.util.stream.Collectors;
 @Service
 public class UserFacadeImpl implements UserFacade {
 
-    @Resource
+    @javax.annotation.Resource
     private OcUserService ocUserService;
 
-    @Resource
+    @javax.annotation.Resource
     private OcUserGroupService ocUserGroupService;
 
-    @Resource
+    @javax.annotation.Resource
     private StringEncryptor stringEncryptor;
 
-    @Resource
+    @javax.annotation.Resource
     private AccountCenter accountCenter;
 
-    @Resource
+    @javax.annotation.Resource
     private GroupRepo groupRepo;
 
-    @Resource
+    @javax.annotation.Resource
     private PersonRepo personRepo;
 
-    @Resource
+    @javax.annotation.Resource
     private UserGroupDecorator userGroupDecorator;
 
-    @Resource
+    @javax.annotation.Resource
     private UserDecorator userDecorator;
 
-    @Resource
+    @javax.annotation.Resource
     private UserPermissionFacade userPermissionFacade;
 
-    @Resource
+    @javax.annotation.Resource
     private OcUserApiTokenService ocUserApiTokenService;
 
-    @Resource
+    @javax.annotation.Resource
     private AuthFacade authFacade;
 
-    @Resource
+    @javax.annotation.Resource
     private OcUserCredentialService ocUserCredentialService;
 
     @Override
@@ -119,14 +118,37 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public BusinessWrapper<Boolean> delUserApiToken(int id) {
         OcUserApiToken ocUserApiToken = ocUserApiTokenService.queryOcUserApiTokenById(id);
-        if(!SessionUtils.getUsername().equals(ocUserApiToken.getUsername()))
+        if (!SessionUtils.getUsername().equals(ocUserApiToken.getUsername()))
             return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
         ocUserApiTokenService.delOcUserApiTokenById(id);
         return BusinessWrapper.SUCCESS;
     }
 
+    /**
+     * 2次鉴权
+     * @param userId
+     * @param resource
+     * @return
+     */
+    private BusinessWrapper<Boolean> enhancedAuthority(int userId, String resource) {
+        // 公共接口需要2次鉴权
+        String username = SessionUtils.getUsername();
+        OcUser checkOcUser = ocUserService.queryOcUserById(userId);
+        if (!username.equals(checkOcUser.getUsername())) {
+            BusinessWrapper<Boolean> wrapper = authFacade.authenticationByResourceName(resource);
+            if (!wrapper.isSuccess())
+                return wrapper;
+        }
+        return BusinessWrapper.SUCCESS;
+    }
+
     @Override
     public BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
+        // 公共接口需要2次鉴权
+        BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(),Resource.USER_CREDENTIAL_SAVE);
+        if(!wrapper.isSuccess())
+            return wrapper;
+
         if (userCredential.getCredentialType() == null)
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_TYPE_ERROR);
         if (StringUtils.isEmpty(userCredential.getCredential()))
@@ -144,7 +166,7 @@ public class UserFacadeImpl implements UserFacade {
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
         }
         // sshkey push
-        if(userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType()){
+        if (userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType()) {
             accountCenter.pushSSHKey(ocUser);
         }
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
@@ -163,14 +185,9 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user) {
         // 公共接口需要2次鉴权
-        String username = SessionUtils.getUsername();
-        OcUser checkOcUser = ocUserService.queryOcUserById(user.getId());
-        if (!username.equals(checkOcUser.getUsername())) {
-            BusinessWrapper<Boolean> wrapper = authFacade.authenticationByResourceName(Ressource.USER_UPDATE);
-            if (!wrapper.isSuccess())
-                return wrapper;
-        }
-
+        BusinessWrapper<Boolean> wrapper = enhancedAuthority(user.getId(),Resource.USER_UPDATE);
+        if(!wrapper.isSuccess())
+            return wrapper;
         OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
         String password = ""; // 用户密码原文
         // 用户尝试修改密码

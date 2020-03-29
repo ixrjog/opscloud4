@@ -31,6 +31,14 @@ public class AliyunCoreImpl implements AliyunCore {
     }
 
     @Override
+    public AliyunAccount getAccount() {
+        for (AliyunAccount aliyunAccount : aliyunCoreConfig.getAccounts())
+            if (aliyunAccount.getMaster())
+                return aliyunAccount;
+        return null;
+    }
+
+    @Override
     public List<String> getRegionIds() {
         for (AliyunAccount aliyunAccount : aliyunCoreConfig.getAccounts())
             if (aliyunAccount.getMaster())

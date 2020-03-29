@@ -24,7 +24,7 @@ public class AliyunImageTest extends BaseUnit {
     private AliyunCore aliyunCore;
 
     @Test
-    void aaa() {
+    void testGetImage() {
         for (String regionId : aliyunCore.getRegionIds()) {
             List<DescribeImagesResponse.Image> list = aliyunImageHandler.getImageList(regionId, true);
             System.err.println(JSON.toJSONString(list));

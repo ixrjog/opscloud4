@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.builder.OcCloudserverBuilder;
+import com.baiyi.opscloud.cloud.server.builder.OcCloudServerBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.ZabbixHostDecorator;
 import com.baiyi.opscloud.cloud.server.instance.ZabbixHostInstance;
 import com.baiyi.opscloud.common.base.CloudServerType;
@@ -76,7 +76,7 @@ public class ZabbixHostCloudServer<T> extends BaseCloudServer<T> implements IClo
     protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof ZabbixHostInstance)) return null;
         ZabbixHostInstance i = (ZabbixHostInstance) instance;
-        return OcCloudserverBuilder.build(i, getInstanceDetail(instance), zabbixConfig.getZone());
+        return OcCloudServerBuilder.build(i, getInstanceDetail(instance), zabbixConfig.getZone());
     }
 
 }

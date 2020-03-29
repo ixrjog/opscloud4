@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class OcCloudserverBO {
+public class OcCloudServerBO {
 
     private Integer id;
     private String serverName;
