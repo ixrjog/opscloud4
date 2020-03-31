@@ -57,6 +57,8 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
     public static final String TASK_STATUS_STARTING = "STARTING";
     // 实例正常运行
     public static final String TASK_STATUS_RUNNING = "RUNNING";
+    // 已录入云服务器实例
+    public static final String TASK_STATUS_RECORDED = "RECORDED";
 
     public static final int TASK_TIMEOUT_MINUTE = 5;
 
@@ -65,6 +67,7 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
     public void doCreateInstanceTask(OcCloudInstanceTask ocCloudInstanceTask, CreateCloudInstanceBO createCloudInstanceBO) {
         List<String> vswitchIds = getVswitchIdList(createCloudInstanceBO);
         int taskId = ocCloudInstanceTask.getId();
+        String regionId = createCloudInstanceBO.getCloudInstanceTemplate().getRegionId();
         // 当前可用区下的虚拟交换机地址池ip不足
         if (vswitchIds.isEmpty() || vswitchIds.size() < createCloudInstanceBO.getCreateCloudInstance().getCreateSize()) {
             saveCreateInstanceTaskError(ocCloudInstanceTask, "当前可用区下的虚拟交换机地址池ip不足");
@@ -89,13 +92,15 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
             // 分配公网
             createInstanceTaskHandler.allocatePublicIpAddressHandler(queryTaskMember(taskId,
                     TASK_STATUS_CREATE_INSTANCE), createCloudInstanceBO.getCreateCloudInstance().getAllocatePublicIpAddress());
-            // 查询实例详情并录入ip
             // 启动实例
             createInstanceTaskHandler.startInstanceHandler(queryTaskMember(taskId,
                     TASK_STATUS_ALLOCATE_PUBLIC_IP_ADDRESS));
             // 查询实例是否正常运行
-            createInstanceTaskHandler.describeInstanceStatusHandler(createCloudInstanceBO.getCloudInstanceTemplate().getRegionId(), queryTaskMember(taskId,
+            createInstanceTaskHandler.describeInstanceStatusHandler(regionId, queryTaskMember(taskId,
                     TASK_STATUS_STARTING));
+            // 录入实例信息到云服务器表
+            createInstanceTaskHandler.recordInstanceHandler(regionId,queryTaskMember(taskId,
+                    TASK_STATUS_RUNNING));
 
             // 校验任务是否完成
             isTaskFinalized = checkTaskCompleted(ocCloudInstanceTask, createCloudInstanceBO);
@@ -110,7 +115,7 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
     // COMPLETED
     private boolean checkTaskCompleted(OcCloudInstanceTask ocCloudInstanceTask, CreateCloudInstanceBO createCloudInstanceBO) {
         List<OcCloudInstanceTaskMember> memberList = queryTaskMember(ocCloudInstanceTask.getId(),
-                TASK_STATUS_RUNNING);
+                TASK_STATUS_RECORDED);
         if (memberList.size() == createCloudInstanceBO.getCreateCloudInstance().getCreateSize()) {
             ocCloudInstanceTask.setTaskPhase("FINALIZED");
             ocCloudInstanceTask.setTaskStatus("COMPLETED");

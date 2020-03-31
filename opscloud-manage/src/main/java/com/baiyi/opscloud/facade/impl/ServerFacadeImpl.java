@@ -67,7 +67,7 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Override
     public DataTable<OcServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
-        DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
+        DataTable<OcServer> table = ocServerService.fuzzyQueryOcServerByParam(pageQuery);
         return toServerDataTable(table);
     }
 

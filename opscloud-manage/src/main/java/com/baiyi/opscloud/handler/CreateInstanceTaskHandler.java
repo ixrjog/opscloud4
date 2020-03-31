@@ -6,13 +6,17 @@ import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
 import com.baiyi.opscloud.bo.CloudInstanceTaskMemberBO;
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
 import com.baiyi.opscloud.builder.CreateInstanceRequestBuilder;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
+import com.baiyi.opscloud.cloud.server.factory.CloudServerFactory;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskService;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcVswitchService;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -43,6 +47,9 @@ public class CreateInstanceTaskHandler {
     private OcServerService ocServerService;
 
     @Resource
+    private OcCloudServerService ocCloudServerService;
+
+    @Resource
     private OcEnvService ocEnvService;
 
     @Resource
@@ -68,7 +75,7 @@ public class CreateInstanceTaskHandler {
         } else {
             String errCode = (String) wrapper.getBody();
             // SDK超时需要触发实例查询确保不重复开通
-            if (errCode.equals("SDK.ServerUnreachable")) {
+            if (errCode == null || errCode.equals("SDK.ServerUnreachable")) {
                 try {
                     // retry
                     DescribeInstancesResponse.Instance instance = aliyunInstance.getStoppedInstance(regionId, hostname);
@@ -151,6 +158,18 @@ public class CreateInstanceTaskHandler {
                 member.setPrivateIp(privateIp);
                 ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
             }
+        }
+    }
+
+    public void recordInstanceHandler(String regionId, List<OcCloudInstanceTaskMember> memberList) {
+        if (memberList.isEmpty()) return;
+        ICloudServer iCloudServer = CloudServerFactory.getCloudServerByKey("AliyunECSCloudServer");
+        for (OcCloudInstanceTaskMember member : memberList) {
+            iCloudServer.record(regionId, member.getInstanceId());
+            OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByInstanceId(member.getInstanceId());
+            if(ocCloudServer == null) continue;
+            member.setTaskStatus(TASK_STATUS_RECORDED);
+            ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
         }
     }
 

@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2020/1/9 3:42 下午
  * @Version 1.0
  */
-public class CloudCerverFactory {
+public class CloudServerFactory {
 
     static Map<String, ICloudServer> context = new ConcurrentHashMap<>();
 

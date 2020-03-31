@@ -60,9 +60,10 @@
                 a1.business_type = 1 and a1.tag_id = #{tagId}
             </if>
             <if test="queryName != null and queryName != ''">
-                and a0.name like "%" #{queryName} "%"
-                and a0.private_ip like "%" #{queryName} "%" or a0.public_ip like "%" #{queryName} "%"
-                and a0.comment like "%" #{queryName} "%"
+                and ( a0.name like "%" #{queryName} "%"
+                or a0.private_ip like "%" #{queryName} "%"
+                or a0.public_ip like "%" #{queryName} "%"
+                or a0.comment like "%" #{queryName} "%" )
             </if>
             <if test="serverGroupId != null and serverGroupId > 0">
                 and a0.server_group_id = #{serverGroupId}

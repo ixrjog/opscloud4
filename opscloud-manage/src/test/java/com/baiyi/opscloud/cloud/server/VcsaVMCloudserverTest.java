@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
+import com.baiyi.opscloud.cloud.server.factory.CloudServerFactory;
 import com.baiyi.opscloud.vmware.vcsa.vm.VcsaVM;
 import org.junit.jupiter.api.Test;
 
@@ -20,7 +20,7 @@ public class VcsaVMCloudserverTest extends BaseUnit {
     private static final String key = "VcsaVMCloudServer";
 
     private ICloudServer getICloudServer() {
-        return CloudCerverFactory.getCloudServerByKey(key);
+        return CloudServerFactory.getCloudServerByKey(key);
     }
 
     @Test

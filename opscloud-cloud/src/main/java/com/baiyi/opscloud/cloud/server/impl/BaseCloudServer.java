@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.factory.CloudCerverFactory;
+import com.baiyi.opscloud.cloud.server.factory.CloudServerFactory;
 import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
@@ -13,6 +13,7 @@ import com.baiyi.opscloud.facade.OcServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
@@ -51,6 +52,19 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     @Override
     public Boolean sync() {
         return sync(Boolean.FALSE);
+    }
+
+    /**
+     *  录入实例
+     * @param regionId
+     * @param instanceId
+     * @return
+     */
+    @Override
+    public Boolean record(String regionId, String instanceId) {
+        T instance = getInstance(regionId,instanceId);
+        saveOcCloudServer(instance, Maps.newHashMap(), false);
+        return Boolean.TRUE;
     }
 
     @Override
@@ -211,7 +225,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerById(id);
         if (!checkAuth(ocCloudServer))
             return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
-        return power(ocCloudServer,POWER_ON);
+        return power(ocCloudServer, POWER_ON);
     }
 
     /**
@@ -225,11 +239,12 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerById(id);
         if (!checkAuth(ocCloudServer))
             return new BusinessWrapper(ErrorEnum.AUTHENTICATION_FAILUER);
-        return power(ocCloudServer,POWER_OFF);
+        return power(ocCloudServer, POWER_OFF);
     }
 
     /**
      * 如果支持电源管理请重写
+     *
      * @param action
      * @return
      */
@@ -250,7 +265,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
      */
     @Override
     public void afterPropertiesSet() throws Exception {
-        CloudCerverFactory.register(this);
+        CloudServerFactory.register(this);
     }
 
 }

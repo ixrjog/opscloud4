@@ -27,6 +27,14 @@ public interface ICloudServer {
     Boolean sync(boolean pushName);
 
     /**
+     * 录入实例
+     * @param regionId
+     * @param instanceId
+     * @return
+     */
+    Boolean record(String regionId,String instanceId);
+
+    /**
      * 更新CloudServer by instanceId
      *
      * @param instanceId

@@ -36,6 +36,8 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
         return getInstanceList(aliyunECS.getInstanceList());
     }
 
+
+
     @Override
     protected T getInstance(String regionId, String instanceId) {
         return (T) aliyunECSInstanceDecorator.decorator(aliyunECS.getInstance(regionId, instanceId));
@@ -73,11 +75,9 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
     }
 
     @Override
-    protected BusinessWrapper<Boolean> power(OcCloudServer ocCloudserver, Boolean action){
-        return aliyunECS.power(ocCloudserver.getZone(),ocCloudserver.getInstanceId(),action);
+    protected BusinessWrapper<Boolean> power(OcCloudServer ocCloudserver, Boolean action) {
+        return aliyunECS.power(ocCloudserver.getZone(), ocCloudserver.getInstanceId(), action);
     }
-
-
 
 
 }
