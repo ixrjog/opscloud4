@@ -119,8 +119,11 @@
 <!--        oc_cloud_vpc_security_group-->
 <!--        oc_cloud_instance_template-->
 <!--        oc_cloud_instance_type-->
+<!--        oc_cloud_instance_template-->
+<!--        oc_cloud_instance_task-->
+<!--        oc_cloud_instance_task_member-->
 
-        <table tableName="oc_cloud_instance_template">
+        <table tableName="oc_cloud_instance_task_member">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

@@ -92,6 +92,21 @@ public class TimeUtils {
     }
 
     /**
+     * 计算时间经过了多少分钟
+     * @param date
+     * @return
+     */
+    public static int calculateDateAgoMinute(Date date) {
+        long subTime = new Date().getTime() - date.getTime();
+        if (subTime < 0) {
+            throw new RuntimeException("计算时间有误!");
+        }
+        Long diff = subTime / minuteTime;
+        return diff.intValue();
+    }
+
+
+    /**
      * 计算两个时间的时间戳差
      *
      * @param startTime

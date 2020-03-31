@@ -51,7 +51,7 @@ public class ServerAttributeDecorator {
      * @param serverAttributeList
      * @return
      */
-    protected static Map<String, ServerAttribute> getServerAttributeMap(List<ServerAttribute> serverAttributeList) {
+    private static Map<String, ServerAttribute> getServerAttributeMap(List<ServerAttribute> serverAttributeList) {
         return serverAttributeList.stream().collect(Collectors.toMap(ServerAttribute::getName, a -> a, (k1, k2) -> k1));
     }
 

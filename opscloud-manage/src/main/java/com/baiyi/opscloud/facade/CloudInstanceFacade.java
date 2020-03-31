@@ -21,6 +21,8 @@ public interface CloudInstanceFacade {
 
     BusinessWrapper<Boolean> saveCloudInstanceTemplate(OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
 
+    BusinessWrapper<Boolean> createCloudInstance( CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance);
+
     BusinessWrapper<Boolean> saveCloudInstanceTemplateYAML(OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
 
     DataTable<OcCloudInstanceTypeVO.CloudInstanceType> fuzzyQueryCloudInstanceTypePage(CloudInstanceTypeParam.PageQuery pageQuery);

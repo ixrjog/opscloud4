@@ -4,10 +4,12 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTemplateParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
+import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
 import com.baiyi.opscloud.facade.CloudInstanceFacade;
+import com.baiyi.opscloud.facade.CloudInstanceTaskFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -29,6 +31,9 @@ public class CloudInstanceController {
 
     @Resource
     private CloudInstanceFacade cloudInstanceFacade;
+
+    @Resource
+    private CloudInstanceTaskFacade cloudInstanceTaskFacade;
 
     @ApiOperation(value = "分页模糊查询云实例模版列表")
     @PostMapping(value = "/template/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -84,4 +89,21 @@ public class CloudInstanceController {
         return new HttpResult<>(cloudInstanceFacade.queryCloudInstanceTemplateVSwitch(templateId, zoneId));
     }
 
+    @ApiOperation(value = "创建ECS实例")
+    @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> createCloudInstance(@RequestBody @Valid CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance) {
+        return new HttpResult<>(cloudInstanceFacade.createCloudInstance(createCloudInstance));
+    }
+
+    @ApiOperation(value = "查询创建实例任务详情")
+    @GetMapping(value = "/task/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcCloudInstanceTaskVO.CloudInstanceTask> queryCloudInstanceTask(@RequestParam int id) {
+        return new HttpResult<>(cloudInstanceTaskFacade.queryCloudInstanceTask(id));
+    }
+
+    @ApiOperation(value = "查询创建实例任务详情（最后一个任务）")
+    @GetMapping(value = "/task/last/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcCloudInstanceTaskVO.CloudInstanceTask> queryLastCloudInstanceTask(@RequestParam int templateId) {
+        return new HttpResult<>(cloudInstanceTaskFacade.queryLastCloudInstanceTask(templateId));
+    }
 }
