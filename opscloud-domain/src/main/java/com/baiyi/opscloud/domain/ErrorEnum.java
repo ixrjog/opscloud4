@@ -106,6 +106,10 @@ public enum ErrorEnum {
     CLOUD_VPC_SECURITY_GROUP_NOT_EXIST(30002, "云VPC安全组不存在！"),
     CLOUD_VPC_VSWITCH_NOT_EXIST(30002, "云VPC虚拟交换机不存在！"),
 
+    // create instance Zone must be selected
+    CREATE_CLOUD_INSTANCE_ZONEID_MUST_BE_SELECTED(30002,"必须指定创建实例的可用区"),
+    CREATE_CLOUD_INSTANCE_VSWITCHIDS_MUST_BE_SELECTED(30002,"必须指定创建实例的虚拟交换机列表"),
+
     // aliyunRDSMysql
     ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR(30002, "创建云数据库账户错误！"),
     ALIYUN_RDS_MYSQL_DESCRIBE_ACCOUNT_ERROR(30002, "查询云数据库账户错误！"),

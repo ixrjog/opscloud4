@@ -25,7 +25,6 @@ public class AssetsAssetBuilder {
         return covert(assetsAssetBO);
     }
 
-
     private static AssetsAsset covert(AssetsAssetBO assetsAssetBO) {
         return BeanCopierUtils.copyProperties(assetsAssetBO, AssetsAsset.class);
     }

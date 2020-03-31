@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.aliyun.ecs;
 
+import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
+import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 
 import java.util.List;
 import java.util.Map;
@@ -19,10 +22,21 @@ public interface AliyunInstance {
     /**
      * Key : instanceTypeId
      * Value : Set<String zoneId>
+     *
      * @param regionId
      * @return
      */
     Map<String, Set<String>> getInstanceTypeZoneMap(String regionId);
 
     List<DescribeVSwitchesResponse.VSwitch> getVSwitchList(String regionId, String vpcId);
+
+    List<DescribeInstancesResponse.Instance> getInstanceList(String regionId, List<String> instanceIds);
+
+    DescribeInstancesResponse.Instance getStoppedInstance(String regionId, String hostname) throws Exception;
+
+    String allocateInstancePublicIp(String regionId, String instanceId) throws Exception;
+
+    boolean startInstance(String regionId, String instanceId) throws Exception;
+
+    BusinessWrapper<Boolean> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest);
 }
