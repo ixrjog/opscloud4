@@ -79,4 +79,10 @@
         where server_group_id = #{serverGroupId}
         order by serial_number desc limit 1
     </select>
+
+    <select id="queryOcServerMaxSerialNumberByEnvType"  resultMap="BaseResultMap">
+        select * from oc_server
+        where server_group_id = #{serverGroupId} and env_type = #{envType}
+        order by serial_number desc limit 1
+    </select>
 </mapper>

@@ -1,12 +1,12 @@
-package com.baiyi.opscloud.builder;
+package com.baiyi.opscloud.server.builder;
 
-import com.baiyi.opscloud.bo.ServerAttributeBO;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.server.bo.ServerAttributeBO;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;

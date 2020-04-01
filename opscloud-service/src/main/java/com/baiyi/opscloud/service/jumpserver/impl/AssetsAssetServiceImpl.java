@@ -59,4 +59,9 @@ public class AssetsAssetServiceImpl implements AssetsAssetService {
     public void addAssetsAsset(AssetsAsset assetsAsset) {
         assetsAssetMapper.insert(assetsAsset);
     }
+
+    @Override
+    public void deleteAssetsAssetById(String id) {
+        assetsAssetMapper.deleteByPrimaryKey(id);
+    }
 }

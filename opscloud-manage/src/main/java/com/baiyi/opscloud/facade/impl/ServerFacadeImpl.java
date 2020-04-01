@@ -16,9 +16,10 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
-import com.baiyi.opscloud.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.facade.TagFacade;
+import com.baiyi.opscloud.server.ServerCenter;
+import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -58,6 +59,9 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Resource
     private TagFacade tagFacade;
+
+    @Resource
+    private ServerCenter serverCenter;
 
     @Override
     public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
@@ -108,14 +112,16 @@ public class ServerFacadeImpl implements ServerFacade {
             // 序号错误
         }
         if (serialNumber == 0) {
-            serialNumber = ocServerService.queryOcServerMaxSerialNumber(server.getServerGroupId());
+            serialNumber = ocServerService.queryOcServerMaxSerialNumber(server.getServerGroupId(), server.getEnvType());
             server.setSerialNumber(serialNumber + 1);
         }
         OcServer ocServer = BeanCopierUtils.copyProperties(server, OcServer.class);
         ocServerService.addOcServer(ocServer);
         // 云主机绑定
         if (server.getCloudServerId() != null && server.getCloudServerId() > 0)
-            cloudServerFacade.updateCloudServerStatus(server.getServerGroupId(), ocServer.getId(), CloudServerStatus.REGISTER.getStatus());
+            cloudServerFacade.updateCloudServerStatus(server.getCloudServerId(), ocServer.getId(), CloudServerStatus.REGISTER.getStatus());
+        // 服务器工厂
+        serverCenter.create(ocServer);
         return BusinessWrapper.SUCCESS;
     }
 
@@ -132,6 +138,8 @@ public class ServerFacadeImpl implements ServerFacade {
         }
         OcServer ocServer = BeanCopierUtils.copyProperties(server, OcServer.class);
         ocServerService.updateOcServer(ocServer);
+        // 服务器工厂
+        serverCenter.update(ocServer);
         return BusinessWrapper.SUCCESS;
     }
 
@@ -148,10 +156,12 @@ public class ServerFacadeImpl implements ServerFacade {
 
         // 删除server的属性
         List<OcServerAttribute> serverAttributeList = serverAttributeFacade.queryServerAttributeById(id);
-        if(!serverAttributeList.isEmpty())
+        if (!serverAttributeList.isEmpty())
             serverAttributeFacade.deleteServerAttributeByList(serverAttributeList);
 
         ocServerService.deleteOcServerById(id);
+        // 服务器工厂
+        serverCenter.remove(ocServer);
         return BusinessWrapper.SUCCESS;
     }
 

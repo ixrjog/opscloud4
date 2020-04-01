@@ -11,6 +11,8 @@ public interface IAccount {
 
     /**
      * 同步账户
+     * LDAP 为远端到本地
+     * 其它是本地到远端
      *
      * @return
      */

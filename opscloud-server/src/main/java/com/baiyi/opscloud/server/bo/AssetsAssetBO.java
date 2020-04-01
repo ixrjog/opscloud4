@@ -1,5 +1,6 @@
-package com.baiyi.opscloud.bo;
+package com.baiyi.opscloud.server.bo;
 
+import com.baiyi.opscloud.common.base.Global;
 import lombok.Builder;
 import lombok.Data;
 
@@ -49,7 +50,7 @@ public class AssetsAssetBO {
     private String orgId = "";
     private Integer cpuVcpus;
     @Builder.Default
-    private String comment = "";
+    private String comment = Global.CREATED_BY;
     @Builder.Default
     private String protocols ="ssh/22";
     @Builder.Default

@@ -2,13 +2,10 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.user.UsersUserPageParam;
 import com.baiyi.opscloud.domain.vo.jumpserver.*;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 
 import java.util.List;
 
@@ -19,6 +16,10 @@ import java.util.List;
  */
 public interface JumpserverFacade {
 
+    /**
+     * 同步用户
+     * @return
+     */
     BusinessWrapper<Boolean> syncUsers();
 
     BusinessWrapper<Boolean> setUserActive(String id);
@@ -29,31 +30,6 @@ public interface JumpserverFacade {
      * @return
      */
     BusinessWrapper<Boolean> syncAssets();
-
-    /**
-     * 同步服务器到资产
-     *
-     * @param ocServer
-     */
-    void addAssets(OcServer ocServer);
-
-
-
-
-    boolean activeUsersUser(String username, boolean active);
-
-    boolean delUsersUser(String username);
-
-    boolean updateUsersUser(OcUser ocUser);
-
-    /**
-     * 通过API推送用户公钥
-     *
-     * @param user
-     * @return
-     */
-    boolean pushKey(OcUserVO.User user);
-
 
     DataTable<JumpserverUsersUserVO.UsersUser> fuzzyQueryUserPage(UsersUserPageParam.PageQuery pageQuery);
 

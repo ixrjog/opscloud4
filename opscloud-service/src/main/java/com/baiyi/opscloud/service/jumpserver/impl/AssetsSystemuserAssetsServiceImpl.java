@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -29,8 +30,28 @@ public class AssetsSystemuserAssetsServiceImpl implements AssetsSystemuserAssets
     }
 
     @Override
-    public void addAssetsSystemuserAssets(AssetsSystemuserAssets assetsSystemuserAssets){
+    public List<AssetsSystemuserAssets> queryAssetsSystemuserAssetsByAssetId(String assetId) {
+        Example example = new Example(AssetsSystemuserAssets.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("assetId", assetId);
+        return assetsSystemuserAssetsMapper.selectByExample(example);
+    }
+
+    @Override
+    public void deleteAssetsSystemuserAssetsByAssetId(String assetId) {
+        List<AssetsSystemuserAssets> list = queryAssetsSystemuserAssetsByAssetId(assetId);
+        for (AssetsSystemuserAssets assetsSystemuserAssets : list)
+            deleteAssetsSystemuserAssetsById(assetsSystemuserAssets.getId());
+    }
+
+    @Override
+    public void addAssetsSystemuserAssets(AssetsSystemuserAssets assetsSystemuserAssets) {
         assetsSystemuserAssetsMapper.insert(assetsSystemuserAssets);
+    }
+
+    @Override
+    public void deleteAssetsSystemuserAssetsById(int id) {
+        assetsSystemuserAssetsMapper.deleteByPrimaryKey(id);
     }
 
 }

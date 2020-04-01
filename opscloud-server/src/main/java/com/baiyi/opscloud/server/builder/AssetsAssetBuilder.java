@@ -1,10 +1,11 @@
-package com.baiyi.opscloud.builder;
+package com.baiyi.opscloud.server.builder;
 
-import com.baiyi.opscloud.bo.AssetsAssetBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.server.bo.AssetsAssetBO;
+import org.springframework.util.StringUtils;
 
 /**
  * @Author baiyi
@@ -14,14 +15,17 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 public class AssetsAssetBuilder {
 
     public static AssetsAsset build(OcServer ocServer, String ip, String adminUserId, String hostname) {
+
+
         AssetsAssetBO assetsAssetBO = AssetsAssetBO.builder()
                 .id(UUIDUtils.getUUID())
                 .ip(ip)
                 .publicIp(ocServer.getPublicIp() != null ? ocServer.getPublicIp() : "")
                 .adminUserId(adminUserId)
                 .hostname(hostname)
-                .comment(ocServer.getComment())
                 .build();
+        if (!StringUtils.isEmpty(ocServer.getComment()))
+            assetsAssetBO.setComment(ocServer.getComment());
         return covert(assetsAssetBO);
     }
 

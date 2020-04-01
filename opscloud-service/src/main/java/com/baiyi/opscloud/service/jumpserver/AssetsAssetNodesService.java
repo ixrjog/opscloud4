@@ -12,7 +12,6 @@ public interface AssetsAssetNodesService {
 
     AssetsAssetNodes queryAssetsAssetNodesByUniqueKey(AssetsAssetNodes assetsAssetNodes);
 
-
     AssetsAssetNodes queryAssetsAssetNodesByAssetId(String assetId);
 
     void addAssetsAssetNodes(AssetsAssetNodes assetsAssetNodes);

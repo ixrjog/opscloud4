@@ -37,4 +37,6 @@ public interface OcServerService {
 
     int queryOcServerMaxSerialNumber(int serverGroupId);
 
+    int queryOcServerMaxSerialNumber(int serverGroupId, int envType);
+
 }

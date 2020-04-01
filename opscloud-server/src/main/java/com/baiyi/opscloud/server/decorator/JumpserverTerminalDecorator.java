@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.decorator;
+package com.baiyi.opscloud.server.decorator;
 
 import com.baiyi.opscloud.domain.vo.jumpserver.JumpserverTerminalVO;
 import com.baiyi.opscloud.service.jumpserver.TerminalSessionService;

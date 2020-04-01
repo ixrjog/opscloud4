@@ -1,27 +1,27 @@
 package com.baiyi.opscloud.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
 import com.baiyi.opscloud.bo.CloudInstanceTaskMemberBO;
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
+import com.baiyi.opscloud.bo.ServerBO;
 import com.baiyi.opscloud.builder.CreateInstanceRequestBuilder;
 import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.factory.CloudServerFactory;
+import com.baiyi.opscloud.common.base.CloudInstanceTaskPhase;
+import com.baiyi.opscloud.common.base.CloudInstanceTaskStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
-import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
-import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskService;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcVswitchService;
-import com.baiyi.opscloud.service.env.OcEnvService;
-import com.baiyi.opscloud.service.server.OcServerGroupService;
-import com.baiyi.opscloud.service.server.OcServerService;
-import com.google.common.base.Joiner;
+import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -29,8 +29,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static com.baiyi.opscloud.facade.impl.CloudInstanceTaskFacadeImpl.*;
 
 /**
  * @Author baiyi
@@ -41,22 +39,10 @@ import static com.baiyi.opscloud.facade.impl.CloudInstanceTaskFacadeImpl.*;
 public class CreateInstanceTaskHandler {
 
     @Resource
-    private OcServerGroupService ocServerGroupService;
-
-    @Resource
-    private OcServerService ocServerService;
-
-    @Resource
     private OcCloudServerService ocCloudServerService;
 
     @Resource
-    private OcEnvService ocEnvService;
-
-    @Resource
     private AliyunInstance aliyunInstance;
-
-    @Resource
-    private OcCloudInstanceTaskService ocCloudInstanceTaskService;
 
     @Resource
     private OcCloudInstanceTaskMemberService ocCloudInstanceTaskMemberService;
@@ -64,10 +50,13 @@ public class CreateInstanceTaskHandler {
     @Resource
     private OcCloudVpcVswitchService ocCloudVpcVswitchService;
 
-    public boolean createInstanceHandler(int taskId, CreateCloudInstanceBO createCloudInstanceBO, int maxSerialNumber, int seq, String vswitchId) {
+    @Resource
+    private ServerFacade serverFacade;
+
+    public boolean createInstanceHandler(int taskId, CreateCloudInstanceBO createCloudInstanceBO, ServerBO serverBO) {
         String regionId = createCloudInstanceBO.getCloudInstanceTemplate().getRegionId();
-        String hostname = getHostname(maxSerialNumber, seq, createCloudInstanceBO);
-        CreateInstanceRequest createInstanceRequest = CreateInstanceRequestBuilder.build(createCloudInstanceBO, vswitchId, hostname);
+        String hostname = serverBO.getHostname();
+        CreateInstanceRequest createInstanceRequest = CreateInstanceRequestBuilder.build(createCloudInstanceBO, serverBO);
         BusinessWrapper wrapper = aliyunInstance.getCreateInstanceResponse(regionId, createInstanceRequest);
         String instanceId = "";
         if (wrapper.isSuccess()) {
@@ -88,11 +77,12 @@ public class CreateInstanceTaskHandler {
         CloudInstanceTaskMemberBO cloudInstanceTaskMemberBO = CloudInstanceTaskMemberBO.builder()
                 .taskId(taskId)
                 .instanceId(instanceId)
-                .seq(seq)
+                .seq(serverBO.getSeq())
                 .regionId(createCloudInstanceBO.getCloudInstanceTemplate().getRegionId())
                 .hostname(hostname)
-                .taskStatus(TASK_STATUS_CREATE_INSTANCE)
-                .zoneId(ocCloudVpcVswitchService.queryOcCloudVpcVswitchByVswitchId(vswitchId).getZoneId())
+                .taskPhase(CloudInstanceTaskPhase.CREATE_INSTANCE.getPhase())
+                .detail(JSON.toJSONString(serverBO))
+                .zoneId(ocCloudVpcVswitchService.queryOcCloudVpcVswitchByVswitchId(serverBO.getVswitchId()).getZoneId())
                 .build();
         OcCloudInstanceTaskMember ocCloudInstanceTaskMember = BeanCopierUtils.copyProperties(cloudInstanceTaskMemberBO, OcCloudInstanceTaskMember.class);
         ocCloudInstanceTaskMemberService.addOcCloudInstanceTaskMember(ocCloudInstanceTaskMember);
@@ -106,14 +96,14 @@ public class CreateInstanceTaskHandler {
                 try {
                     publicIp = aliyunInstance.allocateInstancePublicIp(member.getRegionId(), member.getInstanceId());
                     if (!StringUtils.isEmpty(publicIp)) {
-                        member.setTaskStatus(TASK_STATUS_ALLOCATE_PUBLIC_IP_ADDRESS);
+                        member.setTaskPhase(CloudInstanceTaskPhase.ALLOCATE_PUBLIC_IP_ADDRESS.getPhase());
                         member.setPublicIp(publicIp);
                         ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
                     }
                 } catch (Exception e) {
                 }
             } else {
-                member.setTaskStatus(TASK_STATUS_ALLOCATE_PUBLIC_IP_ADDRESS);
+                member.setTaskPhase(CloudInstanceTaskPhase.ALLOCATE_PUBLIC_IP_ADDRESS.getPhase());
                 ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
             }
         }
@@ -123,7 +113,7 @@ public class CreateInstanceTaskHandler {
         for (OcCloudInstanceTaskMember member : memberList) {
             try {
                 if (aliyunInstance.startInstance(member.getRegionId(), member.getInstanceId())) {
-                    member.setTaskStatus(TASK_STATUS_STARTING);
+                    member.setTaskPhase(CloudInstanceTaskPhase.STARTING.getPhase());
                     ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
                 }
             } catch (Exception e) {
@@ -145,7 +135,7 @@ public class CreateInstanceTaskHandler {
             if (!memberMap.containsKey(instance.getInstanceId())) continue;
             OcCloudInstanceTaskMember member = memberMap.get(instance.getInstanceId());
             if (instance.getStatus().equalsIgnoreCase("Running")) {
-                member.setTaskStatus(TASK_STATUS_RUNNING);
+                member.setTaskPhase(CloudInstanceTaskPhase.RUNNING.getPhase());
                 ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
             }
             if (StringUtils.isEmpty(member.getPrivateIp())) {
@@ -161,14 +151,59 @@ public class CreateInstanceTaskHandler {
         }
     }
 
-    public void recordInstanceHandler(String regionId, List<OcCloudInstanceTaskMember> memberList) {
+    /**
+     * 录入云服务器表
+     *
+     * @param regionId
+     * @param memberList
+     */
+    public void recordInstanceCloudServerHandler(String regionId, List<OcCloudInstanceTaskMember> memberList) {
         if (memberList.isEmpty()) return;
         ICloudServer iCloudServer = CloudServerFactory.getCloudServerByKey("AliyunECSCloudServer");
         for (OcCloudInstanceTaskMember member : memberList) {
             iCloudServer.record(regionId, member.getInstanceId());
             OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByInstanceId(member.getInstanceId());
-            if(ocCloudServer == null) continue;
-            member.setTaskStatus(TASK_STATUS_RECORDED);
+            if (ocCloudServer == null) continue;
+            member.setTaskPhase(CloudInstanceTaskPhase.CLOUD_SERVER_RECORDED.getPhase());
+            ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
+        }
+    }
+
+    /**
+     * 录入服务器表（此操作会触发服务器数据工厂同步多平台数据）
+     *
+     * @param memberList
+     */
+    public void recordInstanceServerHandler(List<OcCloudInstanceTaskMember> memberList) {
+        if (memberList.isEmpty()) return;
+        for (OcCloudInstanceTaskMember member : memberList) {
+            OcServerVO.Server server = new GsonBuilder().create().fromJson(member.getDetail(), OcServerVO.Server.class);
+            server.setPrivateIp(member.getPrivateIp());
+            if (!StringUtils.isEmpty(member.getPublicIp()))
+                server.setPublicIp(member.getPublicIp());
+            OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByInstanceId(member.getInstanceId());
+            server.setCloudServerId(ocCloudServer.getId());
+            // 录入服务器
+            BusinessWrapper wrapper = serverFacade.addServer(server);
+            if (wrapper.isSuccess()) {
+                member.setTaskPhase(CloudInstanceTaskPhase.SERVER_RECORDED.getPhase());
+            } else {
+                member.setTaskPhase(CloudInstanceTaskPhase.FINALIZED.getPhase());
+                member.setTaskStatus(CloudInstanceTaskStatus.UNSTABLE.getStatus());
+                member.setErrorMsg(wrapper.getBody().toString());
+            }
+            ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
+        }
+    }
+
+
+    public void taskFinalizedHandler(List<OcCloudInstanceTaskMember> memberList) {
+        if (memberList.isEmpty()) return;
+        for (OcCloudInstanceTaskMember member : memberList) {
+            // TODO 前置校验
+            // 结束子任务
+            member.setTaskPhase(CloudInstanceTaskPhase.FINALIZED.getPhase());
+            member.setTaskStatus(CloudInstanceTaskStatus.COMPLETED.getStatus());
             ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
         }
     }
@@ -177,25 +212,5 @@ public class CreateInstanceTaskHandler {
         return memberList.stream().collect(Collectors.toMap(OcCloudInstanceTaskMember::getInstanceId, a -> a, (k1, k2) -> k1));
     }
 
-    /**
-     * 获取实例的主机名
-     *
-     * @param maxSerialNumber
-     * @param seq
-     * @param createCloudInstanceBO
-     * @return
-     */
-    private String getHostname(int maxSerialNumber, int seq, CreateCloudInstanceBO createCloudInstanceBO) {
-        int serialNumber = maxSerialNumber + seq;
-        String serverName;
-        if (!StringUtils.isEmpty(createCloudInstanceBO.getCreateCloudInstance().getServerName())) {
-            serverName = createCloudInstanceBO.getCreateCloudInstance().getServerName();
-        } else {
-            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(createCloudInstanceBO.getCreateCloudInstance().getServerGroupId());
-            serverName = ocServerGroup.getName().replace("group_", "");
-        }
-        OcEnv ocEnv = ocEnvService.queryOcEnvByType(createCloudInstanceBO.getCreateCloudInstance().getEnvType());
-        return Joiner.on("-").skipNulls().join(serverName, !ocEnv.getEnvName().equals("prod") ? ocEnv.getEnvName() : null, serialNumber);
-    }
 
 }

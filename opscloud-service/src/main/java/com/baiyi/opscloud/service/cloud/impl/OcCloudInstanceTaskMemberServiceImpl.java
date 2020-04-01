@@ -28,11 +28,11 @@ public class OcCloudInstanceTaskMemberServiceImpl implements OcCloudInstanceTask
     }
 
     @Override
-    public List<OcCloudInstanceTaskMember> queryOcCloudInstanceTaskMemberByTaskIdAndStatus(int taskId, String taskStatus) {
+    public List<OcCloudInstanceTaskMember> queryOcCloudInstanceTaskMemberByTaskIdAndPhase(int taskId, String taskPhase) {
         Example example = new Example(OcCloudInstanceTaskMember.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("taskId", taskId);
-        criteria.andEqualTo("taskStatus", taskStatus);
+        criteria.andEqualTo("taskPhase", taskPhase);
         return ocCloudInstanceTaskMemberMapper.selectByExample(example);
     }
 

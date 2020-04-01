@@ -24,6 +24,7 @@ public class CloudInstanceTaskMemberBO {
     private String zoneId;
     private String hostname;
     private String taskStatus;
+    private String taskPhase;
     private Integer retryCount;
     private Integer errorCode;
     private Date createTime;

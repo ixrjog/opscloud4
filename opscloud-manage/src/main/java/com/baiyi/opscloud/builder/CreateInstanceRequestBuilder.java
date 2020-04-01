@@ -2,6 +2,7 @@ package com.baiyi.opscloud.builder;
 
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
+import com.baiyi.opscloud.bo.ServerBO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import com.google.common.collect.Lists;
 import org.springframework.util.StringUtils;
@@ -15,7 +16,7 @@ import java.util.List;
  */
 public class CreateInstanceRequestBuilder {
 
-    public static CreateInstanceRequest build(CreateCloudInstanceBO createCloudInstance, String vswitchId, String hostName) {
+    public static CreateInstanceRequest build(CreateCloudInstanceBO createCloudInstance, ServerBO serverBO) {
         CreateInstanceRequest createInstanceRequest = new CreateInstanceRequest();
         createInstanceRequest.setSysRegionId(createCloudInstance.getCloudInstanceTemplate().getRegionId());
         // 实例所属的可用区编号，空表示由系统选择，默认值：空。
@@ -32,7 +33,7 @@ public class CreateInstanceRequestBuilder {
         // 配置实例VPC安全组
         createInstanceRequest.setSecurityGroupId(createCloudInstance.getCreateCloudInstance().getSecurityGroupId());
         // 配置虚拟交换机
-        createInstanceRequest.setVSwitchId(vswitchId);
+        createInstanceRequest.setVSwitchId(serverBO.getVswitchId());
         // 付费选项设置 PostPaid（默认）：按量付费。 PrePaid：包年包月。选择该类付费方式时，您必须确认自己的账号支持余额支付/信用支付，否则将返回 InvalidPayMethod的错误提示。
         if (createCloudInstance.getCreateCloudInstance().getCharge().getChargeType()) {
             createInstanceRequest.setInstanceChargeType("PrePaid");
@@ -42,7 +43,7 @@ public class CreateInstanceRequestBuilder {
             createInstanceRequest.setAutoRenew(createCloudInstance.getCreateCloudInstance().getCharge().getAutoRenew());
         }
         // 设置HostName
-        createInstanceRequest.setHostName(hostName);
+        createInstanceRequest.setHostName(serverBO.getHostname());
         // 设置IO优化实例配置  none：非I/O优化。optimized：I/O优化。
         if (!StringUtils.isEmpty(createCloudInstance.getCloudInstanceTemplate().getIoOptimized())) {
             createInstanceRequest.setIoOptimized(createCloudInstance.getCloudInstanceTemplate().getIoOptimized());

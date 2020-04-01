@@ -1,6 +1,5 @@
-package com.baiyi.opscloud.facade.impl;
+package com.baiyi.opscloud.server.facade.impl;
 
-import com.baiyi.opscloud.builder.ServerAttributeBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
@@ -10,13 +9,14 @@ import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.ServerAttributeUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.decorator.ServerAttributeDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
-import com.baiyi.opscloud.facade.ServerAttributeFacade;
+import com.baiyi.opscloud.server.builder.ServerAttributeBuilder;
+import com.baiyi.opscloud.server.decorator.ServerAttributeDecorator;
+import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerAttributeService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;

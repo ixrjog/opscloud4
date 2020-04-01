@@ -14,6 +14,7 @@
     <result column="region_id" jdbcType="VARCHAR" property="regionId" />
     <result column="zone_id" jdbcType="VARCHAR" property="zoneId" />
     <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="task_phase" jdbcType="VARCHAR" property="taskPhase" />
     <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
     <result column="retry_count" jdbcType="INTEGER" property="retryCount" />
     <result column="error_code" jdbcType="INTEGER" property="errorCode" />

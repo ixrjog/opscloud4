@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade;
+package com.baiyi.opscloud.server.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;

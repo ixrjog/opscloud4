@@ -106,5 +106,13 @@ public class OcServerServiceImpl implements OcServerService {
         return ocServer.getSerialNumber();
     }
 
+    @Override
+    public int queryOcServerMaxSerialNumber(int serverGroupId, int envType) {
+        OcServer ocServer = ocServerMapper.queryOcServerMaxSerialNumberByEnvType(serverGroupId, envType);
+        if (ocServer == null)
+            return 0;
+        return ocServer.getSerialNumber();
+    }
+
 
 }

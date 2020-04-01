@@ -13,7 +13,7 @@ public interface OcCloudInstanceTaskMemberService {
 
     List<OcCloudInstanceTaskMember> queryOcCloudInstanceTaskMemberByTaskId(int taskId);
 
-    List<OcCloudInstanceTaskMember> queryOcCloudInstanceTaskMemberByTaskIdAndStatus(int taskId,String taskStatus);
+    List<OcCloudInstanceTaskMember> queryOcCloudInstanceTaskMemberByTaskIdAndPhase(int taskId,String taskPhase);
 
     /**
      * 统计条目

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.decorator;
+package com.baiyi.opscloud.server.decorator;
 
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.config.serverAttribute.ServerAttribute;
