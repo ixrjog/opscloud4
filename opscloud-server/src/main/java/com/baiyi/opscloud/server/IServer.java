@@ -11,11 +11,11 @@ public interface IServer {
 
     String getKey();
 
-    boolean sync();
+    Boolean sync();
 
-    boolean disable(OcServer ocServer);
+    Boolean disable(OcServer ocServer);
 
-    boolean enable(OcServer ocServer);
+    Boolean enable(OcServer ocServer);
 
     /**
      * 创建
@@ -23,7 +23,7 @@ public interface IServer {
      * @param ocServer
      * @return
      */
-    boolean create(OcServer ocServer);
+    Boolean create(OcServer ocServer);
 
     /**
      * 移除
@@ -31,7 +31,7 @@ public interface IServer {
      * @param ocServer
      * @return
      */
-    boolean remove(OcServer ocServer);
+    Boolean remove(OcServer ocServer);
 
     /**
      * 更新
@@ -39,5 +39,5 @@ public interface IServer {
      * @param ocServer
      * @return
      */
-    boolean update(OcServer ocServer);
+    Boolean update(OcServer ocServer);
 }

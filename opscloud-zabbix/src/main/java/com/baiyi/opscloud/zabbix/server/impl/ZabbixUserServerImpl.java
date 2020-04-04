@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.zabbix.server.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostgroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserMedia;
@@ -13,6 +12,7 @@ import com.baiyi.opscloud.zabbix.mapper.ZabbixIdsMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixUserMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixUsergroupMapper;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostgroupServer;
+import com.baiyi.opscloud.zabbix.server.ZabbixServer;
 import com.baiyi.opscloud.zabbix.server.ZabbixUserServer;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
@@ -36,6 +36,8 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
     @Resource
     private ZabbixHandler zabbixHandler;
 
+    @Resource
+    private ZabbixServer zabbixServer;
 
     @Resource
     private ZabbixHostgroupServer zabbixHostgroupServer;
@@ -122,7 +124,7 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
         request.setParams(userids);
 
         try {
-            System.err.println(JSON.toJSONString(request));
+            //System.err.println(JSON.toJSONString(request));
             JsonNode jsonNode = zabbixHandler.api(request);
             String userid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("userids")).get(0);
             if (!StringUtils.isEmpty(userid))
@@ -175,6 +177,7 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
                 ZabbixUsergroup   zabbixUsergroup = new ZabbixUsergroup();
                 zabbixUsergroup.setUsrgrpid(usrgrpid);
                 zabbixUsergroup.setName(usergroupName);
+                zabbixServer.createAction(usergroupName);
                 return zabbixUsergroup;
             }
         } catch (Exception e) {

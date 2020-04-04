@@ -5,8 +5,11 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
+import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
 
 import java.util.List;
 import java.util.Map;
@@ -50,4 +53,6 @@ public interface AliyunRDSMysql {
     BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount);
 
     BusinessWrapper<Boolean> deleteAccount(AliyunAccount aliyunAccount, OcCloudDb ocCloudDb,  OcCloudDbAccount ocCloudDbAccount);
+
+    DataTable<CloudDatabaseSlowLogVO.SlowLog> querySlowLogPage(AliyunAccount aliyunAccount, CloudDBDatabaseParam.SlowLogPageQuery pageQuery);
 }

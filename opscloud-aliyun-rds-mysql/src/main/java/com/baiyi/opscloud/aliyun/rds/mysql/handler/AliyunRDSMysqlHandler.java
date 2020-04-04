@@ -237,7 +237,24 @@ public class AliyunRDSMysqlHandler {
         }
     }
 
+    public DescribeSlowLogsResponse describeDBInstancesResponse(DescribeSlowLogsRequest describe, AliyunAccount aliyunAccount) {
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(),aliyunAccount);
+        try {
+            DescribeSlowLogsResponse response = client.getAcsResponse(describe);
+            return response;
+        } catch (ServerException e) {
+            e.printStackTrace();
+            return null;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     private IAcsClient acqAcsClient(String regionId, AliyunAccount aliyunAccount) {
         return aliyunCore.getAcsClient(regionId, aliyunAccount);
     }
+
+
+
 }

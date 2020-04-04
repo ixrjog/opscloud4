@@ -22,7 +22,7 @@ public class CloudDBDatabaseParam {
         @ApiModelProperty(value = "扩展属性",example = "1")
         private Integer  extend;
 
-        @ApiModelProperty(value = "云数据库类型")
+        @ApiModelProperty(value = "云数据库类型",example = "1")
         private Integer cloudDbType;
 
         @ApiModelProperty(value = "查询关键字")
@@ -36,6 +36,28 @@ public class CloudDBDatabaseParam {
 
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class SlowLogPageQuery extends PageParam {
+
+        @ApiModelProperty(value = "云数据库类型",example = "1")
+        private Integer cloudDbType;
+
+        @ApiModelProperty(value = "数据库名称")
+        private String dbName;
+
+        @ApiModelProperty(value = "实例ID")
+        private String dbInstanceId;
+
+        @ApiModelProperty(value = "查询开始日期，格式：yyyy-MM-ddZ")
+        private String startTime;
+
+        @ApiModelProperty(value = "查询结束日期，不能小于查询开始日期，与查询开始日期间隔不超过31天。格式：yyyy-MM-ddZ")
+        private String endTime;
 
     }
 

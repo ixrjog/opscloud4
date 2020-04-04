@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
@@ -69,6 +70,12 @@ public class CloudDBController {
     @PutMapping(value = "/database/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateCloudDBDatabase(@RequestBody @Valid OcCloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase) {
         return new HttpResult<>(cloudDBFacade.updateBaseCloudDBDatabase(cloudDBDatabase));
+    }
+
+    @ApiOperation(value = "分页查询云数据库SlowLogs")
+    @PostMapping(value = "/database/slowlog/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<CloudDatabaseSlowLogVO.SlowLog>> queryCloudDBDatabaseSlowLogPage(@RequestBody @Valid CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
+        return new HttpResult<>(cloudDBFacade.queryCloudDBDatabaseSlowLogPage(pageQuery));
     }
 
 }

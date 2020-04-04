@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.server.impl;
 
-import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.jumpserver.*;
+import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
+import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAssetNodes;
+import com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode;
+import com.baiyi.opscloud.domain.generator.jumpserver.UsersUsergroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.vo.jumpserver.JumpserverSettingsVO;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.server.IServer;
@@ -50,12 +51,8 @@ public class JumpserverAsset extends BaseServer implements IServer {
     private AssetsAssetService assetsAssetService;
 
     @Override
-    public boolean sync() {
-        ServerGroupParam.PageQuery pageQuery = new ServerGroupParam.PageQuery();
-        pageQuery.setPage(0);
-        pageQuery.setLength(2000);
-        DataTable<OcServerGroup> table = ocServerGroupService.queryOcServerGroupByParam(pageQuery);
-        List<OcServerGroup> serverGroupList = table.getData();
+    public Boolean sync() {
+        List<OcServerGroup> serverGroupList = getServerGroupList();
         for (OcServerGroup ocServerGroup : serverGroupList) {
             // 创建资产节点（服务器组）
             AssetsNode assetsNode = saveAssetsNode(ocServerGroup);
@@ -71,7 +68,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
 
 
     @Override
-    public boolean create(OcServer ocServer) {
+    public Boolean create(OcServer ocServer) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
         AssetsNode assetsNode = saveAssetsNode(ocServerGroup);
         if (assetsNode == null) {
@@ -83,7 +80,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
     }
 
     @Override
-    public boolean disable(OcServer ocServer) {
+    public Boolean disable(OcServer ocServer) {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
         if (assetsAsset == null) return true;
         assetsAsset.setIsActive(false);
@@ -92,7 +89,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
     }
 
     @Override
-    public boolean enable(OcServer ocServer) {
+    public Boolean enable(OcServer ocServer) {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
         if (assetsAsset == null) return false;
         assetsAsset.setIsActive(true);
@@ -101,7 +98,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
     }
 
     @Override
-    public boolean remove(OcServer ocServer) {
+    public Boolean remove(OcServer ocServer) {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
         if (assetsAsset == null) return true;
         // 删除资产的节点绑定关系
@@ -116,7 +113,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
     }
 
     @Override
-    public boolean update(OcServer ocServer) {
+    public Boolean update(OcServer ocServer) {
         AssetsAsset assetsAsset = createAssetsAsset(ocServer, null);
         return assetsAsset != null;
     }
@@ -174,12 +171,12 @@ public class JumpserverAsset extends BaseServer implements IServer {
             }
             if (!StringUtils.isEmpty(ocServer.getPublicIp()))
                 assetsAsset.setComment(Joiner.on("").join(assetsAsset.getComment(), "(pubIp:", ocServer.getPublicIp(), ")"));
-            assetsAsset.setHostname(getHostName(ocServer));
+            assetsAsset.setHostname(getHostname(ocServer));
             //assetsAssetDO.setCreated_by("oc auto");
             jumpserverCenter.updateAssetsAsset(assetsAsset);
         } else {
             String manageIp = getManageIp(ocServer);
-            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostName(ocServer));
+            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer));
             if (!StringUtils.isEmpty(comment))
                 assetsAsset.setComment(comment);
             jumpserverCenter.addAssetsAsset(assetsAsset);
@@ -202,7 +199,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
         AssetsAsset assetsAsset = jumpserverCenter.queryAssetsAssetByIp(manageIp);
         if (assetsAsset != null) return assetsAsset;
         // 主机名查询服务器
-        assetsAsset = jumpserverCenter.queryAssetsAssetByHostname(getHostName(ocServer));
+        assetsAsset = jumpserverCenter.queryAssetsAssetByHostname(getHostname(ocServer));
         if (assetsAsset != null) {
             // 更新IP 此服务器可能是使用公网连接
             assetsAsset.setIp(manageIp);

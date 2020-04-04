@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.util.encryptor;
+package com.baiyi.opscloud.util;
 
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;

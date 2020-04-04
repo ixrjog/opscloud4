@@ -2,11 +2,15 @@ package com.baiyi.opscloud.zabbix;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.service.server.OcServerGroupService;
+import com.baiyi.opscloud.zabbix.entry.ZabbixAction;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.server.ZabbixServer;
 import com.google.common.collect.Maps;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -16,6 +20,11 @@ import java.util.Map;
  */
 public class ZabbixServerTest extends BaseUnit {
 
+    @Resource
+    private ZabbixServer zabbixServer;
+
+    @Resource
+    private OcServerGroupService ocServerGroupService;
 
     @Test
     public void testZabbixRequestBuilder() {
@@ -33,6 +42,18 @@ public class ZabbixServerTest extends BaseUnit {
             e.printStackTrace();
 
         }
+    }
+
+    @Test
+    void testGetAction() {
+        ZabbixAction action = zabbixServer.getAction("users_admin-job");
+        System.err.println(JSON.toJSONString(action));
+    }
+
+    @Test
+    void testCreateAction() {
+        zabbixServer.createAction("users_test");
+
     }
 
 }

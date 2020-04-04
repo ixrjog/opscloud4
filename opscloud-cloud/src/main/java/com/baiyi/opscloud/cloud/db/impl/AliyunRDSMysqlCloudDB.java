@@ -14,10 +14,13 @@ import com.baiyi.opscloud.cloud.db.builder.CloudDbDatabaseBuilder;
 import com.baiyi.opscloud.common.base.CloudDBType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase;
+import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -132,15 +135,22 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
     }
 
     @Override
-    public  BusinessWrapper<Boolean> deleteAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount){
+    public DataTable<CloudDatabaseSlowLogVO.SlowLog> querySlowLogPage(OcCloudDb ocCloudDb, CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
         AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
-        return aliyunRDSMysql.deleteAccount(aliyunAccount,ocCloudDb,ocCloudDbAccount);
+        return aliyunRDSMysql.querySlowLogPage(aliyunAccount, pageQuery);
+    }
+
+
+    @Override
+    public BusinessWrapper<Boolean> deleteAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        return aliyunRDSMysql.deleteAccount(aliyunAccount, ocCloudDb, ocCloudDbAccount);
     }
 
     @Override
     public BusinessWrapper<Boolean> revokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
         AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
-        return aliyunRDSMysql.revokeAccountPrivilege(aliyunAccount,ocCloudDbAccount);
+        return aliyunRDSMysql.revokeAccountPrivilege(aliyunAccount, ocCloudDbAccount);
     }
 
 }

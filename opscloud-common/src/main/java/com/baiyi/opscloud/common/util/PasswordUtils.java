@@ -13,12 +13,10 @@ import java.util.Random;
 public class PasswordUtils {
 
     private static final String PW_STR = "01234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-
     private static final String NUM_CHAR = "23456789"; // 8
     private static final String UPPER_CHAR = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";  // 26
     private static final String LOWER_CHAR = "abcdefghijklmnopqrstuvwxyz";
     private static final String SYBL_CHAR = "!@#$%^&*()_+-="; //14
-
 
     /**
      * 生成随机密码
@@ -65,7 +63,6 @@ public class PasswordUtils {
             resultStr += lst.get(i);
         return resultStr;
     }
-
 
     /**
      * 取随机长度，1 ～ maxLength
