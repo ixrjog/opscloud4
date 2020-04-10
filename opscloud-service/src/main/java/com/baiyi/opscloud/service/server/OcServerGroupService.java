@@ -41,4 +41,6 @@ public interface OcServerGroupService {
     DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
 
     List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery);
+
+    List<OcServerGroup> queryAll();
 }

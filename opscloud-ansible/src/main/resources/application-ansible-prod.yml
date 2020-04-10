@@ -1,6 +1,6 @@
-
 ansible:
+  version: 2.9.6
   bin: /bin/ansible
+  dataPath: /data/opscloud-data/ansible
   playbookBin: /bin/ansible-playbook
-  scriptPath: /data/www/data/scrips
   logPath: /logs/ansible/

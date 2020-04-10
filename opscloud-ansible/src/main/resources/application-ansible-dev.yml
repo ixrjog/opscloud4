@@ -5,6 +5,11 @@
 ansible:
   version: 2.9.6
   bin: /usr/local/bin/ansible
+  dataPath: /Users/liangjian/Documents/workspace/opscloud-data/ansible
   playbookBin: /usr/local/bin/ansible-playbook
-  scriptPath: /data/www/data/scripts
   logPath: /logs/ansible/
+
+
+#   inventoryPath: ${dataPath}/inventory
+#   scriptPath: ${dataPath}/script
+#   playbookPath: ${dataPath}/playbook

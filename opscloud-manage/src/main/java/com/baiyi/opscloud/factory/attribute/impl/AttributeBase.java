@@ -77,7 +77,7 @@ public abstract class AttributeBase {
         return Joiner.on("-").join(ocServerGroup.getName().replace("group_", ""), getEnvName(envType));
     }
 
-    protected String getHeadInfo() {
+    public String getHeadInfo() {
         FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
         return Joiner.on(" ").join("#", Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
     }

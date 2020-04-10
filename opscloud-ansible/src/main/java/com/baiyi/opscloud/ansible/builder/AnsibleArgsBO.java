@@ -11,6 +11,11 @@ import lombok.Data;
 @Data
 @Builder
 public class AnsibleArgsBO {
+    /**
+     *  --private-key PRIVATE_KEY_FILE, --key-file PRIVATE_KEY_FILE
+     *                         use this file to authenticate the connection
+     */
+    private String keyFile;
 
     /**
      *  -i INVENTORY, --inventory INVENTORY, --inventory-file INVENTORY

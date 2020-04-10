@@ -4,6 +4,8 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.ansible.handler.AnsibleExecutorHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
+import com.baiyi.opscloud.facade.impl.AttributeFacadeImpl;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import org.junit.jupiter.api.Test;
@@ -28,12 +30,45 @@ public class AnsibleTest extends BaseUnit {
     @Resource
     private OcServerGroupService ocServerGroupService;
 
+    @Resource
+    private AttributeFacadeImpl attributeFacadeImpl;
+
+    @Test
+    void aaaTest() {
+
+        long startTime = new Date().getTime();
+        attributeFacadeImpl.createAnsibleHosts();
+        long endTime = new Date().getTime();
+        System.err.println("消耗时间:" + (endTime - startTime));
+
+
+//        List<OcServerGroup> serverGroupList = ocServerGroupService.queryAll();
+//        for (OcServerGroup ocServerGroup : serverGroupList)
+//            attributeAnsible.evictBuild(ocServerGroup);
+
+    }
+
     @Test
     void executorTest() {
         //CommandLine commandLine = CommandLine.parse("ping www.baidu.com");
 
         ansibleExecutor.executorTest(100000L);
         System.err.println("111111");
+    }
+
+    @Test
+    void testAnsiblePreviewAttribute() {
+        // 1423
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(46);
+        List<PreviewAttributeVO.PreviewAttribute> list = attributeAnsible.preview(ocServerGroup.getId());
+        for (PreviewAttributeVO.PreviewAttribute preview : list)
+            System.err.println(preview.getContent());
+
+
+        PreviewAttributeVO.PreviewAttribute pre = attributeAnsible.build(ocServerGroup);
+        System.err.println(pre.getContent());
+
+
     }
 
     @Test
@@ -48,6 +83,5 @@ public class AnsibleTest extends BaseUnit {
             long endTime = new Date().getTime();
             System.err.println("第" + i + "次, 消耗时间:" + (endTime - startTime));
         }
-
     }
 }

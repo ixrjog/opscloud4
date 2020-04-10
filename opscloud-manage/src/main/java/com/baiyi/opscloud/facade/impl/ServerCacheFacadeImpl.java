@@ -26,12 +26,14 @@ public class ServerCacheFacadeImpl implements ServerCacheFacade {
     @Override
     public void evictServerCache(OcServer ocServer) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
-        evictServerGroupCache( ocServerGroup );
+        evictServerGroupCache(ocServerGroup);
     }
 
     @Override
-    public void evictServerGroupCache(OcServerGroup ocServerGroup ) {
-        attributeAnsible.evictGrouping(ocServerGroup );
+    public void evictServerGroupCache(OcServerGroup ocServerGroup) {
+        attributeAnsible.evictGrouping(ocServerGroup);
+        attributeAnsible.evictBuild(ocServerGroup);
+        attributeAnsible.evictPreview(ocServerGroup.getId());
     }
 
 }

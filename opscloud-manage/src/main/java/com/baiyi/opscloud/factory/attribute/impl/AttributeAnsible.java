@@ -45,6 +45,21 @@ public class AttributeAnsible extends AttributeBase {
     @Resource
     private ServerAttributeFacade serverAttributeFacade;
 
+
+    /**
+     * 清空缓存
+     */
+    @CacheEvict(cacheNames = CachingConfig.CACHE_NAME_ATTRIBUTE_CACHE_REPO, key = "'preview_' + #serverGroupId", beforeInvocation = true)
+    public void evictPreview(int serverGroupId) {
+    }
+
+    /**
+     * 用于服务器组属性预览
+     *
+     * @param serverGroupId
+     * @return
+     */
+    @Cacheable(cacheNames = CachingConfig.CACHE_NAME_ATTRIBUTE_CACHE_REPO, key = "'preview_' + #serverGroupId")
     public List<PreviewAttributeVO.PreviewAttribute> preview(int serverGroupId) {
         List<PreviewAttributeVO.PreviewAttribute> previewAttributes = Lists.newArrayList();
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(serverGroupId);
@@ -53,11 +68,33 @@ public class AttributeAnsible extends AttributeBase {
         if (StringUtils.isEmpty(content))
             return previewAttributes;
         PreviewAttributeVO.PreviewAttribute previewAttribute = PreviewAttributeVO.PreviewAttribute.builder()
-                .title("Ansible主机配置")
+                .title("Ansible hosts")
                 .content(content)
                 .build();
         previewAttributes.add(previewAttribute);
         return previewAttributes;
+    }
+
+    /**
+     * 清空缓存
+     */
+    @CacheEvict(cacheNames = CachingConfig.CACHE_NAME_ATTRIBUTE_CACHE_REPO, key = "'build_' + #ocServerGroup.id", beforeInvocation = true)
+    public void evictBuild(OcServerGroup ocServerGroup) {
+    }
+
+    @Cacheable(cacheNames = CachingConfig.CACHE_NAME_ATTRIBUTE_CACHE_REPO, key = "'build_' + #ocServerGroup.id")
+    public PreviewAttributeVO.PreviewAttribute build(OcServerGroup ocServerGroup) {
+        // 跳过空服务器组
+        if(ocServerService.countByServerGroupId(ocServerGroup.getId()) == 0)
+            return PreviewAttributeVO.PreviewAttribute.builder().build();
+        Map<String, List<OcServer>> serverMap = grouping(ocServerGroup, true);
+        String content = format(ocServerGroup, serverMap);
+        if (StringUtils.isEmpty(content))
+            return PreviewAttributeVO.PreviewAttribute.builder().build();
+        return PreviewAttributeVO.PreviewAttribute.builder()
+                .title("Ansible hosts")
+                .content(content)
+                .build();
     }
 
     private String build(List<OcServerGroup> serverGroups, boolean isSubgroup) {
@@ -109,6 +146,7 @@ public class AttributeAnsible extends AttributeBase {
 
     /**
      * 取服务器分组map (可单独对外提供分组配置)
+     * 完整的包含 环境全组数据
      *
      * @param ocServerGroup
      * @param isSubgroup

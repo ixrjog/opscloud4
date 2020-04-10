@@ -33,6 +33,8 @@ public class CachingConfig extends CachingConfigurerSupport {
 
     public static final String CACHE_NAME_ANSIBLE_CACHE_REPO = "ansibleCacheRepo";
 
+    public static final String CACHE_NAME_ATTRIBUTE_CACHE_REPO =  "attributeCacheRepo";
+
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         // 设置一个初始化的缓存空间set集合
@@ -41,6 +43,7 @@ public class CachingConfig extends CachingConfigurerSupport {
         cacheNames.add("aliyunECSDisk");
         cacheNames.add("aliyunECSRenew");
         cacheNames.add(CACHE_NAME_ANSIBLE_CACHE_REPO);
+        cacheNames.add(CACHE_NAME_ATTRIBUTE_CACHE_REPO);
         // 使用自定义的缓存配置初始化一个cacheManager
         RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -60,6 +63,8 @@ public class CachingConfig extends CachingConfigurerSupport {
         configMap.put("aliyunECSDisk", config.entryTtl(Duration.ofMinutes(2)));
         configMap.put("aliyunECSRenew", config.entryTtl(Duration.ofMinutes(2)));
         configMap.put(CACHE_NAME_ANSIBLE_CACHE_REPO, config.entryTtl(Duration.ofDays(7)));
+        configMap.put(CACHE_NAME_ATTRIBUTE_CACHE_REPO, config.entryTtl(Duration.ofDays(7)));
+
         return configMap;
     }
 

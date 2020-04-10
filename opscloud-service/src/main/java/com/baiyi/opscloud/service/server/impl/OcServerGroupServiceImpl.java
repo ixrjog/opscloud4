@@ -73,6 +73,11 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     }
 
     @Override
+    public List<OcServerGroup> queryAll(){
+        return ocServerGroupMapper.selectAll();
+    }
+
+    @Override
     public DataTable<OcServerGroup> queryUserIncludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserOcServerGroupByParam(pageQuery);
