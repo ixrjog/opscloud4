@@ -5,7 +5,7 @@ package com.baiyi.opscloud.common.base;
  * @Date 2020/2/26 1:23 下午
  * @Version 1.0
  */
-public class Resource {
+public class URLResource {
 
     /**
      * 需要2次鉴权的资源

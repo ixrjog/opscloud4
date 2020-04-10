@@ -1,0 +1,10 @@
+# Macbook 安装ansible
+# brew install ansible [or] brew upgrade ansible
+# 当前最新版本为 ansible 2.9.6_1
+
+ansible:
+  version: 2.9.6
+  bin: /usr/local/bin/ansible
+  playbookBin: /usr/local/bin/ansible-playbook
+  scriptPath: /data/www/data/scripts
+  logPath: /logs/ansible/

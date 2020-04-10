@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * @Date 2020/2/24 4:50 下午
  * @Version 1.0
  */
-public class UserGroupParam {
+public class UserBusinessGroupParam {
 
     @Data
     @NoArgsConstructor
@@ -36,6 +36,17 @@ public class UserGroupParam {
     @NoArgsConstructor
     @ApiModel
     public static class UserUserGroupPageQuery extends PageParam {
+        @ApiModelProperty(value = "用户id")
+        private Integer userId;
+
+        @ApiModelProperty(value = "查询名称")
+        private String queryName;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserServerGroupPageQuery extends PageParam {
         @ApiModelProperty(value = "用户id")
         private Integer userId;
 

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 
 /**
  * @Author baiyi
@@ -23,7 +23,7 @@ public class UserPermissionBuilder {
         return covert(userPermissionBO);
     }
 
-    public static OcUserPermission build(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+    public static OcUserPermission build(UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission) {
         UserPermissionBO userPermissionBO = UserPermissionBO.builder()
                 .userId(userUserGroupPermission.getUserId())
                 .businessId(userUserGroupPermission.getUserGroupId())

@@ -50,6 +50,10 @@ public abstract class BaseServer implements InitializingBean, IServer {
         return ocServerGroup.getName();
     }
 
+    protected OcServerGroup getOcServerGroup(OcServer ocServer){
+        return  ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
+    }
+
     protected List<OcServerGroup> getServerGroupList() {
         ServerGroupParam.PageQuery pageQuery = new ServerGroupParam.PageQuery();
         pageQuery.setPage(0);

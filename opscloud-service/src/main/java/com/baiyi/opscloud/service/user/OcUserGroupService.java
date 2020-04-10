@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.user;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 
 import java.util.List;
 
@@ -13,11 +13,11 @@ import java.util.List;
  */
 public interface OcUserGroupService {
 
-    DataTable<OcUserGroup> queryOcUserGroupByParam(UserGroupParam.PageQuery pageQuery);
+    DataTable<OcUserGroup> queryOcUserGroupByParam(UserBusinessGroupParam.PageQuery pageQuery);
 
-    DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
+    DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
-    DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery);
+    DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
     void addOcUserGroup(OcUserGroup ocUserGroup);
 

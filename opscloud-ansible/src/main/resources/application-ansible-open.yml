@@ -1,0 +1,6 @@
+
+ansible:
+  bin: /bin/ansible
+  playbookBin: /bin/ansible-playbook
+  scriptPath: /data/www/data/scrips
+  logPath: /logs/ansible/

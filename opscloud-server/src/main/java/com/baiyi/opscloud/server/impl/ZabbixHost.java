@@ -133,10 +133,13 @@ public class ZabbixHost extends BaseServer implements IServer {
         if (!serverAttributeMap.containsKey(Global.SERVER_ATTRIBUTE_ZABBIX_TEMPLATES))
             return map;
         String templatesOpt = serverAttributeMap.get(Global.SERVER_ATTRIBUTE_ZABBIX_TEMPLATES);
+        if (StringUtils.isEmpty(templatesOpt))
+            return map;
         List<String> templateNameList = Splitter.on(",").splitToList(templatesOpt);
         for (String templateName : templateNameList) {
             ZabbixTemplate zabbixTemplate = zabbixServer.getTemplate(templateName);
-            map.put(templateName, zabbixTemplate.getTemplateid());
+            if (zabbixTemplate != null)
+                map.put(templateName, zabbixTemplate.getTemplateid());
         }
         return map;
     }
@@ -220,7 +223,7 @@ public class ZabbixHost extends BaseServer implements IServer {
         if (!isBidirectionalSync.equalsIgnoreCase("true"))
             return;
         // 清理模版
-        zabbixHostServer.clearHostTemplates(host.getHostid(), getClearTemplate(templates,mergeTemplateMap));
+        zabbixHostServer.clearHostTemplates(host.getHostid(), getClearTemplate(templates, mergeTemplateMap));
     }
 
     private Map<String, String> getClearTemplate(List<ZabbixTemplate> templates, Map<String, String> mergeTemplateMap) {
@@ -256,10 +259,8 @@ public class ZabbixHost extends BaseServer implements IServer {
                 updateHostName(host, hostname);
         }
         // 更新模版
-        updateHostTemplates(host,getServerAttributeMap(ocServer));
-
-
-        return true;
+        updateHostTemplates(host, getServerAttributeMap(ocServer));
+        return Boolean.TRUE;
     }
 
 

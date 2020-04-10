@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.server;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 
 import java.util.List;
 
@@ -38,4 +39,6 @@ public interface OcServerGroupService {
     DataTable<OcServerGroup> queryUserIncludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
 
     DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery);
+
+    List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery);
 }

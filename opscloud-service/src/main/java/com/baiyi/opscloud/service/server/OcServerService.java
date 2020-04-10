@@ -15,10 +15,17 @@ public interface OcServerService {
 
     OcServer queryOcServerByPrivateIp(String privateIp);
 
+    OcServer queryOcServerByIp(String ip);
+
     List<OcServer> queryOcServerByServerGroupId(int serverGroupId);
 
     OcServer queryOcServerById(int id);
 
+    /**
+     * 统计服务器组中的服务器数量
+     * @param id
+     * @return
+     */
     int countByServerGroupId(int id);
 
     int countByEnvType(int envType);

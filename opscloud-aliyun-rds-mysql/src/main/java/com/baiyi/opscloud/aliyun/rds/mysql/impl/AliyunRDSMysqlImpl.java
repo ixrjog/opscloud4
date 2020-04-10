@@ -48,10 +48,9 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
             if (database.getDBName().indexOf("__") == 0) continue; // 过滤内部数据库
             result.add(database);
         }
-
         return result;
     }
-    
+
     @Override
     public Map<String, List<DescribeDBInstancesResponse.DBInstance>> getDBInstanceMap() {
         List<AliyunAccount> accounts = aliyunCore.getAccounts();

@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.io.Serializable;
+import java.util.Date;
 
 @Table(name = "oc_server")
-public class OcServer {
+public class OcServer implements Serializable {
+    private static final long serialVersionUID = 2234702948079569429L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

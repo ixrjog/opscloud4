@@ -16,4 +16,6 @@ public interface OcServerMapper extends Mapper<OcServer> {
     OcServer queryOcServerMaxSerialNumber(@Param("serverGroupId") int serverGroupId);
 
     OcServer queryOcServerMaxSerialNumberByEnvType(@Param("serverGroupId") int serverGroupId,@Param("envType") int envType);
+
+
 }

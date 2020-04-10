@@ -1,0 +1,89 @@
+package com.baiyi.opscloud.factory.attribute.impl;
+
+import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.facade.ServerFacade;
+import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
+import com.baiyi.opscloud.service.env.OcEnvService;
+import com.baiyi.opscloud.service.server.OcServerGroupService;
+import com.baiyi.opscloud.service.server.OcServerService;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import org.apache.commons.lang3.time.FastDateFormat;
+import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * @Author baiyi
+ * @Date 2020/4/7 11:44 上午
+ * @Version 1.0
+ */
+@Component
+public abstract class AttributeBase {
+
+    @Resource
+    private OcServerGroupService ocServerGroupService;
+
+    @Resource
+    private OcServerService ocServerService;
+
+    @Resource
+    private ServerFacade serverFacade;
+
+    @Resource
+    private OcEnvService ocEnvService;
+
+    @Resource
+    private ServerAttributeFacade serverAttributeFacade;
+
+    /**
+     * 按环境分组
+     *
+     * @param ocServerGroup
+     * @return key: envName
+     */
+    protected Map<String, List<OcServer>> groupingByEnv(OcServerGroup ocServerGroup) {
+        List<OcServer> serverList = ocServerService.queryOcServerByServerGroupId(ocServerGroup.getId());
+        Map<String, List<OcServer>> map = Maps.newHashMap();
+        if (CollectionUtils.isEmpty(serverList)) return map;
+
+        for (OcServer ocServer : serverList) {
+            String groupingName =  convertSubgroupName(ocServerGroup,ocServer.getEnvType());
+            if (map.containsKey(groupingName)) {
+                map.get(groupingName).add(ocServer);
+            } else {
+                List<OcServer> list = Lists.newArrayList();
+                list.add(ocServer);
+                map.put(groupingName, list);
+            }
+        }
+        return map;
+    }
+
+    /**
+     * ddd-prod
+     * @param ocServerGroup
+     * @param envType
+     * @return
+     */
+    protected String convertSubgroupName(OcServerGroup ocServerGroup,int envType){
+        return Joiner.on("-").join(ocServerGroup.getName().replace("group_", ""), getEnvName(envType));
+    }
+
+    protected String getHeadInfo() {
+        FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+        return Joiner.on(" ").join("#", Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
+    }
+
+    protected String getEnvName(int envType) {
+        return ocEnvService.queryOcEnvByType(envType).getEnvName();
+    }
+
+}

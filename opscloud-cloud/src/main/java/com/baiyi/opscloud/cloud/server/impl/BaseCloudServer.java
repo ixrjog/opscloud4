@@ -7,10 +7,11 @@ import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.bo.OcServerBO;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
-import com.baiyi.opscloud.facade.OcServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
+import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -39,7 +40,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     private OcServerService ocServerService;
 
     @Resource
-    private OcServerFacade ocServerFacde;
+    private OcEnvService ocEnvService;
 
     public static final boolean POWER_ON = true;
     public static final boolean POWER_OFF = false;
@@ -209,9 +210,17 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
             } else {
                 ocCloudServer.setServerStatus(CloudServerStatus.REGISTER.getStatus());
                 ocCloudServer.setServerId(ocServer.getId());
-                ocCloudServer.setServerName(ServerUtils.toServerName(ocServerFacde.getOcServerBO(ocServer)));
+                ocCloudServer.setServerName(ServerUtils.toServerName(getOcServerBO(ocServer)));
             }
         }
+    }
+
+
+    public OcServerBO getOcServerBO(OcServer ocServer) {
+        return OcServerBO.builder()
+                .ocServer(ocServer)
+                .ocEnv(ocEnvService.queryOcEnvById(ocServer.getEnvType()))
+                .build();
     }
 
     /**

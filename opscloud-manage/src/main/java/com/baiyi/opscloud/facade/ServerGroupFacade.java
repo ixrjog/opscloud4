@@ -2,11 +2,14 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 
 import java.util.List;
 
@@ -44,5 +47,7 @@ public interface ServerGroupFacade {
     List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
 
     BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
+
+    ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery, OcUser ocUser);
 
 }
