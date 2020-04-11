@@ -5,9 +5,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.facade.ServerCacheFacade;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
+import com.baiyi.opscloud.task.TaskUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+
+import static com.baiyi.opscloud.task.AttributeTask.TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC;
 
 /**
  * @Author baiyi
@@ -23,6 +26,9 @@ public class ServerCacheFacadeImpl implements ServerCacheFacade {
     @Resource
     private OcServerGroupService ocServerGroupService;
 
+    @Resource
+    private TaskUtil taskUtil;
+
     @Override
     public void evictServerCache(OcServer ocServer) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
@@ -34,6 +40,8 @@ public class ServerCacheFacadeImpl implements ServerCacheFacade {
         attributeAnsible.evictGrouping(ocServerGroup);
         attributeAnsible.evictBuild(ocServerGroup);
         attributeAnsible.evictPreview(ocServerGroup.getId());
+        // 通知任务执行
+        taskUtil.sendMessage(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
     }
 
 }

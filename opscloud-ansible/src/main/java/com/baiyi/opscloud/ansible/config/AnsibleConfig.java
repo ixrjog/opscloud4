@@ -21,7 +21,7 @@ public class AnsibleConfig {
     private String version;
     private String playbookBin;
     private String logPath;
-    //    主机配置文件目录
+    // 主机配置文件目录
     private String dataPath;
 
     public String acqInventoryPath(){

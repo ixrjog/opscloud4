@@ -23,6 +23,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
+
 
 /**
  * @Author baiyi
@@ -159,7 +161,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @return
      */
     @Override
-    @Async
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void async() {
         sync();
     }

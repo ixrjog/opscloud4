@@ -28,4 +28,7 @@ public class Global {
     public static final String JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY = "assetsAdminSystemuserId";
 
 
+    public static final String ASYNC_POOL_TASK_EXECUTOR = "asyncPoolTaskExecutor";
+
+
 }

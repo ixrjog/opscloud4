@@ -6,7 +6,6 @@ import com.baiyi.opscloud.ansible.builder.ServerTaskMemberBuilder;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.base.ServerTaskStatus;
 import com.baiyi.opscloud.common.base.ServerTaskStopType;
-import com.baiyi.opscloud.common.schedule.SchedulerManager;
 import com.baiyi.opscloud.domain.generator.OcServerTask;
 import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
@@ -28,6 +27,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
+
 /**
  * @Author baiyi
  * @Date 2020/4/6 4:34 下午
@@ -41,7 +42,7 @@ public class AnsibleTaskHandler {
     public static final String ANSIBLE_DEFAULT_BECOME_USER = "root";
 
     // 任务并发数
-    public static final int TASK_CONCURRENT = 2;
+    public static final int TASK_CONCURRENT = 10;
 
     @Resource
     private AnsibleConfig ansibleConfig;
@@ -55,13 +56,13 @@ public class AnsibleTaskHandler {
     @Resource
     private OcServerTaskService ocServerTaskService;
 
-    @Resource
-    private SchedulerManager schedulerManager;
+//    @Resource
+//    private SchedulerManager schedulerManager;
 
     @Resource
     private OcServerService ocServerService;
 
-    @Async
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void call(OcServerTask ocServerTask, ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
         AnsibleArgsBO args = AnsibleArgsBO.builder()
                 .moduleName(ANSIBLE_MODULE_SHELL)
@@ -128,7 +129,7 @@ public class AnsibleTaskHandler {
      * @param args
      */
     private void executorCommand(OcServerTaskMember member, AnsibleArgsBO args) {
-        args.setInventory(member.getManageIp());
+        args.setPattern(member.getManageIp());
         CommandLine commandLine = AnsibleArgsBuilder.build(ansibleConfig, args);
         ansibleExecutorHandler.executorRecorder(member, commandLine, 0L);
     }

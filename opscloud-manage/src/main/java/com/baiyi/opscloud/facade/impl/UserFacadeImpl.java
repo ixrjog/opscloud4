@@ -34,6 +34,7 @@ import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserCredentialService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
@@ -98,6 +99,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Resource
     private ServerTreeDecorator serverTreeDecorator;
+
 
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
@@ -368,8 +370,10 @@ public class UserFacadeImpl implements UserFacade {
     public ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
         userServerTreeQuery.setUserId(ocUser.getId());
-        return serverGroupFacade.queryUserServerTree(userServerTreeQuery,ocUser);
+        return serverGroupFacade.queryUserServerTree(userServerTreeQuery, ocUser);
     }
+
+
 
 
     private void syncUserPermission(OcUserVO.User user) {

@@ -32,6 +32,11 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
     }
 
     @Override
+    public int queryOcAuthRoleAccessLevelByUsername(String username) {
+        return ocAuthRoleMapper.queryOcAuthRoleAccessLevelByUsername(username);
+    }
+
+    @Override
     public void addOcAuthRole(OcAuthRole ocAuthRole) {
         ocAuthRoleMapper.insert(ocAuthRole);
     }

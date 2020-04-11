@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.account.AccountCenter;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.decorator.ServerGroupDecorator;
@@ -253,6 +254,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     @Override
     public ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery, OcUser ocUser) {
         // 过滤空服务器组
+        int accessLevel = userPermissionFacade.getUserAccessLevel(ocUser);
+        if (accessLevel >= AccessLevel.OPS.getLevel())
+            userServerTreeQuery.setUserId(0);
         List<OcServerGroup> serverGroupList
                 = ocServerGroupService.queryUserPermissionOcServerGroupByParam(userServerTreeQuery).stream()
                 .filter(g -> ocServerService.countByServerGroupId(g.getId()) != 0).collect(Collectors.toList());

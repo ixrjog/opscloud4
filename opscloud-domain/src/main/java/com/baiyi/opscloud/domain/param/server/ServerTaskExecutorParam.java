@@ -30,6 +30,10 @@ public class ServerTaskExecutorParam {
     @ApiModel
     public static class TaskExecutor {
 
+        // TASK_CONCURRENT
+        @ApiModelProperty(value = "并发线程数",example = "5")
+        private Integer concurrent;
+
         @ApiModelProperty(value = "系统用户")
         private String becomeUser;
 

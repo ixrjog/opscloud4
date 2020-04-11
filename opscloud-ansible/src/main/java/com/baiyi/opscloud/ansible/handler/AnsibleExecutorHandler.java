@@ -19,6 +19,8 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
+import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
+
 /**
  * @Author baiyi
  * @Date 2020/4/6 6:23 下午
@@ -76,7 +78,7 @@ public class AnsibleExecutorHandler {
         }
     }
 
-    @Async(value = "taskExecutorExecutorTest")
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void executorTest(Long timeout) {
         if (timeout == 0)
             timeout = MAX_TIMEOUT;
@@ -123,10 +125,10 @@ public class AnsibleExecutorHandler {
      * @param timeout
      * @return
      */
-    @Async
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void executorRecorder(OcServerTaskMember member, CommandLine commandLine, Long timeout) {
-        final CommandLine cmd = CommandLine.parse("ping www.baidu.com -t 30");
-
+        // final CommandLine cmd = CommandLine.parse("ping www.baidu.com -t 30");
+        // System.err.println(JSON.toJSONString(commandLine));
         if (timeout == 0)
             timeout = MAX_TIMEOUT;
         try {
@@ -136,7 +138,7 @@ public class AnsibleExecutorHandler {
             final ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
             final DefaultExecuteResultHandler resultHandler = new DefaultExecuteResultHandler();
             DefaultExecutor executor = acqExecutor(watchdog, outputStream, errorStream);
-            executor.execute(cmd, resultHandler);
+            executor.execute(commandLine, resultHandler);
             resultHandler.waitFor(1000);
             // 启动时间
             Long startTaskTime = new Date().getTime();

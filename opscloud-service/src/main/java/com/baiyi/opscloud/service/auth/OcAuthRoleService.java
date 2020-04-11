@@ -13,6 +13,8 @@ public interface OcAuthRoleService {
 
     DataTable<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery);
 
+    int queryOcAuthRoleAccessLevelByUsername(String username);
+
     void addOcAuthRole(OcAuthRole ocAuthRole);
 
     void updateOcAuthRole(OcAuthRole ocAuthRole);

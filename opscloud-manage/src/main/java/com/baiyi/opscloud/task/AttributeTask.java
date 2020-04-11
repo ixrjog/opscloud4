@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.task;
 
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.facade.AttributeFacade;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -12,11 +12,9 @@ import javax.annotation.Resource;
  * @Date 2020/4/10 3:50 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class AttributeTask {
-
-    @Resource
-    private RedisUtil redisUtil;
 
     @Resource
     private TaskUtil taskUtil;
@@ -26,16 +24,23 @@ public class AttributeTask {
 
     public static final String TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY = "TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY";
 
+    public static final String TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC = "TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC";
+
     /**
-     * 每2分组执行一次，ansible配置文件生成任务
+     * 执行ansible配置文件生成任务
      */
-    @Scheduled(cron = "0 */2 * * * ?")
-    public void cronBuildAnsibleHosts() {
-        // 任务执行中
+    @Scheduled(cron = "* */2 * * * ?")
+    public void cronBuildAnsibleHostsConsumer() {
         if (taskUtil.isTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY)) return;
+        if (taskUtil.getSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC) == 0) return;
+        log.info("任务: buildAnsibleHosts 开始执行!");
         taskUtil.setTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY, 5);
+        taskUtil.clearSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
+
         attributeFacade.createAnsibleHosts();
+
         taskUtil.delTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY);
+        log.info("任务: buildAnsibleHosts 执行完成!");
     }
 
 

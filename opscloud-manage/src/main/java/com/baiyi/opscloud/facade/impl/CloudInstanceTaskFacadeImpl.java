@@ -32,6 +32,8 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
+
 /**
  * @Author baiyi
  * @Date 2020/3/30 11:40 上午
@@ -67,7 +69,7 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
     public static final int TASK_TIMEOUT_MINUTE = 5;
 
     @Override
-    @Async(value = "taskExecutorCloudInstance")
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void doCreateInstanceTask(OcCloudInstanceTask ocCloudInstanceTask, CreateCloudInstanceBO createCloudInstanceBO) {
         List<String> vswitchIds = getVswitchIdList(createCloudInstanceBO);
         int taskId = ocCloudInstanceTask.getId();

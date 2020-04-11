@@ -56,13 +56,17 @@
             parameterType="com.baiyi.opscloud.domain.param.user.UserServerTreeParam$UserServerTreeQuery"
             resultMap="BaseResultMap">
         select * from oc_server_group
-        where id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
-        <if test="queryName != null and queryName != ''">
-            and name like "%" #{queryName} "%"
-        </if>
-        <if test="grpType != null and grpType > 0">
-            and grp_type = #{grpType}
-        </if>
+        <where>
+            <if test="userId != null and userId > 0">
+                id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and name like "%" #{queryName} "%"
+            </if>
+            <if test="grpType != null and grpType > 0">
+                and grp_type = #{grpType}
+            </if>
+        </where>
     </select>
 
 
