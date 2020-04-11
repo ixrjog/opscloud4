@@ -30,16 +30,11 @@ public class AttributeTask {
      * 执行ansible配置文件生成任务
      */
     @Scheduled(cron = "* */2 * * * ?")
-    public void cronBuildAnsibleHostsConsumer() {
+    public void createAnsibleHostsConsumer() {
         if (taskUtil.isTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY)) return;
         if (taskUtil.getSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC) == 0) return;
         log.info("任务: buildAnsibleHosts 开始执行!");
-        taskUtil.setTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY, 5);
-        taskUtil.clearSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
-
         attributeFacade.createAnsibleHosts();
-
-        taskUtil.delTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY);
         log.info("任务: buildAnsibleHosts 执行完成!");
     }
 

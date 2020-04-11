@@ -13,6 +13,7 @@ import com.baiyi.opscloud.domain.generator.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
+import com.baiyi.opscloud.facade.AttributeFacade;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import com.baiyi.opscloud.service.server.OcServerTaskService;
 import com.baiyi.opscloud.service.user.OcUserService;
@@ -44,6 +45,9 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
     @Resource
     private ServerTaskDecorator serverTaskDecorator;
 
+    @Resource
+    private AttributeFacade attributeFacade;
+
     @Override
     public BusinessWrapper<Boolean> executorCommand(ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
@@ -66,6 +70,12 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         OcServerTask ocServerTask = ocServerTaskService.queryOcServerTaskById(taskId);
         OcServerTaskVO.ServerTask serverTask = BeanCopierUtils.copyProperties(ocServerTask, OcServerTaskVO.ServerTask.class);
         return serverTaskDecorator.decorator(serverTask);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> createAnsibleHosts() {
+        attributeFacade.createAnsibleHosts();
+        return BusinessWrapper.SUCCESS;
     }
 
 }

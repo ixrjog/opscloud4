@@ -14,4 +14,6 @@ public interface ServerTaskFacade {
    BusinessWrapper<Boolean> executorCommand(ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor);
 
    OcServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId);
+
+   BusinessWrapper<Boolean> createAnsibleHosts();
 }
