@@ -2,7 +2,7 @@ package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.mapper.opscloud.OcUserGroupMapper;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.github.pagehelper.Page;
@@ -25,21 +25,21 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     private OcUserGroupMapper ocUserGroupMapper;
 
     @Override
-    public DataTable<OcUserGroup> queryOcUserGroupByParam(UserGroupParam.PageQuery pageQuery) {
+    public DataTable<OcUserGroup> queryOcUserGroupByParam(UserBusinessGroupParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
 
     @Override
-    public DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+    public DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryUserOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
 
     @Override
-    public DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+    public DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryUserExcludeOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());

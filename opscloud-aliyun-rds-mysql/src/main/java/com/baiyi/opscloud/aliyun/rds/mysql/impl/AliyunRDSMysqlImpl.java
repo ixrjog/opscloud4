@@ -1,17 +1,18 @@
 package com.baiyi.opscloud.aliyun.rds.mysql.impl;
 
-import com.aliyuncs.rds.model.v20140815.DescribeAccountsResponse;
-import com.aliyuncs.rds.model.v20140815.DescribeDBInstanceAttributeResponse;
-import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
-import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
+import com.aliyuncs.rds.model.v20140815.*;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.aliyun.rds.mysql.AliyunRDSMysql;
 import com.baiyi.opscloud.aliyun.rds.mysql.handler.AliyunRDSMysqlHandler;
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
+import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -47,10 +48,8 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
             if (database.getDBName().indexOf("__") == 0) continue; // 过滤内部数据库
             result.add(database);
         }
-
         return result;
     }
-
 
     @Override
     public Map<String, List<DescribeDBInstancesResponse.DBInstance>> getDBInstanceMap() {
@@ -137,6 +136,23 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
         if (dbInstanceAccount != null)
             aliyunRDSMysqlHandler.deleteAccount(aliyunAccount, ocCloudDb.getDbInstanceId(), ocCloudDbAccount.getAccountName());
         return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public DataTable<CloudDatabaseSlowLogVO.SlowLog> querySlowLogPage(AliyunAccount aliyunAccount, CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
+        DescribeSlowLogsRequest request = new DescribeSlowLogsRequest();
+        request.setDBInstanceId(pageQuery.getDbInstanceId());
+        request.setDBName(pageQuery.getDbName());
+        request.setStartTime(pageQuery.getStartTime());
+        request.setEndTime(pageQuery.getEndTime());
+        request.setPageSize(pageQuery.getLength() < 30?30:pageQuery.getLength());
+        request.setPageNumber(pageQuery.getPage());
+        DescribeSlowLogsResponse response = aliyunRDSMysqlHandler.describeDBInstancesResponse(request, aliyunAccount);
+        if (response != null) {
+            List<CloudDatabaseSlowLogVO.SlowLog> page = BeanCopierUtils.copyListProperties(response.getItems(), CloudDatabaseSlowLogVO.SlowLog.class);
+            return new DataTable<>(page, response.getTotalRecordCount());
+        }
+        return new DataTable<>(Lists.newArrayList(), 0);
     }
 
 }

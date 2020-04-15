@@ -5,9 +5,12 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.config.ServerAttributeConfig;
 import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.util.ServerAttributeUtils;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
-import com.baiyi.opscloud.facade.ServerAttributeFacade;
+import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
+import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
+import com.baiyi.opscloud.service.server.OcServerGroupService;
 import org.junit.jupiter.api.Test;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -28,6 +31,11 @@ public class ServerAttributeTest extends BaseUnit {
     private ServerAttributeConfig serverAttributeConfig;
     @Resource
     private ServerAttributeFacade serverAttributeFacade;
+
+    @Resource
+    private OcServerGroupService ocServerGroupService;
+    @Resource
+    private AttributeAnsible attributeAnsible;
 
     @Test
     void testAttributeGroups() {
@@ -72,6 +80,14 @@ public class ServerAttributeTest extends BaseUnit {
         OcServerGroup ocServerGroup = new OcServerGroup();
         ocServerGroup.setId(1);
         Map<String, String> map = serverAttributeFacade.getServerGroupAttributeMap(ocServerGroup);
+        System.err.println(JSON.toJSONString(map));
+    }
+
+    @Test
+    void testGrouping() {
+        // 90
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(90);
+        Map<String, List<OcServer>> map = attributeAnsible.grouping(ocServerGroup, true);
         System.err.println(JSON.toJSONString(map));
     }
 

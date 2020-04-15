@@ -2,8 +2,10 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
+import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
@@ -98,32 +100,32 @@ public class UserController {
 
     @ApiOperation(value = "分页查询user授权的用户组列表")
     @GetMapping(value = "/include/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserIncludeUserGroupPage(@Valid UserGroupParam.UserUserGroupPageQuery pageQuery) {
+    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserIncludeUserGroupPage(@Valid UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserIncludeUserGroupPage(pageQuery));
     }
 
     @ApiOperation(value = "分页查询user未授权的用户组列表")
     @GetMapping(value = "/exclude/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserExcludeUserGroupPage(@Valid UserGroupParam.UserUserGroupPageQuery pageQuery) {
+    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserExcludeUserGroupPage(@Valid UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserExcludeUserGroupPage(pageQuery));
     }
 
     @ApiOperation(value = "分页查询用户组列表")
     @GetMapping(value = "/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserGroupPage(@Valid UserGroupParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<OcUserGroupVO.UserGroup>> queryUserGroupPage(@Valid UserBusinessGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserGroupPage(pageQuery));
     }
 
     // user group
     @ApiOperation(value = "用户组授权给用户")
     @GetMapping(value = "/group/grant", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> grantUserUserGroup(@Valid UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+    public HttpResult<Boolean> grantUserUserGroup(@Valid UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission) {
         return new HttpResult<>(userFacade.grantUserUserGroup(userUserGroupPermission));
     }
 
     @ApiOperation(value = "用户解除用户组授权")
     @DeleteMapping(value = "/group/revoke", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> revokeUserUserGroup(@Valid UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+    public HttpResult<Boolean> revokeUserUserGroup(@Valid UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission) {
         return new HttpResult<>(userFacade.revokeUserUserGroup(userUserGroupPermission));
     }
 
@@ -137,6 +139,12 @@ public class UserController {
     @GetMapping(value = "/group/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncUserGroup() {
         return new HttpResult<>(userFacade.syncUserGroup());
+    }
+
+    @ApiOperation(value = "查询user授权的服务器树")
+    @PostMapping(value = "/server/tree/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ServerTreeVO.MyServerTree> queryUserServerTree(@RequestBody @Valid UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
+        return new HttpResult<>(userFacade.queryUserServerTree(userServerTreeQuery));
     }
 
 }

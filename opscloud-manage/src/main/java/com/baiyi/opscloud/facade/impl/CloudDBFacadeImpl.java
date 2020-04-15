@@ -18,6 +18,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
@@ -90,7 +91,6 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
         List<OcCloudDbAttribute> ocCloudDbAttributeList = ocCloudDBAttributeService.queryOcCloudDbAttributeByCloudDbId(id);
         for (OcCloudDbAttribute ocCloudDbAttribute : ocCloudDbAttributeList)
             ocCloudDBAttributeService.delOcCloudDbAttributeById(ocCloudDbAttribute.getId());
-
         return BusinessWrapper.SUCCESS;
     }
 
@@ -162,6 +162,14 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
         return BusinessWrapper.SUCCESS;
     }
 
+    @Override
+    public DataTable<CloudDatabaseSlowLogVO.SlowLog> queryCloudDBDatabaseSlowLogPage(CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
+        OcCloudDb ocCloudDb = ocCloudDBService.queryOcCloudDbByUniqueKey(pageQuery.getCloudDbType(), pageQuery.getDbInstanceId());
+        String key = CloudDBType.getName(ocCloudDb.getCloudDbType());
+        ICloudDB iCloudDB = CloudDBFactory.getCloudDBByKey(key);
+        return iCloudDB.querySlowLogPage(ocCloudDb, pageQuery);
+    }
+
     private BusinessWrapper<Boolean> createAccount(ICloudDB iCloudDB, OcCloudDb ocCloudDb, String privilege) {
         OcCloudDbAccount ocCloudDbAccount = new OcCloudDbAccount();
         ocCloudDbAccount.setAccountName(Joiner.on("_").join(cloudDBConfig.getPrefix(), privilege.toLowerCase()));
@@ -174,7 +182,7 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
         ocCloudDbAccount.setWorkflow(1);
         ocCloudDbAccount.setComment(Global.CREATED_BY);
         BusinessWrapper<Boolean> wrapper = iCloudDB.createAccount(ocCloudDb, ocCloudDbAccount, privilege);
-        if(wrapper.isSuccess()){
+        if (wrapper.isSuccess()) {
             // 加密
             ocCloudDbAccount.setAccountPassword(stringEncryptor.encrypt(password));
             ocCloudDBAccountService.addOcCloudDbAccount(ocCloudDbAccount);

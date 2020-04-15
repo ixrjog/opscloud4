@@ -2,11 +2,13 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
 import com.baiyi.opscloud.facade.TagFacade;
+import com.baiyi.opscloud.service.cloud.OcCloudDBService;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import org.springframework.stereotype.Component;
 
@@ -22,6 +24,9 @@ public class CloudDBDatabaseDecorator {
 
     @Resource
     private OcEnvService ocEnvService;
+
+    @Resource
+    private OcCloudDBService ocCloudDBService;
 
     @Resource
     private TagFacade tagFacade;
@@ -42,6 +47,8 @@ public class CloudDBDatabaseDecorator {
         cloudDBDatabase.setTags(tagFacade.queryBusinessTag(businessQuery));
 
         if (extend != null && extend == 1) {
+            OcCloudDb ocCloudDb = ocCloudDBService.queryOcCloudDbById(cloudDBDatabase.getCloudDbId());
+            cloudDBDatabase.setCloudDbType(ocCloudDb.getCloudDbType());
         }
         return cloudDBDatabase;
     }

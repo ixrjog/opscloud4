@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.server.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 import com.baiyi.opscloud.mapper.opscloud.OcServerGroupMapper;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.github.pagehelper.Page;
@@ -68,7 +69,12 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
 
     @Override
     public List<OcServerGroup> queryUserPermissionOcServerGroupByUserId(int userId){
-        return ocServerGroupMapper.queryUerPermissionOcServerGroupByUserId(userId);
+        return ocServerGroupMapper.queryUserPermissionOcServerGroupByUserId(userId);
+    }
+
+    @Override
+    public List<OcServerGroup> queryAll(){
+        return ocServerGroupMapper.selectAll();
     }
 
     @Override
@@ -83,6 +89,11 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserExcludeOcServerGroupByParam(pageQuery);
         return new DataTable<>(ocServerGroupList, page.getTotal());
+    }
+
+    @Override
+    public List<OcServerGroup>  queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery){
+       return ocServerGroupMapper.queryUserPermissionOcServerGroupByParam(userServerTreeQuery);
     }
 
 

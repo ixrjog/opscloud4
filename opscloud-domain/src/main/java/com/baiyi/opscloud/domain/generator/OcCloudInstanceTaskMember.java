@@ -34,6 +34,9 @@ public class OcCloudInstanceTaskMember {
 
     private String hostname;
 
+    @Column(name = "task_phase")
+    private String taskPhase;
+
     /**
      * 任务状态
      */
@@ -188,6 +191,20 @@ public class OcCloudInstanceTaskMember {
      */
     public void setHostname(String hostname) {
         this.hostname = hostname;
+    }
+
+    /**
+     * @return task_phase
+     */
+    public String getTaskPhase() {
+        return taskPhase;
+    }
+
+    /**
+     * @param taskPhase
+     */
+    public void setTaskPhase(String taskPhase) {
+        this.taskPhase = taskPhase;
     }
 
     /**

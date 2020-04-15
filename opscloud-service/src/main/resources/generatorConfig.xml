@@ -122,8 +122,11 @@
 <!--        oc_cloud_instance_template-->
 <!--        oc_cloud_instance_task-->
 <!--        oc_cloud_instance_task_member-->
+<!--        oc_server_task-->
+<!--        oc_server_task_member-->
+<!--        oc_ansible_playbook-->
 
-        <table tableName="oc_cloud_instance_task_member">
+        <table tableName="oc_ansible_playbook">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

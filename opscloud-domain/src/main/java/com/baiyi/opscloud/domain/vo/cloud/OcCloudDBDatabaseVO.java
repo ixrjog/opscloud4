@@ -27,6 +27,9 @@ public class OcCloudDBDatabaseVO {
 
         private OcEnvVO.Env env;
 
+        @ApiModelProperty(value = "云数据库类型")
+        private Integer cloudDbType;
+
         @ApiModelProperty(value = "主键")
         private Integer id;
 

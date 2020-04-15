@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
@@ -28,5 +29,7 @@ public interface CloudDBFacade {
     BusinessWrapper<Boolean> updateBaseCloudDBDatabase(OcCloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase);
 
     BusinessWrapper<Boolean> privilegeAccount(OcCloudDBAccountVO.PrivilegeAccount privilegeAccount);
+
+    DataTable<CloudDatabaseSlowLogVO.SlowLog> queryCloudDBDatabaseSlowLogPage(CloudDBDatabaseParam.SlowLogPageQuery pageQuery);
 
 }

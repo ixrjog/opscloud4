@@ -7,28 +7,34 @@ import com.baiyi.opscloud.bo.UserGroupBO;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CredentialType;
-import com.baiyi.opscloud.common.base.Resource;
+import com.baiyi.opscloud.common.base.URLResource;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
 import com.baiyi.opscloud.convert.UserCredentialConvert;
+import com.baiyi.opscloud.decorator.ServerTreeDecorator;
 import com.baiyi.opscloud.decorator.UserDecorator;
 import com.baiyi.opscloud.decorator.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.domain.param.user.UserGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
+import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.AuthFacade;
+import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserCredentialService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
@@ -37,6 +43,7 @@ import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,41 +55,51 @@ import java.util.stream.Collectors;
 @Service
 public class UserFacadeImpl implements UserFacade {
 
-    @javax.annotation.Resource
+    @Resource
     private OcUserService ocUserService;
 
-    @javax.annotation.Resource
+    @Resource
     private OcUserGroupService ocUserGroupService;
 
-    @javax.annotation.Resource
+    @Resource
     private StringEncryptor stringEncryptor;
 
-    @javax.annotation.Resource
+    @Resource
     private AccountCenter accountCenter;
 
-    @javax.annotation.Resource
+    @Resource
     private GroupRepo groupRepo;
 
-    @javax.annotation.Resource
+    @Resource
     private PersonRepo personRepo;
 
-    @javax.annotation.Resource
+    @Resource
     private UserGroupDecorator userGroupDecorator;
 
-    @javax.annotation.Resource
+    @Resource
     private UserDecorator userDecorator;
 
-    @javax.annotation.Resource
+    @Resource
     private UserPermissionFacade userPermissionFacade;
 
-    @javax.annotation.Resource
+    @Resource
     private OcUserApiTokenService ocUserApiTokenService;
 
-    @javax.annotation.Resource
+    @Resource
     private AuthFacade authFacade;
 
-    @javax.annotation.Resource
+    @Resource
     private OcUserCredentialService ocUserCredentialService;
+
+    @Resource
+    private ServerGroupFacade serverGroupFacade;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private ServerTreeDecorator serverTreeDecorator;
+
 
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
@@ -126,6 +143,7 @@ public class UserFacadeImpl implements UserFacade {
 
     /**
      * 2次鉴权
+     *
      * @param userId
      * @param resource
      * @return
@@ -145,8 +163,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
         // 公共接口需要2次鉴权
-        BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(),Resource.USER_CREDENTIAL_SAVE);
-        if(!wrapper.isSuccess())
+        BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(), URLResource.USER_CREDENTIAL_SAVE);
+        if (!wrapper.isSuccess())
             return wrapper;
 
         if (userCredential.getCredentialType() == null)
@@ -185,8 +203,8 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user) {
         // 公共接口需要2次鉴权
-        BusinessWrapper<Boolean> wrapper = enhancedAuthority(user.getId(),Resource.USER_UPDATE);
-        if(!wrapper.isSuccess())
+        BusinessWrapper<Boolean> wrapper = enhancedAuthority(user.getId(), URLResource.USER_UPDATE);
+        if (!wrapper.isSuccess())
             return wrapper;
         OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
         String password = ""; // 用户密码原文
@@ -238,7 +256,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.PageQuery pageQuery) {
+    public DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryOcUserGroupByParam(pageQuery);
         List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
         DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
@@ -246,7 +264,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> grantUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+    public BusinessWrapper<Boolean> grantUserUserGroup(UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission) {
         OcUserPermission ocUserPermission = UserPermissionBuilder.build(userUserGroupPermission);
         BusinessWrapper<Boolean> wrapper = userPermissionFacade.addOcUserPermission(ocUserPermission);
         if (!wrapper.isSuccess())
@@ -264,7 +282,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> revokeUserUserGroup(UserGroupParam.UserUserGroupPermission userUserGroupPermission) {
+    public BusinessWrapper<Boolean> revokeUserUserGroup(UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission) {
         OcUserPermission ocUserPermission = UserPermissionBuilder.build(userUserGroupPermission);
         BusinessWrapper<Boolean> wrapper = userPermissionFacade.delOcUserPermission(ocUserPermission);
         if (!wrapper.isSuccess())
@@ -282,7 +300,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public DataTable<OcUserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+    public DataTable<OcUserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryUserIncludeOcUserGroupByParam(pageQuery);
         List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
         DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
@@ -290,7 +308,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public DataTable<OcUserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserGroupParam.UserUserGroupPageQuery pageQuery) {
+    public DataTable<OcUserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryUserExcludeOcUserGroupByParam(pageQuery);
         List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
         DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
@@ -347,6 +365,16 @@ public class UserFacadeImpl implements UserFacade {
         }
         return BusinessWrapper.SUCCESS;
     }
+
+    @Override
+    public ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
+        userServerTreeQuery.setUserId(ocUser.getId());
+        return serverGroupFacade.queryUserServerTree(userServerTreeQuery, ocUser);
+    }
+
+
+
 
     private void syncUserPermission(OcUserVO.User user) {
         // OcUser ocUser= ocUserService.queryOcUserByUsername(user.getUsername());

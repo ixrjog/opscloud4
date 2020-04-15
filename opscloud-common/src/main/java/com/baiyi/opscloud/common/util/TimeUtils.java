@@ -40,6 +40,17 @@ public class TimeUtils {
     public static String timeFormat = "yyyy-MM-dd HH:mm:ss";
 
     /**
+     * 判断是否超时
+     *
+     * @param startTime
+     * @return
+     */
+    public static boolean checkTimeout(Long startTime, Long timeout) {
+        return (new Date().getTime() - startTime) >= timeout;
+    }
+
+
+    /**
      * 计算2个日期时间差
      *
      * @param fromDate
@@ -93,6 +104,7 @@ public class TimeUtils {
 
     /**
      * 计算时间经过了多少分钟
+     *
      * @param date
      * @return
      */

@@ -29,7 +29,17 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-server</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-cloud</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-ansible</artifactId>
         </dependency>
 
         <dependency>

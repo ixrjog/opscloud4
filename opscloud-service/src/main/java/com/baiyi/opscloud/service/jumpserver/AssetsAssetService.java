@@ -21,4 +21,6 @@ public interface AssetsAssetService {
 
     void addAssetsAsset(AssetsAsset assetsAsset);
 
+    void deleteAssetsAssetById(String id);
+
 }

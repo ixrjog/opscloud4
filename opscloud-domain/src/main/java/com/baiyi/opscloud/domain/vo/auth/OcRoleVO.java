@@ -16,11 +16,14 @@ public class OcRoleVO {
     @ApiModel
     public static class Role {
 
-        @ApiModelProperty(value = "主键",example="1")
+        @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 
         @ApiModelProperty(value = "角色名称")
         private String roleName;
+
+        @ApiModelProperty(value = "访问级别", example = "50")
+        private Integer accessLevel;
 
         @ApiModelProperty(value = "资源路径")
         private String resourceName;
@@ -28,7 +31,7 @@ public class OcRoleVO {
         @ApiModelProperty(value = "角色描述")
         private String comment;
 
-        @ApiModelProperty(value = "是否支持工作流申请",example="1")
+        @ApiModelProperty(value = "是否支持工作流申请", example = "1")
         private Integer workflow;
 
         @ApiModelProperty(value = "创建时间")

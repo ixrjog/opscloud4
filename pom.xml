@@ -21,6 +21,8 @@
         <module>opscloud-gitlab</module>
         <module>opscloud-vmware-vcsa</module>
         <module>opscloud-aliyun-rds-mysql</module>
+        <module>opscloud-server</module>
+        <module>opscloud-ansible</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -247,6 +249,16 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-gitlab</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-server</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-ansible</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

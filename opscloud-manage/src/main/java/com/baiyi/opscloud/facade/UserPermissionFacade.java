@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 
@@ -20,4 +21,11 @@ public interface UserPermissionFacade {
     BusinessWrapper<Boolean> addOcUserPermission(OcUserPermission ocUserPermission);
 
     BusinessWrapper<Boolean> delOcUserPermission(OcUserPermission ocUserPermission);
+
+    /**
+     * 查询用户的访问级别
+     * @param ocUser
+     * @return
+     */
+    int getUserAccessLevel(OcUser ocUser);
 }

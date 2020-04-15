@@ -15,6 +15,9 @@ public class OcAuthRole {
     @Column(name = "role_name")
     private String roleName;
 
+    @Column(name = "access_level")
+    private Integer accessLevel;
+
     /**
      * 角色描述
      */
@@ -67,6 +70,14 @@ public class OcAuthRole {
      */
     public void setRoleName(String roleName) {
         this.roleName = roleName;
+    }
+
+    public Integer getAccessLevel() {
+        return accessLevel;
+    }
+
+    public void setAccessLevel(Integer accessLevel) {
+        this.accessLevel = accessLevel;
     }
 
     /**

@@ -9,7 +9,6 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.jumpserver.api.JumpserverAPI;
 import com.baiyi.opscloud.jumpserver.bo.UsersUsergroupBO;
 import com.baiyi.opscloud.jumpserver.builder.AssetsNodeBuilder;
@@ -126,15 +125,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         return usersUsergroup;
     }
 
-    @Override
-    public UsersUser createUsersUser(OcUser ocUser) {
-        if (StringUtils.isEmpty(ocUser.getEmail()))
-            return null;
-        UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser != null)
-            return usersUser;
-        return saveUsersUser(ocUser);
-    }
+
 
     /**
      * 创建Jumpserver用户
@@ -376,41 +367,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     }
 
     @Override
-    public Boolean grant(OcUser ocUser, String resource) {
-        UsersUser usersUser = createUsersUser(ocUser);
-        //UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser == null) return Boolean.FALSE;
-        String name = JumpserverUtils.toUsergroupName(resource);
-        UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
-        if (usersUsergroup == null) return Boolean.FALSE;
-        UsersUserGroups pre = new UsersUserGroups();
-        pre.setUsergroupId(usersUsergroup.getId());
-        pre.setUserId(usersUser.getId());
-        UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
-        if (usersUserGroups == null)
-            usersUserGroupsService.addUsersUserGroups(pre);
-        return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean revoke(OcUser ocUser, String resource) {
-        UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser == null) return Boolean.TRUE;
-        String name = JumpserverUtils.toUsergroupName(resource);
-
-        UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
-        if (usersUsergroup == null) return Boolean.TRUE;
-        UsersUserGroups pre = new UsersUserGroups();
-        pre.setUsergroupId(usersUsergroup.getId());
-        pre.setUserId(usersUser.getId());
-        UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
-        if (usersUserGroups != null)
-            usersUserGroupsService.delUsersUserGroupsById(usersUserGroups.getId());
-        return Boolean.TRUE;
-    }
-
-
-    @Override
     public boolean activeUsersUser(String username, boolean active) {
         log.info("JUMPSERVER设置用Active,username = {}, active = {}", username, active);
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);
@@ -447,14 +403,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             usersUser.setWechat(ocUser.getWechat());
         usersUserService.updateUsersUser(usersUser);
         return true;
-    }
-
-    @Override
-    public boolean pushKey(OcUser ocUser, OcUserCredentialVO.UserCredential credential) {
-        UsersUser usersUser = saveUsersUser(ocUser);
-        if (usersUser == null)
-            return false;
-        return jumpserverAPI.pushKey(ocUser, usersUser, credential);
     }
 
     @Override
