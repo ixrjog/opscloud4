@@ -37,5 +37,10 @@ public class OcServerTaskMemberVO {
         private String outputMsg;
         private String errorMsg;
 
+        // 是否成功
+        private Boolean success;
+        // 结果中是否隐藏显示
+        private Boolean hide;
+
     }
 }

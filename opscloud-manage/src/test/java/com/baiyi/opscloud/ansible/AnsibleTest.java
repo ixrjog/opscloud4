@@ -8,12 +8,15 @@ import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.impl.AttributeFacadeImpl;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author baiyi
@@ -32,6 +35,17 @@ public class AnsibleTest extends BaseUnit {
 
     @Resource
     private AttributeFacadeImpl attributeFacadeImpl;
+
+    @Test
+    void aTest() {
+      //  System.err.println(UUIDUtils.getUUID());
+
+        Set<String>  tags = Sets.newHashSet();
+        tags.add("test1");
+        tags.add("test2");
+        tags.add("test3");
+        System.err.println( Joiner.on(",").join(tags));
+    }
 
     @Test
     void aaaTest() {

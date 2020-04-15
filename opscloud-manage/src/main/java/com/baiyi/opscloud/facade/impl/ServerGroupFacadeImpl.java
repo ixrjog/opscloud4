@@ -18,6 +18,7 @@ import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.ServerCacheFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
@@ -263,9 +264,11 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         // 缓存
         Map<String, String> serverTreeHostPatternMap = Maps.newHashMap();
 
-        List<ServerTreeVO.Tree> treeList = Lists.newArrayList();
+        List<TreeVO.Tree> treeList = Lists.newArrayList();
+        int treeSize = 0;
         for (OcServerGroup ocServerGroup : serverGroupList) {
             Map<String, List<OcServer>> serverGroupMap = attributeAnsible.grouping(ocServerGroup);
+            treeSize += getServerGroupMapSize( serverGroupMap );
             // 组装缓存
             assembleServerTreeHostPatternMap(serverTreeHostPatternMap, serverGroupMap);
             treeList.add(serverTreeDecorator.decorator(ocServerGroup, serverGroupMap));
@@ -274,6 +277,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
                 .userId(ocUser.getId())
                 .uuid(UUIDUtils.getUUID())
                 .tree(treeList)
+                .size(treeSize)
                 .build();
         // 缓存1小时
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), myServerTree.getUuid());
@@ -286,6 +290,15 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             for (OcServer ocServer : serverGroupMap.get(key))
                 serverTreeHostPatternMap.put(serverFacade.acqServerName(ocServer), serverAttributeFacade.getManageIp(ocServer));
         }
+    }
+
+    private int getServerGroupMapSize(Map<String, List<OcServer>> serverGroupMap ){
+        int size =0;
+        if(serverGroupMap.isEmpty())
+            return size;
+        for(String key:serverGroupMap.keySet())
+            size += serverGroupMap.get(key).size();
+        return size;
     }
 
 }

@@ -15,10 +15,11 @@ import java.util.Map;
  */
 public class ServerTaskBuilder {
 
-    public static  OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap) {
+    public static  OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, Object executorParam) {
         ServerTaskBO serverTaskBO = ServerTaskBO.builder()
                 .userId(ocUser.getId())
                 .userDetail(JSON.toJSONString(ocUser))
+                .executorParam(JSON.toJSONString(executorParam))
                 .serverTargetDetail(JSON.toJSONString(serverTreeHostPatternMap))
                 .build();
 

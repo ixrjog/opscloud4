@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_server_task")
 public class OcServerTask {
@@ -9,6 +9,8 @@ public class OcServerTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(name = "executor_param")
+    private String executorParam;
     /**
      * 资源组id
      */
@@ -79,6 +81,14 @@ public class OcServerTask {
      */
     public void setId(Integer id) {
         this.id = id;
+    }
+
+    public String getExecutorParam() {
+        return executorParam;
+    }
+
+    public void setExecutorParam(String executorParam) {
+        this.executorParam = executorParam;
     }
 
     /**

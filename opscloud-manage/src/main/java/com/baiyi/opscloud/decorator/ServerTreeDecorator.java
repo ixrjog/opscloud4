@@ -2,7 +2,7 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
@@ -23,14 +23,14 @@ public class ServerTreeDecorator {
     @Resource
     private ServerFacade serverFacade;
 
-    public ServerTreeVO.Tree decorator(OcServerGroup ocServerGroup, Map<String, List<OcServer>> serverGroupMap) {
-        List<ServerTreeVO.Tree> childrens = serverGroupMap.keySet().stream().map(subName -> ServerTreeVO.Tree.builder()
+    public TreeVO.Tree decorator(OcServerGroup ocServerGroup, Map<String, List<OcServer>> serverGroupMap) {
+        List<TreeVO.Tree> childrens = serverGroupMap.keySet().stream().map(subName -> TreeVO.Tree.builder()
                 .id(subName)
                 .label(subName)
                 .children(getServerChildrens(serverGroupMap.get(subName)))
                 .build()).collect(Collectors.toList());
 
-        ServerTreeVO.Tree tree = ServerTreeVO.Tree.builder()
+        TreeVO.Tree tree = TreeVO.Tree.builder()
                 .id(ocServerGroup.getName())
                 .label(ocServerGroup.getName())
                 .children(childrens)
@@ -39,13 +39,13 @@ public class ServerTreeDecorator {
         return tree;
     }
 
-    private List<ServerTreeVO.Tree> getServerChildrens(List<OcServer> serverList) {
+    private List<TreeVO.Tree> getServerChildrens(List<OcServer> serverList) {
         return serverList.stream().map(this::apply).collect(Collectors.toList());
     }
 
-    private ServerTreeVO.Tree apply(OcServer e) {
+    private TreeVO.Tree apply(OcServer e) {
         String serverName = serverFacade.acqServerName(e);
-        return ServerTreeVO.Tree.builder()
+        return TreeVO.Tree.builder()
                 .id(serverName)
                 .label(Joiner.on(":").join(serverName, e.getPrivateIp()))
                 .build();

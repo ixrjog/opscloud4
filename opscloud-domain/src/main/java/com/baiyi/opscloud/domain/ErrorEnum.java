@@ -63,6 +63,9 @@ public enum ErrorEnum {
 
     // server task
     SERVER_TASK_TREE_NOT_EXIST(11007, "用户服务器资源树不存在或过期！"),
+    SERVER_TASK_NOT_EXIST(11007, "服务器任务不存在！"),
+    SERVER_TASK_MEMBER_NOT_EXIST(11007, "服务器子任务不存在！"),
+    SERVER_TASK_HAS_FINALIIZED_AND_CANNOT_BE_MODIFIED(11007, "任务已经结束！"),
 
     // serverGrooup
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),

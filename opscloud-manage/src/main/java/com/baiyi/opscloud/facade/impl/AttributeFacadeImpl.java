@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
@@ -34,9 +33,6 @@ public class AttributeFacadeImpl implements AttributeFacade {
     private OcServerGroupService ocServerGroupService;
 
     @Resource
-    private RedisUtil redisUtil;
-
-    @Resource
     private AnsibleConfig ansibleConfig;
 
     @Resource
@@ -46,7 +42,7 @@ public class AttributeFacadeImpl implements AttributeFacade {
     public void createAnsibleHosts() {
         taskUtil.setTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY, 5);
         taskUtil.clearSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
-        try{
+        try {
             String context = attributeAnsible.getHeadInfo();
             List<OcServerGroup> serverGroupList = ocServerGroupService.queryAll();
             for (OcServerGroup serverGroup : serverGroupList) {
@@ -55,7 +51,7 @@ public class AttributeFacadeImpl implements AttributeFacade {
                     context += "\n" + previewAttribute.getContent();
             }
             IOUtils.createFile(ansibleConfig.acqInventoryPath(), ANSIBLE_HOSTS, context);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         taskUtil.delTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY);

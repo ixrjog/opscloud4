@@ -8,6 +8,8 @@ package com.baiyi.opscloud.common.base;
 public enum ServerTaskStatus {
 
     QUEUE("QUEUE"),
+    // 执行队列，还未执行
+    EXECUTE_QUEUE("EXECUTE_QUEUE"),
     EXECUTING("EXECUTING"),
     FINALIZED("FINALIZED");
 

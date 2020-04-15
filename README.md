@@ -20,6 +20,8 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
+<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/mov/oc-playbook.mov" target="_blank">AnsiblePlaybook演示视频</a>
+
 
 <img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/mov/createInstance.gif"></img> 
 

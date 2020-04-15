@@ -7,6 +7,7 @@
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="executor_param" jdbcType="VARCHAR" property="executorParam" />
     <result column="task_type" jdbcType="INTEGER" property="taskType" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="task_size" jdbcType="INTEGER" property="taskSize" />

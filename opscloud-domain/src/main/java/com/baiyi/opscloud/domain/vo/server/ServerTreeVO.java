@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.server;
 
+import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
@@ -16,19 +17,12 @@ public class ServerTreeVO {
     @Data
     @Builder
     @ApiModel
-    public static class MyServerTree  {
+    public static class MyServerTree {
+        private Integer size;
         private Integer userId;
         private String uuid;
-        private List<Tree> tree;
+        private List<TreeVO.Tree> tree;
     }
 
 
-    @Data
-    @Builder
-    @ApiModel
-    public static class Tree  {
-        private String id;
-        private String label;
-        private List<Tree> children;
-    }
 }

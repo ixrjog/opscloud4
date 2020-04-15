@@ -16,6 +16,8 @@ public class ServerTaskBO {
 
     private Integer id;
 
+    private String executorParam;
+
     private Integer userId;
 
     @Builder.Default

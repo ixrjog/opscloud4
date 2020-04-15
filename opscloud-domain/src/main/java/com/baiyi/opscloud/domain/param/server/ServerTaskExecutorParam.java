@@ -25,6 +25,21 @@ public class ServerTaskExecutorParam {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class ServerTaskPlaybookExecutor extends TaskExecutor {
+
+        @ApiModelProperty(value = "指定执行的playbookId",example = "1")
+        private Integer playbookId;
+
+        @ApiModelProperty(value = "自定义变量")
+        private String vars;
+
+        @ApiModelProperty(value = "按标签执行playbook")
+        private Set<String> tags;
+    }
+
 
     @Data
     @ApiModel

@@ -2,33 +2,33 @@ package com.baiyi.opscloud.ansible.builder;
 
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
 import org.apache.commons.exec.CommandLine;
 import org.springframework.util.StringUtils;
+
+import java.util.Map;
 
 import static com.baiyi.opscloud.ansible.config.AnsibleConfig.ANSIBLE_HOSTS;
 
 /**
  * @Author baiyi
- * @Date 2020/4/6 5:27 下午
+ * @Date 2020/4/12 1:14 下午
  * @Version 1.0
  */
-public class AnsibleArgsBuilder {
+public class AnsiblePlaybookArgsBuilder {
 
     /**
      * @param config
      * @param args
      * @return
      */
-    public static CommandLine build(AnsibleConfig config, AnsibleArgsBO args) {
-        CommandLine commandLine = new CommandLine(config.getBin());
+    public static CommandLine build(AnsibleConfig config, AnsiblePlaybookArgsBO args) {
+        CommandLine commandLine = new CommandLine(config.getPlaybookBin());
 
-        if(args.isVersion()){
+        if (args.isVersion()) {
             commandLine.addArgument("--version");
             return commandLine;
         }
-
-        // 目标主机或分组
-        commandLine.addArgument(args.getPattern());
 
         commandLine.addArgument("--key-file");
         if (!StringUtils.isEmpty(args.getKeyFile())) {
@@ -55,16 +55,31 @@ public class AnsibleArgsBuilder {
             commandLine.addArgument(args.getForks().toString());
         }
 
-        if (!StringUtils.isEmpty(args.getModuleName())) {
-            commandLine.addArgument("-m");
-            commandLine.addArgument(args.getModuleName());
+        // 外部变量
+        Map<String, String> extraVarsMap = Maps.newHashMap();
+        if (args.getExtraVars() != null)
+            extraVarsMap = args.getExtraVars();
+
+        extraVarsMap.put("hosts", args.getHosts());
+        commandLine.addArgument("-e");
+        commandLine.addArgument(convertExtraVars(extraVarsMap),false);
+
+        // 标签执行 -t task1,task2
+        if (args.getTags() != null && !args.getTags().isEmpty()) {
+            commandLine.addArgument("-t");
+            commandLine.addArgument(Joiner.on(",").join(args.getTags()));
         }
 
-        if (!StringUtils.isEmpty(args.getModuleArguments())) {
-            commandLine.addArgument("-a");
-            commandLine.addArgument(args.getModuleArguments());
-        }
+        // playbook脚本
+        commandLine.addArgument(args.getPlaybook());
 
         return commandLine;
+    }
+
+    private static String convertExtraVars(Map<String, String> extraVarsMap) {
+        String extraVars = null;
+        for (String key : extraVarsMap.keySet())
+            extraVars = Joiner.on(" ").skipNulls().join(extraVars, Joiner.on("=").join(key, extraVarsMap.get(key)));
+        return extraVars;
     }
 }

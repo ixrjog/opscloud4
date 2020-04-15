@@ -1,22 +1,30 @@
 package com.baiyi.opscloud.ansible.builder;
 
+import com.google.common.collect.Maps;
 import lombok.Builder;
 import lombok.Data;
 
+import java.util.Map;
+import java.util.Set;
+
 /**
  * @Author baiyi
- * @Date 2020/4/6 5:16 下午
+ * @Date 2020/4/12 1:07 下午
  * @Version 1.0
  */
 @Data
 @Builder
-public class AnsibleArgsBO {
-
+public class AnsiblePlaybookArgsBO {
 
     /**
-     * host pattern
+     * Playbook(s)
      */
-    private String pattern;
+    private String playbook;
+
+    /**
+     * hosts 主机ip
+     */
+    private String hosts;
 
     /**
      *  --private-key PRIVATE_KEY_FILE, --key-file PRIVATE_KEY_FILE
@@ -32,21 +40,11 @@ public class AnsibleArgsBO {
     private String inventory;
 
     /**
-     *   -m MODULE_NAME, --module-name MODULE_NAME
-     *                         module name to execute (default=command)
+     * -t TAGS, --tags TAGS  only run plays and tasks tagged with these values
      */
-    private String moduleName;
+    private Set<String> tags;
 
-    /**
-     *   -a MODULE_ARGS, --args MODULE_ARGS
-     *                         module arguments
-     */
-    private String moduleArguments;
-    /**
-     *   -f FORKS, --forks FORKS
-     *                         specify number of parallel processes to use
-     *                         (default=5)
-     */
+
     @Builder.Default
     private Integer forks = 1;
 
@@ -57,8 +55,12 @@ public class AnsibleArgsBO {
     @Builder.Default
     private String becomeUser = "root";
 
+    /**
+     * -e EXTRA_VARS, --extra-vars EXTRA_VARS
+     *                         set additional variables as key=value or YAML/JSON, if filename prepend with @
+     */
     @Builder.Default
-    private boolean version = false;
+    private Map<String, String> extraVars = Maps.newHashMap();
 
     /**
      *   -v, --verbose         verbose mode (-vvv for more, -vvvv to enable
@@ -66,4 +68,6 @@ public class AnsibleArgsBO {
      */
     private String verbose;
 
+    @Builder.Default
+    private boolean version = false;
 }

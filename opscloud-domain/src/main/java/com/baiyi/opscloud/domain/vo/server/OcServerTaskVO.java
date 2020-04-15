@@ -20,9 +20,14 @@ public class OcServerTaskVO {
     @ApiModel
     public static class ServerTask {
 
-        private Map<String,List<OcServerTaskMemberVO.ServerTaskMember>> memberMap;
+        private Map<String, List<OcServerTaskMemberVO.ServerTaskMember>> memberMap;
+
+        // Statistics
+        private ServerTastStatistics taskStatistics;
 
         private Integer id;
+        private String executorParam;
+        private Object executorParamDetail;
         private Integer userId;
         private Integer taskType;
         private String comment;
@@ -35,6 +40,18 @@ public class OcServerTaskVO {
         private Date updateTime;
         private String userDetail;
         private String serverTargetDetail;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class ServerTastStatistics {
+
+        private Integer total;
+        private Integer successfulCount;
+        private Integer failedCount;
+        private Integer errorCount;
 
     }
 }

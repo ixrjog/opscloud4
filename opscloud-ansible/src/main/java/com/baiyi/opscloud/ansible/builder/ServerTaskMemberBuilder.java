@@ -13,7 +13,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
  */
 public class ServerTaskMemberBuilder {
 
-
     public static OcServerTaskMember build(OcServerTask ocServerTask, String hostPattern, String manageIp, OcServer ocServer) {
         ServerTaskMemberBO serverTaskMemberBO = ServerTaskMemberBO.builder()
                 .taskId(ocServerTask.getId())
