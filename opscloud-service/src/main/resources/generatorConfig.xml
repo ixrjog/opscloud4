@@ -125,8 +125,9 @@
 <!--        oc_server_task-->
 <!--        oc_server_task_member-->
 <!--        oc_ansible_playbook-->
+<!--        oc_ansible_script-->
 
-        <table tableName="oc_ansible_playbook">
+        <table tableName="oc_ansible_script">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

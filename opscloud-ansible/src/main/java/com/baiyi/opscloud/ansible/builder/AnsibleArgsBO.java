@@ -42,6 +42,11 @@ public class AnsibleArgsBO {
      *                         module arguments
      */
     private String moduleArguments;
+
+    /**
+     * script 参数
+     */
+    private String scriptParam;
     /**
      *   -f FORKS, --forks FORKS
      *                         specify number of parallel processes to use

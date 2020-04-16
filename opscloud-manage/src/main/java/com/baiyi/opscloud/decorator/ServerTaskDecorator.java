@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.decorator;
 
+import com.baiyi.opscloud.common.util.AnsibleUtils;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
@@ -13,9 +14,11 @@ import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -77,6 +80,8 @@ public class ServerTaskDecorator {
                 memberMap.put(member.getTaskStatus(), members);
             }
             if (member.getFinalized() == 0) continue;
+            if (member.getTaskResult() == null)
+                continue;
             switch (member.getTaskResult()) {
                 case "SUCCESSFUL":
                     successfulCount += 1;
@@ -105,6 +110,18 @@ public class ServerTaskDecorator {
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
         serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, OcEnvVO.Env.class));
         serverTaskMember.setSuccess(serverTaskMember.getExitValue() != null && serverTaskMember.getExitValue() == 0);
+        if (serverTaskMember.getSuccess()) {
+            // 格式化数据
+            String resultHead = AnsibleUtils.getResultHead(serverTaskMember.getOutputMsg());
+            if(!StringUtils.isEmpty(resultHead)){
+                String resultStr =  serverTaskMember.getOutputMsg().replace(resultHead,"");
+                try{
+                    OcServerTaskMemberVO.AnsibleResult ansibleResult = new Gson().fromJson(resultStr, OcServerTaskMemberVO.AnsibleResult.class);
+                    serverTaskMember.setResult(ansibleResult);
+                }catch (Exception e){
+                }
+            }
+        }
         return serverTaskMember;
     }
 

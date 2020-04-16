@@ -28,6 +28,20 @@ public class ServerTaskExecutorParam {
     @Data
     @NoArgsConstructor
     @ApiModel
+    public static class ServerTaskScriptExecutor extends TaskExecutor {
+
+        @ApiModelProperty(value = "指定执行的scriptId",example = "1")
+        private Integer scriptId;
+
+        @ApiModelProperty(value = "自定义脚本参数")
+        private String scriptParam;
+
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
     public static class ServerTaskPlaybookExecutor extends TaskExecutor {
 
         @ApiModelProperty(value = "指定执行的playbookId",example = "1")

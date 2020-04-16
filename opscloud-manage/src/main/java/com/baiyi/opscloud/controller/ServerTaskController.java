@@ -4,8 +4,10 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
+import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import io.swagger.annotations.Api;
@@ -47,17 +49,28 @@ public class ServerTaskController {
         return new HttpResult<>(serverTaskFacade.updatePlaybook(ansiblePlaybook));
     }
 
-
     @ApiOperation(value = "删除指定的playbook")
     @DeleteMapping(value = "/playbook/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteServerById(@Valid @RequestParam int id) {
         return new HttpResult<>(serverTaskFacade.deletePlaybookById(id));
     }
 
+    @ApiOperation(value = "分页模糊查询script/列表")
+    @PostMapping(value = "/script/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcAnsibleScriptVO.AnsibleScript>> queryScriptPage(@RequestBody @Valid AnsibleScriptParam.PageQuery pageQuery) {
+        return new HttpResult<>(serverTaskFacade.queryScriptPage(pageQuery));
+    }
+
     @ApiOperation(value = "批量命令")
     @PostMapping(value = "/command/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessWrapper<Boolean>> executorCommand(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
         return new HttpResult(serverTaskFacade.executorCommand(serverTaskCommandExecutor));
+    }
+
+    @ApiOperation(value = "批量脚本")
+    @PostMapping(value = "/script/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<BusinessWrapper<Boolean>> executorScript(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
+        return new HttpResult(serverTaskFacade.executorScript(serverTaskScriptExecutor));
     }
 
     @ApiOperation(value = "执行playbook")

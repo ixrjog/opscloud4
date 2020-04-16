@@ -1,14 +1,13 @@
 package com.baiyi.opscloud.ansible.builder;
 
+import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import org.apache.commons.exec.CommandLine;
-import org.springframework.util.StringUtils;
 
 import java.util.Map;
-
-import static com.baiyi.opscloud.ansible.config.AnsibleConfig.ANSIBLE_HOSTS;
 
 /**
  * @Author baiyi
@@ -23,37 +22,11 @@ public class AnsiblePlaybookArgsBuilder {
      * @return
      */
     public static CommandLine build(AnsibleConfig config, AnsiblePlaybookArgsBO args) {
-        CommandLine commandLine = new CommandLine(config.getPlaybookBin());
 
-        if (args.isVersion()) {
-            commandLine.addArgument("--version");
+        CommandLine commandLine = AnsibleArgsBuilder.buildPlaybook(config, new Gson().fromJson(JSON.toJSONString(args), AnsibleArgsBO.class));
+
+        if (args.isVersion())
             return commandLine;
-        }
-
-        commandLine.addArgument("--key-file");
-        if (!StringUtils.isEmpty(args.getKeyFile())) {
-            commandLine.addArgument(args.getKeyFile());
-        } else {
-            commandLine.addArgument(config.acqPrivateKey());
-        }
-
-        // 指定主机文件，如果不指定则用默认主机文件
-        commandLine.addArgument("-i");
-        if (!StringUtils.isEmpty(args.getInventory())) {
-            commandLine.addArgument(args.getInventory());
-        } else {
-            commandLine.addArgument(Joiner.on("/").join(config.acqInventoryPath(), ANSIBLE_HOSTS));
-        }
-
-        if (!StringUtils.isEmpty(args.getBecomeUser()) && !args.getBecomeUser().equalsIgnoreCase("root")) {
-            commandLine.addArgument("--become-user");
-            commandLine.addArgument(args.getBecomeUser());
-        }
-
-        if (args.getForks() != null && args.getForks() != 5) {
-            commandLine.addArgument("-f");
-            commandLine.addArgument(args.getForks().toString());
-        }
 
         // 外部变量
         Map<String, String> extraVarsMap = Maps.newHashMap();
@@ -62,7 +35,7 @@ public class AnsiblePlaybookArgsBuilder {
 
         extraVarsMap.put("hosts", args.getHosts());
         commandLine.addArgument("-e");
-        commandLine.addArgument(convertExtraVars(extraVarsMap),false);
+        commandLine.addArgument(convertExtraVars(extraVarsMap), false);
 
         // 标签执行 -t task1,task2
         if (args.getTags() != null && !args.getTags().isEmpty()) {

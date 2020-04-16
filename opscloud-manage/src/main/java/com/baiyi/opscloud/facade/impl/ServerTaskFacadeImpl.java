@@ -15,16 +15,20 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
+import com.baiyi.opscloud.domain.generator.OcAnsibleScript;
 import com.baiyi.opscloud.domain.generator.OcServerTask;
 import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
+import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import com.baiyi.opscloud.service.ansible.OcAnsiblePlaybookService;
+import com.baiyi.opscloud.service.ansible.OcAnsibleScriptService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.baiyi.opscloud.service.server.OcServerTaskService;
 import com.baiyi.opscloud.service.user.OcUserService;
@@ -32,6 +36,7 @@ import com.google.common.base.Joiner;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
@@ -68,6 +73,9 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
     private OcAnsiblePlaybookService ocAnsiblePlaybookService;
 
     @Resource
+    private OcAnsibleScriptService ocAnsibleScriptService;
+
+    @Resource
     private AnsibleConfig ansibleConfig;
 
     @Resource
@@ -78,6 +86,14 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         DataTable<OcAnsiblePlaybook> table = ocAnsiblePlaybookService.queryOcAnsiblePlaybookByParam(pageQuery);
         DataTable<OcAnsiblePlaybookVO.AnsiblePlaybook> dataTable
                 = new DataTable<>(table.getData().stream().map(e -> ansiblePlaybookDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public DataTable<OcAnsibleScriptVO.AnsibleScript> queryScriptPage(AnsibleScriptParam.PageQuery pageQuery) {
+        DataTable<OcAnsibleScript> table = ocAnsibleScriptService.queryOcAnsibleScriptByParam(pageQuery);
+        List<OcAnsibleScriptVO.AnsibleScript> page = BeanCopierUtils.copyListProperties(table.getData(), OcAnsibleScriptVO.AnsibleScript.class);
+        DataTable<OcAnsibleScriptVO.AnsibleScript> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
@@ -120,6 +136,29 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> executorScript(ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
+        String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), serverTaskScriptExecutor.getUuid());
+        if (!redisUtil.hasKey(key))
+            return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);
+        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) redisUtil.get(key);
+        // 录入任务
+        OcServerTask ocServerTask = ServerTaskBuilder.build(ocUser, serverTreeHostPatternMap, serverTaskScriptExecutor);
+        ocServerTaskService.addOcServerTask(ocServerTask);
+
+        // 写入playbook
+        OcAnsibleScript ocAnsibleScript = ocAnsibleScriptService.queryOcAnsibleScriptById(serverTaskScriptExecutor.getScriptId());
+        String scriptPath = getScriptPath(ocAnsibleScript);
+        IOUtils.writeFile(ocAnsibleScript.getScriptContent(), scriptPath);
+
+        // 异步执行
+        ansibleTaskHandler.call(ocServerTask, serverTaskScriptExecutor, scriptPath);
+        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
+        wrapper.setBody(ocServerTask);
+        return wrapper;
+    }
+
+    @Override
     public BusinessWrapper<Boolean> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), serverTaskPlaybookExecutor.getUuid());
@@ -143,7 +182,12 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
 
     @Override
     public String getPlaybookPath(OcAnsiblePlaybook ocAnsiblePlaybook) {
-        return Joiner.on("/").join(ansibleConfig.getDataPath(), "playbook", ocAnsiblePlaybook.getPlaybookUuid() + ".yml");
+        return Joiner.on("/").join(ansibleConfig.acqPlaybookPath(), ocAnsiblePlaybook.getPlaybookUuid() + ".yml");
+    }
+
+    @Override
+    public String getScriptPath(OcAnsibleScript ocAnsibleScript) {
+        return Joiner.on("/").join(ansibleConfig.acqScriptPath(), Joiner.on(".").join(ocAnsibleScript.getScriptUuid(), ocAnsibleScript.getScriptLang()));
     }
 
     @Override
