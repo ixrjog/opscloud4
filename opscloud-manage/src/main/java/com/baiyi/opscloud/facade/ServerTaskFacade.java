@@ -2,8 +2,6 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
-import com.baiyi.opscloud.domain.generator.OcAnsibleScript;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
@@ -22,6 +20,12 @@ public interface ServerTaskFacade {
 
     DataTable<OcAnsibleScriptVO.AnsibleScript> queryScriptPage(AnsibleScriptParam.PageQuery pageQuery);
 
+    BusinessWrapper<Boolean> addScript(OcAnsibleScriptVO.AnsibleScript ansibleScript);
+
+    BusinessWrapper<Boolean> updateScript(OcAnsibleScriptVO.AnsibleScript ansibleScript);
+
+    BusinessWrapper<Boolean> deleteScriptById(int id);
+
     BusinessWrapper<Boolean> addPlaybook(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
 
     BusinessWrapper<Boolean> updatePlaybook(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
@@ -33,15 +37,6 @@ public interface ServerTaskFacade {
     BusinessWrapper<Boolean> executorScript(ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor);
 
     BusinessWrapper<Boolean> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor);
-
-    /**
-     * 查询playbook剧本路径
-     * @param ocAnsiblePlaybook
-     * @return
-     */
-    String getPlaybookPath(OcAnsiblePlaybook ocAnsiblePlaybook);
-
-    String getScriptPath(OcAnsibleScript ocAnsibleScript);
 
     OcServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId);
 

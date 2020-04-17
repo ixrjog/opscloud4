@@ -21,10 +21,11 @@ public class OcAnsiblePlaybookVO {
     @ApiModel
     public static class AnsiblePlaybook {
         private String path;
-
         private List<PlaybookTask> tasks;
-
         private Set<String> selectedTags;
+
+        // 格式错误
+        private Boolean formatError ;
 
         private Integer id;
         private String playbookUuid;

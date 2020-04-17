@@ -17,28 +17,21 @@ public class OcAnsibleScriptVO {
     @NoArgsConstructor
     @ApiModel
     public static class AnsibleScript {
+
+        private String path;
+
         private Integer id;
-
         private String scriptUuid;
-
         private String name;
-
         private String scriptLang;
-
         private String comment;
-
         private Integer userId;
-
         private Integer useType;
-
         private Integer scriptLock;
-
         private Date createTime;
-
         private Date updateTime;
-
         private String scriptContent;
-
         private String userDetail;
     }
+
 }

@@ -1,12 +1,12 @@
 package com.baiyi.opscloud.decorator;
 
-import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTags;
+import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.PlaybookUtils;
 import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTags;
 import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTask;
-import com.baiyi.opscloud.facade.ServerTaskFacade;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.stereotype.Component;
@@ -24,15 +24,20 @@ import java.util.Set;
 public class AnsiblePlaybookDecorator {
 
     @Resource
-    private ServerTaskFacade serverTaskFacade;
+    private AnsibleConfig ansibleConfig;
 
     public OcAnsiblePlaybookVO.AnsiblePlaybook decorator(OcAnsiblePlaybook ocAnsiblePlaybook) {
         OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook = BeanCopierUtils.copyProperties(ocAnsiblePlaybook, OcAnsiblePlaybookVO.AnsiblePlaybook.class);
-        PlaybookTags tags = PlaybookUtils.buildTags(ansiblePlaybook.getTags());
-        invokeTags(ansiblePlaybook, tags);
-        ansiblePlaybook.setTasks(tags.getTasks());
+        try{
+            PlaybookTags tags = PlaybookUtils.buildTags(ansiblePlaybook.getTags());
+            invokeTags(ansiblePlaybook, tags);
+            ansiblePlaybook.setTasks(tags.getTasks());
+            ansiblePlaybook.setFormatError(false);
+        }catch (Exception e){
+            ansiblePlaybook.setFormatError(true);
+        }
 
-        ansiblePlaybook.setPath(serverTaskFacade.getPlaybookPath(ocAnsiblePlaybook));
+        ansiblePlaybook.setPath(ansibleConfig.getPlaybookPath(ocAnsiblePlaybook));
         return ansiblePlaybook;
     }
 

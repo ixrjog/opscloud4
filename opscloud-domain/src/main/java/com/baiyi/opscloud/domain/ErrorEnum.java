@@ -127,6 +127,9 @@ public enum ErrorEnum {
     JUMPSERVER_ASSETS_NODE_ROOT_NOT_EXIST(40002, "资产根节点不存在(表：assets_node,字段：key = 1)！"),
     JUMPSERVER_ADMINISTRATOR_AUTHORIZATION_CANNOT_BE_REVOKED(40002, "不能撤销Administrator账户管理员授权"),
 
+    // Executor
+    EXECUTOR_PARAM_TYPE_ERROR(50001, "执行参数类型错误"),
+
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),
     CREATE_TABLE_ERROR(10003, "创建表失败！"),

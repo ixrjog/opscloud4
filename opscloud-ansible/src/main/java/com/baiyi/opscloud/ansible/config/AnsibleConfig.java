@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.ansible.config;
 
+import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
+import com.baiyi.opscloud.domain.generator.OcAnsibleScript;
 import com.google.common.base.Joiner;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -38,6 +40,16 @@ public class AnsibleConfig {
 
     public String acqPrivateKey(){
         return Joiner.on("/").join(dataPath,"private_key/id_rsa");
+    }
+
+
+    public String getPlaybookPath(OcAnsiblePlaybook ocAnsiblePlaybook) {
+        return Joiner.on("/").join(acqPlaybookPath(), ocAnsiblePlaybook.getPlaybookUuid() + ".yml");
+    }
+
+
+    public String getScriptPath(OcAnsibleScript ocAnsibleScript) {
+        return Joiner.on("/").join(acqScriptPath(), Joiner.on(".").join(ocAnsibleScript.getScriptUuid(), ocAnsibleScript.getScriptLang()));
     }
 
 }

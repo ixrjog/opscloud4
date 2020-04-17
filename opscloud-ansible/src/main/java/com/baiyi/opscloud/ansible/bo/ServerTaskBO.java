@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.bo;
+package com.baiyi.opscloud.ansible.bo;
 
 import lombok.Builder;
 import lombok.Data;

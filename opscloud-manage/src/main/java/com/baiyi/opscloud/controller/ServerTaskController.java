@@ -51,7 +51,7 @@ public class ServerTaskController {
 
     @ApiOperation(value = "删除指定的playbook")
     @DeleteMapping(value = "/playbook/del", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> deleteServerById(@Valid @RequestParam int id) {
+    public HttpResult<Boolean> deletePlaybookById(@Valid @RequestParam int id) {
         return new HttpResult<>(serverTaskFacade.deletePlaybookById(id));
     }
 
@@ -60,6 +60,25 @@ public class ServerTaskController {
     public HttpResult<DataTable<OcAnsibleScriptVO.AnsibleScript>> queryScriptPage(@RequestBody @Valid AnsibleScriptParam.PageQuery pageQuery) {
         return new HttpResult<>(serverTaskFacade.queryScriptPage(pageQuery));
     }
+
+    @ApiOperation(value = "新增script")
+    @PostMapping(value = "/script/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addScript(@RequestBody @Valid OcAnsibleScriptVO.AnsibleScript ansibleScript) {
+        return new HttpResult<>(serverTaskFacade.addScript(ansibleScript));
+    }
+
+    @ApiOperation(value = "更新script")
+    @PutMapping(value = "/script/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updasteScript(@RequestBody @Valid OcAnsibleScriptVO.AnsibleScript ansibleScript) {
+        return new HttpResult<>(serverTaskFacade.updateScript(ansibleScript));
+    }
+
+    @ApiOperation(value = "删除指定的script")
+    @DeleteMapping(value = "/script/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteScriptById(@Valid @RequestParam int id) {
+        return new HttpResult<>(serverTaskFacade.deleteScriptById(id));
+    }
+
 
     @ApiOperation(value = "批量命令")
     @PostMapping(value = "/command/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

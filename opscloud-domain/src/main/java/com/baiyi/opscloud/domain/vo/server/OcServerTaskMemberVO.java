@@ -21,6 +21,7 @@ public class OcServerTaskMemberVO {
     public static class ServerTaskMember {
 
         private OcEnvVO.Env env;
+        /** 格式化执行结果 **/
         private AnsibleResult result;
 
         private Integer id;
@@ -59,9 +60,7 @@ public class OcServerTaskMemberVO {
         //private String stderr_lines;
 
         private String stdout;
-
         //private String stdout_lines;
-
 
     }
 
