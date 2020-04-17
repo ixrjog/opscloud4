@@ -149,9 +149,9 @@ public class UserFacadeImpl implements UserFacade {
      */
     private BusinessWrapper<Boolean> enhancedAuthority(int userId, String resource) {
         // 公共接口需要2次鉴权
-        String username = SessionUtils.getUsername();
-        OcUser checkOcUser = ocUserService.queryOcUserById(userId);
-        if (!username.equals(checkOcUser.getUsername())) {
+        OcUser checkOcUser =  getOcUserBySession();
+        OcUser ocUser = ocUserService.queryOcUserById(userId);
+        if (!ocUser.getUsername().equals(checkOcUser.getUsername())) {
             BusinessWrapper<Boolean> wrapper = authFacade.authenticationByResourceName(resource);
             if (!wrapper.isSuccess())
                 return wrapper;
@@ -169,8 +169,8 @@ public class UserFacadeImpl implements UserFacade {
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_TYPE_ERROR);
         if (StringUtils.isEmpty(userCredential.getCredential()))
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_ERROR);
-        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
-        userCredential.setUserId(ocUser.getId());
+        OcUser ocUser = ocUserService.queryOcUserById(userCredential.getUserId());
+       //userCredential.setUserId(ocUser.getId());
         userCredential.setUsername(ocUser.getUsername());
         OcUserCredential ocUserCredential = UserCredentialConvert.convertOcUserCredential(userCredential);
 
@@ -182,7 +182,7 @@ public class UserFacadeImpl implements UserFacade {
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
         }
         // sshkey push
-        if ( !StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType() ) 
+        if ( !StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType() )
             accountCenter.pushSSHKey(ocUser);
 
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
