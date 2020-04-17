@@ -34,7 +34,6 @@ import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
-import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserCredentialService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
@@ -166,7 +165,6 @@ public class UserFacadeImpl implements UserFacade {
         BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(), URLResource.USER_CREDENTIAL_SAVE);
         if (!wrapper.isSuccess())
             return wrapper;
-
         if (userCredential.getCredentialType() == null)
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_TYPE_ERROR);
         if (StringUtils.isEmpty(userCredential.getCredential()))
@@ -184,9 +182,9 @@ public class UserFacadeImpl implements UserFacade {
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
         }
         // sshkey push
-        if (userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType()) {
+        if ( !StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType() ) 
             accountCenter.pushSSHKey(ocUser);
-        }
+
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
     }
 
@@ -373,7 +371,13 @@ public class UserFacadeImpl implements UserFacade {
         return serverGroupFacade.queryUserServerTree(userServerTreeQuery, ocUser);
     }
 
-
+    @Override
+    public OcUser getOcUserBySession(){
+        String username = SessionUtils.getUsername();
+        if(StringUtils.isEmpty(username))
+            return null;
+        return ocUserService.queryOcUserByUsername(username);
+    }
 
 
     private void syncUserPermission(OcUserVO.User user) {
