@@ -24,6 +24,9 @@ public class OcServerTaskMemberVO {
         /** 格式化执行结果 **/
         private AnsibleResult result;
 
+        private String outputMsgLog;
+        private String errorMsgLog;
+
         private Integer id;
         private Integer taskId;
         private String hostPattern;
