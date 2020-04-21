@@ -8,11 +8,9 @@ import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.base.URLResource;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
 import com.baiyi.opscloud.convert.UserCredentialConvert;
-import com.baiyi.opscloud.decorator.ServerTreeDecorator;
 import com.baiyi.opscloud.decorator.UserDecorator;
 import com.baiyi.opscloud.decorator.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -92,13 +90,6 @@ public class UserFacadeImpl implements UserFacade {
 
     @Resource
     private ServerGroupFacade serverGroupFacade;
-
-    @Resource
-    private RedisUtil redisUtil;
-
-    @Resource
-    private ServerTreeDecorator serverTreeDecorator;
-
 
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {

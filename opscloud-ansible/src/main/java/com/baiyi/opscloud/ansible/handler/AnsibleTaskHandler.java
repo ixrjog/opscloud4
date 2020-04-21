@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.ansible.handler;
 
+import com.baiyi.opscloud.ansible.bo.TaskResult;
 import com.baiyi.opscloud.ansible.builder.*;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.base.ServerTaskStatus;
@@ -317,5 +318,21 @@ public class AnsibleTaskHandler {
             if (serverTreeHostPatternMap.containsKey(hostPattern))
                 taskServerMap.put(hostPattern, serverTreeHostPatternMap.get(hostPattern));
         return taskServerMap;
+    }
+
+    public TaskResult getAnsibleVersion() {
+        AnsibleArgsBO args = AnsibleArgsBO.builder()
+                .version(true)
+                .build();
+        CommandLine commandLine = AnsibleCommandArgsBuilder.build(ansibleConfig, args);
+        return ansibleExecutorHandler.executor(commandLine, 2000L);
+    }
+
+    public TaskResult getAnsiblePlaybookVersion() {
+        AnsiblePlaybookArgsBO args = AnsiblePlaybookArgsBO.builder()
+                .version(true)
+                .build();
+        CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansibleConfig, args);
+        return ansibleExecutorHandler.executor(commandLine, 2000L);
     }
 }

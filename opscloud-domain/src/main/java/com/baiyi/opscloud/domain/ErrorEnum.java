@@ -130,6 +130,11 @@ public enum ErrorEnum {
     // Executor
     EXECUTOR_PARAM_TYPE_ERROR(50001, "执行参数类型错误"),
 
+    // Org Department
+    ORG_DEPARTMENT_CANNOT_DROP_ROOT(60001, "不能拖拽根部门"),
+    ORG_DEPARTMENT_NOT_EXIST(60001, "部门不存在"),
+    ORG_DEPARTMENT_DROP_ERROR(60001, "拖拽类型错误"),
+
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),
     CREATE_TABLE_ERROR(10003, "创建表失败！"),

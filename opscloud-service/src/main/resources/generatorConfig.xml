@@ -126,8 +126,10 @@
 <!--        oc_server_task_member-->
 <!--        oc_ansible_playbook-->
 <!--        oc_ansible_script-->
+<!--        oc_org_department-->
+<!--        oc_org_department_member-->
 
-        <table tableName="oc_ansible_script">
+        <table tableName="oc_org_department_member">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

@@ -122,4 +122,15 @@ public class ServerTaskController {
         return new HttpResult<>(serverTaskFacade.abortServerTaskMember(memberId));
     }
 
+    @ApiOperation(value = "查询Ansible版本")
+    @GetMapping(value = "/ansible/version", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> queryAnsibleVersion() {
+        return new HttpResult<>(serverTaskFacade.queryAnsibleVersion());
+    }
+
+    @ApiOperation(value = "预览Ansible主机配置文件")
+    @GetMapping(value = "/ansible/hosts/preview", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> previewAnsibleHosts() {
+        return new HttpResult<>(serverTaskFacade.previewAnsibleHosts());
+    }
 }

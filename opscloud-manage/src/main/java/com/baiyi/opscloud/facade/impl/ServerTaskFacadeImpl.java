@@ -1,13 +1,17 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.ansible.bo.TaskResult;
+import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.ansible.factory.ExecutorFactory;
+import com.baiyi.opscloud.ansible.handler.AnsibleTaskHandler;
 import com.baiyi.opscloud.ansible.impl.AnsibleCommandExecutor;
 import com.baiyi.opscloud.ansible.impl.AnsiblePlaybookExecutor;
 import com.baiyi.opscloud.ansible.impl.AnsibleScriptExecutor;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.ServerTaskStopType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.decorator.AnsiblePlaybookDecorator;
 import com.baiyi.opscloud.decorator.AnsibleScriptDecorator;
@@ -23,8 +27,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
+import com.baiyi.opscloud.domain.vo.ansible.AnsibleVersionVO;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
+import com.baiyi.opscloud.domain.vo.preview.PreviewFileVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
@@ -34,9 +40,11 @@ import com.baiyi.opscloud.service.ansible.OcAnsiblePlaybookService;
 import com.baiyi.opscloud.service.ansible.OcAnsibleScriptService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.baiyi.opscloud.service.server.OcServerTaskService;
+import com.google.common.base.Joiner;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.io.UnsupportedEncodingException;
 import java.util.stream.Collectors;
 
 /**
@@ -76,6 +84,12 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
 
     @Resource
     private UserPermissionFacade userPermissionFacade;
+
+    @Resource
+    private AnsibleTaskHandler ansibleTaskHandler;
+
+    @Resource
+    private AnsibleConfig ansibleConfig;
 
     @Override
     public DataTable<OcAnsiblePlaybookVO.AnsiblePlaybook> queryPlaybookPage(AnsiblePlaybookParam.PageQuery pageQuery) {
@@ -128,7 +142,7 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         preAnsibleScript.setScriptLang(ansibleScript.getScriptLang());
         preAnsibleScript.setComment(ansibleScript.getComment());
         preAnsibleScript.setScriptLock(ansibleScript.getScriptLock());
-        ocAnsibleScriptService.updateOcAnsibleScript(preAnsibleScript );
+        ocAnsibleScriptService.updateOcAnsibleScript(preAnsibleScript);
         return BusinessWrapper.SUCCESS;
     }
 
@@ -226,6 +240,40 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         ocServerTaskMember.setFinalized(1);
         ocServerTaskMemberService.updateOcServerTaskMember(ocServerTaskMember);
         return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> queryAnsibleVersion() {
+        AnsibleVersionVO.AnsibleVersion version = new AnsibleVersionVO.AnsibleVersion();
+        try {
+            TaskResult ansibleVersion = ansibleTaskHandler.getAnsibleVersion();
+            version.setVersion(ansibleVersion.getOutputStream().toString("utf8"));
+        } catch (UnsupportedEncodingException e) {
+
+        }
+        try {
+            TaskResult playbookVersion = ansibleTaskHandler.getAnsiblePlaybookVersion();
+            version.setPlaybookVersion(playbookVersion.getOutputStream().toString("utf8"));
+        } catch (UnsupportedEncodingException e) {
+        }
+        BusinessWrapper wrapper = new BusinessWrapper(true);
+        wrapper.setBody(version);
+        return wrapper;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> previewAnsibleHosts() {
+        String path = Joiner.on("/").join(ansibleConfig.acqInventoryPath(), AnsibleConfig.ANSIBLE_HOSTS);
+        String ansibleHosts = IOUtils.readFile(path);
+        PreviewFileVO previewFile = PreviewFileVO.builder()
+                .name(AnsibleConfig.ANSIBLE_HOSTS)
+                .path(path)
+                .content(ansibleHosts)
+                .comment("Ansible主机配置文件")
+                .build();
+        BusinessWrapper wrapper = new BusinessWrapper(true);
+        wrapper.setBody(previewFile);
+        return wrapper;
     }
 
 }

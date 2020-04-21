@@ -45,4 +45,8 @@ public interface ServerTaskFacade {
     BusinessWrapper<Boolean> abortServerTask(int taskId);
 
     BusinessWrapper<Boolean> abortServerTaskMember(int memberId);
+
+    BusinessWrapper<Boolean> queryAnsibleVersion();
+
+    BusinessWrapper<Boolean> previewAnsibleHosts();
 }
