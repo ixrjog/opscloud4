@@ -10,7 +10,6 @@ import java.util.regex.Pattern;
  */
 public class AnsibleUtils {
 
-
     /**
      *
      * @param ansibleResult
@@ -23,9 +22,7 @@ public class AnsibleUtils {
             Matcher matcher = pattern.matcher(ansibleResult);
             if (matcher.find())
                 return matcher.group(0);
-
         } catch (Exception e) {
-
         }
         return "";
     }

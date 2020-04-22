@@ -12,4 +12,16 @@ import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 public interface OcOrgDepartmentMemberService {
 
     DataTable<OcOrgDepartmentMember> queryOcOrgDepartmentMemberParam(DepartmentMemberParam.PageQuery pageQuery);
+
+    void addOcOrgDepartmentMember(OcOrgDepartmentMember ocOrgDepartmentMember);
+
+    void updateOcOrgDepartmentMember(OcOrgDepartmentMember ocOrgDepartmentMember);
+
+    OcOrgDepartmentMember getOcOrgDepartmentMemberByUniqueKey(int departmentId,int userId);
+
+    int countOcOrgDepartmentMemberByDepartmentId(int departmentId);
+
+    OcOrgDepartmentMember queryOcOrgDepartmentMemberById(int id);
+
+    void deleteOcOrgDepartmentMemberById(int id);
 }

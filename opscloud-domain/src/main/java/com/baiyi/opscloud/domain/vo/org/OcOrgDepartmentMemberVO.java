@@ -19,6 +19,7 @@ public class OcOrgDepartmentMemberVO {
     public static class DepartmentMember {
 
         private String displayName;
+        private String email;
 
         private Integer id;
         private Integer departmentId;

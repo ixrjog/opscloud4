@@ -36,6 +36,7 @@ public enum ErrorEnum {
     USER_PASSWORD_NON_COMPLIANCE_WITH_RULES(12002, "用户密码不合规！"),
     USER_PHONE_NON_COMPLIANCE_WITH_RULES(12002, "用户手机号不合规！"),
     USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
+    USER_NOT_EXIST(12002, "用户不存在！"),
     //applyUserApiToken
     USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003,"申请ApiToken描述不能为空"),
     USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003,"申请ApiToken过期时间为空或格式错误"),
@@ -131,9 +132,14 @@ public enum ErrorEnum {
     EXECUTOR_PARAM_TYPE_ERROR(50001, "执行参数类型错误"),
 
     // Org Department
+    ORG_DEPARTMENT_CANNOT_DELETE_ROOT(60001, "不能删除根部门"),
     ORG_DEPARTMENT_CANNOT_DROP_ROOT(60001, "不能拖拽根部门"),
     ORG_DEPARTMENT_NOT_EXIST(60001, "部门不存在"),
     ORG_DEPARTMENT_DROP_ERROR(60001, "拖拽类型错误"),
+    ORG_DEPARTMENT_MEMBER_ALREADY_EXISTS(60001, "部门成员已存在"),
+    ORG_DEPARTMENT_MEMBER_NOT_EXIST(60001, "部门成员不存在"),
+    ORG_DEPARTMENT_SUB_DEPT_EXISTS(60001,"有子部门存在"),
+    ORG_DEPARTMENT_MEMBER_IS_NOT_EMPTY(60001, "部门成员不为空"),
 
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),

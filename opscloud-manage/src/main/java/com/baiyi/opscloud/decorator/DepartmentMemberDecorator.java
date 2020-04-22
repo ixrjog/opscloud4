@@ -22,6 +22,7 @@ public class DepartmentMemberDecorator {
         OcUser ocUser = ocUserService.queryOcUserById(departmentMember.getUserId());
         if(ocUser != null){
             departmentMember.setDisplayName(ocUser.getDisplayName());
+            departmentMember.setEmail(ocUser.getEmail());
         }
         return departmentMember;
     }

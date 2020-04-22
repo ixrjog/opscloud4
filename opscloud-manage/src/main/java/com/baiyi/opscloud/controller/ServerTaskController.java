@@ -25,7 +25,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/server/task")
-@Api(tags = "服务器管理")
+@Api(tags = "服务器任务")
 public class ServerTaskController {
 
     @Resource

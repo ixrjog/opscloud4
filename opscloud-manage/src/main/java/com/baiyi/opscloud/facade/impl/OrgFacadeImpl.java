@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.bo.OrgDepartmentMemberBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.decorator.DepartmentDecorator;
 import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
@@ -8,13 +9,17 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.OcOrgDepartment;
 import com.baiyi.opscloud.domain.generator.OcOrgDepartmentMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
+import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
+import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
+import com.baiyi.opscloud.service.user.OcUserService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -36,6 +41,9 @@ public class OrgFacadeImpl implements OrgFacade {
     private OcOrgDepartmentMemberService ocOrgDepartmentMemberService;
 
     @Resource
+    private OcUserService ocUserService;
+
+    @Resource
     private DepartmentDecorator departmentDecorator;
 
     @Resource
@@ -51,6 +59,8 @@ public class OrgFacadeImpl implements OrgFacade {
      */
     @Override
     public BusinessWrapper<Boolean> dropDepartmentTree(int draggingParentId, int dropParentId, String dropType) {
+        if (draggingParentId == dropParentId)
+            return BusinessWrapper.SUCCESS;
         if (draggingParentId == ROOT_PARENT_ID)
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_CANNOT_DROP_ROOT);
         OcOrgDepartment draggingDept = ocOrgDepartmentService.queryOcOrgDepartmentById(draggingParentId);
@@ -149,6 +159,58 @@ public class OrgFacadeImpl implements OrgFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> addDepartment(OcOrgDepartmentVO.Department department) {
+        OcOrgDepartment ocOrgDepartment = BeanCopierUtils.copyProperties(department, OcOrgDepartment.class);
+        ocOrgDepartment.setDeptOrder(128);
+        if (department.getParentId() == null || department.getParentId() <= 0)
+            ocOrgDepartment.setParentId(1);
+        ocOrgDepartment.setDeptHiding(0);
+        ocOrgDepartmentService.addOcOrgDepartment(ocOrgDepartment);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> updateDepartment(OcOrgDepartmentVO.Department department) {
+        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(department.getId());
+        ocOrgDepartment.setName(department.getName());
+        ocOrgDepartment.setDeptType(department.getDeptType());
+        ocOrgDepartment.setComment(department.getComment());
+        ocOrgDepartmentService.updateOcOrgDepartment(ocOrgDepartment);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public OcOrgDepartmentVO.Department queryDepartmentById(int id) {
+        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(id);
+        return BeanCopierUtils.copyProperties(ocOrgDepartment, OcOrgDepartmentVO.Department.class);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delDepartmentById(int id) {
+        if (id == ROOT_PARENT_ID)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_CANNOT_DELETE_ROOT);
+        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(id);
+        if (ocOrgDepartment == null)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_NOT_EXIST);
+        // 查询下级部门
+        List<OcOrgDepartment> list = ocOrgDepartmentService.queryOcOrgDepartmentByParentId(id);
+        if (list != null && !list.isEmpty())
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_SUB_DEPT_EXISTS);
+        // 查询成员
+        if (ocOrgDepartmentMemberService.countOcOrgDepartmentMemberByDepartmentId(id) > 0)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_IS_NOT_EMPTY);
+        ocOrgDepartmentService.deleteOcOrgDepartmentById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public DataTable<OcOrgDepartmentVO.Department> queryDepartmentPage(DepartmentParam.PageQuery pageQuery) {
+        DataTable<OcOrgDepartment> table = ocOrgDepartmentService.queryOcOrgDepartmentParam(pageQuery);
+        List<OcOrgDepartmentVO.Department> page = BeanCopierUtils.copyListProperties(table.getData(), OcOrgDepartmentVO.Department.class);
+        return new DataTable<>(page, table.getTotalNum());
+    }
+
+    @Override
     public DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId) {
         List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
         List<TreeVO.DeptTree> tree = departmentDecorator.deptListToTree(deptList);
@@ -168,6 +230,57 @@ public class OrgFacadeImpl implements OrgFacade {
         DataTable<OcOrgDepartmentMember> table = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberParam(pageQuery);
         List<OcOrgDepartmentMemberVO.DepartmentMember> page = BeanCopierUtils.copyListProperties(table.getData(), OcOrgDepartmentMemberVO.DepartmentMember.class);
         return new DataTable<>(page.stream().map(e -> departmentMemberDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> addDepartmentMember(int departmentId, int userId) {
+        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(departmentId);
+        if (ocOrgDepartment == null)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_NOT_EXIST);
+        OcUser ocUser = ocUserService.queryOcUserById(userId);
+        if (ocUser == null)
+            return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
+
+        OcOrgDepartmentMember pre = ocOrgDepartmentMemberService.getOcOrgDepartmentMemberByUniqueKey(departmentId, userId);
+        if (pre != null)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_ALREADY_EXISTS);
+
+        OrgDepartmentMemberBO orgDepartmentMemberBO = OrgDepartmentMemberBO.builder()
+                .departmentId(departmentId)
+                .userId(userId)
+                .username(ocUser.getUsername())
+                .build();
+
+        // 添加部门成员
+        ocOrgDepartmentMemberService.addOcOrgDepartmentMember(BeanCopierUtils.copyProperties(orgDepartmentMemberBO, OcOrgDepartmentMember.class));
+
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delDepartmentMemberById(int id) {
+        ocOrgDepartmentMemberService.deleteOcOrgDepartmentMemberById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> updateDepartmentMemberLeader(int id) {
+        OcOrgDepartmentMember member = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberById(id);
+        if (member == null)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_NOT_EXIST);
+        member.setIsLeader(member.getIsLeader() == 0 ? 1 : 0);
+        ocOrgDepartmentMemberService.updateOcOrgDepartmentMember(member);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> updateDepartmentMemberApprovalAuthority(int id) {
+        OcOrgDepartmentMember member = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberById(id);
+        if (member == null)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_NOT_EXIST);
+        member.setIsApprovalAuthority(member.getIsApprovalAuthority() == 0 ? 1 : 0);
+        ocOrgDepartmentMemberService.updateOcOrgDepartmentMember(member);
+        return BusinessWrapper.SUCCESS;
     }
 
 }

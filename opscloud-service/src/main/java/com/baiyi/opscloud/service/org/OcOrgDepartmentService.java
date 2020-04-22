@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.org;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcOrgDepartment;
+import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 
 import java.util.List;
 
@@ -11,9 +13,15 @@ import java.util.List;
  */
 public interface OcOrgDepartmentService {
 
+    DataTable<OcOrgDepartment> queryOcOrgDepartmentParam(DepartmentParam.PageQuery pageQuery);
+
     List<OcOrgDepartment> queryOcOrgDepartmentByParentId(int parentId);
 
     OcOrgDepartment queryOcOrgDepartmentById(int id);
 
+    void addOcOrgDepartment(OcOrgDepartment ocOrgDepartment);
+
     void updateOcOrgDepartment(OcOrgDepartment ocOrgDepartment);
+
+    void deleteOcOrgDepartmentById(int id);
 }

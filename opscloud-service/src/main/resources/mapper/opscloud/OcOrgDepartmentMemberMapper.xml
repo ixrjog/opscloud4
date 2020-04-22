@@ -36,6 +36,7 @@
                 and is_approval_authority = #{isApprovalAuthority}
             </if>
         </where>
+        order by is_leader desc, is_approval_authority desc
     </select>
 
 </mapper>

@@ -1,8 +1,12 @@
 package com.baiyi.opscloud.service.org.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.OcOrgDepartment;
+import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.mapper.opscloud.OcOrgDepartmentMapper;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -21,6 +25,13 @@ public class OcOrgDepartmentServiceImpl implements OcOrgDepartmentService {
     private OcOrgDepartmentMapper ocOrgDepartmentMapper;
 
     @Override
+    public DataTable<OcOrgDepartment> queryOcOrgDepartmentParam(DepartmentParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcOrgDepartment> list = ocOrgDepartmentMapper.queryOcOrgDepartmentParam(pageQuery);
+        return new DataTable<>(list, page.getTotal());
+    }
+
+    @Override
     public List<OcOrgDepartment> queryOcOrgDepartmentByParentId(int parentId) {
         Example example = new Example(OcOrgDepartment.class);
         example.setOrderByClause("dept_order");
@@ -34,10 +45,19 @@ public class OcOrgDepartmentServiceImpl implements OcOrgDepartmentService {
         return ocOrgDepartmentMapper.selectByPrimaryKey(id);
     }
 
+    @Override
+    public void addOcOrgDepartment(OcOrgDepartment ocOrgDepartment) {
+        ocOrgDepartmentMapper.insert(ocOrgDepartment);
+    }
 
     @Override
     public void updateOcOrgDepartment(OcOrgDepartment ocOrgDepartment) {
         ocOrgDepartmentMapper.updateByPrimaryKey(ocOrgDepartment);
+    }
+
+    @Override
+    public void deleteOcOrgDepartmentById(int id) {
+        ocOrgDepartmentMapper.deleteByPrimaryKey(id);
     }
 
 }
