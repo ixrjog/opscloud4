@@ -142,6 +142,7 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         preAnsibleScript.setScriptLang(ansibleScript.getScriptLang());
         preAnsibleScript.setComment(ansibleScript.getComment());
         preAnsibleScript.setScriptLock(ansibleScript.getScriptLock());
+        preAnsibleScript.setScriptContent(ansibleScript.getScriptContent());
         ocAnsibleScriptService.updateOcAnsibleScript(preAnsibleScript);
         return BusinessWrapper.SUCCESS;
     }
