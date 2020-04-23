@@ -183,11 +183,12 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
         while (vswitchIds.size() < size) {
             if (vswitchList.isEmpty()) break;
             for (OcCloudVpcVswitch ocCloudVpcVswitch : vswitchList) {
-                if (ocCloudVpcVswitch.getAvailableIpAddressCount() >= 240) {
+                // 预留可用ip
+                if (ocCloudVpcVswitch.getAvailableIpAddressCount() <= 10) {
                     vswitchList.remove(ocCloudVpcVswitch);
                     break;
                 } else {
-                    ocCloudVpcVswitch.setAvailableIpAddressCount(ocCloudVpcVswitch.getAvailableIpAddressCount() + 1);
+                    ocCloudVpcVswitch.setAvailableIpAddressCount(ocCloudVpcVswitch.getAvailableIpAddressCount() - 1);
                     vswitchIds.add(ocCloudVpcVswitch.getVswitchId());
                 }
                 if (vswitchIds.size() >= size) break;
