@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.util.RedisKeyUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcServerTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.service.server.OcServerTaskService;
 import com.baiyi.opscloud.service.user.OcUserService;

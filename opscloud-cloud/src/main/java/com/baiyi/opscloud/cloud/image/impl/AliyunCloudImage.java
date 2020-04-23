@@ -9,7 +9,7 @@ import com.baiyi.opscloud.cloud.image.ICloudImage;
 import com.baiyi.opscloud.cloud.image.builder.OcCloudImageBuilder;
 import com.baiyi.opscloud.common.base.CloudType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudImage;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.decorator;
 
-import com.baiyi.opscloud.domain.generator.OcOrgDepartment;
+import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartment;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;

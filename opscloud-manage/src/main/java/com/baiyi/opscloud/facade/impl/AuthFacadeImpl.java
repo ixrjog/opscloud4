@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.MenuUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.decorator.ResourceDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -12,9 +13,11 @@ import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
 import com.baiyi.opscloud.domain.vo.auth.*;
+import com.baiyi.opscloud.domain.vo.auth.menu.MenuVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import com.baiyi.opscloud.service.auth.*;
 import com.baiyi.opscloud.service.user.OcUserService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -49,6 +52,9 @@ public class AuthFacadeImpl implements AuthFacade {
 
     @Resource
     private ResourceDecorator resourceDecorator;
+
+    @Resource
+    private OcAuthMenuService ocAuthMenuService;
 
     @Override
     public DataTable<OcRoleVO.Role> queryRolePage(RoleParam.PageQuery pageQuery) {
@@ -234,9 +240,22 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public BusinessWrapper<Boolean> authenticationByResourceName(String resourceName) {
         String username = SessionUtils.getUsername();
-        if(ocAuthUserRoleService.authenticationByUsernameAndResourceName(username,resourceName))
+        if (ocAuthUserRoleService.authenticationByUsernameAndResourceName(username, resourceName))
             return BusinessWrapper.SUCCESS;
         return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
     }
+
+    @Override
+    public List<MenuVO> queryUserMenu() {
+        List<MenuVO> menu = Lists.newArrayList();
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryTopOcAuthRoleByUsername(SessionUtils.getUsername());
+        if (ocAuthRole == null)
+            return menu;
+        OcAuthMenu ocAuthMenu = ocAuthMenuService.queryOcAuthMenuByRoleId(ocAuthRole.getId(), 0);
+        if (ocAuthMenu == null)
+            return menu;
+        return MenuUtils.buildMenu(ocAuthMenu);
+    }
+
 
 }

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
 import com.baiyi.opscloud.bo.CloudInstanceTypeBO;
 import com.baiyi.opscloud.common.base.CloudType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceType;
 
 /**
  * @Author baiyi

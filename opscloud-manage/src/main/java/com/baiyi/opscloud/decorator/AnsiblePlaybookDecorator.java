@@ -3,7 +3,7 @@ package com.baiyi.opscloud.decorator;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.PlaybookUtils;
-import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTags;
 import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTask;

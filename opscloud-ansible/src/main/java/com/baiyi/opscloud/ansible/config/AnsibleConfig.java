@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.ansible.config;
 
-import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
-import com.baiyi.opscloud.domain.generator.OcAnsibleScript;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsibleScript;
 import com.google.common.base.Joiner;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.ansible.IAnsibleExecutor;
 import com.baiyi.opscloud.ansible.builder.ServerTaskBuilder;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcServerTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import lombok.extern.slf4j.Slf4j;

@@ -14,7 +14,7 @@ import com.baiyi.opscloud.common.base.CloudInstanceTaskPhase;
 import com.baiyi.opscloud.common.base.CloudInstanceTaskStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.vo.server.OcServerVO;
 import com.baiyi.opscloud.facade.ServerFacade;

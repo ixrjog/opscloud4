@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTask;
 import com.baiyi.opscloud.mapper.opscloud.OcCloudInstanceTaskMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskService;
 import org.springframework.stereotype.Service;

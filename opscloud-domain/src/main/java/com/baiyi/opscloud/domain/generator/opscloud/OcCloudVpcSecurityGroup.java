@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import java.util.Date;
 import javax.persistence.*;
 
-@Table(name = "oc_cloud_vpc_vswitch")
-public class OcCloudVpcVswitch {
+@Table(name = "oc_cloud_vpc_security_group")
+public class OcCloudVpcSecurityGroup {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -12,35 +12,20 @@ public class OcCloudVpcVswitch {
     @Column(name = "region_id")
     private String regionId;
 
-    @Column(name = "zone_id")
-    private String zoneId;
-
     /**
      * vpc id
      */
     @Column(name = "vpc_id")
     private String vpcId;
 
-    @Column(name = "vswitch_name")
-    private String vswitchName;
+    @Column(name = "security_group_name")
+    private String securityGroupName;
 
-    /**
-     * vswitch
-     */
-    @Column(name = "vswitch_id")
-    private String vswitchId;
+    @Column(name = "security_group_id")
+    private String securityGroupId;
 
-    /**
-     * 状态
-     */
-    @Column(name = "vswitch_status")
-    private String vswitchStatus;
-
-    /**
-     * Classless Inter-Domain Routing网段
-     */
-    @Column(name = "cidr_block")
-    private String cidrBlock;
+    @Column(name = "security_group_type")
+    private String securityGroupType;
 
     @Column(name = "cloud_type")
     private Integer cloudType;
@@ -52,9 +37,6 @@ public class OcCloudVpcVswitch {
 
     @Column(name = "creation_time")
     private Date creationTime;
-
-    @Column(name = "available_ip_address_count")
-    private Integer availableIpAddressCount;
 
     /**
      * 有效
@@ -99,20 +81,6 @@ public class OcCloudVpcVswitch {
     }
 
     /**
-     * @return zone_id
-     */
-    public String getZoneId() {
-        return zoneId;
-    }
-
-    /**
-     * @param zoneId
-     */
-    public void setZoneId(String zoneId) {
-        this.zoneId = zoneId;
-    }
-
-    /**
      * 获取vpc id
      *
      * @return vpc_id - vpc id
@@ -131,71 +99,45 @@ public class OcCloudVpcVswitch {
     }
 
     /**
-     * @return vswitch_name
+     * @return security_group_name
      */
-    public String getVswitchName() {
-        return vswitchName;
+    public String getSecurityGroupName() {
+        return securityGroupName;
     }
 
     /**
-     * @param vswitchName
+     * @param securityGroupName
      */
-    public void setVswitchName(String vswitchName) {
-        this.vswitchName = vswitchName;
+    public void setSecurityGroupName(String securityGroupName) {
+        this.securityGroupName = securityGroupName;
     }
 
     /**
-     * 获取vswitch
-     *
-     * @return vswitch_id - vswitch
+     * @return security_group_id
      */
-    public String getVswitchId() {
-        return vswitchId;
+    public String getSecurityGroupId() {
+        return securityGroupId;
     }
 
     /**
-     * 设置vswitch
-     *
-     * @param vswitchId vswitch
+     * @param securityGroupId
      */
-    public void setVswitchId(String vswitchId) {
-        this.vswitchId = vswitchId;
+    public void setSecurityGroupId(String securityGroupId) {
+        this.securityGroupId = securityGroupId;
     }
 
     /**
-     * 获取状态
-     *
-     * @return vswitch_status - 状态
+     * @return security_group_type
      */
-    public String getVswitchStatus() {
-        return vswitchStatus;
+    public String getSecurityGroupType() {
+        return securityGroupType;
     }
 
     /**
-     * 设置状态
-     *
-     * @param vswitchStatus 状态
+     * @param securityGroupType
      */
-    public void setVswitchStatus(String vswitchStatus) {
-        this.vswitchStatus = vswitchStatus;
-    }
-
-    /**
-     * 获取Classless Inter-Domain Routing网段
-     *
-     * @return cidr_block - Classless Inter-Domain Routing网段
-     */
-    public String getCidrBlock() {
-        return cidrBlock;
-    }
-
-    /**
-     * 设置Classless Inter-Domain Routing网段
-     *
-     * @param cidrBlock Classless Inter-Domain Routing网段
-     */
-    public void setCidrBlock(String cidrBlock) {
-        this.cidrBlock = cidrBlock;
+    public void setSecurityGroupType(String securityGroupType) {
+        this.securityGroupType = securityGroupType;
     }
 
     /**
@@ -242,20 +184,6 @@ public class OcCloudVpcVswitch {
      */
     public void setCreationTime(Date creationTime) {
         this.creationTime = creationTime;
-    }
-
-    /**
-     * @return available_ip_address_count
-     */
-    public Integer getAvailableIpAddressCount() {
-        return availableIpAddressCount;
-    }
-
-    /**
-     * @param availableIpAddressCount
-     */
-    public void setAvailableIpAddressCount(Integer availableIpAddressCount) {
-        this.availableIpAddressCount = availableIpAddressCount;
     }
 
     /**

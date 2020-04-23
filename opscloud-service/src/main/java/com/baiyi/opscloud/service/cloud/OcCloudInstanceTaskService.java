@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.cloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTask;
 
 /**
  * @Author baiyi

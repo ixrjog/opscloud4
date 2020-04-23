@@ -13,7 +13,7 @@ import com.baiyi.opscloud.common.base.ServerTaskStatus;
 import com.baiyi.opscloud.common.base.ServerTaskStopType;
 import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.baiyi.opscloud.service.server.OcServerTaskService;
 import lombok.extern.slf4j.Slf4j;

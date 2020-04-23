@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceType;
-import com.baiyi.opscloud.domain.generator.OcCloudVpc;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTypeService;

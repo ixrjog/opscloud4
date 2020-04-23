@@ -39,6 +39,4 @@ public class OcGroupVO {
         private Date updateTime;
     }
 
-
-
 }

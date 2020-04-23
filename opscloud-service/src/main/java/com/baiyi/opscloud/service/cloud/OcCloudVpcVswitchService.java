@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.cloud;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
 
 import java.util.List;

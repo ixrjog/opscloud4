@@ -10,5 +10,7 @@ public interface OcAuthRoleMapper extends Mapper<OcAuthRole> {
 
     List<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery);
 
+    OcAuthRole queryTopOcAuthRoleByUsername(String username);
+
     int queryOcAuthRoleAccessLevelByUsername(String username);
 }

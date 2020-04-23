@@ -4,7 +4,7 @@ import com.baiyi.opscloud.ansible.bo.MemberExecutorLogBO;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.ansible.executor.ExecutorEngine;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 

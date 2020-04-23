@@ -39,7 +39,7 @@
             targetPackage：生成的类要放的包，真实的包受enableSubPackages属性控制；
             targetProject：目标项目，指定一个存在的目录下，生成的内容会放到指定目录中，如果目录不存在，MBG不会自动建目录
          -->
-        <javaModelGenerator targetPackage="com.baiyi.opscloud.domain.generator"
+        <javaModelGenerator targetPackage="com.baiyi.opscloud.domain.generator.opscloud"
                             targetProject="../opscloud-domain/src/main/java">
             <!-- 是否对model添加 构造函数 -->
             <property name="constructorBased" value="false"/>
@@ -104,6 +104,7 @@
 <!--        oc_auth_role-->
 <!--        oc_auth_role_resource-->
 <!--        oc_auth_user_role-->
+<!--        oc_auth_menu-->
 <!--        oc_business_tag-->
 <!--        oc_user_group-->
 <!--        oc_user_permission-->
@@ -129,7 +130,7 @@
 <!--        oc_org_department-->
 <!--        oc_org_department_member-->
 
-        <table tableName="oc_org_department_member">
+        <table tableName="oc_auth_menu">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

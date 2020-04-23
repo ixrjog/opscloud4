@@ -4,8 +4,8 @@ import com.aliyuncs.ecs.model.v20140526.DescribeSecurityGroupsResponse;
 import com.baiyi.opscloud.common.base.CloudType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudVpc;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup;
 
 /**
  * @Author baiyi

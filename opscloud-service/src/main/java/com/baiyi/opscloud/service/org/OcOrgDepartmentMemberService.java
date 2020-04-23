@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.org;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcOrgDepartmentMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartmentMember;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 
 /**

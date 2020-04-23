@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
-import com.baiyi.opscloud.domain.generator.OcCloudVpc;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
 import com.baiyi.opscloud.facade.OcCloudVpcFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcService;

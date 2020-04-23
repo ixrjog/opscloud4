@@ -5,7 +5,7 @@ import com.baiyi.opscloud.ansible.handler.TaskLogRecorder;
 import com.baiyi.opscloud.common.util.AnsibleUtils;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IOUtils;
-import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;

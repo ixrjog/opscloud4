@@ -1,32 +1,33 @@
-package com.baiyi.opscloud.domain.generator;
+package com.baiyi.opscloud.domain.generator.opscloud;
 
 import javax.persistence.*;
 import java.util.Date;
 
-@Table(name = "oc_server_task")
-public class OcServerTask {
+@Table(name = "oc_server_task_member")
+public class OcServerTaskMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "executor_param")
-    private String executorParam;
-    /**
-     * 资源组id
-     */
-    @Column(name = "user_id")
-    private Integer userId;
+    @Column(name = "task_id")
+    private Integer taskId;
 
     /**
-     * 0:命令 1:脚本 2:playbook
+     * 主机模式
      */
-    @Column(name = "task_type")
-    private Integer taskType;
+    @Column(name = "host_pattern")
+    private String hostPattern;
+
+    @Column(name = "server_id")
+    private Integer serverId;
+
+    /**
+     * 管理ip
+     */
+    @Column(name = "manage_ip")
+    private String manageIp;
 
     private String comment;
-
-    @Column(name = "task_size")
-    private Integer taskSize;
 
     /**
      * 是否完成
@@ -51,23 +52,20 @@ public class OcServerTask {
     @Column(name = "task_status")
     private String taskStatus;
 
+    @Column(name = "task_result")
+    private String taskResult;
+
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;
 
-    /**
-     * 资源名称
-     */
-    @Column(name = "user_detail")
-    private String userDetail;
+    @Column(name = "output_msg")
+    private String outputMsg;
 
-    /**
-     * 目标
-     */
-    @Column(name = "server_target_detail")
-    private String serverTargetDetail;
+    @Column(name = "error_msg")
+    private String errorMsg;
 
     /**
      * @return id
@@ -83,48 +81,68 @@ public class OcServerTask {
         this.id = id;
     }
 
-    public String getExecutorParam() {
-        return executorParam;
-    }
-
-    public void setExecutorParam(String executorParam) {
-        this.executorParam = executorParam;
+    /**
+     * @return task_id
+     */
+    public Integer getTaskId() {
+        return taskId;
     }
 
     /**
-     * 获取资源组id
-     *
-     * @return user_id - 资源组id
+     * @param taskId
      */
-    public Integer getUserId() {
-        return userId;
+    public void setTaskId(Integer taskId) {
+        this.taskId = taskId;
     }
 
     /**
-     * 设置资源组id
+     * 获取主机模式
      *
-     * @param userId 资源组id
+     * @return host_pattern - 主机模式
      */
-    public void setUserId(Integer userId) {
-        this.userId = userId;
+    public String getHostPattern() {
+        return hostPattern;
     }
 
     /**
-     * 获取0:命令 1:脚本 2:playbook
+     * 设置主机模式
      *
-     * @return task_type - 0:命令 1:脚本 2:playbook
+     * @param hostPattern 主机模式
      */
-    public Integer getTaskType() {
-        return taskType;
+    public void setHostPattern(String hostPattern) {
+        this.hostPattern = hostPattern;
     }
 
     /**
-     * 设置0:命令 1:脚本 2:playbook
-     *
-     * @param taskType 0:命令 1:脚本 2:playbook
+     * @return server_id
      */
-    public void setTaskType(Integer taskType) {
-        this.taskType = taskType;
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    /**
+     * @param serverId
+     */
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
+    }
+
+    /**
+     * 获取管理ip
+     *
+     * @return manage_ip - 管理ip
+     */
+    public String getManageIp() {
+        return manageIp;
+    }
+
+    /**
+     * 设置管理ip
+     *
+     * @param manageIp 管理ip
+     */
+    public void setManageIp(String manageIp) {
+        this.manageIp = manageIp;
     }
 
     /**
@@ -139,20 +157,6 @@ public class OcServerTask {
      */
     public void setComment(String comment) {
         this.comment = comment;
-    }
-
-    /**
-     * @return task_size
-     */
-    public Integer getTaskSize() {
-        return taskSize;
-    }
-
-    /**
-     * @param taskSize
-     */
-    public void setTaskSize(Integer taskSize) {
-        this.taskSize = taskSize;
     }
 
     /**
@@ -228,6 +232,20 @@ public class OcServerTask {
     }
 
     /**
+     * @return task_result
+     */
+    public String getTaskResult() {
+        return taskResult;
+    }
+
+    /**
+     * @param taskResult
+     */
+    public void setTaskResult(String taskResult) {
+        this.taskResult = taskResult;
+    }
+
+    /**
      * @return create_time
      */
     public Date getCreateTime() {
@@ -256,38 +274,30 @@ public class OcServerTask {
     }
 
     /**
-     * 获取资源名称
-     *
-     * @return user_detail - 资源名称
+     * @return output_msg
      */
-    public String getUserDetail() {
-        return userDetail;
+    public String getOutputMsg() {
+        return outputMsg;
     }
 
     /**
-     * 设置资源名称
-     *
-     * @param userDetail 资源名称
+     * @param outputMsg
      */
-    public void setUserDetail(String userDetail) {
-        this.userDetail = userDetail;
+    public void setOutputMsg(String outputMsg) {
+        this.outputMsg = outputMsg;
     }
 
     /**
-     * 获取目标
-     *
-     * @return server_target_detail - 目标
+     * @return error_msg
      */
-    public String getServerTargetDetail() {
-        return serverTargetDetail;
+    public String getErrorMsg() {
+        return errorMsg;
     }
 
     /**
-     * 设置目标
-     *
-     * @param serverTargetDetail 目标
+     * @param errorMsg
      */
-    public void setServerTargetDetail(String serverTargetDetail) {
-        this.serverTargetDetail = serverTargetDetail;
+    public void setErrorMsg(String errorMsg) {
+        this.errorMsg = errorMsg;
     }
 }

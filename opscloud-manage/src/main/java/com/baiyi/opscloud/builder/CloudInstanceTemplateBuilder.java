@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.builder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTemplate;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTemplate;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;

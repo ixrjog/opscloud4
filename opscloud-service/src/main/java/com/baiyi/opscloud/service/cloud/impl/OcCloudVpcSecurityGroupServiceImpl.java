@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.cloud.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcSecurityGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
 import com.baiyi.opscloud.mapper.opscloud.OcCloudVpcSecurityGroupMapper;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;

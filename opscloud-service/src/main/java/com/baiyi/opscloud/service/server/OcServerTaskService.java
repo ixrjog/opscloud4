@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.server;
 
-import com.baiyi.opscloud.domain.generator.OcServerTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 
 /**
  * @Author baiyi

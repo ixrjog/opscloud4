@@ -7,6 +7,9 @@ import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
 import com.baiyi.opscloud.domain.vo.auth.*;
+import com.baiyi.opscloud.domain.vo.auth.menu.MenuVO;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -69,5 +72,7 @@ public interface AuthFacade {
      * @return
      */
     BusinessWrapper<Boolean> authenticationByResourceName(String resourceName);
+
+    List<MenuVO> queryUserMenu();
 
 }

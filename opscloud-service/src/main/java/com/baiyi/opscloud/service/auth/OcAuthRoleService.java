@@ -13,6 +13,13 @@ public interface OcAuthRoleService {
 
     DataTable<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery);
 
+    /**
+     * 查询用户访问级别最高的角色
+     * @param username
+     * @return
+     */
+    OcAuthRole queryTopOcAuthRoleByUsername(String username);
+
     int queryOcAuthRoleAccessLevelByUsername(String username);
 
     void addOcAuthRole(OcAuthRole ocAuthRole);

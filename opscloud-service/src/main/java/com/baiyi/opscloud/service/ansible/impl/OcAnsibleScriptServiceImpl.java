@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.ansible.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcAnsibleScript;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsibleScript;
 import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.mapper.opscloud.OcAnsibleScriptMapper;
 import com.baiyi.opscloud.service.ansible.OcAnsibleScriptService;

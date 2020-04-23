@@ -3,7 +3,7 @@ package com.baiyi.opscloud.ansible.builder;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.ansible.bo.ServerTaskBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcServerTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 

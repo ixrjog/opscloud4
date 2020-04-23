@@ -28,6 +28,13 @@
         </where>
     </select>
 
+    <select id="queryTopOcAuthRoleByUsername" resultMap="BaseResultMap">
+       select * from oc_auth_role
+          where id in ( select role_id from oc_auth_user_role where username = #{username} )
+          order by access_level desc
+          limit 1
+    </select>
+
     <select id="queryOcAuthRoleAccessLevelByUsername" resultType="java.lang.Integer">
         select access_level from oc_auth_role
         where id in ( select id from oc_auth_user_role where username = #{username} )

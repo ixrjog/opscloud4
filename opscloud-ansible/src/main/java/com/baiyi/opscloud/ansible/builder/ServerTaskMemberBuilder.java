@@ -2,8 +2,8 @@ package com.baiyi.opscloud.ansible.builder;
 
 import com.baiyi.opscloud.ansible.bo.ServerTaskMemberBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcServerTask;
-import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 
 /**

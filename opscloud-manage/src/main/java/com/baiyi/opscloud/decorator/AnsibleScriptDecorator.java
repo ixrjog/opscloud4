@@ -2,7 +2,7 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcAnsibleScript;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsibleScript;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
 import org.springframework.stereotype.Component;
 
