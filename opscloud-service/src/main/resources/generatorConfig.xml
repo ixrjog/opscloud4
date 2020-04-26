@@ -129,8 +129,10 @@
 <!--        oc_ansible_script-->
 <!--        oc_org_department-->
 <!--        oc_org_department_member-->
+<!--        oc_auth_menu-->
+<!--        oc_workorder_group-->
 
-        <table tableName="oc_auth_menu">
+        <table tableName="oc_workorder_group">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>
