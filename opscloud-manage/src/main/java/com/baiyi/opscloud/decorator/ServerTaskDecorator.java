@@ -116,11 +116,15 @@ public class ServerTaskDecorator {
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
         serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, OcEnvVO.Env.class));
         serverTaskMember.setSuccess(serverTaskMember.getExitValue() != null && serverTaskMember.getExitValue() == 0);
+        serverTaskMember.setShowErrorLog(false); // 不显示错误日志
         if (serverTaskMember.getFinalized() == 1) {
             if (!StringUtils.isEmpty(member.getOutputMsg()))
                 serverTaskMember.setOutputMsgLog(IOUtils.readFile(member.getOutputMsg()));
-            if (!StringUtils.isEmpty(member.getErrorMsg()))
+            if (!StringUtils.isEmpty(member.getErrorMsg())) {
                 serverTaskMember.setErrorMsgLog(IOUtils.readFile(member.getErrorMsg()));
+                if (serverTaskMember.getExitValue() != 0)
+                    serverTaskMember.setShowErrorLog(true); // 显示错误日志
+            }
         } else {
             MemberExecutorLogBO memberExecutorLogBO = taskLogRecorder.getLog(member.getId());
             if (memberExecutorLogBO != null) {

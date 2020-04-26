@@ -27,6 +27,8 @@ public class OcServerTaskMemberVO {
         private String outputMsgLog;
         private String errorMsgLog;
 
+        private Boolean showErrorLog;
+
         private Integer id;
         private Integer taskId;
         private String hostPattern;
