@@ -5,12 +5,12 @@ import com.baiyi.opscloud.ansible.builder.*;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.base.ServerTaskStatus;
 import com.baiyi.opscloud.common.base.ServerTaskStopType;
-import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookVars;
 import com.baiyi.opscloud.common.util.PlaybookUtils;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
+import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookVars;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.baiyi.opscloud.service.server.OcServerTaskService;
@@ -71,6 +71,9 @@ public class AnsibleTaskHandler {
 
     @Resource
     private OcServerService ocServerService;
+
+    @Resource
+    private  TaskLogRecorder taskLogRecorder;
 
     @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void call(OcServerTask ocServerTask, ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor, String playbookPath) {
@@ -223,17 +226,17 @@ public class AnsibleTaskHandler {
             // 判断任务是否结束
             if (finalizedSize == ocServerTask.getTaskSize()) {
                 ocServerTask.setFinalized(1);
-                //   ocServerTask.setExitValue(0);
                 ocServerTaskService.updateOcServerTask(ocServerTask);
                 isFinalized = true;
             }
             // 判断主任务是否结束
-            ocServerTask = ocServerTaskService.queryOcServerTaskById(ocServerTask.getId());
-            if (ocServerTask.getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType())
-                isFinalized = true;
-            try {
-                Thread.sleep(1000);
-            } catch (Exception e) {
+            if(taskLogRecorder.getAbortTask(ocServerTask.getId()) != 0)  {
+                if (ocServerTask.getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType())
+                    isFinalized = true;
+                try {
+                    Thread.sleep(200);
+                } catch (Exception e) {
+                }
             }
         }
     }

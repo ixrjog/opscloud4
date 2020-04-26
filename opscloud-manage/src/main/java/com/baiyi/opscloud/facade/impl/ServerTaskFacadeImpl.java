@@ -5,6 +5,7 @@ import com.baiyi.opscloud.ansible.bo.TaskResult;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.ansible.factory.ExecutorFactory;
 import com.baiyi.opscloud.ansible.handler.AnsibleTaskHandler;
+import com.baiyi.opscloud.ansible.handler.TaskLogRecorder;
 import com.baiyi.opscloud.ansible.impl.AnsibleCommandExecutor;
 import com.baiyi.opscloud.ansible.impl.AnsiblePlaybookExecutor;
 import com.baiyi.opscloud.ansible.impl.AnsibleScriptExecutor;
@@ -19,11 +20,7 @@ import com.baiyi.opscloud.decorator.ServerTaskDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook;
-import com.baiyi.opscloud.domain.generator.opscloud.OcAnsibleScript;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
@@ -90,6 +87,9 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
 
     @Resource
     private AnsibleConfig ansibleConfig;
+
+    @Resource
+    private TaskLogRecorder taskLogRecorder;
 
     @Override
     public DataTable<OcAnsiblePlaybookVO.AnsiblePlaybook> queryPlaybookPage(AnsiblePlaybookParam.PageQuery pageQuery) {
@@ -227,6 +227,10 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         ocServerTask.setFinalized(1);
         ocServerTask.setStopType(ServerTaskStopType.SERVER_TASK_STOP.getType());
         ocServerTaskService.updateOcServerTask(ocServerTask);
+        taskLogRecorder.abortTask(taskId);
+        ocServerTaskMemberService.queryOcServerTaskMemberByTaskId(taskId).forEach( e ->{
+            taskLogRecorder.abortTaskMember(e.getId(),ServerTaskStopType.SERVER_TASK_STOP.getType());
+        });
         return BusinessWrapper.SUCCESS;
     }
 
@@ -235,11 +239,12 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         OcServerTaskMember ocServerTaskMember = ocServerTaskMemberService.queryOcServerTaskMemberById(memberId);
         if (ocServerTaskMember == null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_MEMBER_NOT_EXIST);
-        if (ocServerTaskMember.getFinalized() == 1)
-            return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_HAS_FINALIIZED_AND_CANNOT_BE_MODIFIED);
-        ocServerTaskMember.setStopType(ServerTaskStopType.MEMBER_TASK_STOP.getType());
-        ocServerTaskMember.setFinalized(1);
-        ocServerTaskMemberService.updateOcServerTaskMember(ocServerTaskMember);
+//        if (ocServerTaskMember.getFinalized() == 1)
+//            return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_HAS_FINALIIZED_AND_CANNOT_BE_MODIFIED);
+        taskLogRecorder.abortTaskMember(memberId,ServerTaskStopType.MEMBER_TASK_STOP.getType());
+//        ocServerTaskMember.setStopType(ServerTaskStopType.MEMBER_TASK_STOP.getType());
+//        ocServerTaskMember.setFinalized(1);
+//        ocServerTaskMemberService.updateOcServerTaskMember(ocServerTaskMember);
         return BusinessWrapper.SUCCESS;
     }
 

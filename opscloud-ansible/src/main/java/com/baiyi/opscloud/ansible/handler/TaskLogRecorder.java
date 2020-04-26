@@ -3,7 +3,9 @@ package com.baiyi.opscloud.ansible.handler;
 import com.baiyi.opscloud.ansible.bo.MemberExecutorLogBO;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.ansible.executor.ExecutorEngine;
+import com.baiyi.opscloud.common.base.ServerTaskStopType;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
@@ -28,6 +30,14 @@ public class TaskLogRecorder {
     // 日志缓存路径
     private String getTaskMemberLogKey(int memberId) {
         return Joiner.on("_").join("taskLogRecorder", "memberId", memberId);
+    }
+
+    private String getAbortTaskMemberKey(int memberId) {
+        return Joiner.on("_").join("abortTaskMember", "memberId", memberId);
+    }
+
+    private String getAbortTaskKey(int taskId) {
+        return Joiner.on("_").join("abortTask", "taskId", taskId);
     }
 
     public void recorderLog(int memberId, ExecutorEngine executorEngine) {
@@ -57,6 +67,35 @@ public class TaskLogRecorder {
 
     public String getErrorLogPath(OcServerTaskMember member) {
         return Joiner.on("/").join(ansibleConfig.getPlaybookLogPath(member.getTaskId()), member.getId() + "_error.log");
+    }
+
+    public void abortTask(int taskId) {
+        String key = getAbortTaskKey(taskId);
+        redisUtil.set(key, ServerTaskStopType.SERVER_TASK_STOP.getType(), TimeUtils.minuteTime * 5);
+    }
+
+    public int getAbortTask(int taskId) {
+        String key = getAbortTaskKey(taskId);
+        if (redisUtil.hasKey(key)) {
+            return (int) redisUtil.get(key);
+        } else {
+            return 0;
+        }
+    }
+
+
+    public void abortTaskMember(int memberId, int stopType) {
+        String key = getAbortTaskMemberKey(memberId);
+        redisUtil.set(key, stopType, TimeUtils.minuteTime * 5);
+    }
+
+    public int getAbortTaskMember(int memberId) {
+        String key = getAbortTaskMemberKey(memberId);
+        if (redisUtil.hasKey(key)) {
+            return (int) redisUtil.get(key);
+        } else {
+            return 0;
+        }
     }
 
 }

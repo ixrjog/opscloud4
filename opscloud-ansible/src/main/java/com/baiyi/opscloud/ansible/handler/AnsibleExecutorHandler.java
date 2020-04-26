@@ -4,7 +4,6 @@ import com.baiyi.opscloud.ansible.bo.MemberExecutorLogBO;
 import com.baiyi.opscloud.ansible.bo.TaskResult;
 import com.baiyi.opscloud.ansible.bo.TaskStatusBO;
 import com.baiyi.opscloud.ansible.builder.ExecutorEngineBuilder;
-import com.baiyi.opscloud.ansible.exception.TaskMemberStopException;
 import com.baiyi.opscloud.ansible.exception.TaskStopException;
 import com.baiyi.opscloud.ansible.exception.TaskTimeoutException;
 import com.baiyi.opscloud.ansible.executor.ExecutorEngine;
@@ -193,18 +192,10 @@ public class AnsibleExecutorHandler {
                         executorEngine.killedProcess();
                         throw new TaskTimeoutException();
                     }
-                    // 判断主任务是否终止
-                    if (ocServerTaskService.queryOcServerTaskById(member.getTaskId()).getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType()) {
+                    // 判断任务是否终止( 缓存标志位获取 )
+                    if( taskLogRecorder.getAbortTaskMember(member.getId())!= 0){
                         executorEngine.killedProcess();
                         throw new TaskStopException();
-                    }
-                    // 判断子任务是否终止
-                    if (ocServerTaskMemberService.queryOcServerTaskMemberById(member.getId()).getStopType() == ServerTaskStopType.MEMBER_TASK_STOP.getType()) {
-                        try {
-                            executorEngine.killedProcess();
-                        } catch (Exception e) {
-                        }
-                        throw new TaskMemberStopException();
                     }
                     // 日志容量上限判断 暂不处理
                     // if (member.getOutputMsg().length() >= MAX_LOG_LENGTH) {
@@ -219,13 +210,7 @@ public class AnsibleExecutorHandler {
             saveServerTaskMember(member, taskStatus);
         } catch (TaskStopException e) {
             TaskStatusBO taskStatus = TaskStatusBO.builder()
-                    .stopType(ServerTaskStopType.SERVER_TASK_STOP.getType())
-                    .tastResult("STOP")
-                    .build();
-            saveServerTaskMember(member, taskStatus);
-        } catch (TaskMemberStopException e) {
-            TaskStatusBO taskStatus = TaskStatusBO.builder()
-                    .stopType(ServerTaskStopType.MEMBER_TASK_STOP.getType())
+                    .stopType(taskLogRecorder.getAbortTaskMember(member.getId()))
                     .tastResult("STOP")
                     .build();
             saveServerTaskMember(member, taskStatus);
@@ -260,12 +245,17 @@ public class AnsibleExecutorHandler {
                     IOUtils.writeFile(memberExecutorLogBO.getOutputMsg(), outputLogPath);
                     member.setOutputMsg(outputLogPath);
                 }
+            } catch (Exception e) {
+                log.error("记录执行日志OutputMsg错误, memberId = {}",member.getId());
+            }
+            try {
                 if (!StringUtils.isEmpty(memberExecutorLogBO.getErrorMsg())) {
                     String errorLogPath = taskLogRecorder.getErrorLogPath(member); //Joiner.on("/").join(playbookLogPath,member.getId() + "_error.log" );
                     IOUtils.writeFile(memberExecutorLogBO.getErrorMsg(), errorLogPath);
                     member.setErrorMsg(errorLogPath);
                 }
             } catch (Exception e) {
+                log.error("记录执行日志ErrorMsg错误, memberId = {}",member.getId());
             }
             taskLogRecorder.clearLog(member.getId());
         }
