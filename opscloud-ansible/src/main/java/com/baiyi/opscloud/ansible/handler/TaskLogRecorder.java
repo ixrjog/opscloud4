@@ -23,7 +23,6 @@ public class TaskLogRecorder {
     @Resource
     private RedisUtil redisUtil;
 
-
     @Resource
     private AnsibleConfig ansibleConfig;
 

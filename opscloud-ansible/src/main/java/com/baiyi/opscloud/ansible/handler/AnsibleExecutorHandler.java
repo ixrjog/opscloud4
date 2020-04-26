@@ -190,11 +190,13 @@ public class AnsibleExecutorHandler {
                     if (TimeUtils.checkTimeout(startTaskTime, timeout)) {
                         // 停止任务
                         executorEngine.killedProcess();
+                        taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskTimeoutException();
                     }
                     // 判断任务是否终止( 缓存标志位获取 )
                     if( taskLogRecorder.getAbortTaskMember(member.getId())!= 0){
                         executorEngine.killedProcess();
+                        taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskStopException();
                     }
                     // 日志容量上限判断 暂不处理
