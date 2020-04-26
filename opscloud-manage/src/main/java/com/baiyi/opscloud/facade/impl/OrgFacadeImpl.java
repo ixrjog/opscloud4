@@ -17,6 +17,7 @@ import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
+import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
 import com.baiyi.opscloud.service.user.OcUserService;
@@ -48,6 +49,9 @@ public class OrgFacadeImpl implements OrgFacade {
 
     @Resource
     private DepartmentMemberDecorator departmentMemberDecorator;
+
+    @Resource
+    private UserFacade userFacade;
 
     public static final int ROOT_PARENT_ID = 0;
 
@@ -253,7 +257,33 @@ public class OrgFacadeImpl implements OrgFacade {
 
         // 添加部门成员
         ocOrgDepartmentMemberService.addOcOrgDepartmentMember(BeanCopierUtils.copyProperties(orgDepartmentMemberBO, OcOrgDepartmentMember.class));
+        return BusinessWrapper.SUCCESS;
+    }
 
+    @Override
+    public BusinessWrapper<Boolean> joinDepartmentMember(int departmentId) {
+        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(departmentId);
+        if (ocOrgDepartment == null)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_NOT_EXIST);
+        if (ocOrgDepartment.getParentId() == ROOT_PARENT_ID)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_CANNOT_JOIN_ROOT);
+        OcUser ocUser = userFacade.getOcUserBySession();
+        if (ocUser == null)
+            return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
+        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(ocUser.getId());
+        for (OcOrgDepartmentMember member : members) {
+            if (member.getIsLeader() == 1)
+                return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_IS_LEADER);
+            if (member.getIsApprovalAuthority() == 1)
+                return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_IS_APPROVAL);
+            ocOrgDepartmentMemberService.deleteOcOrgDepartmentMemberById(member.getId());
+        }
+        OrgDepartmentMemberBO orgDepartmentMemberBO = OrgDepartmentMemberBO.builder()
+                .departmentId(departmentId)
+                .userId(ocUser.getId())
+                .username(ocUser.getUsername())
+                .build();
+        ocOrgDepartmentMemberService.addOcOrgDepartmentMember(BeanCopierUtils.copyProperties(orgDepartmentMemberBO, OcOrgDepartmentMember.class));
         return BusinessWrapper.SUCCESS;
     }
 
@@ -280,6 +310,19 @@ public class OrgFacadeImpl implements OrgFacade {
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_NOT_EXIST);
         member.setIsApprovalAuthority(member.getIsApprovalAuthority() == 0 ? 1 : 0);
         ocOrgDepartmentMemberService.updateOcOrgDepartmentMember(member);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delOrgUserById(int userId) {
+        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userId);
+        if (members != null)
+            try {
+                for (OcOrgDepartmentMember ocOrgDepartmentMember : members)
+                    ocOrgDepartmentMemberService.deleteOcOrgDepartmentMemberById(ocOrgDepartmentMember.getId());
+            } catch (Exception e) {
+                return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_DELETE_ERROR);
+            }
         return BusinessWrapper.SUCCESS;
     }
 

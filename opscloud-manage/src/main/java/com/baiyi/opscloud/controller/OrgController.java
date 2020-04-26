@@ -83,6 +83,12 @@ public class OrgController {
         return new HttpResult<>(orgFacade.addDepartmentMember(departmentId, userId));
     }
 
+    @ApiOperation(value = "设置部门成员(当前用户加入部门)")
+    @PutMapping(value = "/department/member/join", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> joinDepartmentMember(@Valid int departmentId) {
+        return new HttpResult<>(orgFacade.joinDepartmentMember(departmentId));
+    }
+
     @ApiOperation(value = "移除部门成员")
     @DeleteMapping(value = "/department/member/remove", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> removeDepartmentMember(@RequestParam int id) {

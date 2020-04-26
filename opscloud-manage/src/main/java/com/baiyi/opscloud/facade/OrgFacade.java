@@ -35,9 +35,18 @@ public interface OrgFacade {
 
     BusinessWrapper<Boolean> addDepartmentMember(int departmentId, int userId);
 
+    BusinessWrapper<Boolean> joinDepartmentMember(int departmentId);
+
     BusinessWrapper<Boolean> delDepartmentMemberById(int id);
 
     BusinessWrapper<Boolean> updateDepartmentMemberLeader(int id);
 
     BusinessWrapper<Boolean> updateDepartmentMemberApprovalAuthority(int id);
+
+    /**
+     * 删除用户的所有组织架构信息
+     * @param userId
+     * @return
+     */
+    BusinessWrapper<Boolean> delOrgUserById(int userId);
 }

@@ -37,5 +37,4 @@ public interface OcUserService {
      */
     List<OcUser> queryOcUserActive();
 
-
 }

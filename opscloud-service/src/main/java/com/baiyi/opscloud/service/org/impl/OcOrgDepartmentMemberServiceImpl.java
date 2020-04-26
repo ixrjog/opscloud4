@@ -64,6 +64,14 @@ public class OcOrgDepartmentMemberServiceImpl implements OcOrgDepartmentMemberSe
     }
 
     @Override
+    public  List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByUserId(int userId){
+        Example example = new Example(OcOrgDepartmentMember.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        return ocOrgDepartmentMemberMapper.selectByExample(example);
+    }
+
+    @Override
     public void deleteOcOrgDepartmentMemberById(int id) {
         ocOrgDepartmentMemberMapper.deleteByPrimaryKey(id);
     }

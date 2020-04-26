@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartmentMember;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/4/21 4:24 下午
@@ -17,11 +19,13 @@ public interface OcOrgDepartmentMemberService {
 
     void updateOcOrgDepartmentMember(OcOrgDepartmentMember ocOrgDepartmentMember);
 
-    OcOrgDepartmentMember getOcOrgDepartmentMemberByUniqueKey(int departmentId,int userId);
+    OcOrgDepartmentMember getOcOrgDepartmentMemberByUniqueKey(int departmentId, int userId);
 
     int countOcOrgDepartmentMemberByDepartmentId(int departmentId);
 
     OcOrgDepartmentMember queryOcOrgDepartmentMemberById(int id);
 
     void deleteOcOrgDepartmentMemberById(int id);
+
+    List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByUserId(int userId);
 }
