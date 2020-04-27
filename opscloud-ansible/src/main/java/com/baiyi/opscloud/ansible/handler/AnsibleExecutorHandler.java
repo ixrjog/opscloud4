@@ -4,6 +4,7 @@ import com.baiyi.opscloud.ansible.bo.MemberExecutorLogBO;
 import com.baiyi.opscloud.ansible.bo.TaskResult;
 import com.baiyi.opscloud.ansible.bo.TaskStatusBO;
 import com.baiyi.opscloud.ansible.builder.ExecutorEngineBuilder;
+import com.baiyi.opscloud.ansible.exception.TaskLogExceededLimit;
 import com.baiyi.opscloud.ansible.exception.TaskStopException;
 import com.baiyi.opscloud.ansible.exception.TaskTimeoutException;
 import com.baiyi.opscloud.ansible.executor.ExecutorEngine;
@@ -173,7 +174,7 @@ public class AnsibleExecutorHandler {
             }
 
             while (true) {
-                resultHandler.waitFor(1000);
+                resultHandler.waitFor(500);
                 // 执行日志写入redis
                 taskLogRecorder.recorderLog(member.getId(), executorEngine);
                 // 任务结束
@@ -194,14 +195,14 @@ public class AnsibleExecutorHandler {
                         throw new TaskTimeoutException();
                     }
                     // 判断任务是否终止( 缓存标志位获取 )
-                    if( taskLogRecorder.getAbortTaskMember(member.getId())!= 0){
+                    if (taskLogRecorder.getAbortTaskMember(member.getId()) != 0) {
                         executorEngine.killedProcess();
                         taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskStopException();
                     }
-                    // 日志容量上限判断 暂不处理
-                    // if (member.getOutputMsg().length() >= MAX_LOG_LENGTH) {
-                    // }
+                    // 日志长度超过阈值
+                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH)
+                        throw new TaskLogExceededLimit();
                 }
             }
         } catch (TaskTimeoutException e) {
@@ -213,7 +214,7 @@ public class AnsibleExecutorHandler {
         } catch (TaskStopException e) {
             TaskStatusBO taskStatus = TaskStatusBO.builder()
                     .stopType(taskLogRecorder.getAbortTaskMember(member.getId()))
-                    .tastResult("STOP")
+                    .tastResult("ABORT")
                     .build();
             saveServerTaskMember(member, taskStatus);
         } catch (ExecuteException e) {
@@ -223,10 +224,16 @@ public class AnsibleExecutorHandler {
                     .tastResult(AnsibleResult.ERROR.getName())
                     .build();
             saveServerTaskMember(member, taskStatus);
+        } catch (TaskLogExceededLimit e) {
+            TaskStatusBO taskStatus = TaskStatusBO.builder()
+                    .stopType(ServerTaskStopType.LOG_EXCEEDED_LIMIT.getType())
+                    .tastResult("LOG_EXCEEDED_LIMIT")
+                    .build();
+            saveServerTaskMember(member, taskStatus);
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (UnsupportedEncodingException e) {
-            // 日志流转码错误
+            // 日志流转码错误 暂不处理
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
@@ -248,7 +255,7 @@ public class AnsibleExecutorHandler {
                     member.setOutputMsg(outputLogPath);
                 }
             } catch (Exception e) {
-                log.error("记录执行日志OutputMsg错误, memberId = {}",member.getId());
+                log.error("记录执行日志OutputMsg错误, memberId = {}", member.getId());
             }
             try {
                 if (!StringUtils.isEmpty(memberExecutorLogBO.getErrorMsg())) {
@@ -257,7 +264,7 @@ public class AnsibleExecutorHandler {
                     member.setErrorMsg(errorLogPath);
                 }
             } catch (Exception e) {
-                log.error("记录执行日志ErrorMsg错误, memberId = {}",member.getId());
+                log.error("记录执行日志ErrorMsg错误, memberId = {}", member.getId());
             }
             taskLogRecorder.clearLog(member.getId());
         }
