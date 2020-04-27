@@ -9,8 +9,6 @@ public class OcServerTask {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "executor_param")
-    private String executorParam;
     /**
      * 资源组id
      */
@@ -22,6 +20,12 @@ public class OcServerTask {
      */
     @Column(name = "task_type")
     private Integer taskType;
+
+    /**
+     * 系统任务类型
+     */
+    @Column(name = "system_type")
+    private Integer systemType;
 
     private String comment;
 
@@ -57,6 +61,9 @@ public class OcServerTask {
     @Column(name = "update_time")
     private Date updateTime;
 
+    @Column(name = "executor_param")
+    private String executorParam;
+
     /**
      * 资源名称
      */
@@ -81,14 +88,6 @@ public class OcServerTask {
      */
     public void setId(Integer id) {
         this.id = id;
-    }
-
-    public String getExecutorParam() {
-        return executorParam;
-    }
-
-    public void setExecutorParam(String executorParam) {
-        this.executorParam = executorParam;
     }
 
     /**
@@ -125,6 +124,24 @@ public class OcServerTask {
      */
     public void setTaskType(Integer taskType) {
         this.taskType = taskType;
+    }
+
+    /**
+     * 获取系统任务类型
+     *
+     * @return system_type - 系统任务类型
+     */
+    public Integer getSystemType() {
+        return systemType;
+    }
+
+    /**
+     * 设置系统任务类型
+     *
+     * @param systemType 系统任务类型
+     */
+    public void setSystemType(Integer systemType) {
+        this.systemType = systemType;
     }
 
     /**
@@ -253,6 +270,20 @@ public class OcServerTask {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+    /**
+     * @return executor_param
+     */
+    public String getExecutorParam() {
+        return executorParam;
+    }
+
+    /**
+     * @param executorParam
+     */
+    public void setExecutorParam(String executorParam) {
+        this.executorParam = executorParam;
     }
 
     /**

@@ -132,7 +132,7 @@
 <!--        oc_auth_menu-->
 <!--        oc_workorder_group-->
 
-        <table tableName="oc_workorder_group">
+        <table tableName="oc_server_task">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

@@ -15,7 +15,6 @@ import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
-import com.baiyi.opscloud.service.server.OcServerTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.*;
 import org.springframework.scheduling.annotation.Async;
@@ -46,20 +45,12 @@ public class AnsibleExecutorHandler {
     private OcServerTaskMemberService ocServerTaskMemberService;
 
     @Resource
-    private OcServerTaskService ocServerTaskService;
-
-    @Resource
     private TaskLogRecorder taskLogRecorder;
-
-//    @Resource
-//    private AnsibleConfig ansibleConfig;
-
 
     /**
      * 512KB
      **/
     public static final int MAX_LOG_LENGTH = 512 * 1024;
-
 
     /**
      *  public static final String RESULT_UNREACHABLE = "UNREACHABLE";
@@ -144,8 +135,6 @@ public class AnsibleExecutorHandler {
      */
     @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void executorRecorder(OcServerTaskMember member, CommandLine commandLine, Long timeout) {
-        //System.err.println(JSON.toJSONString(commandLine));
-
         if (timeout == 0)
             timeout = MAX_TIMEOUT;
         try {
@@ -189,7 +178,6 @@ public class AnsibleExecutorHandler {
                 } else {
                     // 判断任务是否需要终止或超时
                     if (TimeUtils.checkTimeout(startTaskTime, timeout)) {
-                        // 停止任务
                         executorEngine.killedProcess();
                         taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskTimeoutException();
@@ -201,8 +189,11 @@ public class AnsibleExecutorHandler {
                         throw new TaskStopException();
                     }
                     // 日志长度超过阈值
-                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH)
+                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH){
+                        executorEngine.killedProcess();
+                        taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskLogExceededLimit();
+                    }
                 }
             }
         } catch (TaskTimeoutException e) {
