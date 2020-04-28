@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -17,6 +18,8 @@ public class OcWorkorderGroupVO {
     @NoArgsConstructor
     @ApiModel
     public static class WorkorderGroup {
+
+        private List<OcWorkorderVO.Workorder> workorders;
 
         private Integer id;
         private String name;

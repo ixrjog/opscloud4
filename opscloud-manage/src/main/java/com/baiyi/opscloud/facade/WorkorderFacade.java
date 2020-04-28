@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/4/26 1:13 下午
@@ -12,4 +14,7 @@ import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
 public interface WorkorderFacade {
 
     DataTable<OcWorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery);
+
+    List<OcWorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup();
+
 }

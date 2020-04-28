@@ -32,7 +32,14 @@ public class OcUserPermissionServiceImpl implements OcUserPermissionService {
 
     @Override
     public OcUserPermission queryOcUserPermissionByUniqueKey(OcUserPermission ocUserPermission) {
-        return ocUserPermissionMapper.queryOcUserPermissionByUniqueKey(ocUserPermission);
+        Example example = new Example(OcUserPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", ocUserPermission.getUserId());
+        criteria.andEqualTo("businessId",ocUserPermission.getBusinessId());
+        criteria.andEqualTo("businessType",ocUserPermission.getBusinessType());
+        // criteria.andEqualTo("content",ocUserPermission.getContent());
+        //return ocUserPermissionMapper.queryOcUserPermissionByUniqueKey(ocUserPermission);
+        return ocUserPermissionMapper.selectOneByExample(example);
     }
 
     @Override

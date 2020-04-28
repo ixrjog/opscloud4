@@ -8,13 +8,11 @@ import com.baiyi.opscloud.facade.WorkorderFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -33,6 +31,12 @@ public class WorkorderController {
     @PostMapping(value = "/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcWorkorderGroupVO.WorkorderGroup>> queryWorkorderGroupPage(@RequestBody @Valid WorkorderGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(workorderFacade.queryWorkorderGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "工作台查询工单组详情")
+    @GetMapping(value = "/group/query", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OcWorkorderGroupVO.WorkorderGroup>> queryWorkbenchWorkorderGroup() {
+        return new HttpResult<>(workorderFacade.queryWorkbenchWorkorderGroup());
     }
 
 }

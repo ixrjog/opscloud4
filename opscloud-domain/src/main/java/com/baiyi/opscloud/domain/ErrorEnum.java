@@ -52,9 +52,10 @@ public enum ErrorEnum {
     USERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "用户组名称不合规！"),
 
 
-    USER_GRANT_USERGROUP_ERROR(12002, "授权用户组错误！"),
-    USER_REVOKE_USERGROUP_ERROR(12002, "撤销用户组授权错误！"),
-
+    USER_GRANT_USERGROUP_ERROR(12002, "用户授权用户组错误！"),
+    USER_REVOKE_USERGROUP_ERROR(12002, "用户撤销用户组授权错误！"),
+    USER_GRANT_SERVERGROUP_ERROR(12002, "用户授权服务器组错误！"),
+    USER_REVOKE_SERVERGROUP_ERROR(12002, "用户撤销服务器组授权错误！"),
     // server
     SERVER_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器名称不合规！"),
     SERVER_GROUP_NOT_SELECTED(12003, "服务器组未选择！"),

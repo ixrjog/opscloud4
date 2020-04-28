@@ -50,14 +50,14 @@ public class ZabbixHostServerTest extends BaseUnit {
     @Test
     void testCreateHost() {
         IServer iServer = ServerFactory.getIServerByKey("ZabbixHost");
-        OcServer ocServer= ocServerService.queryOcServerByPrivateIp("192.168.8.118");
+        OcServer ocServer= ocServerService.queryOcServerByPrivateIp("192.168.10.183");
         iServer.create(ocServer);
     }
 
     @Test
     void testRemoveHost() {
         IServer iServer = ServerFactory.getIServerByKey("ZabbixHost");
-        OcServer ocServer= ocServerService.queryOcServerByPrivateIp("192.168.8.118");
+        OcServer ocServer= ocServerService.queryOcServerByPrivateIp("192.168.10.183");
         iServer.remove(ocServer);
     }
 

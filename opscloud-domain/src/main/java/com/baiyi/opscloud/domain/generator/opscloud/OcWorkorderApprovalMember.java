@@ -1,13 +1,19 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
-@Table(name = "oc_user_permission")
-public class OcUserPermission {
+@Table(name = "oc_workorder_approval_member")
+public class OcWorkorderApprovalMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    /**
+     * 审批组id
+     */
+    @Column(name = "group_id")
+    private Integer groupId;
 
     /**
      * 用户id
@@ -16,19 +22,14 @@ public class OcUserPermission {
     private Integer userId;
 
     /**
-     * 业务id
+     * 用户名
      */
-    @Column(name = "business_id")
-    private Integer businessId;
-
-    @Column(name = "content")
-    private String content;
+    private String username;
 
     /**
-     * 业务类型
+     * 说明
      */
-    @Column(name = "business_type")
-    private Integer businessType;
+    private String comment;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -51,6 +52,24 @@ public class OcUserPermission {
     }
 
     /**
+     * 获取审批组id
+     *
+     * @return group_id - 审批组id
+     */
+    public Integer getGroupId() {
+        return groupId;
+    }
+
+    /**
+     * 设置审批组id
+     *
+     * @param groupId 审批组id
+     */
+    public void setGroupId(Integer groupId) {
+        this.groupId = groupId;
+    }
+
+    /**
      * 获取用户id
      *
      * @return user_id - 用户id
@@ -69,47 +88,39 @@ public class OcUserPermission {
     }
 
     /**
-     * 获取业务id
+     * 获取用户名
      *
-     * @return business_id - 业务id
+     * @return username - 用户名
      */
-    public Integer getBusinessId() {
-        return businessId;
+    public String getUsername() {
+        return username;
     }
 
     /**
-     * 设置业务id
+     * 设置用户名
      *
-     * @param businessId 业务id
+     * @param username 用户名
      */
-    public void setBusinessId(Integer businessId) {
-        this.businessId = businessId;
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     /**
-     * 获取业务类型
+     * 获取说明
      *
-     * @return business_type - 业务类型
+     * @return comment - 说明
      */
-    public Integer getBusinessType() {
-        return businessType;
+    public String getComment() {
+        return comment;
     }
 
     /**
-     * 设置业务类型
+     * 设置说明
      *
-     * @param businessType 业务类型
+     * @param comment 说明
      */
-    public void setBusinessType(Integer businessType) {
-        this.businessType = businessType;
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**

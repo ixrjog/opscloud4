@@ -29,4 +29,11 @@ public class OcWorkorderGroupServiceImpl implements OcWorkorderGroupService {
         List<OcWorkorderGroup> list = ocWorkorderGroupMapper.queryOcWorkorderGroupByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }
+
+
+    @Override
+    public List<OcWorkorderGroup> queryOcWorkorderGroupAll() {
+        return ocWorkorderGroupMapper.selectAll();
+
+    }
 }

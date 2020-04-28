@@ -222,7 +222,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
-        return new BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
+        return new BusinessWrapper(ErrorEnum.USER_GRANT_SERVERGROUP_ERROR);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
-        return new BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
+        return new BusinessWrapper(ErrorEnum.USER_REVOKE_SERVERGROUP_ERROR);
     }
 
     @Override

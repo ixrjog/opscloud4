@@ -131,8 +131,13 @@
 <!--        oc_org_department_member-->
 <!--        oc_auth_menu-->
 <!--        oc_workorder_group-->
+<!--        oc_workorder-->
+<!--        oc_workorder_approval_group-->
+<!--        oc_workorder_approval_member-->
+<!--        oc_workorder_ticket-->
+<!--        oc_workorder_ticket_entry-->
 
-        <table tableName="oc_server_task">
+        <table tableName="oc_workorder_ticket">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>
