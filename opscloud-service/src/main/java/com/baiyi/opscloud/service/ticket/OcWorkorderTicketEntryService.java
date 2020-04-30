@@ -18,4 +18,6 @@ public interface OcWorkorderTicketEntryService {
     void updateOcWorkorderTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
 
     void addOcWorkorderTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
+
+    void deleteOcWorkorderTicketEntryById(int id);
 }

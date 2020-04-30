@@ -10,7 +10,7 @@
         <result column="access_level" jdbcType="INTEGER" property="accessLevel"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
-        <result column="workflow" jdbcType="INTEGER" property="workflow"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>

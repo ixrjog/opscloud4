@@ -12,11 +12,14 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class WorkorderTicketEntryBO {
+public class WorkorderTicketEntryBO<T> {
+
+    private T ticketEntry;
 
     private Integer id;
     private Integer workorderTicketId;
     private String name;
+    private Integer businessId;
     @Builder.Default
     private Integer entryStatus = 0;
     private String comment;

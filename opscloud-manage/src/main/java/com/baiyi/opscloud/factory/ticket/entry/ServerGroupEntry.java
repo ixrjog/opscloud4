@@ -9,14 +9,17 @@ import lombok.Data;
  * @Date 2020/4/27 3:18 下午
  * @Version 1.0
  */
-@Builder
 @Data
-public class ServerGroupEntry implements ITicketEntry{
+@Builder
+public class ServerGroupEntry implements ITicketEntry {
 
     private OcServerGroupVO.ServerGroup serverGroup;
 
-    /** 需要管理员账户权限 **/
-    private Boolean hasAdministratorAccount;
+    /**
+     * 需要管理员账户权限
+     **/
+    @Builder.Default
+    private Boolean needAdministratorAccount = false;
 
     public String getName() {
         return this.serverGroup.getName();

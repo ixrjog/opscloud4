@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_server_group")
 public class OcServerGroup {
@@ -13,6 +13,12 @@ public class OcServerGroup {
 
     @Column(name = "grp_type")
     private Integer grpType;
+
+    /**
+     * 在工单中
+     */
+    @Column(name = "in_workorder")
+    private Integer inWorkorder;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -62,6 +68,14 @@ public class OcServerGroup {
      */
     public void setGrpType(Integer grpType) {
         this.grpType = grpType;
+    }
+
+    public Integer getInWorkorder() {
+        return inWorkorder;
+    }
+
+    public void setInWorkorder(Integer inWorkorder) {
+        this.inWorkorder = inWorkorder;
     }
 
     /**

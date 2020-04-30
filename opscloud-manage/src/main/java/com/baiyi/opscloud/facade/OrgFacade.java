@@ -49,4 +49,6 @@ public interface OrgFacade {
      * @return
      */
     BusinessWrapper<Boolean> delOrgUserById(int userId);
+
+    BusinessWrapper<Boolean> queryUserParentByOrg(int userId);
 }

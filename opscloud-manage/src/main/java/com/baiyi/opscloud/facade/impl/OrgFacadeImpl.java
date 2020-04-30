@@ -326,4 +326,25 @@ public class OrgFacadeImpl implements OrgFacade {
         return BusinessWrapper.SUCCESS;
     }
 
+    // 查询用户在组织架构中的上级
+    @Override
+    public BusinessWrapper<Boolean> queryUserParentByOrg(int userId) {
+        BusinessWrapper wrapper = new BusinessWrapper(true);
+        // 先查询主机是否有审批权限
+        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userId);
+        // 未加入组织架构
+        if (members == null || members.size() == 0)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_USER_NOT_IN_THE_ORG);
+        // 查询用户是否有审批权限
+        for (OcOrgDepartmentMember member : members) {
+            if (member.getIsApprovalAuthority() == 1 || member.getIsLeader() == 1) {
+                wrapper.setBody(member);
+                return wrapper;
+            }
+        }
+
+
+        return BusinessWrapper.SUCCESS;
+    }
+
 }

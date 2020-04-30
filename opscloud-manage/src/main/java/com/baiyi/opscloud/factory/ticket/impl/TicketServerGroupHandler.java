@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.factory.ticket.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.WorkorderKey;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -7,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
-import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketEntryParam;
+import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
@@ -38,16 +39,20 @@ public class TicketServerGroupHandler<T> extends BaseTicketHandler<T> implements
     private UserPermissionFacade userPermissionFacade;
 
     @Override
+    public String getKey() {
+        return WorkorderKey.SERVER_GROUP.getKey();
+    }
+
+    @Override
     protected String acqWorkorderKey() {
         return WorkorderKey.SERVER_GROUP.getKey();
     }
 
     @Override
-    protected ITicketEntry acqITicketEntry(WorkorderTicketEntryParam.TicketEntry ticketEntry){
+    protected ITicketEntry acqITicketEntry(Object ticketEntry) {
         ServerGroupEntry entry = new ObjectMapper().convertValue(ticketEntry, ServerGroupEntry.class);
         return entry;
     }
-
 
     @Override
     protected T getTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) throws JsonSyntaxException {
@@ -64,7 +69,7 @@ public class TicketServerGroupHandler<T> extends BaseTicketHandler<T> implements
         userServerGroupPermission.setUserId(ocUser.getId());
         BusinessWrapper<Boolean> wrapper = serverGroupFacade.grantUserServerGroup(userServerGroupPermission);
         // 管理员账户授权
-        if (wrapper.isSuccess() && BooleanUtils.isTrue(serverGroupEntry.getHasAdministratorAccount()))
+        if (wrapper.isSuccess() && BooleanUtils.isTrue(serverGroupEntry.getNeedAdministratorAccount()))
             grantUserServerAdministratorAccount(ocUser, serverGroupEntry);
         saveTicketEntry(ocWorkorderTicketEntry, wrapper);
     }
@@ -72,6 +77,14 @@ public class TicketServerGroupHandler<T> extends BaseTicketHandler<T> implements
     protected void grantUserServerAdministratorAccount(OcUser ocUser, ServerGroupEntry serverGroupEntry) {
         OcUserPermission ocUserPermission = UserPermissionBuilder.build(ocUser, serverGroupEntry);
         userPermissionFacade.addOcUserPermission(ocUserPermission);
+    }
+
+    @Override
+    protected BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry) {
+        OcWorkorderTicketEntry ocWorkorderTicketEntry = ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryById(entry.getId());
+        ocWorkorderTicketEntry.setEntryDetail(JSON.toJSONString(entry.getTicketEntry()));
+        ocWorkorderTicketEntryService.updateOcWorkorderTicketEntry(ocWorkorderTicketEntry);
+        return BusinessWrapper.SUCCESS;
     }
 
 }

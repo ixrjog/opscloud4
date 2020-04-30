@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.service.workorder.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
-import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
 import com.baiyi.opscloud.mapper.opscloud.OcWorkorderMapper;
 import com.baiyi.opscloud.service.workorder.OcWorkorderService;
 import org.springframework.stereotype.Service;
@@ -24,7 +23,7 @@ public class OcWorkorderServiceImpl implements OcWorkorderService {
 
     @Override
     public OcWorkorder queryOcWorkorderByWorkorderKey(String workorderKey) {
-        Example example = new Example(OcWorkorderTicketEntry.class);
+        Example example = new Example(OcWorkorder.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("workorderKey", workorderKey);
         return ocWorkorderMapper.selectOneByExample(example);
@@ -32,7 +31,7 @@ public class OcWorkorderServiceImpl implements OcWorkorderService {
 
     @Override
     public List<OcWorkorder> queryOcWorkorderByGroupId(int workorderGroupId, boolean isDevelopment) {
-        Example example = new Example(OcWorkorderTicketEntry.class);
+        Example example = new Example(OcWorkorder.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("workorderGroupId",workorderGroupId);
         if(!isDevelopment)

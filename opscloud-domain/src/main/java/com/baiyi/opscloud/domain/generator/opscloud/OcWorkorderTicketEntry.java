@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_workorder_ticket_entry")
 public class OcWorkorderTicketEntry {
@@ -19,6 +19,12 @@ public class OcWorkorderTicketEntry {
      * 名称
      */
     private String name;
+
+    /**
+     * 业务id
+     */
+    @Column(name = "business_id")
+    private Integer businessId;
 
     /**
      * 状态
@@ -100,6 +106,24 @@ public class OcWorkorderTicketEntry {
      */
     public void setName(String name) {
         this.name = name;
+    }
+
+    /**
+     * 获取业务id
+     *
+     * @return business_id - 业务id
+     */
+    public Integer getBusinessId() {
+        return businessId;
+    }
+
+    /**
+     * 设置业务id
+     *
+     * @param businessId 业务id
+     */
+    public void setBusinessId(Integer businessId) {
+        this.businessId = businessId;
     }
 
     /**

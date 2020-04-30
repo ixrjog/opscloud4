@@ -24,9 +24,10 @@ public class OcAuthRole {
     private String comment;
 
     /**
-     * 允许工作流申请
+     * 在工单中
      */
-    private Integer workflow;
+    @Column(name = "in_workorder")
+    private Integer inWorkorder;
 
     /**
      * api允许访问的资源路径(用于公共接口2次鉴权)
@@ -98,18 +99,12 @@ public class OcAuthRole {
         this.comment = comment;
     }
 
-    /**
-     * @return workflow
-     */
-    public Integer getWorkflow() {
-        return workflow;
+    public Integer getInWorkorder() {
+        return inWorkorder;
     }
 
-    /**
-     * @param workflow
-     */
-    public void setWorkflow(Integer workflow) {
-        this.workflow = workflow;
+    public void setInWorkorder(Integer inWorkorder) {
+        this.inWorkorder = inWorkorder;
     }
 
     public String getResourceName() {

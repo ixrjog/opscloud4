@@ -43,4 +43,9 @@ public class OcWorkorderTicketEntryServiceImpl implements OcWorkorderTicketEntry
         ocWorkorderTicketEntryMapper.insert(ocWorkorderTicketEntry);
     }
 
+    @Override
+    public void deleteOcWorkorderTicketEntryById(int id) {
+        ocWorkorderTicketEntryMapper.deleteByPrimaryKey(id);
+    }
+
 }

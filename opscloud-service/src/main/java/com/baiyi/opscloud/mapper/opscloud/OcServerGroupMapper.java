@@ -19,4 +19,6 @@ public interface OcServerGroupMapper extends Mapper<OcServerGroup> {
     List<OcServerGroup> queryUserPermissionOcServerGroupByUserId(@Param("userId") int userId);
 
     List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery);
+
+    List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery userTicketOcServerGroupQuery);
 }

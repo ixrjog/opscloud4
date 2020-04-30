@@ -8,6 +8,7 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="workorder_ticket_id" jdbcType="INTEGER" property="workorderTicketId" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="business_id" jdbcType="INTEGER" property="businessId" />
     <result column="entry_status" jdbcType="INTEGER" property="entryStatus" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="entry_key" jdbcType="VARCHAR" property="entryKey" />

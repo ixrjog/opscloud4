@@ -4,8 +4,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.mapper.opscloud.OcWorkorderTicketMapper;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -21,6 +23,16 @@ public class OcWorkorderTicketServiceImpl implements OcWorkorderTicketService {
     @Override
     public OcWorkorderTicket queryOcWorkorderTicketById(int id) {
         return ocWorkorderTicketMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<OcWorkorderTicket> queryOcWorkorderTicketByParam(OcWorkorderTicket ocWorkorderTicket) {
+        Example example = new Example(OcWorkorderTicket.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workorderId", ocWorkorderTicket.getWorkorderId());
+        criteria.andEqualTo("userId", ocWorkorderTicket.getUserId());
+        criteria.andEqualTo("ticketPhase", ocWorkorderTicket.getTicketPhase());
+        return ocWorkorderTicketMapper.selectByExample(example);
     }
 
     @Override

@@ -137,7 +137,7 @@
 <!--        oc_workorder_ticket-->
 <!--        oc_workorder_ticket_entry-->
 
-        <table tableName="oc_workorder_ticket">
+        <table tableName="oc_workorder_ticket_entry">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

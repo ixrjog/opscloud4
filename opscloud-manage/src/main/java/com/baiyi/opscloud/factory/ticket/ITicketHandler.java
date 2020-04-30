@@ -3,7 +3,8 @@ package com.baiyi.opscloud.factory.ticket;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
-import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketEntryParam;
+import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
 
 /**
  * @Author baiyi
@@ -17,11 +18,17 @@ public interface ITicketHandler {
      **/
     void executorTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
 
-    BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
+    //BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
 
-    BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
+    BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser,  OcWorkorderTicketEntryVO.Entry entry);
 
-    void createTicket(OcUser ocUser);
+    BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser,  OcWorkorderTicketEntryVO.Entry entry);
+
+   // BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
+
+    OcWorkorderTicketEntryVO.Entry convertTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
+
+    OcWorkorderTicketVO.Ticket createTicket(OcUser ocUser);
 
     String getKey();
 

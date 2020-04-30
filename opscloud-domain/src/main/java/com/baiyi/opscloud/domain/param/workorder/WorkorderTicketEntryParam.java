@@ -26,7 +26,7 @@ public class WorkorderTicketEntryParam {
         @ApiModelProperty(value = "票据id")
         private Integer ticketId;
 
-        @ApiModelProperty(value = "工单组名称")
+        @ApiModelProperty(value = "条目对象")
         private T ticketEntry;
 
     }
