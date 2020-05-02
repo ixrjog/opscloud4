@@ -23,6 +23,8 @@ public interface OcOrgDepartmentMemberService {
 
     int countOcOrgDepartmentMemberByDepartmentId(int departmentId);
 
+    List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByDepartmentId(int departmentId);
+
     OcOrgDepartmentMember queryOcOrgDepartmentMemberById(int id);
 
     void deleteOcOrgDepartmentMemberById(int id);

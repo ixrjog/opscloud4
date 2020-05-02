@@ -50,5 +50,4 @@ public interface OrgFacade {
      */
     BusinessWrapper<Boolean> delOrgUserById(int userId);
 
-    BusinessWrapper<Boolean> queryUserParentByOrg(int userId);
 }

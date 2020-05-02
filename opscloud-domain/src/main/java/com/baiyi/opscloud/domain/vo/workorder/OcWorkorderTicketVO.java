@@ -22,7 +22,12 @@ public class OcWorkorderTicketVO {
         /**
          * 工单条目
          **/
-        private List<OcWorkorderTicketEntryVO.Entry> ticketEntrys;
+        private List<OcWorkorderTicketEntryVO.Entry> ticketEntries;
+
+        /**
+         * 审批步骤
+         */
+        private  ApprovalStepsVO.ApprovalDetail  approvalDetail ;
 
         private Integer id;
         private Integer workorderId;

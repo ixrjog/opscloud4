@@ -146,6 +146,10 @@ public enum ErrorEnum {
     ORG_DEPARTMENT_MEMBER_IS_LEADER(60001, "经理不能随意变更部门"),
     ORG_DEPARTMENT_MEMBER_IS_APPROVAL(60001, "拥有审批权不能随意变更部门"),
     ORG_DEPARTMENT_USER_NOT_IN_THE_ORG(60001, "你未加入组织架构"),
+    ORG_DEPARTMENT_USER_NO_APPROVAL_REATIONSHIP_FOUND(60001, "用户没有建立上级审批关系"),
+
+
+
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),
     CREATE_TABLE_ERROR(10003, "创建表失败！"),
