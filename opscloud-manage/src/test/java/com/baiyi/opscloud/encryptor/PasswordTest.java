@@ -15,4 +15,7 @@ public class PasswordTest extends BaseUnit {
     void test(){
         System.err.println(PasswordUtils.getRandomPW(32));
     }
+
+
+
 }

@@ -161,7 +161,6 @@ public class UserFacadeImpl implements UserFacade {
         if (StringUtils.isEmpty(userCredential.getCredential()))
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_ERROR);
         OcUser ocUser = ocUserService.queryOcUserById(userCredential.getUserId());
-       //userCredential.setUserId(ocUser.getId());
         userCredential.setUsername(ocUser.getUsername());
         OcUserCredential ocUserCredential = UserCredentialConvert.convertOcUserCredential(userCredential);
 
@@ -175,7 +174,6 @@ public class UserFacadeImpl implements UserFacade {
         // sshkey push
         if ( !StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType() )
             accountCenter.pushSSHKey(ocUser);
-
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
     }
 

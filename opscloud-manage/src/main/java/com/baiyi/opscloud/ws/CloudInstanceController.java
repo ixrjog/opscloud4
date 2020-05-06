@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.websocket;
+package com.baiyi.opscloud.ws;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/ws/create/cloud/instance/task")
 @Component
-public class CloudInstanceWebSocketController {
+public class CloudInstanceController {
 
         @PostConstruct
         public void init() {

@@ -46,7 +46,6 @@ public class UserDecorator {
     @Resource
     private OcUserCredentialService ocUserCredentialService;
 
-
     @Resource
     private JumpserverCenter jumpserverCenter;
 

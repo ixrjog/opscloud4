@@ -23,6 +23,7 @@
         <module>opscloud-aliyun-rds-mysql</module>
         <module>opscloud-server</module>
         <module>opscloud-ansible</module>
+        <module>opscloud-xterm</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -259,6 +260,11 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-ansible</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-xterm</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>
