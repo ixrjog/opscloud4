@@ -23,5 +23,20 @@ public class RoleParam {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserTicketOcAuthRoleQuery extends PageParam {
+
+        @ApiModelProperty(value = "查询名称")
+        private String queryName;
+
+        private String username;
+
+        @ApiModelProperty(value = "工单票据id")
+        private Integer workorderTicketId;
+
+    }
+
 
 }

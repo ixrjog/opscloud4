@@ -25,4 +25,5 @@ public class UserRoleParam {
         private Integer roleId;
 
     }
+
 }

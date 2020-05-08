@@ -2,7 +2,9 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
@@ -97,11 +99,37 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.delWorkorderTicketEntryById(id));
     }
 
-    // 用户查询服务器组信息
-    @ApiOperation(value = "工单票据查询服务器组列表")
+    /**
+     * 工单配置-用户组查询
+     * @param queryParam
+     * @return
+     */
+    @ApiOperation(value = "工单配置-用户组查询")
     @PostMapping(value = "/ticket/server/group/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<OcWorkorderTicketEntryVO.Entry>> queryUserTicketServerGroupPage(@RequestBody @Valid ServerGroupParam.UserTicketOcServerGroupQuery queryParam) {
         return new HttpResult<>(workorderFacade.queryUserTicketOcServerGroupByParam(queryParam));
+    }
+
+    /**
+     * 工单配置-用户组查询
+     * @param queryParam
+     * @return
+     */
+    @ApiOperation(value = "工单配置-用户组查询")
+    @PostMapping(value = "/ticket/user/group/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OcWorkorderTicketEntryVO.Entry>> queryUserTicketUserGroupPage(@RequestBody @Valid UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
+        return new HttpResult<>(workorderFacade.queryUserTicketOcUserGroupByParam(queryParam));
+    }
+
+    /**
+     * 工单配置-平台角色查询
+     * @param queryParam
+     * @return
+     */
+    @ApiOperation(value = "工单配置-平台角色查询")
+    @PostMapping(value = "/ticket/role/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OcWorkorderTicketEntryVO.Entry>> queryUserTicketAuthRolePage(@RequestBody @Valid RoleParam.UserTicketOcAuthRoleQuery queryParam) {
+        return new HttpResult<>(workorderFacade.queryUserTicketOcAuthRoleByParam(queryParam));
     }
 
 }

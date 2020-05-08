@@ -25,6 +25,13 @@ public interface OcOrgDepartmentMemberService {
 
     List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByDepartmentId(int departmentId);
 
+    /**
+     * 查询部门中的leader
+     * @param departmentId
+     * @return
+     */
+    OcOrgDepartmentMember queryOcOrgDepartmentMemberByLeader(int departmentId);
+
     OcOrgDepartmentMember queryOcOrgDepartmentMemberById(int id);
 
     void deleteOcOrgDepartmentMemberById(int id);

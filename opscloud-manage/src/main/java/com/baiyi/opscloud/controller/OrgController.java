@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -39,6 +40,12 @@ public class OrgController {
     @GetMapping(value = "/department/tree/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DepartmentTreeVO.DepartmentTree> queryDepartmentTree(@Valid int parentId) {
         return new HttpResult<>(orgFacade.queryDepartmentTree(parentId));
+    }
+
+    @ApiOperation(value = "查询组织架构图")
+    @GetMapping(value = "/chart/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OrgChartVO.OrgChart> queryOrgChartByParentId(@Valid int parentId) {
+        return new HttpResult<>(orgFacade.queryOrgChart(parentId));
     }
 
     @ApiOperation(value = "组织架构部门drop")

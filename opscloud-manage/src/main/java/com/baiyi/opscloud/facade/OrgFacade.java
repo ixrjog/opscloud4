@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 
 /**
  * @Author baiyi
@@ -18,6 +19,8 @@ public interface OrgFacade {
     DataTable<OcOrgDepartmentVO.Department> queryDepartmentPage(DepartmentParam.PageQuery pageQuery);
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId);
+
+    OrgChartVO.OrgChart queryOrgChart(int parentId);
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree();
 

@@ -33,7 +33,7 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
 
     @Override
     public OcAuthRole queryTopOcAuthRoleByUsername(String username) {
-       return ocAuthRoleMapper.queryTopOcAuthRoleByUsername(username);
+        return ocAuthRoleMapper.queryTopOcAuthRoleByUsername(username);
     }
 
 
@@ -68,6 +68,11 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("roleName", roleName);
         return ocAuthRoleMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<OcAuthRole> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam) {
+        return ocAuthRoleMapper.queryUserTicketOcAuthRoleByParam(queryParam);
     }
 
 }

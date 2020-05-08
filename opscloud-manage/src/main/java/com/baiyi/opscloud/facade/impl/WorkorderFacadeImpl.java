@@ -10,7 +10,9 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
 import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
@@ -24,10 +26,12 @@ import com.baiyi.opscloud.factory.ticket.ITicketHandler;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketFactory;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
+import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketEntryService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
+import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderGroupService;
 import org.springframework.stereotype.Service;
 
@@ -61,6 +65,12 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Resource
     private OcServerGroupService ocServerGroupService;
+
+    @Resource
+    private OcUserGroupService ocUserGroupService;
+
+    @Resource
+    private OcAuthRoleService ocAuthRoleService;
 
     @Resource
     private WorkorderTicketDecorator workorderTicketDecorator;
@@ -208,9 +218,28 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Override
     public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam) {
-        // OcUser ocUser = userFacade.getOcUserBySession();
-        // queryParam.setUserId(ocUser.getId());
         List<OcServerGroup> list = ocServerGroupService.queryUserTicketOcServerGroupByParam(queryParam);
+        return list.stream().map(e ->
+                WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
+        OcUser ocUser = userFacade.getOcUserBySession();
+        queryParam.setUserId(ocUser.getId());
+
+        List<OcUserGroup> list = ocUserGroupService.queryUserTicketOcUserGroupByParam(queryParam);
+        return list.stream().map(e ->
+                WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam) {
+        OcUser ocUser = userFacade.getOcUserBySession();
+        queryParam.setUsername(ocUser.getUsername());
+        List<OcAuthRole> list =  ocAuthRoleService.queryUserTicketOcAuthRoleByParam(queryParam);
         return list.stream().map(e ->
                 WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e)
         ).collect(Collectors.toList());

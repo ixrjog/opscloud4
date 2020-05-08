@@ -41,4 +41,23 @@
         order by access_level desc limit 1
     </select>
 
+    <!--    工单票据查询用户可以申请的角色列表-->
+    <select id="queryUserTicketOcAuthRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.RoleParam$UserTicketOcAuthRoleQuery"
+            resultMap="BaseResultMap">
+        select * from oc_auth_role
+        where
+           in_workorder = 1
+           --  排除本人已申请的角色
+           and id not in ( select role_id from oc_auth_user_role where username = #{username} )
+           --  排除ticket中的role_id
+           and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+           <if test="queryName != null and queryName != ''">
+              and role_name like "%" #{queryName} "%"
+           </if>
+    </select>
+
+
+
+
+
 </mapper>

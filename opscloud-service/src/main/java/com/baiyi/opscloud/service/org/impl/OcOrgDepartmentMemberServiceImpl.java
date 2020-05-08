@@ -51,7 +51,7 @@ public class OcOrgDepartmentMemberServiceImpl implements OcOrgDepartmentMemberSe
     }
 
     @Override
-    public int countOcOrgDepartmentMemberByDepartmentId(int departmentId){
+    public int countOcOrgDepartmentMemberByDepartmentId(int departmentId) {
         Example example = new Example(OcOrgDepartmentMember.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("departmentId", departmentId);
@@ -59,11 +59,21 @@ public class OcOrgDepartmentMemberServiceImpl implements OcOrgDepartmentMemberSe
     }
 
     @Override
-    public List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByDepartmentId(int departmentId){
+    public List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByDepartmentId(int departmentId) {
         Example example = new Example(OcOrgDepartmentMember.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("departmentId", departmentId);
         return ocOrgDepartmentMemberMapper.selectByExample(example);
+    }
+
+    @Override
+    public OcOrgDepartmentMember queryOcOrgDepartmentMemberByLeader(int departmentId) {
+        Example example = new Example(OcOrgDepartmentMember.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("departmentId", departmentId);
+        criteria.andEqualTo("isLeader", 1);
+        PageHelper.startPage(1, 1);
+        return ocOrgDepartmentMemberMapper.selectOneByExample(example);
     }
 
     @Override
@@ -72,7 +82,7 @@ public class OcOrgDepartmentMemberServiceImpl implements OcOrgDepartmentMemberSe
     }
 
     @Override
-    public  List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByUserId(int userId){
+    public List<OcOrgDepartmentMember> queryOcOrgDepartmentMemberByUserId(int userId) {
         Example example = new Example(OcOrgDepartmentMember.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("userId", userId);

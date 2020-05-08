@@ -30,8 +30,8 @@ public class OcUserGroupVO {
         @ApiModelProperty(value = "用户组类型")
         private Integer grpType;
 
-        @ApiModelProperty(value = "允许工资流申请")
-        private Integer workflow;
+        @ApiModelProperty(value = "允许工单申请")
+        private Integer inWorkorder;
 
         @ApiModelProperty(value = "数据源")
         private String source;

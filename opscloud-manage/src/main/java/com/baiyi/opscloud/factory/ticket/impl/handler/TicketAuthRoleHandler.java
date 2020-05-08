@@ -10,7 +10,6 @@ import com.baiyi.opscloud.factory.ticket.ITicketHandler;
 import com.baiyi.opscloud.factory.ticket.entry.AuthRoleEntry;
 import com.baiyi.opscloud.factory.ticket.entry.ITicketEntry;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
@@ -48,10 +47,7 @@ public class TicketAuthRoleHandler<T> extends BaseTicketHandler<T> implements IT
 
     @Override
     protected T getTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) throws JsonSyntaxException {
-        Gson gson = new GsonBuilder()
-                .setDateFormat("yyyy-MM-dd HH:mm:ss")
-                .create();
-        AuthRoleEntry entry = gson.fromJson(ocWorkorderTicketEntry.getEntryDetail(), AuthRoleEntry.class);
+        AuthRoleEntry entry = new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), AuthRoleEntry.class);
         return (T) entry;
     }
 

@@ -13,4 +13,6 @@ public interface OcAuthRoleMapper extends Mapper<OcAuthRole> {
     OcAuthRole queryTopOcAuthRoleByUsername(String username);
 
     int queryOcAuthRoleAccessLevelByUsername(String username);
+
+    List<OcAuthRole> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
 }

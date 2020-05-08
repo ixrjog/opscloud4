@@ -4,6 +4,7 @@ import com.baiyi.opscloud.bo.OrgDepartmentMemberBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.decorator.DepartmentDecorator;
 import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
+import com.baiyi.opscloud.decorator.OrgDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -15,6 +16,7 @@ import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import com.baiyi.opscloud.facade.UserFacade;
@@ -46,6 +48,9 @@ public class OrgFacadeImpl implements OrgFacade {
 
     @Resource
     private DepartmentDecorator departmentDecorator;
+
+    @Resource
+    private OrgDecorator orgDecorator;
 
     @Resource
     private DepartmentMemberDecorator departmentMemberDecorator;
@@ -225,6 +230,27 @@ public class OrgFacadeImpl implements OrgFacade {
         return departmentTree;
     }
 
+    @Override
+    public OrgChartVO.OrgChart queryOrgChart(int parentId) {
+        List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
+        List<OrgChartVO.Children> children = orgDecorator.deptListToChart(deptList);
+        OcOrgDepartmentMember ocOrgDepartmentMember = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByLeader(parentId);
+        String name = "空缺";
+        if(ocOrgDepartmentMember != null){
+            OcUser ocUser = ocUserService.queryOcUserById(ocOrgDepartmentMember.getUserId());
+            if(ocUser != null)
+                name= ocUser.getDisplayName();
+        }
+        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(parentId);
+        OrgChartVO.OrgChart orgChart = OrgChartVO.OrgChart.builder()
+                .id(parentId)
+                .children(children)
+                .name(name)
+                .title(ocOrgDepartment.getName())
+                .build();
+        return orgChart;
+    }
+
     private List<OcOrgDepartment> queryDepartmentByParentId(int parentId) {
         return ocOrgDepartmentService.queryOcOrgDepartmentByParentId(parentId);
     }
@@ -325,7 +351,6 @@ public class OrgFacadeImpl implements OrgFacade {
             }
         return BusinessWrapper.SUCCESS;
     }
-
 
 
 }
