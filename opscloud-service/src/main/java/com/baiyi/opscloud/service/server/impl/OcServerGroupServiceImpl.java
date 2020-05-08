@@ -96,7 +96,6 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
         return ocServerGroupMapper.queryUserPermissionOcServerGroupByParam(userServerTreeQuery);
     }
 
-
     @Override
     public List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery userTicketOcServerGroupQuery) {
         return ocServerGroupMapper.queryUserTicketOcServerGroupByParam(userTicketOcServerGroupQuery);

@@ -18,7 +18,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/ws/create/cloud/instance/task")
 @Component
-public class CloudInstanceController {
+public class CloudInstanceWSController {
 
         @PostConstruct
         public void init() {

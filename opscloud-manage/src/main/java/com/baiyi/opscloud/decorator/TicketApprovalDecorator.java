@@ -1,17 +1,18 @@
 package com.baiyi.opscloud.decorator;
 
+import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
-import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
+import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketFlow;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
+import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderService;
-import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -21,57 +22,46 @@ import java.util.stream.Collectors;
 @Component
 public class TicketApprovalDecorator {
 
-
     @Resource
     private OcWorkorderService ocWorkorderService;
 
     @Resource
-    private DepartmentMemberDecorator departmentMemberDecorator;
+    private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
 
     // 组装 TicketApproval
     public void decorator(OcWorkorderTicketVO.Ticket ticket) {
         ApprovalStepsVO.ApprovalDetail approvalDetail = new ApprovalStepsVO.ApprovalDetail();
-
         List<ApprovalStepsVO.ApprovalStep> approvalStepList = Lists.newArrayList();
-
-        OcWorkorder ocWorkorder = ocWorkorderService.queryOcWorkorderById(ticket.getWorkorderId());
-        ApprovalStepsVO.ApprovalStep approvalStepWrite = ApprovalStepsVO.ApprovalStep.builder()
-                .title("填写")
-                .description("填写完成后提交申请")
-                .build();
-        approvalStepList.add(approvalStepWrite);
-
-        // 要求组织架构上级审批
-        if (ocWorkorder.getOrgApproval()) {
-            // 组织架构审批
-            OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ticket.getUserId());
-            ApprovalStepsVO.ApprovalStep orgApprovalStep = ApprovalStepsVO.ApprovalStep.builder()
-                    .title("上级审批")
-                    .description(getDescription(orgApproval))
-                    .build();
-            approvalStepList.add(orgApprovalStep);
-        }
-
-        //  FINALIZED
-        ApprovalStepsVO.ApprovalStep approvalStepFinalized = ApprovalStepsVO.ApprovalStep.builder()
-                .title("完成")
-                .description("工单结束")
-                .build();
-        approvalStepList.add(approvalStepFinalized);
-
-        approvalDetail.setActive(1);
 
         approvalDetail.setApprovalSteps(approvalStepList);
         ticket.setApprovalDetail(approvalDetail);
+
+        OcWorkorder ocWorkorder = ocWorkorderService.queryOcWorkorderById(ticket.getWorkorderId());
+
+        String ticketPhase = TicketPhase.CREATED.getPhase();
+
+        if(ticket.getFlowId() != null){
+            OcWorkorderTicketFlow ocWorkorderTicketFlow = ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowById(ticket.getFlowId());
+            if (ocWorkorderTicketFlow != null)
+                ticketPhase = ocWorkorderTicketFlow.getFlowName();
+        }
+
+        // 填写阶段
+        WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(TicketPhase.CREATED.getPhase()).invokeFlowStep(ticket, ticketPhase);
+
+        WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(TicketPhase.APPLIED.getPhase()).invokeFlowStep(ticket, ticketPhase);
+
+        // 要求组织架构上级审批
+        if (ocWorkorder.getOrgApproval())
+            WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(TicketPhase.ORG_APPROVAL.getPhase()).invokeFlowStep(ticket, ticketPhase);
+
+        // 审批组配置
+        if (ocWorkorder.getApprovalGroupId() != 0)
+            WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(TicketPhase.USERGROUP_APPROVAL.getPhase()).invokeFlowStep(ticket, ticketPhase);
+
+        // 工单结束阶段
+        WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(TicketPhase.FINALIZED.getPhase()).invokeFlowStep(ticket, ticketPhase);
     }
 
-    private String getDescription(OrgApprovalVO.OrgApproval orgApproval) {
-        if (orgApproval.getIsError())
-            return orgApproval.getErrorMsg();
-        if (orgApproval.getIsApprovalAuthority())
-            return "本人拥有审批权";
-        if (orgApproval.getPreferenceDeptMember() != null)
-            return orgApproval.getPreferenceDeptMember().getDisplayName();
-        return Joiner.on(",").join(orgApproval.getAlternativeDeptMembers().stream().map(e -> e.getDisplayName()).collect(Collectors.toList()));
-    }
+
 }

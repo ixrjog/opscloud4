@@ -1,8 +1,12 @@
 package com.baiyi.opscloud.service.ticket.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
+import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
 import com.baiyi.opscloud.mapper.opscloud.OcWorkorderTicketMapper;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -43,5 +47,12 @@ public class OcWorkorderTicketServiceImpl implements OcWorkorderTicketService {
     @Override
     public void updateOcWorkorderTicket(OcWorkorderTicket ocWorkorderTicket) {
         ocWorkorderTicketMapper.updateByPrimaryKey(ocWorkorderTicket);
+    }
+
+    @Override
+    public DataTable<OcWorkorderTicket> queryOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicket pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcWorkorderTicket> list = ocWorkorderTicketMapper.queryMyTicketByParam(pageQuery);
+        return new DataTable<>(list, page.getTotal());
     }
 }

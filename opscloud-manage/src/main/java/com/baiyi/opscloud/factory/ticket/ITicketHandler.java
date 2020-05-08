@@ -32,13 +32,9 @@ public interface ITicketHandler {
 
     String getKey();
 
-//    /**
-//     * 审批通过
-//     *
-//     * @param ticketId
-//     * @return
-//     */
-//    BusinessWrapper<Boolean> approvalTicket(int ticketId);
+    // disagree  agree
+
+
 //
 //    /**
 //     * 审批拒绝

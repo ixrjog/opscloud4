@@ -56,8 +56,8 @@ public class ServerGroupParam {
         @ApiModelProperty(value = "查询名称")
         private String queryName;
 
-        @ApiModelProperty(value = "用户id")
-        private Integer userId;
+      //  @ApiModelProperty(value = "用户id")
+      //  private Integer userId;
 
         @ApiModelProperty(value = "工单票据id")
         private Integer workorderTicketId;

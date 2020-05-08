@@ -148,6 +148,10 @@ public enum ErrorEnum {
     ORG_DEPARTMENT_USER_NOT_IN_THE_ORG(60001, "你未加入组织架构"),
     ORG_DEPARTMENT_USER_NO_APPROVAL_REATIONSHIP_FOUND(60001, "用户没有建立上级审批关系"),
 
+    // Workorder
+    WORKORDER_TICKET_PHASE_ERROR(70001, "工单阶段不正确"),
+    WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
+    WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
 
 
     // ----------------------- 例子 -----------------------

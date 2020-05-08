@@ -136,8 +136,11 @@
 <!--        oc_workorder_approval_member-->
 <!--        oc_workorder_ticket-->
 <!--        oc_workorder_ticket_entry-->
+<!--        oc_workorder_ticket_subscribe-->
+<!--        oc_workorder_ticket_flow-->
+<!--        oc_keybox-->
 
-        <table tableName="oc_keybox">
+        <table tableName="oc_workorder_ticket">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

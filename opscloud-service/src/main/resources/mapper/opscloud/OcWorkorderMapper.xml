@@ -12,11 +12,11 @@
     <result column="workorder_group_id" jdbcType="INTEGER" property="workorderGroupId" />
     <result column="approval_type" jdbcType="INTEGER" property="approvalType" />
     <result column="org_approval" jdbcType="BIT" property="orgApproval" />
+    <result column="approval_group_id" jdbcType="INTEGER" property="approvalGroupId" />
     <result column="workorder_mode" jdbcType="INTEGER" property="workorderMode" />
     <result column="workorder_status" jdbcType="INTEGER" property="workorderStatus" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="approval_detail" jdbcType="LONGVARCHAR" property="approvalDetail" />
   </resultMap>
 </mapper>

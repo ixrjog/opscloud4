@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.ticket;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
+import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
 
 import java.util.List;
 
@@ -18,4 +20,7 @@ public interface OcWorkorderTicketService {
     void addOcWorkorderTicket(OcWorkorderTicket ocWorkorderTicket);
 
     void updateOcWorkorderTicket(OcWorkorderTicket ocWorkorderTicket);
+
+    DataTable<OcWorkorderTicket> queryOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicket pageQuery);
+
 }

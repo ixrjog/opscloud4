@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_workorder")
 public class OcWorkorder {
@@ -45,6 +45,12 @@ public class OcWorkorder {
     private Boolean orgApproval;
 
     /**
+     * 审批组id
+     */
+    @Column(name = "approval_group_id")
+    private Integer approvalGroupId;
+
+    /**
      * 模式 0 自动 1 手动
      */
     @Column(name = "workorder_mode")
@@ -66,12 +72,6 @@ public class OcWorkorder {
 
     @Column(name = "update_time")
     private Date updateTime;
-
-    /**
-     * 审批详情
-     */
-    @Column(name = "approval_detail")
-    private String approvalDetail;
 
     /**
      * @return id
@@ -196,6 +196,24 @@ public class OcWorkorder {
     }
 
     /**
+     * 获取审批组id
+     *
+     * @return approval_group_id - 审批组id
+     */
+    public Integer getApprovalGroupId() {
+        return approvalGroupId;
+    }
+
+    /**
+     * 设置审批组id
+     *
+     * @param approvalGroupId 审批组id
+     */
+    public void setApprovalGroupId(Integer approvalGroupId) {
+        this.approvalGroupId = approvalGroupId;
+    }
+
+    /**
      * 获取模式 0 自动 1 手动
      *
      * @return workorder_mode - 模式 0 自动 1 手动
@@ -275,23 +293,5 @@ public class OcWorkorder {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
-    }
-
-    /**
-     * 获取审批详情
-     *
-     * @return approval_detail - 审批详情
-     */
-    public String getApprovalDetail() {
-        return approvalDetail;
-    }
-
-    /**
-     * 设置审批详情
-     *
-     * @param approvalDetail 审批详情
-     */
-    public void setApprovalDetail(String approvalDetail) {
-        this.approvalDetail = approvalDetail;
     }
 }

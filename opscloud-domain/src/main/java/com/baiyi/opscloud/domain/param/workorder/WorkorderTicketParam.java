@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.param.workorder;
 
+import com.baiyi.opscloud.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -11,6 +12,15 @@ import lombok.NoArgsConstructor;
  * @Version 1.0
  */
 public class WorkorderTicketParam {
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class QueryMyTicket extends PageParam {
+
+        @ApiModelProperty(value = "用户id")
+        private Integer userId;
+    }
 
 
     @Data
@@ -28,7 +38,6 @@ public class WorkorderTicketParam {
         @ApiModelProperty(value = "workorderTicketId")
         private Integer id;
     }
-
 
 
 }

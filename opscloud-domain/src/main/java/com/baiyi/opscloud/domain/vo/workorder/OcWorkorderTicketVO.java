@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
+import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,12 +28,33 @@ public class OcWorkorderTicketVO {
         /**
          * 审批步骤
          */
-        private  ApprovalStepsVO.ApprovalDetail  approvalDetail ;
+        private ApprovalStepsVO.ApprovalDetail approvalDetail;
+
+        /**
+         * 工单
+         */
+        private OcWorkorderVO.Workorder workorder;
+
+        /**
+         * 工单申请时间
+         */
+        private String ago;
+
+        /**
+         * 发起人
+         */
+        private OcUserVO.User user;
+
+        /**
+         * 审批中
+         */
+        private Boolean isInApproval;
 
         private Integer id;
         private Integer workorderId;
         private Integer userId;
         private String username;
+        private Integer flowId;
         private String comment;
         private String ticketPhase;
         private Integer ticketStatus;

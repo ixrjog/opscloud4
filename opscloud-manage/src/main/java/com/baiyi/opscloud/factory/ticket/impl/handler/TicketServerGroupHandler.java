@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.factory.ticket.impl;
+package com.baiyi.opscloud.factory.ticket.impl.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.builder.UserPermissionBuilder;

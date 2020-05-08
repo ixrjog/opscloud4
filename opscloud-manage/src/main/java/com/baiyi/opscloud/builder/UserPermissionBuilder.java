@@ -34,17 +34,17 @@ public class UserPermissionBuilder {
         return covert(userPermissionBO);
     }
 
-    public static OcUserPermission build(OcUser ocUser, ServerGroupEntry serverGroupEntry ) {
+    public static OcUserPermission build(OcUser ocUser, ServerGroupEntry serverGroupEntry) {
         UserPermissionBO userPermissionBO = UserPermissionBO.builder()
-                .userId( ocUser.getId())
+                .userId(ocUser.getId())
                 .businessId(serverGroupEntry.getServerGroup().getId())
                 .businessType(BusinessType.SERVER_ADMINISTRATOR_ACCOUNT.getType())
                 .build();
         return covert(userPermissionBO);
     }
 
-    private static OcUserPermission covert(UserPermissionBO userPermissionBO){
-        return BeanCopierUtils.copyProperties(userPermissionBO,  OcUserPermission.class);
+    private static OcUserPermission covert(UserPermissionBO userPermissionBO) {
+        return BeanCopierUtils.copyProperties(userPermissionBO, OcUserPermission.class);
     }
 
 }

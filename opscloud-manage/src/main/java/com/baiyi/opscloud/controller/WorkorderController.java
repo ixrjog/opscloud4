@@ -37,6 +37,12 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.queryWorkorderGroupPage(pageQuery));
     }
 
+    @ApiOperation(value = "查询我的工单")
+    @PostMapping(value = "/ticket/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicket queryMyTicket) {
+        return new HttpResult<>(workorderFacade.queryMyTicketPage(queryMyTicket));
+    }
+
     @ApiOperation(value = "工作台查询工单组详情")
     @GetMapping(value = "/group/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<OcWorkorderGroupVO.WorkorderGroup>> queryWorkbenchWorkorderGroup() {
@@ -56,9 +62,21 @@ public class WorkorderController {
     }
 
     @ApiOperation(value = "提交工单票据")
-    @PutMapping(value = "/ticket/submit", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean>  submitWorkorderTicket(@Valid int id) {
-        return new HttpResult<>(workorderFacade.submitWorkorderTicket(id));
+    @PutMapping(value = "/ticket/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> submitWorkorderTicket(@RequestBody @Valid OcWorkorderTicketVO.Ticket ticket) {
+        return new HttpResult<>(workorderFacade.submitWorkorderTicket(ticket));
+    }
+
+    @ApiOperation(value = "审批同意工单票据")
+    @PutMapping(value = "/ticket/agree",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> agreeWorkorderTicket( @Valid int ticketId) {
+        return new HttpResult<>(workorderFacade.agreeWorkorderTicket(ticketId));
+    }
+
+    @ApiOperation(value = "审批拒绝工单票据")
+    @PutMapping(value = "/ticket/disagree",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> disagreeWorkorderTicket( @Valid int ticketId) {
+        return new HttpResult<>(workorderFacade.disagreeWorkorderTicket(ticketId));
     }
 
     @ApiOperation(value = "工单票据添加条目")

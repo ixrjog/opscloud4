@@ -21,7 +21,7 @@ public class WorkorderUtils {
             ApprovalOptionsVO.ApprovalOptions options = gson.fromJson(JSON.toJSONString(result), ApprovalOptionsVO.ApprovalOptions.class);
             return options;
         } catch (Exception e) {
-            return new ApprovalOptionsVO.ApprovalOptions();
+            return null;
         }
     }
 }

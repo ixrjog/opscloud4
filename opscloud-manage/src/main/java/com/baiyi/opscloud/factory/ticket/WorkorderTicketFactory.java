@@ -10,7 +10,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class WorkorderTicketFactory {
 
-
     static Map<String, ITicketHandler> context = new ConcurrentHashMap<>();
 
     public static ITicketHandler getTicketHandlerByKey(String key) {

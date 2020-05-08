@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.factory.ticket.impl;
+package com.baiyi.opscloud.factory.ticket.impl.handler;
 
 import com.baiyi.opscloud.builder.WorkorderTicketBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;

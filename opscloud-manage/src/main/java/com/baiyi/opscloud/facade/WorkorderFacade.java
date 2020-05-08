@@ -30,10 +30,14 @@ public interface WorkorderFacade {
 
     /**
      * 提交工单票据
-     * @param id
+     * @param ticket
      * @return
      */
-    BusinessWrapper<Boolean> submitWorkorderTicket(int id);
+    BusinessWrapper<Boolean> submitWorkorderTicket(OcWorkorderTicketVO.Ticket ticket);
+
+    BusinessWrapper<Boolean> agreeWorkorderTicket(int ticketId);
+
+    BusinessWrapper<Boolean> disagreeWorkorderTicket(int ticketId);
 
     BusinessWrapper<Boolean> addTicketEntry(OcWorkorderTicketEntryVO.Entry entry);
 
@@ -42,5 +46,7 @@ public interface WorkorderFacade {
     BusinessWrapper<Boolean> delWorkorderTicketEntryById(int id);
 
     List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam);
+
+    DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicket pageQuery);
 
 }

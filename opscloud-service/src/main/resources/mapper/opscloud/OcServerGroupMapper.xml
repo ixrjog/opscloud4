@@ -75,14 +75,14 @@
             resultMap="BaseResultMap">
         select * from oc_server_group
         <where>
-            and in_workorder = 1
+            in_workorder = 1
+            <if test="queryName != null and queryName != ''">
+              and name like "%" #{queryName} "%"
+            </if>
             --  排除用户已授权的服务器组
-            and id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
+            <!--  and id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} ) -->
             --  排除ticket中的服务器组
             and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
-            <if test="queryName != null and queryName != ''">
-                and name like "%" #{queryName} "%"
-            </if>
         </where>
     </select>
 

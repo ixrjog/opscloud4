@@ -29,6 +29,14 @@ public class OcWorkorderTicketEntryServiceImpl implements OcWorkorderTicketEntry
     }
 
     @Override
+    public int countOcWorkorderTicketEntryByTicketId(int workorderTicketId) {
+        Example example = new Example(OcWorkorderTicketEntry.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workorderTicketId", workorderTicketId);
+        return ocWorkorderTicketEntryMapper.selectCountByExample(example);
+    }
+
+    @Override
     public OcWorkorderTicketEntry queryOcWorkorderTicketEntryById(int id) {
         return ocWorkorderTicketEntryMapper.selectByPrimaryKey(id);
     }

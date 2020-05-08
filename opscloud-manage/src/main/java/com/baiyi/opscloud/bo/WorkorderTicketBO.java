@@ -25,6 +25,7 @@ public class WorkorderTicketBO {
     private String ticketPhase = TicketPhase.CREATED.getPhase();
     @Builder.Default
     private Integer ticketStatus = 0;
+    private Integer flowId;
     private Date startTime;
     private Date endTime;
     private Date createTime;
