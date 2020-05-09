@@ -23,10 +23,15 @@ public class KeyboxTest extends BaseUnit {
 
     @Test
     void encryptOcKeyboxPrivateKeyTest() {
-        OcKeybox ocKeybox = ocKeyboxService.queryOcKeyboxById(1);
+        OcKeybox ocKeybox = ocKeyboxService.queryOcKeyboxById(2);
         String privateKey = ocKeybox.getPrivateKey();
         privateKey = stringEncryptor.encrypt(privateKey);
         ocKeybox.setPrivateKey(privateKey);
+
+        String passphrase = ocKeybox.getPassphrase();
+        passphrase = stringEncryptor.encrypt(passphrase );
+        ocKeybox.setPassphrase(passphrase);
+
         ocKeyboxService.updateOcKeybox(ocKeybox);
     }
 

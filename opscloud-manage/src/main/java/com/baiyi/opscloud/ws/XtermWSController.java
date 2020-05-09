@@ -64,7 +64,9 @@ public class XtermWSController {
 
         String instanceId = jsonObject.getString("instanceId");
 
-        if (jsonObject.getString("status").equals(HostSystem.INITIAL_STATUS)) {
+        String status = jsonObject.getString("status");
+
+        if (status .equals(HostSystem.INITIAL_STATUS)) {
             HostSystem hostSystem = new HostSystem();
 
             SSHUtils.openSSHTermOnSystem(sessionId, instanceId, hostSystem);

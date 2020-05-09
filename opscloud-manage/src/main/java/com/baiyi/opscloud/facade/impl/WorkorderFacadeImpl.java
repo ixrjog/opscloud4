@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.builder.WorkorderTicketEntryBuilder;
 import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
 import com.baiyi.opscloud.decorator.WorkorderGroupDecorator;
 import com.baiyi.opscloud.decorator.WorkorderTicketDecorator;
@@ -115,8 +116,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     public BusinessWrapper<Boolean> submitWorkorderTicket(OcWorkorderTicketVO.Ticket ticket) {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(ticket.getId());
         // 校验用户
-        OcUser ocUser = userFacade.getOcUserBySession();
-        if (ocUser.getId() != ocWorkorderTicket.getUserId())
+        if (!SessionUtils.getUsername().equals(ocWorkorderTicket.getUsername()))
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
         // 校验状态
         if (!ocWorkorderTicket.getTicketPhase().equals(TicketPhase.CREATED.getPhase()))
@@ -239,7 +239,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam) {
         OcUser ocUser = userFacade.getOcUserBySession();
         queryParam.setUsername(ocUser.getUsername());
-        List<OcAuthRole> list =  ocAuthRoleService.queryUserTicketOcAuthRoleByParam(queryParam);
+        List<OcAuthRole> list = ocAuthRoleService.queryUserTicketOcAuthRoleByParam(queryParam);
         return list.stream().map(e ->
                 WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e)
         ).collect(Collectors.toList());
