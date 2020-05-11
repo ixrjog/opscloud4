@@ -28,34 +28,6 @@ public class XtermWSController {
    // private static final String sessionId = UUID.randomUUID().toString();
 
 
-//    private static OcAuthFacade ocAuthFacade;
-//
-//    private static OcUserService ocUserService;
-//
-//    private static ServerGroupFacade serverGroupFacade;
-//
-//    private static KeyboxFacade keyboxFacade;
-//
-//    @Autowired
-//    public void setOcAuthFacade(OcAuthFacade ocAuthFacade) {
-//        XtermWSController.ocAuthFacade = ocAuthFacade;
-//    }
-//
-//    @Autowired
-//    public void setOcUserService(OcUserService ocUserService) {
-//        XtermWSController.ocUserService = ocUserService;
-//    }
-//
-//    @Autowired
-//    public void setServerGroupFacade(ServerGroupFacade serverGroupFacade) {
-//        XtermWSController.serverGroupFacade = serverGroupFacade;
-//    }
-//
-//    @Autowired
-//    public void setKeyboxFacade(KeyboxFacade keyboxFacade) {
-//        XtermWSController.keyboxFacade = keyboxFacade;
-//    }
-
 
     /**
      * 连接建立成功调用的方法

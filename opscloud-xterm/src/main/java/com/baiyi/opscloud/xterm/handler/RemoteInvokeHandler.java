@@ -3,18 +3,11 @@ package com.baiyi.opscloud.xterm.handler;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.xterm.message.XTermInitialWSMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
-import com.baiyi.opscloud.xterm.model.JSchSession;
-import com.baiyi.opscloud.xterm.model.JSchSessionMap;
-import com.baiyi.opscloud.xterm.model.SessionOutput;
-import com.baiyi.opscloud.xterm.task.SecureShellTask;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.UUID;
 
 /**
@@ -31,7 +24,7 @@ public class RemoteInvokeHandler {
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
-    public static void getSession(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static ConnectionSession getSession( String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -57,28 +50,11 @@ public class RemoteInvokeHandler {
 
             invokeChannelPtySize(channel, hostSystem.getInitialMessage());
 
-            InputStream outFromChannel = channel.getInputStream();
-
-
-            //new session output
-            SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
-
-            Runnable run = new SecureShellTask(sessionOutput, outFromChannel);
-            Thread thread = new Thread(run);
-            thread.start();
-
-
-            OutputStream inputToChannel = channel.getOutputStream();
-            PrintStream commander = new PrintStream(inputToChannel, true);
-
-            JSchSession jSchSession = new JSchSession();
-            jSchSession.setSessionId(sessionId);
-            jSchSession.setInstanceId(instanceId);
-            jSchSession.setCommander(commander);
-            jSchSession.setChannel(channel);
-            JSchSessionMap.addSession(jSchSession);
-
             channel.connect();
+            ConnectionSession connectionSession = new ConnectionSession(channel, session);
+
+            return connectionSession;
+
         } catch (Exception e) {
             log.info(e.toString(), e);
             if (e.getMessage().toLowerCase().contains("userauth fail")) {
@@ -91,6 +67,7 @@ public class RemoteInvokeHandler {
             } else {
                 hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
             }
+            return null;
         }
     }
 
