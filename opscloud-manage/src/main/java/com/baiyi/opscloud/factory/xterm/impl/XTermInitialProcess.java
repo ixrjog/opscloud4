@@ -53,8 +53,8 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
             hostSystem.setSshKeyCredential(sshKeyCredential);
             hostSystem.setInitialMessage(initialMessage);
 
-            RemoteInvokeHandler.getSession(sessionId, instanceId, hostSystem);
-            Runnable run = new SentOutputTask(sessionId, session);
+            RemoteInvokeHandler.getSession(session.getId(), instanceId, hostSystem);
+            Runnable run = new SentOutputTask(session.getId(), session);
             Thread thread = new Thread(run);
             thread.start();
         }

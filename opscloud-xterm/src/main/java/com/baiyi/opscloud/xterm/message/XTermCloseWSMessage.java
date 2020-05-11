@@ -10,5 +10,4 @@ import lombok.Data;
 @Data
 public class XTermCloseWSMessage extends BaseXTermWSMessage {
 
-    private String instanceId;
 }

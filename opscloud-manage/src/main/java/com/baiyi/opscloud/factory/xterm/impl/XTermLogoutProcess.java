@@ -3,7 +3,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermCommandWSMessage;
+import com.baiyi.opscloud.xterm.message.XTermLoginOutWSMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
@@ -13,29 +13,31 @@ import javax.websocket.Session;
 
 /**
  * @Author baiyi
- * @Date 2020/5/11 9:38 上午
+ * @Date 2020/5/11 5:19 下午
  * @Version 1.0
  */
 @Component
-public class XTermCommandProcess extends BaseXTermProcess implements IXTermProcess {
+public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProcess {
 
     @Override
     public String getKey() {
-        return XTermRequestStatus.COMMAND.getCode();
+        return XTermRequestStatus.LOGOUT.getCode();
     }
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermCommandWSMessage cmdMessage = (XTermCommandWSMessage) getXTermMessage(message);
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), cmdMessage.getInstanceId());
-        jSchSession.getCommander().print(cmdMessage.getData());
+        XTermLoginOutWSMessage loginOutMessage = (XTermLoginOutWSMessage) getXTermMessage(message);
+        try {
+            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
+            jSchSession.getChannel().disconnect();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermCommandWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermCommandWSMessage.class);
+        XTermLoginOutWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermLoginOutWSMessage.class);
         return cmdMessage;
     }
-
-
 }

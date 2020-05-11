@@ -6,15 +6,13 @@ import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.user.OcUserService;
-import com.baiyi.opscloud.xterm.handler.ConnectionSession;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.google.common.collect.Maps;
+import com.baiyi.opscloud.xterm.model.JSchSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -24,11 +22,6 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 @Slf4j
 public abstract class BaseXTermProcess implements IXTermProcess, InitializingBean {
-
-    /**
-     *
-     */
-    private static Map<String, String> sessionMap = Maps.newHashMap();
 
     @Resource
     protected OcAuthFacade ocAuthFacade;
@@ -42,9 +35,9 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
     @Resource
     protected KeyboxFacade keyboxFacade;
 
-    protected Map<String, ConnectionSession> connectionSessionMap = new ConcurrentHashMap<>();
+    protected Map<String, Map<String, JSchSession>> connectionSessionPool = new ConcurrentHashMap<>();
 
-    protected static final String sessionId = UUID.randomUUID().toString();
+  //  protected static final String sessionId = UUID.randomUUID().toString();
 
     abstract protected BaseXTermWSMessage getXTermMessage(String message);
 

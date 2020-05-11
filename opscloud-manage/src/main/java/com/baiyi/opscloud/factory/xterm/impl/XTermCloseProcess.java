@@ -3,9 +3,12 @@ package com.baiyi.opscloud.factory.xterm.impl;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
+import com.baiyi.opscloud.xterm.model.JSchSession;
+import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -22,7 +25,15 @@ public class XTermCloseProcess extends BaseXTermProcess implements IXTermProcess
 
     @Override
     public void xtermProcess(String message, Session session) {
-        // XTermCloseWSMessage closeMessage = (XTermCloseWSMessage) getXTermMessage(message);
+        Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
+        for (String instanceId : sessionMap.keySet()) {
+            try {
+                JSchSession jSchSession = sessionMap.get(instanceId);
+                jSchSession.getChannel().disconnect();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         try {
             session.close();
         } catch (Exception e) {

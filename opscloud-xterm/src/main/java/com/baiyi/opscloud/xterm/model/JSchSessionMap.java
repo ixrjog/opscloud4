@@ -16,8 +16,11 @@ public class JSchSessionMap {
             sessionMap = new HashedMap<>();
             jSchSessionMap.put(jSchSession.getSessionId(), sessionMap);
         }
-
         sessionMap.put(jSchSession.getInstanceId(), jSchSession);
+    }
+
+    public static Map<String, JSchSession> getBySessionId(String sessionId) {
+        return jSchSessionMap.get(sessionId);
     }
 
     public static JSchSession getBySessionId(String sessionId, String instanceId) {

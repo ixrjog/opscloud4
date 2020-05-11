@@ -4,14 +4,11 @@ import lombok.Data;
 
 /**
  * @Author baiyi
- * @Date 2020/5/11 10:47 上午
+ * @Date 2020/5/11 5:18 下午
  * @Version 1.0
  */
 @Data
-public class XTermCmdWSMessage extends BaseXTermWSMessage {
+public class XTermLoginOutWSMessage extends BaseXTermWSMessage{
 
     private String instanceId;
-
-    private String data;
-
 }
