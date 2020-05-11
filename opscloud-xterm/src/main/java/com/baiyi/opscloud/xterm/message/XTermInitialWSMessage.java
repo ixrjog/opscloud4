@@ -10,19 +10,15 @@ import java.util.Set;
  * @Version 1.0
  */
 @Data
-public class InitialMessage {
+public class XTermInitialWSMessage extends BaseXTermWSMessage {
 
     // {"uuid":"43621c089207449799c6ef6bb1de0061","loginUserType":0,"instanceIds":["vm-springboot-3","vm-springboot-1","vm-springboot-2"],"status":"INITIAL"}
-    private String uuid;
-    private String token;
     // 0 普通账户 1 管理员账户
     private Integer loginUserType;
     private Set<String> instanceIds;
 
-    private Integer xtermWidth;
-    private Integer xtermHeight;
+    // 服务器树鉴权uuid
+    private String uuid;
 
-    // INITIAL
-    private String status;
 
 }

@@ -3,31 +3,16 @@ package com.baiyi.opscloud.ws;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baiyi.opscloud.domain.BusinessWrapper;
-import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.facade.KeyboxFacade;
-import com.baiyi.opscloud.facade.OcAuthFacade;
-import com.baiyi.opscloud.facade.ServerGroupFacade;
-import com.baiyi.opscloud.service.user.OcUserService;
-import com.baiyi.opscloud.xterm.message.InitialMessage;
-import com.baiyi.opscloud.xterm.model.HostSystem;
-import com.baiyi.opscloud.xterm.model.JSchSession;
-import com.baiyi.opscloud.xterm.model.JSchSessionMap;
-import com.baiyi.opscloud.xterm.task.SentOutputTask;
-import com.baiyi.opscloud.xterm.util.SSHUtils;
-import com.google.gson.GsonBuilder;
+import com.baiyi.opscloud.common.base.XTermRequestStatus;
+import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -40,35 +25,36 @@ public class XtermWSController {
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
     private static CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
 
-    private static final String sessionId = UUID.randomUUID().toString();
+   // private static final String sessionId = UUID.randomUUID().toString();
 
-    private static OcAuthFacade ocAuthFacade;
 
-    private static OcUserService ocUserService;
-
-    private static ServerGroupFacade serverGroupFacade;
-
-    private static KeyboxFacade keyboxFacade;
-
-    @Autowired
-    public void setOcAuthFacade(OcAuthFacade ocAuthFacade) {
-        XtermWSController.ocAuthFacade = ocAuthFacade;
-    }
-
-    @Autowired
-    public void setOcUserService(OcUserService ocUserService) {
-        XtermWSController.ocUserService = ocUserService;
-    }
-
-    @Autowired
-    public void setServerGroupFacade(ServerGroupFacade serverGroupFacade) {
-        XtermWSController.serverGroupFacade = serverGroupFacade;
-    }
-
-    @Autowired
-    public void setKeyboxFacade(KeyboxFacade keyboxFacade) {
-        XtermWSController.keyboxFacade = keyboxFacade;
-    }
+//    private static OcAuthFacade ocAuthFacade;
+//
+//    private static OcUserService ocUserService;
+//
+//    private static ServerGroupFacade serverGroupFacade;
+//
+//    private static KeyboxFacade keyboxFacade;
+//
+//    @Autowired
+//    public void setOcAuthFacade(OcAuthFacade ocAuthFacade) {
+//        XtermWSController.ocAuthFacade = ocAuthFacade;
+//    }
+//
+//    @Autowired
+//    public void setOcUserService(OcUserService ocUserService) {
+//        XtermWSController.ocUserService = ocUserService;
+//    }
+//
+//    @Autowired
+//    public void setServerGroupFacade(ServerGroupFacade serverGroupFacade) {
+//        XtermWSController.serverGroupFacade = serverGroupFacade;
+//    }
+//
+//    @Autowired
+//    public void setKeyboxFacade(KeyboxFacade keyboxFacade) {
+//        XtermWSController.keyboxFacade = keyboxFacade;
+//    }
 
 
     /**
@@ -86,6 +72,7 @@ public class XtermWSController {
      */
     @OnClose
     public void onClose(Session session) {
+        XTermProcessFactory.getIXTermProcessByKey(XTermRequestStatus.CLOSE.getCode()).xtermProcess("",session);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
         log.info("有连接关闭，当前连接数为：{}", cnt);
@@ -100,45 +87,8 @@ public class XtermWSController {
     public void onMessage(String message, Session session) {
         log.info("来自客户端的消息：{}", message);
         JSONObject jsonObject = JSON.parseObject(message);
-
-
         String status = jsonObject.getString("status");
-
-        if (status.equals(HostSystem.INITIAL_STATUS)) {
-
-            InitialMessage initialMessage = new GsonBuilder().create().fromJson(message, InitialMessage.class);
-            String username = ocAuthFacade.getUserByToken(initialMessage.getToken());
-            if (StringUtils.isEmpty(username)) return;
-            OcUser ocUser = ocUserService.queryOcUserByUsername(username);
-
-            BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(initialMessage.getUuid(), ocUser);
-            if (!wrapper.isSuccess())
-                return;
-            Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
-
-            for (String instanceId : initialMessage.getInstanceIds()) {
-                if (!serverTreeHostPatternMap.containsKey(instanceId))
-                    continue;
-                String host = serverTreeHostPatternMap.get(instanceId);
-                SSHKeyCredential sshKeyCredential = keyboxFacade.getSSHKeyCredential("admin");
-
-                HostSystem hostSystem = new HostSystem();
-                hostSystem.setHost(host);
-                hostSystem.setSshKeyCredential(sshKeyCredential);
-                hostSystem.setInitialMessage(initialMessage);
-
-                SSHUtils.openSSHTermOnSystem(sessionId, instanceId, hostSystem);
-
-                Runnable run = new SentOutputTask(sessionId, session);
-                Thread thread = new Thread(run);
-                thread.start();
-
-            }
-        } else {
-            String instanceId = jsonObject.getString("instanceId");
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(sessionId, instanceId);
-            jSchSession.getCommander().print(jsonObject.getString("data"));
-        }
+        XTermProcessFactory.getIXTermProcessByKey(status).xtermProcess(message,session);
     }
 
     /**

@@ -1,6 +1,7 @@
-package com.baiyi.opscloud.xterm.util;
+package com.baiyi.opscloud.xterm.handler;
 
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
+import com.baiyi.opscloud.xterm.message.XTermInitialWSMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -16,8 +17,13 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.UUID;
 
+/**
+ * @Author baiyi
+ * @Date 2020/5/11 10:05 上午
+ * @Version 1.0
+ */
 @Slf4j
-public class SSHUtils {
+public class RemoteInvokeHandler {
 
     private static String appId = UUID.randomUUID().toString();
 
@@ -25,7 +31,7 @@ public class SSHUtils {
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
-    public static void openSSHTermOnSystem(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void getSession(String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -48,11 +54,11 @@ public class SSHUtils {
             // SSH 代理转发
             channel.setAgentForwarding(false);
             channel.setPtyType("xterm");
-            int width = hostSystem.getInitialMessage().getXtermWidth();
-            int height = hostSystem.getInitialMessage().getXtermHeight();
-            channel.setPtySize((int) Math.floor(width / 7.2981), (int) Math.floor(height / 14.4166), width, height);
+
+            invokeChannelPtySize(channel, hostSystem.getInitialMessage());
 
             InputStream outFromChannel = channel.getInputStream();
+
 
             //new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
@@ -61,6 +67,7 @@ public class SSHUtils {
             Thread thread = new Thread(run);
             thread.start();
 
+
             OutputStream inputToChannel = channel.getOutputStream();
             PrintStream commander = new PrintStream(inputToChannel, true);
 
@@ -68,6 +75,7 @@ public class SSHUtils {
             jSchSession.setSessionId(sessionId);
             jSchSession.setInstanceId(instanceId);
             jSchSession.setCommander(commander);
+            jSchSession.setChannel(channel);
             JSchSessionMap.addSession(jSchSession);
 
             channel.connect();
@@ -84,5 +92,11 @@ public class SSHUtils {
                 hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
             }
         }
+    }
+
+    public static void invokeChannelPtySize(ChannelShell channel, XTermInitialWSMessage initialMessage) {
+        int width = initialMessage.getXtermWidth();
+        int height = initialMessage.getXtermHeight();
+        channel.setPtySize((int) Math.floor(width / 7.2981), (int) Math.floor(height / 14.4166), width, height);
     }
 }
