@@ -17,7 +17,8 @@ public enum  XTermRequestStatus {
     COMMAND("COMMAND", "交互命令"),
     RESIZE("RESIZE", "改变形体"),
     CLOSE("CLOSE", "关闭所有Term会话"),
-    LOGOUT("LOGOUT", "关闭Term会话");
+    LOGOUT("LOGOUT", "关闭Term会话"),
+    BATCH_COMMAND("BATCH_COMMAND","批量命令");
     private String code;
     private String desc;
 

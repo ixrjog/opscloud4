@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class XTermLoginOutWSMessage extends BaseXTermWSMessage{
+public class XTermLogoutWSMessage extends BaseXTermWSMessage{
 
     private String instanceId;
 }

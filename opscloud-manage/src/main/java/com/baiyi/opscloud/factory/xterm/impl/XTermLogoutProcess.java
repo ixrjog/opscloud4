@@ -3,7 +3,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermLoginOutWSMessage;
+import com.baiyi.opscloud.xterm.message.XTermLogoutWSMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
@@ -26,7 +26,7 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermLoginOutWSMessage loginOutMessage = (XTermLoginOutWSMessage) getXTermMessage(message);
+        XTermLogoutWSMessage loginOutMessage = (XTermLogoutWSMessage) getXTermMessage(message);
         try {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
             jSchSession.getChannel().disconnect();
@@ -37,7 +37,7 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
 
     @Override
     protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermLoginOutWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermLoginOutWSMessage.class);
+        XTermLogoutWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermLogoutWSMessage.class);
         return cmdMessage;
     }
 }
