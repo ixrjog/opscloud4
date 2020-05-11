@@ -10,6 +10,7 @@ import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -27,8 +28,22 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
     @Override
     public void xtermProcess(String message, Session session) {
         XTermCommandWSMessage cmdMessage = (XTermCommandWSMessage) getXTermMessage(message);
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), cmdMessage.getInstanceId());
-        jSchSession.getCommander().print(cmdMessage.getData());
+
+        Boolean isBatch = JSchSessionMap.getBatchBySessionId(session.getId());
+        if(isBatch == null)
+            isBatch = false;
+
+        if(!isBatch){
+            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), cmdMessage.getInstanceId());
+            jSchSession.getCommander().print(cmdMessage.getData());
+        }else {
+            Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
+            for (String instanceId : sessionMap.keySet()) {
+                JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), instanceId);
+                jSchSession.getCommander().print(cmdMessage.getData());
+            }
+        }
+
     }
 
     @Override

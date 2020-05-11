@@ -10,8 +10,6 @@ import lombok.Data;
 @Data
 public class XTermBatchCommandMSMessage extends BaseXTermWSMessage {
 
-    private String instanceId;
-    private String data;
-    private Integer keyCode;
+    private Boolean isBatch; // 会话批量指令
 
 }

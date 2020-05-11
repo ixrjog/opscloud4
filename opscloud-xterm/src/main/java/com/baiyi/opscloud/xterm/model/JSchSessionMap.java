@@ -10,6 +10,16 @@ public class JSchSessionMap {
 
     private static Map<String, Map<String, JSchSession>> jSchSessionMap = new HashedMap<>();
 
+    private static Map<String, Boolean> batchMap = new HashedMap<>();
+
+    public static void setBatch(String sessionId, Boolean isBatch) {
+        batchMap.put(sessionId, isBatch);
+    }
+
+    public static Boolean getBatchBySessionId(String sessionId) {
+      return  batchMap.get(sessionId);
+    }
+
     public static void addSession(JSchSession jSchSession) {
         Map<String, JSchSession> sessionMap = jSchSessionMap.get(jSchSession.getSessionId());
         if (sessionMap == null) {

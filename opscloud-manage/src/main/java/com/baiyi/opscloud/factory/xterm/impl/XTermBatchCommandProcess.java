@@ -4,14 +4,12 @@ import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
 import com.baiyi.opscloud.xterm.message.XTermBatchCommandMSMessage;
-import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
-import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,18 +31,7 @@ public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTerm
     @Override
     public void xtermProcess(String message, Session session) {
         XTermBatchCommandMSMessage batchCmdMessage = (XTermBatchCommandMSMessage) getXTermMessage(message);
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), batchCmdMessage.getInstanceId());
-        if(keyMap.containsKey(batchCmdMessage.getKeyCode())){
-            byte[] k= keyMap.get(batchCmdMessage.getKeyCode());
-            try {
-                jSchSession.getCommander().write(k);
-            } catch (IOException ex) {
-                log.error(ex.toString(), ex);
-            }
-        }else{
-            jSchSession.getCommander().print(batchCmdMessage.getData());
-        }
-
+        JSchSessionMap.setBatch(session.getId(), batchCmdMessage.getIsBatch());
     }
 
     @Override
@@ -52,6 +39,7 @@ public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTerm
         XTermBatchCommandMSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermBatchCommandMSMessage.class);
         return cmdMessage;
     }
+
 
     /**
      * Maps key press events to the ascii values
