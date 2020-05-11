@@ -28,9 +28,9 @@ public class KeyboxTest extends BaseUnit {
         privateKey = stringEncryptor.encrypt(privateKey);
         ocKeybox.setPrivateKey(privateKey);
 
-        String passphrase = ocKeybox.getPassphrase();
-        passphrase = stringEncryptor.encrypt(passphrase );
-        ocKeybox.setPassphrase(passphrase);
+       // String passphrase = ocKeybox.getPassphrase();
+      //  passphrase = stringEncryptor.encrypt(passphrase );
+       // ocKeybox.setPassphrase(passphrase);
 
         ocKeyboxService.updateOcKeybox(ocKeybox);
     }

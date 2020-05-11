@@ -27,9 +27,9 @@
  */
 package com.baiyi.opscloud.xterm.model;
 
+import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
+import com.baiyi.opscloud.xterm.message.InitialMessage;
 import lombok.Data;
-
-import java.util.List;
 
 /**
  * Value object that contains host system information
@@ -38,7 +38,7 @@ import java.util.List;
 public class HostSystem {
     Long id;
     String displayNm;
-    String user = "root";
+    String user = "admin";
     String host;
     Integer port = 22;
     String displayLabel;
@@ -46,8 +46,12 @@ public class HostSystem {
     Boolean checked = false;
     String statusCd = INITIAL_STATUS;
     String errorMsg;
-    List<String> publicKeyList;
+   // List<String> publicKeyList;
     String instanceId;
+
+    private SSHKeyCredential sshKeyCredential;
+
+    private InitialMessage initialMessage;
 
     public static final String INITIAL_STATUS = "INITIAL";
     public static final String AUTH_FAIL_STATUS = "AUTHFAIL";

@@ -301,4 +301,15 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         return size;
     }
 
+    @Override
+    public  BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
+        String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), uuid);
+        if (!redisUtil.hasKey(key))
+            return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);
+        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) redisUtil.get(key);
+        BusinessWrapper wrapper = new BusinessWrapper(Boolean.TRUE);
+        wrapper.setBody(serverTreeHostPatternMap);
+        return wrapper;
+    }
+
 }

@@ -122,7 +122,6 @@ public class SessionOutputUtil {
      * returns list of output lines
      *
      * @param sessionId session id object
-     * @param user user auth object
      * @return session output list
      */
     public static List<SessionOutput> getOutput(String sessionId) {

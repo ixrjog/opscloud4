@@ -114,7 +114,6 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         }
     }
 
-
     @Override
     public String getUserByToken(String token) {
         OcUserToken ocUserToken = ocUserTokenService.queryOcUserTokenByTokenAndValid(token);

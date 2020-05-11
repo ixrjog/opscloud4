@@ -3,13 +3,24 @@ package com.baiyi.opscloud.ws;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
+import com.baiyi.opscloud.facade.KeyboxFacade;
+import com.baiyi.opscloud.facade.OcAuthFacade;
+import com.baiyi.opscloud.facade.ServerGroupFacade;
+import com.baiyi.opscloud.service.user.OcUserService;
+import com.baiyi.opscloud.xterm.message.InitialMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.baiyi.opscloud.xterm.task.SentOutputTask;
 import com.baiyi.opscloud.xterm.util.SSHUtils;
+import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -30,6 +41,35 @@ public class XtermWSController {
     private static CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
 
     private static final String sessionId = UUID.randomUUID().toString();
+
+    private static OcAuthFacade ocAuthFacade;
+
+    private static OcUserService ocUserService;
+
+    private static ServerGroupFacade serverGroupFacade;
+
+    private static KeyboxFacade keyboxFacade;
+
+    @Autowired
+    public void setOcAuthFacade(OcAuthFacade ocAuthFacade) {
+        XtermWSController.ocAuthFacade = ocAuthFacade;
+    }
+
+    @Autowired
+    public void setOcUserService(OcUserService ocUserService) {
+        XtermWSController.ocUserService = ocUserService;
+    }
+
+    @Autowired
+    public void setServerGroupFacade(ServerGroupFacade serverGroupFacade) {
+        XtermWSController.serverGroupFacade = serverGroupFacade;
+    }
+
+    @Autowired
+    public void setKeyboxFacade(KeyboxFacade keyboxFacade) {
+        XtermWSController.keyboxFacade = keyboxFacade;
+    }
+
 
     /**
      * 连接建立成功调用的方法
@@ -59,21 +99,43 @@ public class XtermWSController {
     @OnMessage
     public void onMessage(String message, Session session) {
         log.info("来自客户端的消息：{}", message);
-//        SendMessage(session, "收到消息，消息内容："+message);
         JSONObject jsonObject = JSON.parseObject(message);
 
-        String instanceId = jsonObject.getString("instanceId");
 
         String status = jsonObject.getString("status");
 
-        if (status .equals(HostSystem.INITIAL_STATUS)) {
-            HostSystem hostSystem = new HostSystem();
+        if (status.equals(HostSystem.INITIAL_STATUS)) {
 
-            SSHUtils.openSSHTermOnSystem(sessionId, instanceId, hostSystem);
-            Runnable run = new SentOutputTask(sessionId, session);
-            Thread thread = new Thread(run);
-            thread.start();
+            InitialMessage initialMessage = new GsonBuilder().create().fromJson(message, InitialMessage.class);
+            String username = ocAuthFacade.getUserByToken(initialMessage.getToken());
+            if (StringUtils.isEmpty(username)) return;
+            OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+
+            BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(initialMessage.getUuid(), ocUser);
+            if (!wrapper.isSuccess())
+                return;
+            Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
+
+            for (String instanceId : initialMessage.getInstanceIds()) {
+                if (!serverTreeHostPatternMap.containsKey(instanceId))
+                    continue;
+                String host = serverTreeHostPatternMap.get(instanceId);
+                SSHKeyCredential sshKeyCredential = keyboxFacade.getSSHKeyCredential("admin");
+
+                HostSystem hostSystem = new HostSystem();
+                hostSystem.setHost(host);
+                hostSystem.setSshKeyCredential(sshKeyCredential);
+                hostSystem.setInitialMessage(initialMessage);
+
+                SSHUtils.openSSHTermOnSystem(sessionId, instanceId, hostSystem);
+
+                Runnable run = new SentOutputTask(sessionId, session);
+                Thread thread = new Thread(run);
+                thread.start();
+
+            }
         } else {
+            String instanceId = jsonObject.getString("instanceId");
             JSchSession jSchSession = JSchSessionMap.getBySessionId(sessionId, instanceId);
             jSchSession.getCommander().print(jsonObject.getString("data"));
         }

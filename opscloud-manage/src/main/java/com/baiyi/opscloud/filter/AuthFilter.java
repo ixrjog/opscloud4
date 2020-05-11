@@ -33,7 +33,8 @@ public class AuthFilter extends OncePerRequestFilter {
             "/swagger-resources",
             "/swagger-ui.html",
             "/v2/api-docs",
-            "/webjars"
+            "/webjars",
+            "/ws/xterm"
     };
 
     @Override
