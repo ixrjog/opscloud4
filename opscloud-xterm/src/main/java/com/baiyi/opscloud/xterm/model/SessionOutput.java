@@ -45,7 +45,7 @@ public class SessionOutput extends HostSystem {
         this.sessionId=sessionId;
         this.setId(hostSystem.getId());
         this.setInstanceId(hostSystem.getInstanceId());
-        this.setUser(hostSystem.getUser());
+        //  this.setUser(hostSystem.getUser());
         this.setHost(hostSystem.getHost());
         this.setPort(hostSystem.getPort());
         this.setDisplayNm(hostSystem.getDisplayNm());

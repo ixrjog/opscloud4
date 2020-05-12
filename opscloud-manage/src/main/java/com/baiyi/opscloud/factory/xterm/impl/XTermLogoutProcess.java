@@ -19,6 +19,11 @@ import javax.websocket.Session;
 @Component
 public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProcess {
 
+    /**
+     * 初始化XTerm 单个关闭
+     * @return
+     */
+
     @Override
     public String getKey() {
         return XTermRequestStatus.LOGOUT.getCode();
@@ -31,7 +36,7 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
             JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
             jSchSession.getChannel().disconnect();
         } catch (Exception e) {
-            e.printStackTrace();
+            // e.printStackTrace();
         }
     }
 

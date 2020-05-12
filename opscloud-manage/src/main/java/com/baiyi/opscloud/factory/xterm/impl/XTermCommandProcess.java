@@ -20,6 +20,11 @@ import java.util.Map;
 @Component
 public class XTermCommandProcess extends BaseXTermProcess implements IXTermProcess {
 
+    /**
+     * XTerm发送指令
+     * @return
+     */
+
     @Override
     public String getKey() {
         return XTermRequestStatus.COMMAND.getCode();

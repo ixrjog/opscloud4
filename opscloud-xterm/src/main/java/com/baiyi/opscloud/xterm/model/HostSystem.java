@@ -36,9 +36,10 @@ import lombok.Data;
  */
 @Data
 public class HostSystem {
+
     Long id;
     String displayNm;
-    String user = "admin";
+   // String user;
     String host;
     Integer port = 22;
     String displayLabel;
@@ -46,11 +47,13 @@ public class HostSystem {
     Boolean checked = false;
     String statusCd = INITIAL_STATUS;
     String errorMsg;
-   // List<String> publicKeyList;
+    // List<String> publicKeyList;
     String instanceId;
 
+    /**
+     * 登录凭据
+     */
     private SSHKeyCredential sshKeyCredential;
-
     private XTermInitialWSMessage initialMessage;
 
     public static final String INITIAL_STATUS = "INITIAL";

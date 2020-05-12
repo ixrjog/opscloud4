@@ -18,6 +18,11 @@ import java.util.Map;
 @Component
 public class XTermCloseProcess extends BaseXTermProcess implements IXTermProcess {
 
+    /**
+     * 关闭所有XTerm
+     * @return
+     */
+
     @Override
     public String getKey() {
         return XTermRequestStatus.CLOSE.getCode();

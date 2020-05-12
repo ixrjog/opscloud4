@@ -22,6 +22,10 @@ import java.util.Map;
 @Component
 public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTermProcess {
 
+    /**
+     * XTerm设置批量命令
+     * @return
+     */
 
     @Override
     public String getKey() {

@@ -7,13 +7,10 @@ import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.model.JSchSession;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @Author baiyi
@@ -34,8 +31,6 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
 
     @Resource
     protected KeyboxFacade keyboxFacade;
-
-    protected Map<String, Map<String, JSchSession>> connectionSessionPool = new ConcurrentHashMap<>();
 
   //  protected static final String sessionId = UUID.randomUUID().toString();
 
