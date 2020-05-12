@@ -5,6 +5,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
+import com.baiyi.opscloud.xterm.task.SentOutputTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -63,6 +64,11 @@ public class XtermWSController {
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
         log.info("有连接加入，当前连接数为：{}", cnt);
+        session.setMaxIdleTimeout(0);
+        // 线程必须启在这里
+        Runnable run = new SentOutputTask(session.getId(), session);
+        Thread thread = new Thread(run);
+        thread.start();
     }
 
     /**

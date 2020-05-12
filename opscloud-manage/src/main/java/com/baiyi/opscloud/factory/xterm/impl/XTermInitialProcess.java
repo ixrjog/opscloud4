@@ -14,7 +14,6 @@ import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
 import com.baiyi.opscloud.xterm.message.XTermInitialWSMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
-import com.baiyi.opscloud.xterm.task.SentOutputTask;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -71,9 +70,9 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
             HostSystem hostSystem = buildHostSystem(ocUser, host, initialMessage);
 
             RemoteInvokeHandler.getSession(session.getId(), instanceId, hostSystem);
-            Runnable run = new SentOutputTask(session.getId(), session);
-            Thread thread = new Thread(run);
-            thread.start();
+//            Runnable run = new SentOutputTask(session.getId(), session);
+//            Thread thread = new Thread(run);
+//            thread.start();
         }
     }
 
