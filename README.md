@@ -20,6 +20,9 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
+<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/help/opscloud/web-xterm/oc-web-xterm.mov" target="_blank">Web-XTerm演示视频</a>
+
+
 <a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/mov/oc-playbook.mov" target="_blank">AnsiblePlaybook演示视频</a>
 
 
@@ -53,8 +56,8 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 配置文件加密（密码, AK），数据库敏感字段加密
   + 代码即文档，全接口API
   + 前后端分离，支持跨域部署
-  + Java Springboot 开源的DevOps(CMDB)还有第二家么？
-  + 这是个人项目，基本也是个人完成，前端用了vue3(d2admin框架非常炫酷)
+  + Java Springboot 开源的DevOps
+  + 这是个人项目，基本也是个人完成，前端用了vue2(d2admin框架非常炫酷)
 
 + 自动化运维特性
   + 外部平台或工具原生API调用
@@ -62,7 +65,11 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
   + 以用户纬度数据映射全自动配置管理
   
 + 核心功能
-  + 堡垒机(Jumpserver全自动透明化，无需购买收费版就能实现增强功能)
+  + 堡垒机
+    + 终端版Jumpserver全自动配置
+    + Web终端
+      + 支持多窗口批量操作（看日志利器）
+      + 支持低权限/高权限登录（工单中申请权限）
   + 可视化数据管理DMS（支持AliyunRDS, 自建Mysql）
     + 权限申请
     + 操作审计
