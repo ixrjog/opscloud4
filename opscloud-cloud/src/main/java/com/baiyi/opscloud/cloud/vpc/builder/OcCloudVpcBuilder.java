@@ -5,7 +5,7 @@ import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.common.base.CloudType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudVpc;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
 
 /**
  * @Author baiyi

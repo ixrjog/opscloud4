@@ -8,11 +8,9 @@ import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.base.URLResource;
-import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
 import com.baiyi.opscloud.convert.UserCredentialConvert;
-import com.baiyi.opscloud.decorator.ServerTreeDecorator;
 import com.baiyi.opscloud.decorator.UserDecorator;
 import com.baiyi.opscloud.decorator.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -34,7 +32,6 @@ import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
-import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserCredentialService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
@@ -94,13 +91,6 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private ServerGroupFacade serverGroupFacade;
 
-    @Resource
-    private RedisUtil redisUtil;
-
-    @Resource
-    private ServerTreeDecorator serverTreeDecorator;
-
-
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
@@ -150,9 +140,9 @@ public class UserFacadeImpl implements UserFacade {
      */
     private BusinessWrapper<Boolean> enhancedAuthority(int userId, String resource) {
         // 公共接口需要2次鉴权
-        String username = SessionUtils.getUsername();
-        OcUser checkOcUser = ocUserService.queryOcUserById(userId);
-        if (!username.equals(checkOcUser.getUsername())) {
+        OcUser checkOcUser =  getOcUserBySession();
+        OcUser ocUser = ocUserService.queryOcUserById(userId);
+        if (!ocUser.getUsername().equals(checkOcUser.getUsername())) {
             BusinessWrapper<Boolean> wrapper = authFacade.authenticationByResourceName(resource);
             if (!wrapper.isSuccess())
                 return wrapper;
@@ -166,13 +156,11 @@ public class UserFacadeImpl implements UserFacade {
         BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(), URLResource.USER_CREDENTIAL_SAVE);
         if (!wrapper.isSuccess())
             return wrapper;
-
         if (userCredential.getCredentialType() == null)
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_TYPE_ERROR);
         if (StringUtils.isEmpty(userCredential.getCredential()))
             return new BusinessWrapper(ErrorEnum.USER_CREDENTIAL_ERROR);
-        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
-        userCredential.setUserId(ocUser.getId());
+        OcUser ocUser = ocUserService.queryOcUserById(userCredential.getUserId());
         userCredential.setUsername(ocUser.getUsername());
         OcUserCredential ocUserCredential = UserCredentialConvert.convertOcUserCredential(userCredential);
 
@@ -184,9 +172,8 @@ public class UserFacadeImpl implements UserFacade {
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
         }
         // sshkey push
-        if (userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType()) {
+        if ( !StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType() )
             accountCenter.pushSSHKey(ocUser);
-        }
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
     }
 
@@ -373,7 +360,13 @@ public class UserFacadeImpl implements UserFacade {
         return serverGroupFacade.queryUserServerTree(userServerTreeQuery, ocUser);
     }
 
-
+    @Override
+    public OcUser getOcUserBySession(){
+        String username = SessionUtils.getUsername();
+        if(StringUtils.isEmpty(username))
+            return null;
+        return ocUserService.queryOcUserByUsername(username);
+    }
 
 
     private void syncUserPermission(OcUserVO.User user) {

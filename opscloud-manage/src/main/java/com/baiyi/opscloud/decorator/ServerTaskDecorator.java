@@ -1,7 +1,11 @@
 package com.baiyi.opscloud.decorator;
 
+import com.baiyi.opscloud.ansible.bo.MemberExecutorLogBO;
+import com.baiyi.opscloud.ansible.handler.TaskLogRecorder;
+import com.baiyi.opscloud.common.util.AnsibleUtils;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
+import com.baiyi.opscloud.common.util.IOUtils;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
@@ -13,9 +17,11 @@ import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -37,6 +43,9 @@ public class ServerTaskDecorator {
 
     @Resource
     private OcEnvService ocEnvService;
+
+    @Resource
+    private TaskLogRecorder taskLogRecorder;
 
     public OcServerTaskVO.ServerTask decorator(OcServerTaskVO.ServerTask serverTask) {
         List<OcServerTaskMember> memberList = ocServerTaskMemberService.queryOcServerTaskMemberByTaskId(serverTask.getId());
@@ -77,6 +86,8 @@ public class ServerTaskDecorator {
                 memberMap.put(member.getTaskStatus(), members);
             }
             if (member.getFinalized() == 0) continue;
+            if (member.getTaskResult() == null)
+                continue;
             switch (member.getTaskResult()) {
                 case "SUCCESSFUL":
                     successfulCount += 1;
@@ -105,6 +116,36 @@ public class ServerTaskDecorator {
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
         serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, OcEnvVO.Env.class));
         serverTaskMember.setSuccess(serverTaskMember.getExitValue() != null && serverTaskMember.getExitValue() == 0);
+        serverTaskMember.setShowErrorLog(false); // 不显示错误日志
+        if (serverTaskMember.getFinalized() == 1) {
+            if (!StringUtils.isEmpty(member.getOutputMsg()))
+                serverTaskMember.setOutputMsgLog(IOUtils.readFile(member.getOutputMsg()));
+            if (!StringUtils.isEmpty(member.getErrorMsg())) {
+                serverTaskMember.setErrorMsgLog(IOUtils.readFile(member.getErrorMsg()));
+                if (serverTaskMember.getExitValue() != 0)
+                    serverTaskMember.setShowErrorLog(true); // 显示错误日志
+            }
+        } else {
+            MemberExecutorLogBO memberExecutorLogBO = taskLogRecorder.getLog(member.getId());
+            if (memberExecutorLogBO != null) {
+                if (!StringUtils.isEmpty(memberExecutorLogBO.getOutputMsg()))
+                    serverTaskMember.setOutputMsgLog(memberExecutorLogBO.getOutputMsg());
+                if (!StringUtils.isEmpty(memberExecutorLogBO.getErrorMsg()))
+                    serverTaskMember.setErrorMsgLog(memberExecutorLogBO.getErrorMsg());
+            }
+        }
+        if (serverTaskMember.getSuccess()) {
+            // 格式化数据
+            String resultHead = AnsibleUtils.getResultHead(serverTaskMember.getOutputMsgLog());
+            if (!StringUtils.isEmpty(resultHead)) {
+                String resultStr = serverTaskMember.getOutputMsgLog().replace(resultHead, "");
+                try {
+                    OcServerTaskMemberVO.AnsibleResult ansibleResult = new Gson().fromJson(resultStr, OcServerTaskMemberVO.AnsibleResult.class);
+                    serverTaskMember.setResult(ansibleResult);
+                } catch (Exception e) {
+                }
+            }
+        }
         return serverTaskMember;
     }
 

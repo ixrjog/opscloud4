@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceType;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
 import org.apache.ibatis.annotations.Param;
 import tk.mybatis.mapper.common.Mapper;

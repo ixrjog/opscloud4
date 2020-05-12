@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/2/12 2:11 下午
@@ -12,6 +14,13 @@ import com.baiyi.opscloud.domain.param.auth.RoleParam;
 public interface OcAuthRoleService {
 
     DataTable<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery);
+
+    /**
+     * 查询用户访问级别最高的角色
+     * @param username
+     * @return
+     */
+    OcAuthRole queryTopOcAuthRoleByUsername(String username);
 
     int queryOcAuthRoleAccessLevelByUsername(String username);
 
@@ -24,4 +33,6 @@ public interface OcAuthRoleService {
     OcAuthRole queryOcAuthRoleById(int id);
 
     OcAuthRole queryOcAuthRoleByName(String roleName);
+
+    List<OcAuthRole> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
 }

@@ -36,8 +36,6 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
         return getInstanceList(aliyunECS.getInstanceList());
     }
 
-
-
     @Override
     protected T getInstance(String regionId, String instanceId) {
         return (T) aliyunECSInstanceDecorator.decorator(aliyunECS.getInstance(regionId, instanceId));

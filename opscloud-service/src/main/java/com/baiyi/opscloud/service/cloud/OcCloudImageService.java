@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.cloud;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcCloudImage;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
 import com.baiyi.opscloud.domain.param.cloud.CloudImageParam;
 
 import java.util.List;

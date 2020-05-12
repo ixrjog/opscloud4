@@ -13,11 +13,4 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
 
-  <select id="queryOcUserPermissionByUniqueKey" resultMap="BaseResultMap">
-    select * from oc_user_permission
-       where user_id = #{userId}
-             and business_id = #{businessId}
-             and business_type = #{businessType}
-  </select>
-
 </mapper>

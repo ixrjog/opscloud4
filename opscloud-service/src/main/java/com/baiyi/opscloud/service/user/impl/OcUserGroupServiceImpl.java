@@ -67,4 +67,9 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     public List<OcUserGroup> queryOcUserGroupByUserId(int userId) {
         return ocUserGroupMapper.queryOcUserGroupByUserId(userId);
     }
+
+    @Override
+    public List<OcUserGroup> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
+      return   ocUserGroupMapper.queryUserTicketOcUserGroupByParam(queryParam);
+    }
 }

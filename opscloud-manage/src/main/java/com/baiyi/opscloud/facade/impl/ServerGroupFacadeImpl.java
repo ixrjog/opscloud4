@@ -222,7 +222,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
-        return new BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
+        return new BusinessWrapper(ErrorEnum.USER_GRANT_SERVERGROUP_ERROR);
     }
 
     @Override
@@ -238,7 +238,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
         }
-        return new BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
+        return new BusinessWrapper(ErrorEnum.USER_REVOKE_SERVERGROUP_ERROR);
     }
 
     @Override
@@ -299,6 +299,17 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         for(String key:serverGroupMap.keySet())
             size += serverGroupMap.get(key).size();
         return size;
+    }
+
+    @Override
+    public  BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
+        String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), uuid);
+        if (!redisUtil.hasKey(key))
+            return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);
+        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) redisUtil.get(key);
+        BusinessWrapper wrapper = new BusinessWrapper(Boolean.TRUE);
+        wrapper.setBody(serverTreeHostPatternMap);
+        return wrapper;
     }
 
 }

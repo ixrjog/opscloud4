@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.OcCloudImage;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
 import com.baiyi.opscloud.domain.param.cloud.CloudImageParam;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudImageVO;
 import com.baiyi.opscloud.facade.CloudImageFacade;

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.cloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
 
 import java.util.List;
 

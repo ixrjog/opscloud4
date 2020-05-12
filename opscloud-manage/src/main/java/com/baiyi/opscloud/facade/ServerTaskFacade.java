@@ -2,10 +2,11 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
+import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
 
 /**
@@ -17,6 +18,14 @@ public interface ServerTaskFacade {
 
     DataTable<OcAnsiblePlaybookVO.AnsiblePlaybook> queryPlaybookPage(AnsiblePlaybookParam.PageQuery pageQuery);
 
+    DataTable<OcAnsibleScriptVO.AnsibleScript> queryScriptPage(AnsibleScriptParam.PageQuery pageQuery);
+
+    BusinessWrapper<Boolean> addScript(OcAnsibleScriptVO.AnsibleScript ansibleScript);
+
+    BusinessWrapper<Boolean> updateScript(OcAnsibleScriptVO.AnsibleScript ansibleScript);
+
+    BusinessWrapper<Boolean> deleteScriptById(int id);
+
     BusinessWrapper<Boolean> addPlaybook(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
 
     BusinessWrapper<Boolean> updatePlaybook(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
@@ -25,14 +34,9 @@ public interface ServerTaskFacade {
 
     BusinessWrapper<Boolean> executorCommand(ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor);
 
-    BusinessWrapper<Boolean> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor);
+    BusinessWrapper<Boolean> executorScript(ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor);
 
-    /**
-     * 查询playbook剧本路径
-     * @param ocAnsiblePlaybook
-     * @return
-     */
-    String getPlaybookPath(OcAnsiblePlaybook ocAnsiblePlaybook);
+    BusinessWrapper<Boolean> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor);
 
     OcServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId);
 
@@ -41,4 +45,8 @@ public interface ServerTaskFacade {
     BusinessWrapper<Boolean> abortServerTask(int taskId);
 
     BusinessWrapper<Boolean> abortServerTaskMember(int memberId);
+
+    BusinessWrapper<Boolean> queryAnsibleVersion();
+
+    BusinessWrapper<Boolean> previewAnsibleHosts();
 }

@@ -18,4 +18,4 @@ ansible:
   bin: /usr/local/bin/ansible
   dataPath: /Users/liangjian/Documents/workspace/opscloud-data/ansible
   playbookBin: /usr/local/bin/ansible-playbook
-  logPath: /logs/ansible/
+  logPath: /Users/liangjian/Documents/workspace/opscloud-data/log/ansible

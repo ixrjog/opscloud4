@@ -107,6 +107,8 @@ public class ZabbixHost extends BaseServer implements IServer {
         if (!serverAttributeMap.containsKey(Global.SERVER_ATTRIBUTE_ZABBIX_PROXY))
             return null;
         String proxyHostname = serverAttributeMap.get(Global.SERVER_ATTRIBUTE_ZABBIX_PROXY);
+        if (StringUtils.isEmpty(proxyHostname))
+            return null;
         ZabbixProxy zabbixProxy = zabbixServer.getProxy(proxyHostname);
         if (zabbixProxy == null)
             return null;

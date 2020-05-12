@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.junit.jupiter.api.Test;
 
@@ -20,6 +21,9 @@ public class UserTest extends BaseUnit {
     @Resource
     private OcUserService ocUserService;
 
+    @Resource
+    private UserPermissionFacade userPermissionFacade;
+
     @Test
     void updateUsersUuid() {
         UserParam.PageQuery pageQuery = new UserParam.PageQuery();
@@ -33,6 +37,13 @@ public class UserTest extends BaseUnit {
             ocUserService.updateOcUser(ocUser);
         }
 
+    }
+
+    @Test
+    void accessLevelTest(){
+        OcUser ocUser = ocUserService.queryOcUserByUsername("xujian");
+        int accessLevel = userPermissionFacade.getUserAccessLevel(ocUser);
+        System.err.println(JSON.toJSONString(accessLevel));
     }
 
 

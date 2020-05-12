@@ -17,6 +17,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @Author baiyi
@@ -38,6 +40,20 @@ public class AnsibleTest extends BaseUnit {
 
     @Test
     void aTest() {
+        String str = "10.200.1.40 | Cdsdg => { aaa , bbb , ccc }" ;
+
+        Pattern pattern = Pattern.compile("^[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\.[0-9]{1,3}\\ \\|\\ \\w+\\ =>\\ ");
+        Matcher matcher = pattern.matcher(str);
+        if (matcher.find()) {
+            String collegeId = matcher.group(0);
+
+            System.out.println(collegeId );//14000
+        }
+    }
+
+
+    @Test
+    void bTest() {
       //  System.err.println(UUIDUtils.getUUID());
 
         Set<String>  tags = Sets.newHashSet();

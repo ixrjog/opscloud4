@@ -4,7 +4,7 @@ import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.cloud.image.ICloudImage;
 import com.baiyi.opscloud.cloud.image.factory.CloudImageFactory;
 import com.baiyi.opscloud.common.util.JSONUtils;
-import com.baiyi.opscloud.domain.generator.OcCloudImage;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
 import com.baiyi.opscloud.service.cloud.OcCloudImageService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;

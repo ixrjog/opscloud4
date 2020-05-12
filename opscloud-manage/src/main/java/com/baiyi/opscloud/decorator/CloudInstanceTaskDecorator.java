@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.base.CloudInstanceTaskPhase;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
 import com.google.common.collect.Lists;

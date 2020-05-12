@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTask;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
 
 /**

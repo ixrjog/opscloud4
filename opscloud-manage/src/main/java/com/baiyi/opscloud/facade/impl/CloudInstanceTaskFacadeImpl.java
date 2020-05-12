@@ -7,9 +7,9 @@ import com.baiyi.opscloud.common.base.CloudInstanceTaskStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.decorator.CloudInstanceTaskDecorator;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTask;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
-import com.baiyi.opscloud.domain.generator.OcCloudVpcVswitch;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
@@ -183,11 +183,12 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
         while (vswitchIds.size() < size) {
             if (vswitchList.isEmpty()) break;
             for (OcCloudVpcVswitch ocCloudVpcVswitch : vswitchList) {
-                if (ocCloudVpcVswitch.getAvailableIpAddressCount() >= 240) {
+                // 预留可用ip
+                if (ocCloudVpcVswitch.getAvailableIpAddressCount() <= 10) {
                     vswitchList.remove(ocCloudVpcVswitch);
                     break;
                 } else {
-                    ocCloudVpcVswitch.setAvailableIpAddressCount(ocCloudVpcVswitch.getAvailableIpAddressCount() + 1);
+                    ocCloudVpcVswitch.setAvailableIpAddressCount(ocCloudVpcVswitch.getAvailableIpAddressCount() - 1);
                     vswitchIds.add(ocCloudVpcVswitch.getVswitchId());
                 }
                 if (vswitchIds.size() >= size) break;

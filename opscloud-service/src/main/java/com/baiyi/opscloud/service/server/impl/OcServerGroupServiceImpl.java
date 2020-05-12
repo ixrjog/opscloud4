@@ -25,10 +25,10 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     private OcServerGroupMapper ocServerGroupMapper;
 
     @Override
-    public int countByGrpType(int grpType){
+    public int countByGrpType(int grpType) {
         Example example = new Example(OcServerGroup.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("grpType",grpType);
+        criteria.andEqualTo("grpType", grpType);
         return ocServerGroupMapper.selectCountByExample(example);
     }
 
@@ -68,12 +68,12 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     }
 
     @Override
-    public List<OcServerGroup> queryUserPermissionOcServerGroupByUserId(int userId){
+    public List<OcServerGroup> queryUserPermissionOcServerGroupByUserId(int userId) {
         return ocServerGroupMapper.queryUserPermissionOcServerGroupByUserId(userId);
     }
 
     @Override
-    public List<OcServerGroup> queryAll(){
+    public List<OcServerGroup> queryAll() {
         return ocServerGroupMapper.selectAll();
     }
 
@@ -85,16 +85,20 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     }
 
     @Override
-    public DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery  pageQuery) {
+    public DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserExcludeOcServerGroupByParam(pageQuery);
         return new DataTable<>(ocServerGroupList, page.getTotal());
     }
 
     @Override
-    public List<OcServerGroup>  queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery){
-       return ocServerGroupMapper.queryUserPermissionOcServerGroupByParam(userServerTreeQuery);
+    public List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
+        return ocServerGroupMapper.queryUserPermissionOcServerGroupByParam(userServerTreeQuery);
     }
 
+    @Override
+    public List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery userTicketOcServerGroupQuery) {
+        return ocServerGroupMapper.queryUserTicketOcServerGroupByParam(userTicketOcServerGroupQuery);
+    }
 
 }

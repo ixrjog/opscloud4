@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcWorkorderMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="workorder_key" jdbcType="VARCHAR" property="workorderKey" />
+    <result column="readme_id" jdbcType="INTEGER" property="readmeId" />
+    <result column="workorder_group_id" jdbcType="INTEGER" property="workorderGroupId" />
+    <result column="approval_type" jdbcType="INTEGER" property="approvalType" />
+    <result column="org_approval" jdbcType="BIT" property="orgApproval" />
+    <result column="approval_group_id" jdbcType="INTEGER" property="approvalGroupId" />
+    <result column="workorder_mode" jdbcType="INTEGER" property="workorderMode" />
+    <result column="workorder_status" jdbcType="INTEGER" property="workorderStatus" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

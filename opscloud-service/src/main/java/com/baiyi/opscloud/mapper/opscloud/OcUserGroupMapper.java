@@ -18,4 +18,6 @@ public interface OcUserGroupMapper extends Mapper<OcUserGroup> {
     // 用户未授权用户组
     List<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
+    List<OcUserGroup> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam);
+
 }

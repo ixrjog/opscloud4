@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.ansible;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 
 /**

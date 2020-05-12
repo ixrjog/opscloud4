@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -63,9 +64,11 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);
 
         OcUserToken ocUserToken = ocUserTokenService.queryOcUserTokenByTokenAndValid(token);
-        if (ocUserToken == null) // 检查token是否失效
+        // 检查token是否失效
+        if (ocUserToken == null) {
             // 从ApiToken校验
             return checkUserApiHasResourceAuthorize(token, resourceName, new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_TOKEN_INVALID));
+        }
 
         // 校验用户是否可以访问资源路径
         int nums = ocUserTokenService.checkUserHasResourceAuthorize(token, resourceName);
@@ -106,10 +109,10 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         if (nums == 0) {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_FAILUER);
         } else {
+            SessionUtils.setUsername(ocUserApiToken.getUsername());
             return new BusinessWrapper<>(true);
         }
     }
-
 
     @Override
     public String getUserByToken(String token) {

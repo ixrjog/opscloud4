@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_user_permission")
 public class OcUserPermission {
@@ -20,6 +20,9 @@ public class OcUserPermission {
      */
     @Column(name = "business_id")
     private Integer businessId;
+
+    @Column(name = "content")
+    private String content;
 
     /**
      * 业务类型
@@ -81,6 +84,14 @@ public class OcUserPermission {
      */
     public void setBusinessId(Integer businessId) {
         this.businessId = businessId;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 
     /**

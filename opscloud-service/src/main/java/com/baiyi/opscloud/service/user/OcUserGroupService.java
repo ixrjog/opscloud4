@@ -26,4 +26,6 @@ public interface OcUserGroupService {
     OcUserGroup queryOcUserGroupById(int id);
 
     List<OcUserGroup> queryOcUserGroupByUserId(int userId);
+
+    List<OcUserGroup> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam);
 }

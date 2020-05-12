@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,13 @@ public class OcServerTaskMemberVO {
     public static class ServerTaskMember {
 
         private OcEnvVO.Env env;
+        /** 格式化执行结果 **/
+        private AnsibleResult result;
+
+        private String outputMsgLog;
+        private String errorMsgLog;
+
+        private Boolean showErrorLog;
 
         private Integer id;
         private Integer taskId;
@@ -43,4 +51,22 @@ public class OcServerTaskMemberVO {
         private Boolean hide;
 
     }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    @JsonIgnoreProperties
+    public static class AnsibleResult {
+
+        private Boolean changed;
+        private Integer rc;
+        private String stderr;
+
+        //private String stderr_lines;
+
+        private String stdout;
+        //private String stdout_lines;
+
+    }
+
 }

@@ -8,6 +8,7 @@
         <id column="id" jdbcType="INTEGER" property="id"/>
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="grp_type" jdbcType="INTEGER" property="grpType"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
@@ -45,11 +46,10 @@
         </if>
     </select>
 
-
     <!--    business_type = 2 serverGroup-->
     <select id="queryUserPermissionOcServerGroupByUserId" resultMap="BaseResultMap">
-        select * from oc_server_group where id in
-        ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
+        select * from oc_server_group
+        where id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
     </select>
 
     <select id="queryUserPermissionOcServerGroupByParam"
@@ -66,6 +66,23 @@
             <if test="grpType != null and grpType > 0">
                 and grp_type = #{grpType}
             </if>
+        </where>
+    </select>
+
+    <!--    工单票据查询用户可以申请的服务器组列表-->
+    <select id="queryUserTicketOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$UserTicketOcServerGroupQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        <where>
+            in_workorder = 1
+            <if test="queryName != null and queryName != ''">
+              and name like "%" #{queryName} "%"
+            </if>
+            --  排除用户已授权的服务器组
+            <!--  and id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} ) -->
+            --  排除ticket中的服务器组
+            and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
         </where>
     </select>
 

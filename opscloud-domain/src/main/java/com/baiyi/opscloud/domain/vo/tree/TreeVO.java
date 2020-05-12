@@ -20,4 +20,13 @@ public class TreeVO {
         private String label;
         private List<TreeVO.Tree> children;
     }
+
+    @Data
+    @Builder
+    @ApiModel
+    public static class DeptTree {
+        private Integer id;
+        private String label;
+        private List<TreeVO.DeptTree> children;
+    }
 }

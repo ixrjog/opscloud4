@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.mapper.opscloud;
 
-import com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import tk.mybatis.mapper.common.Mapper;
 

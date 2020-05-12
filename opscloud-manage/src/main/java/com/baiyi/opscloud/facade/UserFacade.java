@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
@@ -53,5 +54,11 @@ public interface UserFacade {
     BusinessWrapper<Boolean> syncUser();
 
     ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery);
+
+    /**
+     * 从当前会话中查询用户
+     * @return
+     */
+    OcUser getOcUserBySession();
 
 }

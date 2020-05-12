@@ -10,7 +10,7 @@
         <result column="access_level" jdbcType="INTEGER" property="accessLevel"/>
         <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
-        <result column="workflow" jdbcType="INTEGER" property="workflow"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
@@ -28,10 +28,36 @@
         </where>
     </select>
 
+    <select id="queryTopOcAuthRoleByUsername" resultMap="BaseResultMap">
+       select * from oc_auth_role
+          where id in ( select role_id from oc_auth_user_role where username = #{username} )
+          order by access_level desc
+          limit 1
+    </select>
+
     <select id="queryOcAuthRoleAccessLevelByUsername" resultType="java.lang.Integer">
         select access_level from oc_auth_role
-        where id in ( select id from oc_auth_user_role where username = #{username} )
+        where id in ( select role_id from oc_auth_user_role where username = #{username} )
         order by access_level desc limit 1
     </select>
+
+    <!--    工单票据查询用户可以申请的角色列表-->
+    <select id="queryUserTicketOcAuthRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.RoleParam$UserTicketOcAuthRoleQuery"
+            resultMap="BaseResultMap">
+        select * from oc_auth_role
+        where
+           in_workorder = 1
+           --  排除本人已申请的角色
+           and id not in ( select role_id from oc_auth_user_role where username = #{username} )
+           --  排除ticket中的role_id
+           and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+           <if test="queryName != null and queryName != ''">
+              and role_name like "%" #{queryName} "%"
+           </if>
+    </select>
+
+
+
+
 
 </mapper>

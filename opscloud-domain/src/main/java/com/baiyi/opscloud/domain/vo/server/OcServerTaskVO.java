@@ -30,6 +30,7 @@ public class OcServerTaskVO {
         private Object executorParamDetail;
         private Integer userId;
         private Integer taskType;
+        private Integer systemType;
         private String comment;
         private Integer taskSize;
         private Integer finalized;

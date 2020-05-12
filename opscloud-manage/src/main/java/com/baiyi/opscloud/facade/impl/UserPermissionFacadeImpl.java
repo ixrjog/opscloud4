@@ -78,4 +78,15 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
         return ocAuthRoleService.queryOcAuthRoleAccessLevelByUsername(ocUser.getUsername());
     }
 
+    @Override
+    public BusinessWrapper<Boolean> checkAccessLevel(OcUser ocUser,int accessLevel) {
+        if (ocUser == null)
+            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+        if(getUserAccessLevel(ocUser) >= accessLevel) {
+            return BusinessWrapper.SUCCESS;
+        }else{
+            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+        }
+    }
+
 }

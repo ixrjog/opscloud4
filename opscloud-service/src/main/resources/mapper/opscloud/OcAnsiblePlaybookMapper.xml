@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAnsiblePlaybookMapper">
-  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.OcAnsiblePlaybook">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook">
     <!--
       WARNING - @mbg.generated
     -->

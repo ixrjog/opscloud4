@@ -42,5 +42,7 @@ public interface OcServerGroupService {
 
     List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery);
 
+    List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery userTicketOcServerGroupQuery);
+
     List<OcServerGroup> queryAll();
 }

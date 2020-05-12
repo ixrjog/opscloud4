@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
 import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
 import com.baiyi.opscloud.domain.vo.auth.*;
+import com.baiyi.opscloud.domain.vo.auth.menu.MenuVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -161,6 +163,12 @@ public class AuthController {
     @DeleteMapping(value = "/user/role/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteUserRoleById(@RequestParam int id) {
         return new HttpResult<>(authFacade.deleteUserRoleById(id));
+    }
+
+    @ApiOperation(value = "分页查询role列表")
+    @GetMapping(value = "/menu/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<MenuVO>> queryUserMenu() {
+        return new HttpResult<>(authFacade.queryUserMenu());
     }
 
 

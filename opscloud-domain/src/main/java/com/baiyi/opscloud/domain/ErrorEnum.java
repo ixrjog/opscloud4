@@ -36,6 +36,7 @@ public enum ErrorEnum {
     USER_PASSWORD_NON_COMPLIANCE_WITH_RULES(12002, "用户密码不合规！"),
     USER_PHONE_NON_COMPLIANCE_WITH_RULES(12002, "用户手机号不合规！"),
     USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
+    USER_NOT_EXIST(12002, "用户不存在！"),
     //applyUserApiToken
     USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003,"申请ApiToken描述不能为空"),
     USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003,"申请ApiToken过期时间为空或格式错误"),
@@ -51,9 +52,10 @@ public enum ErrorEnum {
     USERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "用户组名称不合规！"),
 
 
-    USER_GRANT_USERGROUP_ERROR(12002, "授权用户组错误！"),
-    USER_REVOKE_USERGROUP_ERROR(12002, "撤销用户组授权错误！"),
-
+    USER_GRANT_USERGROUP_ERROR(12002, "用户授权用户组错误！"),
+    USER_REVOKE_USERGROUP_ERROR(12002, "用户撤销用户组授权错误！"),
+    USER_GRANT_SERVERGROUP_ERROR(12002, "用户授权服务器组错误！"),
+    USER_REVOKE_SERVERGROUP_ERROR(12002, "用户撤销服务器组授权错误！"),
     // server
     SERVER_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器名称不合规！"),
     SERVER_GROUP_NOT_SELECTED(12003, "服务器组未选择！"),
@@ -126,6 +128,31 @@ public enum ErrorEnum {
     // jumpserver
     JUMPSERVER_ASSETS_NODE_ROOT_NOT_EXIST(40002, "资产根节点不存在(表：assets_node,字段：key = 1)！"),
     JUMPSERVER_ADMINISTRATOR_AUTHORIZATION_CANNOT_BE_REVOKED(40002, "不能撤销Administrator账户管理员授权"),
+
+    // Executor
+    EXECUTOR_PARAM_TYPE_ERROR(50001, "执行参数类型错误"),
+
+    // Org Department
+    ORG_DEPARTMENT_CANNOT_DELETE_ROOT(60001, "不能删除根部门"),
+    ORG_DEPARTMENT_CANNOT_DROP_ROOT(60001, "不能拖拽根部门"),
+    ORG_DEPARTMENT_CANNOT_JOIN_ROOT(60001, "不能加入根部门"),
+    ORG_DEPARTMENT_NOT_EXIST(60001, "部门不存在"),
+    ORG_DEPARTMENT_DROP_ERROR(60001, "拖拽类型错误"),
+    ORG_DEPARTMENT_MEMBER_ALREADY_EXISTS(60001, "部门成员已存在"),
+    ORG_DEPARTMENT_MEMBER_NOT_EXIST(60001, "部门成员不存在"),
+    ORG_DEPARTMENT_SUB_DEPT_EXISTS(60001,"有子部门存在"),
+    ORG_DEPARTMENT_MEMBER_IS_NOT_EMPTY(60001, "部门成员不为空"),
+    ORG_DEPARTMENT_MEMBER_DELETE_ERROR(60001, "删除部门成员错误"),
+    ORG_DEPARTMENT_MEMBER_IS_LEADER(60001, "经理不能随意变更部门"),
+    ORG_DEPARTMENT_MEMBER_IS_APPROVAL(60001, "拥有审批权不能随意变更部门"),
+    ORG_DEPARTMENT_USER_NOT_IN_THE_ORG(60001, "你未加入组织架构"),
+    ORG_DEPARTMENT_USER_NO_APPROVAL_REATIONSHIP_FOUND(60001, "用户没有建立上级审批关系"),
+
+    // Workorder
+    WORKORDER_TICKET_PHASE_ERROR(70001, "工单阶段不正确"),
+    WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
+    WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
+
 
     // ----------------------- 例子 -----------------------
     GET_CONNECTION_ERROR(10002, "获取链接失败！"),

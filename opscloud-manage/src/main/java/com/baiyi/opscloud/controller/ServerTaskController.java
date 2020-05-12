@@ -4,8 +4,10 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
+import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
 import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import io.swagger.annotations.Api;
@@ -23,7 +25,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/server/task")
-@Api(tags = "服务器管理")
+@Api(tags = "服务器任务")
 public class ServerTaskController {
 
     @Resource
@@ -47,17 +49,47 @@ public class ServerTaskController {
         return new HttpResult<>(serverTaskFacade.updatePlaybook(ansiblePlaybook));
     }
 
-
     @ApiOperation(value = "删除指定的playbook")
     @DeleteMapping(value = "/playbook/del", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> deleteServerById(@Valid @RequestParam int id) {
+    public HttpResult<Boolean> deletePlaybookById(@Valid @RequestParam int id) {
         return new HttpResult<>(serverTaskFacade.deletePlaybookById(id));
     }
+
+    @ApiOperation(value = "分页模糊查询script/列表")
+    @PostMapping(value = "/script/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcAnsibleScriptVO.AnsibleScript>> queryScriptPage(@RequestBody @Valid AnsibleScriptParam.PageQuery pageQuery) {
+        return new HttpResult<>(serverTaskFacade.queryScriptPage(pageQuery));
+    }
+
+    @ApiOperation(value = "新增script")
+    @PostMapping(value = "/script/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addScript(@RequestBody @Valid OcAnsibleScriptVO.AnsibleScript ansibleScript) {
+        return new HttpResult<>(serverTaskFacade.addScript(ansibleScript));
+    }
+
+    @ApiOperation(value = "更新script")
+    @PutMapping(value = "/script/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updasteScript(@RequestBody @Valid OcAnsibleScriptVO.AnsibleScript ansibleScript) {
+        return new HttpResult<>(serverTaskFacade.updateScript(ansibleScript));
+    }
+
+    @ApiOperation(value = "删除指定的script")
+    @DeleteMapping(value = "/script/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteScriptById(@Valid @RequestParam int id) {
+        return new HttpResult<>(serverTaskFacade.deleteScriptById(id));
+    }
+
 
     @ApiOperation(value = "批量命令")
     @PostMapping(value = "/command/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessWrapper<Boolean>> executorCommand(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
         return new HttpResult(serverTaskFacade.executorCommand(serverTaskCommandExecutor));
+    }
+
+    @ApiOperation(value = "批量脚本")
+    @PostMapping(value = "/script/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<BusinessWrapper<Boolean>> executorScript(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
+        return new HttpResult(serverTaskFacade.executorScript(serverTaskScriptExecutor));
     }
 
     @ApiOperation(value = "执行playbook")
@@ -90,4 +122,15 @@ public class ServerTaskController {
         return new HttpResult<>(serverTaskFacade.abortServerTaskMember(memberId));
     }
 
+    @ApiOperation(value = "查询Ansible版本")
+    @GetMapping(value = "/ansible/version", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> queryAnsibleVersion() {
+        return new HttpResult<>(serverTaskFacade.queryAnsibleVersion());
+    }
+
+    @ApiOperation(value = "预览Ansible主机配置文件")
+    @GetMapping(value = "/ansible/hosts/preview", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> previewAnsibleHosts() {
+        return new HttpResult<>(serverTaskFacade.previewAnsibleHosts());
+    }
 }

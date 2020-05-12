@@ -82,8 +82,8 @@
 
     <!--  business_type = 4 userGroup-->
     <select id="queryOcUserByUserGroupId" resultMap="BaseResultMap">
-    select * from oc_user where id in
-    ( select user_id from oc_user_permission where business_type = 4 and business_id = #{userGroupId} )
+        select * from oc_user
+           where id in ( select user_id from oc_user_permission where business_type = 4 and business_id = #{userGroupId} )
     </select>
 
 

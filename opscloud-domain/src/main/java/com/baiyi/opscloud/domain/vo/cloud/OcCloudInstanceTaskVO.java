@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.cloud;
 
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

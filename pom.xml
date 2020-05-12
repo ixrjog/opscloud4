@@ -23,6 +23,7 @@
         <module>opscloud-aliyun-rds-mysql</module>
         <module>opscloud-server</module>
         <module>opscloud-ansible</module>
+        <module>opscloud-xterm</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -107,6 +108,12 @@
             <groupId>com.unboundid</groupId>
             <artifactId>unboundid-ldapsdk</artifactId>
             <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.8</version>
         </dependency>
 
 <!--        <dependency>-->
@@ -259,6 +266,11 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-ansible</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-xterm</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

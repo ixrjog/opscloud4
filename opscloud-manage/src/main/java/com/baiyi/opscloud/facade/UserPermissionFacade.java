@@ -28,4 +28,6 @@ public interface UserPermissionFacade {
      * @return
      */
     int getUserAccessLevel(OcUser ocUser);
+
+    BusinessWrapper<Boolean> checkAccessLevel(OcUser ocUser,int accessLevel);
 }

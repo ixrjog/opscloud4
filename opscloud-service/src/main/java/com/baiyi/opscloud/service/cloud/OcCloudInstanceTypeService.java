@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.cloud;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.OcCloudInstanceType;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceType;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
 
 import java.util.List;

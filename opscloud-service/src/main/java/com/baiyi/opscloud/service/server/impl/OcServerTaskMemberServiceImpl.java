@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.server.impl;
 
-import com.baiyi.opscloud.domain.generator.OcServerTaskMember;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.mapper.opscloud.OcServerTaskMemberMapper;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
 import com.github.pagehelper.PageHelper;

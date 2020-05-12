@@ -77,13 +77,13 @@ public class OcUserVO {
         @ApiModelProperty(value = "留言")
         private String comment;
 
-        @ApiModelProperty(value = "创建时间")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date createTime;
-
-        @ApiModelProperty(value = "更新时间")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date updateTime;
+//        @ApiModelProperty(value = "创建时间")
+//        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+//        private Date createTime;
+//
+//        @ApiModelProperty(value = "更新时间")
+//        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+//        private Date updateTime;
     }
 
 }

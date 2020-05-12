@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTags;
 import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookVars;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.springframework.util.StringUtils;
 import org.yaml.snakeyaml.Yaml;
 
 /**
@@ -15,9 +16,11 @@ import org.yaml.snakeyaml.Yaml;
 public class PlaybookUtils {
 
     public static PlaybookVars buildVars(String varsYAML) {
-        Yaml yaml = new Yaml();
-        Object result = yaml.load(varsYAML);
+        if(StringUtils.isEmpty(varsYAML))
+            return new PlaybookVars();
         try {
+            Yaml yaml = new Yaml();
+            Object result = yaml.load(varsYAML);
             Gson gson = new GsonBuilder().create();
             PlaybookVars vars = gson.fromJson(JSON.toJSONString(result), PlaybookVars.class);
             return vars;

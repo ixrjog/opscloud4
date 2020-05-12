@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade;
 
-import com.baiyi.opscloud.domain.generator.OcCloudVpc;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
 
 /**
  * @Author baiyi

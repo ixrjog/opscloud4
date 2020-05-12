@@ -21,4 +21,4 @@ ansible:
   bin: /bin/ansible
   dataPath: /data/opscloud-data/ansible
   playbookBin: /bin/ansible-playbook
-  logPath: /logs/ansible/
+  logPath: /data/opscloud-data/log/ansible
