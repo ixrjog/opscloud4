@@ -22,6 +22,7 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
 
     /**
      * XTerm发送指令
+     *
      * @return
      */
 
@@ -35,20 +36,19 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
         XTermCommandWSMessage cmdMessage = (XTermCommandWSMessage) getXTermMessage(message);
 
         Boolean isBatch = JSchSessionMap.getBatchBySessionId(session.getId());
-        if(isBatch == null)
+        if (isBatch == null)
             isBatch = false;
 
-        if(!isBatch){
+        if (!isBatch) {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), cmdMessage.getInstanceId());
             jSchSession.getCommander().print(cmdMessage.getData());
-        }else {
+        } else {
             Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
             for (String instanceId : sessionMap.keySet()) {
                 JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), instanceId);
                 jSchSession.getCommander().print(cmdMessage.getData());
             }
         }
-
     }
 
     @Override
@@ -56,6 +56,5 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
         XTermCommandWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermCommandWSMessage.class);
         return cmdMessage;
     }
-
 
 }

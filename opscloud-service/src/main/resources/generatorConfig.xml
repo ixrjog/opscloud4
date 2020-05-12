@@ -139,8 +139,9 @@
 <!--        oc_workorder_ticket_subscribe-->
 <!--        oc_workorder_ticket_flow-->
 <!--        oc_keybox-->
+<!--        oc_document-->
 
-        <table tableName="oc_workorder_ticket">
+        <table tableName="oc_document">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>
