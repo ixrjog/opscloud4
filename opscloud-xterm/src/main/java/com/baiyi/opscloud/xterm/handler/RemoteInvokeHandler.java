@@ -40,7 +40,6 @@ public class RemoteInvokeHandler {
         try {
             SSHKeyCredential sshKeyCredential = hostSystem.getSshKeyCredential();
             jsch.addIdentity(appId, sshKeyCredential.getPrivateKey().trim().getBytes(), sshKeyCredential.getPublicKey().getBytes(), sshKeyCredential.getPassphrase().getBytes());
-
             //create session
             Session session = jsch.getSession(sshKeyCredential.getSystemUser(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? 22 : hostSystem.getPort());
@@ -48,26 +47,21 @@ public class RemoteInvokeHandler {
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
             session.setServerAliveInterval(SERVER_ALIVE_INTERVAL);
             session.connect(SESSION_TIMEOUT);
+            session.setTimeout(CHANNEL_TIMEOUT);
 
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             channel.setEnv("LANG", "en_US.UTF-8");
             // SSH 代理转发
             channel.setAgentForwarding(false);
             channel.setPtyType("xterm");
-
             invokeChannelPtySize(channel, hostSystem.getInitialMessage());
-
             InputStream outFromChannel = channel.getInputStream();
-
-
             //new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
 
             Runnable run = new SecureShellTask(sessionOutput, outFromChannel);
             Thread thread = new Thread(run);
             thread.start();
-
-
             OutputStream inputToChannel = channel.getOutputStream();
             PrintStream commander = new PrintStream(inputToChannel, true);
 

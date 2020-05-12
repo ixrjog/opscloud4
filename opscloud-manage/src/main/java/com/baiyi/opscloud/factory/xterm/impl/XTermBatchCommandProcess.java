@@ -44,7 +44,6 @@ public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTerm
         return cmdMessage;
     }
 
-
     /**
      * Maps key press events to the ascii values
      */

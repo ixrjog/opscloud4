@@ -19,6 +19,8 @@ public interface OcServerService {
 
     List<OcServer> queryOcServerByServerGroupId(int serverGroupId);
 
+    List<OcServer> queryAllOcServer();
+
     OcServer queryOcServerById(int id);
 
     /**

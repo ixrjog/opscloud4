@@ -38,8 +38,8 @@ public class OcServerServiceImpl implements OcServerService {
         Example example = new Example(OcServer.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("privateIp", ip);
-        Example.Criteria criteria2=example.createCriteria();
-        criteria2.andEqualTo("publicIp",ip);
+        Example.Criteria criteria2 = example.createCriteria();
+        criteria2.andEqualTo("publicIp", ip);
         example.or(criteria2);
         PageHelper.startPage(1, 1);
         return ocServerMapper.selectOneByExample(example);
@@ -95,6 +95,11 @@ public class OcServerServiceImpl implements OcServerService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("serverGroupId", serverGroupId);
         return ocServerMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<OcServer> queryAllOcServer() {
+        return ocServerMapper.selectAll();
     }
 
     @Override

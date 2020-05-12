@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.server;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.service.server.OcServerService;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,6 +28,18 @@ public class ServerTest extends BaseUnit {
         // 序号错误
         serialNumber = ocServerService.queryOcServerMaxSerialNumber(44);
         System.err.println(serialNumber);
+
+    }
+
+
+    @Test
+    void test1() {
+      List<OcServer> list =  ocServerService.queryAllOcServer();
+      list.forEach( e ->{
+              e.setLoginUser("gegejia");
+          ocServerService.updateOcServer(e);
+
+      });
 
     }
 }
