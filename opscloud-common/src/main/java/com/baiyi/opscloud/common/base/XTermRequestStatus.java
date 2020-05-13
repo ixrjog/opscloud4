@@ -14,6 +14,7 @@ public enum  XTermRequestStatus {
      */
 
     INITIAL("INITIAL", "会话初始建立"),
+    HEARTBEAT("HEARTBEAT","心跳，保持会话"),
     COMMAND("COMMAND", "交互命令"),
     DUPLICATE_SESSION("DUPLICATE_SESSION","复制会话"),
     RESIZE("RESIZE", "改变形体"),
