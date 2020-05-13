@@ -12,5 +12,6 @@ public class JSchSession {
     private String instanceId;
     private PrintStream commander;
     private Channel channel;
+    private HostSystem hostSystem;
 
 }

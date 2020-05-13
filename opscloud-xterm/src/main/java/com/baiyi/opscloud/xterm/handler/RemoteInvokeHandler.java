@@ -70,6 +70,7 @@ public class RemoteInvokeHandler {
             jSchSession.setInstanceId(instanceId);
             jSchSession.setCommander(commander);
             jSchSession.setChannel(channel);
+            jSchSession.setHostSystem(hostSystem);
             JSchSessionMap.addSession(jSchSession);
 
             channel.connect();

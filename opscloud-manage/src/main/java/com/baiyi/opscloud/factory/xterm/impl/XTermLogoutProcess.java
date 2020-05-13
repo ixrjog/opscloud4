@@ -47,7 +47,7 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
 
     @Override
     protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermLogoutWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermLogoutWSMessage.class);
-        return cmdMessage;
+        XTermLogoutWSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermLogoutWSMessage.class);
+        return baseMessage;
     }
 }

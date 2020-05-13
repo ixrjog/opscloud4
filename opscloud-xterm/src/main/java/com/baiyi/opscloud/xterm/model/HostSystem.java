@@ -28,7 +28,7 @@
 package com.baiyi.opscloud.xterm.model;
 
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
-import com.baiyi.opscloud.xterm.message.XTermInitialWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
 import lombok.Data;
 
 /**
@@ -54,7 +54,7 @@ public class HostSystem {
      * 登录凭据
      */
     private SSHKeyCredential sshKeyCredential;
-    private XTermInitialWSMessage initialMessage;
+    private BaseXTermWSMessage initialMessage;
 
     public static final String INITIAL_STATUS = "INITIAL";
     public static final String AUTH_FAIL_STATUS = "AUTHFAIL";

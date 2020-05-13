@@ -13,6 +13,8 @@ public class BaseXTermWSMessage {
     private String id;
     private String token;
     private String status;
+    // 0 普通账户 1 管理员账户
+    private Integer loginUserType;
 
     private Integer xtermWidth;
     private Integer xtermHeight;

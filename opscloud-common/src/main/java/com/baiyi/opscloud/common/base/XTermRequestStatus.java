@@ -15,6 +15,7 @@ public enum  XTermRequestStatus {
 
     INITIAL("INITIAL", "会话初始建立"),
     COMMAND("COMMAND", "交互命令"),
+    DUPLICATE_SESSION("DUPLICATE_SESSION","复制会话"),
     RESIZE("RESIZE", "改变形体"),
     CLOSE("CLOSE", "关闭所有Term会话"),
     LOGOUT("LOGOUT", "关闭Term会话"),
