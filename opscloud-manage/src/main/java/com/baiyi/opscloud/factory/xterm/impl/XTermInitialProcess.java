@@ -55,7 +55,7 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
                 continue;
             String host = serverTreeHostPatternMap.get(instanceId);
             HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage);
-            RemoteInvokeHandler.getSession(session.getId(), instanceId, hostSystem);
+            RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), instanceId, hostSystem);
         }
     }
 

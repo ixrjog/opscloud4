@@ -33,16 +33,14 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
     @Override
     public void xtermProcess(String message, Session session) {
         XTermLogoutWSMessage loginOutMessage = (XTermLogoutWSMessage) getXTermMessage(message);
-        try {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
-            jSchSession.getChannel().disconnect();
-            jSchSession.setCommander(null);
-            jSchSession.setChannel(null);
-            jSchSession = null;
-            JSchSessionMap.removeSession(session.getId(), loginOutMessage.getInstanceId());
-        } catch (Exception e) {
-            // e.printStackTrace();
-        }
+
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
+        jSchSession.getChannel().disconnect();
+        jSchSession.setCommander(null);
+        jSchSession.setChannel(null);
+        jSchSession.setInputToChannel(null);
+        jSchSession = null;
+        JSchSessionMap.removeSession(session.getId(), loginOutMessage.getInstanceId());
     }
 
     @Override
