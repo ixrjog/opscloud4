@@ -49,12 +49,12 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
         if (!wrapper.isSuccess())
             return;
         Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
-
+        boolean isAdmin = isOps(ocUser);
         for (String instanceId : baseMessage.getInstanceIds()) {
             if (!serverTreeHostPatternMap.containsKey(instanceId))
                 continue;
             String host = serverTreeHostPatternMap.get(instanceId);
-            HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage);
+            HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage,isAdmin);
             RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), instanceId, hostSystem);
         }
     }

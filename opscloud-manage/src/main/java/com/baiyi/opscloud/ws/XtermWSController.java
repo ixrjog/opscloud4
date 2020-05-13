@@ -32,7 +32,6 @@ public class XtermWSController {
     
     // 超时时间10分钟
     public static final Long WEBSOCKET_TIMEOUT = 6000000L;
-    // duplicate session
 
     /**
      * 连接建立成功调用的方法

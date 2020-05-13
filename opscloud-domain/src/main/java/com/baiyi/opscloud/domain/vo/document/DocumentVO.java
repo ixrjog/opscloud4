@@ -24,4 +24,20 @@ public class DocumentVO {
         private String previewDoc;
 
     }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserDoc {
+
+        private Integer id;
+        private Integer userId;
+        private String username;
+        private String docTitle;
+        private Integer docType;
+        private String comment;
+        private String docContent;
+        private String previewDoc;
+
+    }
 }

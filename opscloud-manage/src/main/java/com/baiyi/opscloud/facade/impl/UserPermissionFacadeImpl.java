@@ -58,9 +58,9 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public BusinessWrapper<Boolean> addOcUserPermission(OcUserPermission ocUserPermission) {
         OcUserPermission checkOcUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
-        if (checkOcUserPermission != null)
-            return new BusinessWrapper<>(ErrorEnum.USER_PERMISSION_EXIST);
-        ocUserPermissionService.addOcUserPermission(ocUserPermission);
+        if (checkOcUserPermission == null)
+            ocUserPermissionService.addOcUserPermission(ocUserPermission);
+        //   return new BusinessWrapper<>(ErrorEnum.USER_PERMISSION_EXIST);
         return BusinessWrapper.SUCCESS;
     }
 
@@ -79,12 +79,12 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> checkAccessLevel(OcUser ocUser,int accessLevel) {
+    public BusinessWrapper<Boolean> checkAccessLevel(OcUser ocUser, int accessLevel) {
         if (ocUser == null)
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
-        if(getUserAccessLevel(ocUser) >= accessLevel) {
+        if (getUserAccessLevel(ocUser) >= accessLevel) {
             return BusinessWrapper.SUCCESS;
-        }else{
+        } else {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
         }
     }

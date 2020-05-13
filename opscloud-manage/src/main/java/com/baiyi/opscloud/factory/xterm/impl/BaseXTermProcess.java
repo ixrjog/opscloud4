@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
@@ -8,6 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.facade.KeyboxFacade;
 import com.baiyi.opscloud.facade.OcAuthFacade;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -34,6 +36,9 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
     protected OcAuthFacade ocAuthFacade;
 
     @Resource
+    protected UserPermissionFacade userPermissionFacade;
+
+    @Resource
     protected OcUserService ocUserService;
 
     @Resource
@@ -48,11 +53,15 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
     @Resource
     protected OcUserPermissionService ocUserPermissionService;
 
-  //  protected static final String sessionId = UUID.randomUUID().toString();
+    //  protected static final String sessionId = UUID.randomUUID().toString();
 
     abstract protected BaseXTermWSMessage getXTermMessage(String message);
 
-    protected HostSystem buildHostSystem(OcUser ocUser, String host, BaseXTermWSMessage baseMessage) {
+    protected boolean isOps(OcUser ocUser) {
+        return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
+    }
+
+    protected HostSystem buildHostSystem(OcUser ocUser, String host, BaseXTermWSMessage baseMessage, boolean isAdmin) {
         OcServer ocServer = ocServerService.queryOcServerByIp(host);
         OcUserPermission ocUserPermission = new OcUserPermission();
         ocUserPermission.setUserId(ocUser.getId());
@@ -61,9 +70,13 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
 
         boolean loginType = false;
         if (baseMessage.getLoginUserType() == 1) {
-            OcUserPermission checkUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
-            if (checkUserPermission != null)
+            if (isAdmin) {
                 loginType = true;
+            } else {
+                OcUserPermission checkUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
+                if (checkUserPermission != null)
+                    loginType = true;
+            }
         }
 
         SSHKeyCredential sshKeyCredential;

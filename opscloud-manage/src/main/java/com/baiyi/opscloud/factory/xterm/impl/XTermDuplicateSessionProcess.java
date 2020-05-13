@@ -44,7 +44,8 @@ public class XTermDuplicateSessionProcess extends BaseXTermProcess implements IX
         JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), baseMessage.getDuplicateInstanceId());
 
         String host = jSchSession.getHostSystem().getHost();
-        HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage);
+        boolean isAdmin = isOps(ocUser);
+        HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage, isAdmin);
 
         RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), baseMessage.getInstanceId(), hostSystem);
     }
