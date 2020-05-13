@@ -21,6 +21,7 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
 
     /**
      * 初始化XTerm 单个关闭
+     *
      * @return
      */
 
@@ -35,6 +36,10 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
         try {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
             jSchSession.getChannel().disconnect();
+            jSchSession.setCommander(null);
+            jSchSession.setChannel(null);
+            jSchSession = null;
+            JSchSessionMap.removeSession(session.getId(), loginOutMessage.getInstanceId());
         } catch (Exception e) {
             // e.printStackTrace();
         }

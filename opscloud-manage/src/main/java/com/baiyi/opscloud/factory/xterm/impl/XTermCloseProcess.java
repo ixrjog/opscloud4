@@ -40,6 +40,7 @@ public class XTermCloseProcess extends BaseXTermProcess implements IXTermProcess
             }
         }
         try {
+            sessionMap.clear();
             session.close();
         } catch (Exception e) {
             e.printStackTrace();
