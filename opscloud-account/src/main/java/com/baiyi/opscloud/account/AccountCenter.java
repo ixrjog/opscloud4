@@ -72,7 +72,7 @@ public class AccountCenter {
         try{
             AccountFactory.getAccountByKey("JumpserverAccount").pushSSHKey(ocUser);
         }catch (Exception e){
-            
+
         }
     }
 
