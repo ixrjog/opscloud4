@@ -63,6 +63,10 @@ public class AccountCenter {
         }
     }
 
+    private void initialUser(OcUser ocUser){
+
+    }
+
     public Boolean create(String key, OcUser user) {
         IAccount account = AccountFactory.getAccountByKey(key);
         return account.create(user);
