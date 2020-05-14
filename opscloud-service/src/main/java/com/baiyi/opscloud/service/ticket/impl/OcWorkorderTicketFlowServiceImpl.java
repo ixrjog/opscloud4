@@ -25,10 +25,19 @@ public class OcWorkorderTicketFlowServiceImpl implements OcWorkorderTicketFlowSe
     }
 
     @Override
-    public OcWorkorderTicketFlow queryOcWorkorderTicketFlowByflowParentId(int flowParentId){
+    public OcWorkorderTicketFlow queryOcWorkorderTicketFlowByflowParentId(int flowParentId) {
         Example example = new Example(OcWorkorderTicketFlow.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("flowParentId", flowParentId);
+        return ocWorkorderTicketFlowMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public OcWorkorderTicketFlow queryOcWorkorderTicketByUniqueKey(int ticketId, String flowName) {
+        Example example = new Example(OcWorkorderTicketFlow.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ticketId", ticketId);
+        criteria.andEqualTo("flowName", flowName);
         return ocWorkorderTicketFlowMapper.selectOneByExample(example);
     }
 

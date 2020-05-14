@@ -7,12 +7,6 @@ package com.baiyi.opscloud.common.base;
  */
 public enum  XTermRequestStatus {
 
-    /**
-     *   keyCode("keyCode", "指令"),
-     *       subServerGroup("serverGroup", "基于服务器组订阅"),
-     *     subTaskChain("taskChain", "订阅任务链表");
-     */
-
     INITIAL("INITIAL", "会话初始建立"),
     HEARTBEAT("HEARTBEAT","心跳，保持会话"),
     COMMAND("COMMAND", "交互命令"),
