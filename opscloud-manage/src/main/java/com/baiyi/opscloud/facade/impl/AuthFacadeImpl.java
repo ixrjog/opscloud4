@@ -257,5 +257,4 @@ public class AuthFacadeImpl implements AuthFacade {
         return MenuUtils.buildMenu(ocAuthMenu);
     }
 
-
 }

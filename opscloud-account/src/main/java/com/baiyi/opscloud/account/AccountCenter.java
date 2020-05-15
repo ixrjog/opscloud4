@@ -57,9 +57,22 @@ public class AccountCenter {
             ocAuthFacade.setOcUserPassword(ocUser, loginParam.getPassword());
             BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
             wrapper.setBody(loginVO);
+            initialUser(ocUser);
             return wrapper;
         } else {
             return new BusinessWrapper(ErrorEnum.USER_LOGIN_FAILUER);
+        }
+    }
+
+    /**
+     * 登录初始化
+     * @param ocUser
+     */
+    private void initialUser(OcUser ocUser){
+        try{
+            AccountFactory.getAccountByKey("JumpserverAccount").pushSSHKey(ocUser);
+        }catch (Exception e){
+
         }
     }
 

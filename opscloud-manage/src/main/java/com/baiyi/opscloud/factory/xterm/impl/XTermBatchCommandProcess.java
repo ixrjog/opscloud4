@@ -40,8 +40,8 @@ public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTerm
 
     @Override
     protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermBatchCommandMSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermBatchCommandMSMessage.class);
-        return cmdMessage;
+        XTermBatchCommandMSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermBatchCommandMSMessage.class);
+        return baseMessage;
     }
 
     /**

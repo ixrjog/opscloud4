@@ -41,4 +41,10 @@ public class JSchSessionMap {
             return sessionMap.get(instanceId);
         }
     }
+
+    public static void removeSession(String sessionId, String instanceId) {
+        Map<String, JSchSession> sessionMap = jSchSessionMap.get(sessionId);
+        if (sessionMap != null)
+            sessionMap.remove(instanceId);
+    }
 }

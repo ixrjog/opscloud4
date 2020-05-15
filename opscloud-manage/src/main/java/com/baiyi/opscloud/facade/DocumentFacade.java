@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.vo.document.DocumentVO;
 
 /**
@@ -10,4 +11,8 @@ import com.baiyi.opscloud.domain.vo.document.DocumentVO;
 public interface DocumentFacade {
 
     DocumentVO.Doc queryDocByKey(String docKey);
+
+    DocumentVO.UserDoc queryUserDocByType(int docType);
+
+    BusinessWrapper<Boolean> saveUserDoc(DocumentVO.UserDoc userDoc);
 }

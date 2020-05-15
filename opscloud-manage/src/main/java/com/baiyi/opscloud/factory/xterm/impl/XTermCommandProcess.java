@@ -53,8 +53,8 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
 
     @Override
     protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermCommandWSMessage cmdMessage = new GsonBuilder().create().fromJson(message, XTermCommandWSMessage.class);
-        return cmdMessage;
+        XTermCommandWSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermCommandWSMessage.class);
+        return baseMessage;
     }
 
 }

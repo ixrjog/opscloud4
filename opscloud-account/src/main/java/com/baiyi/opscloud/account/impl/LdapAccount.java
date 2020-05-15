@@ -7,10 +7,14 @@ import com.baiyi.opscloud.account.builder.OcUserBuilder;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthUserRole;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.ldap.entry.Person;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.service.auth.OcAuthRoleService;
+import com.baiyi.opscloud.service.auth.OcAuthUserRoleService;
 import com.google.common.collect.Lists;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
@@ -19,6 +23,8 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.common.base.Global.BASE_ROLE_NAME;
 
 /**
  * @Author baiyi
@@ -36,6 +42,13 @@ public class LdapAccount extends BaseAccount implements IAccount {
 
     @Resource
     private GroupRepo groupRepo;
+
+    @Resource
+    private OcAuthUserRoleService ocAuthUserRoleService;
+
+    @Resource
+    private OcAuthRoleService ocAuthRoleService;
+
 
     @Override
     protected List<OcUser> getUserList() {
@@ -67,7 +80,20 @@ public class LdapAccount extends BaseAccount implements IAccount {
         String password = (StringUtils.isEmpty(user.getPassword()) ? PasswordUtils.getPW(PASSWORD_LENGTH) : user.getPassword());
         user.setPassword(stringEncryptor.encrypt(password)); // 加密
         ocUserService.addOcUser(user);
+        initialUserBaseRole(user); // 初始化角色
+        // 初始化默认角色
         return personRepo.create(LdapPersonConvert.convertOcUser(user, password));
+    }
+
+    private void initialUserBaseRole(OcUser user) {
+        try{
+            OcAuthUserRole ocAuthUserRole = new OcAuthUserRole();
+            ocAuthUserRole.setUsername(user.getUsername());
+            OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleByName(BASE_ROLE_NAME);
+            ocAuthUserRole.setRoleId(ocAuthRole.getId());
+            ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
+        }catch (Exception e){
+        }
     }
 
     /**

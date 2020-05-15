@@ -85,6 +85,8 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     @Resource
     private DepartmentMemberDecorator departmentMemberDecorator;
 
+    public final static int AGREE_TYPE = 1;
+
     @Override
     public DataTable<OcWorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery) {
         DataTable<OcWorkorderGroup> table = ocWorkorderGroupService.queryOcWorkorderGroupByParam(pageQuery);
@@ -135,6 +137,10 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Override
     public BusinessWrapper<Boolean> agreeWorkorderTicket(int ticketId) {
+        return approvalWorkorderTicket(ticketId, AGREE_TYPE);
+    }
+
+    private BusinessWrapper<Boolean> approvalWorkorderTicket(int ticketId, int type) {
         OcUser ocUser = userFacade.getOcUserBySession();
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(ticketId);
         // 当前指针
@@ -162,20 +168,29 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
             ocWorkorderTicketFlow.setUsername(ocWorkorderTicketSubscribe.getUsername());
         }
         // 开始审批
-        ocWorkorderTicketFlow.setApprovalStatus(1);
+        ocWorkorderTicketFlow.setApprovalStatus(type);
         ocWorkorderTicketFlowService.updateOcWorkorderTicketFlow(ocWorkorderTicketFlow);
         // 更新工单状态
-        ocWorkorderTicket.setFlowId(ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowByflowParentId(ocWorkorderTicketFlow.getId()).getId()); // 插入下级流程id
-        ocWorkorderTicket.setTicketPhase(ocWorkorderTicketFlow.getFlowName());
-        ocWorkorderTicketService.updateOcWorkorderTicket(ocWorkorderTicket);
-        // 执行工单
-        executorTicket(ocWorkorderTicket);
+        if (type == AGREE_TYPE) {
+            ocWorkorderTicket.setFlowId(ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowByflowParentId(ocWorkorderTicketFlow.getId()).getId()); // 插入下级流程id
+            ocWorkorderTicket.setTicketPhase(ocWorkorderTicketFlow.getFlowName());
+            ocWorkorderTicketService.updateOcWorkorderTicket(ocWorkorderTicket);
+            // 执行工单
+            executorTicket(ocWorkorderTicket);
+        } else {
+            // 拒绝申请
+            ocWorkorderTicketFlow = ocWorkorderTicketFlowService.queryOcWorkorderTicketByUniqueKey(ticketId, TicketPhase.FINALIZED.name());
+            ocWorkorderTicket.setFlowId(ocWorkorderTicketFlow.getId());
+            ocWorkorderTicket.setTicketPhase(TicketPhase.FINALIZED.name());
+            ocWorkorderTicketService.updateOcWorkorderTicket(ocWorkorderTicket);
+            ticketSubscribe.unsubscribe(ocWorkorderTicket); // 取消所有订阅
+        }
         return BusinessWrapper.SUCCESS;
     }
 
     @Override
     public BusinessWrapper<Boolean> disagreeWorkorderTicket(int ticketId) {
-        return BusinessWrapper.SUCCESS;
+        return approvalWorkorderTicket(ticketId, AGREE_TYPE - 1);
     }
 
     /**

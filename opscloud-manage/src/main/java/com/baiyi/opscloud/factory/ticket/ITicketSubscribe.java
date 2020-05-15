@@ -17,7 +17,19 @@ public interface ITicketSubscribe {
 
     OcWorkorderTicketSubscribe queryTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, OcUser ocUser);
 
+    /**
+     * 订阅工单
+     * @param ocWorkorderTicket
+     * @return
+     */
     BusinessWrapper<Boolean> subscribe(OcWorkorderTicket ocWorkorderTicket);
+
+    /**
+     * 取消订阅
+     * @param ocWorkorderTicket
+     * @return
+     */
+    void unsubscribe(OcWorkorderTicket ocWorkorderTicket);
 
     void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase);
 

@@ -13,6 +13,8 @@ public interface OcWorkorderTicketFlowService {
 
     OcWorkorderTicketFlow queryOcWorkorderTicketFlowByflowParentId(int flowParentId);
 
+    OcWorkorderTicketFlow queryOcWorkorderTicketByUniqueKey(int ticketId,String flowName);
+
     void addOcWorkorderTicketFlow(OcWorkorderTicketFlow ocWorkorderTicketFlow);
 
     void updateOcWorkorderTicketFlow(OcWorkorderTicketFlow ocWorkorderTicketFlow);

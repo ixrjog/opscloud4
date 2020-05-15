@@ -8,10 +8,12 @@ import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.xterm.task.SentOutputTask;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -24,37 +26,12 @@ public class XtermWSController {
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
     private static CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
 
-   // private static final String sessionId = UUID.randomUUID().toString();
+    private static final String sessionId = UUID.randomUUID().toString();
 
-
-//    private static OcAuthFacade ocAuthFacade;
-//
-//    private static OcUserService ocUserService;
-//
-//    private static ServerGroupFacade serverGroupFacade;
-//
-//    private static KeyboxFacade keyboxFacade;
-//
-//    @Autowired
-//    public void setOcAuthFacade(OcAuthFacade ocAuthFacade) {
-//        XtermWSController.ocAuthFacade = ocAuthFacade;
-//    }
-//
-//    @Autowired
-//    public void setOcUserService(OcUserService ocUserService) {
-//        XtermWSController.ocUserService = ocUserService;
-//    }
-//
-//    @Autowired
-//    public void setServerGroupFacade(ServerGroupFacade serverGroupFacade) {
-//        XtermWSController.serverGroupFacade = serverGroupFacade;
-//    }
-//
-//    @Autowired
-//    public void setKeyboxFacade(KeyboxFacade keyboxFacade) {
-//        XtermWSController.keyboxFacade = keyboxFacade;
-//    }
-
+    private Session session = null;
+    
+    // 超时时间10分钟
+    public static final Long WEBSOCKET_TIMEOUT = 6000000L;
 
     /**
      * 连接建立成功调用的方法
@@ -64,7 +41,8 @@ public class XtermWSController {
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
         log.info("有连接加入，当前连接数为：{}", cnt);
-        session.setMaxIdleTimeout(0);
+        session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
+        this.session = session;
         // 线程必须启在这里
         Runnable run = new SentOutputTask(session.getId(), session);
         Thread thread = new Thread(run);
@@ -75,8 +53,8 @@ public class XtermWSController {
      * 连接关闭调用的方法
      */
     @OnClose
-    public void onClose(Session session) {
-        XTermProcessFactory.getIXTermProcessByKey(XTermRequestStatus.CLOSE.getCode()).xtermProcess("",session);
+    public void onClose() {
+        XTermProcessFactory.getIXTermProcessByKey(XTermRequestStatus.CLOSE.getCode()).xtermProcess("", session);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
         log.info("有连接关闭，当前连接数为：{}", cnt);
@@ -84,15 +62,18 @@ public class XtermWSController {
 
     /**
      * 收到客户端消息后调用的方法
+     * Session session
      *
      * @param message 客户端发送过来的消息
      */
     @OnMessage
-    public void onMessage(String message, Session session) {
+    public void onMessage(String message) {
+        if (!session.isOpen() || StringUtils.isEmpty(message)) return;
+
         log.info("来自客户端的消息：{}", message);
         JSONObject jsonObject = JSON.parseObject(message);
         String status = jsonObject.getString("status");
-        XTermProcessFactory.getIXTermProcessByKey(status).xtermProcess(message,session);
+        XTermProcessFactory.getIXTermProcessByKey(status).xtermProcess(message, session);
     }
 
     /**
