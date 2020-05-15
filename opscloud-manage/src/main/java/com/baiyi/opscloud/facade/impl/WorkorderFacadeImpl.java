@@ -183,6 +183,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
             ocWorkorderTicket.setFlowId(ocWorkorderTicketFlow.getId());
             ocWorkorderTicket.setTicketPhase(TicketPhase.FINALIZED.name());
             ocWorkorderTicketService.updateOcWorkorderTicket(ocWorkorderTicket);
+            ticketSubscribe.unsubscribe(ocWorkorderTicket); // 取消所有订阅
         }
         return BusinessWrapper.SUCCESS;
     }

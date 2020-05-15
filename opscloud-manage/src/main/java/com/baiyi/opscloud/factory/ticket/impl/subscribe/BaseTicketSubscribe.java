@@ -41,8 +41,8 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
     private OcUserService ocUserService;
 
     @Override
-    public OcWorkorderTicketSubscribe queryTicketSubscribe(OcWorkorderTicket ocWorkorderTicket,OcUser ocUser) {
-       return null;
+    public OcWorkorderTicketSubscribe queryTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, OcUser ocUser) {
+        return null;
     }
 
 
@@ -63,13 +63,20 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
         }
     }
 
+    @Override
+    public void unsubscribe(OcWorkorderTicket ocWorkorderTicket) {
+        for (TicketSubscribeType subscribeType : TicketSubscribeType.values())
+            resetTicketSubscribe(ocWorkorderTicket, subscribeType.getType());
+    }
+
+
     /**
      * 重置所有订阅用户无效
      *
      * @param ocWorkorderTicket
      */
-    protected void resetTicketSubscribe(OcWorkorderTicket ocWorkorderTicket,int subscribeType) {
-        List<OcWorkorderTicketSubscribe> list = ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ocWorkorderTicket.getId(),subscribeType);
+    protected void resetTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, int subscribeType) {
+        List<OcWorkorderTicketSubscribe> list = ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ocWorkorderTicket.getId(), subscribeType);
         for (OcWorkorderTicketSubscribe subscribe : list) {
             subscribe.setSubscribeActive(false);
             ocWorkorderTicketSubscribeService.updateOcWorkorderTicketSubscribe(subscribe);
