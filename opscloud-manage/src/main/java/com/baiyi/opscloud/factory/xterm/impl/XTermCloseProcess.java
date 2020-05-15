@@ -31,6 +31,7 @@ public class XTermCloseProcess extends BaseXTermProcess implements IXTermProcess
     @Override
     public void xtermProcess(String message, Session session) {
         Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
+        if(sessionMap == null) return;
         for (String instanceId : sessionMap.keySet()) {
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
