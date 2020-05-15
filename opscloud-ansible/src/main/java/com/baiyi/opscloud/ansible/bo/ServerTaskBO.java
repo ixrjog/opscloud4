@@ -33,6 +33,9 @@ public class ServerTaskBO {
     @Builder.Default
     private Integer stopType = 0;
 
+    @Builder.Default
+    private Integer systemType = 0;
+
     private Integer exitValue;
 
     private String taskStatus;
