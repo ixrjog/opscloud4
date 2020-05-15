@@ -20,13 +20,24 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
-<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/help/opscloud/web-xterm/oc-web-xterm.mov" target="_blank">Web-XTerm演示视频</a>
-
-
-<a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/mov/oc-playbook.mov" target="_blank">AnsiblePlaybook演示视频</a>
-
-
+<img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-1.gif"></img>
+### web终端
+  + 支持批量登录
+  + 支持命令同步
+  + 支持会话复制（单机多终端）
+  
+<img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-playbook-1.gif"></img>
+### ansible-playbook
+  + 多线程执行
+  + 批量执行结果精确展示（成功数量/失败数量）
+  + 支持自定义变量
+  + 支持tags
+  + 执行结果查看页面可以直接使用web终端登录操作（支持会话复制）
+  
 <img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/mov/createInstance.gif"></img> 
+### aliyun-ecs
+  + 非阿里云ecs模版实现开机（全部oc实现）
+  + 开通服务器后自动录入jumpserver/zabbix
 
 <img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/version/3.0.0-demo/opscloud-01.png"></img> 
 <img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/version/3.0.0-demo/opscloud-02.png"></img> 
