@@ -140,8 +140,9 @@
 <!--        oc_workorder_ticket_flow-->
 <!--        oc_keybox-->
 <!--        oc_document-->
+<!--        oc_user_document-->
 
-        <table tableName="oc_user_document">
+        <table tableName="oc_user_setting">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

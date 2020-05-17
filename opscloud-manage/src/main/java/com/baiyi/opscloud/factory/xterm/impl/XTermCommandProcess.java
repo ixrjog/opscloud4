@@ -2,8 +2,8 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermCommandWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.CommandMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
@@ -33,28 +33,25 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermCommandWSMessage cmdMessage = (XTermCommandWSMessage) getXTermMessage(message);
+        CommandMessage xtermMessage = (CommandMessage) getXTermMessage(message);
 
-        Boolean isBatch = JSchSessionMap.getBatchBySessionId(session.getId());
-        if (isBatch == null)
-            isBatch = false;
-
-        if (!isBatch) {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), cmdMessage.getInstanceId());
-            jSchSession.getCommander().print(cmdMessage.getData());
+        if (!isBatch(session)) {
+            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getInstanceId());
+            jSchSession.getCommander().print(xtermMessage.getData());
+           // System.err.println( "cmd=\"" + xtermMessage.getData() +"\"");
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
             for (String instanceId : sessionMap.keySet()) {
                 JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), instanceId);
-                jSchSession.getCommander().print(cmdMessage.getData());
+                jSchSession.getCommander().print(xtermMessage.getData());
             }
         }
     }
 
     @Override
-    protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermCommandWSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermCommandWSMessage.class);
-        return baseMessage;
+    protected BaseXTermMessage getXTermMessage(String message) {
+        CommandMessage xtermMessage = new GsonBuilder().create().fromJson(message, CommandMessage.class);
+        return xtermMessage;
     }
 
 }

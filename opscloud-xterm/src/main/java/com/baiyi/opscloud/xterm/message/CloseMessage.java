@@ -8,6 +8,6 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class XTermCloseWSMessage extends BaseXTermWSMessage {
+public class CloseMessage extends BaseXTermMessage {
 
 }

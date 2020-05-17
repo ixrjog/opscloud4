@@ -7,8 +7,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermInitialIpWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.InitialIpMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
@@ -37,13 +37,13 @@ public class XTermInitialIpProcess extends BaseXTermProcess implements IXTermPro
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermInitialIpWSMessage baseMessage = (XTermInitialIpWSMessage) getXTermMessage(message);
-        baseMessage.setLoginUserType(1);
+        InitialIpMessage xtermMessage = (InitialIpMessage) getXTermMessage(message);
+        xtermMessage.setLoginUserType(1);
 
-        String username = ocAuthFacade.getUserByToken(baseMessage.getToken());
+        String username = ocAuthFacade.getUserByToken(xtermMessage.getToken());
         if (StringUtils.isEmpty(username)) return;
         OcUser ocUser = ocUserService.queryOcUserByUsername(username);
-        String ip = baseMessage.getIp();
+        String ip = xtermMessage.getIp();
 
         boolean isAdmin = isOps(ocUser);
         // 鉴权
@@ -58,15 +58,15 @@ public class XTermInitialIpProcess extends BaseXTermProcess implements IXTermPro
                 return;
         }
 
-        HostSystem hostSystem = buildHostSystem(ocUser, ip, baseMessage, isAdmin);
-        RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), baseMessage.getInstanceId(), hostSystem);
+        HostSystem hostSystem = buildHostSystem(ocUser, ip, xtermMessage, isAdmin);
+        RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), xtermMessage.getInstanceId(), hostSystem);
     }
 
 
     @Override
-    protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermInitialIpWSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermInitialIpWSMessage.class);
-        return baseMessage;
+    protected BaseXTermMessage getXTermMessage(String message) {
+        InitialIpMessage xtermMessage = new GsonBuilder().create().fromJson(message, InitialIpMessage.class);
+        return xtermMessage;
     }
 
 }

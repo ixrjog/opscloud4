@@ -2,8 +2,8 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermLogoutWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.LogoutMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
@@ -32,20 +32,20 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermLogoutWSMessage loginOutMessage = (XTermLogoutWSMessage) getXTermMessage(message);
+        LogoutMessage xtermMessage = (LogoutMessage) getXTermMessage(message);
 
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), loginOutMessage.getInstanceId());
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getInstanceId());
         jSchSession.getChannel().disconnect();
         jSchSession.setCommander(null);
         jSchSession.setChannel(null);
         jSchSession.setInputToChannel(null);
         jSchSession = null;
-        JSchSessionMap.removeSession(session.getId(), loginOutMessage.getInstanceId());
+        JSchSessionMap.removeSession(session.getId(), xtermMessage.getInstanceId());
     }
 
     @Override
-    protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermLogoutWSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermLogoutWSMessage.class);
-        return baseMessage;
+    protected BaseXTermMessage getXTermMessage(String message) {
+        LogoutMessage xtermMessage = new GsonBuilder().create().fromJson(message, LogoutMessage.class);
+        return xtermMessage;
     }
 }

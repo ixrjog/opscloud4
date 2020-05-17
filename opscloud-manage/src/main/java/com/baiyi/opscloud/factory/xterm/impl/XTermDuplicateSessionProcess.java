@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermDuplicateSessionWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.DuplicateSessionMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -36,25 +36,25 @@ public class XTermDuplicateSessionProcess extends BaseXTermProcess implements IX
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermDuplicateSessionWSMessage baseMessage = (XTermDuplicateSessionWSMessage) getXTermMessage(message);
-        String username = ocAuthFacade.getUserByToken(baseMessage.getToken());
+        DuplicateSessionMessage xtermMessage = (DuplicateSessionMessage) getXTermMessage(message);
+        String username = ocAuthFacade.getUserByToken(xtermMessage.getToken());
         if (StringUtils.isEmpty(username)) return;
         OcUser ocUser = ocUserService.queryOcUserByUsername(username);
 
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), baseMessage.getDuplicateInstanceId());
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getDuplicateInstanceId());
 
         String host = jSchSession.getHostSystem().getHost();
         boolean isAdmin = isOps(ocUser);
-        HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage, isAdmin);
+        HostSystem hostSystem = buildHostSystem(ocUser, host, xtermMessage, isAdmin);
 
-        RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), baseMessage.getInstanceId(), hostSystem);
+        RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), xtermMessage.getInstanceId(), hostSystem);
     }
 
 
     @Override
-    protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermDuplicateSessionWSMessage baseMessage = new GsonBuilder().create().fromJson(message, XTermDuplicateSessionWSMessage.class);
-        return baseMessage;
+    protected BaseXTermMessage getXTermMessage(String message) {
+        DuplicateSessionMessage xtermMessage = new GsonBuilder().create().fromJson(message, DuplicateSessionMessage.class);
+        return xtermMessage;
     }
 
 }

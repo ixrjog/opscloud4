@@ -10,6 +10,10 @@ import java.io.PrintStream;
 public class JSchSession {
 
     private String sessionId;
+    /**
+     * 服务器唯一id
+     * 会话复制后 id#uuid
+     */
     private String instanceId;
     private PrintStream commander;
     private OutputStream inputToChannel;

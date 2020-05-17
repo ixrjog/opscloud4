@@ -4,13 +4,11 @@ import lombok.Data;
 
 /**
  * @Author baiyi
- * @Date 2020/5/11 10:47 上午
+ * @Date 2020/5/12 10:44 上午
  * @Version 1.0
  */
 @Data
-public class XTermCommandWSMessage extends BaseXTermWSMessage {
+public class ResizeMessage extends BaseXTermMessage {
 
     private String instanceId;
-    private String data;
-
 }

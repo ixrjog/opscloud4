@@ -2,7 +2,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import org.springframework.stereotype.Component;
@@ -49,7 +49,7 @@ public class XTermCloseProcess extends BaseXTermProcess implements IXTermProcess
     }
 
     @Override
-    protected BaseXTermWSMessage getXTermMessage(String message) {
+    protected BaseXTermMessage getXTermMessage(String message) {
         return null;
     }
 }

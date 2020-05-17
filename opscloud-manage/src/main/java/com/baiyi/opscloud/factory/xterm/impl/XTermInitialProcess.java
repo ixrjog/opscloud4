@@ -5,8 +5,8 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
-import com.baiyi.opscloud.xterm.message.XTermInitialWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.InitialMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
@@ -40,21 +40,21 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
 
     @Override
     public void xtermProcess(String message, Session session) {
-        XTermInitialWSMessage baseMessage = (XTermInitialWSMessage) getXTermMessage(message);
-        String username = ocAuthFacade.getUserByToken(baseMessage.getToken());
+        InitialMessage xtermMessage = (InitialMessage) getXTermMessage(message);
+        String username = ocAuthFacade.getUserByToken(xtermMessage.getToken());
         if (StringUtils.isEmpty(username)) return;
         OcUser ocUser = ocUserService.queryOcUserByUsername(username);
 
-        BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(baseMessage.getUuid(), ocUser);
+        BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
         if (!wrapper.isSuccess())
             return;
         Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
         boolean isAdmin = isOps(ocUser);
-        for (String instanceId : baseMessage.getInstanceIds()) {
+        for (String instanceId : xtermMessage.getInstanceIds()) {
             if (!serverTreeHostPatternMap.containsKey(instanceId))
                 continue;
             String host = serverTreeHostPatternMap.get(instanceId);
-            HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage,isAdmin);
+            HostSystem hostSystem = buildHostSystem(ocUser, host, xtermMessage,isAdmin);
             RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), instanceId, hostSystem);
         }
     }
@@ -63,9 +63,9 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
 
 
     @Override
-    protected BaseXTermWSMessage getXTermMessage(String message) {
-        XTermInitialWSMessage initialMessage = new GsonBuilder().create().fromJson(message, XTermInitialWSMessage.class);
-        return initialMessage;
+    protected BaseXTermMessage getXTermMessage(String message) {
+        InitialMessage xtermMessage = new GsonBuilder().create().fromJson(message, InitialMessage.class);
+        return xtermMessage;
     }
 
 }

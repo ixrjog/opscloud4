@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.xterm.handler;
 
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -90,7 +90,7 @@ public class RemoteInvokeHandler {
         }
     }
 
-    public static void invokeChannelPtySize(ChannelShell channel, BaseXTermWSMessage baseMessage) {
+    public static void invokeChannelPtySize(ChannelShell channel, BaseXTermMessage baseMessage) {
         int width = baseMessage.getXtermWidth();
         int height = baseMessage.getXtermHeight();
         channel.setPtySize((int) Math.floor(width / 7.2981), (int) Math.floor(height / 14.4166), width, height);

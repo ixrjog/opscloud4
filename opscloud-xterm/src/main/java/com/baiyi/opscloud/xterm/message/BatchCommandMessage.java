@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class XTermBatchCommandMSMessage extends BaseXTermWSMessage {
+public class BatchCommandMessage extends BaseXTermMessage {
 
     private Boolean isBatch; // 会话批量指令
 

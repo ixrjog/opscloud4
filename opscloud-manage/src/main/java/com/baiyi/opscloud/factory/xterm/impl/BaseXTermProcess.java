@@ -15,12 +15,14 @@ import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
+import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
+import javax.websocket.Session;
 
 import static com.baiyi.opscloud.factory.xterm.impl.XTermInitialProcess.HIGH_AUTHORITY_ACCOUNT;
 
@@ -55,13 +57,13 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
 
     //  protected static final String sessionId = UUID.randomUUID().toString();
 
-    abstract protected BaseXTermWSMessage getXTermMessage(String message);
+    abstract protected BaseXTermMessage getXTermMessage(String message);
 
     protected boolean isOps(OcUser ocUser) {
         return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
     }
 
-    protected HostSystem buildHostSystem(OcUser ocUser, String host, BaseXTermWSMessage baseMessage, boolean isAdmin) {
+    protected HostSystem buildHostSystem(OcUser ocUser, String host, BaseXTermMessage baseMessage, boolean isAdmin) {
         OcServer ocServer = ocServerService.queryOcServerByIp(host);
         OcUserPermission ocUserPermission = new OcUserPermission();
         ocUserPermission.setUserId(ocUser.getId());
@@ -93,6 +95,13 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
         return hostSystem;
     }
 
+
+    protected Boolean isBatch(Session session) {
+        Boolean isBatch = JSchSessionMap.getBatchBySessionId(session.getId());
+        if (isBatch == null)
+            isBatch = Boolean.FALSE;
+        return isBatch;
+    }
 
     /**
      * 注册

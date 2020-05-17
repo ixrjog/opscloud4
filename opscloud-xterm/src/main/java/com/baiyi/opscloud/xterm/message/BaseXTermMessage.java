@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class BaseXTermWSMessage {
+public class BaseXTermMessage {
 
     private String id;
     private String token;
