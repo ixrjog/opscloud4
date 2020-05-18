@@ -75,7 +75,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         List<T> instanceList = getInstanceList();
         for (T instance : instanceList)
             saveOcCloudServer(instance, cloudServerMap, pushName);
-
+        setCloudServerDeleted(cloudServerMap);
         return Boolean.TRUE;
     }
 
@@ -106,11 +106,10 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
                 updateCloudServer(instance, ocCloudServer);
                 // TODO 更新 server 表 public_ip
                 // saveServerPublicIP(updateCloudServerByInstance(instance, cloudServerDO)); // 已录入(更新数据)
-                map.remove(instanceId);
             } else {
                 addOcCloudServer(instance);
             }
-            setCloudServerDeleted(map);
+            map.remove(instanceId);
         } catch (Exception e) {
         }
 
