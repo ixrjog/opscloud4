@@ -34,12 +34,11 @@ public class ServerTest extends BaseUnit {
 
     @Test
     void test1() {
-      List<OcServer> list =  ocServerService.queryAllOcServer();
-      list.forEach( e ->{
-              e.setLoginUser("gegejia");
-          ocServerService.updateOcServer(e);
-
-      });
+        List<OcServer> list = ocServerService.queryAllOcServer();
+        list.forEach(e -> {
+            e.setLoginUser("gegejia");
+            ocServerService.updateOcServer(e);
+        });
 
     }
 }

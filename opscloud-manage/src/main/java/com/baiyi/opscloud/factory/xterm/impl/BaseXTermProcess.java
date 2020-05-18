@@ -24,7 +24,8 @@ import org.springframework.beans.factory.InitializingBean;
 import javax.annotation.Resource;
 import javax.websocket.Session;
 
-import static com.baiyi.opscloud.factory.xterm.impl.XTermInitialProcess.HIGH_AUTHORITY_ACCOUNT;
+import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
+
 
 /**
  * @Author baiyi

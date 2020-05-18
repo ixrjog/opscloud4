@@ -35,4 +35,17 @@ public class KeyboxTest extends BaseUnit {
         ocKeyboxService.updateOcKeybox(ocKeybox);
     }
 
+
+    @Test
+    void decryptOcKeyboxPrivateKeyTest() {
+        OcKeybox ocKeybox = ocKeyboxService.queryOcKeyboxById(1);
+        String privateKey = ocKeybox.getPrivateKey();
+        privateKey = stringEncryptor.decrypt(privateKey);
+
+        System.err.println(privateKey);
+
+
+
+    }
+
 }

@@ -23,8 +23,6 @@ import java.util.Map;
 @Component
 public class XTermInitialProcess extends BaseXTermProcess implements IXTermProcess {
 
-    // 高权限账户
-    public static final String HIGH_AUTHORITY_ACCOUNT = "admin";
 
     /**
      * 初始化XTerm
@@ -58,8 +56,6 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
             RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), instanceId, hostSystem);
         }
     }
-
-
 
 
     @Override
