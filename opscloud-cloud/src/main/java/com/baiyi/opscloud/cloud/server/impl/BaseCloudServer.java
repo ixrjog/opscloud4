@@ -56,14 +56,15 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     }
 
     /**
-     *  录入实例
+     * 录入实例
+     *
      * @param regionId
      * @param instanceId
      * @return
      */
     @Override
     public Boolean record(String regionId, String instanceId) {
-        T instance = getInstance(regionId,instanceId);
+        T instance = getInstance(regionId, instanceId);
         saveOcCloudServer(instance, Maps.newHashMap(), false);
         return Boolean.TRUE;
     }
@@ -109,8 +110,19 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
             } else {
                 addOcCloudServer(instance);
             }
+            setCloudServerDeleted(map);
         } catch (Exception e) {
         }
+
+    }
+
+    private void setCloudServerDeleted(Map<String, OcCloudServer> map) {
+        if (map == null || map.isEmpty()) return;
+        map.keySet().forEach(k -> {
+            OcCloudServer ocCloudServer = map.get(k);
+            ocCloudServer.setServerStatus(CloudServerStatus.DELETE.getStatus());
+            ocCloudServerService.updateOcCloudServer(ocCloudServer);
+        });
     }
 
     @Override
