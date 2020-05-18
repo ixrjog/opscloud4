@@ -93,6 +93,9 @@ public class RemoteInvokeHandler {
     public static void invokeChannelPtySize(ChannelShell channel, BaseXTermMessage baseMessage) {
         int width = baseMessage.getXtermWidth();
         int height = baseMessage.getXtermHeight();
-        channel.setPtySize((int) Math.floor(width / 7.2981), (int) Math.floor(height / 14.4166), width, height);
+        // int cols = (int) Math.floor(width / 7.2981);
+        int cols = (int) Math.floor(width / 7);
+        int rows = (int) Math.floor(height / 14.4166);
+        channel.setPtySize(cols, rows, width, height);
     }
 }
