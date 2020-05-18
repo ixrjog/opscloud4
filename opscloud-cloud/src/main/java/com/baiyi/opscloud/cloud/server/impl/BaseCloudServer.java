@@ -191,7 +191,8 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     protected OcCloudServer updateCloudServer(T instance, OcCloudServer ocCloudServer) {
         OcCloudServer preCloudServer = getCloudServer(instance);
         preCloudServer.setId(ocCloudServer.getId());
-        invokeCloudServerStatus(preCloudServer, ocCloudServer.getServerStatus());
+        int cloudServerStatus = ocCloudServer.getServerStatus() == null ? 0 : ocCloudServer.getServerStatus();
+        invokeCloudServerStatus(preCloudServer, cloudServerStatus);
         if (StringUtils.isEmpty(preCloudServer.getPrivateIp())) // VM-Tools可能导致获取不到ip
             preCloudServer.setPrivateIp(ocCloudServer.getPrivateIp());
         if (preCloudServer != null)
