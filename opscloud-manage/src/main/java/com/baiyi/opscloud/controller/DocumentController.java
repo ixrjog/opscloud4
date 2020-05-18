@@ -31,6 +31,12 @@ public class DocumentController {
     }
 
     @ApiOperation(value = "查询帮助文档")
+    @GetMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DocumentVO.Doc> queryDocById(@Valid int id) {
+        return new HttpResult<>(documentFacade.queryDocById(id));
+    }
+
+    @ApiOperation(value = "查询帮助文档")
     @GetMapping(value = "/user/type/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DocumentVO.UserDoc> queryUserDocByType(@Valid int docType) {
         return new HttpResult<>(documentFacade.queryUserDocByType(docType));
