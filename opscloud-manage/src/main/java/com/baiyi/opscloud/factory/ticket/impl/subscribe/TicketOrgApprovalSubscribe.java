@@ -48,19 +48,23 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
     @Override
     public BusinessWrapper<Boolean> subscribe(OcWorkorderTicket ocWorkorderTicket) {
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocWorkorderTicket.getUserId());
-        if (orgApproval.getPreferenceDeptMember() != null) {
-            addTicketSubscribe(ocWorkorderTicket, orgApproval.getPreferenceDeptMember().getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
-        }
-        if (orgApproval.getAlternativeDeptMembers() != null) {
-            for (OcOrgDepartmentMemberVO.DepartmentMember member : orgApproval.getAlternativeDeptMembers())
-                addTicketSubscribe(ocWorkorderTicket, member.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+        if (orgApproval.getIsApprovalAuthority()) {
+            // 本人拥有审批权 
+            addTicketSubscribe(ocWorkorderTicket, ocWorkorderTicket.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+        } else {
+            if (orgApproval.getPreferenceDeptMember() != null) {
+                addTicketSubscribe(ocWorkorderTicket, orgApproval.getPreferenceDeptMember().getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+            }
+            if (orgApproval.getAlternativeDeptMembers() != null) {
+                for (OcOrgDepartmentMemberVO.DepartmentMember member : orgApproval.getAlternativeDeptMembers())
+                    addTicketSubscribe(ocWorkorderTicket, member.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+            }
         }
         return BusinessWrapper.SUCCESS;
-
     }
 
     @Override
-    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket,String ticketPhase) {
+    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase) {
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ticket.getUserId());
         ApprovalStepsVO.ApprovalStep approvalStep = ApprovalStepsVO.ApprovalStep.builder()
                 .title("上级审批")
@@ -68,7 +72,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
                 .build();
         ticket.getApprovalDetail().getApprovalSteps().add(approvalStep);
 
-        if(TicketPhase.ORG_APPROVAL.getPhase().equals(ticketPhase))
+        if (TicketPhase.ORG_APPROVAL.getPhase().equals(ticketPhase))
             ticket.getApprovalDetail().setActive(ticket.getApprovalDetail().getApprovalSteps().size());
     }
 
