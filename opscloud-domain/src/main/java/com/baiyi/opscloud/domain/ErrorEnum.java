@@ -10,7 +10,7 @@ public enum ErrorEnum {
     // ----------------------- 系统级错误 -----------------------
     SYSTEM_ERROR(10001, "系统错误！"),
     // 权限
-    AUTHENTICATION_FAILUER(401,"鉴权失败！"),
+    AUTHENTICATION_FAILUER(20001,"鉴权失败！"),
     AUTHENTICATION_API_FAILUER(401,"Api鉴权失败！"),
     AUTHENTICATION_RESOURCE_NOT_EXIST(20002,"资源路径不存在！"),
     AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌Token！"),
@@ -146,7 +146,7 @@ public enum ErrorEnum {
     ORG_DEPARTMENT_MEMBER_IS_LEADER(60001, "经理不能随意变更部门"),
     ORG_DEPARTMENT_MEMBER_IS_APPROVAL(60001, "拥有审批权不能随意变更部门"),
     ORG_DEPARTMENT_USER_NOT_IN_THE_ORG(60001, "你未加入组织架构"),
-    ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT(60001, "你未加入部门"),
+    ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT(0, "你未加入部门"),
     ORG_DEPARTMENT_USER_NO_APPROVAL_REATIONSHIP_FOUND(60001, "用户没有建立上级审批关系"),
 
     // Workorder
