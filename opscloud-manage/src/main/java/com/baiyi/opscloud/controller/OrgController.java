@@ -114,4 +114,11 @@ public class OrgController {
         return new HttpResult<>(orgFacade.updateDepartmentMemberApprovalAuthority(id));
     }
 
+    @ApiOperation(value = "校验用户是否加入部门")
+    @GetMapping(value = "/department/user/check", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> checkUserInTheDepartment() {
+        return new HttpResult<>(orgFacade.checkUserInTheDepartment());
+    }
+
+
 }
