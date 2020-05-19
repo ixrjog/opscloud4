@@ -21,7 +21,9 @@ Welcome to the opscloud wiki!
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
-[XTerm演示视频](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-1.mov) ![](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-2.gif)
+[XTerm演示视频](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-1.mov) 
+
+![](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-2.gif)
 
 ### web终端
 
@@ -29,7 +31,9 @@ Welcome to the opscloud wiki!
 * 支持命令同步
 * 支持会话复制（单机多终端）
 
-[Playbook演示视频](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-playbook-1.mov) ![](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-playbook-1.gif)
+[Playbook演示视频](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-playbook-1.mov) 
+
+![](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-playbook-1.gif)
 
 ### ansible-playbook
 
