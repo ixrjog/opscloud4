@@ -32,11 +32,19 @@ app:
       username: opscloud
       password: 123456
       driver-class-name: com.mysql.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
     jumpserver:
       url: jdbc:mysql://jumpserver.mysql.opscloud.top:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
       username: jumpserver
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
 
 
 # java -jar -Djasypt.encryptor.password=${password}

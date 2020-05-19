@@ -20,11 +20,26 @@ public class OcAuthMenuServiceImpl implements OcAuthMenuService {
     private OcAuthMenuMapper ocAuthMenuMapper;
 
     @Override
-    public OcAuthMenu queryOcAuthMenuByRoleId(int roleId,int menuType){
+    public OcAuthMenu queryOcAuthMenuByRoleId(int roleId, int menuType) {
         Example example = new Example(OcAuthMenu.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("roleId",roleId);
-        criteria.andEqualTo("menuType",menuType);
+        criteria.andEqualTo("roleId", roleId);
+        criteria.andEqualTo("menuType", menuType);
         return ocAuthMenuMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public void addOcAuthMenu(OcAuthMenu ocAuthMenu) {
+        ocAuthMenuMapper.insert(ocAuthMenu);
+    }
+
+    @Override
+    public void updateOcAuthMenu(OcAuthMenu ocAuthMenu) {
+        ocAuthMenuMapper.updateByPrimaryKey(ocAuthMenu);
+    }
+
+    @Override
+    public void deletetOcAuthMenuById(OcAuthMenu ocAuthMenu) {
+        ocAuthMenuMapper.deleteByPrimaryKey(ocAuthMenu);
     }
 }

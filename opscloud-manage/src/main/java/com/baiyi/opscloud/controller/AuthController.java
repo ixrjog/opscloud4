@@ -165,11 +165,23 @@ public class AuthController {
         return new HttpResult<>(authFacade.deleteUserRoleById(id));
     }
 
-    @ApiOperation(value = "分页查询role列表")
+    @ApiOperation(value = "用户查询菜单")
     @GetMapping(value = "/menu/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<MenuVO>> queryUserMenu() {
         return new HttpResult<>(authFacade.queryUserMenu());
     }
 
+
+    @ApiOperation(value = "保存角色菜单配置")
+    @PutMapping(value = "/role/menu/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveRoleMenu(@RequestBody @Valid OcAuthMenuVO.Menu menu) {
+        return new HttpResult<>(authFacade.saveRoleMenu(menu));
+    }
+
+    @ApiOperation(value = "查询角色菜单配置")
+    @GetMapping(value = "/role/menu/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcAuthMenuVO.Menu> queryRoleMenuByRoleId(@RequestParam int roleId) {
+        return new HttpResult<>(authFacade.queryRoleMenuByRoleId(roleId));
+    }
 
 }

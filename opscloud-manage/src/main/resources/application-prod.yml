@@ -32,11 +32,19 @@ app:
       username: opscloud
       password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
       driver-class-name: com.mysql.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
     jumpserver:
       url: ENC(Es1I9fzvijR2ExH5OQPALDWDcazs0XJz2nULeHtGJ344E1hFLHne2E4kPQqhgJYATwoX98bMhMWKBy9NtSoEB03U/aqVpskwNsKBQU9b6eujeiwnigLacHzbrEipJUtX9Pk3HCYuh1w5QP0g+AwQdxhLOu/smxsvc36yzR121IPZoDJ+FpXT64U+2BPlLnfK)
       username: jumpserver2
       password: ENC(pB1+m3990SC/Kk89SIPr7rcLyYCfBPyDB9+F/5Xa9isM6hPubAz3CUX6zUioNIkq)
       driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
 
 
 # java -jar -Djasypt.encryptor.password=${password}
