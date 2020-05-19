@@ -16,7 +16,6 @@ public class AssetsAssetBuilder {
 
     public static AssetsAsset build(OcServer ocServer, String ip, String adminUserId, String hostname) {
 
-
         AssetsAssetBO assetsAssetBO = AssetsAssetBO.builder()
                 .id(UUIDUtils.getUUID())
                 .ip(ip)
