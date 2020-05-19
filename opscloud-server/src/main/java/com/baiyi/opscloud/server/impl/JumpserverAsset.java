@@ -159,16 +159,16 @@ public class JumpserverAsset extends BaseServer implements IServer {
         if (StringUtils.isEmpty(adminUserId))
             return null;
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
+        String pubIp = StringUtils.isEmpty(ocServer.getPublicIp()) ? null : "(pubIp:" + ocServer.getPublicIp() + ")";
+        String assetComment = Joiner.on(" ").skipNulls().join(pubIp, comment, ocServer.getComment());
         // 更新服务器信息
         if (assetsAsset != null) {
-            String pubIp = StringUtils.isEmpty(ocServer.getPublicIp()) ? null : "(pubIp:" + ocServer.getPublicIp() + ")";
-            String assetComment = Joiner.on(" ").skipNulls().join(pubIp, comment, ocServer.getComment());
-            assetsAsset.setComment(assetComment);
+            assetsAsset.setComment(assetComment == null ? "" : assetComment);
             assetsAsset.setHostname(getHostname(ocServer));
             jumpserverCenter.updateAssetsAsset(assetsAsset);
         } else {
             String manageIp = getManageIp(ocServer);
-            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer));
+            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer),assetComment);
             if (!StringUtils.isEmpty(comment))
                 assetsAsset.setComment(comment);
             jumpserverCenter.addAssetsAsset(assetsAsset);
