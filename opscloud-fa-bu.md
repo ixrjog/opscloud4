@@ -111,7 +111,8 @@ public class Oc3Test extends BaseUnit {
         queryServer(null, null, null);
     }
 
-    private void queryServer(Integer serverGroupId, Integer envType, Integer tagId) {
+    private void queryServer(Integer serverGroupId, Integer envType, 
+    Integer tagId) {
         HttpPost httpPost = getHttpPostClient(queryServer);
         PageQueryServerParam pageQueryServerParam = new PageQueryServerParam();
         pageQueryServerParam.setServerGroupId(serverGroupId);
@@ -120,8 +121,10 @@ public class Oc3Test extends BaseUnit {
 
         HttpClient httpClient = HttpClients.createDefault();
         try {
-            httpPost.setEntity(new StringEntity(JSON.toJSONString(pageQueryServerParam), "utf-8"));
-            HttpResponse response = httpClient.execute(httpPost, new HttpClientContext());
+            httpPost.setEntity(
+            new StringEntity(JSON.toJSONString(pageQueryServerParam), "utf-8"));
+            HttpResponse response 
+            = httpClient.execute(httpPost, new HttpClientContext());
 
             HttpEntity entity = response.getEntity();
             byte[] data = EntityUtils.toByteArray(entity);
