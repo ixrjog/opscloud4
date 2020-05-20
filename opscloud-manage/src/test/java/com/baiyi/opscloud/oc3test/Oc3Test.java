@@ -37,7 +37,6 @@ public class Oc3Test extends BaseUnit {
 
     private static final String queryServer = "/oc3/server/page/fuzzy/query";
 
-
     private HttpPost getHttpPostClient(String url) {
         RequestConfig requestConfig = RequestConfig.custom()
                 .setSocketTimeout(20000)

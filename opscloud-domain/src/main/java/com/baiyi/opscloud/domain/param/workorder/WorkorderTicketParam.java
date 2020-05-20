@@ -16,10 +16,26 @@ public class WorkorderTicketParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class QueryMyTicket extends PageParam {
+    public static class QueryMyTicketPage extends PageParam {
 
         @ApiModelProperty(value = "用户id")
         private Integer userId;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class QueryTicketPage extends PageParam {
+
+        @ApiModelProperty(value = "用户名")
+        private String username;
+
+        @ApiModelProperty(value = "工单阶段")
+        private String ticketPhase;
+
+        @ApiModelProperty(value = "工单状态")
+        private Integer ticketStatus;
+
     }
 
 

@@ -49,7 +49,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
     public BusinessWrapper<Boolean> subscribe(OcWorkorderTicket ocWorkorderTicket) {
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocWorkorderTicket.getUserId());
         if (orgApproval.getIsApprovalAuthority()) {
-            // 本人拥有审批权 
+            // 本人拥有审批权
             addTicketSubscribe(ocWorkorderTicket, ocWorkorderTicket.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
         } else {
             if (orgApproval.getPreferenceDeptMember() != null) {

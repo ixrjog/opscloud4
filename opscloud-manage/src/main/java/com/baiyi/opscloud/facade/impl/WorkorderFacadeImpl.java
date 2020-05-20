@@ -261,10 +261,20 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicket pageQuery) {
+    public DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage queryPage) {
         OcUser ocUser = userFacade.getOcUserBySession();
-        pageQuery.setUserId(ocUser.getId());
+        queryPage.setUserId(ocUser.getId());
+        DataTable<OcWorkorderTicket> table = ocWorkorderTicketService.queryMyOcWorkorderTicketByParam(queryPage);
+        return getTicketDataTable(table);
+    }
+
+    @Override
+    public DataTable<OcWorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery) {
         DataTable<OcWorkorderTicket> table = ocWorkorderTicketService.queryOcWorkorderTicketByParam(pageQuery);
+        return getTicketDataTable(table);
+    }
+
+    private DataTable<OcWorkorderTicketVO.Ticket> getTicketDataTable(DataTable<OcWorkorderTicket> table) {
         List<OcWorkorderTicketVO.Ticket> page = BeanCopierUtils.copyListProperties(table.getData(), OcWorkorderTicketVO.Ticket.class);
         DataTable<OcWorkorderTicketVO.Ticket> dataTable = new DataTable<>(page.stream().map(e -> workorderTicketDecorator.decorator(e)
         ).collect(Collectors.toList()), table.getTotalNum());

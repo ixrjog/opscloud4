@@ -20,12 +20,27 @@
         <result column="user_detail" jdbcType="LONGVARCHAR" property="userDetail"/>
     </resultMap>
 
-    <select id="queryMyTicketByParam"
-            parameterType="com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam$QueryMyTicket"
+    <select id="queryMyTicketByParam" parameterType="com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam$QueryMyTicketPage"
             resultMap="BaseResultMap">
         select * from oc_workorder_ticket
         where ticket_status = 0
               and ( user_id = #{userId} or id in ( select ticket_id from oc_workorder_ticket_subscribe where user_id = #{userId} and subscribe_active = true ) )
     </select>
 
+    <select id="queryTicketByParam" parameterType="com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam$QueryTicketPage"
+            resultMap="BaseResultMap">
+        select * from oc_workorder_ticket
+        <where>
+            <if test="ticketPhase != null and ticketPhase != ''">
+                and ticket_phase = #{ticketPhase}
+            </if>
+            <if test="username != null and username != ''">
+                and username like "%" #{username} "%"
+            </if>
+            <if test="ticketStatus != null and ticketStatus != -1">
+                and ticket_status = #{ticketStatus}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
 </mapper>

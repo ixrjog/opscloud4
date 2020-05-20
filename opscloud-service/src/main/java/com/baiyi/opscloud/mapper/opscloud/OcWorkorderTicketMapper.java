@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface OcWorkorderTicketMapper extends Mapper<OcWorkorderTicket> {
 
-    List<OcWorkorderTicket> queryMyTicketByParam(WorkorderTicketParam.QueryMyTicket pageQuery);
+    List<OcWorkorderTicket> queryMyTicketByParam(WorkorderTicketParam.QueryMyTicketPage pageQuery);
+
+    List<OcWorkorderTicket> queryTicketByParam(WorkorderTicketParam.QueryTicketPage pageQuery);
 }
