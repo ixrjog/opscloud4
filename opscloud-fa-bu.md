@@ -96,32 +96,6 @@ public class Oc3Test extends BaseUnit {
         return httpPost;
     }
 
-    private HttpPut getHttpPutClient(String url) {
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setSocketTimeout(20000)
-                .setConnectTimeout(20000)
-                .setConnectionRequestTimeout(20000)
-                .build();
-        HttpPut httpPut = new HttpPut(Joiner.on("").join(OC3_URL, url));
-        httpPut.setConfig(requestConfig);
-        httpPut.setHeader(TOKEN_KEY, X_TOKEN);
-        httpPut.setHeader("Content-Type", "application/json;charset=utf-8");
-        return httpPut;
-    }
-
-    private HttpGet getHttpGetClient(String url) {
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setSocketTimeout(2000)
-                .setConnectTimeout(2000)
-                .setConnectionRequestTimeout(2000)
-                .build();
-        HttpGet httpGet = new HttpGet(Joiner.on("").join(OC3_URL, url));
-        httpGet.setConfig(requestConfig);
-        httpGet.setHeader(TOKEN_KEY, X_TOKEN);
-        httpGet.setHeader("Content-Type", "application/json;charset=utf-8");
-        return httpGet;
-    }
-
     @Data
     public class PageQueryServerParam {
         private Integer serverGroupId; // 服务器组id
