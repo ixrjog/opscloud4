@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -84,6 +85,11 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
         if (orgApproval.getPreferenceDeptMember() != null)
             return orgApproval.getPreferenceDeptMember().getDisplayName();
         return Joiner.on(",").join(orgApproval.getAlternativeDeptMembers().stream().map(e -> e.getDisplayName()).collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket){
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.ORG_APPROVAL.getType());
     }
 
 }

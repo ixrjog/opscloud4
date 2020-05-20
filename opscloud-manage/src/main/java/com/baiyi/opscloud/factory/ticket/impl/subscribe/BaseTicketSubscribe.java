@@ -4,9 +4,11 @@ import com.baiyi.opscloud.bo.WorkorderTicketSubscribeBO;
 import com.baiyi.opscloud.common.base.TicketSubscribeType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
 import com.baiyi.opscloud.service.ticket.OcWorkorderApprovalMemberService;
+import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketSubscribeService;
 import com.baiyi.opscloud.service.user.OcUserService;
@@ -16,6 +18,7 @@ import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -40,11 +43,13 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
     @Resource
     private OcUserService ocUserService;
 
+    @Resource
+    private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
+
     @Override
     public OcWorkorderTicketSubscribe queryTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, OcUser ocUser) {
         return null;
     }
-
 
     protected OcWorkorder getOcWorkorderById(int workorderId) {
         return ocWorkorderService.queryOcWorkorderById(workorderId);
@@ -68,7 +73,6 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
         for (TicketSubscribeType subscribeType : TicketSubscribeType.values())
             resetTicketSubscribe(ocWorkorderTicket, subscribeType.getType());
     }
-
 
     /**
      * 重置所有订阅用户无效
@@ -102,13 +106,26 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
         }
     }
 
+    @Override
+    public Boolean isAllowApproval(OcUser ocUser, OcWorkorderTicketVO.Ticket ticket) {
+        // 查询下级流程
+        if (ticket.getFlowId() == null || ticket.getFlowId() == 0)
+            return Boolean.FALSE;
+        OcWorkorderTicketFlow ocWorkorderTicketFlow = ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowByflowParentId(ticket.getFlowId());
+        if (ocWorkorderTicketFlow == null)
+            return Boolean.FALSE;
+        ITicketSubscribe iTicketSubscribe = WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(ocWorkorderTicketFlow.getFlowName());
+        List<OcWorkorderTicketSubscribe> subscribes = iTicketSubscribe.queryTicketSubscribes(ticket);
+        return subscribes.stream().filter(e -> e.getUserId().equals(ocUser.getId()) && e.getSubscribeActive()).collect(Collectors.toList()).size() == 1;
+    }
+
     /**
      * 注册
      *
      * @throws Exception
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         WorkorderTicketSubscribeFactory.register(this);
     }
 }
