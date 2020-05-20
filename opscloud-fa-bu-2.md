@@ -35,5 +35,5 @@ ssh USERNAME@oc3.ops.yangege.cn
 * 个人文档，用于保存常用命令
 * 全站web-xterm，服务器管理、playbook等界面都能快速登录系统排除故障
 
-![](https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-2.gif)
+![](.gitbook/assets/oc-webxterm-2.gif)
 
