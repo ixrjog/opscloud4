@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -42,6 +43,14 @@ public class OcWorkorderTicketFlowServiceImpl implements OcWorkorderTicketFlowSe
     }
 
     @Override
+    public List<OcWorkorderTicketFlow> queryOcWorkorderTicketByTicketId(int ticketId) {
+        Example example = new Example(OcWorkorderTicketFlow.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ticketId", ticketId);
+        return ocWorkorderTicketFlowMapper.selectByExample(example);
+    }
+
+    @Override
     public void addOcWorkorderTicketFlow(OcWorkorderTicketFlow ocWorkorderTicketFlow) {
         ocWorkorderTicketFlowMapper.insert(ocWorkorderTicketFlow);
     }
@@ -49,6 +58,11 @@ public class OcWorkorderTicketFlowServiceImpl implements OcWorkorderTicketFlowSe
     @Override
     public void updateOcWorkorderTicketFlow(OcWorkorderTicketFlow ocWorkorderTicketFlow) {
         ocWorkorderTicketFlowMapper.updateByPrimaryKey(ocWorkorderTicketFlow);
+    }
+
+    @Override
+    public void deleteOcWorkorderTicketFlowById(int id) {
+        ocWorkorderTicketFlowMapper.deleteByPrimaryKey(id);
     }
 
 }

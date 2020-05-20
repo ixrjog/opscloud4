@@ -45,7 +45,19 @@ public interface WorkorderFacade {
 
     BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry);
 
+    /**
+     * 删除工单条目
+     * @param id
+     * @return
+     */
     BusinessWrapper<Boolean> delWorkorderTicketEntryById(int id);
+
+    /**
+     * 删除工单
+     * @param id
+     * @return
+     */
+    BusinessWrapper<Boolean> delWorkorderTicketById(int id);
 
     List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam);
 

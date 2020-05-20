@@ -105,6 +105,12 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.delWorkorderTicketEntryById(id));
     }
 
+    @ApiOperation(value = "删除工单")
+    @DeleteMapping(value = "/ticket/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> delWorkorderTicket(@RequestParam int id) {
+        return new HttpResult<>(workorderFacade.delWorkorderTicketById(id));
+    }
+
     /**
      * 工单配置-用户组查询
      *

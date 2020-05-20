@@ -18,6 +18,8 @@ public interface OcWorkorderTicketSubscribeService {
      */
     List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByAppoval(int ticketId, int subscribeType);
 
+    List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByTicketId(int ticketId);
+
     OcWorkorderTicketSubscribe queryOcWorkorderTicketSubscribeByParam(int ticketId,int userId, int subscribeType);
 
     OcWorkorderTicketSubscribe queryOcWorkorderTicketSubscribeById(int id);
@@ -25,4 +27,6 @@ public interface OcWorkorderTicketSubscribeService {
     void addOcWorkorderTicketSubscribe(OcWorkorderTicketSubscribe ocWorkorderTicketSubscribe);
 
     void updateOcWorkorderTicketSubscribe(OcWorkorderTicketSubscribe ocWorkorderTicketSubscribe);
+
+    void deleteOcWorkorderTicketSubscribeById(int id);
 }

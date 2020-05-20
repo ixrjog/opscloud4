@@ -50,6 +50,11 @@ public class OcWorkorderTicketServiceImpl implements OcWorkorderTicketService {
     }
 
     @Override
+    public void deleteOcWorkorderTicketById(int id) {
+        ocWorkorderTicketMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public DataTable<OcWorkorderTicket> queryMyOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicketPage pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcWorkorderTicket> list = ocWorkorderTicketMapper.queryMyTicketByParam(pageQuery);

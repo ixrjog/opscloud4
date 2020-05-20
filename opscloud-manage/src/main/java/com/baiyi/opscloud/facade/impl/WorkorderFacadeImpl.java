@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.builder.WorkorderTicketEntryBuilder;
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
@@ -21,6 +22,7 @@ import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
 import com.baiyi.opscloud.facade.UserFacade;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.facade.WorkorderFacade;
 import com.baiyi.opscloud.facade.WorkorderTicketFlowFacade;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
@@ -32,6 +34,7 @@ import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketEntryService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
+import com.baiyi.opscloud.service.ticket.OcWorkorderTicketSubscribeService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderGroupService;
 import org.springframework.stereotype.Service;
@@ -65,6 +68,9 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     private UserFacade userFacade;
 
     @Resource
+    private UserPermissionFacade userPermissionFacade;
+
+    @Resource
     private OcServerGroupService ocServerGroupService;
 
     @Resource
@@ -81,6 +87,8 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Resource
     private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
+    @Resource
+    private OcWorkorderTicketSubscribeService ocWorkorderTicketSubscribeService;
 
     @Resource
     private DepartmentMemberDecorator departmentMemberDecorator;
@@ -225,9 +233,52 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Override
     public BusinessWrapper<Boolean> delWorkorderTicketEntryById(int id) {
-        // TODO 需要鉴权
         OcWorkorderTicketEntry ocWorkorderTicketEntry = ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryById(id);
+        int ticketId = ocWorkorderTicketEntry.getWorkorderTicketId();
+        // 需要鉴权
+        OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(ticketId);
+        // 校验用户
+        if (!SessionUtils.getUsername().equals(ocWorkorderTicket.getUsername()))
+            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+        // 校验状态
+        if (!ocWorkorderTicket.getTicketPhase().equals(TicketPhase.CREATED.getPhase()))
+            return new BusinessWrapper<>(ErrorEnum.WORKORDER_TICKET_PHASE_ERROR);
         ocWorkorderTicketEntryService.deleteOcWorkorderTicketEntryById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delWorkorderTicketById(int id) {
+        OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(id);
+        // 校验用户
+        BusinessWrapper<Boolean> wrapper = userPermissionFacade.checkAccessLevel(userFacade.getOcUserBySession(), AccessLevel.OPS.getLevel());
+        if(!wrapper.isSuccess())
+            return wrapper;
+//        if (!SessionUtils.getUsername().equals(ocWorkorderTicket.getUsername()))
+//            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+        // 校验状态
+        if (ocWorkorderTicket.getTicketPhase().equals(TicketPhase.FINALIZED.getPhase()))
+            return new BusinessWrapper<>(ErrorEnum.WORKORDER_TICKET_PHASE_ERROR);
+        try{
+            // 删除工单条目
+            ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryByTicketId(id).forEach( e ->{
+                ocWorkorderTicketEntryService.deleteOcWorkorderTicketEntryById(e.getId());
+            });
+
+            // 删除工单流程
+            ocWorkorderTicketFlowService.queryOcWorkorderTicketByTicketId(id).forEach( e ->{
+                ocWorkorderTicketFlowService.deleteOcWorkorderTicketFlowById(e.getId());
+            });
+
+            // 删除工单订阅
+            ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByTicketId(id).forEach( e ->{
+                ocWorkorderTicketSubscribeService.deleteOcWorkorderTicketSubscribeById(e.getId());
+            });
+            // 删除工单
+            ocWorkorderTicketService.deleteOcWorkorderTicketById(id);
+        }catch (Exception e){
+            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+        }
         return BusinessWrapper.SUCCESS;
     }
 
