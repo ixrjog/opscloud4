@@ -1,19 +1,19 @@
 # OpsCloud发布
 
-#### OC3.0版本发布
+## OC3.0版本发布 [https://oc3.ops.yangege.cn](https://oc3.ops.yangege.cn)
 
 * **工单、web堡垒机、跳板机迁移至oc3**
 * **登录账户/密码不变**
 * **新应用上线工单目前还在老oc中申请**
 * **任何意见、建议、bug都可以反馈给我baiyi@gegejia.com**
 
-####  平台特性
+###  平台特性
 
 * 全接口API，可调用查询运维元数据 [https://oc3.ops.yangege.cn/oc3/doc.html\#/home](https://oc3.ops.yangege.cn/oc3/doc.html#/home)
 * 工单优化、支持组织架构上级审批
 * 增强的web-xterm
 
-#### 跳板机使用说明
+### 跳板机使用说明
 
 * [https://oc3.ops.yangege.cn/index.html\#/workbench/jump](https://oc3.ops.yangege.cn/index.html#/workbench/jump)
 * 登录方式：
@@ -24,7 +24,7 @@
 ssh {USERNAME}@oc3.ops.yangege.cn
 ```
 
-#### web-xterm使用说明
+### web-xterm使用说明
 
 * [https://oc3.ops.yangege.cn/index.html\#/workbench/xterm](https://oc3.ops.yangege.cn/index.html#/workbench/xterm)
 * 支持高权限批量登录系统（工单中申请）
@@ -111,8 +111,7 @@ public class Oc3Test extends BaseUnit {
         queryServer(null, null, null);
     }
 
-    private void queryServer(Integer serverGroupId, Integer envType, 
-    Integer tagId) {
+    private void queryServer(Integer serverGroupId, Integer envType, Integer tagId) {
         HttpPost httpPost = getHttpPostClient(queryServer);
         PageQueryServerParam pageQueryServerParam = new PageQueryServerParam();
         pageQueryServerParam.setServerGroupId(serverGroupId);
@@ -121,10 +120,8 @@ public class Oc3Test extends BaseUnit {
 
         HttpClient httpClient = HttpClients.createDefault();
         try {
-            httpPost.setEntity(
-            new StringEntity(JSON.toJSONString(pageQueryServerParam), "utf-8"));
-            HttpResponse response 
-            = httpClient.execute(httpPost, new HttpClientContext());
+            httpPost.setEntity(new StringEntity(JSON.toJSONString(pageQueryServerParam), "utf-8"));
+            HttpResponse response = httpClient.execute(httpPost, new HttpClientContext());
 
             HttpEntity entity = response.getEntity();
             byte[] data = EntityUtils.toByteArray(entity);
