@@ -18,9 +18,9 @@ export PATH=$JAVA_HOME/bin:$M2_HOME/bin:$PATH
 
 **环境安装Mysql 8.0**
 
-* 推荐使用阿里云RDS
-* 创建opscloud数据库
-* 导入 opscloud.sql
+* 推荐使用阿里云RDS\(MySQL 8.0\)
+* 创建opscloud数据库\(字符集utf8mb4\)
+* 导入opscloud.sql
 
 **环境安装Redis 3**
 
