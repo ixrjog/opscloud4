@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.factory.ticket.impl.subscribe;
 
 import com.baiyi.opscloud.bo.WorkorderTicketSubscribeBO;
+import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.base.TicketSubscribeType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -111,7 +112,12 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
         // 查询下级流程
         if (ticket.getFlowId() == null || ticket.getFlowId() == 0)
             return Boolean.FALSE;
-        OcWorkorderTicketFlow ocWorkorderTicketFlow = ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowByflowParentId(ticket.getFlowId());
+        OcWorkorderTicketFlow ocWorkorderTicketFlow;
+        if (ticket.getTicketPhase().equals(TicketPhase.APPLIED.getPhase())) {
+            ocWorkorderTicketFlow = ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowByflowParentId(ticket.getFlowId());
+        } else {
+            ocWorkorderTicketFlow = ocWorkorderTicketFlowService.queryOcWorkorderTicketFlowById(ticket.getFlowId());
+        }
         if (ocWorkorderTicketFlow == null)
             return Boolean.FALSE;
         ITicketSubscribe iTicketSubscribe = WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(ocWorkorderTicketFlow.getFlowName());
