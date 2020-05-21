@@ -15,7 +15,6 @@ import javax.annotation.Resource;
  */
 public class JumpserverAccountTest extends BaseUnit {
 
-
     private static final String key = "JumpserverAccount";
 
     private IAccount getAccount() {
@@ -27,7 +26,7 @@ public class JumpserverAccountTest extends BaseUnit {
 
     @Test
     void testPushKey() {
-        OcUser ocUser = ocUserService.queryOcUserByUsername("baiyi");
+        OcUser ocUser = ocUserService.queryOcUserByUsername("xusx");
         getAccount().pushSSHKey(ocUser);
     }
 

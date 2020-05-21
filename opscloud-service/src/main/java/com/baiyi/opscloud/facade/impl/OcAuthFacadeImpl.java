@@ -122,6 +122,13 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
         return ocUserToken.getUsername();
     }
 
+    @Override
+    public void revokeUserToken(String username) {
+        OcUserToken ocUserToken = ocUserTokenService.queryOcUserTokenByTokenAndValid(username);
+        if(ocUserToken == null) return;
+        ocUserTokenService.updateOcUserTokenInvalid(ocUserToken);
+    }
+
     /**
      * 设置用户Token
      *
@@ -145,7 +152,7 @@ public class OcAuthFacadeImpl implements OcAuthFacade {
     public void setOcUserPassword(OcUser ocUser, String password) {
         if (!StringUtils.isEmpty(ocUser.getPassword())) {
             String pw = stringEncryptor.decrypt(ocUser.getPassword());
-            if(pw.equals(password))
+            if (pw.equals(password))
                 return;
         }
         ocUser.setPassword(stringEncryptor.encrypt(password));

@@ -57,10 +57,18 @@ public interface UserFacade {
 
     /**
      * 从当前会话中查询用户
+     *
      * @return
      */
     OcUser getOcUserBySession();
 
+
+    /**
+     * 用户离职
+     * @param userId
+     * @return
+     */
+    BusinessWrapper<Boolean> resignationUser(int userId);
 
 
 }

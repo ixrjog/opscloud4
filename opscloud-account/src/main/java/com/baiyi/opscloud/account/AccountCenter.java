@@ -37,6 +37,7 @@ public class AccountCenter {
 
     /**
      * 登录接口
+     *
      * @param loginParam
      * @return
      */
@@ -66,12 +67,13 @@ public class AccountCenter {
 
     /**
      * 登录初始化
+     *
      * @param ocUser
      */
-    private void initialUser(OcUser ocUser){
-        try{
+    private void initialUser(OcUser ocUser) {
+        try {
             AccountFactory.getAccountByKey("JumpserverAccount").pushSSHKey(ocUser);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -91,6 +93,16 @@ public class AccountCenter {
                 if (!account.create(user))
                     return Boolean.FALSE;
             }
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean active(OcUser user, boolean active) {
+        Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+        for (String key : accountContainer.keySet()) {
+            IAccount account = accountContainer.get(key);
+            if (!account.active(user, active))
+                return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }

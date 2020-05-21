@@ -21,6 +21,12 @@ public interface OcAuthFacade {
 
     String getUserByToken(String token);
 
+    /**
+     * 撤销用户Token
+     * @param username
+     */
+    void revokeUserToken(String username);
+
     void setUserToken(String username, String token);
 
     /**

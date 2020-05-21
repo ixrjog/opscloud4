@@ -25,10 +25,7 @@ import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
-import com.baiyi.opscloud.facade.AuthFacade;
-import com.baiyi.opscloud.facade.ServerGroupFacade;
-import com.baiyi.opscloud.facade.UserFacade;
-import com.baiyi.opscloud.facade.UserPermissionFacade;
+import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
@@ -82,6 +79,10 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private OcUserApiTokenService ocUserApiTokenService;
 
+
+    @Resource
+    private OcAuthFacade ocAuthFacade;
+
     @Resource
     private AuthFacade authFacade;
 
@@ -93,6 +94,8 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
+        if (pageQuery.getIsActive() == null)
+            pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
         return toUserPage(table, pageQuery.getExtend());
     }
@@ -106,6 +109,8 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery) {
+        if (pageQuery.getIsActive() == null)
+            pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.fuzzyQueryUserByParam(pageQuery);
         return toUserPage(table, pageQuery.getExtend());
     }
@@ -140,7 +145,7 @@ public class UserFacadeImpl implements UserFacade {
      */
     private BusinessWrapper<Boolean> enhancedAuthority(int userId, String resource) {
         // 公共接口需要2次鉴权
-        OcUser checkOcUser =  getOcUserBySession();
+        OcUser checkOcUser = getOcUserBySession();
         OcUser ocUser = ocUserService.queryOcUserById(userId);
         if (!ocUser.getUsername().equals(checkOcUser.getUsername())) {
             BusinessWrapper<Boolean> wrapper = authFacade.authenticationByResourceName(resource);
@@ -172,7 +177,7 @@ public class UserFacadeImpl implements UserFacade {
             ocUserCredentialService.updateOcUserCredential(ocUserCredential);
         }
         // sshkey push
-        if ( !StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType() )
+        if (!StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType())
             accountCenter.pushSSHKey(ocUser);
         return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
     }
@@ -361,11 +366,31 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public OcUser getOcUserBySession(){
+    public OcUser getOcUserBySession() {
         String username = SessionUtils.getUsername();
-        if(StringUtils.isEmpty(username))
+        if (StringUtils.isEmpty(username))
             return null;
         return ocUserService.queryOcUserByUsername(username);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> resignationUser(int userId) {
+        OcUser ocUser = ocUserService.queryOcUserById(userId);
+        // 禁用用户
+        Boolean result = accountCenter.active(ocUser, false);
+        if (result) {
+            // 吊销用户ApiToken
+            ocUserApiTokenService.queryOcUserApiTokenByUsername(ocUser.getUsername()).forEach(e -> {
+                e.setValid(false);
+                ocUserApiTokenService.updateOcUserApiToken(e);
+            });
+            // 吊销用户Token
+            ocAuthFacade.revokeUserToken(ocUser.getUsername());
+            ocUser.setIsActive(false);
+            ocUserService.updateOcUser(ocUser);
+            return BusinessWrapper.SUCCESS;
+        }
+        return new BusinessWrapper<>(ErrorEnum.USER_RESIGNATION_ERROR);
     }
 
 

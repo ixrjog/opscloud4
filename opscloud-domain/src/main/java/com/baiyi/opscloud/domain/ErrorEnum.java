@@ -43,6 +43,9 @@ public enum ErrorEnum {
     USER_CREDENTIAL_TYPE_ERROR(12003,"用户凭据类型为空或类型错误"),
     USER_CREDENTIAL_ERROR(12003,"用户凭据为空或凭据格式错误!"),
 
+    // resignationUser
+    USER_RESIGNATION_ERROR(12003,"用户离职账户禁用错误!"),
+
     // UserPermission
     USER_PERMISSION_EXIST(12003,"用户授权已存在!"),
 

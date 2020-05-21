@@ -86,13 +86,13 @@ public class LdapAccount extends BaseAccount implements IAccount {
     }
 
     private void initialUserBaseRole(OcUser user) {
-        try{
+        try {
             OcAuthUserRole ocAuthUserRole = new OcAuthUserRole();
             ocAuthUserRole.setUsername(user.getUsername());
             OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleByName(BASE_ROLE_NAME);
             ocAuthUserRole.setRoleId(ocAuthRole.getId());
             ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
-        }catch (Exception e){
+        } catch (Exception e) {
         }
     }
 
@@ -117,7 +117,13 @@ public class LdapAccount extends BaseAccount implements IAccount {
 
     @Override
     public Boolean active(OcUser user, boolean active) {
-        return Boolean.TRUE;
+        if (!active) {
+            Person person = new Person();
+            person.setUsername(user.getUsername());
+            person.setUserPassword(PasswordUtils.getPW(20));
+            personRepo.update(person);
+        }
+        return true;
     }
 
     @Override

@@ -48,11 +48,7 @@ public class JumpserverTest extends BaseUnit {
         usersUserService.addUsersUser(usersUser);
     }
 
-    @Test
-    void test2(){
-        // jumpserverAPI.pushKey();
-      // System.err.println(jumpserverAPI.getToken());
-    }
+
 
 
 }
