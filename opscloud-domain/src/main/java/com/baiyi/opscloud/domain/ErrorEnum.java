@@ -152,7 +152,12 @@ public enum ErrorEnum {
     // Workorder
     WORKORDER_TICKET_PHASE_ERROR(70001, "工单阶段不正确"),
     WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
-    WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写")
+    WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
+
+    KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
+    KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
+    KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！")
+
     ;
 
     private int code;

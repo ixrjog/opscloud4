@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.keybox;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.util.SSHUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcKeybox;
 import com.baiyi.opscloud.service.keybox.OcKeyboxService;
 import org.jasypt.encryption.StringEncryptor;
@@ -28,9 +29,9 @@ public class KeyboxTest extends BaseUnit {
         privateKey = stringEncryptor.encrypt(privateKey);
         ocKeybox.setPrivateKey(privateKey);
 
-       // String passphrase = ocKeybox.getPassphrase();
-      //  passphrase = stringEncryptor.encrypt(passphrase );
-       // ocKeybox.setPassphrase(passphrase);
+        // String passphrase = ocKeybox.getPassphrase();
+        //  passphrase = stringEncryptor.encrypt(passphrase );
+        // ocKeybox.setPassphrase(passphrase);
 
         ocKeyboxService.updateOcKeybox(ocKeybox);
     }
@@ -43,9 +44,13 @@ public class KeyboxTest extends BaseUnit {
         privateKey = stringEncryptor.decrypt(privateKey);
 
         System.err.println(privateKey);
+    }
 
-
-
+    @Test
+    void ocKeyboxGetFingerprintTest() {
+        OcKeybox ocKeybox = ocKeyboxService.queryOcKeyboxById(2);
+        String fingerprint = SSHUtils.getFingerprint(ocKeybox.getPublicKey());
+        System.err.println(fingerprint);
     }
 
 }

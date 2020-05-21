@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.keybox;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcKeybox;
+import com.baiyi.opscloud.domain.param.keybox.KeyboxParam;
 
 /**
  * @Author baiyi
@@ -16,4 +18,8 @@ public interface OcKeyboxService {
     void updateOcKeybox(OcKeybox ocKeybox);
 
     void addOcKeybox(OcKeybox ocKeybox);
+
+    void deleteOcKeyboxById(int id);
+
+    DataTable<OcKeybox> queryOcKeyboxByParam(KeyboxParam.PageQuery pageQuery);
 }
