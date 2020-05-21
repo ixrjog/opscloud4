@@ -30,10 +30,24 @@ public class OcWorkorderGroupServiceImpl implements OcWorkorderGroupService {
         return new DataTable<>(list, page.getTotal());
     }
 
-
     @Override
     public List<OcWorkorderGroup> queryOcWorkorderGroupAll() {
         return ocWorkorderGroupMapper.selectAll();
 
+    }
+
+    @Override
+    public void addOcWorkorderGroup(OcWorkorderGroup ocWorkorderGroup) {
+        ocWorkorderGroupMapper.insert(ocWorkorderGroup);
+    }
+
+    @Override
+    public void updateOcWorkorderGroup(OcWorkorderGroup ocWorkorderGroup) {
+        ocWorkorderGroupMapper.updateByPrimaryKey(ocWorkorderGroup);
+    }
+
+    @Override
+    public void deleteOcWorkorderGroupById(int id) {
+        ocWorkorderGroupMapper.deleteByPrimaryKey(id);
     }
 }

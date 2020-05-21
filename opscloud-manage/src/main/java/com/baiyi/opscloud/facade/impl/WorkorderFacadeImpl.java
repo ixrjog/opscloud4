@@ -104,6 +104,17 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> saveWorkorderGroup(OcWorkorderGroupVO.WorkorderGroup workorderGroup) {
+        OcWorkorderGroup ocWorkorderGroup = BeanCopierUtils.copyProperties(workorderGroup, OcWorkorderGroup.class);
+        if (workorderGroup.getId() == null || workorderGroup.getId() == 0) {
+            ocWorkorderGroupService.addOcWorkorderGroup(ocWorkorderGroup);
+        } else {
+            ocWorkorderGroupService.updateOcWorkorderGroup(ocWorkorderGroup);
+        }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
     public List<OcWorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup() {
         List<OcWorkorderGroupVO.WorkorderGroup> list = BeanCopierUtils.copyListProperties(ocWorkorderGroupService.queryOcWorkorderGroupAll(), OcWorkorderGroupVO.WorkorderGroup.class);
         return list.stream().map(e -> workorderGroupDecorator.decorator(e)).collect(Collectors.toList());
@@ -252,31 +263,31 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(id);
         // 校验用户
         BusinessWrapper<Boolean> wrapper = userPermissionFacade.checkAccessLevel(userFacade.getOcUserBySession(), AccessLevel.OPS.getLevel());
-        if(!wrapper.isSuccess())
+        if (!wrapper.isSuccess())
             return wrapper;
 //        if (!SessionUtils.getUsername().equals(ocWorkorderTicket.getUsername()))
 //            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
         // 校验状态
         if (ocWorkorderTicket.getTicketPhase().equals(TicketPhase.FINALIZED.getPhase()))
             return new BusinessWrapper<>(ErrorEnum.WORKORDER_TICKET_PHASE_ERROR);
-        try{
+        try {
             // 删除工单条目
-            ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryByTicketId(id).forEach( e ->{
+            ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryByTicketId(id).forEach(e -> {
                 ocWorkorderTicketEntryService.deleteOcWorkorderTicketEntryById(e.getId());
             });
 
             // 删除工单流程
-            ocWorkorderTicketFlowService.queryOcWorkorderTicketByTicketId(id).forEach( e ->{
+            ocWorkorderTicketFlowService.queryOcWorkorderTicketByTicketId(id).forEach(e -> {
                 ocWorkorderTicketFlowService.deleteOcWorkorderTicketFlowById(e.getId());
             });
 
             // 删除工单订阅
-            ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByTicketId(id).forEach( e ->{
+            ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByTicketId(id).forEach(e -> {
                 ocWorkorderTicketSubscribeService.deleteOcWorkorderTicketSubscribeById(e.getId());
             });
             // 删除工单
             ocWorkorderTicketService.deleteOcWorkorderTicketById(id);
-        }catch (Exception e){
+        } catch (Exception e) {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
         }
         return BusinessWrapper.SUCCESS;

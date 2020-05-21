@@ -22,6 +22,8 @@ public interface WorkorderFacade {
 
     DataTable<OcWorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery);
 
+    BusinessWrapper<Boolean> saveWorkorderGroup(OcWorkorderGroupVO.WorkorderGroup workorderGroup);
+
     List<OcWorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup();
 
     // WorkorderTicketParam.CreateTicket createTicket
@@ -32,6 +34,7 @@ public interface WorkorderFacade {
 
     /**
      * 提交工单票据
+     *
      * @param ticket
      * @return
      */
@@ -47,6 +50,7 @@ public interface WorkorderFacade {
 
     /**
      * 删除工单条目
+     *
      * @param id
      * @return
      */
@@ -54,6 +58,7 @@ public interface WorkorderFacade {
 
     /**
      * 删除工单
+     *
      * @param id
      * @return
      */
@@ -67,6 +72,7 @@ public interface WorkorderFacade {
 
     /**
      * 我的工单
+     *
      * @param pageQuery
      * @return
      */

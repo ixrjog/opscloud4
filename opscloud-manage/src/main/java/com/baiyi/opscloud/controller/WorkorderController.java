@@ -39,6 +39,12 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.queryWorkorderGroupPage(pageQuery));
     }
 
+    @ApiOperation(value = "保存工单组")
+    @PostMapping(value = "/group/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveWorkorderGroup(@RequestBody @Valid OcWorkorderGroupVO.WorkorderGroup workorderGroup) {
+        return new HttpResult<>(workorderFacade.saveWorkorderGroup(workorderGroup));
+    }
+
     @ApiOperation(value = "查询我的工单")
     @PostMapping(value = "/ticket/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicketPage queryMyTicketPage) {
