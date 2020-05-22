@@ -71,7 +71,7 @@ public class ServerVO {
         @ApiModelProperty(value = "服务器状态",example="1")
         private Integer serverStatus;
 
-        @ApiModelProperty(value = "是否有效",example="1")
+        @ApiModelProperty(value = "有效")
         private Boolean isActive;
 
         @ApiModelProperty(value = "云主机id,云主机录入专用")

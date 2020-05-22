@@ -262,12 +262,18 @@ public class OcServer implements Serializable {
         this.serverStatus = serverStatus;
     }
 
-    public Boolean getActive() {
+    /**
+     * @return is_active
+     */
+    public Boolean getIsActive() {
         return isActive;
     }
 
-    public void setActive(Boolean active) {
-        isActive = active;
+    /**
+     * @param isActive
+     */
+    public void setIsActive(Boolean isActive) {
+        this.isActive = isActive;
     }
 
     /**

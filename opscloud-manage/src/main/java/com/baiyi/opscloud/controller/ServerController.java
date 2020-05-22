@@ -34,6 +34,13 @@ public class ServerController {
         return new HttpResult<>(serverFacade.queryServerPage(pageQuery));
     }
 
+
+    @ApiOperation(value = "查询server列表")
+    @PostMapping(value = "/query/by/group", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<ServerVO.Server>> queryServerByServerGroup(@RequestBody @Valid ServerParam.QueryByServerGroup queryByServerGroup) {
+        return new HttpResult<>(serverFacade.queryServerByServerGroup(queryByServerGroup));
+    }
+
     @ApiOperation(value = "分页模糊查询server列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ServerVO.Server>> fuzzyQueryServerPage(@RequestBody @Valid ServerParam.PageQuery pageQuery) {

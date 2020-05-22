@@ -8,10 +8,7 @@ import com.baiyi.opscloud.decorator.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
-import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -29,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -77,6 +75,24 @@ public class ServerFacadeImpl implements ServerFacade {
     public DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.fuzzyQueryOcServerByParam(pageQuery);
         return toServerDataTable(table);
+    }
+
+    @Override
+    public List<ServerVO.Server> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup) {
+        Integer serverGroupId = queryByServerGroup.getServerGroupId();
+        if (serverGroupId == null || serverGroupId <= 0) {
+            if (!StringUtils.isEmpty(queryByServerGroup.getServerGroupName())) {
+                OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupByName(queryByServerGroup.getServerGroupName());
+                if (ocServerGroup != null)
+                    serverGroupId = ocServerGroup.getId();
+
+            }
+        }
+        if (serverGroupId == null) return Collections.EMPTY_LIST;
+        List<ServerVO.Server> servers = ocServerService.queryOcServerByServerGroupId(serverGroupId).stream().map(e ->
+                serverDecorator.decorator(BeanCopierUtils.copyProperties(e, ServerVO.Server.class))
+        ).collect(Collectors.toList());
+        return servers;
     }
 
     @Override
