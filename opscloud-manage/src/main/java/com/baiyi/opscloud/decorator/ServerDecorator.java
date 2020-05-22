@@ -6,8 +6,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.TagFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -35,7 +35,7 @@ public class ServerDecorator {
     @Resource
     private  ServerGroupDecorator serverGroupDecorator;
 
-    public OcServerVO.Server decorator(OcServerVO.Server server) {
+    public ServerVO.Server decorator(ServerVO.Server server) {
         // 装饰 环境信息
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(server.getEnvType());
         if (ocEnv != null) {
@@ -45,7 +45,7 @@ public class ServerDecorator {
         // 装饰 服务器组信息
         OcServerGroup ocServerGroup =  ocServerGroupService.queryOcServerGroupById(server.getServerGroupId());
         if (ocServerGroup != null) {
-            OcServerGroupVO.ServerGroup serverGroup = BeanCopierUtils.copyProperties(ocServerGroup, OcServerGroupVO.ServerGroup.class);
+            ServerGroupVO.ServerGroup serverGroup = BeanCopierUtils.copyProperties(ocServerGroup, ServerGroupVO.ServerGroup.class);
             server.setServerGroup(serverGroupDecorator.decorator(serverGroup));
         }
         // 装饰 标签

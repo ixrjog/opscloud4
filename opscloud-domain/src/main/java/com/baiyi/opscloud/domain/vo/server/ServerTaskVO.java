@@ -13,14 +13,14 @@ import java.util.Map;
  * @Date 2020/4/7 5:08 下午
  * @Version 1.0
  */
-public class OcServerTaskVO {
+public class ServerTaskVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class ServerTask {
 
-        private Map<String, List<OcServerTaskMemberVO.ServerTaskMember>> memberMap;
+        private Map<String, List<ServerTaskMemberVO.ServerTaskMember>> memberMap;
 
         // Statistics
         private ServerTastStatistics taskStatistics;

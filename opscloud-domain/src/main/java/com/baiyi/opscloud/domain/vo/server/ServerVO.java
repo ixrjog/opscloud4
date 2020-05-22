@@ -16,7 +16,7 @@ import java.util.List;
  * @Date 2020/2/21 4:56 下午
  * @Version 1.0
  */
-public class OcServerVO {
+public class ServerVO {
 
     @Data
     @NoArgsConstructor
@@ -27,7 +27,7 @@ public class OcServerVO {
 
         private OcEnvVO.Env env;
 
-        private OcServerGroupVO.ServerGroup serverGroup;
+        private ServerGroupVO.ServerGroup serverGroup;
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;
@@ -67,6 +67,12 @@ public class OcServerVO {
 
         @ApiModelProperty(value = "资源描述")
         private String comment;
+
+        @ApiModelProperty(value = "服务器状态",example="1")
+        private Integer serverStatus;
+
+        @ApiModelProperty(value = "是否有效",example="1")
+        private Boolean isActive;
 
         @ApiModelProperty(value = "云主机id,云主机录入专用")
         private Integer cloudServerId;

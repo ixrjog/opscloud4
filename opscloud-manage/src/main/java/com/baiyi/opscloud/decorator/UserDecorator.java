@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
@@ -100,9 +100,9 @@ public class UserDecorator {
         return user;
     }
 
-    private List<OcServerGroupVO.ServerGroup> convert(OcUserVO.User user, List<OcServerGroup> serverGroupList) {
+    private List<ServerGroupVO.ServerGroup> convert(OcUserVO.User user, List<OcServerGroup> serverGroupList) {
         return serverGroupList.stream().map(e -> {
-            OcServerGroupVO.ServerGroup serverGroup = BeanCopierUtils.copyProperties(e, OcServerGroupVO.ServerGroup.class);
+            ServerGroupVO.ServerGroup serverGroup = BeanCopierUtils.copyProperties(e, ServerGroupVO.ServerGroup.class);
             OcUserPermission permission = new OcUserPermission();
             permission.setBusinessType(BusinessType.SERVER_ADMINISTRATOR_ACCOUNT.getType());
             permission.setBusinessId(e.getId());

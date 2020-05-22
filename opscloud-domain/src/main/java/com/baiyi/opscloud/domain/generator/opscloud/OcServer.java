@@ -42,13 +42,20 @@ public class OcServer implements Serializable {
     @Column(name = "monitor_status")
     private Integer monitorStatus;
 
+    private String comment;
+
+    @Column(name = "server_status")
+    private Integer serverStatus;
+
+    @Column(name = "is_active")
+    private Boolean isActive;
+
     @Column(name = "create_time")
     private Date createTime;
 
     @Column(name = "update_time")
     private Date updateTime;
 
-    private String comment;
 
     /**
      * @return id
@@ -244,6 +251,23 @@ public class OcServer implements Serializable {
      */
     public void setUpdateTime(Date updateTime) {
         this.updateTime = updateTime;
+    }
+
+
+    public Integer getServerStatus() {
+        return serverStatus;
+    }
+
+    public void setServerStatus(Integer serverStatus) {
+        this.serverStatus = serverStatus;
+    }
+
+    public Boolean getActive() {
+        return isActive;
+    }
+
+    public void setActive(Boolean active) {
+        isActive = active;
     }
 
     /**

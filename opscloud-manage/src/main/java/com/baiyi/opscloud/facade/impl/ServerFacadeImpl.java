@@ -13,8 +13,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
 import com.baiyi.opscloud.facade.ServerCacheFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
@@ -68,36 +68,36 @@ public class ServerFacadeImpl implements ServerFacade {
     private ServerCacheFacade serverCacheFacade;
 
     @Override
-    public DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
+    public DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
         return toServerDataTable(table);
     }
 
     @Override
-    public DataTable<OcServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
+    public DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.fuzzyQueryOcServerByParam(pageQuery);
         return toServerDataTable(table);
     }
 
     @Override
-    public List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(int id) {
+    public List<ServerAttributeVO.ServerAttribute> queryServerAttribute(int id) {
         OcServer ocServer = ocServerService.queryOcServerById(id);
         return serverAttributeFacade.queryServerAttribute(ocServer);
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
+    public BusinessWrapper<Boolean> saveServerAttribute(ServerAttributeVO.ServerAttribute serverAttribute) {
         return serverAttributeFacade.saveServerAttribute(serverAttribute);
     }
 
-    private DataTable<OcServerVO.Server> toServerDataTable(DataTable<OcServer> table) {
-        List<OcServerVO.Server> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerVO.Server.class);
-        DataTable<OcServerVO.Server> dataTable = new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+    private DataTable<ServerVO.Server> toServerDataTable(DataTable<OcServer> table) {
+        List<ServerVO.Server> page = BeanCopierUtils.copyListProperties(table.getData(), ServerVO.Server.class);
+        DataTable<ServerVO.Server> dataTable = new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> addServer(OcServerVO.Server server) {
+    public BusinessWrapper<Boolean> addServer(ServerVO.Server server) {
         if (StringUtils.isEmpty(server.getPrivateIp()))
             return new BusinessWrapper<>(ErrorEnum.SERVER_PRIVATE_IP_IS_NAME);
         if (ocServerService.queryOcServerByPrivateIp(server.getPrivateIp()) != null)
@@ -132,7 +132,7 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateServer(OcServerVO.Server server) {
+    public BusinessWrapper<Boolean> updateServer(ServerVO.Server server) {
         // 校验服务器名称
         if (!RegexUtils.isServerNameRule(server.getName()))
             return new BusinessWrapper<>(ErrorEnum.SERVER_NAME_NON_COMPLIANCE_WITH_RULES);

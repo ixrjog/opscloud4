@@ -4,8 +4,8 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 
 import java.util.List;
 
@@ -16,17 +16,17 @@ import java.util.List;
  */
 public interface ServerFacade {
 
-    DataTable<OcServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery);
+    DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery);
 
-    DataTable<OcServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
+    DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
 
-    List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(int id);
+    List<ServerAttributeVO.ServerAttribute> queryServerAttribute(int id);
 
-    BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
+    BusinessWrapper<Boolean> saveServerAttribute(ServerAttributeVO.ServerAttribute serverAttribute);
 
-    BusinessWrapper<Boolean> addServer(OcServerVO.Server server);
+    BusinessWrapper<Boolean> addServer(ServerVO.Server server);
 
-    BusinessWrapper<Boolean> updateServer(OcServerVO.Server server);
+    BusinessWrapper<Boolean> updateServer(ServerVO.Server server);
 
     BusinessWrapper<Boolean> deleteServerById(int id);
 

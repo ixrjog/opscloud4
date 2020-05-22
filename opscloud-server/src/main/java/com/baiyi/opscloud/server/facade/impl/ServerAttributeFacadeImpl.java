@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
 import com.baiyi.opscloud.server.builder.ServerAttributeBuilder;
 import com.baiyi.opscloud.server.decorator.ServerAttributeDecorator;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
@@ -47,8 +47,8 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     private OcServerAttributeService ocServerAttributeService;
 
     @Override
-    public List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(OcServerGroup ocServerGroup) {
-        return BeanCopierUtils.copyListProperties(getServerGroupAttribute(ocServerGroup), OcServerAttributeVO.ServerAttribute.class);
+    public List<ServerAttributeVO.ServerAttribute> queryServerGroupAttribute(OcServerGroup ocServerGroup) {
+        return BeanCopierUtils.copyListProperties(getServerGroupAttribute(ocServerGroup), ServerAttributeVO.ServerAttribute.class);
     }
 
     public List<OcServerAttribute> getServerAttribute(OcServer ocServer) {
@@ -110,8 +110,8 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     }
 
     @Override
-    public List<OcServerAttributeVO.ServerAttribute> queryServerAttribute(OcServer ocServer) {
-        return BeanCopierUtils.copyListProperties(getServerAttribute(ocServer), OcServerAttributeVO.ServerAttribute.class);
+    public List<ServerAttributeVO.ServerAttribute> queryServerAttribute(OcServer ocServer) {
+        return BeanCopierUtils.copyListProperties(getServerAttribute(ocServer), ServerAttributeVO.ServerAttribute.class);
     }
 
     @Override
@@ -126,7 +126,7 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveServerAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
+    public BusinessWrapper<Boolean> saveServerAttribute(ServerAttributeVO.ServerAttribute serverAttribute) {
         OcServerAttribute preServerAttribute = BeanCopierUtils.copyProperties(serverAttribute, OcServerAttribute.class);
         OcServerAttribute checkServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(preServerAttribute);
         if (checkServerAttribute == null) {
@@ -145,8 +145,8 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
         if (serverGroupAttributeMap != null && !serverGroupAttributeMap.isEmpty())
             return serverGroupAttributeMap;
         serverGroupAttributeMap = Maps.newHashMap();
-        List<OcServerAttributeVO.ServerAttribute> list = queryServerGroupAttribute(ocServerGroup);
-        for (OcServerAttributeVO.ServerAttribute sa : list) {
+        List<ServerAttributeVO.ServerAttribute> list = queryServerGroupAttribute(ocServerGroup);
+        for (ServerAttributeVO.ServerAttribute sa : list) {
             AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
             serverGroupAttributeMap.putAll(toServerAttributeMap(attributeGroup.getAttributes()));
         }
@@ -162,8 +162,8 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
         if (serverAttributeMap != null && !serverAttributeMap.isEmpty())
             return serverAttributeMap;
         serverAttributeMap = Maps.newHashMap();
-        List<OcServerAttributeVO.ServerAttribute> list = queryServerAttribute(ocServer);
-        for (OcServerAttributeVO.ServerAttribute sa : list) {
+        List<ServerAttributeVO.ServerAttribute> list = queryServerAttribute(ocServer);
+        for (ServerAttributeVO.ServerAttribute sa : list) {
             AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
             serverAttributeMap.putAll(toServerAttributeMap(attributeGroup.getAttributes()));
         }

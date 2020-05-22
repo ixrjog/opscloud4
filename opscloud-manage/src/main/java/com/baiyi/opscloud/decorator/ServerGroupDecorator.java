@@ -2,8 +2,8 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroupType;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;
 import org.springframework.stereotype.Component;
 
@@ -20,9 +20,9 @@ public class ServerGroupDecorator {
     @Resource
     private OcServerGroupTypeService ocServerGroupTypeService;
 
-    public OcServerGroupVO.ServerGroup decorator(OcServerGroupVO.ServerGroup serverGroup) {
+    public ServerGroupVO.ServerGroup decorator(ServerGroupVO.ServerGroup serverGroup) {
         OcServerGroupType ocServerGroupType = ocServerGroupTypeService.queryOcServerGroupTypeByGrpType(serverGroup.getGrpType());
-        OcServerGroupTypeVO.ServerGroupType serverGroupType = BeanCopierUtils.copyProperties(ocServerGroupType, OcServerGroupTypeVO.ServerGroupType.class);
+        ServerGroupTypeVO.ServerGroupType serverGroupType = BeanCopierUtils.copyProperties(ocServerGroupType, ServerGroupTypeVO.ServerGroupType.class);
         serverGroup.setServerGroupType(serverGroupType);
         return serverGroup;
     }

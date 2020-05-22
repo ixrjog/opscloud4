@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * @Date 2020/2/21 11:14 上午
  * @Version 1.0
  */
-public class OcServerGroupVO {
+public class ServerGroupVO {
 
 
     @Data
@@ -18,7 +18,7 @@ public class OcServerGroupVO {
     @ApiModel
     public static class ServerGroup {
 
-        private OcServerGroupTypeVO.ServerGroupType serverGroupType;
+        private ServerGroupTypeVO.ServerGroupType serverGroupType;
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;

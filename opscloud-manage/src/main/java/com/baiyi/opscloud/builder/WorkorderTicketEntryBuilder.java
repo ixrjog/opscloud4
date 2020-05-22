@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketEntryParam;
 import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
 import com.baiyi.opscloud.factory.ticket.entry.AuthRoleEntry;
@@ -36,7 +36,7 @@ public class WorkorderTicketEntryBuilder {
 
     public static OcWorkorderTicketEntryVO.Entry build(int ticketId, OcServerGroup ocServerGroup) {
         ServerGroupEntry entry = ServerGroupEntry.builder()
-                .serverGroup(BeanCopierUtils.copyProperties(ocServerGroup, OcServerGroupVO.ServerGroup.class))
+                .serverGroup(BeanCopierUtils.copyProperties(ocServerGroup, ServerGroupVO.ServerGroup.class))
                 .build();
 
         WorkorderTicketEntryBO workorderTicketEntryBO = WorkorderTicketEntryBO.builder()

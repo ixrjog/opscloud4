@@ -13,7 +13,7 @@ import java.util.Date;
  * @Date 2020/3/6 4:27 下午
  * @Version 1.0
  */
-public class OcServerAttributeVO {
+public class ServerAttributeVO {
 
     @Data
     @NoArgsConstructor

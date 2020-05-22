@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.config.serverAttribute.AttributeGroup;
 import com.baiyi.opscloud.common.util.ServerAttributeUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -71,7 +71,7 @@ public class ServerAttributeTest extends BaseUnit {
     void testGetServerGroupAttribute() {
         OcServerGroup ocServerGroup = new OcServerGroup();
         ocServerGroup.setId(1);
-        List<OcServerAttributeVO.ServerAttribute> list = serverAttributeFacade.queryServerGroupAttribute(ocServerGroup);
+        List<ServerAttributeVO.ServerAttribute> list = serverAttributeFacade.queryServerGroupAttribute(ocServerGroup);
         System.err.println(JSON.toJSONString(list));
     }
 

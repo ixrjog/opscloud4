@@ -6,9 +6,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
-import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 
 import java.util.List;
@@ -20,33 +20,33 @@ import java.util.List;
  */
 public interface ServerGroupFacade {
 
-    DataTable<OcServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery);
+    DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> addServerGroup(OcServerGroupVO.ServerGroup serverGroup);
+    BusinessWrapper<Boolean> addServerGroup(ServerGroupVO.ServerGroup serverGroup);
 
-    BusinessWrapper<Boolean> updateServerGroup(OcServerGroupVO.ServerGroup serverGroup);
+    BusinessWrapper<Boolean> updateServerGroup(ServerGroupVO.ServerGroup serverGroup);
 
     BusinessWrapper<Boolean> deleteServerGroupById(int id);
 
-    DataTable<OcServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.PageQuery pageQuery);
+    DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> addServerGroupType(OcServerGroupTypeVO.ServerGroupType serverGroupType);
+    BusinessWrapper<Boolean> addServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType);
 
-    BusinessWrapper<Boolean> updateServerGroupType(OcServerGroupTypeVO.ServerGroupType serverGroupType);
+    BusinessWrapper<Boolean> updateServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType);
 
     BusinessWrapper<Boolean> deleteServerGroupTypeById(int id);
 
-    DataTable<OcServerGroupVO.ServerGroup> queryUserIncludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery);
+    DataTable<ServerGroupVO.ServerGroup> queryUserIncludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery);
 
-    DataTable<OcServerGroupVO.ServerGroup> queryUserExcludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery);
+    DataTable<ServerGroupVO.ServerGroup> queryUserExcludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery);
 
     BusinessWrapper<Boolean> grantUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission);
 
     BusinessWrapper<Boolean> revokeUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission);
 
-    List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
+    List<ServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
 
-    BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute);
+    BusinessWrapper<Boolean> saveServerGroupAttribute(ServerAttributeVO.ServerAttribute serverAttribute);
 
     ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery, OcUser ocUser);
 

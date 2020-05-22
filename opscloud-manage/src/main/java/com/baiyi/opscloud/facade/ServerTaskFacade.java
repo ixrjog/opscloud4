@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
+import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 
 /**
  * @Author baiyi
@@ -38,7 +38,7 @@ public interface ServerTaskFacade {
 
     BusinessWrapper<Boolean> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor);
 
-    OcServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId);
+    ServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId);
 
     BusinessWrapper<Boolean> createAnsibleHosts();
 
