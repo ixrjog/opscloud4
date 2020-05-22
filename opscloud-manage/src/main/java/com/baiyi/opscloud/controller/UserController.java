@@ -56,6 +56,12 @@ public class UserController {
         return new HttpResult<>(userFacade.queryUserDetail());
     }
 
+    @ApiOperation(value = "离职")
+    @PutMapping(value = "/retire",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> retireUser( @Valid int id) {
+        return new HttpResult<>(userFacade.retireUser(id));
+    }
+
     @ApiOperation(value = "分页查询user列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<OcUserVO.User>> fuzzyQueryUserPage(@RequestBody @Valid UserParam.PageQuery pageQuery) {

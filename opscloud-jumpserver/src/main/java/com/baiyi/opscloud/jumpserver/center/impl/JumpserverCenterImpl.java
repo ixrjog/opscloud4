@@ -364,7 +364,8 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     public boolean activeUsersUser(String username, boolean active) {
         log.info("JUMPSERVER设置用Active,username = {}, active = {}", username, active);
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);
-        if (usersUser == null) return false;
+        if (usersUser == null)
+            return !active; // 账户不存在无需禁用
         usersUser.setIsActive(active);
         usersUserService.updateUsersUser(usersUser);
         return true;

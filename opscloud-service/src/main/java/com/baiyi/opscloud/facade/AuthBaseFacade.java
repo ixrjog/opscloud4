@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
  * @Date 2020/1/16 10:04 上午
  * @Version 1.0
  */
-public interface OcAuthFacade {
+public interface AuthBaseFacade {
 
     /**
      * 判断用户请求资源是否授权

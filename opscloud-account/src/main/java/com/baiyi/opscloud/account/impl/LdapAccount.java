@@ -118,6 +118,8 @@ public class LdapAccount extends BaseAccount implements IAccount {
     @Override
     public Boolean active(OcUser user, boolean active) {
         if (!active) {
+            if (!personRepo.checkPersonInLdap(user.getUsername()))
+                return true; // 用户不存在
             Person person = new Person();
             person.setUsername(user.getUsername());
             person.setUserPassword(PasswordUtils.getPW(20));

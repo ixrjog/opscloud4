@@ -81,7 +81,7 @@ public class UserFacadeImpl implements UserFacade {
 
 
     @Resource
-    private OcAuthFacade ocAuthFacade;
+    private AuthBaseFacade ocAuthFacade;
 
     @Resource
     private AuthFacade authFacade;
@@ -374,7 +374,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> resignationUser(int userId) {
+    public BusinessWrapper<Boolean> retireUser(int userId) {
         OcUser ocUser = ocUserService.queryOcUserById(userId);
         // 禁用用户
         Boolean result = accountCenter.active(ocUser, false);

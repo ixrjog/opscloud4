@@ -68,7 +68,7 @@ public interface UserFacade {
      * @param userId
      * @return
      */
-    BusinessWrapper<Boolean> resignationUser(int userId);
+    BusinessWrapper<Boolean> retireUser(int userId);
 
 
 }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
-import com.baiyi.opscloud.facade.OcCloudVpcFacade;
+import com.baiyi.opscloud.facade.CloudVpcBaseFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcVswitchService;
@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
-public class OcCloudVpcFacadeImpl implements OcCloudVpcFacade {
+public class CloudVpcBaseFacadeImpl implements CloudVpcBaseFacade {
 
     @Resource
     private OcCloudVpcService ocCloudVpcService;

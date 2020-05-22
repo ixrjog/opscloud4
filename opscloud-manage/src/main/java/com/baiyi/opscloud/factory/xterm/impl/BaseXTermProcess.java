@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.facade.KeyboxFacade;
-import com.baiyi.opscloud.facade.OcAuthFacade;
+import com.baiyi.opscloud.facade.AuthBaseFacade;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
@@ -36,7 +36,7 @@ import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
 public abstract class BaseXTermProcess implements IXTermProcess, InitializingBean {
 
     @Resource
-    protected OcAuthFacade ocAuthFacade;
+    protected AuthBaseFacade ocAuthFacade;
 
     @Resource
     protected UserPermissionFacade userPermissionFacade;

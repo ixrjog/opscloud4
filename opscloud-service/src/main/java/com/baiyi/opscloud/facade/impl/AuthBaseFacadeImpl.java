@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.facade.OcAuthFacade;
+import com.baiyi.opscloud.facade.AuthBaseFacade;
 import com.baiyi.opscloud.service.auth.OcAuthResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
@@ -25,7 +25,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class OcAuthFacadeImpl implements OcAuthFacade {
+public class AuthBaseFacadeImpl implements AuthBaseFacade {
 
     public static final String SUPER_ADMIN = "super_admin";
 
