@@ -26,7 +26,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -78,7 +77,7 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
-    public List<ServerVO.Server> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup) {
+    public BusinessWrapper<Boolean> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup) {
         Integer serverGroupId = queryByServerGroup.getServerGroupId();
         if (serverGroupId == null || serverGroupId <= 0) {
             if (!StringUtils.isEmpty(queryByServerGroup.getServerGroupName())) {
@@ -88,11 +87,14 @@ public class ServerFacadeImpl implements ServerFacade {
 
             }
         }
-        if (serverGroupId == null) return Collections.EMPTY_LIST;
+        if (serverGroupId == null) return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
         List<ServerVO.Server> servers = ocServerService.queryOcServerByServerGroupId(serverGroupId).stream().map(e ->
                 serverDecorator.decorator(BeanCopierUtils.copyProperties(e, ServerVO.Server.class))
         ).collect(Collectors.toList());
-        return servers;
+        BusinessWrapper wrapper = new BusinessWrapper();
+        wrapper.setBody(servers);
+
+        return wrapper;
     }
 
     @Override

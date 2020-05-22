@@ -37,7 +37,7 @@ public class ServerController {
 
     @ApiOperation(value = "查询server列表")
     @PostMapping(value = "/query/by/group", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<ServerVO.Server>> queryServerByServerGroup(@RequestBody @Valid ServerParam.QueryByServerGroup queryByServerGroup) {
+    public HttpResult<Boolean> queryServerByServerGroup(@RequestBody @Valid ServerParam.QueryByServerGroup queryByServerGroup) {
         return new HttpResult<>(serverFacade.queryServerByServerGroup(queryByServerGroup));
     }
 

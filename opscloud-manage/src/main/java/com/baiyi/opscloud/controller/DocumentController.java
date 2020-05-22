@@ -18,7 +18,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/doc")
-@Api(tags = "环境管理")
+@Api(tags = "文档管理")
 public class DocumentController {
 
     @Resource
