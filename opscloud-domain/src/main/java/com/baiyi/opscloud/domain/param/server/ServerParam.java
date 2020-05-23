@@ -33,6 +33,12 @@ public class ServerParam {
         @ApiModelProperty(value = "环境类型")
         private Integer envType;
 
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+        @ApiModelProperty(value = "状态")
+        private Integer serverStatus;
+
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
     }

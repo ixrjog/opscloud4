@@ -47,6 +47,12 @@
             <if test="envType != null and envType >= 0">
                 and a0.env_type = #{envType}
             </if>
+            <if test="isActive != null">
+                and a0.is_active = #{isActive}
+            </if>
+            <if test="serverStatus != null">
+                and a0.server_status = #{serverStatus}
+            </if>
         </where>
     </select>
 
@@ -72,6 +78,12 @@
             </if>
             <if test="envType != null and envType >= 0">
                 and a0.env_type = #{envType}
+            </if>
+            <if test="isActive != null">
+                and a0.is_active = #{isActive}
+            </if>
+            <if test="serverStatus != null">
+                and a0.server_status = #{serverStatus}
             </if>
         </where>
     </select>

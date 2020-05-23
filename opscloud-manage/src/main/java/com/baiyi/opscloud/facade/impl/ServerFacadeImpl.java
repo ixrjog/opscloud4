@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.builder.ServerBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
@@ -84,17 +85,13 @@ public class ServerFacadeImpl implements ServerFacade {
                 OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupByName(queryByServerGroup.getServerGroupName());
                 if (ocServerGroup != null)
                     serverGroupId = ocServerGroup.getId();
-
             }
         }
         if (serverGroupId == null) return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
         List<ServerVO.Server> servers = ocServerService.queryOcServerByServerGroupId(serverGroupId).stream().map(e ->
                 serverDecorator.decorator(BeanCopierUtils.copyProperties(e, ServerVO.Server.class))
         ).collect(Collectors.toList());
-        BusinessWrapper wrapper = new BusinessWrapper();
-        wrapper.setBody(servers);
-
-        return wrapper;
+        return new BusinessWrapper(servers);
     }
 
     @Override
@@ -137,7 +134,7 @@ public class ServerFacadeImpl implements ServerFacade {
             serialNumber = ocServerService.queryOcServerMaxSerialNumber(server.getServerGroupId(), server.getEnvType());
             server.setSerialNumber(serialNumber + 1);
         }
-        OcServer ocServer = BeanCopierUtils.copyProperties(server, OcServer.class);
+        OcServer ocServer = ServerBuilder.build(server);
         ocServerService.addOcServer(ocServer);
         // 清理缓存
         serverCacheFacade.evictServerCache(ocServer);

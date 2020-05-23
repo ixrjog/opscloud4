@@ -16,21 +16,25 @@ public class ServerCenter {
 
     /**
      * 服务器工厂 创建服务器信息
+     *
      * @param ocServer
      * @return
      */
     public Boolean create(OcServer ocServer) {
         Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
+        Boolean result = Boolean.TRUE;
+
         for (String key : serverContainer.keySet()) {
             IServer iServer = serverContainer.get(key);
             if (!iServer.create(ocServer))
-                return Boolean.FALSE;
+                result = Boolean.FALSE;
         }
-        return Boolean.TRUE;
+        return result;
     }
 
     /**
      * 服务器工厂 创建服务器信息
+     *
      * @param ocServer
      * @return
      */
@@ -46,6 +50,7 @@ public class ServerCenter {
 
     /**
      * 服务器工厂 创建服务器信息
+     *
      * @param ocServer
      * @return
      */
@@ -58,7 +63,6 @@ public class ServerCenter {
         }
         return Boolean.TRUE;
     }
-
 
 
 }

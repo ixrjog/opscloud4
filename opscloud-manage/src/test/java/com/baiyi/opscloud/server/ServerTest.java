@@ -2,6 +2,7 @@ package com.baiyi.opscloud.server;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -54,7 +55,8 @@ public class ServerTest extends BaseUnit {
         ServerParam.QueryByServerGroup queryByServerGroup = new ServerParam.QueryByServerGroup();
         // group_opscloud
         queryByServerGroup.setServerGroupId(3);
-        List<ServerVO.Server> servers = serverFacade.queryServerByServerGroup(queryByServerGroup);
+        BusinessWrapper wrapper = serverFacade.queryServerByServerGroup(queryByServerGroup);
+        List<ServerVO.Server> servers = (List<ServerVO.Server>) wrapper.getBody();
         System.err.println(JSON.toJSONString(servers));
 
     }
