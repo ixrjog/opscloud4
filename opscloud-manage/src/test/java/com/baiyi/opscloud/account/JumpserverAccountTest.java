@@ -26,7 +26,7 @@ public class JumpserverAccountTest extends BaseUnit {
 
     @Test
     void testPushKey() {
-        OcUser ocUser = ocUserService.queryOcUserByUsername("xusx");
+        OcUser ocUser = ocUserService.queryOcUserByUsername("baiyi");
         getAccount().pushSSHKey(ocUser);
     }
 
