@@ -8,6 +8,6 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class CloseMessage extends BaseXTermMessage {
+public class CloseMessage extends BaseMessage {
 
 }

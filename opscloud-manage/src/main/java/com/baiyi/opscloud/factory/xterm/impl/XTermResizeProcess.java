@@ -3,7 +3,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.ResizeMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -42,7 +42,7 @@ public class XTermResizeProcess extends BaseXTermProcess implements IXTermProces
     }
 
     @Override
-    protected BaseXTermMessage getXTermMessage(String message) {
+    protected BaseMessage getXTermMessage(String message) {
         ResizeMessage xtermMessage = new GsonBuilder().create().fromJson(message, ResizeMessage.class);
         return  xtermMessage;
     }

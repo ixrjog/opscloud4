@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.InitialMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.google.gson.GsonBuilder;
@@ -59,7 +59,7 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
 
 
     @Override
-    protected BaseXTermMessage getXTermMessage(String message) {
+    protected BaseMessage getXTermMessage(String message) {
         InitialMessage xtermMessage = new GsonBuilder().create().fromJson(message, InitialMessage.class);
         return xtermMessage;
     }

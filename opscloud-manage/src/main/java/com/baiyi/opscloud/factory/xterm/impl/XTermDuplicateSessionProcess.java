@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.DuplicateSessionMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
@@ -52,7 +52,7 @@ public class XTermDuplicateSessionProcess extends BaseXTermProcess implements IX
 
 
     @Override
-    protected BaseXTermMessage getXTermMessage(String message) {
+    protected BaseMessage getXTermMessage(String message) {
         DuplicateSessionMessage xtermMessage = new GsonBuilder().create().fromJson(message, DuplicateSessionMessage.class);
         return xtermMessage;
     }

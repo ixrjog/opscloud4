@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class LogoutMessage extends BaseXTermMessage {
+public class LogoutMessage extends BaseMessage {
 
     private String instanceId;
 }

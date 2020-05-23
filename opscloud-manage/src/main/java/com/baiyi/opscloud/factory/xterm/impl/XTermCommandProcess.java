@@ -2,7 +2,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
-import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.CommandMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -49,7 +49,7 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
     }
 
     @Override
-    protected BaseXTermMessage getXTermMessage(String message) {
+    protected BaseMessage getXTermMessage(String message) {
         CommandMessage xtermMessage = new GsonBuilder().create().fromJson(message, CommandMessage.class);
         return xtermMessage;
     }

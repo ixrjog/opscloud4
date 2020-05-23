@@ -15,7 +15,7 @@ import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
-import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import lombok.extern.slf4j.Slf4j;
@@ -58,13 +58,13 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
 
     //  protected static final String sessionId = UUID.randomUUID().toString();
 
-    abstract protected BaseXTermMessage getXTermMessage(String message);
+    abstract protected BaseMessage getXTermMessage(String message);
 
     protected boolean isOps(OcUser ocUser) {
         return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
     }
 
-    protected HostSystem buildHostSystem(OcUser ocUser, String host, BaseXTermMessage baseMessage, boolean isAdmin) {
+    protected HostSystem buildHostSystem(OcUser ocUser, String host, BaseMessage baseMessage, boolean isAdmin) {
         OcServer ocServer = ocServerService.queryOcServerByIp(host);
         OcUserPermission ocUserPermission = new OcUserPermission();
         ocUserPermission.setUserId(ocUser.getId());

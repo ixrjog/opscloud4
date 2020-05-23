@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class CommandMessage extends BaseXTermMessage {
+public class CommandMessage extends BaseMessage {
 
     private String instanceId;
     private String data;

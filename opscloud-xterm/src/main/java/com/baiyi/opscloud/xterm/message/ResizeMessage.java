@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class ResizeMessage extends BaseXTermMessage {
+public class ResizeMessage extends BaseMessage {
 
     private String instanceId;
 }

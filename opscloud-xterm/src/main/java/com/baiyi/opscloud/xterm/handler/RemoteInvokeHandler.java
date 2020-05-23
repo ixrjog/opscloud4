@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.xterm.handler;
 
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
-import com.baiyi.opscloud.xterm.message.BaseXTermMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -62,6 +62,7 @@ public class RemoteInvokeHandler {
             Runnable run = new SecureShellTask(sessionOutput, outFromChannel);
             Thread thread = new Thread(run);
             thread.start();
+
             OutputStream inputToChannel = channel.getOutputStream();
             PrintStream commander = new PrintStream(inputToChannel, true);
 
@@ -90,7 +91,7 @@ public class RemoteInvokeHandler {
         }
     }
 
-    public static void invokeChannelPtySize(ChannelShell channel, BaseXTermMessage baseMessage) {
+    public static void invokeChannelPtySize(ChannelShell channel, BaseMessage baseMessage) {
         int width = baseMessage.getXtermWidth();
         int height = baseMessage.getXtermHeight();
         // int cols = (int) Math.floor(width / 7.2981);
