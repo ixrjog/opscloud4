@@ -279,6 +279,14 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         return Boolean.TRUE;
     }
 
+    @Override
+    public void offline(int serverId) {
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(getCloudServerType(), serverId);
+        if(ocCloudServer == null) return;
+        ocCloudServer.setServerStatus(CloudServerStatus.OFFLINE.getStatus());
+        ocCloudServerService.updateOcCloudServer(ocCloudServer);
+    }
+
     /**
      * 注册
      *

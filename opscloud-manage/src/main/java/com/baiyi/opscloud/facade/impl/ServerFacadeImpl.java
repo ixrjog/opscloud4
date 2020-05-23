@@ -1,7 +1,10 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.builder.ServerBuilder;
+import com.baiyi.opscloud.cloud.server.ICloudServer;
+import com.baiyi.opscloud.cloud.server.factory.CloudServerFactory;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.base.CloudServerKey;
 import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
@@ -177,15 +180,16 @@ public class ServerFacadeImpl implements ServerFacade {
         List<OcBusinessTag> ocBusinessTagList = tagFacade.queryOcBusinessTagByBusinessTypeAndBusinessId(BusinessType.SERVER.getType(), id);
         if (!ocBusinessTagList.isEmpty())
             tagFacade.deleteTagByList(ocBusinessTagList);
-
         // 删除server的属性
         List<OcServerAttribute> serverAttributeList = serverAttributeFacade.queryServerAttributeById(id);
         if (!serverAttributeList.isEmpty())
             serverAttributeFacade.deleteServerAttributeByList(serverAttributeList);
-
         ocServerService.deleteOcServerById(id);
         // 服务器工厂
         serverCenter.remove(ocServer);
+        // 设置云服务器离线
+        ICloudServer iCloudServer = CloudServerFactory.getCloudServerByKey(CloudServerKey.getKey(ocServer.getServerType()));
+        iCloudServer.offline(id);
         return BusinessWrapper.SUCCESS;
     }
 
