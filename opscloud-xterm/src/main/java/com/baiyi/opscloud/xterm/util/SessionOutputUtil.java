@@ -1,29 +1,29 @@
 /**
- *    Copyright (C) 2013 Loophole, LLC
- *
- *    This program is free software: you can redistribute it and/or  modify
- *    it under the terms of the GNU Affero General Public License, version 3,
- *    as published by the Free Software Foundation.
- *
- *    This program is distributed in the hope that it will be useful,
- *    but WITHOUT ANY WARRANTY; without even the implied warranty of
- *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *    GNU Affero General Public License for more details.
- *
- *    You should have received a copy of the GNU Affero General Public License
- *    along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- *    As a special exception, the copyright holders give permission to link the
- *    code of portions of this program with the OpenSSL library under certain
- *    conditions as described in each individual source file and distribute
- *    linked combinations including the program with the OpenSSL library. You
- *    must comply with the GNU Affero General Public License in all respects for
- *    all of the code used other than as permitted herein. If you modify file(s)
- *    with this exception, you may extend this exception to your version of the
- *    file(s), but you are not obligated to do so. If you do not wish to do so,
- *    delete this exception statement from your version. If you delete this
- *    exception statement from all source files in the program, then also delete
- *    it in the license file.
+ * Copyright (C) 2013 Loophole, LLC
+ * <p>
+ * This program is free software: you can redistribute it and/or  modify
+ * it under the terms of the GNU Affero General Public License, version 3,
+ * as published by the Free Software Foundation.
+ * <p>
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU Affero General Public License for more details.
+ * <p>
+ * You should have received a copy of the GNU Affero General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * <p>
+ * As a special exception, the copyright holders give permission to link the
+ * code of portions of this program with the OpenSSL library under certain
+ * conditions as described in each individual source file and distribute
+ * linked combinations including the program with the OpenSSL library. You
+ * must comply with the GNU Affero General Public License in all respects for
+ * all of the code used other than as permitted herein. If you modify file(s)
+ * with this exception, you may extend this exception to your version of the
+ * file(s), but you are not obligated to do so. If you do not wish to do so,
+ * delete this exception statement from your version. If you delete this
+ * exception statement from all source files in the program, then also delete
+ * it in the license file.
  */
 package com.baiyi.opscloud.xterm.util;
 
@@ -46,7 +46,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionOutputUtil {
 
     private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
-//    public final static boolean enableInternalAudit = "true".equals(AppConfig.getProperty("enableInternalAudit"));
+    //    public final static boolean enableInternalAudit = "true".equals(AppConfig.getProperty("enableInternalAudit"));
 //    private static Gson gson = new GsonBuilder().registerTypeAdapter(AuditWrapper.class, new SessionOutputSerializer()).create();
     private static Logger systemAuditLogger = LoggerFactory.getLogger("io.bastillion.manage.util.SystemAudit");
 
@@ -70,7 +70,7 @@ public class SessionOutputUtil {
     /**
      * removes session output for host system
      *
-     * @param sessionId    session id
+     * @param sessionId  session id
      * @param instanceId id of host system instance
      */
     public static void removeOutput(String sessionId, String instanceId) {
@@ -102,11 +102,11 @@ public class SessionOutputUtil {
     /**
      * adds a new output
      *
-     * @param sessionId    session id
+     * @param sessionId  session id
      * @param instanceId id of host system instance
-     * @param value        Array that is the source of characters
-     * @param offset       The initial offset
-     * @param count        The length
+     * @param value      Array that is the source of characters
+     * @param offset     The initial offset
+     * @param count      The length
      */
     public static void addToOutput(String sessionId, String instanceId, char value[], int offset, int count) {
 
@@ -135,7 +135,7 @@ public class SessionOutputUtil {
                 //get output chars and set to output
                 try {
                     SessionOutput sessionOutput = userSessionsOutput.getSessionOutputMap().get(key);
-                    if (sessionOutput!=null && sessionOutput.getOutput() != null
+                    if (sessionOutput != null && sessionOutput.getOutput() != null
                             && StringUtils.isNotEmpty(sessionOutput.getOutput())) {
 
                         outputList.add(sessionOutput);
@@ -146,7 +146,7 @@ public class SessionOutputUtil {
 //                        if(enableInternalAudit) {
 //                            SessionAuditDB.insertTerminalLog(con, sessionOutput);
 //                        }
-                      //  System.err.println(sessionOutput.getOutput().toString());
+                        //  System.err.println(sessionOutput.getOutput().toString());
                         userSessionsOutput.getSessionOutputMap().put(key, new SessionOutput(sessionId, sessionOutput));
                     }
                 } catch (Exception ex) {
