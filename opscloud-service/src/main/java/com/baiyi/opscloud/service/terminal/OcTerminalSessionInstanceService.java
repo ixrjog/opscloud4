@@ -1,18 +1,13 @@
-package com.baiyi.opscloud.facade;
+package com.baiyi.opscloud.service.terminal;
 
-import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSessionInstance;
 
 /**
  * @Author baiyi
- * @Date 2020/5/24 12:26 下午
+ * @Date 2020/5/25 11:12 上午
  * @Version 1.0
  */
-public interface TerminalFacade {
-
-    void addOcTerminalSession(OcTerminalSession ocTerminalSession);
-
-    void updateOcTerminalSession(OcTerminalSession ocTerminalSession);
+public interface OcTerminalSessionInstanceService {
 
     void addOcTerminalSessionInstance(OcTerminalSessionInstance ocTerminalSessionInstance);
 

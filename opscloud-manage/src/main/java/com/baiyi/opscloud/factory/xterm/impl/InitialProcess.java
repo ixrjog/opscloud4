@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
+import com.baiyi.opscloud.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
@@ -20,7 +22,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class XTermInitialProcess extends BaseXTermProcess implements IXTermProcess {
+public class InitialProcess extends BaseProcess implements IXTermProcess {
 
 
     /**
@@ -36,7 +38,7 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
+    public void xtermProcess(String message, Session session,OcTerminalSession ocTerminalSession) {
         InitialMessage xtermMessage = (InitialMessage) getXTermMessage(message);
         OcUser ocUser =  userFacade.getOcUserBySession();
         BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
@@ -49,10 +51,10 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
                 continue;
             String host = serverTreeHostPatternMap.get(instanceId);
             HostSystem hostSystem = buildHostSystem(ocUser, host, xtermMessage,isAdmin);
-            RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), instanceId, hostSystem);
+            RemoteInvokeHandler.openSSHTermOnSystem(ocTerminalSession.getSessionId(), instanceId, hostSystem);
+            terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession,hostSystem));
         }
     }
-
 
     @Override
     protected BaseMessage getXTermMessage(String message) {

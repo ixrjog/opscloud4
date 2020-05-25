@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.BatchCommandMessage;
@@ -18,7 +19,7 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTermProcess {
+public class BatchCommandProcess extends BaseProcess implements IXTermProcess {
 
     /**
      * XTerm设置批量命令
@@ -31,9 +32,9 @@ public class XTermBatchCommandProcess extends BaseXTermProcess implements IXTerm
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
+    public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         BatchCommandMessage xtermMessage = (BatchCommandMessage) getXTermMessage(message);
-        JSchSessionMap.setBatch(session.getId(), xtermMessage.getIsBatch());
+        JSchSessionMap.setBatch(ocTerminalSession.getSessionId(), xtermMessage.getIsBatch());
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.CommandMessage;
@@ -18,7 +19,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class XTermCommandProcess extends BaseXTermProcess implements IXTermProcess {
+public class CommandProcess extends BaseProcess implements IXTermProcess {
 
     /**
      * XTerm发送指令
@@ -32,17 +33,17 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
+    public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         CommandMessage xtermMessage = (CommandMessage) getXTermMessage(message);
 
-        if (!isBatch(session)) {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getInstanceId());
+        if (!isBatch(ocTerminalSession)) {
+            JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
             jSchSession.getCommander().print(xtermMessage.getData());
            //  List<SessionOutput> list = SessionOutputUtil.getOutput(session.getId());
         } else {
-            Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
+            Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId());
             for (String instanceId : sessionMap.keySet()) {
-                JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), instanceId);
+                JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), instanceId);
                 jSchSession.getCommander().print(xtermMessage.getData());
             }
         }

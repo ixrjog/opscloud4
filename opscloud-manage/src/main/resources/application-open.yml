@@ -13,7 +13,7 @@ opscloud:
 
 spring:
   profiles:
-    include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod
+    include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod,ansible-open,xterm-open
   redis:
     host: redis.opscloud.top
     port: 6379

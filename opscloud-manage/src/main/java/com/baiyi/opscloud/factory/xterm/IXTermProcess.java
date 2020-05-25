@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.factory.xterm;
 
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
+
 import javax.websocket.Session;
 
 /**
@@ -10,7 +12,7 @@ import javax.websocket.Session;
 public interface IXTermProcess {
 
 
-    void xtermProcess(String message, Session session);
+    void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession);
 
     String getKey();
 

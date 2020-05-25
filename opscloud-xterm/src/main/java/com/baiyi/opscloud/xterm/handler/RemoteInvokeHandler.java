@@ -31,7 +31,7 @@ public class RemoteInvokeHandler {
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
-    public static void openSSHTermOnSystem(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void openSSHTermOnSystem( String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);

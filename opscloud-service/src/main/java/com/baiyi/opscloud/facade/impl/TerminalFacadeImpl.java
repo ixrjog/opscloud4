@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSessionInstance;
 import com.baiyi.opscloud.facade.TerminalFacade;
+import com.baiyi.opscloud.service.terminal.OcTerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.OcTerminalSessionService;
 import org.springframework.stereotype.Service;
 
@@ -13,19 +15,37 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
-public class TerminalFacadeImpl  implements TerminalFacade {
+public class TerminalFacadeImpl implements TerminalFacade {
 
     @Resource
     private OcTerminalSessionService ocTerminalSessionService;
 
+    @Resource
+    private OcTerminalSessionInstanceService ocTerminalSessionInstanceService;
+
     @Override
-    public void addOcTerminalSession(OcTerminalSession ocTerminalSession){
+    public void addOcTerminalSession(OcTerminalSession ocTerminalSession) {
         ocTerminalSessionService.addOcTerminalSession(ocTerminalSession);
     }
 
     @Override
-    public  void updateOcTerminalSession(OcTerminalSession ocTerminalSession){
+    public void updateOcTerminalSession(OcTerminalSession ocTerminalSession) {
         ocTerminalSessionService.updateOcTerminalSession(ocTerminalSession);
+    }
+
+    @Override
+    public void addOcTerminalSessionInstance(OcTerminalSessionInstance ocTerminalSessionInstance) {
+        ocTerminalSessionInstanceService.addOcTerminalSessionInstance(ocTerminalSessionInstance);
+    }
+
+    @Override
+    public void updateOcTerminalSessionInstance(OcTerminalSessionInstance ocTerminalSessionInstance) {
+        ocTerminalSessionInstanceService.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
+    }
+
+    @Override
+    public OcTerminalSessionInstance queryOcTerminalSessionInstanceByUniqueKey(String sessionId, String instanceId) {
+        return ocTerminalSessionInstanceService.queryOcTerminalSessionInstanceByUniqueKey(sessionId, instanceId);
     }
 
 }

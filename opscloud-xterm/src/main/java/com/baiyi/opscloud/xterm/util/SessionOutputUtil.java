@@ -27,12 +27,14 @@
  */
 package com.baiyi.opscloud.xterm.util;
 
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.xterm.model.SessionOutput;
 import com.baiyi.opscloud.xterm.model.UserSessionsOutput;
+import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,12 +45,20 @@ import java.util.concurrent.ConcurrentHashMap;
  * Utility to is used to store the output for a session until the ajax call that brings it to the screen
  */
 @Slf4j
+@Component
 public class SessionOutputUtil {
+
+    private static RedisUtil redisUtil;
+
+    @Autowired
+    private void setRedisUtil(RedisUtil redisUtil) {
+        SessionOutputUtil.redisUtil = redisUtil;
+    }
 
     private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
     //    public final static boolean enableInternalAudit = "true".equals(AppConfig.getProperty("enableInternalAudit"));
 //    private static Gson gson = new GsonBuilder().registerTypeAdapter(AuditWrapper.class, new SessionOutputSerializer()).create();
-    private static Logger systemAuditLogger = LoggerFactory.getLogger("io.bastillion.manage.util.SystemAudit");
+  //  private static Logger systemAuditLogger = LoggerFactory.getLogger("io.bastillion.manage.util.SystemAudit");
 
     private SessionOutputUtil() {
     }
@@ -130,24 +140,26 @@ public class SessionOutputUtil {
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
 
-            for (String key : userSessionsOutput.getSessionOutputMap().keySet()) {
+            for (String instanceId : userSessionsOutput.getSessionOutputMap().keySet()) {
 
                 //get output chars and set to output
                 try {
-                    SessionOutput sessionOutput = userSessionsOutput.getSessionOutputMap().get(key);
+                    SessionOutput sessionOutput = userSessionsOutput.getSessionOutputMap().get(instanceId);
                     if (sessionOutput != null && sessionOutput.getOutput() != null
                             && StringUtils.isNotEmpty(sessionOutput.getOutput())) {
 
                         outputList.add(sessionOutput);
 
-//                        //send to audit logger
-//                        systemAuditLogger.info(gson.toJson(new AuditWrapper(user, sessionOutput)));
-//
-//                        if(enableInternalAudit) {
-//                            SessionAuditDB.insertTerminalLog(con, sessionOutput);
-//                        }
-                        //  System.err.println(sessionOutput.getOutput().toString());
-                        userSessionsOutput.getSessionOutputMap().put(key, new SessionOutput(sessionId, sessionOutput));
+                        String auditContent = sessionOutput.getOutput().toString();
+
+                        String cacheKey = Joiner.on("#").join(sessionId, instanceId);
+
+                        if (redisUtil.hasKey(cacheKey)) {
+                            auditContent =  redisUtil.get(cacheKey) + auditContent;
+                        }
+                        redisUtil.set(cacheKey, auditContent, 10 * 60 * 1000L);
+                        //  System.err.println(auditContent);
+                        userSessionsOutput.getSessionOutputMap().put(instanceId, new SessionOutput(sessionId, sessionOutput));
                     }
                 } catch (Exception ex) {
                     log.error(ex.toString(), ex);

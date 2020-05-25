@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
+import com.baiyi.opscloud.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
@@ -21,7 +23,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class XTermInitialIpProcess extends BaseXTermProcess implements IXTermProcess {
+public class InitialByIpProcess extends BaseProcess implements IXTermProcess {
 
 
     /**
@@ -35,7 +37,7 @@ public class XTermInitialIpProcess extends BaseXTermProcess implements IXTermPro
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
+    public void xtermProcess(String message, Session session,OcTerminalSession ocTerminalSession) {
         InitialIpMessage xtermMessage = (InitialIpMessage) getXTermMessage(message);
         xtermMessage.setLoginUserType(1);
         OcUser ocUser =  userFacade.getOcUserBySession();
@@ -55,7 +57,8 @@ public class XTermInitialIpProcess extends BaseXTermProcess implements IXTermPro
         }
 
         HostSystem hostSystem = buildHostSystem(ocUser, ip, xtermMessage, isAdmin);
-        RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), xtermMessage.getInstanceId(), hostSystem);
+        RemoteInvokeHandler.openSSHTermOnSystem(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId(), hostSystem);
+        terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession,hostSystem));
     }
 
 

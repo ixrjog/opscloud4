@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
@@ -19,7 +20,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class XTermResizeProcess extends BaseXTermProcess implements IXTermProcess {
+public class ResizeProcess extends BaseProcess implements IXTermProcess {
 
     /**
      * XTerm改变形体
@@ -32,10 +33,10 @@ public class XTermResizeProcess extends BaseXTermProcess implements IXTermProces
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
+    public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         ResizeMessage xtermMessage= (ResizeMessage) getXTermMessage(message);
         try {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getInstanceId());
+            JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
             RemoteInvokeHandler.invokeChannelPtySize((ChannelShell)jSchSession.getChannel(),xtermMessage);
         } catch (Exception e) {
         }

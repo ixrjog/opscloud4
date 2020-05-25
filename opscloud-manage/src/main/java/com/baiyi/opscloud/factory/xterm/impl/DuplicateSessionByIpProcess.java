@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
+import com.baiyi.opscloud.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.handler.RemoteInvokeHandler;
@@ -16,11 +18,11 @@ import javax.websocket.Session;
 
 /**
  * @Author baiyi
- * @Date 2020/5/13 10:24 上午
+ * @Date 2020/5/15 4:02 下午
  * @Version 1.0
  */
 @Component
-public class XTermDuplicateSessionProcess extends BaseXTermProcess implements IXTermProcess {
+public class DuplicateSessionByIpProcess extends BaseProcess implements IXTermProcess {
 
     /**
      * XTerm复制会话
@@ -30,22 +32,24 @@ public class XTermDuplicateSessionProcess extends BaseXTermProcess implements IX
 
     @Override
     public String getKey() {
-        return XTermRequestStatus.DUPLICATE_SESSION.getCode();
+        return XTermRequestStatus.DUPLICATE_SESSION_IP.getCode();
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
-        DuplicateSessionMessage xtermMessage = (DuplicateSessionMessage) getXTermMessage(message);
+    public void xtermProcess(String message, Session session , OcTerminalSession ocTerminalSession) {
+        DuplicateSessionMessage baseMessage = (DuplicateSessionMessage) getXTermMessage(message);
+        baseMessage.setLoginUserType(1);
 
         OcUser ocUser =  userFacade.getOcUserBySession();
 
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getDuplicateInstanceId());
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), baseMessage.getDuplicateInstanceId());
 
         String host = jSchSession.getHostSystem().getHost();
         boolean isAdmin = isOps(ocUser);
-        HostSystem hostSystem = buildHostSystem(ocUser, host, xtermMessage, isAdmin);
+        HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage, isAdmin);
 
-        RemoteInvokeHandler.openSSHTermOnSystem(session.getId(), xtermMessage.getInstanceId(), hostSystem);
+        RemoteInvokeHandler.openSSHTermOnSystem(ocTerminalSession.getSessionId(), baseMessage.getInstanceId(), hostSystem);
+        terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession,hostSystem ,baseMessage.getDuplicateInstanceId()));
     }
 
 

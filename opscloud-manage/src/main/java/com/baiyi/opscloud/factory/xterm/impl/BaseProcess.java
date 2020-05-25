@@ -2,24 +2,26 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
+import com.baiyi.opscloud.xterm.config.XTermConfig;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
+import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
-import javax.websocket.Session;
+import java.util.Date;
 
 import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
 
@@ -30,7 +32,7 @@ import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseXTermProcess implements IXTermProcess, InitializingBean {
+public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     @Resource
     protected UserFacade userFacade;
@@ -52,6 +54,15 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
 
     @Resource
     protected OcUserPermissionService ocUserPermissionService;
+
+    @Resource
+    protected TerminalFacade terminalFacade;
+
+    @Resource
+    private RedisUtil redisUtil;
+
+    @Resource
+    private XTermConfig xtermConfig;
 
     //  protected static final String sessionId = UUID.randomUUID().toString();
 
@@ -94,11 +105,34 @@ public abstract class BaseXTermProcess implements IXTermProcess, InitializingBea
     }
 
 
-    protected Boolean isBatch(Session session) {
-        Boolean isBatch = JSchSessionMap.getBatchBySessionId(session.getId());
+    protected Boolean isBatch(OcTerminalSession ocTerminalSession) {
+        Boolean isBatch = JSchSessionMap.getBatchBySessionId(ocTerminalSession.getSessionId());
         if (isBatch == null)
             isBatch = Boolean.FALSE;
         return isBatch;
+    }
+
+    protected void sessionInstanceClosed(OcTerminalSession ocTerminalSession, String instanceId) {
+        try {
+            OcTerminalSessionInstance ocTerminalSessionInstance = terminalFacade.queryOcTerminalSessionInstanceByUniqueKey(ocTerminalSession.getSessionId(), instanceId);
+            ocTerminalSessionInstance.setCloseTime(new Date());
+            ocTerminalSessionInstance.setIsClosed(true);
+            terminalFacade.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
+        } catch (Exception e) {
+
+        }
+    }
+
+    protected void writeAuditLog(OcTerminalSession ocTerminalSession, String instanceId) {
+        String cacheKey = Joiner.on("#").join(ocTerminalSession.getSessionId(), instanceId);
+
+        try{
+            if (redisUtil.hasKey(cacheKey)) {
+                IOUtils.writeFile((String) redisUtil.get(cacheKey), xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(), instanceId));
+                redisUtil.del(cacheKey); // 清空缓存
+            }
+        }catch (Exception e){
+        }
     }
 
     /**

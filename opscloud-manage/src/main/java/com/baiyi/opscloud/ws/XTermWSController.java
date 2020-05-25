@@ -25,7 +25,6 @@ import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.util.Date;
 import java.util.UUID;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -80,7 +79,7 @@ public class XTermWSController implements InitializingBean {
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
         // 线程启动
-        Runnable run = new SentOutputTask(session.getId(), session);
+        Runnable run = new SentOutputTask(sessionId, session);
         Thread thread = new Thread(run);
         thread.start();
     }
@@ -90,13 +89,7 @@ public class XTermWSController implements InitializingBean {
      */
     @OnClose
     public void onClose() {
-        if (ocTerminalSession != null) {
-            ocTerminalSession.setCloseTime(new Date());
-            ocTerminalSession.setIsClosed(true);
-            terminalFacade.updateOcTerminalSession(ocTerminalSession);
-            ocTerminalSession = null;
-        }
-        XTermProcessFactory.getIXTermProcessByKey(XTermRequestStatus.CLOSE.getCode()).xtermProcess("", session);
+        XTermProcessFactory.getIXTermProcessByKey(XTermRequestStatus.CLOSE.getCode()).xtermProcess("", session, ocTerminalSession);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
         log.info("有连接关闭，当前连接数为：{}", cnt);
@@ -105,6 +98,7 @@ public class XTermWSController implements InitializingBean {
     /**
      * 收到客户端消息后调用的方法
      * Session session
+     *
      * @param message 客户端发送过来的消息
      */
     @OnMessage
@@ -115,16 +109,16 @@ public class XTermWSController implements InitializingBean {
         JSONObject jsonObject = JSON.parseObject(message);
         String status = jsonObject.getString("status");
         // 鉴权并更新会话信息
-        if (XTermRequestStatus.INITIAL.getCode().equals(status) || XTermRequestStatus.INITIAL_IP.getCode().equals(status)){
+        if (XTermRequestStatus.INITIAL.getCode().equals(status) || XTermRequestStatus.INITIAL_IP.getCode().equals(status)) {
             InitialMessage xtermMessage = new GsonBuilder().create().fromJson(message, InitialMessage.class);
             String username = authBaseFacade.getUserByToken(xtermMessage.getToken());
-            if(StringUtils.isEmpty(ocTerminalSession.getUsername())){
+            if (StringUtils.isEmpty(ocTerminalSession.getUsername())) {
                 ocTerminalSession.setUsername(username);
                 terminalFacade.updateOcTerminalSession(ocTerminalSession);
-                SessionUtils.setUsername(ocTerminalSession.getUsername());
+                SessionUtils.setUsername(ocTerminalSession.getUsername()); // 设置当前会话用户身份
             }
         }
-        XTermProcessFactory.getIXTermProcessByKey(status).xtermProcess(message, session);
+        XTermProcessFactory.getIXTermProcessByKey(status).xtermProcess(message, session, ocTerminalSession);
     }
 
     /**

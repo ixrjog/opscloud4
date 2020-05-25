@@ -9,6 +9,8 @@ import java.io.PrintStream;
 @Data
 public class JSchSession {
 
+    private String termSessionId;
+
     private String sessionId;
     /**
      * 服务器唯一id

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.XTermRequestStatus;
+import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.LogoutMessage;
@@ -17,7 +18,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProcess {
+public class LogoutProcess extends BaseProcess implements IXTermProcess {
 
     /**
      * 初始化XTerm 单个关闭
@@ -31,16 +32,19 @@ public class XTermLogoutProcess extends BaseXTermProcess implements IXTermProces
     }
 
     @Override
-    public void xtermProcess(String message, Session session) {
-        LogoutMessage xtermMessage = (LogoutMessage) getXTermMessage(message);
+    public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
+        LogoutMessage baseMessage = (LogoutMessage) getXTermMessage(message);
 
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getInstanceId());
+        sessionInstanceClosed(ocTerminalSession, baseMessage.getInstanceId()); // 设置关闭会话
+        writeAuditLog(ocTerminalSession, baseMessage.getInstanceId()); // 写审计日志
+
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), baseMessage.getInstanceId());
         jSchSession.getChannel().disconnect();
         jSchSession.setCommander(null);
         jSchSession.setChannel(null);
         jSchSession.setInputToChannel(null);
         jSchSession = null;
-        JSchSessionMap.removeSession(session.getId(), xtermMessage.getInstanceId());
+        JSchSessionMap.removeSession(ocTerminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 
     @Override
