@@ -6,13 +6,10 @@ import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.message.CommandMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
-import com.baiyi.opscloud.xterm.model.SessionOutput;
-import com.baiyi.opscloud.xterm.util.SessionOutputUtil;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -41,7 +38,7 @@ public class XTermCommandProcess extends BaseXTermProcess implements IXTermProce
         if (!isBatch(session)) {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getInstanceId());
             jSchSession.getCommander().print(xtermMessage.getData());
-            List<SessionOutput> list = SessionOutputUtil.getOutput(session.getId());
+           //  List<SessionOutput> list = SessionOutputUtil.getOutput(session.getId());
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(session.getId());
             for (String instanceId : sessionMap.keySet()) {

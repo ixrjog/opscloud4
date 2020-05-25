@@ -146,7 +146,7 @@ public class SessionOutputUtil {
 //                        if(enableInternalAudit) {
 //                            SessionAuditDB.insertTerminalLog(con, sessionOutput);
 //                        }
-                        System.err.println(sessionOutput.getOutput().toString());
+                      //  System.err.println(sessionOutput.getOutput().toString());
                         userSessionsOutput.getSessionOutputMap().put(key, new SessionOutput(sessionId, sessionOutput));
                     }
                 } catch (Exception ex) {
