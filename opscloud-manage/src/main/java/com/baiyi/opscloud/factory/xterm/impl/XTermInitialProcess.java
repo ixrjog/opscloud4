@@ -10,7 +10,6 @@ import com.baiyi.opscloud.xterm.message.InitialMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.websocket.Session;
 import java.util.Map;
@@ -39,10 +38,7 @@ public class XTermInitialProcess extends BaseXTermProcess implements IXTermProce
     @Override
     public void xtermProcess(String message, Session session) {
         InitialMessage xtermMessage = (InitialMessage) getXTermMessage(message);
-        String username = ocAuthFacade.getUserByToken(xtermMessage.getToken());
-        if (StringUtils.isEmpty(username)) return;
-        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
-
+        OcUser ocUser =  userFacade.getOcUserBySession();
         BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
         if (!wrapper.isSuccess())
             return;

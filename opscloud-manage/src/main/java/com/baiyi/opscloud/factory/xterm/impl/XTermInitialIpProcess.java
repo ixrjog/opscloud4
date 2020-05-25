@@ -12,7 +12,6 @@ import com.baiyi.opscloud.xterm.message.InitialIpMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.websocket.Session;
 
@@ -39,10 +38,7 @@ public class XTermInitialIpProcess extends BaseXTermProcess implements IXTermPro
     public void xtermProcess(String message, Session session) {
         InitialIpMessage xtermMessage = (InitialIpMessage) getXTermMessage(message);
         xtermMessage.setLoginUserType(1);
-
-        String username = ocAuthFacade.getUserByToken(xtermMessage.getToken());
-        if (StringUtils.isEmpty(username)) return;
-        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+        OcUser ocUser =  userFacade.getOcUserBySession();
         String ip = xtermMessage.getIp();
 
         boolean isAdmin = isOps(ocUser);

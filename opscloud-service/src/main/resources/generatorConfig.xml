@@ -141,8 +141,9 @@
 <!--        oc_keybox-->
 <!--        oc_document-->
 <!--        oc_user_document-->
+<!--        oc_user_setting-->
 
-        <table tableName="oc_user_setting">
+        <table tableName="oc_terminal_session">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

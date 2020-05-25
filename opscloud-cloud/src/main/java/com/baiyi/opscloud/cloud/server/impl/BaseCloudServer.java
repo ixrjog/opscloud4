@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.bo.OcServerBO;
+import com.baiyi.opscloud.domain.bo.ServerBO;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
@@ -228,8 +228,8 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     }
 
 
-    public OcServerBO getOcServerBO(OcServer ocServer) {
-        return OcServerBO.builder()
+    public ServerBO getOcServerBO(OcServer ocServer) {
+        return ServerBO.builder()
                 .ocServer(ocServer)
                 .ocEnv(ocEnvService.queryOcEnvById(ocServer.getEnvType()))
                 .build();

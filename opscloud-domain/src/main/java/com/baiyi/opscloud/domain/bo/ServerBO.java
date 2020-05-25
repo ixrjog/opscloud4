@@ -12,7 +12,7 @@ import lombok.Data;
  */
 @Builder
 @Data
-public class OcServerBO {
+public class ServerBO {
     private OcServer ocServer;
     private OcEnv ocEnv;
 }

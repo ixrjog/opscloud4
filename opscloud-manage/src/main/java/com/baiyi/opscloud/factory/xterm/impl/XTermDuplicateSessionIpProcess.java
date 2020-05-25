@@ -11,7 +11,6 @@ import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 
 import javax.websocket.Session;
 
@@ -38,9 +37,8 @@ public class XTermDuplicateSessionIpProcess  extends BaseXTermProcess implements
     public void xtermProcess(String message, Session session) {
         DuplicateSessionMessage xtermMessage = (DuplicateSessionMessage) getXTermMessage(message);
         xtermMessage.setLoginUserType(1);
-        String username = ocAuthFacade.getUserByToken(xtermMessage.getToken());
-        if (StringUtils.isEmpty(username)) return;
-        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+
+        OcUser ocUser =  userFacade.getOcUserBySession();
 
         JSchSession jSchSession = JSchSessionMap.getBySessionId(session.getId(), xtermMessage.getDuplicateInstanceId());
 
