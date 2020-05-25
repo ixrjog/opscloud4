@@ -2,8 +2,6 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
-import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.*;
@@ -12,11 +10,10 @@ import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
-import com.baiyi.opscloud.xterm.config.XTermConfig;
+import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -57,14 +54,6 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     @Resource
     protected TerminalFacade terminalFacade;
-
-    @Resource
-    private RedisUtil redisUtil;
-
-    @Resource
-    private XTermConfig xtermConfig;
-
-    //  protected static final String sessionId = UUID.randomUUID().toString();
 
     abstract protected BaseMessage getXTermMessage(String message);
 
@@ -124,15 +113,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     }
 
     protected void writeAuditLog(OcTerminalSession ocTerminalSession, String instanceId) {
-        String cacheKey = Joiner.on("#").join(ocTerminalSession.getSessionId(), instanceId);
-
-        try{
-            if (redisUtil.hasKey(cacheKey)) {
-                IOUtils.writeFile((String) redisUtil.get(cacheKey), xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(), instanceId));
-                redisUtil.del(cacheKey); // 清空缓存
-            }
-        }catch (Exception e){
-        }
+        AuditLogHandler.writeAuditLog(ocTerminalSession.getSessionId(), instanceId);
     }
 
     /**

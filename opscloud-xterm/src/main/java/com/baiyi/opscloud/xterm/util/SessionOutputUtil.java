@@ -28,6 +28,7 @@
 package com.baiyi.opscloud.xterm.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
 import com.baiyi.opscloud.xterm.model.SessionOutput;
 import com.baiyi.opscloud.xterm.model.UserSessionsOutput;
 import com.google.common.base.Joiner;
@@ -58,7 +59,7 @@ public class SessionOutputUtil {
     private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
     //    public final static boolean enableInternalAudit = "true".equals(AppConfig.getProperty("enableInternalAudit"));
 //    private static Gson gson = new GsonBuilder().registerTypeAdapter(AuditWrapper.class, new SessionOutputSerializer()).create();
-  //  private static Logger systemAuditLogger = LoggerFactory.getLogger("io.bastillion.manage.util.SystemAudit");
+    //  private static Logger systemAuditLogger = LoggerFactory.getLogger("io.bastillion.manage.util.SystemAudit");
 
     private SessionOutputUtil() {
     }
@@ -149,28 +150,38 @@ public class SessionOutputUtil {
                             && StringUtils.isNotEmpty(sessionOutput.getOutput())) {
 
                         outputList.add(sessionOutput);
-
-                        String auditContent = sessionOutput.getOutput().toString();
-
-                        String cacheKey = Joiner.on("#").join(sessionId, instanceId);
-
-                        if (redisUtil.hasKey(cacheKey)) {
-                            auditContent =  redisUtil.get(cacheKey) + auditContent;
-                        }
-                        redisUtil.set(cacheKey, auditContent, 10 * 60 * 1000L);
-                        //  System.err.println(auditContent);
                         userSessionsOutput.getSessionOutputMap().put(instanceId, new SessionOutput(sessionId, sessionOutput));
+                        auditing(sessionId, instanceId, sessionOutput);
                     }
                 } catch (Exception ex) {
                     log.error(ex.toString(), ex);
                 }
-
             }
 
         }
-
-
         return outputList;
+    }
+
+    /**
+     * 审计日志
+     * @param sessionId
+     * @param instanceId
+     * @param sessionOutput
+     */
+    private static void auditing(String sessionId, String instanceId, SessionOutput sessionOutput) {
+        String auditContent = sessionOutput.getOutput().toString();
+        if (auditContent.length() >= 512) {  // 输出太多只取512
+            auditContent = auditContent.substring(0, 511);
+        }
+        String cacheKey = Joiner.on("#").join(sessionId, instanceId);
+        if (redisUtil.hasKey(cacheKey)) {
+            auditContent = redisUtil.get(cacheKey) + auditContent;
+        }
+        redisUtil.set(cacheKey, auditContent, 10 * 60 * 1000L);
+
+        if(auditContent.length() >= 2048)
+            AuditLogHandler.writeAuditLog(sessionId,instanceId);
+
     }
 
 
