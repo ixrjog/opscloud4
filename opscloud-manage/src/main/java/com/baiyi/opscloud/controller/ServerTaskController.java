@@ -45,7 +45,7 @@ public class ServerTaskController {
 
     @ApiOperation(value = "更新playbook")
     @PutMapping(value = "/playbook/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updastePlaybook(@RequestBody @Valid OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook) {
+    public HttpResult<Boolean> updatePlaybook(@RequestBody @Valid OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook) {
         return new HttpResult<>(serverTaskFacade.updatePlaybook(ansiblePlaybook));
     }
 

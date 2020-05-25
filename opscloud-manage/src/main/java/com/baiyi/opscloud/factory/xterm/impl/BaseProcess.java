@@ -53,7 +53,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     protected OcUserPermissionService ocUserPermissionService;
 
     @Resource
-    protected TerminalFacade terminalFacade;
+    protected TerminalBaseFacade terminalFacade;
 
     abstract protected BaseMessage getXTermMessage(String message);
 
@@ -92,7 +92,6 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
         return hostSystem;
     }
-
 
     protected Boolean isBatch(OcTerminalSession ocTerminalSession) {
         Boolean isBatch = JSchSessionMap.getBatchBySessionId(ocTerminalSession.getSessionId());

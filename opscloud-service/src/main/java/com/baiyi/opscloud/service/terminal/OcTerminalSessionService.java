@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.terminal;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
+import com.baiyi.opscloud.domain.param.term.TermSessionParam;
 
 /**
  * @Author baiyi
@@ -8,6 +10,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
  * @Version 1.0
  */
 public interface OcTerminalSessionService {
+
+    DataTable<OcTerminalSession> queryTerminalSessionByParam(TermSessionParam.PageQuery pageQuery);
 
     OcTerminalSession queryOcTerminalSessionBySessionId(String sessionId);
 

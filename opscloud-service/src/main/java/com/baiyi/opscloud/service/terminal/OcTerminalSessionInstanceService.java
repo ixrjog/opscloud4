@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.terminal;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSessionInstance;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/5/25 11:12 上午
@@ -14,4 +16,8 @@ public interface OcTerminalSessionInstanceService {
     void updateOcTerminalSessionInstance(OcTerminalSessionInstance ocTerminalSessionInstance);
 
     OcTerminalSessionInstance queryOcTerminalSessionInstanceByUniqueKey(String sessionId, String instanceId);
+
+    OcTerminalSessionInstance queryOcTerminalSessionInstanceById(int id);
+
+    List<OcTerminalSessionInstance> queryOcTerminalSessionInstanceBySessionId(String sessionId);
 }

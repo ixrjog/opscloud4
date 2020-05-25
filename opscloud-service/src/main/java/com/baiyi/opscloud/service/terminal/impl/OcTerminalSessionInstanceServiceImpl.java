@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -36,6 +37,19 @@ public class OcTerminalSessionInstanceServiceImpl implements OcTerminalSessionIn
         criteria.andEqualTo("sessionId", sessionId);
         criteria.andEqualTo("instanceId", instanceId);
         return ocTerminalSessionInstanceMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public OcTerminalSessionInstance queryOcTerminalSessionInstanceById(int id) {
+        return ocTerminalSessionInstanceMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<OcTerminalSessionInstance> queryOcTerminalSessionInstanceBySessionId(String sessionId) {
+        Example example = new Example(OcTerminalSessionInstance.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sessionId", sessionId);
+        return ocTerminalSessionInstanceMapper.selectByExample(example);
     }
 
 }

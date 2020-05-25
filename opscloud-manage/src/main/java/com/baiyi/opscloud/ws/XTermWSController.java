@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.base.XTermRequestStatus;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
 import com.baiyi.opscloud.facade.AuthBaseFacade;
-import com.baiyi.opscloud.facade.TerminalFacade;
+import com.baiyi.opscloud.facade.TerminalBaseFacade;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.xterm.message.InitialMessage;
 import com.baiyi.opscloud.xterm.task.SentOutputTask;
@@ -50,13 +50,13 @@ public class XTermWSController implements InitializingBean {
 
     private static OcTerminalSession ocTerminalSession;
 
-    private static TerminalFacade terminalFacade;
+    private static TerminalBaseFacade terminalFacade;
 
     private static AuthBaseFacade authBaseFacade;
 
     // 注入的时候，给类的 service 注入
     @Autowired
-    public void setTerminalFacade(TerminalFacade terminalFacade) {
+    public void setTerminalFacade(TerminalBaseFacade terminalFacade) {
         XTermWSController.terminalFacade = terminalFacade;
     }
 

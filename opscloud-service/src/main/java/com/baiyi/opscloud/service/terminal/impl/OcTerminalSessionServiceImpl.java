@@ -1,12 +1,17 @@
 package com.baiyi.opscloud.service.terminal.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSession;
+import com.baiyi.opscloud.domain.param.term.TermSessionParam;
 import com.baiyi.opscloud.mapper.opscloud.OcTerminalSessionMapper;
 import com.baiyi.opscloud.service.terminal.OcTerminalSessionService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -18,6 +23,13 @@ public class OcTerminalSessionServiceImpl implements OcTerminalSessionService {
 
     @Resource
     private OcTerminalSessionMapper ocTerminalSessionMapper;
+
+    @Override
+    public  DataTable<OcTerminalSession> queryTerminalSessionByParam(TermSessionParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcTerminalSession> list = ocTerminalSessionMapper.queryTerminalSessionByParam(pageQuery);
+        return new DataTable<>(list, page.getTotal());
+    }
 
     @Override
     public OcTerminalSession queryOcTerminalSessionBySessionId(String sessionId) {

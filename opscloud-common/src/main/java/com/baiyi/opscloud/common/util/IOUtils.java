@@ -129,7 +129,8 @@ public class IOUtils {
             }
             return buffer.toString();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+          //  throw new RuntimeException(e);
+            return null;
         }
     }
 
