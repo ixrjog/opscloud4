@@ -56,6 +56,12 @@ public class UserController {
         return new HttpResult<>(userFacade.queryUserDetail());
     }
 
+    @ApiOperation(value = "按用户名查询user详情")
+    @GetMapping(value = "/detail/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcUserVO.User> queryUserDetailByUsername(@Valid String username) {
+        return new HttpResult<>(userFacade.queryUserDetailByUsername(username));
+    }
+
     @ApiOperation(value = "离职")
     @PutMapping(value = "/retire",  produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> retireUser( @Valid int id) {

@@ -23,6 +23,8 @@ public interface UserFacade {
 
     OcUserVO.User queryUserDetail();
 
+    OcUserVO.User queryUserDetailByUsername(String username);
+
     DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);

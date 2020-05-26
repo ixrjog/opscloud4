@@ -102,7 +102,12 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public OcUserVO.User queryUserDetail() {
-        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
+        return queryUserDetailByUsername(SessionUtils.getUsername());
+    }
+
+    @Override
+    public OcUserVO.User queryUserDetailByUsername(String username){
+        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
         OcUserVO.User user = BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class);
         return userDecorator.decorator(user, 1);
     }
