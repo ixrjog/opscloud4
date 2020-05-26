@@ -57,9 +57,6 @@ public class SessionOutputUtil {
     }
 
     private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
-    //    public final static boolean enableInternalAudit = "true".equals(AppConfig.getProperty("enableInternalAudit"));
-//    private static Gson gson = new GsonBuilder().registerTypeAdapter(AuditWrapper.class, new SessionOutputSerializer()).create();
-    //  private static Logger systemAuditLogger = LoggerFactory.getLogger("io.bastillion.manage.util.SystemAudit");
 
     private SessionOutputUtil() {
     }
@@ -170,8 +167,8 @@ public class SessionOutputUtil {
      */
     private static void auditing(String sessionId, String instanceId, SessionOutput sessionOutput) {
         String auditContent = sessionOutput.getOutput().toString();
-        if (auditContent.length() >= 512) {  // 输出太多只取512
-            auditContent = auditContent.substring(0, 511);
+        if (auditContent.length() >= 1024) {  // 输出太多只取1024
+            auditContent = auditContent.substring(0, 1023) + "\n";
         }
         String cacheKey = Joiner.on("#").join(sessionId, instanceId);
         if (redisUtil.hasKey(cacheKey)) {
@@ -179,7 +176,7 @@ public class SessionOutputUtil {
         }
         redisUtil.set(cacheKey, auditContent, 10 * 60 * 1000L);
 
-        if(auditContent.length() >= 2048)
+        if(auditContent.length() >= 5120)
             AuditLogHandler.writeAuditLog(sessionId,instanceId);
 
     }

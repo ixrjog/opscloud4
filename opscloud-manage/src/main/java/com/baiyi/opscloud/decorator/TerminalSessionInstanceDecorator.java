@@ -31,11 +31,26 @@ public class TerminalSessionInstanceDecorator {
             auditLog.setIsEmpty(true);
         } else {
             auditLog.setPath(path);
-            if (extend == 1)
-                auditLog.setContent(content);
+            if (extend == 1) {
+                auditLog.setContent(convert(content));
+            }
             auditLog.setIsEmpty(false);
         }
         terminalSessionInstance.setAuditLog(auditLog);
         return terminalSessionInstance;
+    }
+
+    /**
+     * 过滤掉特殊字符（终端颜色）, 转换退格
+     *
+     * @param auditLog
+     * @return
+     */
+    private String convert(String auditLog) {
+        // auditLog = auditLog.replaceAll("\\u0007|\u001B\\[K|\\]0;|\\[\\d\\d;\\d\\dm|\\[\\dm", "");
+        while (auditLog.contains("\b")) {
+            auditLog = auditLog.replaceFirst(".\b", "");
+        }
+        return auditLog;
     }
 }
