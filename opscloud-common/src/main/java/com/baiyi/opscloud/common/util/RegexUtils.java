@@ -16,7 +16,7 @@ public class RegexUtils {
      * @return
      */
     public static boolean isPhone(String phone) {
-        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177))\\d{8}$";
+        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0,5-9]))\\d{8}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
@@ -52,7 +52,7 @@ public class RegexUtils {
     public static boolean isServerNameRule(String serverName){
         return serverName.matches("[a-z][\\d0-9a-z-]{1,55}");
     }
-
+    
     public static boolean isEmail(String email) {
         String repx = "\\w+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
         return email.matches(repx);
