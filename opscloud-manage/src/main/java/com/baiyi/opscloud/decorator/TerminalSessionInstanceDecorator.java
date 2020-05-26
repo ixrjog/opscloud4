@@ -47,9 +47,9 @@ public class TerminalSessionInstanceDecorator {
      * @return
      */
     private String convert(String auditLog) {
-        // auditLog = auditLog.replaceAll("\\u0007|\u001B\\[K|\\]0;|\\[\\d\\d;\\d\\dm|\\[\\dm", "");
+        auditLog = auditLog.replaceAll("\\u0007|\u001B\\[K|\\]0;|\\[\\d\\d;\\d\\dm|\\[\\dm", ""); // 颜色等特殊字符
         while (auditLog.contains("\b")) {
-            auditLog = auditLog.replaceFirst(".\b", "");
+            auditLog = auditLog.replaceFirst(".\b", ""); // 退格处理
         }
         return auditLog;
     }

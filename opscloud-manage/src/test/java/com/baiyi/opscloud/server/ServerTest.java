@@ -60,4 +60,41 @@ public class ServerTest extends BaseUnit {
         System.err.println(JSON.toJSONString(servers));
 
     }
+
+
+    @Test
+    void test3() {
+        String log = "1111111\n" +
+                "2222222\n" +
+                "3333333\n" +
+                "4444444\n" +
+                "5555555\n" +
+                "66666666\n" +
+                "77777777\n";
+        System.err.println(log);
+
+        String r = "";
+
+        int index = 0;
+        int max = 3;
+
+        int line = 1;
+
+        while (true) {
+            if (line > max) break;
+
+            int find = log.indexOf("\n", index) + 1;
+            if (find != 0) {
+                index = find;
+            } else {
+                break;
+            }
+
+            line++;
+        }
+        System.err.println(index);
+        System.err.println(log.substring(0, index));
+        System.err.println(log.substring(0, index) + "wo shi baiyi");
+
+    }
 }

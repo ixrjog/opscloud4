@@ -161,14 +161,16 @@ public class SessionOutputUtil {
 
     /**
      * 审计日志
+     *
      * @param sessionId
      * @param instanceId
      * @param sessionOutput
      */
     private static void auditing(String sessionId, String instanceId, SessionOutput sessionOutput) {
         String auditContent = sessionOutput.getOutput().toString();
-        if (auditContent.length() >= 1024) {  // 输出太多只取1024
-            auditContent = auditContent.substring(0, 1023) + "\n";
+        if (auditContent.length() >= 1024) {  // 输出太多截断
+            auditContent = auditContent.substring(0, subOutputLine(auditContent));
+            // auditContent = auditContent.substring(0, 1023) + "\n";
         }
         String cacheKey = Joiner.on("#").join(sessionId, instanceId);
         if (redisUtil.hasKey(cacheKey)) {
@@ -176,9 +178,26 @@ public class SessionOutputUtil {
         }
         redisUtil.set(cacheKey, auditContent, 10 * 60 * 1000L);
 
-        if(auditContent.length() >= 5120)
-            AuditLogHandler.writeAuditLog(sessionId,instanceId);
+        if (auditContent.length() >= 5120)
+            AuditLogHandler.writeAuditLog(sessionId, instanceId);
 
+    }
+
+    private static int subOutputLine(String auditContent) {
+        int maxLine = 5;
+        int index = 0;
+        int line = 1;
+        while (true) {
+            if (line > maxLine) break;
+            int find = auditContent.indexOf("\n", index) + 1;
+            if (find != 0) {
+                index = find;
+            } else {
+                break;
+            }
+            line++;
+        }
+        return index;
     }
 
 
