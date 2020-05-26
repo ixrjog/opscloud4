@@ -2,6 +2,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.*;
@@ -54,6 +55,9 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     @Resource
     protected TerminalBaseFacade terminalFacade;
+
+    @Resource
+    protected RedisUtil redisUtil;
 
     abstract protected BaseMessage getXTermMessage(String message);
 

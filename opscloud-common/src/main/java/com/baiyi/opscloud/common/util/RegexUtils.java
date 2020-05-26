@@ -52,7 +52,7 @@ public class RegexUtils {
     public static boolean isServerNameRule(String serverName){
         return serverName.matches("[a-z][\\d0-9a-z-]{1,55}");
     }
-    
+
     public static boolean isEmail(String email) {
         String repx = "\\w+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
         return email.matches(repx);

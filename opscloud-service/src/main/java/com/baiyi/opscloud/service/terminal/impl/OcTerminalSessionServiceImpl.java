@@ -25,7 +25,7 @@ public class OcTerminalSessionServiceImpl implements OcTerminalSessionService {
     private OcTerminalSessionMapper ocTerminalSessionMapper;
 
     @Override
-    public  DataTable<OcTerminalSession> queryTerminalSessionByParam(TermSessionParam.PageQuery pageQuery) {
+    public DataTable<OcTerminalSession> queryTerminalSessionByParam(TermSessionParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcTerminalSession> list = ocTerminalSessionMapper.queryTerminalSessionByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
@@ -37,6 +37,14 @@ public class OcTerminalSessionServiceImpl implements OcTerminalSessionService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("sessionId", sessionId);
         return ocTerminalSessionMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<OcTerminalSession> queryOcTerminalSessionByActive() {
+        Example example = new Example(OcTerminalSession.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isClosed", false);
+        return ocTerminalSessionMapper.selectByExample(example);
     }
 
     @Override

@@ -15,4 +15,6 @@ public interface TerminalFacade {
     DataTable<TerminalSessionVO.TerminalSession> queryTerminalSessionPage(TermSessionParam.PageQuery pageQuery);
 
     TerminalSessionInstanceVO.TerminalSessionInstance  querySessionInstanceById(int id);
+
+    void closeInvalidSession();
 }
