@@ -19,11 +19,16 @@ public class LdapTest extends BaseUnit {
 
     @Test
     void testLoginCheck() {
-        com.baiyi.opscloud.ldap.credential.PersonCredential credential = PersonCredential.builder()
-                .username("oc3-test")
-                .password("+T8qKphhEz1")
-                .build();
-        System.err.println(ldapHandler.loginCheck(credential));
+
+        for(int i=1;i<= 20;i++ ){
+            com.baiyi.opscloud.ldap.credential.PersonCredential credential = PersonCredential.builder()
+                    .username("zzz-test2")
+                    .password("1111111111111")
+                    .build();
+            System.err.println(ldapHandler.loginCheck(credential));
+        }
+
+
     }
 
 }

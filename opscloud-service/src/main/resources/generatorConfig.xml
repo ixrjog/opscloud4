@@ -143,8 +143,9 @@
 <!--        oc_user_document-->
 <!--        oc_user_setting-->
 <!--        oc_terminal_session-->
+<!--        oc_terminal_session_instance-->
 
-        <table tableName="oc_terminal_session_instance">
+        <table tableName="oc_server_change_task">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>
