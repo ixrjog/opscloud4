@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_server_change_task")
 public class OcServerChangeTask {
@@ -63,10 +63,10 @@ public class OcServerChangeTask {
     @Column(name = "task_status")
     private String taskStatus;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", updatable = false)
     private Date updateTime;
 
     /**

@@ -6,7 +6,7 @@ import lombok.Data;
 @Data
 public class BusinessWrapper<T> {
 
-    public static final BusinessWrapper<Boolean> SUCCESS = new BusinessWrapper<>(true);
+    public static final BusinessWrapper<Boolean> SUCCESS = new BusinessWrapper<>();
 
     private T body;
 
@@ -18,6 +18,11 @@ public class BusinessWrapper<T> {
 
     public BusinessWrapper(T body) {
         this.body = body;
+        this.success = true;
+    }
+
+    public BusinessWrapper() {
+        this.body = null;
         this.success = true;
     }
 
