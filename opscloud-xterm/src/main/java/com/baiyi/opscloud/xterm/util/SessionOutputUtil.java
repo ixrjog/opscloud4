@@ -58,6 +58,9 @@ public class SessionOutputUtil {
 
     private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
 
+
+    private static Map<String, String> auditLogRepoMap = new ConcurrentHashMap<>();
+
     private SessionOutputUtil() {
     }
 
@@ -159,6 +162,7 @@ public class SessionOutputUtil {
         return outputList;
     }
 
+
     /**
      * 审计日志
      *
@@ -167,18 +171,22 @@ public class SessionOutputUtil {
      * @param sessionOutput
      */
     private static void auditing(String sessionId, String instanceId, SessionOutput sessionOutput) {
-        String auditContent = sessionOutput.getOutput().toString();
-        if (auditContent.length() >= 1024) {  // 输出太多截断
-            auditContent = auditContent.substring(0, subOutputLine(auditContent));
+        String outputStr = sessionOutput.getOutput().toString();
+        String auditLog;
+        if (outputStr.length() >= 1024) {  // 输出太多截断
+            auditLog = outputStr.substring(0, subOutputLine(outputStr));
             // auditContent = auditContent.substring(0, 1023) + "\n";
+        } else {
+            auditLog = outputStr;
         }
         String cacheKey = Joiner.on("#").join(sessionId, instanceId);
+        String logRepo = "";
         if (redisUtil.hasKey(cacheKey)) {
-            auditContent = redisUtil.get(cacheKey) + auditContent;
+            logRepo = redisUtil.get(cacheKey) + auditLog;
         }
-        redisUtil.set(cacheKey, auditContent, 10 * 60 * 1000L);
+        redisUtil.set(cacheKey, logRepo, 100 * 60 * 1000L);
 
-        if (auditContent.length() >= 5120)
+        if (logRepo.length() >= 5120)
             AuditLogHandler.writeAuditLog(sessionId, instanceId);
 
     }

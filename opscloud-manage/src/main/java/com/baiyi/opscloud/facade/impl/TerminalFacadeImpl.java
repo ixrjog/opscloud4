@@ -68,6 +68,7 @@ public class TerminalFacadeImpl implements TerminalFacade {
                 instanceList.forEach(i -> {
                     AuditLogHandler.writeAuditLog(e.getSessionId(), i.getInstanceId());
                     i.setIsClosed(true);
+                    i.setCloseTime(new Date());
                     ocTerminalSessionInstanceService.updateOcTerminalSessionInstance(i);
                 });
                 e.setIsClosed(true);
