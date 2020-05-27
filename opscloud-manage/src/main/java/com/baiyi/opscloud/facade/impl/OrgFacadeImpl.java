@@ -236,10 +236,10 @@ public class OrgFacadeImpl implements OrgFacade {
         List<OrgChartVO.Children> children = orgDecorator.deptListToChart(deptList);
         OcOrgDepartmentMember ocOrgDepartmentMember = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByLeader(parentId);
         String name = "空缺";
-        if(ocOrgDepartmentMember != null){
+        if (ocOrgDepartmentMember != null) {
             OcUser ocUser = ocUserService.queryOcUserById(ocOrgDepartmentMember.getUserId());
-            if(ocUser != null)
-                name= ocUser.getDisplayName();
+            if (ocUser != null)
+                name = ocUser.getDisplayName();
         }
         OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(parentId);
         OrgChartVO.OrgChart orgChart = OrgChartVO.OrgChart.builder()
@@ -349,6 +349,14 @@ public class OrgFacadeImpl implements OrgFacade {
             } catch (Exception e) {
                 return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_DELETE_ERROR);
             }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> checkUserInTheDepartment() {
+        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userFacade.getOcUserBySession().getId());
+        if(members == null || members.size() == 0)
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT);
         return BusinessWrapper.SUCCESS;
     }
 

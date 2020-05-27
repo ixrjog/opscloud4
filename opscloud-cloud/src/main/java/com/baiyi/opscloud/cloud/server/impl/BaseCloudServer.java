@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.common.util.ServerUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.bo.OcServerBO;
+import com.baiyi.opscloud.domain.bo.ServerBO;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
@@ -56,14 +56,15 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     }
 
     /**
-     *  录入实例
+     * 录入实例
+     *
      * @param regionId
      * @param instanceId
      * @return
      */
     @Override
     public Boolean record(String regionId, String instanceId) {
-        T instance = getInstance(regionId,instanceId);
+        T instance = getInstance(regionId, instanceId);
         saveOcCloudServer(instance, Maps.newHashMap(), false);
         return Boolean.TRUE;
     }
@@ -74,7 +75,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         List<T> instanceList = getInstanceList();
         for (T instance : instanceList)
             saveOcCloudServer(instance, cloudServerMap, pushName);
-
+        setCloudServerDeleted(cloudServerMap);
         return Boolean.TRUE;
     }
 
@@ -105,12 +106,22 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
                 updateCloudServer(instance, ocCloudServer);
                 // TODO 更新 server 表 public_ip
                 // saveServerPublicIP(updateCloudServerByInstance(instance, cloudServerDO)); // 已录入(更新数据)
-                map.remove(instanceId);
             } else {
                 addOcCloudServer(instance);
             }
+            map.remove(instanceId);
         } catch (Exception e) {
         }
+
+    }
+
+    private void setCloudServerDeleted(Map<String, OcCloudServer> map) {
+        if (map == null || map.isEmpty()) return;
+        map.keySet().forEach(k -> {
+            OcCloudServer ocCloudServer = map.get(k);
+            ocCloudServer.setServerStatus(CloudServerStatus.DELETE.getStatus());
+            ocCloudServerService.updateOcCloudServer(ocCloudServer);
+        });
     }
 
     @Override
@@ -180,7 +191,8 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     protected OcCloudServer updateCloudServer(T instance, OcCloudServer ocCloudServer) {
         OcCloudServer preCloudServer = getCloudServer(instance);
         preCloudServer.setId(ocCloudServer.getId());
-        invokeCloudServerStatus(preCloudServer, ocCloudServer.getServerStatus());
+        int cloudServerStatus = ocCloudServer.getServerStatus() == null ? 0 : ocCloudServer.getServerStatus();
+        invokeCloudServerStatus(preCloudServer, cloudServerStatus);
         if (StringUtils.isEmpty(preCloudServer.getPrivateIp())) // VM-Tools可能导致获取不到ip
             preCloudServer.setPrivateIp(ocCloudServer.getPrivateIp());
         if (preCloudServer != null)
@@ -216,8 +228,8 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     }
 
 
-    public OcServerBO getOcServerBO(OcServer ocServer) {
-        return OcServerBO.builder()
+    public ServerBO getOcServerBO(OcServer ocServer) {
+        return ServerBO.builder()
                 .ocServer(ocServer)
                 .ocEnv(ocEnvService.queryOcEnvById(ocServer.getEnvType()))
                 .build();
@@ -265,6 +277,14 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         if (!ocCloudServer.getPowerMgmt())
             return Boolean.FALSE;
         return Boolean.TRUE;
+    }
+
+    @Override
+    public void offline(int serverId) {
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(getCloudServerType(), serverId);
+        if(ocCloudServer == null) return;
+        ocCloudServer.setServerStatus(CloudServerStatus.OFFLINE.getStatus());
+        ocCloudServerService.updateOcCloudServer(ocCloudServer);
     }
 
     /**

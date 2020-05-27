@@ -19,6 +19,8 @@ public class OcAuthMenuVO {
     @ApiModel
     public static class Menu {
 
+        private String roleName;
+
         private Integer id;
         private Integer roleId;
         private Integer menuType;

@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.workorder;
 
+import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderApprovalMember;
+import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
 import com.baiyi.opscloud.service.ticket.OcWorkorderApprovalMemberService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderService;
@@ -21,10 +24,11 @@ public class WorkorderTest extends BaseUnit {
     @Resource
     private OcWorkorderService ocWorkorderService;
 
-
     @Resource
     private OcWorkorderApprovalMemberService ocWorkorderApprovalMemberService;
 
+    @Resource
+    private DepartmentMemberDecorator departmentMemberDecorator;
 
     @Resource
     private OcUserService ocUserService;
@@ -52,6 +56,15 @@ public class WorkorderTest extends BaseUnit {
 
 
         ocWorkorderApprovalMemberService.addOcWorkorderApprovalMember(memeber);
+
+    }
+
+    @Test
+    void deptTest() {
+        // banmayu
+        OcUser ocUser = ocUserService.queryOcUserByUsername("banmayu");
+        OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocUser.getId());
+        System.err.println(JSON.toJSONString(orgApproval));
 
     }
 }

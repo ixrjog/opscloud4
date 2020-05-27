@@ -19,6 +19,8 @@ public interface OcCloudServerService {
 
     OcCloudServer queryOcCloudServerByInstanceId(String instanceId);
 
+    OcCloudServer queryOcCloudServerByUnqueKey(int cloudServerType,int serverId);
+
     OcCloudServer queryOcCloudServerById(int id);
 
     void addOcCloudServer(OcCloudServer ocCloudserver);

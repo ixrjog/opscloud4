@@ -21,6 +21,9 @@ public interface OcWorkorderTicketService {
 
     void updateOcWorkorderTicket(OcWorkorderTicket ocWorkorderTicket);
 
-    DataTable<OcWorkorderTicket> queryOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicket pageQuery);
+    void deleteOcWorkorderTicketById(int id);
 
+    DataTable<OcWorkorderTicket> queryMyOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicketPage pageQuery);
+
+    DataTable<OcWorkorderTicket> queryOcWorkorderTicketByParam(WorkorderTicketParam.QueryTicketPage pageQuery);
 }

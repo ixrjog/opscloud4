@@ -22,6 +22,8 @@ public interface WorkorderFacade {
 
     DataTable<OcWorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery);
 
+    BusinessWrapper<Boolean> saveWorkorderGroup(OcWorkorderGroupVO.WorkorderGroup workorderGroup);
+
     List<OcWorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup();
 
     // WorkorderTicketParam.CreateTicket createTicket
@@ -32,6 +34,7 @@ public interface WorkorderFacade {
 
     /**
      * 提交工单票据
+     *
      * @param ticket
      * @return
      */
@@ -45,7 +48,21 @@ public interface WorkorderFacade {
 
     BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry);
 
+    /**
+     * 删除工单条目
+     *
+     * @param id
+     * @return
+     */
     BusinessWrapper<Boolean> delWorkorderTicketEntryById(int id);
+
+    /**
+     * 删除工单
+     *
+     * @param id
+     * @return
+     */
+    BusinessWrapper<Boolean> delWorkorderTicketById(int id);
 
     List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam);
 
@@ -53,6 +70,14 @@ public interface WorkorderFacade {
 
     List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
 
-    DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicket pageQuery);
+    /**
+     * 我的工单
+     *
+     * @param pageQuery
+     * @return
+     */
+    DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage pageQuery);
+
+    DataTable<OcWorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery);
 
 }

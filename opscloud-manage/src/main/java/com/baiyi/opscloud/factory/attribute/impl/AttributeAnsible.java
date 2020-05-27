@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
+
 
 /**
  * @Author baiyi
@@ -32,6 +34,7 @@ import java.util.Set;
  */
 @Component
 public class AttributeAnsible extends AttributeBase {
+
 
     @Resource
     private OcServerGroupService ocServerGroupService;
@@ -128,7 +131,7 @@ public class AttributeAnsible extends AttributeBase {
     private String acqHostLine(OcServer ocServer) {
         String serverName = serverFacade.acqServerName(ocServer);
         return Joiner.on(" ").join(getManageIp(ocServer),
-                "ansible_ssh_user=" + ocServer.getLoginUser(),
+                "ansible_ssh_user=" + HIGH_AUTHORITY_ACCOUNT ,
                 "cloudServerType=" + getCloudServerType(ocServer),
                 "hostname=" + serverName,
                 "#", serverName, "\n");

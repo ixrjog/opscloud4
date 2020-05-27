@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.xterm.handler;
 
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
-import com.baiyi.opscloud.xterm.message.BaseXTermWSMessage;
+import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
@@ -31,7 +31,7 @@ public class RemoteInvokeHandler {
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
-    public static void openSSHTermOnSystem(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void openSSHTermOnSystem( String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -62,6 +62,7 @@ public class RemoteInvokeHandler {
             Runnable run = new SecureShellTask(sessionOutput, outFromChannel);
             Thread thread = new Thread(run);
             thread.start();
+
             OutputStream inputToChannel = channel.getOutputStream();
             PrintStream commander = new PrintStream(inputToChannel, true);
 
@@ -72,7 +73,9 @@ public class RemoteInvokeHandler {
             jSchSession.setInputToChannel(inputToChannel);
             jSchSession.setChannel(channel);
             jSchSession.setHostSystem(hostSystem);
+            jSchSession.setSessionOutput(sessionOutput);
             JSchSessionMap.addSession(jSchSession);
+
 
             channel.connect();
         } catch (Exception e) {
@@ -90,9 +93,12 @@ public class RemoteInvokeHandler {
         }
     }
 
-    public static void invokeChannelPtySize(ChannelShell channel, BaseXTermWSMessage baseMessage) {
+    public static void invokeChannelPtySize(ChannelShell channel, BaseMessage baseMessage) {
         int width = baseMessage.getXtermWidth();
         int height = baseMessage.getXtermHeight();
-        channel.setPtySize((int) Math.floor(width / 7.2981), (int) Math.floor(height / 14.4166), width, height);
+        // int cols = (int) Math.floor(width / 7.2981);
+        int cols = (int) Math.floor(width / 7);
+        int rows = (int) Math.floor(height / 14.4166);
+        channel.setPtySize(cols, rows, width, height);
     }
 }

@@ -18,7 +18,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/doc")
-@Api(tags = "环境管理")
+@Api(tags = "文档管理")
 public class DocumentController {
 
     @Resource
@@ -28,6 +28,12 @@ public class DocumentController {
     @GetMapping(value = "/key/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DocumentVO.Doc> queryDocByKey(@Valid String key) {
         return new HttpResult<>(documentFacade.queryDocByKey(key));
+    }
+
+    @ApiOperation(value = "查询帮助文档")
+    @GetMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DocumentVO.Doc> queryDocById(@Valid int id) {
+        return new HttpResult<>(documentFacade.queryDocById(id));
     }
 
     @ApiOperation(value = "查询帮助文档")

@@ -31,5 +31,8 @@ public class Global {
 
     public static final String BASE_ROLE_NAME = "base";
 
+    // 高权限账户
+    public static final String HIGH_AUTHORITY_ACCOUNT = "admin";
+
 
 }

@@ -18,6 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -48,19 +49,23 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
     @Override
     public BusinessWrapper<Boolean> subscribe(OcWorkorderTicket ocWorkorderTicket) {
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocWorkorderTicket.getUserId());
-        if (orgApproval.getPreferenceDeptMember() != null) {
-            addTicketSubscribe(ocWorkorderTicket, orgApproval.getPreferenceDeptMember().getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
-        }
-        if (orgApproval.getAlternativeDeptMembers() != null) {
-            for (OcOrgDepartmentMemberVO.DepartmentMember member : orgApproval.getAlternativeDeptMembers())
-                addTicketSubscribe(ocWorkorderTicket, member.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+        if (orgApproval.getIsApprovalAuthority()) {
+            // 本人拥有审批权
+            addTicketSubscribe(ocWorkorderTicket, ocWorkorderTicket.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+        } else {
+            if (orgApproval.getPreferenceDeptMember() != null) {
+                addTicketSubscribe(ocWorkorderTicket, orgApproval.getPreferenceDeptMember().getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+            }
+            if (orgApproval.getAlternativeDeptMembers() != null) {
+                for (OcOrgDepartmentMemberVO.DepartmentMember member : orgApproval.getAlternativeDeptMembers())
+                    addTicketSubscribe(ocWorkorderTicket, member.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
+            }
         }
         return BusinessWrapper.SUCCESS;
-
     }
 
     @Override
-    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket,String ticketPhase) {
+    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase) {
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ticket.getUserId());
         ApprovalStepsVO.ApprovalStep approvalStep = ApprovalStepsVO.ApprovalStep.builder()
                 .title("上级审批")
@@ -68,7 +73,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
                 .build();
         ticket.getApprovalDetail().getApprovalSteps().add(approvalStep);
 
-        if(TicketPhase.ORG_APPROVAL.getPhase().equals(ticketPhase))
+        if (TicketPhase.ORG_APPROVAL.getPhase().equals(ticketPhase))
             ticket.getApprovalDetail().setActive(ticket.getApprovalDetail().getApprovalSteps().size());
     }
 
@@ -80,6 +85,11 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
         if (orgApproval.getPreferenceDeptMember() != null)
             return orgApproval.getPreferenceDeptMember().getDisplayName();
         return Joiner.on(",").join(orgApproval.getAlternativeDeptMembers().stream().map(e -> e.getDisplayName()).collect(Collectors.toList()));
+    }
+
+    @Override
+    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket){
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.ORG_APPROVAL.getType());
     }
 
 }

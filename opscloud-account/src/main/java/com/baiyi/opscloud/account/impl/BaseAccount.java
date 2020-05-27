@@ -74,6 +74,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      */
     protected void updateOcAccount(OcAccount preOcAccount, OcAccount ocAccount) {
         preOcAccount.setId(ocAccount.getId());
+        if(!StringUtils.isEmpty(ocAccount.getPassword())) // 插入用户密码
+            preOcAccount.setPassword(ocAccount.getPassword());
         ocAccountService.updateOcAccount(preOcAccount);
     }
 

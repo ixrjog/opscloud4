@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
+import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -45,7 +45,7 @@ public class ServerTaskController {
 
     @ApiOperation(value = "更新playbook")
     @PutMapping(value = "/playbook/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updastePlaybook(@RequestBody @Valid OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook) {
+    public HttpResult<Boolean> updatePlaybook(@RequestBody @Valid OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook) {
         return new HttpResult<>(serverTaskFacade.updatePlaybook(ansiblePlaybook));
     }
 
@@ -100,7 +100,7 @@ public class ServerTaskController {
 
     @ApiOperation(value = "查询任务")
     @GetMapping(value = "/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcServerTaskVO.ServerTask> queryServerTask(@Valid int taskId) {
+    public HttpResult<ServerTaskVO.ServerTask> queryServerTask(@Valid int taskId) {
         return new HttpResult<>(serverTaskFacade.queryServerTaskByTaskId(taskId));
     }
 

@@ -16,7 +16,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
-import com.baiyi.opscloud.domain.vo.server.OcServerVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
@@ -177,7 +177,7 @@ public class CreateInstanceTaskHandler {
     public void recordInstanceServerHandler(List<OcCloudInstanceTaskMember> memberList) {
         if (memberList.isEmpty()) return;
         for (OcCloudInstanceTaskMember member : memberList) {
-            OcServerVO.Server server = new GsonBuilder().create().fromJson(member.getDetail(), OcServerVO.Server.class);
+            ServerVO.Server server = new GsonBuilder().create().fromJson(member.getDetail(), ServerVO.Server.class);
             server.setPrivateIp(member.getPrivateIp());
             if (!StringUtils.isEmpty(member.getPublicIp()))
                 server.setPublicIp(member.getPublicIp());

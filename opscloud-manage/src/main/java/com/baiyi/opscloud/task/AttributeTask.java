@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.task;
 
+import com.baiyi.opscloud.config.OpscloudConfig;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,6 +18,9 @@ import javax.annotation.Resource;
 public class AttributeTask {
 
     @Resource
+    private OpscloudConfig opscloudConfig;
+
+    @Resource
     private TaskUtil taskUtil;
 
     @Resource
@@ -31,6 +35,7 @@ public class AttributeTask {
      */
     @Scheduled(cron = "* */2 * * * ?")
     public void createAnsibleHostsConsumer() {
+        if (!opscloudConfig.getOpenTask()) return;
         if (taskUtil.isTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY)) return;
         if (taskUtil.getSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC) == 0) return;
         log.info("任务: buildAnsibleHosts 开始执行!");

@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.auth.LogParam;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
-import com.baiyi.opscloud.facade.OcAuthFacade;
+import com.baiyi.opscloud.facade.AuthBaseFacade;
 import com.baiyi.opscloud.ldap.credential.PersonCredential;
 import com.baiyi.opscloud.ldap.handler.LdapHandler;
 import com.baiyi.opscloud.service.user.OcUserService;
@@ -28,7 +28,7 @@ public class AccountCenter {
     private LdapHandler ldapHandler;
 
     @Resource
-    private OcAuthFacade ocAuthFacade;
+    private AuthBaseFacade ocAuthFacade;
 
     @Resource
     private OcUserService ocUserService;
@@ -37,6 +37,7 @@ public class AccountCenter {
 
     /**
      * 登录接口
+     *
      * @param loginParam
      * @return
      */
@@ -45,11 +46,15 @@ public class AccountCenter {
                 .username(loginParam.getUsername())
                 .password(loginParam.getPassword())
                 .build();
+        OcUser ocUser = ocUserService.queryOcUserByUsername(loginParam.getUsername());
+        if(ocUser == null )
+            return new BusinessWrapper(ErrorEnum.USER_NOT_EXIST);
+        if( !ocUser.getIsActive())
+            return new BusinessWrapper(ErrorEnum.ACCOUNT_IS_DISABLE);
         // 验证通过
         if (ldapHandler.loginCheck(credential)) {
             String token = UUIDUtils.getUUID();
             ocAuthFacade.setUserToken(loginParam.getUsername(), token);
-            OcUser ocUser = ocUserService.queryOcUserByUsername(loginParam.getUsername());
             LogVO.LoginVO loginVO = new LogVO.LoginVO();
             loginVO.setName(ocUser.getDisplayName());
             loginVO.setUuid(ocUser.getUuid());
@@ -66,12 +71,13 @@ public class AccountCenter {
 
     /**
      * 登录初始化
+     *
      * @param ocUser
      */
-    private void initialUser(OcUser ocUser){
-        try{
+    private void initialUser(OcUser ocUser) {
+        try {
             AccountFactory.getAccountByKey("JumpserverAccount").pushSSHKey(ocUser);
-        }catch (Exception e){
+        } catch (Exception e) {
 
         }
     }
@@ -91,6 +97,16 @@ public class AccountCenter {
                 if (!account.create(user))
                     return Boolean.FALSE;
             }
+        }
+        return Boolean.TRUE;
+    }
+
+    public Boolean active(OcUser user, boolean active) {
+        Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
+        for (String key : accountContainer.keySet()) {
+            IAccount account = accountContainer.get(key);
+            if (!account.active(user, active))
+                return Boolean.FALSE;
         }
         return Boolean.TRUE;
     }

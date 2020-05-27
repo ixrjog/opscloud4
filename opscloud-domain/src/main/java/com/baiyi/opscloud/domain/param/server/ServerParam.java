@@ -33,7 +33,26 @@ public class ServerParam {
         @ApiModelProperty(value = "环境类型")
         private Integer envType;
 
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+        @ApiModelProperty(value = "状态")
+        private Integer serverStatus;
+
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class QueryByServerGroup {
+
+        @ApiModelProperty(value = "服务器组id，优先级高")
+        private Integer serverGroupId;
+
+        @ApiModelProperty(value = "服务器组名称，优先级低")
+        private String serverGroupName;
+
     }
 }

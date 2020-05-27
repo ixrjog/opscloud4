@@ -1,12 +1,17 @@
 package com.baiyi.opscloud.service.keybox.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcKeybox;
+import com.baiyi.opscloud.domain.param.keybox.KeyboxParam;
 import com.baiyi.opscloud.mapper.opscloud.OcKeyboxMapper;
 import com.baiyi.opscloud.service.keybox.OcKeyboxService;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -27,6 +32,14 @@ public class OcKeyboxServiceImpl implements OcKeyboxService {
         return ocKeyboxMapper.selectOneByExample(example);
     }
 
+
+    @Override
+    public DataTable<OcKeybox> queryOcKeyboxByParam(KeyboxParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        List<OcKeybox> list = ocKeyboxMapper.queryOcKeyboxByParam(pageQuery);
+        return new DataTable<>(list, page.getTotal());
+    }
+
     @Override
     public OcKeybox queryOcKeyboxById(int id) {
         return ocKeyboxMapper.selectByPrimaryKey(id);
@@ -40,6 +53,11 @@ public class OcKeyboxServiceImpl implements OcKeyboxService {
     @Override
     public void addOcKeybox(OcKeybox ocKeybox) {
         ocKeyboxMapper.insert(ocKeybox);
+    }
+
+    @Override
+    public void deleteOcKeyboxById(int id) {
+        ocKeyboxMapper.deleteByPrimaryKey(id);
     }
 
 }

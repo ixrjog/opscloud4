@@ -10,4 +10,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcAuthMenu;
 public interface OcAuthMenuService {
 
     OcAuthMenu queryOcAuthMenuByRoleId(int roleId, int menuType);
+
+    void addOcAuthMenu(OcAuthMenu ocAuthMenu);
+
+    void updateOcAuthMenu(OcAuthMenu ocAuthMenu);
+
+    void deletetOcAuthMenuById(OcAuthMenu ocAuthMenu);
 }

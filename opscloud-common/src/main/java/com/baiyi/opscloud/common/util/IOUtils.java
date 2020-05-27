@@ -23,7 +23,7 @@ public class IOUtils {
         boolean result = false;
         try {
             if (StringUtils.isBlank(fileName)) {
-               return result;
+                return result;
             }
             mkdir(dir);
             if (StringUtils.isNotBlank(dir) && StringUtils.isNotBlank(context)) {
@@ -60,7 +60,7 @@ public class IOUtils {
         return feedback;
     }
 
-    public static void mkdir(String path){
+    public static void mkdir(String path) {
         File file = new File(path);
         try {
             FileUtils.forceMkdir(file);
@@ -70,20 +70,21 @@ public class IOUtils {
 
     /**
      * 将指定字符串内容写入指定位置的文件内
+     *
      * @param body
      * @param path
      */
     public static void writeFile(String body, String path) {
         log.info(SessionUtils.getUsername() + " write file " + path);
 
-        if(StringUtils.isEmpty(path)){
+        if (StringUtils.isEmpty(path)) {
             log.error("WriteFile path is null !");
-            return ;
+            return;
         }
 
         mkdir(getPath(path));
         File file = new File(path);
-        try(FileWriter fw = new FileWriter(file)) {
+        try (FileWriter fw = new FileWriter(file)) {
             fw.write(body);//将字符串写入到指定的路径下的文件中
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -91,7 +92,27 @@ public class IOUtils {
     }
 
     /**
+     * 追加文件内容：使用FileWriter
+     */
+    public static void appendFile(String body, String path) {
+        if (StringUtils.isEmpty(path)) {
+            log.error("WriteFile path is null !");
+            return;
+        }
+        mkdir(getPath(path));
+        try {
+            //打开一个写文件器，构造函数中的第二个参数true表示以追加形式写文件
+            FileWriter writer = new FileWriter(path, true);
+            writer.write(body);
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * 将指定文件以字符串形式读出
+     *
      * @param path
      * @return
      */
@@ -108,19 +129,21 @@ public class IOUtils {
             }
             return buffer.toString();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+          //  throw new RuntimeException(e);
+            return null;
         }
     }
 
-    public static String getPath( String path){
-        if(path == null || path.equals("")  ) return "";
+    public static String getPath(String path) {
+        if (path == null || path.equals("")) return "";
         String[] a = path.split("\\/");
-        path=path.replace(a[a.length-1],"");
+        path = path.replace(a[a.length - 1], "");
         return path;
     }
 
     /**
      * 删除指定文件
+     *
      * @param path
      * @return
      */

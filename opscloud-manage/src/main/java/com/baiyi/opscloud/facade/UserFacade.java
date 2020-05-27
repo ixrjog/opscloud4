@@ -23,6 +23,8 @@ public interface UserFacade {
 
     OcUserVO.User queryUserDetail();
 
+    OcUserVO.User queryUserDetailByUsername(String username);
+
     DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);
@@ -57,10 +59,18 @@ public interface UserFacade {
 
     /**
      * 从当前会话中查询用户
+     *
      * @return
      */
     OcUser getOcUserBySession();
 
+
+    /**
+     * 用户离职
+     * @param userId
+     * @return
+     */
+    BusinessWrapper<Boolean> retireUser(int userId);
 
 
 }

@@ -21,7 +21,7 @@ public class OcWorkorderTicketSubscribeServiceImpl implements OcWorkorderTicketS
     private OcWorkorderTicketSubscribeMapper ocWorkorderTicketSubscribeMapper;
 
     @Override
-    public List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByAppoval(int ticketId,int subscribeType) {
+    public List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByAppoval(int ticketId, int subscribeType) {
         Example example = new Example(OcWorkorderTicketSubscribe.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ticketId", ticketId);
@@ -29,13 +29,21 @@ public class OcWorkorderTicketSubscribeServiceImpl implements OcWorkorderTicketS
         return ocWorkorderTicketSubscribeMapper.selectByExample(example);
     }
 
-
     @Override
-    public  OcWorkorderTicketSubscribe queryOcWorkorderTicketSubscribeByParam(int ticketId,int userId, int subscribeType){
+    public List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByTicketId(int ticketId) {
         Example example = new Example(OcWorkorderTicketSubscribe.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ticketId", ticketId);
-        criteria.andEqualTo("userId",  userId);
+        return ocWorkorderTicketSubscribeMapper.selectByExample(example);
+    }
+
+
+    @Override
+    public OcWorkorderTicketSubscribe queryOcWorkorderTicketSubscribeByParam(int ticketId, int userId, int subscribeType) {
+        Example example = new Example(OcWorkorderTicketSubscribe.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("ticketId", ticketId);
+        criteria.andEqualTo("userId", userId);
         criteria.andEqualTo("subscribeType", subscribeType);
         return ocWorkorderTicketSubscribeMapper.selectOneByExample(example);
     }
@@ -54,6 +62,11 @@ public class OcWorkorderTicketSubscribeServiceImpl implements OcWorkorderTicketS
     @Override
     public void updateOcWorkorderTicketSubscribe(OcWorkorderTicketSubscribe ocWorkorderTicketSubscribe) {
         ocWorkorderTicketSubscribeMapper.updateByPrimaryKey(ocWorkorderTicketSubscribe);
+    }
+
+    @Override
+    public void deleteOcWorkorderTicketSubscribeById(int id) {
+        ocWorkorderTicketSubscribeMapper.deleteByPrimaryKey(id);
     }
 
 }

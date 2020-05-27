@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.factory.ticket.entry;
 
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import lombok.Data;
 @Builder
 public class ServerGroupEntry implements ITicketEntry {
 
-    private OcServerGroupVO.ServerGroup serverGroup;
+    private ServerGroupVO.ServerGroup serverGroup;
 
     /**
      * 需要管理员账户权限

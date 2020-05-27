@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.bo;
 
+import com.baiyi.opscloud.common.base.ServerStatus;
 import lombok.Builder;
 import lombok.Data;
 
@@ -27,6 +28,10 @@ public class ServerBO {
     private Integer serialNumber;
     @Builder.Default
     private Integer monitorStatus = -1;
+    @Builder.Default
+    private Boolean isActive = true;
+    @Builder.Default
+    private Integer serverStatus = ServerStatus.ONLINE.getStatus();
     private Date createTime;
     private Date updateTime;
     private String comment;

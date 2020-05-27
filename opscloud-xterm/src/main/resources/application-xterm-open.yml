@@ -1,0 +1,3 @@
+xterm:
+  auditPath: /data/opscloud-data/xterm/audit
+  openAudit: true

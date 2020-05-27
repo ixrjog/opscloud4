@@ -39,10 +39,22 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.queryWorkorderGroupPage(pageQuery));
     }
 
+    @ApiOperation(value = "保存工单组")
+    @PostMapping(value = "/group/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveWorkorderGroup(@RequestBody @Valid OcWorkorderGroupVO.WorkorderGroup workorderGroup) {
+        return new HttpResult<>(workorderFacade.saveWorkorderGroup(workorderGroup));
+    }
+
     @ApiOperation(value = "查询我的工单")
     @PostMapping(value = "/ticket/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicket queryMyTicket) {
-        return new HttpResult<>(workorderFacade.queryMyTicketPage(queryMyTicket));
+    public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicketPage queryMyTicketPage) {
+        return new HttpResult<>(workorderFacade.queryMyTicketPage(queryMyTicketPage));
+    }
+
+    @ApiOperation(value = "查询工单")
+    @PostMapping(value = "/ticket/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryTicketPage queryTicketPage) {
+        return new HttpResult<>(workorderFacade.queryTicketPage(queryTicketPage));
     }
 
     @ApiOperation(value = "工作台查询工单组详情")
@@ -70,14 +82,14 @@ public class WorkorderController {
     }
 
     @ApiOperation(value = "审批同意工单票据")
-    @PutMapping(value = "/ticket/agree",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> agreeWorkorderTicket( @Valid int ticketId) {
+    @PutMapping(value = "/ticket/agree", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> agreeWorkorderTicket(@Valid int ticketId) {
         return new HttpResult<>(workorderFacade.agreeWorkorderTicket(ticketId));
     }
 
     @ApiOperation(value = "审批拒绝工单票据")
-    @PutMapping(value = "/ticket/disagree",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> disagreeWorkorderTicket( @Valid int ticketId) {
+    @PutMapping(value = "/ticket/disagree", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> disagreeWorkorderTicket(@Valid int ticketId) {
         return new HttpResult<>(workorderFacade.disagreeWorkorderTicket(ticketId));
     }
 
@@ -99,8 +111,15 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.delWorkorderTicketEntryById(id));
     }
 
+    @ApiOperation(value = "删除工单")
+    @DeleteMapping(value = "/ticket/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> delWorkorderTicket(@RequestParam int id) {
+        return new HttpResult<>(workorderFacade.delWorkorderTicketById(id));
+    }
+
     /**
      * 工单配置-用户组查询
+     *
      * @param queryParam
      * @return
      */
@@ -112,6 +131,7 @@ public class WorkorderController {
 
     /**
      * 工单配置-用户组查询
+     *
      * @param queryParam
      * @return
      */
@@ -123,6 +143,7 @@ public class WorkorderController {
 
     /**
      * 工单配置-平台角色查询
+     *
      * @param queryParam
      * @return
      */

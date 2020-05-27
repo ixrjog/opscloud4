@@ -9,7 +9,6 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.jumpserver.api.JumpserverAPI;
 import com.baiyi.opscloud.jumpserver.bo.UsersUsergroupBO;
 import com.baiyi.opscloud.jumpserver.builder.AssetsNodeBuilder;
 import com.baiyi.opscloud.jumpserver.builder.PermsAssetpermissionBuilder;
@@ -71,9 +70,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     @Resource
     private RedisUtil redisUtil;
 
-    @Resource
-    private JumpserverAPI jumpserverAPI;
-
     public static final String DATE_EXPIRED = "2089-01-01 00:00:00";
     // 管理员用户组 绑定 根节点
     public final String USERGROUP_ADMINISTRATORS = "usergroup_administrators";
@@ -124,8 +120,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         }
         return usersUsergroup;
     }
-
-
 
     /**
      * 创建Jumpserver用户
@@ -370,7 +364,8 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     public boolean activeUsersUser(String username, boolean active) {
         log.info("JUMPSERVER设置用Active,username = {}, active = {}", username, active);
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);
-        if (usersUser == null) return false;
+        if (usersUser == null)
+            return !active; // 账户不存在无需禁用
         usersUser.setIsActive(active);
         usersUserService.updateUsersUser(usersUser);
         return true;

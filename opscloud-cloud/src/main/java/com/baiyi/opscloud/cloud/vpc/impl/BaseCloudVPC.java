@@ -6,7 +6,7 @@ import com.baiyi.opscloud.cloud.vpc.factory.CloudVPCFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch;
-import com.baiyi.opscloud.facade.OcCloudVpcFacade;
+import com.baiyi.opscloud.facade.CloudVpcBaseFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcVswitchService;
@@ -38,7 +38,7 @@ public abstract class BaseCloudVPC<T, VSW, SG> implements InitializingBean, IClo
     private OcCloudVpcSecurityGroupService ocCloudVpcSecurityGroupService;
 
     @Resource
-    private OcCloudVpcFacade ocCloudVpcFacade;
+    private CloudVpcBaseFacade ocCloudVpcFacade;
 
     @Override
     public Boolean syncVPC() {

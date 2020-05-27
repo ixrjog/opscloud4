@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.bo.AuthMenuBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.MenuUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
@@ -255,6 +256,35 @@ public class AuthFacadeImpl implements AuthFacade {
         if (ocAuthMenu == null)
             return menu;
         return MenuUtils.buildMenu(ocAuthMenu);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveRoleMenu(OcAuthMenuVO.Menu menu) {
+        OcAuthMenu ocAuthMenu = BeanCopierUtils.copyProperties(menu, OcAuthMenu.class);
+        // ocAuthMenu.setMenu(JSONFormat.format(ocAuthMenu.getMenu()));
+        if (menu.getId() == null || menu.getId() == 0) {
+            ocAuthMenuService.addOcAuthMenu(ocAuthMenu);
+        } else {
+            ocAuthMenuService.updateOcAuthMenu(ocAuthMenu);
+        }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public OcAuthMenuVO.Menu queryRoleMenuByRoleId(int roleId) {
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(roleId);
+        OcAuthMenu ocAuthMenu = ocAuthMenuService.queryOcAuthMenuByRoleId(roleId, 0);
+        if (ocAuthMenu == null) {
+            AuthMenuBO authMenuBO = AuthMenuBO.builder()
+                    .roleId(roleId)
+                    .comment(ocAuthRole.getRoleName())
+                    .build();
+            ocAuthMenu = BeanCopierUtils.copyProperties(authMenuBO, OcAuthMenu.class);
+            ocAuthMenuService.addOcAuthMenu(ocAuthMenu);
+        }
+        OcAuthMenuVO.Menu menu = BeanCopierUtils.copyProperties(ocAuthMenu,OcAuthMenuVO.Menu.class);
+        menu.setRoleName(ocAuthRole.getRoleName());
+        return menu;
     }
 
 }

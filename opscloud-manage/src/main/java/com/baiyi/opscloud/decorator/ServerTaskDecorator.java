@@ -10,8 +10,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerTaskMemberVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
+import com.baiyi.opscloud.domain.vo.server.ServerTaskMemberVO;
+import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
@@ -47,7 +47,7 @@ public class ServerTaskDecorator {
     @Resource
     private TaskLogRecorder taskLogRecorder;
 
-    public OcServerTaskVO.ServerTask decorator(OcServerTaskVO.ServerTask serverTask) {
+    public ServerTaskVO.ServerTask decorator(ServerTaskVO.ServerTask serverTask) {
         List<OcServerTaskMember> memberList = ocServerTaskMemberService.queryOcServerTaskMemberByTaskId(serverTask.getId());
         invokeMemberList(serverTask, memberList);
         try {
@@ -69,10 +69,10 @@ public class ServerTaskDecorator {
         return serverTask;
     }
 
-    private void invokeMemberList(OcServerTaskVO.ServerTask serverTask, List<OcServerTaskMember> memberList) {
-        Map<String, List<OcServerTaskMemberVO.ServerTaskMember>> memberMap = Maps.newHashMap();
+    private void invokeMemberList(ServerTaskVO.ServerTask serverTask, List<OcServerTaskMember> memberList) {
+        Map<String, List<ServerTaskMemberVO.ServerTaskMember>> memberMap = Maps.newHashMap();
 
-        OcServerTaskVO.ServerTastStatistics taskStatistics = new OcServerTaskVO.ServerTastStatistics();
+        ServerTaskVO.ServerTastStatistics taskStatistics = new ServerTaskVO.ServerTastStatistics();
 
         int successfulCount = 0;
         int failedCount = 0;
@@ -82,7 +82,7 @@ public class ServerTaskDecorator {
             if (memberMap.containsKey(member.getTaskStatus())) {
                 memberMap.get(member.getTaskStatus()).add(decorator(member));
             } else {
-                List<OcServerTaskMemberVO.ServerTaskMember> members = Lists.newArrayList(decorator(member));
+                List<ServerTaskMemberVO.ServerTaskMember> members = Lists.newArrayList(decorator(member));
                 memberMap.put(member.getTaskStatus(), members);
             }
             if (member.getFinalized() == 0) continue;
@@ -108,8 +108,8 @@ public class ServerTaskDecorator {
         serverTask.setTaskStatistics(taskStatistics);
     }
 
-    private OcServerTaskMemberVO.ServerTaskMember decorator(OcServerTaskMember member) {
-        OcServerTaskMemberVO.ServerTaskMember serverTaskMember = BeanCopierUtils.copyProperties(member, OcServerTaskMemberVO.ServerTaskMember.class);
+    private ServerTaskMemberVO.ServerTaskMember decorator(OcServerTaskMember member) {
+        ServerTaskMemberVO.ServerTaskMember serverTaskMember = BeanCopierUtils.copyProperties(member, ServerTaskMemberVO.ServerTaskMember.class);
         serverTaskMember.setHide(false);
         OcServer ocServer = ocServerService.queryOcServerById(serverTaskMember.getServerId());
         if (ocServer == null) return serverTaskMember;
@@ -140,7 +140,7 @@ public class ServerTaskDecorator {
             if (!StringUtils.isEmpty(resultHead)) {
                 String resultStr = serverTaskMember.getOutputMsgLog().replace(resultHead, "");
                 try {
-                    OcServerTaskMemberVO.AnsibleResult ansibleResult = new Gson().fromJson(resultStr, OcServerTaskMemberVO.AnsibleResult.class);
+                    ServerTaskMemberVO.AnsibleResult ansibleResult = new Gson().fromJson(resultStr, ServerTaskMemberVO.AnsibleResult.class);
                     serverTaskMember.setResult(ansibleResult);
                 } catch (Exception e) {
                 }

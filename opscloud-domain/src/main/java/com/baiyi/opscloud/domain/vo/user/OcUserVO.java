@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.user;
 
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -27,7 +27,7 @@ public class OcUserVO {
 
         private List<OcUserGroupVO.UserGroup> userGroups;
 
-        private List<OcServerGroupVO.ServerGroup> serverGroups;
+        private List<ServerGroupVO.ServerGroup> serverGroups;
 
         // 只显示有效的ApiToken
         private List<OcUserApiTokenVO.UserApiToken> apiTokens;

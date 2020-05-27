@@ -17,4 +17,17 @@
     <result column="public_key" jdbcType="LONGVARCHAR" property="publicKey" />
     <result column="private_key" jdbcType="LONGVARCHAR" property="privateKey" />
   </resultMap>
+
+
+  <select id="queryOcKeyboxByParam"
+          parameterType="com.baiyi.opscloud.domain.param.keybox.KeyboxParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_keybox
+    <where>
+      <if test="querySystemUser != null and querySystemUser != ''">
+        system_user like "%" #{querySystemUser} "%"
+      </if>
+    </where>
+  </select>
+
 </mapper>

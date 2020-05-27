@@ -14,9 +14,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
-import com.baiyi.opscloud.domain.vo.server.OcServerAttributeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupTypeVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerGroupVO;
+import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.ServerCacheFacade;
@@ -90,24 +90,24 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public static final boolean ACTION_UPDATE = false;
 
     @Override
-    public DataTable<OcServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery) {
+    public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryOcServerGroupByParam(pageQuery);
-        List<OcServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupVO.ServerGroup.class);
-        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+        List<ServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class);
+        DataTable<ServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> addServerGroup(OcServerGroupVO.ServerGroup serverGroup) {
+    public BusinessWrapper<Boolean> addServerGroup(ServerGroupVO.ServerGroup serverGroup) {
         return saveServerGroup(serverGroup, ACTION_ADD);
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateServerGroup(OcServerGroupVO.ServerGroup serverGroup) {
+    public BusinessWrapper<Boolean> updateServerGroup(ServerGroupVO.ServerGroup serverGroup) {
         return saveServerGroup(serverGroup, ACTION_UPDATE);
     }
 
-    private BusinessWrapper<Boolean> saveServerGroup(OcServerGroupVO.ServerGroup serverGroup, boolean action) {
+    private BusinessWrapper<Boolean> saveServerGroup(ServerGroupVO.ServerGroup serverGroup, boolean action) {
         OcServerGroup checkOcServerGroup = ocServerGroupService.queryOcServerGroupByName(serverGroup.getName());
         if (!RegexUtils.isServerGroupNameRule(serverGroup.getName()))
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
@@ -143,24 +143,24 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public DataTable<OcServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.PageQuery pageQuery) {
+    public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.PageQuery pageQuery) {
         DataTable<OcServerGroupType> table = ocServerGroupTypeService.queryOcServerGroupTypeByParam(pageQuery);
-        List<OcServerGroupTypeVO.ServerGroupType> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupTypeVO.ServerGroupType.class);
-        DataTable<OcServerGroupTypeVO.ServerGroupType> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<ServerGroupTypeVO.ServerGroupType> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupTypeVO.ServerGroupType.class);
+        DataTable<ServerGroupTypeVO.ServerGroupType> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> addServerGroupType(OcServerGroupTypeVO.ServerGroupType serverGroupType) {
+    public BusinessWrapper<Boolean> addServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType) {
         return saveServerGroupType(serverGroupType, ACTION_ADD);
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateServerGroupType(OcServerGroupTypeVO.ServerGroupType serverGroupType) {
+    public BusinessWrapper<Boolean> updateServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType) {
         return saveServerGroupType(serverGroupType, ACTION_UPDATE);
     }
 
-    private BusinessWrapper<Boolean> saveServerGroupType(OcServerGroupTypeVO.ServerGroupType serverGroupType, boolean action) {
+    private BusinessWrapper<Boolean> saveServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType, boolean action) {
         OcServerGroupType checkOcServerGroupTypeName = ocServerGroupTypeService.queryOcServerGroupTypeByName(serverGroupType.getName());
         OcServerGroupType ocServerGroupType = BeanCopierUtils.copyProperties(serverGroupType, OcServerGroupType.class);
         // 对象存在 && 新增
@@ -194,18 +194,18 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public DataTable<OcServerGroupVO.ServerGroup> queryUserIncludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+    public DataTable<ServerGroupVO.ServerGroup> queryUserIncludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryUserIncludeOcServerGroupByParam(pageQuery);
-        List<OcServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupVO.ServerGroup.class);
-        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+        List<ServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class);
+        DataTable<ServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public DataTable<OcServerGroupVO.ServerGroup> queryUserExcludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
+    public DataTable<ServerGroupVO.ServerGroup> queryUserExcludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryUserExcludeOcServerGroupByParam(pageQuery);
-        List<OcServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcServerGroupVO.ServerGroup.class);
-        DataTable<OcServerGroupVO.ServerGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<ServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class);
+        DataTable<ServerGroupVO.ServerGroup> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
@@ -242,13 +242,13 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public List<OcServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id) {
+    public List<ServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(id);
         return serverAttributeFacade.queryServerGroupAttribute(ocServerGroup);
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveServerGroupAttribute(OcServerAttributeVO.ServerAttribute serverAttribute) {
+    public BusinessWrapper<Boolean> saveServerGroupAttribute(ServerAttributeVO.ServerAttribute serverAttribute) {
         return serverAttributeFacade.saveServerAttribute(serverAttribute);
     }
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
-import com.baiyi.opscloud.domain.bo.OcServerBO;
+import com.baiyi.opscloud.domain.bo.ServerBO;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.google.common.base.Joiner;
@@ -17,7 +17,7 @@ public class ServerUtils {
      * @param ocServerBO
      * @return server-prod-1
      */
-    public static String toServerName(OcServerBO ocServerBO){
+    public static String toServerName(ServerBO ocServerBO){
         OcServer ocServer = ocServerBO.getOcServer();
         OcEnv ocEnv = ocServerBO.getOcEnv();
         return Joiner.on("-").join(ocServer.getName() ,ocEnv.getEnvName(), ocServer.getSerialNumber());
@@ -28,7 +28,7 @@ public class ServerUtils {
      * @param ocServerBO
      * @return server-prod
      */
-    public static String toHostName(OcServerBO ocServerBO){
+    public static String toHostName(ServerBO ocServerBO){
         OcServer ocServer = ocServerBO.getOcServer();
         OcEnv ocEnv = ocServerBO.getOcEnv();
         return Joiner.on("-").join(ocServer.getName() ,ocEnv.getEnvName());

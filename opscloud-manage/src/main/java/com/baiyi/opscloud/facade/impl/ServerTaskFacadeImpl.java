@@ -28,7 +28,7 @@ import com.baiyi.opscloud.domain.vo.ansible.AnsibleVersionVO;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
 import com.baiyi.opscloud.domain.vo.preview.PreviewFileVO;
-import com.baiyi.opscloud.domain.vo.server.OcServerTaskVO;
+import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import com.baiyi.opscloud.facade.UserFacade;
@@ -205,9 +205,9 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
     }
 
     @Override
-    public OcServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId) {
+    public ServerTaskVO.ServerTask queryServerTaskByTaskId(int taskId) {
         OcServerTask ocServerTask = ocServerTaskService.queryOcServerTaskById(taskId);
-        OcServerTaskVO.ServerTask serverTask = BeanCopierUtils.copyProperties(ocServerTask, OcServerTaskVO.ServerTask.class);
+        ServerTaskVO.ServerTask serverTask = BeanCopierUtils.copyProperties(ocServerTask, ServerTaskVO.ServerTask.class);
         return serverTaskDecorator.decorator(serverTask);
     }
 

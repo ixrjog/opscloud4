@@ -5,7 +5,6 @@ import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.server.bo.AssetsAssetBO;
-import org.springframework.util.StringUtils;
 
 /**
  * @Author baiyi
@@ -14,8 +13,7 @@ import org.springframework.util.StringUtils;
  */
 public class AssetsAssetBuilder {
 
-    public static AssetsAsset build(OcServer ocServer, String ip, String adminUserId, String hostname) {
-
+    public static AssetsAsset build(OcServer ocServer, String ip, String adminUserId, String hostname,String comment) {
 
         AssetsAssetBO assetsAssetBO = AssetsAssetBO.builder()
                 .id(UUIDUtils.getUUID())
@@ -23,9 +21,10 @@ public class AssetsAssetBuilder {
                 .publicIp(ocServer.getPublicIp() != null ? ocServer.getPublicIp() : "")
                 .adminUserId(adminUserId)
                 .hostname(hostname)
+                .comment(comment)
                 .build();
-        if (!StringUtils.isEmpty(ocServer.getComment()))
-            assetsAssetBO.setComment(ocServer.getComment());
+//        if (!StringUtils.isEmpty(ocServer.getComment()))
+//            assetsAssetBO.setComment(ocServer.getComment());
         return covert(assetsAssetBO);
     }
 

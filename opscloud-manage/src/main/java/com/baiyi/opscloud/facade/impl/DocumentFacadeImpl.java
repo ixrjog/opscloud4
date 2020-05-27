@@ -50,6 +50,13 @@ public class DocumentFacadeImpl implements DocumentFacade {
     }
 
     @Override
+    public  DocumentVO.Doc queryDocById(int id){
+        OcDocument ocDocument = ocDocumentService.queryOcDocumentById(id);
+        DocumentVO.Doc doc = BeanCopierUtils.copyProperties(ocDocument, DocumentVO.Doc.class);
+        return documentDecorator.decorator(doc);
+    }
+
+    @Override
     public DocumentVO.UserDoc queryUserDocByType(int docType) {
         OcUser ocUser = userFacade.getOcUserBySession();
 

@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.HttpResult;
-import com.baiyi.opscloud.facade.OcAuthFacade;
+import com.baiyi.opscloud.facade.AuthBaseFacade;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -21,7 +21,7 @@ import java.io.IOException;
 public class AuthFilter extends OncePerRequestFilter {
 
     @Resource
-    private OcAuthFacade authFacade;
+    private AuthBaseFacade authFacade;
 
     /**
      * 前端框架 token 名称

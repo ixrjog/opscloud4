@@ -34,6 +34,9 @@
             <if test="username != null and username != ''">
                 username like "%" #{username} "%"
             </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
         </where>
     </select>
 
@@ -42,12 +45,15 @@
         select * from oc_user
         <where>
             <if test="queryName != null and queryName != ''">
-                username like "%" #{queryName} "%"
+               ( username like "%" #{queryName} "%"
                 or name like "%" #{queryName} "%"
                 or display_name like "%" #{queryName} "%"
                 or email like "%" #{queryName} "%"
                 or phone like "%" #{queryName} "%"
-                or wechat like "%" #{queryName} "%"
+                or wechat like "%" #{queryName} "%" )
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
             </if>
         </where>
     </select>

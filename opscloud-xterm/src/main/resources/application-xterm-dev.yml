@@ -1,0 +1,4 @@
+xterm:
+  auditPath: /Users/liangjian/Documents/workspace/opscloud-data/xterm/audit
+  openAudit: true
+

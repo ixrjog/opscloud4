@@ -25,9 +25,9 @@ public class OcCloudServerServiceImpl implements OcCloudServerService {
     private OcCloudServerMapper ocCloudServerMapper;
 
     @Override
-    public DataTable<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.PageQuery pageQuery){
+    public DataTable<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.PageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
-        List<OcCloudServer> ocCloudServerList =  ocCloudServerMapper.queryOcCloudServerByParam(pageQuery);
+        List<OcCloudServer> ocCloudServerList = ocCloudServerMapper.queryOcCloudServerByParam(pageQuery);
         return new DataTable<>(ocCloudServerList, page.getTotal());
     }
 
@@ -35,7 +35,7 @@ public class OcCloudServerServiceImpl implements OcCloudServerService {
     public List<OcCloudServer> queryOcCloudServerByType(int cloudServerType) {
         Example example = new Example(OcCloudServer.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("cloudServerType",cloudServerType);
+        criteria.andEqualTo("cloudServerType", cloudServerType);
         return ocCloudServerMapper.selectByExample(example);
     }
 
@@ -43,12 +43,21 @@ public class OcCloudServerServiceImpl implements OcCloudServerService {
     public OcCloudServer queryOcCloudServerByInstanceId(String instanceId) {
         Example example = new Example(OcCloudServer.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("instanceId",instanceId);
+        criteria.andEqualTo("instanceId", instanceId);
         return ocCloudServerMapper.selectOneByExample(example);
     }
 
     @Override
-    public OcCloudServer queryOcCloudServerById(int id){
+    public OcCloudServer queryOcCloudServerByUnqueKey(int cloudServerType, int serverId) {
+        Example example = new Example(OcCloudServer.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("cloudServerType", cloudServerType);
+        criteria.andEqualTo("serverId", serverId);
+        return ocCloudServerMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public OcCloudServer queryOcCloudServerById(int id) {
         return ocCloudServerMapper.selectByPrimaryKey(id);
     }
 

@@ -5,12 +5,14 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
+import com.baiyi.opscloud.domain.param.user.UserSettingParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.OcUserVO;
 import com.baiyi.opscloud.facade.UserFacade;
+import com.baiyi.opscloud.facade.UserSettingFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -18,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -31,6 +34,9 @@ public class UserController {
 
     @Resource
     private UserFacade userFacade;
+
+    @Resource
+    private UserSettingFacade userSettingFacade;
 
     /**
      * 管理员查询
@@ -48,6 +54,18 @@ public class UserController {
     @GetMapping(value = "/detail", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<OcUserVO.User> queryUserDetail() {
         return new HttpResult<>(userFacade.queryUserDetail());
+    }
+
+    @ApiOperation(value = "按用户名查询user详情")
+    @GetMapping(value = "/detail/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OcUserVO.User> queryUserDetailByUsername(@Valid String username) {
+        return new HttpResult<>(userFacade.queryUserDetailByUsername(username));
+    }
+
+    @ApiOperation(value = "离职")
+    @PutMapping(value = "/retire",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> retireUser( @Valid int id) {
+        return new HttpResult<>(userFacade.retireUser(id));
     }
 
     @ApiOperation(value = "分页查询user列表")
@@ -146,5 +164,18 @@ public class UserController {
     public HttpResult<ServerTreeVO.MyServerTree> queryUserServerTree(@RequestBody @Valid UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
         return new HttpResult<>(userFacade.queryUserServerTree(userServerTreeQuery));
     }
+
+    @ApiOperation(value = "用户查询配置")
+    @GetMapping(value = "/setting/group/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, String>> queryUserSettingByGroup(@RequestParam @Valid String settingGroup) {
+        return new HttpResult<>(userSettingFacade.queryUserSettingBySettingGroup(settingGroup));
+    }
+
+    @ApiOperation(value = "用户更新配置")
+    @PutMapping(value = "/setting/group/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveUserSettingByGroup(@RequestBody @Valid UserSettingParam.UserSetting userSetting) {
+        return new HttpResult<>(userSettingFacade.saveUserSettingBySettingGroup(userSetting));
+    }
+
 
 }

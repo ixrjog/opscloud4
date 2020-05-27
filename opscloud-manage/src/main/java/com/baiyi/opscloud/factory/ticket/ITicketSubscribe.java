@@ -6,6 +6,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketSubscribe;
 import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/5/6 1:28 下午
@@ -19,6 +21,7 @@ public interface ITicketSubscribe {
 
     /**
      * 订阅工单
+     *
      * @param ocWorkorderTicket
      * @return
      */
@@ -26,11 +29,22 @@ public interface ITicketSubscribe {
 
     /**
      * 取消订阅
+     *
      * @param ocWorkorderTicket
      * @return
      */
     void unsubscribe(OcWorkorderTicket ocWorkorderTicket);
 
     void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase);
+
+    /**
+     * 当前步骤用户是否可审批
+     * @param ocUser
+     * @param ticket
+     * @return
+     */
+    Boolean isAllowApproval(OcUser ocUser, OcWorkorderTicketVO.Ticket ticket);
+
+    List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket);
 
 }

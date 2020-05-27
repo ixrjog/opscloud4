@@ -10,10 +10,11 @@ white:
 
 opscloud:
   version: 3.0
+  openTask: true
 
 spring:
   profiles:
-    include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod
+    include: common-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud-prod,ansible-open,xterm-open
   redis:
     host: redis.opscloud.top
     port: 6379
@@ -32,11 +33,19 @@ app:
       username: opscloud
       password: 123456
       driver-class-name: com.mysql.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
     jumpserver:
       url: jdbc:mysql://jumpserver.mysql.opscloud.top:3306/jumpserver?useUnicode=true&characterEncoding=utf8&autoReconnect=true
       username: jumpserver
       password: 123456
       driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 10
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
 
 
 # java -jar -Djasypt.encryptor.password=${password}

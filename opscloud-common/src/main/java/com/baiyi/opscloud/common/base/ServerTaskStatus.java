@@ -23,5 +23,4 @@ public enum ServerTaskStatus {
         return this.status;
     }
 
-
 }

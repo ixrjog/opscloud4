@@ -12,6 +12,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -46,7 +47,7 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
     }
 
     @Override
-    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket,String ticketPhase) {
+    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase) {
         OcWorkorder ocWorkorder = getOcWorkorderById(ticket.getWorkorderId());
         if (ocWorkorder.getApprovalGroupId() == 0)
             return;
@@ -57,8 +58,13 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
                 .build();
         ticket.getApprovalDetail().getApprovalSteps().add(approvalStep);
 
-        if(TicketPhase.USERGROUP_APPROVAL.getPhase().equals(ticketPhase))
+        if (TicketPhase.USERGROUP_APPROVAL.getPhase().equals(ticketPhase))
             ticket.getApprovalDetail().setActive(ticket.getApprovalDetail().getApprovalSteps().size());
+    }
+
+    @Override
+    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket) {
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
     }
 
 

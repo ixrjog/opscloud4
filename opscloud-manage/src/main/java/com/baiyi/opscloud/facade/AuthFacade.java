@@ -75,4 +75,7 @@ public interface AuthFacade {
 
     List<MenuVO> queryUserMenu();
 
+    BusinessWrapper<Boolean> saveRoleMenu(OcAuthMenuVO.Menu menu);
+
+    OcAuthMenuVO.Menu queryRoleMenuByRoleId(int roleId);
 }

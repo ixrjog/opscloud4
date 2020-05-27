@@ -8,14 +8,14 @@ public enum ErrorEnum {
     OK(0, "成功", 1),
 
     // ----------------------- 系统级错误 -----------------------
-    SYSTEM_ERROR(10001, "系统错误"),
+    SYSTEM_ERROR(10001, "系统错误！"),
     // 权限
-    AUTHENTICATION_FAILUER(20001,"鉴权失败"),
-    AUTHENTICATION_API_FAILUER(20001,"Api鉴权失败"),
-    AUTHENTICATION_RESOURCE_NOT_EXIST(20002,"资源路径不存在"),
-    AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌Token"),
-    AUTHENTICATION_TOKEN_INVALID(20004,"令牌Token无效"),
-    AUTHENTICATION_API_TOKEN_INVALID(20004,"Api令牌Token无效"),
+    AUTHENTICATION_FAILUER(20001,"鉴权失败！"),
+    AUTHENTICATION_API_FAILUER(401,"Api鉴权失败！"),
+    AUTHENTICATION_RESOURCE_NOT_EXIST(20002,"资源路径不存在！"),
+    AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌Token！"),
+    AUTHENTICATION_TOKEN_INVALID(401,"令牌Token无效！"),
+    AUTHENTICATION_API_TOKEN_INVALID(401,"Api令牌Token无效！"),
     USER_LOGIN_FAILUER(20001,"登录失败请检查用户名或密码是否正确，请重试！"),
 
     // auth
@@ -37,11 +37,16 @@ public enum ErrorEnum {
     USER_PHONE_NON_COMPLIANCE_WITH_RULES(12002, "用户手机号不合规！"),
     USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
     USER_NOT_EXIST(12002, "用户不存在！"),
+    // Account is disabled
+    ACCOUNT_IS_DISABLE(12002, "账户被禁用！"),
     //applyUserApiToken
     USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003,"申请ApiToken描述不能为空"),
     USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003,"申请ApiToken过期时间为空或格式错误"),
     USER_CREDENTIAL_TYPE_ERROR(12003,"用户凭据类型为空或类型错误"),
     USER_CREDENTIAL_ERROR(12003,"用户凭据为空或凭据格式错误!"),
+
+    // resignationUser
+    USER_RESIGNATION_ERROR(12003,"用户离职账户禁用错误!"),
 
     // UserPermission
     USER_PERMISSION_EXIST(12003,"用户授权已存在!"),
@@ -146,6 +151,7 @@ public enum ErrorEnum {
     ORG_DEPARTMENT_MEMBER_IS_LEADER(60001, "经理不能随意变更部门"),
     ORG_DEPARTMENT_MEMBER_IS_APPROVAL(60001, "拥有审批权不能随意变更部门"),
     ORG_DEPARTMENT_USER_NOT_IN_THE_ORG(60001, "你未加入组织架构"),
+    ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT(0, "你未加入部门"),
     ORG_DEPARTMENT_USER_NO_APPROVAL_REATIONSHIP_FOUND(60001, "用户没有建立上级审批关系"),
 
     // Workorder
@@ -153,31 +159,10 @@ public enum ErrorEnum {
     WORKORDER_TICKET_NOT_THE_CURRENT_APPROVER(70001, "不是当前审批人"),
     WORKORDER_TICKET_ENTRIES_EXISTS(70001, "工单条目未填写"),
 
+    KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
+    KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
+    KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！")
 
-    // ----------------------- 例子 -----------------------
-    GET_CONNECTION_ERROR(10002, "获取链接失败！"),
-    CREATE_TABLE_ERROR(10003, "创建表失败！"),
-    INVOKE_QUERY_ERROR(10004, "执行查询失败！"),
-    ROW_TIME_FORMAT_ERROR(10005, "行数据时间格式转换失败！"),
-
-    BINLOG_CONFIG_NOT_EXIST(10101, "binlog配置不存在！"),
-    BINLOG_CONFIG_HAS_USED(10102, "binlog配置正在使用！"),
-    BINLOG_CONFIG_TOPIC_TABLE_NOT_EXIST(10103, "binlog的topic&table配置不存在！"),
-
-    BUSINESS_DETAIL_NOT_EXIST(10201, "业务域不存在！"),
-    BUSINESS_DETAIL_HAS_USED(10202, "业务域正在使用！"),
-
-    RULE_DETAIL_NOT_EXIST(10301, "规则SQL不存在！"),
-    RULE_DETAIL_HAS_USED(10302, "规则SQL正在使用！"),
-
-    BUSINESS_RULE_NOT_EXIST(10401, "业务规则不存在！"),
-    BUSINESS_RULE_HAS_USED(10402, "业务规则正在使用！"),
-    BUSINESS_RULE_UNIQUE_KEY_NOT_EXIST(10403, "业务规则依赖的唯一键未指定！"),
-    BUSINESS_RULE_EXTEND_PARAM_ERROR(10404, "业务规则中的扩展参数信息不完善！"),
-    BUSINESS_RULE_SQL_RULE_EXIST(10405, "业务规则组队的SQL规则已存在！"),
-    BUSINESS_RULE_QUERY_MODE_CHECK_TYPE_NO_MATCH(10406, "业务规则的查询模式为1:n or n:1时，校验类型必须为正确性校验！"),
-    BUSINESS_RULE_HAS_USED_RULE_DETAIL(10407, "有业务规则正在使用当前操作的规则SQL，请先停用！"),
-    BUSINESS_RULE_TIMEOUT_MAX_ERROR(10408, "业务规则的超时过多，小时单位最多2小时；分钟单位最多60分钟！")
     ;
 
     private int code;

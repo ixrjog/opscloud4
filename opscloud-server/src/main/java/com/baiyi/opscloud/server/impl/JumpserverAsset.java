@@ -155,28 +155,20 @@ public class JumpserverAsset extends BaseServer implements IServer {
      * @return
      */
     private AssetsAsset createAssetsAsset(OcServer ocServer, String comment) {
-        if (StringUtils.isEmpty(comment))
-            comment = "";
         String adminUserId = getAdminuserId();
         if (StringUtils.isEmpty(adminUserId))
             return null;
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
+        String pubIp = StringUtils.isEmpty(ocServer.getPublicIp()) ? null : "(pubIp:" + ocServer.getPublicIp() + ")";
+        String assetComment = Joiner.on(" ").skipNulls().join(pubIp, comment, ocServer.getComment());
         // 更新服务器信息
         if (assetsAsset != null) {
-            if (!StringUtils.isEmpty(comment)) {
-                assetsAsset.setComment(comment);
-            } else {
-                if (!StringUtils.isEmpty(ocServer.getComment()))
-                    assetsAsset.setComment(ocServer.getComment());
-            }
-            if (!StringUtils.isEmpty(ocServer.getPublicIp()))
-                assetsAsset.setComment(Joiner.on("").join(assetsAsset.getComment(), "(pubIp:", ocServer.getPublicIp(), ")"));
+            assetsAsset.setComment(assetComment == null ? "" : assetComment);
             assetsAsset.setHostname(getHostname(ocServer));
-            //assetsAssetDO.setCreated_by("oc auto");
             jumpserverCenter.updateAssetsAsset(assetsAsset);
         } else {
             String manageIp = getManageIp(ocServer);
-            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer));
+            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer),assetComment);
             if (!StringUtils.isEmpty(comment))
                 assetsAsset.setComment(comment);
             jumpserverCenter.addAssetsAsset(assetsAsset);

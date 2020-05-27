@@ -35,6 +35,13 @@ public interface ICloudServer {
     Boolean record(String regionId,String instanceId);
 
     /**
+     * 设置云服务器离线
+     * @param serverId
+     * @return
+     */
+    void offline(int serverId);
+
+    /**
      * 更新CloudServer by instanceId
      *
      * @param instanceId

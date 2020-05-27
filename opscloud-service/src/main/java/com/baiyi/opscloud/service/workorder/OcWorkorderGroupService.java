@@ -16,4 +16,10 @@ public interface OcWorkorderGroupService {
     DataTable<OcWorkorderGroup> queryOcWorkorderGroupByParam(WorkorderGroupParam.PageQuery pageQuery);
 
     List<OcWorkorderGroup> queryOcWorkorderGroupAll();
+
+    void addOcWorkorderGroup(OcWorkorderGroup ocWorkorderGroup);
+
+    void updateOcWorkorderGroup(OcWorkorderGroup ocWorkorderGroup);
+
+    void deleteOcWorkorderGroupById(int id);
 }

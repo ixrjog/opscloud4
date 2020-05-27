@@ -197,8 +197,10 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
             }
         } else {
             if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
-                usersUser = UsersUserBuilder.build(ocUser);
-                usersUser.setId(checkUsersUser.getId());
+                usersUser = checkUsersUser;
+                usersUser.setName(ocUser.getDisplayName());
+                usersUser.setPhone(ocUser.getPhone()== null ? "" : ocUser.getPhone());
+                usersUser.setWechat(ocUser.getWechat() == null ? "" : ocUser.getWechat());
                 usersUserService.updateUsersUser(usersUser);
             }
         }
