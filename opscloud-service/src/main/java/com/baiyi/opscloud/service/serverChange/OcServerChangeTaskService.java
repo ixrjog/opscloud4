@@ -10,4 +10,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 public interface OcServerChangeTaskService {
 
     void addOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
+
+    OcServerChangeTask checkOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
 }

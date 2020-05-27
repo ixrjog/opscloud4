@@ -174,11 +174,14 @@ public class SessionOutputUtil {
         String outputStr = sessionOutput.getOutput().toString();
         String auditLog;
         if (outputStr.length() >= 1024) {  // 输出太多截断
-            auditLog = outputStr.substring(0, subOutputLine(outputStr));
+            auditLog = outputStr.substring(0, subOutputLine(outputStr)) + "\n";
             // auditContent = auditContent.substring(0, 1023) + "\n";
         } else {
+
+
             auditLog = outputStr;
         }
+        System.err.println(auditLog);
         String cacheKey = Joiner.on("#").join(sessionId, instanceId);
         String logRepo = "";
         if (redisUtil.hasKey(cacheKey)) {
@@ -197,7 +200,7 @@ public class SessionOutputUtil {
         int line = 1;
         while (true) {
             if (line > maxLine) break;
-            int find = auditContent.indexOf("\n", index) + 1;
+            int find = auditContent.indexOf("\r\n", index) + 2;
             if (find != 0) {
                 index = find;
             } else {

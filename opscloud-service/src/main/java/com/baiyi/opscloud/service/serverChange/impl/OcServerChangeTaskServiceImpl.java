@@ -3,7 +3,9 @@ package com.baiyi.opscloud.service.serverChange.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.mapper.opscloud.OcServerChangeTaskMapper;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 
@@ -22,5 +24,15 @@ public class OcServerChangeTaskServiceImpl implements OcServerChangeTaskService 
     @Override
     public void addOcServerChangeTask(OcServerChangeTask ocServerChangeTask) {
         ocServerChangeTaskMapper.insert(ocServerChangeTask);
+    }
+
+    @Override
+    public OcServerChangeTask checkOcServerChangeTask(OcServerChangeTask ocServerChangeTask) {
+        Example example = new Example(OcServerChangeTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverId", ocServerChangeTask.getServerId());
+        criteria.andEqualTo("taskStatus", ocServerChangeTask.getTaskStatus()); // 正在运行的任务
+        PageHelper.startPage(1, 1); // limit 1
+        return ocServerChangeTaskMapper.selectOneByExample(example);
     }
 }
