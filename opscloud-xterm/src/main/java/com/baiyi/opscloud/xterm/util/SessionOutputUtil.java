@@ -177,11 +177,9 @@ public class SessionOutputUtil {
             auditLog = outputStr.substring(0, subOutputLine(outputStr)) + "\n";
             // auditContent = auditContent.substring(0, 1023) + "\n";
         } else {
-
-
             auditLog = outputStr;
         }
-        System.err.println(auditLog);
+
         String cacheKey = Joiner.on("#").join(sessionId, instanceId);
         String logRepo = "";
         if (redisUtil.hasKey(cacheKey)) {
