@@ -51,7 +51,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
-        return  iServerChange.createFlow(ocServerChangeTask, ocServer);
+        return iServerChange.createFlow(ocServerChangeTask, ocServer);
     }
 
 

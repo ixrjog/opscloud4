@@ -34,7 +34,8 @@ public class AuditLogHandler {
         try {
             if (redisUtil.hasKey(cacheKey)) {
                 // 追加内容
-                IOUtils.appendFile((String) redisUtil.get(cacheKey), xtermConfig.getAuditLogPath(sessionId, instanceId));
+                String log = (String)redisUtil.get(cacheKey);
+                IOUtils.appendFile(log, xtermConfig.getAuditLogPath(sessionId, instanceId));
                 redisUtil.del(cacheKey); // 清空缓存
             }
         } catch (Exception e) {

@@ -173,21 +173,23 @@ public class SessionOutputUtil {
     private static void auditing(String sessionId, String instanceId, SessionOutput sessionOutput) {
         String outputStr = sessionOutput.getOutput().toString();
         String auditLog;
-        if (outputStr.length() >= 1024) {  // 输出太多截断
-            auditLog = outputStr.substring(0, subOutputLine(outputStr)) + "\n";
-            // auditContent = auditContent.substring(0, 1023) + "\n";
+
+        if (sessionOutput.getOutput().length() > 1024) { // 输出太多截断
+            auditLog = sessionOutput.getOutput().substring(0, subOutputLine(outputStr)) + "\r\n";
         } else {
-            auditLog = outputStr;
+            auditLog = sessionOutput.getOutput().toString();
         }
 
         String cacheKey = Joiner.on("#").join(sessionId, instanceId);
-        String logRepo = "";
+        String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
-            logRepo = redisUtil.get(cacheKey) + auditLog;
+            logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
+        } else {
+            logRepo = auditLog;
         }
         redisUtil.set(cacheKey, logRepo, 100 * 60 * 1000L);
 
-        if (logRepo.length() >= 5120)
+        if (logRepo.length() > 2048)
             AuditLogHandler.writeAuditLog(sessionId, instanceId);
 
     }
