@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTaskFlow;
 import com.baiyi.opscloud.factory.change.consumer.IServerChangeConsumer;
 import com.baiyi.opscloud.factory.change.consumer.ServerChangeConsumerFactory;
+import com.baiyi.opscloud.factory.change.consumer.bo.ChangeResult;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskFlowService;
 import lombok.extern.slf4j.Slf4j;
@@ -41,12 +42,11 @@ public abstract class BaseServerChangeConsumer implements IServerChangeConsumer,
         ocServerChangeTaskFlowService.updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
     }
 
-    protected void saveChangeTaskFlowStart( OcServerChangeTaskFlow ocServerChangeTaskFlow) {
+    protected void saveChangeTaskFlowStart(OcServerChangeTaskFlow ocServerChangeTaskFlow) {
         ocServerChangeTaskFlow.setTaskStatus(1);
         ocServerChangeTaskFlow.setStartTime(new Date());
         updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
     }
-
 
     protected void saveChangeTaskFlowEnd(OcServerChangeTask ocServerChangeTask, OcServerChangeTaskFlow ocServerChangeTaskFlow) {
         ocServerChangeTaskFlow.setResultCode(0);
@@ -64,19 +64,19 @@ public abstract class BaseServerChangeConsumer implements IServerChangeConsumer,
         ocServerChangeTask.setTaskFlowId(nexFlow.getId());
     }
 
-    protected void saveChangeTaskFlowEnd2(OcServerChangeTask ocServerChangeTask, OcServerChangeTaskFlow ocServerChangeTaskFlow) {
-        ocServerChangeTaskFlow.setResultCode(0);
-        ocServerChangeTaskFlow.setResultMsg("SUCCESS");
+    protected void saveChangeTaskFlowEnd(OcServerChangeTask ocServerChangeTask,OcServerChangeTaskFlow ocServerChangeTaskFlow, ChangeResult changeResult) {
+        ocServerChangeTaskFlow.setResultCode(changeResult.getCode());
+        ocServerChangeTaskFlow.setResultMsg(changeResult.getMsg());
         ocServerChangeTaskFlow.setTaskStatus(0);
-        ocServerChangeTaskFlow.setStartTime(new Date());
+        if (ocServerChangeTaskFlow.getStartTime() == null)
+            ocServerChangeTaskFlow.setStartTime(new Date());
         ocServerChangeTaskFlow.setEndTime(new Date());
         updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
-        // next flow
-        if (ocServerChangeTaskFlow.getTaskFlowName().equals(ServerChangeFlow.FINALIZED.getName()))
-            return;
-        OcServerChangeTaskFlow nexFlow = ocServerChangeTaskFlowService.queryOcServerChangeTaskFlowByParentId(ocServerChangeTaskFlow.getId());
-        ocServerChangeTask.setTaskFlowName(nexFlow.getTaskFlowName());
-        ocServerChangeTask.setTaskFlowId(nexFlow.getId());
+
+
+        ocServerChangeTask.setTaskStatus(2); // 异常结束
+        ocServerChangeTask.setResultCode(changeResult.getCode());
+        ocServerChangeTask.setResultMsg(changeResult.getMsg());
     }
 
     /**

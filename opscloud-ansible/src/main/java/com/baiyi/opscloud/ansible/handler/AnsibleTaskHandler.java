@@ -66,9 +66,6 @@ public class AnsibleTaskHandler {
     @Resource
     private OcServerTaskService ocServerTaskService;
 
-//    @Resource
-//    private SchedulerManager schedulerManager;
-
     @Resource
     private OcServerService ocServerService;
 
@@ -100,9 +97,9 @@ public class AnsibleTaskHandler {
         ocServerTaskService.updateOcServerTask(ocServerTask);
         // 创建子任务
         createTaskMember(ocServerTask, taskServerMap);
-        boolean isFinalized = false;
+        boolean exit = false;
 
-        while (!isFinalized) {
+        while (!exit) {
             /**  QUEUE EXECUTE_QUEUE EXECUTING FINALIZED **/
             int executingSize = ocServerTaskMemberService.countOcServerTaskMemberByTaskStatus(ocServerTask.getId(), ServerTaskStatus.EXECUTING.getStatus(), maxConcurrent);
             // 执行队列数量
@@ -119,12 +116,12 @@ public class AnsibleTaskHandler {
                 ocServerTask.setFinalized(1);
                 //   ocServerTask.setExitValue(0);
                 ocServerTaskService.updateOcServerTask(ocServerTask);
-                isFinalized = true;
+                exit = true;
             }
             // 判断主任务是否结束
             ocServerTask = ocServerTaskService.queryOcServerTaskById(ocServerTask.getId());
             if (ocServerTask.getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType())
-                isFinalized = true;
+                exit = true;
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
@@ -154,9 +151,9 @@ public class AnsibleTaskHandler {
         ocServerTaskService.updateOcServerTask(ocServerTask);
         // 创建子任务
         createTaskMember(ocServerTask, taskServerMap);
-        boolean isFinalized = false;
+        boolean exit = false;
 
-        while (!isFinalized) {
+        while (!exit) {
             int executingSize = ocServerTaskMemberService.countOcServerTaskMemberByTaskStatus(ocServerTask.getId(), ServerTaskStatus.EXECUTING.getStatus(), maxConcurrent);
             // 执行队列数量
             int executeQueueSize = ocServerTaskMemberService.countOcServerTaskMemberByTaskStatus(ocServerTask.getId(), ServerTaskStatus.EXECUTE_QUEUE.getStatus(), maxConcurrent);
@@ -173,12 +170,12 @@ public class AnsibleTaskHandler {
                 ocServerTask.setFinalized(1);
                 //   ocServerTask.setExitValue(0);
                 ocServerTaskService.updateOcServerTask(ocServerTask);
-                isFinalized = true;
+                exit = true;
             }
             // 判断主任务是否结束
             ocServerTask = ocServerTaskService.queryOcServerTaskById(ocServerTask.getId());
             if (ocServerTask.getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType())
-                isFinalized = true;
+                exit = true;
             try {
                 Thread.sleep(1000);
             } catch (Exception e) {
@@ -209,9 +206,9 @@ public class AnsibleTaskHandler {
         ocServerTaskService.updateOcServerTask(ocServerTask);
         // 创建子任务
         createTaskMember(ocServerTask, taskServerMap);
-        boolean isFinalized = false;
+        boolean exit = false;
 
-        while (!isFinalized) {
+        while (!exit) {
             int executingSize = ocServerTaskMemberService.countOcServerTaskMemberByTaskStatus(ocServerTask.getId(), ServerTaskStatus.EXECUTING.getStatus(), maxConcurrent);
             // 执行队列数量
             int executeQueueSize = ocServerTaskMemberService.countOcServerTaskMemberByTaskStatus(ocServerTask.getId(), ServerTaskStatus.EXECUTE_QUEUE.getStatus(), maxConcurrent);
@@ -227,12 +224,12 @@ public class AnsibleTaskHandler {
             if (finalizedSize == ocServerTask.getTaskSize()) {
                 ocServerTask.setFinalized(1);
                 ocServerTaskService.updateOcServerTask(ocServerTask);
-                isFinalized = true;
+                exit = true;
             }
             // 判断主任务是否结束
             if(taskLogRecorder.getAbortTask(ocServerTask.getId()) != 0)  {
                 if (ocServerTask.getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType())
-                    isFinalized = true;
+                    exit = true;
                 try {
                     Thread.sleep(200);
                 } catch (Exception e) {
