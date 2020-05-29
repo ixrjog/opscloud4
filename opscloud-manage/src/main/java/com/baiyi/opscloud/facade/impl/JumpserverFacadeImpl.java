@@ -90,7 +90,7 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     @Override
     public BusinessWrapper<Boolean> syncUsers() {
         getIAccount().sync();
-        return new BusinessWrapper<Boolean>(true);
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
