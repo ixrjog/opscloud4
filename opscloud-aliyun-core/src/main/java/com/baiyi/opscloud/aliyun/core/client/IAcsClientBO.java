@@ -13,6 +13,6 @@ import lombok.Data;
 @Builder
 @Data
 public class IAcsClientBO {
-    private  IAcsClient iAcsClient;
+    private IAcsClient iAcsClient;
     private AliyunAccount aliyunAccount;
 }
