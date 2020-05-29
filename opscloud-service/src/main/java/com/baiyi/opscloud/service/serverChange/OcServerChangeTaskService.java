@@ -11,5 +11,7 @@ public interface OcServerChangeTaskService {
 
     void addOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
 
+    void updateOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
+
     OcServerChangeTask checkOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
 }

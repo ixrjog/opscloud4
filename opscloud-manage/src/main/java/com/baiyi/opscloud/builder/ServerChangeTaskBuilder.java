@@ -2,6 +2,7 @@ package com.baiyi.opscloud.builder;
 
 import com.baiyi.opscloud.bo.ServerChangeTaskBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 
@@ -14,6 +15,7 @@ public class ServerChangeTaskBuilder {
 
     public static OcServerChangeTask build(OcServer ocServer,String changeType) {
         ServerChangeTaskBO bo = ServerChangeTaskBO.builder()
+                .taskId(UUIDUtils.getUUID())
                 .serverId(ocServer.getId())
                 .serverGroupId(ocServer.getServerGroupId())
                 .changeType(changeType)

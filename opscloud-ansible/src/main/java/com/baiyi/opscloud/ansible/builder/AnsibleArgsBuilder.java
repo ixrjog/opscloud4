@@ -16,6 +16,7 @@ public class AnsibleArgsBuilder {
 
     /**
      * ansible 通用参数构建
+     *
      * @param config
      * @param args
      * @return
@@ -27,6 +28,7 @@ public class AnsibleArgsBuilder {
 
     /**
      * ansible-playbook 通用参数构建
+     *
      * @param config
      * @param args
      * @return
@@ -59,8 +61,10 @@ public class AnsibleArgsBuilder {
             commandLine.addArgument(Joiner.on("/").join(config.acqInventoryPath(), ANSIBLE_HOSTS));
         }
 
-        if (!StringUtils.isEmpty(args.getBecomeUser()) && !args.getBecomeUser().equalsIgnoreCase("root")) {
-            commandLine.addArgument("--become-user");
+        commandLine.addArgument("--become-user");
+        if (StringUtils.isEmpty(args.getBecomeUser())) {
+            commandLine.addArgument("root");
+        } else {
             commandLine.addArgument(args.getBecomeUser());
         }
 

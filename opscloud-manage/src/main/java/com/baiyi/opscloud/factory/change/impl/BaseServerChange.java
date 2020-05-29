@@ -26,8 +26,8 @@ public abstract class BaseServerChange implements IServerChange, InitializingBea
     @Resource
     private OcServerChangeTaskFlowService ocServerChangeTaskFlowService;
 
-    protected void updateOcServerChangeTaskFlow(OcServerChangeTask ocServerChangeTask) {
-        ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
+    protected void updateOcServerChangeTask(OcServerChangeTask ocServerChangeTask) {
+        ocServerChangeTaskService.updateOcServerChangeTask(ocServerChangeTask);
     }
 
     protected OcServerChangeTaskFlow addOcServerChangeTaskFlow(OcServerChangeTask ocServerChangeTask, String flowName, int parentId) {

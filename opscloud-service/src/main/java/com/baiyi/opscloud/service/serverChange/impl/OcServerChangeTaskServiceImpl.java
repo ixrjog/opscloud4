@@ -27,6 +27,11 @@ public class OcServerChangeTaskServiceImpl implements OcServerChangeTaskService 
     }
 
     @Override
+    public void updateOcServerChangeTask(OcServerChangeTask ocServerChangeTask) {
+        ocServerChangeTaskMapper.updateByPrimaryKey(ocServerChangeTask);
+    }
+
+    @Override
     public OcServerChangeTask checkOcServerChangeTask(OcServerChangeTask ocServerChangeTask) {
         Example example = new Example(OcServerChangeTask.class);
         Example.Criteria criteria = example.createCriteria();

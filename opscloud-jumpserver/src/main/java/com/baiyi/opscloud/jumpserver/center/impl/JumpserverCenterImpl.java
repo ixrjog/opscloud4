@@ -175,7 +175,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
      */
     private String getAssetsNodeKey() {
         AssetsNode lastNode = assetsNodeService.queryAssetsNodeLastOne();
-        //jumpserverDao.getAssetsNodeLastOne();
         String[] keys = lastNode.getKey().split(":");
         if (keys.length == 1)
             return "1:1";

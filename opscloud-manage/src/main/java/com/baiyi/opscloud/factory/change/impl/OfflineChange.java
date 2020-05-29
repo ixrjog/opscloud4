@@ -32,7 +32,7 @@ public class OfflineChange extends BaseServerChange implements IServerChange {
 
         ocServerChangeTask.setTaskFlowId(serverUnactiveFlow.getId());
         ocServerChangeTask.setTaskFlowName(ServerChangeFlow.SERVER_UNACTIVE.getName());
-        updateOcServerChangeTaskFlow(ocServerChangeTask);
+        updateOcServerChangeTask(ocServerChangeTask);
 
         parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_FACTORY_UNACTIVE.getName(), parentId).getId();
 

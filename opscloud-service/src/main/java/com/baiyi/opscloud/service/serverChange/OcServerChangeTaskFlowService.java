@@ -9,6 +9,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTaskFlow;
  */
 public interface OcServerChangeTaskFlowService {
 
+    OcServerChangeTaskFlow queryOcServerChangeTaskFlowById(int id);
+
+    OcServerChangeTaskFlow queryOcServerChangeTaskFlowByParentId(int parentId);
+
     void addOcServerChangeTaskFlow(OcServerChangeTaskFlow ocServerChangeTaskFlow);
 
     void updateOcServerChangeTaskFlow(OcServerChangeTaskFlow ocServerChangeTaskFlow);
