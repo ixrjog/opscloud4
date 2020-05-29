@@ -18,5 +18,4 @@ public class InitialMessage extends BaseMessage {
     // 服务器树鉴权uuid
     private String uuid;
 
-
 }

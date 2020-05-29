@@ -20,6 +20,15 @@ public class ServerChangeTaskFlowBuilder {
         return covert(bo);
     }
 
+    public static OcServerChangeTaskFlow build(OcServerChangeTask ocServerChangeTask,String flowName, int parentId) {
+        ServerChangeTaskFlowBO bo = ServerChangeTaskFlowBO.builder()
+                .taskFlowName(flowName)
+                .taskId(ocServerChangeTask.getTaskId())
+                .flowParentId(parentId)
+                .build();
+        return covert(bo);
+    }
+
     private static OcServerChangeTaskFlow covert(ServerChangeTaskFlowBO bo) {
         return BeanCopierUtils.copyProperties(bo, OcServerChangeTaskFlow.class);
     }

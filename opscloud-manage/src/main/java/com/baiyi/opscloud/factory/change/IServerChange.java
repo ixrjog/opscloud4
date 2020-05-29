@@ -13,5 +13,11 @@ public interface IServerChange {
 
     String getKey();
 
+    /**
+     * 创建流程
+     * @param ocServerChangeTask
+     * @param ocServer
+     * @return
+     */
     BusinessWrapper<Boolean> createFlow(OcServerChangeTask ocServerChangeTask , OcServer ocServer);
 }
