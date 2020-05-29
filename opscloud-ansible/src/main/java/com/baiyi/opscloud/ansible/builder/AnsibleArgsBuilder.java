@@ -61,6 +61,9 @@ public class AnsibleArgsBuilder {
             commandLine.addArgument(Joiner.on("/").join(config.acqInventoryPath(), ANSIBLE_HOSTS));
         }
 
+        commandLine.addArgument("--become");
+        commandLine.addArgument("--become-method=sudo");
+
         commandLine.addArgument("--become-user");
         if (StringUtils.isEmpty(args.getBecomeUser())) {
             commandLine.addArgument("root");
