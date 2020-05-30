@@ -40,4 +40,12 @@ public class OcServerChangeTaskServiceImpl implements OcServerChangeTaskService 
         PageHelper.startPage(1, 1); // limit 1
         return ocServerChangeTaskMapper.selectOneByExample(example);
     }
+
+    @Override
+    public OcServerChangeTask queryOcServerChangeTaskByTaskId(String taskId) {
+        Example example = new Example(OcServerChangeTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskId", taskId);
+        return ocServerChangeTaskMapper.selectOneByExample(example);
+    }
 }

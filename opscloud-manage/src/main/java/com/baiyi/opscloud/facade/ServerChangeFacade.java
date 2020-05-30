@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
+import com.baiyi.opscloud.domain.vo.serverChange.ServerChangeTaskVO;
 
 /**
  * @Author baiyi
@@ -11,4 +12,6 @@ import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
 public interface ServerChangeFacade {
 
    BusinessWrapper<Boolean> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
+
+   ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId);
 }

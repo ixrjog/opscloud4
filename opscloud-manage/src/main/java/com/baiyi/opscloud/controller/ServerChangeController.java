@@ -2,14 +2,12 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
+import com.baiyi.opscloud.domain.vo.serverChange.ServerChangeTaskVO;
 import com.baiyi.opscloud.facade.ServerChangeFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -33,6 +31,12 @@ public class ServerChangeController {
         return new HttpResult<>(serverChangeFacade.executeServerChangeOffline(executeServerChangeParam));
     }
 
+
+    @ApiOperation(value = "任务查询")
+    @GetMapping(value = "/task/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ServerChangeTaskVO.ServerChangeTask> queryServerChangeTask(@RequestParam @Valid String taskId) {
+        return new HttpResult<>(serverChangeFacade.queryServerChangeTask(taskId));
+    }
 
 
 

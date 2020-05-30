@@ -2,11 +2,13 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.builder.ServerChangeTaskBuilder;
 import com.baiyi.opscloud.common.base.ServerChangeType;
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
+import com.baiyi.opscloud.domain.vo.serverChange.ServerChangeTaskVO;
 import com.baiyi.opscloud.facade.ServerChangeFacade;
 import com.baiyi.opscloud.factory.change.IServerChange;
 import com.baiyi.opscloud.factory.change.ServerChangeFactory;
@@ -51,7 +53,18 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
-        return iServerChange.createFlow(ocServerChangeTask, ocServer);
+        iServerChange.createFlow(ocServerChangeTask, ocServer);
+        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
+        wrapper.setBody(ocServerChangeTask.getTaskId());
+        return wrapper;
+    }
+
+    @Override
+    public ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId) {
+        OcServerChangeTask task = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(taskId);
+        ServerChangeTaskVO.ServerChangeTask serverChangeTask = BeanCopierUtils.copyProperties(task, ServerChangeTaskVO.ServerChangeTask.class);
+
+        return serverChangeTask;
     }
 
 

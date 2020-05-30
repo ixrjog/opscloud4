@@ -14,4 +14,6 @@ public interface OcServerChangeTaskService {
     void updateOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
 
     OcServerChangeTask checkOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
+
+    OcServerChangeTask queryOcServerChangeTaskByTaskId(String taskId);
 }
