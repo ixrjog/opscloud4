@@ -9,10 +9,12 @@ import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.decorator.UsersUserDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode;
 import com.baiyi.opscloud.domain.generator.jumpserver.Terminal;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam;
 import com.baiyi.opscloud.domain.param.jumpserver.user.UsersUserPageParam;
@@ -27,7 +29,6 @@ import com.baiyi.opscloud.service.jumpserver.AssetsAssetService;
 import com.baiyi.opscloud.service.jumpserver.AssetsNodeService;
 import com.baiyi.opscloud.service.jumpserver.TerminalService;
 import com.baiyi.opscloud.service.jumpserver.UsersUserService;
-import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -47,8 +48,6 @@ import java.util.stream.Collectors;
 @Service
 public class JumpserverFacadeImpl implements JumpserverFacade {
 
-    @Resource
-    private OcServerGroupService ocServerGroupService;
 
     @Resource
     private OcUserService ocUserService;
@@ -83,9 +82,6 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     // 授权规则前缀
     public final String PERMS_PREFIX = "perms_";
 
-    // 过期时间
-    //public final String DATE_EXPIRED = "2089-01-01 00:00:00";
-
 
     @Override
     public BusinessWrapper<Boolean> syncUsers() {
@@ -94,11 +90,19 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> syncUserById(String id) {
+        UsersUser usersUser = usersUserService.queryUsersUserById(id);
+        OcUser ocUser = ocUserService.queryOcUserByUsername(usersUser.getUsername());
+        if (ocUser == null) return new BusinessWrapper(ErrorEnum.USER_NOT_EXIST);
+        getIAccount().sync(ocUser);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
     public BusinessWrapper<Boolean> setUserActive(String id) {
 
         return jumpserverCenter.setUserActive(id);
     }
-
 
 
     /**
@@ -125,7 +129,6 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     public DataTable<JumpserverUsersUserVO.UsersUser> fuzzyQueryUserPage(UsersUserPageParam.PageQuery pageQuery) {
         DataTable<UsersUser> table = usersUserService.fuzzyQueryUsersUserPage(pageQuery);
         List<JumpserverUsersUserVO.UsersUser> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverUsersUserVO.UsersUser.class);
-        //DataTable<JumpserverUsersUserVO.UsersUser> dataTable = new DataTable<>(page, table.getTotalNum());
         DataTable<JumpserverUsersUserVO.UsersUser> dataTable
                 = new DataTable<>(page.stream().map(e -> usersUserDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;

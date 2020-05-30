@@ -48,8 +48,14 @@ public class JumpserverController {
 
     @ApiOperation(value = "同步用户")
     @GetMapping(value = "/user/sync", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> syncUser() {
+    public HttpResult<Boolean> syncUsers() {
         return new HttpResult<>(jumpserverFacade.syncUsers());
+    }
+
+    @ApiOperation(value = "同步用户")
+    @GetMapping(value = "/user/id/sync", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> syncUser(@Valid String id) {
+        return new HttpResult<>(jumpserverFacade.syncUserById(id));
     }
 
     @ApiOperation(value = "设置用户是否有效")

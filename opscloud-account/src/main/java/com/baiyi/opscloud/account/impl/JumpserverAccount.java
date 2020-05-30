@@ -71,6 +71,12 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
         return true;
     }
 
+    @Override
+    public Boolean sync(OcUser user) {
+        syncUsersUser(user);
+        return true;
+    }
+
     private void syncUsersUser(OcUser ocUser) {
         // 只同步有服务器组授权的用户
         List<OcServerGroup> serverGroupList = ocServerGroupService.queryUserPermissionOcServerGroupByUserId(ocUser.getId());
@@ -159,13 +165,14 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
 
     /**
      * 推送用户公钥 PubKey
+     *
      * @param ocUser
      * @return
      */
     @Override
     public Boolean pushSSHKey(OcUser ocUser) {
-        OcUserCredential  credential =  getOcUserSSHPubKey(ocUser);
-        if(credential == null) return Boolean.FALSE;
+        OcUserCredential credential = getOcUserSSHPubKey(ocUser);
+        if (credential == null) return Boolean.FALSE;
         //return jumpserverCenter.pushKey(user,BeanCopierUtils.copyProperties(credential,OcUserCredentialVO.UserCredential.class));
 
         UsersUser usersUser = saveUsersUser(ocUser);
@@ -199,7 +206,7 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
             if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
                 usersUser = checkUsersUser;
                 usersUser.setName(ocUser.getDisplayName());
-                usersUser.setPhone(ocUser.getPhone()== null ? "" : ocUser.getPhone());
+                usersUser.setPhone(ocUser.getPhone() == null ? "" : ocUser.getPhone());
                 usersUser.setWechat(ocUser.getWechat() == null ? "" : ocUser.getWechat());
                 usersUserService.updateUsersUser(usersUser);
             }

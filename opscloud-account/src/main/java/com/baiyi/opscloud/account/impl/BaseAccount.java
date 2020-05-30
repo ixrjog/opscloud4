@@ -74,7 +74,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      */
     protected void updateOcAccount(OcAccount preOcAccount, OcAccount ocAccount) {
         preOcAccount.setId(ocAccount.getId());
-        if(!StringUtils.isEmpty(ocAccount.getPassword())) // 插入用户密码
+        if (!StringUtils.isEmpty(ocAccount.getPassword())) // 插入用户密码
             preOcAccount.setPassword(ocAccount.getPassword());
         ocAccountService.updateOcAccount(preOcAccount);
     }
@@ -143,6 +143,10 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
         return Boolean.TRUE;
     }
 
+    @Override
+    public Boolean sync(OcUser user) {
+        return true;
+    }
 
     private void delAccountByMap(Map<String, OcAccount> accountMap) {
         if (accountMap.isEmpty()) return;

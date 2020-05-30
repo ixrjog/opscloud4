@@ -18,6 +18,8 @@ public interface IAccount {
      */
     Boolean sync();
 
+    Boolean sync(OcUser user);
+
     /**
      * 创建账户
      *
