@@ -40,6 +40,8 @@ public class OfflineChange extends BaseServerChange implements IServerChange {
 
         parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_OFFLINE.getName(), parentId).getId();
 
+        parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_POWER_OFF.getName(), parentId).getId();
+
         addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.FINALIZED.getName(), parentId).getId();
 
         return BusinessWrapper.SUCCESS;

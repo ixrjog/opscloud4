@@ -1,13 +1,26 @@
 package com.baiyi.opscloud.factory.change.consumer.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.ansible.factory.ExecutorFactory;
+import com.baiyi.opscloud.ansible.impl.AnsibleScriptExecutor;
 import com.baiyi.opscloud.common.base.ServerChangeFlow;
+import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTaskFlow;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
+import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
+import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
+import com.baiyi.opscloud.facade.ServerTaskFacade;
 import com.baiyi.opscloud.factory.change.consumer.IServerChangeConsumer;
+import com.baiyi.opscloud.factory.change.consumer.bo.ChangeResult;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
@@ -18,6 +31,13 @@ import org.springframework.stereotype.Component;
 @Component
 public class ApplicationStopConsumer extends BaseServerChangeConsumer implements IServerChangeConsumer {
 
+    private static final int APPLICTION_STOP_SCRIPT_ID = 14;
+
+    private static final long TASK_TIMEOUT = 2 * 60 * 1000L;
+
+    @Resource
+    private ServerTaskFacade serverTaskFacade;
+
     @Override
     public String getKey() {
         return ServerChangeFlow.APPLICATION_STOP.getName();
@@ -27,12 +47,60 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
     public BusinessWrapper<Boolean> consuming(OcServerChangeTask ocServerChangeTask, OcServerChangeTaskFlow ocServerChangeTaskFlow) {
         OcServer ocServer = getServer(ocServerChangeTask);
         saveChangeTaskFlowStart(ocServerChangeTaskFlow); // 任务开始
+
+
+        ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = buildTaskExecutorParam();
+        BusinessWrapper wrapper = ExecutorFactory.getAnsibleExecutorByKey(AnsibleScriptExecutor.COMPONENT_NAME).executor(taskExecutor, ocServer);
+
+        ocServerChangeTaskFlow.setExternalType("SCRIPT_TASK");
+
+        if (!wrapper.isSuccess()) {
+            ChangeResult changeResult = ChangeResult.builder().build();
+            saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
+            return wrapper;
+        }
+        // 更新任务id
+        OcServerTask ocServerTask = (OcServerTask) wrapper.getBody();
+        ocServerChangeTaskFlow.setExternalId(ocServerTask.getId());
+        updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
+
+        long startTaskTime = new Date().getTime();
+
         boolean exit = false;
         while (exit) {
+            try {
+                if (TimeUtils.checkTimeout(startTaskTime, TASK_TIMEOUT)) {
+                    ChangeResult changeResult = ChangeResult.builder()
+                            .msg("TASK_TIMEOUT:" + (TASK_TIMEOUT / 1000) + "s")
+                            .build();
+                    saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
 
+                }
+
+                TimeUnit.SECONDS.sleep(2000l);
+                ServerTaskVO.ServerTask task = queryTask(ocServerChangeTaskFlow.getExternalId());
+                if (task.getFinalized() == 1) {
+                    ocServerChangeTaskFlow.setTaskDetail(JSON.toJSONString(task));
+                    saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow);
+                    exit = true;
+                }
+            } catch (Exception e) {
+
+            }
 
         }
         return BusinessWrapper.SUCCESS;
+    }
+
+    private ServerTaskVO.ServerTask queryTask(int taskId) {
+        return serverTaskFacade.queryServerTaskByTaskId(taskId);
+    }
+
+    private ServerTaskExecutorParam.ServerTaskScriptExecutor buildTaskExecutorParam() {
+        ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = new ServerTaskExecutorParam.ServerTaskScriptExecutor();
+        taskExecutor.setScriptId(APPLICTION_STOP_SCRIPT_ID);
+        taskExecutor.setTaskType(1);
+        return taskExecutor;
     }
 
 

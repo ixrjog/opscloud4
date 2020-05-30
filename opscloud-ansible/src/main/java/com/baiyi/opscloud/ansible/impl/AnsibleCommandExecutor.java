@@ -4,6 +4,7 @@ import com.baiyi.opscloud.ansible.IAnsibleExecutor;
 import com.baiyi.opscloud.ansible.builder.ServerTaskBuilder;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
@@ -43,5 +44,9 @@ public class AnsibleCommandExecutor extends BaseExecutor implements IAnsibleExec
         return getResultWrapper(ocServerTask);
     }
 
+    @Override
+    public BusinessWrapper<Boolean> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer) {
+        return BusinessWrapper.SUCCESS;
+    }
 
 }

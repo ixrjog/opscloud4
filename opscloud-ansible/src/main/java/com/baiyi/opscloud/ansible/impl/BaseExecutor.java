@@ -42,6 +42,7 @@ public abstract class BaseExecutor implements InitializingBean, IAnsibleExecutor
     @Resource
     protected AnsibleTaskHandler ansibleTaskHandler;
 
+
     protected OcUser getOcUser() {
         return ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
     }

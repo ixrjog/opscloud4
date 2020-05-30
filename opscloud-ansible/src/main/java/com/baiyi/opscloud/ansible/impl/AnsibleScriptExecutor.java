@@ -6,10 +6,13 @@ import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAnsibleScript;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
+import com.baiyi.opscloud.facade.ServerBaseFacade;
 import com.baiyi.opscloud.service.ansible.OcAnsibleScriptService;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -44,6 +47,28 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
 
         // 录入任务
         OcServerTask ocServerTask = ServerTaskBuilder.build(ocUser, serverTreeHostPatternMap, serverTaskScriptExecutor);
+        addOcServerTask(ocServerTask);
+        // 重新写入脚本
+        OcAnsibleScript ocAnsibleScript = ocAnsibleScriptService.queryOcAnsibleScriptById(serverTaskScriptExecutor.getScriptId());
+        String scriptPath = ansibleConfig.getScriptPath(ocAnsibleScript);
+        IOUtils.writeFile(ocAnsibleScript.getScriptContent(), scriptPath);
+
+        // 异步执行
+        ansibleTaskHandler.call(ocServerTask, serverTaskScriptExecutor, scriptPath);
+        return getResultWrapper(ocServerTask);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer) {
+        if (!(taskExecutor instanceof ServerTaskExecutorParam.ServerTaskScriptExecutor))
+            return new BusinessWrapper(ErrorEnum.EXECUTOR_PARAM_TYPE_ERROR);
+        ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor = (ServerTaskExecutorParam.ServerTaskScriptExecutor) taskExecutor;
+
+        Map<String, String> serverTreeHostPatternMap = Maps.newHashMap();
+        serverTreeHostPatternMap.put(ServerBaseFacade.acqServerName(ocServer), ocServer.getPrivateIp());
+
+        // 录入任务
+        OcServerTask ocServerTask = ServerTaskBuilder.build(null, serverTreeHostPatternMap, serverTaskScriptExecutor);
         addOcServerTask(ocServerTask);
         // 重新写入脚本
         OcAnsibleScript ocAnsibleScript = ocAnsibleScriptService.queryOcAnsibleScriptById(serverTaskScriptExecutor.getScriptId());

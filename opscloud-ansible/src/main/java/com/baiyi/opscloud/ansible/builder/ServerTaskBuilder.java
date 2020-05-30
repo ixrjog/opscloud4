@@ -30,10 +30,11 @@ public class ServerTaskBuilder {
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, String paramJson, int taskType) {
         ServerTaskBO serverTaskBO = ServerTaskBO.builder()
-                .userId(ocUser.getId())
+                .userId(ocUser != null ? ocUser.getId() : 0)
                 .taskType(taskType)
                 .userDetail(JSON.toJSONString(ocUser))
                 .executorParam(paramJson)
+                .systemType(ocUser != null ? 1 : 0)
                 .serverTargetDetail(JSON.toJSONString(serverTreeHostPatternMap))
                 .build();
 
