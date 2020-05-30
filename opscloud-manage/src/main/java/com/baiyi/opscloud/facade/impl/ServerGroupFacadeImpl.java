@@ -19,10 +19,7 @@ import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
-import com.baiyi.opscloud.facade.ServerCacheFacade;
-import com.baiyi.opscloud.facade.ServerFacade;
-import com.baiyi.opscloud.facade.ServerGroupFacade;
-import com.baiyi.opscloud.facade.UserPermissionFacade;
+import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -288,7 +285,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     private void assembleServerTreeHostPatternMap(Map<String, String> serverTreeHostPatternMap, Map<String, List<OcServer>> serverGroupMap) {
         for (String key : serverGroupMap.keySet()) {
             for (OcServer ocServer : serverGroupMap.get(key))
-                serverTreeHostPatternMap.put(serverFacade.acqServerName(ocServer), serverAttributeFacade.getManageIp(ocServer));
+                serverTreeHostPatternMap.put(ServerBaseFacade.acqServerName(ocServer), serverAttributeFacade.getManageIp(ocServer));
         }
     }
 

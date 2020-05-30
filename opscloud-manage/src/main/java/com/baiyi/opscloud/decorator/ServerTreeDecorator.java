@@ -3,6 +3,7 @@ package com.baiyi.opscloud.decorator;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
+import com.baiyi.opscloud.facade.ServerBaseFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,7 @@ public class ServerTreeDecorator {
     }
 
     private TreeVO.Tree apply(OcServer e) {
-        String serverName = serverFacade.acqServerName(e);
+        String serverName = ServerBaseFacade.acqServerName(e);
         return TreeVO.Tree.builder()
                 .id(serverName)
                 .label(Joiner.on(":").join(serverName, e.getPrivateIp()))
