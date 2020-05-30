@@ -28,10 +28,10 @@
 package com.baiyi.opscloud.xterm.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
 import com.baiyi.opscloud.xterm.model.SessionOutput;
 import com.baiyi.opscloud.xterm.model.UserSessionsOutput;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -58,9 +58,6 @@ public class SessionOutputUtil {
 
     private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
 
-
-    private static Map<String, String> auditLogRepoMap = new ConcurrentHashMap<>();
-
     private SessionOutputUtil() {
     }
 
@@ -69,7 +66,7 @@ public class SessionOutputUtil {
      *
      * @param sessionId session id
      */
-    public static void removeUserSession(Long sessionId) {
+    public static void removeUserSession(String sessionId) {
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().clear();
@@ -105,8 +102,6 @@ public class SessionOutputUtil {
             userSessionsOutput = userSessionsOutputMap.get(sessionOutput.getSessionId());
         }
         userSessionsOutput.getSessionOutputMap().put(sessionOutput.getInstanceId(), sessionOutput);
-
-
     }
 
 
@@ -137,12 +132,9 @@ public class SessionOutputUtil {
      */
     public static List<SessionOutput> getOutput(String sessionId) {
         List<SessionOutput> outputList = new ArrayList<>();
-
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
-
             for (String instanceId : userSessionsOutput.getSessionOutputMap().keySet()) {
-
                 //get output chars and set to output
                 try {
                     SessionOutput sessionOutput = userSessionsOutput.getSessionOutputMap().get(instanceId);
@@ -157,11 +149,9 @@ public class SessionOutputUtil {
                     log.error(ex.toString(), ex);
                 }
             }
-
         }
         return outputList;
     }
-
 
     /**
      * 审计日志
@@ -180,7 +170,7 @@ public class SessionOutputUtil {
             auditLog = sessionOutput.getOutput().toString();
         }
 
-        String cacheKey = Joiner.on("#").join(sessionId, instanceId);
+        String cacheKey = CacheKeyUtils.getTermAuditLogKey(sessionId, instanceId);
         String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
             logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
@@ -189,7 +179,7 @@ public class SessionOutputUtil {
         }
         redisUtil.set(cacheKey, logRepo, 100 * 60 * 1000L);
 
-        if (logRepo.length() > 2048)
+        if (logRepo.length() > 10240)
             AuditLogHandler.writeAuditLog(sessionId, instanceId);
 
     }
