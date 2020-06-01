@@ -63,5 +63,12 @@ public interface ICloudServer {
      */
     BusinessWrapper<Boolean> stop(Integer id);
 
+    /**
+     * 查询电源状态
+     * @param id
+     * @return
+     */
+    int queryPowerStatus(Integer id);
+
 
 }

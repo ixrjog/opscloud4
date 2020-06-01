@@ -12,12 +12,13 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class OcCloudServerBO {
+public class CloudServerBO {
 
     private Integer id;
     private String serverName;
     private String instanceId;
     private String instanceName;
+    private String regionId;
     private String zone;
     private Integer cloudServerType;
     private String privateIp;
@@ -39,6 +40,7 @@ public class OcCloudServerBO {
     private Integer serverId;
     @Builder.Default
     private Boolean powerMgmt = Boolean.FALSE;
+    private Integer powerStatus;
     private String comment;
     private String instanceDetail;
     private Date createTime;
