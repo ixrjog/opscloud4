@@ -12,14 +12,18 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTaskFlow;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
+import com.baiyi.opscloud.facade.ServerBaseFacade;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import com.baiyi.opscloud.factory.change.consumer.IServerChangeConsumer;
 import com.baiyi.opscloud.factory.change.consumer.bo.ChangeResult;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.Date;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -49,7 +53,7 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
         saveChangeTaskFlowStart(ocServerChangeTaskFlow); // 任务开始
 
 
-        ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = buildTaskExecutorParam();
+        ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = buildTaskExecutorParam(ocServer);
         BusinessWrapper wrapper = ExecutorFactory.getAnsibleExecutorByKey(AnsibleScriptExecutor.COMPONENT_NAME).executor(taskExecutor, ocServer);
 
         ocServerChangeTaskFlow.setExternalType("SCRIPT_TASK");
@@ -65,19 +69,17 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
         updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
 
         long startTaskTime = new Date().getTime();
-
         boolean exit = false;
         while (exit) {
             try {
                 if (TimeUtils.checkTimeout(startTaskTime, TASK_TIMEOUT)) {
                     ChangeResult changeResult = ChangeResult.builder()
-                            .msg("TASK_TIMEOUT:" + (TASK_TIMEOUT / 1000) + "s")
+                            .msg(Joiner.on("").join("TASK_TIMEOUT:", (TASK_TIMEOUT / 1000), "s"))
                             .build();
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
-
                 }
 
-                TimeUnit.SECONDS.sleep(2000l);
+                TimeUnit.SECONDS.sleep(2); // 2秒延迟
                 ServerTaskVO.ServerTask task = queryTask(ocServerChangeTaskFlow.getExternalId());
                 if (task.getFinalized() == 1) {
                     ocServerChangeTaskFlow.setTaskDetail(JSON.toJSONString(task));
@@ -96,10 +98,14 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
         return serverTaskFacade.queryServerTaskByTaskId(taskId);
     }
 
-    private ServerTaskExecutorParam.ServerTaskScriptExecutor buildTaskExecutorParam() {
+    private ServerTaskExecutorParam.ServerTaskScriptExecutor buildTaskExecutorParam(OcServer ocServer) {
         ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = new ServerTaskExecutorParam.ServerTaskScriptExecutor();
         taskExecutor.setScriptId(APPLICTION_STOP_SCRIPT_ID);
         taskExecutor.setTaskType(1);
+        taskExecutor.setConcurrent(1);
+        Set<String> hostPatterns = Sets.newHashSet();
+        hostPatterns.add(ServerBaseFacade.acqServerName(ocServer));
+        taskExecutor.setHostPatterns(hostPatterns);
         return taskExecutor;
     }
 

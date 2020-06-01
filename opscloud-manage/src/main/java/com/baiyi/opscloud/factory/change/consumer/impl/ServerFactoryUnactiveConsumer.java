@@ -38,7 +38,6 @@ public class ServerFactoryUnactiveConsumer extends BaseServerChangeConsumer impl
         if (result) {
             saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow); // 任务结束
         } else {
-            //  protected void saveChangeTaskFlowEnd(OcServerChangeTaskFlow ocServerChangeTaskFlow, ChangeResult changeResult) {
             ChangeResult changeResult = ChangeResult.builder().build();
             saveChangeTaskFlowEnd(ocServerChangeTask,ocServerChangeTaskFlow, changeResult); // 任务结束
         }

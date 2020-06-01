@@ -117,7 +117,7 @@ public class ZabbixHostServerImpl implements ZabbixHostServer {
     }
 
     @Override
-    public ZabbixHost updateHostStatus(String hostid, int status) {
+    public boolean updateHostStatus(String hostid, int status) {
         ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
                 .method("host.update")
                 .paramEntry("hostid", hostid)
@@ -125,10 +125,12 @@ public class ZabbixHostServerImpl implements ZabbixHostServer {
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
-            return new ZabbixHostMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
+            String id = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("hostids")).get(0);
+            if (!StringUtils.isEmpty(id))
+                return true;
         } catch (Exception e) {
         }
-        return null;
+        return false;
     }
 
     @Override

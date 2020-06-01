@@ -17,6 +17,8 @@ public interface ServerFacade {
 
     DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery);
 
+    BusinessWrapper<Boolean> queryServerById(int id);
+
     DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup);

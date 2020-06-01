@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.builder.OcCloudServerBuilder;
+import com.baiyi.opscloud.cloud.server.builder.CloudServerBuilder;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.esxi.VcsaESXi;
@@ -58,7 +58,11 @@ public class VcsaESXiCloudServer<T> extends BaseCloudServer<T> implements ICloud
     protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof ESXiInstance)) return null;
         ESXiInstance i = (ESXiInstance) instance;
-        return OcCloudServerBuilder.build(i, vcsaESXi.getZone());
+        return CloudServerBuilder.build(i, vcsaESXi.getZone());
+    }
+
+    protected int getPowerStatus(String regionId, String instanceId) {
+        return -1;
     }
 
 }

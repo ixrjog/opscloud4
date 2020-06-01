@@ -12,6 +12,7 @@ import com.baiyi.opscloud.domain.vo.serverChange.ServerChangeTaskVO;
 import com.baiyi.opscloud.facade.ServerChangeFacade;
 import com.baiyi.opscloud.factory.change.IServerChange;
 import com.baiyi.opscloud.factory.change.ServerChangeFactory;
+import com.baiyi.opscloud.factory.change.handler.ServerChangeHandler;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskService;
 import org.springframework.stereotype.Service;
@@ -31,6 +32,9 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
 
     @Resource
     private OcServerService ocServerService;
+
+    @Resource
+    private ServerChangeHandler serverChangeHandler;
 
     /**
      * 服务器变更管理
@@ -54,6 +58,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
         iServerChange.createFlow(ocServerChangeTask, ocServer);
+        serverChangeHandler.executeChangeTask(ocServerChangeTask);
         BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
         wrapper.setBody(ocServerChangeTask.getTaskId());
         return wrapper;

@@ -9,6 +9,7 @@ import com.baiyi.opscloud.factory.change.consumer.ServerChangeConsumerFactory;
 import com.baiyi.opscloud.factory.change.consumer.bo.ChangeResult;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskFlowService;
+import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -29,6 +30,9 @@ public abstract class BaseServerChangeConsumer implements IServerChangeConsumer,
 
     @Resource
     private OcServerChangeTaskFlowService ocServerChangeTaskFlowService;
+
+    @Resource
+    protected OcServerChangeTaskService ocServerChangeTaskService;
 
     protected OcServer getServer(OcServerChangeTask ocServerChangeTask) {
         return ocServerService.queryOcServerById(ocServerChangeTask.getServerId());
@@ -62,6 +66,7 @@ public abstract class BaseServerChangeConsumer implements IServerChangeConsumer,
         OcServerChangeTaskFlow nexFlow = ocServerChangeTaskFlowService.queryOcServerChangeTaskFlowByParentId(ocServerChangeTaskFlow.getId());
         ocServerChangeTask.setTaskFlowName(nexFlow.getTaskFlowName());
         ocServerChangeTask.setTaskFlowId(nexFlow.getId());
+        ocServerChangeTaskService.updateOcServerChangeTask(ocServerChangeTask);
     }
 
     protected void saveChangeTaskFlowEnd(OcServerChangeTask ocServerChangeTask,OcServerChangeTaskFlow ocServerChangeTaskFlow, ChangeResult changeResult) {
@@ -73,10 +78,10 @@ public abstract class BaseServerChangeConsumer implements IServerChangeConsumer,
         ocServerChangeTaskFlow.setEndTime(new Date());
         updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
 
-
         ocServerChangeTask.setTaskStatus(2); // 异常结束
         ocServerChangeTask.setResultCode(changeResult.getCode());
         ocServerChangeTask.setResultMsg(changeResult.getMsg());
+        ocServerChangeTaskService.updateOcServerChangeTask(ocServerChangeTask);
     }
 
     /**

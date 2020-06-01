@@ -77,6 +77,16 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
+    public BusinessWrapper<Boolean> queryServerById(int id) {
+        OcServer ocServer = ocServerService.queryOcServerById(id);
+        if (ocServer == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
+        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
+        wrapper.setBody(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
+        return wrapper;
+    }
+
+    @Override
     public DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.fuzzyQueryOcServerByParam(pageQuery);
         return toServerDataTable(table);
@@ -194,8 +204,6 @@ public class ServerFacadeImpl implements ServerFacade {
         iCloudServer.offline(id);
         return BusinessWrapper.SUCCESS;
     }
-
-
 
 
 }
