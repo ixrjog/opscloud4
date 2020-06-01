@@ -72,5 +72,7 @@ public interface UserFacade {
      */
     BusinessWrapper<Boolean> retireUser(int userId);
 
+    BusinessWrapper<Boolean> beReinstatedUser(int userId);
+
 
 }
