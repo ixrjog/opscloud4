@@ -3,6 +3,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.*;
@@ -117,6 +118,10 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     protected void writeAuditLog(OcTerminalSession ocTerminalSession, String instanceId) {
         AuditLogHandler.writeAuditLog(ocTerminalSession.getSessionId(), instanceId);
+    }
+
+    protected void heartbeat(String sessionId){
+        redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60 * 1000L);
     }
 
     /**

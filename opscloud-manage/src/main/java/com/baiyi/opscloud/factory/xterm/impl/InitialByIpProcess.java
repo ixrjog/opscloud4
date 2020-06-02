@@ -58,6 +58,7 @@ public class InitialByIpProcess extends BaseProcess implements IXTermProcess {
 
         HostSystem hostSystem = buildHostSystem(ocUser, ip, xtermMessage, isAdmin);
         RemoteInvokeHandler.openSSHTermOnSystem(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId(), hostSystem);
+        heartbeat(ocTerminalSession.getSessionId());
         terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession,hostSystem));
     }
 

@@ -46,6 +46,7 @@ public class InitialProcess extends BaseProcess implements IXTermProcess {
             return;
         Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
         boolean isAdmin = isOps(ocUser);
+        heartbeat(ocTerminalSession.getSessionId());
         for (String instanceId : xtermMessage.getInstanceIds()) {
             if (!serverTreeHostPatternMap.containsKey(instanceId))
                 continue;
