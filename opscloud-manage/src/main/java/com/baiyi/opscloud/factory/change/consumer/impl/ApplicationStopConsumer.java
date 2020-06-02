@@ -1,11 +1,13 @@
 package com.baiyi.opscloud.factory.change.consumer.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.ansible.IAnsibleExecutor;
 import com.baiyi.opscloud.ansible.factory.ExecutorFactory;
 import com.baiyi.opscloud.ansible.impl.AnsibleScriptExecutor;
 import com.baiyi.opscloud.common.base.ServerChangeFlow;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTaskFlow;
@@ -52,12 +54,12 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
         OcServer ocServer = getServer(ocServerChangeTask);
         saveChangeTaskFlowStart(ocServerChangeTaskFlow); // 任务开始
 
-
         ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = buildTaskExecutorParam(ocServer);
-        BusinessWrapper wrapper = ExecutorFactory.getAnsibleExecutorByKey(AnsibleScriptExecutor.COMPONENT_NAME).executor(taskExecutor, ocServer);
+        // 执行Script
+        IAnsibleExecutor iAnsibleExecutor = ExecutorFactory.getAnsibleExecutorByKey(AnsibleScriptExecutor.COMPONENT_NAME);
+        BusinessWrapper wrapper = iAnsibleExecutor.executor(taskExecutor, ocServer);
 
         ocServerChangeTaskFlow.setExternalType("SCRIPT_TASK");
-
         if (!wrapper.isSuccess()) {
             ChangeResult changeResult = ChangeResult.builder().build();
             saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
@@ -70,16 +72,16 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
 
         long startTaskTime = new Date().getTime();
         boolean exit = false;
-        while (exit) {
+        while (!exit) {
             try {
+                TimeUnit.SECONDS.sleep(2); // 2秒延迟
                 if (TimeUtils.checkTimeout(startTaskTime, TASK_TIMEOUT)) {
                     ChangeResult changeResult = ChangeResult.builder()
                             .msg(Joiner.on("").join("TASK_TIMEOUT:", (TASK_TIMEOUT / 1000), "s"))
                             .build();
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
+                    return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TIMEOUT);
                 }
-
-                TimeUnit.SECONDS.sleep(2); // 2秒延迟
                 ServerTaskVO.ServerTask task = queryTask(ocServerChangeTaskFlow.getExternalId());
                 if (task.getFinalized() == 1) {
                     ocServerChangeTaskFlow.setTaskDetail(JSON.toJSONString(task));

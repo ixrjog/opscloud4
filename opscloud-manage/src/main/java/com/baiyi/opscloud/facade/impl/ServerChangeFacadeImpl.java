@@ -42,16 +42,9 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
 
     @Override
     public BusinessWrapper<Boolean> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
-        OcServerChangeTask query = new OcServerChangeTask();
-        query.setServerId(executeServerChangeParam.getServerId());
-        query.setTaskStatus(1);
-        OcServerChangeTask check = ocServerChangeTaskService.checkOcServerChangeTask(query);
-        if (check != null)
-            return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_RUNNING); // 任务运行中
-
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
-        if (!ocServer.getServerGroupId().equals(executeServerChangeParam.getServerGroupId()))
-            return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_GROUP_ID_INCORRECT); // 组id不正确
+        BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
+        if (!wrapper.isSuccess()) return wrapper;
 
         OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.OFFLINE.getType());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
@@ -59,10 +52,41 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
         iServerChange.createFlow(ocServerChangeTask, ocServer);
         serverChangeHandler.executeChangeTask(ocServerChangeTask);
-        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
         wrapper.setBody(ocServerChangeTask.getTaskId());
         return wrapper;
     }
+
+    @Override
+    public BusinessWrapper<Boolean> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
+
+        OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
+        BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
+        if (!wrapper.isSuccess()) return wrapper;
+
+        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.ONLINE.getType());
+        ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
+
+        IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.ONLINE.getType());
+        iServerChange.createFlow(ocServerChangeTask, ocServer);
+        serverChangeHandler.executeChangeTask(ocServerChangeTask);
+
+        wrapper.setBody(ocServerChangeTask.getTaskId());
+        return wrapper;
+    }
+
+    private BusinessWrapper<Boolean> checkServerChange(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam, OcServer ocServer) {
+        OcServerChangeTask query = new OcServerChangeTask();
+        query.setServerId(executeServerChangeParam.getServerId());
+        query.setTaskStatus(1);
+        OcServerChangeTask check = ocServerChangeTaskService.checkOcServerChangeTask(query);
+        if (check != null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_RUNNING); // 任务运行中
+
+        if (!ocServer.getServerGroupId().equals(executeServerChangeParam.getServerGroupId()))
+            return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_GROUP_ID_INCORRECT); // 组id不正确
+        return BusinessWrapper.SUCCESS;
+    }
+
 
     @Override
     public ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId) {

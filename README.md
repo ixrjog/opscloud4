@@ -20,6 +20,10 @@ OpsCloud是云时代的全工具链集成运维平台(DevOps)
 
 ### 最新版本说明 3.0.0（开发中预计6月底发布）
 
+### 最佳用户体验
+  + 显示器分辨率大于或等于1080P
+  + 浏览器Chrome/Safari
+
 <a style="color:#2b669a" href="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-1.mov" target="_blank">XTerm演示视频</a>
 <img src="https://opscloud-store.oss-cn-hangzhou.aliyuncs.com/github/gif/oc-webxterm-2.gif"></img>
 ### web终端

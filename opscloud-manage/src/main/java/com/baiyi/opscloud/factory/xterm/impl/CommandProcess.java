@@ -9,6 +9,7 @@ import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.websocket.Session;
 import java.util.Map;
@@ -35,7 +36,8 @@ public class CommandProcess extends BaseProcess implements IXTermProcess {
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         CommandMessage xtermMessage = (CommandMessage) getXTermMessage(message);
-
+        if(StringUtils.isEmpty(xtermMessage.getData()))
+            return;
         if (!isBatch(ocTerminalSession)) {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
             jSchSession.getCommander().print(xtermMessage.getData());

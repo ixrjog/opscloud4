@@ -15,26 +15,26 @@ import javax.annotation.Resource;
 
 /**
  * @Author baiyi
- * @Date 2020/5/29 3:09 下午
+ * @Date 2020/6/2 5:06 下午
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class ServerFactoryUnactiveConsumer extends BaseServerChangeConsumer implements IServerChangeConsumer {
+public class ServerFactoryActiveConsumer extends BaseServerChangeConsumer implements IServerChangeConsumer {
 
     @Resource
     private ServerCenter serverCenter;
 
     @Override
     public String getKey() {
-        return ServerChangeFlow.SERVER_FACTORY_UNACTIVE.getName();
+        return ServerChangeFlow.SERVER_FACTORY_ACTIVE.getName();
     }
 
     @Override
     public BusinessWrapper<Boolean> consuming(OcServerChangeTask ocServerChangeTask, OcServerChangeTaskFlow ocServerChangeTaskFlow) {
         OcServer ocServer = getServer(ocServerChangeTask);
         saveChangeTaskFlowStart(ocServerChangeTaskFlow); // 任务开始
-        Boolean result = serverCenter.disable(ocServer);
+        Boolean result = serverCenter.enable(ocServer);
         if (result) {
             saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow); // 任务结束
         } else {

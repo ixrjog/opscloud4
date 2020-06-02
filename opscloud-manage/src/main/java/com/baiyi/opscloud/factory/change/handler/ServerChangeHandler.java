@@ -7,6 +7,7 @@ import com.baiyi.opscloud.factory.change.consumer.IServerChangeConsumer;
 import com.baiyi.opscloud.factory.change.consumer.ServerChangeConsumerFactory;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskFlowService;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -26,6 +27,7 @@ public class ServerChangeHandler {
     @Resource
     private OcServerChangeTaskService ocServerChangeTaskService;
 
+    @Async
     public void executeChangeTask(OcServerChangeTask ocServerChangeTask) {
 
         boolean exit = false;

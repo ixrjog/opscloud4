@@ -75,7 +75,7 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
 
     @Override
     protected BusinessWrapper<Boolean> power(OcCloudServer ocCloudserver, Boolean action) {
-        return aliyunECS.power(ocCloudserver.getZone(), ocCloudserver.getInstanceId(), action);
+        return aliyunECS.power(ocCloudserver.getRegionId(), ocCloudserver.getInstanceId(), action);
     }
 
     protected int getPowerStatus(String regionId, String instanceId) {

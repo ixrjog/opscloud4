@@ -47,15 +47,7 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
 
         // 录入任务
         OcServerTask ocServerTask = ServerTaskBuilder.build(ocUser, serverTreeHostPatternMap, serverTaskScriptExecutor);
-        addOcServerTask(ocServerTask);
-        // 重新写入脚本
-        OcAnsibleScript ocAnsibleScript = ocAnsibleScriptService.queryOcAnsibleScriptById(serverTaskScriptExecutor.getScriptId());
-        String scriptPath = ansibleConfig.getScriptPath(ocAnsibleScript);
-        IOUtils.writeFile(ocAnsibleScript.getScriptContent(), scriptPath);
-
-        // 异步执行
-        ansibleTaskHandler.call(ocServerTask, serverTaskScriptExecutor, scriptPath);
-        return getResultWrapper(ocServerTask);
+        return executor(ocServerTask, serverTaskScriptExecutor);
     }
 
     @Override
@@ -69,6 +61,11 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
 
         // 录入任务
         OcServerTask ocServerTask = ServerTaskBuilder.build(null, serverTreeHostPatternMap, serverTaskScriptExecutor);
+
+        return executor(ocServerTask, serverTaskScriptExecutor);
+    }
+
+    private BusinessWrapper<Boolean> executor(OcServerTask ocServerTask, ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
         addOcServerTask(ocServerTask);
         // 重新写入脚本
         OcAnsibleScript ocAnsibleScript = ocAnsibleScriptService.queryOcAnsibleScriptById(serverTaskScriptExecutor.getScriptId());

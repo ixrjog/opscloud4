@@ -26,12 +26,12 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * @Author baiyi
- * @Date 2020/6/1 9:23 上午
+ * @Date 2020/6/2 5:00 下午
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements IServerChangeConsumer {
+public class ServerPowerOnConsumer extends BaseServerChangeConsumer implements IServerChangeConsumer {
 
     private static final long TASK_TIMEOUT = 2 * 60 * 1000L;
 
@@ -40,7 +40,7 @@ public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements 
 
     @Override
     public String getKey() {
-        return ServerChangeFlow.SERVER_POWER_OFF.getName();
+        return ServerChangeFlow.SERVER_POWER_ON.getName();
     }
 
     @Override
@@ -68,7 +68,7 @@ public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements 
         updateOcServerChangeTaskFlow(ocServerChangeTaskFlow);
 
         long startTaskTime = new Date().getTime();
-        iCloudServer.stop(ocCloudServer.getId()); // 停止实例
+        iCloudServer.start(ocCloudServer.getId()); // 启动实例
         boolean exit = false;
         while (!exit) {
             try {
@@ -82,7 +82,7 @@ public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements 
 
                 TimeUnit.SECONDS.sleep(5); // 5秒延迟
                 int powerStatus = iCloudServer.queryPowerStatus(ocCloudServer.getId());
-                if (powerStatus == CloudServerPowerStatus.STOPPED.getStatus() || powerStatus == CloudServerPowerStatus.STOPPING.getStatus()) { //  已关闭
+                if (powerStatus == CloudServerPowerStatus.RUNNING.getStatus() ) { //  已关闭
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow);
                     exit = true;
                 }

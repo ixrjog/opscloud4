@@ -13,5 +13,8 @@ public interface ServerChangeFacade {
 
    BusinessWrapper<Boolean> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
 
+   BusinessWrapper<Boolean> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
+
+
    ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId);
 }

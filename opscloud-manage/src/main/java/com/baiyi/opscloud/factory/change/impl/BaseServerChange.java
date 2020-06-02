@@ -26,6 +26,17 @@ public abstract class BaseServerChange implements IServerChange, InitializingBea
     @Resource
     private OcServerChangeTaskFlowService ocServerChangeTaskFlowService;
 
+    protected int addFlow(OcServerChangeTask ocServerChangeTask,String flowName){
+        OcServerChangeTaskFlow serverUnactiveFlow = ServerChangeTaskFlowBuilder
+                .build(ocServerChangeTask, flowName);
+        addOcServerChangeTaskFlow(serverUnactiveFlow);
+
+        ocServerChangeTask.setTaskFlowId(serverUnactiveFlow.getId());
+        ocServerChangeTask.setTaskFlowName(flowName);
+        updateOcServerChangeTask(ocServerChangeTask);
+        return serverUnactiveFlow.getId();
+    }
+
     protected void updateOcServerChangeTask(OcServerChangeTask ocServerChangeTask) {
         ocServerChangeTaskService.updateOcServerChangeTask(ocServerChangeTask);
     }
