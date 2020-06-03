@@ -37,7 +37,7 @@ public class CommandProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
-        CommandMessage xtermMessage = (CommandMessage) getXTermMessage(message);
+        CommandMessage xtermMessage = (CommandMessage) getMessage(message);
         if(StringUtils.isEmpty(xtermMessage.getData()))
             return;
         if (!isBatch(ocTerminalSession)) {
@@ -54,7 +54,7 @@ public class CommandProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
+    protected BaseMessage getMessage(String message) {
         return new GsonBuilder().create().fromJson(message, CommandMessage.class);
     }
 

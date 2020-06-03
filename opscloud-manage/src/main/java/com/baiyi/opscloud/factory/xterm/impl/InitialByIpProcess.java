@@ -38,7 +38,7 @@ public class InitialByIpProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session,OcTerminalSession ocTerminalSession) {
-        InitialIpMessage xtermMessage = (InitialIpMessage) getXTermMessage(message);
+        InitialIpMessage xtermMessage = (InitialIpMessage) getMessage(message);
         xtermMessage.setLoginUserType(1);
         OcUser ocUser =  userFacade.getOcUserBySession();
         String ip = xtermMessage.getIp();
@@ -64,9 +64,8 @@ public class InitialByIpProcess extends BaseProcess implements IXTermProcess {
 
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        InitialIpMessage xtermMessage = new GsonBuilder().create().fromJson(message, InitialIpMessage.class);
-        return xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, InitialIpMessage.class);
     }
 
 }

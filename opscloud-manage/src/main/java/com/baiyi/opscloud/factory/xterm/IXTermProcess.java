@@ -11,7 +11,6 @@ import javax.websocket.Session;
  */
 public interface IXTermProcess {
 
-
     void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession);
 
     String getKey();

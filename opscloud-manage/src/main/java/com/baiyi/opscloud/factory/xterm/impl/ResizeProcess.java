@@ -34,7 +34,7 @@ public class ResizeProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
-        ResizeMessage xtermMessage= (ResizeMessage) getXTermMessage(message);
+        ResizeMessage xtermMessage= (ResizeMessage) getMessage(message);
         try {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
             RemoteInvokeHandler.invokeChannelPtySize((ChannelShell)jSchSession.getChannel(),xtermMessage);
@@ -43,9 +43,8 @@ public class ResizeProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        ResizeMessage xtermMessage = new GsonBuilder().create().fromJson(message, ResizeMessage.class);
-        return  xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ResizeMessage.class);
     }
 }
 

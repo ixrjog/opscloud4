@@ -60,7 +60,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     @Resource
     protected RedisUtil redisUtil;
 
-    abstract protected BaseMessage getXTermMessage(String message);
+    abstract protected BaseMessage getMessage(String message);
 
     protected boolean isOps(OcUser ocUser) {
         return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
