@@ -48,7 +48,7 @@ public class ServerParam {
     @ApiModel
     public static class QueryByServerGroup {
 
-        @ApiModelProperty(value = "服务器组id，优先级高")
+        @ApiModelProperty(value = "服务器组id，优先级高",example = "1")
         private Integer serverGroupId;
 
         @ApiModelProperty(value = "服务器组名称，优先级低")

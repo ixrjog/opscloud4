@@ -12,6 +12,7 @@ import com.baiyi.opscloud.facade.AuthBaseFacade;
 import com.baiyi.opscloud.facade.TerminalBaseFacade;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.xterm.message.InitialMessage;
+import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.baiyi.opscloud.xterm.task.SentOutputTask;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -70,6 +71,9 @@ public class XTermWSController implements InitializingBean {
      */
     @OnOpen
     public void onOpen(Session session) {
+
+        JSchSessionMap.getBySessionId(sessionId);
+
         OcTerminalSession ocTerminalSession = TerminalSessionBuilder.build(sessionId, serverAddr);
         terminalFacade.addOcTerminalSession(ocTerminalSession);
         XTermWSController.ocTerminalSession = ocTerminalSession;

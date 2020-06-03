@@ -18,7 +18,7 @@ public class OnlineChange extends BaseServerChange implements IServerChange {
 
     @Override
     public String getKey() {
-        return ServerChangeType.OFFLINE.getType();
+        return ServerChangeType.ONLINE.getType();
     }
 
     @Override

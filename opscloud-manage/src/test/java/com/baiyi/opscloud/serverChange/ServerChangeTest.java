@@ -2,6 +2,7 @@ package com.baiyi.opscloud.serverChange;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.base.ServerChangeType;
+import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
@@ -48,6 +49,18 @@ public class ServerChangeTest extends BaseUnit {
 
         serverChangeFacade.executeServerChangeOffline(param);
     }
+
+    @Test
+    void testExecuteServerChangeOnline() {
+        OcServer ocServer = ocServerService.queryOcServerById(4298);
+        ServerChangeParam.ExecuteServerChangeParam param = new ServerChangeParam.ExecuteServerChangeParam();
+        param.setChangeType(ServerChangeType.ONLINE.getType());
+        param.setServerGroupId(ocServer.getServerGroupId());
+        param.setServerId(ocServer.getId());
+        param.setTaskId(UUIDUtils.getUUID());
+        serverChangeFacade.executeServerChangeOnline(param);
+    }
+
 
     @Test
     void testServerChangeHandler() {

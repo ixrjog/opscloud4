@@ -12,6 +12,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
+import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
+
 /**
  * @Author baiyi
  * @Date 2020/6/1 3:45 下午
@@ -20,14 +22,13 @@ import javax.annotation.Resource;
 @Component
 public class ServerChangeHandler {
 
-
     @Resource
     private OcServerChangeTaskFlowService ocServerChangeTaskFlowService;
 
     @Resource
     private OcServerChangeTaskService ocServerChangeTaskService;
 
-    @Async
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void executeChangeTask(OcServerChangeTask ocServerChangeTask) {
 
         boolean exit = false;

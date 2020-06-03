@@ -20,10 +20,10 @@ public class OcAuthUserRole {
     @Column(name = "role_id")
     private Integer roleId;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**
