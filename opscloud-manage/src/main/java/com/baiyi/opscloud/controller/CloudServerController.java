@@ -3,7 +3,7 @@ package com.baiyi.opscloud.controller;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudServerVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +28,7 @@ public class CloudServerController {
 
     @ApiOperation(value = "分页查询云主机列表")
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudServerVO.CloudServer>> queryCloudServerPage(@Valid CloudServerParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudServerVO.CloudServer>> queryCloudServerPage(@Valid CloudServerParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudServerFacade.queryCloudServerPage(pageQuery));
     }
 

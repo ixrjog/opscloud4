@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.param.cloud;
 
 import com.baiyi.opscloud.domain.param.PageParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -76,7 +76,7 @@ public class CloudInstanceTemplateParam {
         private Charge charge;
 
         @ApiModelProperty(value = "磁盘选项")
-        private OcCloudInstanceTemplateVO.Disk disk;
+        private CloudInstanceTemplateVO.Disk disk;
 
     }
 

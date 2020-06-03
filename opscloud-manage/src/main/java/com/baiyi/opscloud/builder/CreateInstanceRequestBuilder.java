@@ -3,7 +3,7 @@ package com.baiyi.opscloud.builder;
 import com.aliyuncs.ecs.model.v20140526.CreateInstanceRequest;
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
 import com.baiyi.opscloud.bo.ServerBO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import com.google.common.collect.Lists;
 import org.springframework.util.StringUtils;
 
@@ -55,7 +55,7 @@ public class CreateInstanceRequestBuilder {
         // createInstanceRequest.setInternetChargeType("PayByTraffic");
 
         // 磁盘配置/系统盘
-        OcCloudInstanceTemplateVO.DiskDetail sysDisk = createCloudInstance.getCreateCloudInstance().getDisk().getSysDisk();
+        CloudInstanceTemplateVO.DiskDetail sysDisk = createCloudInstance.getCreateCloudInstance().getDisk().getSysDisk();
         createInstanceRequest.setSystemDiskCategory(sysDisk.getCategory());
         // 系统盘容量必须大于镜像容量
         if (sysDisk.getSize() < createCloudInstance.getOcCloudImage().getImageSize()) {
@@ -64,7 +64,7 @@ public class CreateInstanceRequestBuilder {
             createInstanceRequest.setSystemDiskSize(sysDisk.getSize());
         }
         // 磁盘配置/数据盘
-        OcCloudInstanceTemplateVO.DiskDetail dataDisk = createCloudInstance.getCreateCloudInstance().getDisk().getDataDisk();
+        CloudInstanceTemplateVO.DiskDetail dataDisk = createCloudInstance.getCreateCloudInstance().getDisk().getDataDisk();
         if (dataDisk.getSize() > 0) {
             CreateInstanceRequest.DataDisk disk = new CreateInstanceRequest.DataDisk();
             dataDisk.setCategory(dataDisk.getCategory());

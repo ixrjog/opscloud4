@@ -3,7 +3,7 @@ package com.baiyi.opscloud.controller;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudImageParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudImageVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudImageVO;
 import com.baiyi.opscloud.facade.CloudImageFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -28,7 +28,7 @@ public class CloudImageController {
 
     @ApiOperation(value = "分页模糊查询云镜像列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudImageVO.CloudImage>> queryCloudImagePage(@RequestBody @Valid CloudImageParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudImageVO.CloudImage>> queryCloudImagePage(@RequestBody @Valid CloudImageParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudImageFacade.fuzzyQueryCloudImagePage(pageQuery));
     }
 

@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2020/3/20 4:59 下午
  * @Version 1.0
  */
-public class OcCloudInstanceTemplateVO {
+public class CloudInstanceTemplateVO {
 
     @Data
     @NoArgsConstructor
@@ -32,10 +32,10 @@ public class OcCloudInstanceTemplateVO {
         private List<InstanceZone> instanceZones;
 
         @ApiModelProperty(value = "选中的安全组")
-        private OcCloudVPCSecurityGroupVO.SecurityGroup securityGroup;
+        private CloudVPCSecurityGroupVO.SecurityGroup securityGroup;
 
         @ApiModelProperty(value = "选中的云镜像")
-        private OcCloudImageVO.CloudImage cloudImage;
+        private CloudImageVO.CloudImage cloudImage;
 
         private Integer id;
         private Integer cloudType;

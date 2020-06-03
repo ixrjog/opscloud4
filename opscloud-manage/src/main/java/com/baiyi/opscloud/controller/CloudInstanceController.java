@@ -4,10 +4,10 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTemplateParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTaskVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTypeVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVSwitchVO;
 import com.baiyi.opscloud.facade.CloudInstanceFacade;
 import com.baiyi.opscloud.facade.CloudInstanceTaskFacade;
 import io.swagger.annotations.Api;
@@ -37,13 +37,13 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "分页模糊查询云实例模版列表")
     @PostMapping(value = "/template/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudInstanceTemplateVO.CloudInstanceTemplate>> queryCloudInstanceTemplatePage(@RequestBody @Valid CloudInstanceTemplateParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudInstanceTemplateVO.CloudInstanceTemplate>> queryCloudInstanceTemplatePage(@RequestBody @Valid CloudInstanceTemplateParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudInstanceFacade.fuzzyQueryCloudInstanceTemplatePage(pageQuery));
     }
 
     @ApiOperation(value = "保存模版")
     @PostMapping(value = "/template/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveCloudInstanceTemplate(@RequestBody @Valid OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public HttpResult<Boolean> saveCloudInstanceTemplate(@RequestBody @Valid CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         return new HttpResult<>(cloudInstanceFacade.saveCloudInstanceTemplate(cloudInstanceTemplate));
     }
 
@@ -55,13 +55,13 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "保存模版YAML")
     @PostMapping(value = "/template/yaml/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveCloudInstanceTemplateYAML(@RequestBody @Valid OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public HttpResult<Boolean> saveCloudInstanceTemplateYAML(@RequestBody @Valid CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         return new HttpResult<>(cloudInstanceFacade.saveCloudInstanceTemplateYAML(cloudInstanceTemplate));
     }
 
     @ApiOperation(value = "分页模糊查询云实例类型列表")
     @PostMapping(value = "/type/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudInstanceTypeVO.CloudInstanceType>> queryCloudInstanceTypePage(@RequestBody @Valid CloudInstanceTypeParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudInstanceTypeVO.CloudInstanceType>> queryCloudInstanceTypePage(@RequestBody @Valid CloudInstanceTypeParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudInstanceFacade.fuzzyQueryCloudInstanceTypePage(pageQuery));
     }
 
@@ -85,7 +85,7 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "查询模版可用区中虚拟交换机详情")
     @GetMapping(value = "/template/vswitch/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<OcCloudVSwitchVO.VSwitch>> queryCloudInstanceTemplateVSwitch(@RequestParam int templateId, String zoneId) {
+    public HttpResult<List<CloudVSwitchVO.VSwitch>> queryCloudInstanceTemplateVSwitch(@RequestParam int templateId, String zoneId) {
         return new HttpResult<>(cloudInstanceFacade.queryCloudInstanceTemplateVSwitch(templateId, zoneId));
     }
 
@@ -97,13 +97,13 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "查询创建实例任务详情")
     @GetMapping(value = "/task/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcCloudInstanceTaskVO.CloudInstanceTask> queryCloudInstanceTask(@RequestParam int id) {
+    public HttpResult<CloudInstanceTaskVO.CloudInstanceTask> queryCloudInstanceTask(@RequestParam int id) {
         return new HttpResult<>(cloudInstanceTaskFacade.queryCloudInstanceTask(id));
     }
 
     @ApiOperation(value = "查询创建实例任务详情（最后一个任务）")
     @GetMapping(value = "/task/last/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcCloudInstanceTaskVO.CloudInstanceTask> queryLastCloudInstanceTask(@RequestParam int templateId) {
+    public HttpResult<CloudInstanceTaskVO.CloudInstanceTask> queryLastCloudInstanceTask(@RequestParam int templateId) {
         return new HttpResult<>(cloudInstanceTaskFacade.queryLastCloudInstanceTask(templateId));
     }
 }

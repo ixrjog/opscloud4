@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2020/3/3 10:23 上午
  * @Version 1.0
  */
-public class OcCloudDBAccountVO {
+public class CloudDBAccountVO {
 
     @Data
     @NoArgsConstructor

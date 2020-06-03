@@ -27,10 +27,13 @@ public class ServerChangeParam {
         @NotNull
         private Integer serverId;
 
+        @ApiModelProperty(value = "服务器id")
+        @NotNull
+        private String taskId;
+
         @ApiModelProperty(value = "变更类型")
         @NotNull
         private String changeType;
-
 
     }
 

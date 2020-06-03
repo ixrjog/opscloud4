@@ -15,7 +15,7 @@ import java.util.Map;
  * @Date 2020/3/1 12:07 下午
  * @Version 1.0
  */
-public class OcCloudDBVO {
+public class CloudDBVO {
 
     @Data
     @NoArgsConstructor
@@ -25,9 +25,9 @@ public class OcCloudDBVO {
         // 账户权限关键字 ['ReadOnly', 'ReadWrite', 'DDLOnly', 'DMLOnly']
         private List<String> privileges;
 
-        private List<OcCloudDBAccountVO.CloudDBAccount> accounts;
+        private List<CloudDBAccountVO.CloudDBAccount> accounts;
 
-        private List<OcCloudDBDatabaseVO.CloudDBDatabase> databases;
+        private List<CloudDBDatabaseVO.CloudDBDatabase> databases;
 
         // 属性 attributeName,attributeValue
         private Map<String, String> attributeMap;

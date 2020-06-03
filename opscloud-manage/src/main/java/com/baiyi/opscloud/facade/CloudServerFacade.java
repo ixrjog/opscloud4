@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudServerVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.vo.cloud.OcCloudServerVO;
  */
 public interface CloudServerFacade {
 
-    DataTable<OcCloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery);
+    DataTable<CloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> deleteCloudServerById(int id);
 

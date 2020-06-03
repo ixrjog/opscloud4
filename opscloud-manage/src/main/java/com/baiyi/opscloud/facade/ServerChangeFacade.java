@@ -11,10 +11,9 @@ import com.baiyi.opscloud.domain.vo.serverChange.ServerChangeTaskVO;
  */
 public interface ServerChangeFacade {
 
-   BusinessWrapper<Boolean> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
+    BusinessWrapper<Boolean> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
 
-   BusinessWrapper<Boolean> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
+    BusinessWrapper<Boolean> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam);
 
-
-   ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId);
+    ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId);
 }

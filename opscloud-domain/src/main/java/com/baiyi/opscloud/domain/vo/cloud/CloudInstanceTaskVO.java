@@ -15,7 +15,7 @@ import java.util.Map;
  * @Date 2020/3/31 11:02 上午
  * @Version 1.0
  */
-public class OcCloudInstanceTaskVO {
+public class CloudInstanceTaskVO {
 
     @Data
     @NoArgsConstructor

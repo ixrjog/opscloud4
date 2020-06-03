@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.cloud.CloudImageParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudImageVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudImageVO;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.vo.cloud.OcCloudImageVO;
  */
 public interface CloudImageFacade {
 
-    DataTable<OcCloudImageVO.CloudImage> fuzzyQueryCloudImagePage(CloudImageParam.PageQuery pageQuery);
+    DataTable<CloudImageVO.CloudImage> fuzzyQueryCloudImagePage(CloudImageParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> syncCloudImageByKey(String key);
 

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.base.CloudInstanceTaskPhase;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTaskVO;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -25,7 +25,7 @@ public class CloudInstanceTaskDecorator {
     @Resource
     private OcCloudInstanceTaskMemberService ocCloudInstanceTaskMemberService;
 
-    public OcCloudInstanceTaskVO.CloudInstanceTask decorator(OcCloudInstanceTaskVO.CloudInstanceTask cloudInstanceTask) {
+    public CloudInstanceTaskVO.CloudInstanceTask decorator(CloudInstanceTaskVO.CloudInstanceTask cloudInstanceTask) {
         List<OcCloudInstanceTaskMember> memberList = ocCloudInstanceTaskMemberService.queryOcCloudInstanceTaskMemberByTaskId(cloudInstanceTask.getId());
         Map<String, List<OcCloudInstanceTaskMember>> memberMap = Maps.newHashMap();
         for (OcCloudInstanceTaskMember member : memberList) {

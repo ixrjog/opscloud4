@@ -164,6 +164,7 @@ public enum ErrorEnum {
     KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！"),
 
     SERVER_CHANGE_TASK_RUNNING(60001, "当前服务器变更任务执行中！"),
+    SERVER_CHANGE_TASK_RESUBMISSION(60001, "当前服务器变更任务重复提交！"),
     SERVER_CHANGE_TASK_GROUP_ID_INCORRECT(60001, "服务器组id不正确！")
     ;
 

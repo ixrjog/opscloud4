@@ -31,6 +31,11 @@ public class ServerChangeController {
         return new HttpResult<>(serverChangeFacade.executeServerChangeOffline(executeServerChangeParam));
     }
 
+    @ApiOperation(value = "服务器上线")
+    @PostMapping(value = "/online", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> executeServerChangeOnline(@RequestBody @Valid ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
+        return new HttpResult<>(serverChangeFacade.executeServerChangeOnline(executeServerChangeParam));
+    }
 
     @ApiOperation(value = "任务查询")
     @GetMapping(value = "/task/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

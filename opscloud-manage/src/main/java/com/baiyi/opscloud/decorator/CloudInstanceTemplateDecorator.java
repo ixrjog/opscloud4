@@ -6,9 +6,9 @@ import com.baiyi.opscloud.common.util.CloudInstanceTemplateUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudImageVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCSecurityGroupVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudImageVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVPCSecurityGroupVO;
 import com.baiyi.opscloud.service.cloud.OcCloudImageService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;
 import com.google.common.collect.Lists;
@@ -40,9 +40,9 @@ public class CloudInstanceTemplateDecorator {
     @Resource
     private OcCloudImageService ocCloudImageService;
 
-    public OcCloudInstanceTemplateVO.CloudInstanceTemplate decorator(OcCloudInstanceTemplate ocCloudInstanceTemplate) {
-        OcCloudInstanceTemplateVO.CloudInstanceTemplate instanceTemplate
-                = BeanCopierUtils.copyProperties(ocCloudInstanceTemplate, OcCloudInstanceTemplateVO.CloudInstanceTemplate.class);
+    public CloudInstanceTemplateVO.CloudInstanceTemplate decorator(OcCloudInstanceTemplate ocCloudInstanceTemplate) {
+        CloudInstanceTemplateVO.CloudInstanceTemplate instanceTemplate
+                = BeanCopierUtils.copyProperties(ocCloudInstanceTemplate, CloudInstanceTemplateVO.CloudInstanceTemplate.class);
         // 序列化YAML
         if (!StringUtils.isEmpty(ocCloudInstanceTemplate.getTemplateYaml())) {
             instanceTemplate.setInstanceTemplate(CloudInstanceTemplateUtils.convert(ocCloudInstanceTemplate.getTemplateYaml()));
@@ -57,21 +57,21 @@ public class CloudInstanceTemplateDecorator {
      * @param instanceTemplate
      * @return
      */
-    protected static Map<String, OcCloudInstanceTemplateVO.VSwitch> getVSwitchZoneIdMap(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate) {
+    protected static Map<String, CloudInstanceTemplateVO.VSwitch> getVSwitchZoneIdMap(CloudInstanceTemplateVO.InstanceTemplate instanceTemplate) {
         if (instanceTemplate.getVswitchs() == null)
             return Maps.newHashMap();
-        List<OcCloudInstanceTemplateVO.VSwitch> vswitchs = instanceTemplate.getVswitchs();
-        return vswitchs.stream().collect(Collectors.toMap(OcCloudInstanceTemplateVO.VSwitch::getZoneId, a -> a, (k1, k2) -> k1));
+        List<CloudInstanceTemplateVO.VSwitch> vswitchs = instanceTemplate.getVswitchs();
+        return vswitchs.stream().collect(Collectors.toMap(CloudInstanceTemplateVO.VSwitch::getZoneId, a -> a, (k1, k2) -> k1));
     }
 
-    private List<OcCloudInstanceTemplateVO.InstanceZone> getInstanceZones(String regionId, OcCloudInstanceTemplateVO.Instance instance, Map<String, OcCloudInstanceTemplateVO.VSwitch> vswitchZoneIdMap) {
-        List<OcCloudInstanceTemplateVO.InstanceZone> instanceZones = Lists.newArrayList();
+    private List<CloudInstanceTemplateVO.InstanceZone> getInstanceZones(String regionId, CloudInstanceTemplateVO.Instance instance, Map<String, CloudInstanceTemplateVO.VSwitch> vswitchZoneIdMap) {
+        List<CloudInstanceTemplateVO.InstanceZone> instanceZones = Lists.newArrayList();
         if (StringUtils.isEmpty(instance.getTypeId())) return instanceZones;
         Map<String, Set<String>> instanceTypeZoneMap = aliyunInstance.getInstanceTypeZoneMap(regionId);
         if (!instanceTypeZoneMap.containsKey(instance.getTypeId())) return instanceZones;
         Set<String> zoneIds = instanceTypeZoneMap.get(instance.getTypeId());
         for (String zoneId : zoneIds) {
-            OcCloudInstanceTemplateVO.InstanceZone instanceZone = new OcCloudInstanceTemplateVO.InstanceZone();
+            CloudInstanceTemplateVO.InstanceZone instanceZone = new CloudInstanceTemplateVO.InstanceZone();
             instanceZone.setZoneId(zoneId);
             if (vswitchZoneIdMap.containsKey(zoneId)) {
                 instanceZone.setActive(true);
@@ -82,14 +82,14 @@ public class CloudInstanceTemplateDecorator {
     }
 
 
-    public OcCloudInstanceTemplateVO.CloudInstanceTemplate decorator(OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public CloudInstanceTemplateVO.CloudInstanceTemplate decorator(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         // 序列化YAML
         if (!StringUtils.isEmpty(cloudInstanceTemplate.getTemplateYAML())) {
-            OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate = CloudInstanceTemplateUtils.convert(cloudInstanceTemplate.getTemplateYAML());
+            CloudInstanceTemplateVO.InstanceTemplate instanceTemplate = CloudInstanceTemplateUtils.convert(cloudInstanceTemplate.getTemplateYAML());
             cloudInstanceTemplate.setInstanceTemplate(instanceTemplate);
             // 装饰实例可用区
             if (instanceTemplate.getInstance() != null) {
-                Map<String, OcCloudInstanceTemplateVO.VSwitch> vswitchZoneIdMap = getVSwitchZoneIdMap(cloudInstanceTemplate.getInstanceTemplate());
+                Map<String, CloudInstanceTemplateVO.VSwitch> vswitchZoneIdMap = getVSwitchZoneIdMap(cloudInstanceTemplate.getInstanceTemplate());
                 cloudInstanceTemplate.setInstanceZones(getInstanceZones(cloudInstanceTemplate.getRegionId(), instanceTemplate.getInstance(), vswitchZoneIdMap));
             }
         }
@@ -97,13 +97,13 @@ public class CloudInstanceTemplateDecorator {
         if (!StringUtils.isEmpty(cloudInstanceTemplate.getSecurityGroupId())) {
             OcCloudVpcSecurityGroup ocCloudVpcSecurityGroup = ocCloudVpcSecurityGroupService.queryOcCloudVpcSecurityGroupBySecurityGroupId(cloudInstanceTemplate.getSecurityGroupId());
             if (ocCloudVpcSecurityGroup != null)
-                cloudInstanceTemplate.setSecurityGroup(BeanCopierUtils.copyProperties(ocCloudVpcSecurityGroup, OcCloudVPCSecurityGroupVO.SecurityGroup.class));
+                cloudInstanceTemplate.setSecurityGroup(BeanCopierUtils.copyProperties(ocCloudVpcSecurityGroup, CloudVPCSecurityGroupVO.SecurityGroup.class));
         }
         // 装饰 云镜像
         if (!StringUtils.isEmpty(cloudInstanceTemplate.getImageId())) {
             OcCloudImage ocCloudImage = ocCloudImageService.queryOcCloudImageByImageId(cloudInstanceTemplate.getImageId());
             if (ocCloudImage != null)
-                cloudInstanceTemplate.setCloudImage(BeanCopierUtils.copyProperties(ocCloudImage, OcCloudImageVO.CloudImage.class));
+                cloudInstanceTemplate.setCloudImage(BeanCopierUtils.copyProperties(ocCloudImage, CloudImageVO.CloudImage.class));
         }
 
 //        Yaml yaml = new Yaml();

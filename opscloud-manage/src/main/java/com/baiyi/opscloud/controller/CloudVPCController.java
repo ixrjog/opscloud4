@@ -5,9 +5,9 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCSecurityGroupVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVPCSecurityGroupVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVPCVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVSwitchVO;
 import com.baiyi.opscloud.facade.CloudVPCFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,13 +32,13 @@ public class CloudVPCController {
 
     @ApiOperation(value = "分页模糊查询云VPC列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudVPCVO.CloudVpc>> fuzzyQueryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudVPCVO.CloudVpc>> fuzzyQueryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudVPCFacade.fuzzyQueryCloudVPCPage(pageQuery));
     }
 
     @ApiOperation(value = "分页查询云VPC列表(按可用区过滤)")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudVPCVO.CloudVpc>> queryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudVPCVO.CloudVpc>> queryCloudVPCPage(@RequestBody @Valid CloudVPCParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudVPCFacade.queryCloudVPCPage(pageQuery));
     }
 
@@ -63,7 +63,7 @@ public class CloudVPCController {
     // security_group
     @ApiOperation(value = "分页查询云VPC安全组列表")
     @PostMapping(value = "/security/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudVPCSecurityGroupVO.SecurityGroup>> queryCloudVPCSecurityGroupPage(@RequestBody @Valid CloudVPCSecurityGroupParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudVPCSecurityGroupVO.SecurityGroup>> queryCloudVPCSecurityGroupPage(@RequestBody @Valid CloudVPCSecurityGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudVPCFacade.queryCloudVPCSecurityGroupPage(pageQuery));
     }
 
@@ -75,7 +75,7 @@ public class CloudVPCController {
 
     @ApiOperation(value = "分页查询云VPC虚拟交换机列表")
     @PostMapping(value = "/vswitch/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudVSwitchVO.VSwitch>> queryCloudVPCVSwitchPage(@RequestBody @Valid CloudVPCVSwitchParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudVSwitchVO.VSwitch>> queryCloudVPCVSwitchPage(@RequestBody @Valid CloudVPCVSwitchParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudVPCFacade.queryCloudVPCVSwitchPage(pageQuery));
     }
 

@@ -15,15 +15,15 @@ import java.util.Map;
  * @Date 2020/3/18 7:12 下午
  * @Version 1.0
  */
-public class OcCloudVPCVO {
+public class CloudVPCVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class CloudVpc {
 
-        private List<OcCloudVPCSecurityGroupVO.SecurityGroup> securityGroups;
-        private Map<String, List<OcCloudVSwitchVO.VSwitch>> vswitchMap;
+        private List<CloudVPCSecurityGroupVO.SecurityGroup> securityGroups;
+        private Map<String, List<CloudVSwitchVO.VSwitch>> vswitchMap;
 
         @ApiModelProperty(value = "主键")
         private Integer id;

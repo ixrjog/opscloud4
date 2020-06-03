@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.builder.ServerChangeTaskBuilder;
 import com.baiyi.opscloud.common.base.ServerChangeType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.decorator.ServerChangeTaskDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
@@ -36,6 +37,9 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     @Resource
     private ServerChangeHandler serverChangeHandler;
 
+    @Resource
+    private ServerChangeTaskDecorator serverChangeTaskDecorator;
+
     /**
      * 服务器变更管理
      */
@@ -46,7 +50,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
         if (!wrapper.isSuccess()) return wrapper;
 
-        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.OFFLINE.getType());
+        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.OFFLINE.getType(),executeServerChangeParam.getTaskId());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
@@ -58,12 +62,11 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
 
     @Override
     public BusinessWrapper<Boolean> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
-
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
         BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
         if (!wrapper.isSuccess()) return wrapper;
 
-        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.ONLINE.getType());
+        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.ONLINE.getType(),executeServerChangeParam.getTaskId());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.ONLINE.getType());
@@ -78,22 +81,24 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         OcServerChangeTask query = new OcServerChangeTask();
         query.setServerId(executeServerChangeParam.getServerId());
         query.setTaskStatus(1);
-        OcServerChangeTask check = ocServerChangeTaskService.checkOcServerChangeTask(query);
-        if (check != null)
+        OcServerChangeTask checkTaskRunning = ocServerChangeTaskService.checkOcServerChangeTask(query);
+        if (checkTaskRunning != null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_RUNNING); // 任务运行中
+
+        OcServerChangeTask changeTaskId  = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(executeServerChangeParam.getTaskId());
+        if (changeTaskId != null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_RESUBMISSION); // 任务重复提交
 
         if (!ocServer.getServerGroupId().equals(executeServerChangeParam.getServerGroupId()))
             return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_GROUP_ID_INCORRECT); // 组id不正确
         return BusinessWrapper.SUCCESS;
     }
 
-
     @Override
     public ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId) {
         OcServerChangeTask task = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(taskId);
         ServerChangeTaskVO.ServerChangeTask serverChangeTask = BeanCopierUtils.copyProperties(task, ServerChangeTaskVO.ServerChangeTask.class);
-
-        return serverChangeTask;
+        return serverChangeTaskDecorator.decorator(serverChangeTask);
     }
 
 

@@ -2,13 +2,16 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
+import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.TagFacade;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import org.springframework.stereotype.Component;
@@ -30,10 +33,13 @@ public class ServerDecorator {
     private OcServerGroupService ocServerGroupService;
 
     @Resource
+    private OcCloudServerService ocCloudServerService;
+
+    @Resource
     private TagFacade tagFacade;
 
     @Resource
-    private  ServerGroupDecorator serverGroupDecorator;
+    private ServerGroupDecorator serverGroupDecorator;
 
     public ServerVO.Server decorator(ServerVO.Server server) {
         // 装饰 环境信息
@@ -43,11 +49,16 @@ public class ServerDecorator {
             server.setEnv(env);
         }
         // 装饰 服务器组信息
-        OcServerGroup ocServerGroup =  ocServerGroupService.queryOcServerGroupById(server.getServerGroupId());
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(server.getServerGroupId());
         if (ocServerGroup != null) {
             ServerGroupVO.ServerGroup serverGroup = BeanCopierUtils.copyProperties(ocServerGroup, ServerGroupVO.ServerGroup.class);
             server.setServerGroup(serverGroupDecorator.decorator(serverGroup));
         }
+        // 装饰云服务器
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(server.getServerType(), server.getId());
+        if(ocCloudServer != null)
+            server.setCloudServer(BeanCopierUtils.copyProperties(ocCloudServer, CloudServerVO.CloudServer.class));
+
         // 装饰 标签
         TagParam.BusinessQuery businessQuery = new TagParam.BusinessQuery();
         businessQuery.setBusinessType(BusinessType.SERVER.getType());

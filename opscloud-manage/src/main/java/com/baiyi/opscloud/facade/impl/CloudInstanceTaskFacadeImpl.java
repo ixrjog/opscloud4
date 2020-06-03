@@ -12,8 +12,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTaskVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import com.baiyi.opscloud.facade.CloudInstanceTaskFacade;
 import com.baiyi.opscloud.handler.CreateInstanceTaskHandler;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
@@ -205,9 +205,9 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
      * @param instanceZones
      * @return
      */
-    private List<OcCloudVpcVswitch> queryVswitchByVpcIdAndZoneIds(String vpcId, List<OcCloudInstanceTemplateVO.InstanceZone> instanceZones) {
+    private List<OcCloudVpcVswitch> queryVswitchByVpcIdAndZoneIds(String vpcId, List<CloudInstanceTemplateVO.InstanceZone> instanceZones) {
         List<String> zoneIds = Lists.newArrayList();
-        for (OcCloudInstanceTemplateVO.InstanceZone instanceZone : instanceZones) {
+        for (CloudInstanceTemplateVO.InstanceZone instanceZone : instanceZones) {
             if (!instanceZone.isActive()) continue;
             zoneIds.add(instanceZone.getZoneId());
         }
@@ -232,21 +232,21 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
     }
 
     @Override
-    public OcCloudInstanceTaskVO.CloudInstanceTask queryCloudInstanceTask(int taskId) {
+    public CloudInstanceTaskVO.CloudInstanceTask queryCloudInstanceTask(int taskId) {
         OcCloudInstanceTask ocCloudInstanceTask = ocCloudInstanceTaskService.queryOcCloudInstanceTaskById(taskId);
         return getCloudInstanceTask(ocCloudInstanceTask);
     }
 
     @Override
-    public OcCloudInstanceTaskVO.CloudInstanceTask queryLastCloudInstanceTask(int templateId) {
+    public CloudInstanceTaskVO.CloudInstanceTask queryLastCloudInstanceTask(int templateId) {
         OcCloudInstanceTask ocCloudInstanceTask = ocCloudInstanceTaskService.queryLastOcCloudInstanceTaskByTemplateId(templateId);
         return getCloudInstanceTask(ocCloudInstanceTask);
     }
 
-    private OcCloudInstanceTaskVO.CloudInstanceTask getCloudInstanceTask(OcCloudInstanceTask ocCloudInstanceTask) {
+    private CloudInstanceTaskVO.CloudInstanceTask getCloudInstanceTask(OcCloudInstanceTask ocCloudInstanceTask) {
         if (ocCloudInstanceTask == null)
-            return new OcCloudInstanceTaskVO.CloudInstanceTask();
-        OcCloudInstanceTaskVO.CloudInstanceTask cloudInstanceTask = BeanCopierUtils.copyProperties(ocCloudInstanceTask, OcCloudInstanceTaskVO.CloudInstanceTask.class);
+            return new CloudInstanceTaskVO.CloudInstanceTask();
+        CloudInstanceTaskVO.CloudInstanceTask cloudInstanceTask = BeanCopierUtils.copyProperties(ocCloudInstanceTask, CloudInstanceTaskVO.CloudInstanceTask.class);
         return cloudInstanceTaskDecorator.decorator(cloudInstanceTask);
     }
 

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBDatabaseVO;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
 import com.baiyi.opscloud.facade.TagFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudDBService;
@@ -31,7 +31,7 @@ public class CloudDBDatabaseDecorator {
     @Resource
     private TagFacade tagFacade;
 
-    public OcCloudDBDatabaseVO.CloudDBDatabase decorator(OcCloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase, Integer extend) {
+    public CloudDBDatabaseVO.CloudDBDatabase decorator(CloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase, Integer extend) {
 
         // 装饰 环境信息
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(cloudDBDatabase.getEnvType());

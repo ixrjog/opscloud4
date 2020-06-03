@@ -11,7 +11,7 @@ import java.util.Date;
  * @Date 2020/3/19 2:43 下午
  * @Version 1.0
  */
-public class OcCloudVPCSecurityGroupVO {
+public class CloudVPCSecurityGroupVO {
 
     @Data
     @NoArgsConstructor

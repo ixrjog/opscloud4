@@ -19,9 +19,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbDatabase;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBAccountVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBDatabaseVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBVO;
 import com.baiyi.opscloud.facade.CloudDBFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudDBAccountService;
 import com.baiyi.opscloud.service.cloud.OcCloudDBAttributeService;
@@ -74,9 +74,9 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
     protected CloudDBConfig cloudDBConfig;
 
     @Override
-    public DataTable<OcCloudDBVO.CloudDB> fuzzyQueryCloudDBPage(CloudDBParam.PageQuery pageQuery) {
+    public DataTable<CloudDBVO.CloudDB> fuzzyQueryCloudDBPage(CloudDBParam.PageQuery pageQuery) {
         DataTable<OcCloudDb> table = ocCloudDBService.fuzzyQueryOcCloudDBByParam(pageQuery);
-        List<OcCloudDBVO.CloudDB> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudDBVO.CloudDB.class);
+        List<CloudDBVO.CloudDB> page = BeanCopierUtils.copyListProperties(table.getData(), CloudDBVO.CloudDB.class);
         return new DataTable<>(page.stream().map(e -> cloudDBDecorator.decorator(e, 1)).collect(Collectors.toList()), table.getTotalNum());
     }
 
@@ -116,14 +116,14 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
     }
 
     @Override
-    public DataTable<OcCloudDBDatabaseVO.CloudDBDatabase> fuzzyQueryCloudDBDatabasePage(CloudDBDatabaseParam.PageQuery pageQuery) {
+    public DataTable<CloudDBDatabaseVO.CloudDBDatabase> fuzzyQueryCloudDBDatabasePage(CloudDBDatabaseParam.PageQuery pageQuery) {
         DataTable<OcCloudDbDatabase> table = ocCloudDBDatabaseService.fuzzyQueryOcCloudDBDatabaseByParam(pageQuery);
-        List<OcCloudDBDatabaseVO.CloudDBDatabase> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudDBDatabaseVO.CloudDBDatabase.class);
+        List<CloudDBDatabaseVO.CloudDBDatabase> page = BeanCopierUtils.copyListProperties(table.getData(), CloudDBDatabaseVO.CloudDBDatabase.class);
         return new DataTable<>(page.stream().map(e -> cloudDBDatabaseDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateBaseCloudDBDatabase(OcCloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase) {
+    public BusinessWrapper<Boolean> updateBaseCloudDBDatabase(CloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase) {
         if (ocCloudDBDatabaseService.queryOcCloudDbDatabaseById(cloudDBDatabase.getId()) == null)
             return new BusinessWrapper<>(ErrorEnum.CLOUD_DB_DATABASE_NOT_EXIST);
         OcCloudDbDatabase ocCloudDbDatabase = BeanCopierUtils.copyProperties(cloudDBDatabase, OcCloudDbDatabase.class);
@@ -132,7 +132,7 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> privilegeAccount(OcCloudDBAccountVO.PrivilegeAccount privilegeAccount) {
+    public BusinessWrapper<Boolean> privilegeAccount(CloudDBAccountVO.PrivilegeAccount privilegeAccount) {
         OcCloudDb ocCloudDb = ocCloudDBService.queryOcCloudDbById(privilegeAccount.getCloudDbId());
         if (ocCloudDb == null)
             return new BusinessWrapper<>(ErrorEnum.CLOUD_DB_NOT_EXIST);

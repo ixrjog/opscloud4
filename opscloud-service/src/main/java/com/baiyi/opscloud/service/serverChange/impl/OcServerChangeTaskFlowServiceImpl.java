@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -20,6 +21,13 @@ public class OcServerChangeTaskFlowServiceImpl implements OcServerChangeTaskFlow
     @Resource
     private OcServerChangeTaskFlowMapper ocServerChangeTaskFlowMapper;
 
+    @Override
+    public List<OcServerChangeTaskFlow> queryOcServerChangeTaskFlowByTaskId(String taskId) {
+        Example example = new Example(OcServerChangeTaskFlow.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskId", taskId);
+        return ocServerChangeTaskFlowMapper.selectByExample(example);
+    }
 
     @Override
     public OcServerChangeTaskFlow queryOcServerChangeTaskFlowById(int id) {
@@ -27,7 +35,7 @@ public class OcServerChangeTaskFlowServiceImpl implements OcServerChangeTaskFlow
     }
 
     @Override
-    public   OcServerChangeTaskFlow queryOcServerChangeTaskFlowByParentId(int parentId) {
+    public OcServerChangeTaskFlow queryOcServerChangeTaskFlowByParentId(int parentId) {
         Example example = new Example(OcServerChangeTaskFlow.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("flowParentId", parentId);

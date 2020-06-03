@@ -15,7 +15,7 @@ import java.util.List;
  * @Date 2020/3/2 11:16 上午
  * @Version 1.0
  */
-public class OcCloudDBDatabaseVO {
+public class CloudDBDatabaseVO {
 
 
     @Data
