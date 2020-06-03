@@ -40,6 +40,12 @@ public class ServerController {
         return new HttpResult<>(serverFacade.queryServerById(id));
     }
 
+    @ApiOperation(value = "批量查询server列表")
+    @PostMapping(value = "/ids/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> queryServerByIds(@RequestBody @Valid ServerParam.QueryByServerIds queryByServerByIds) {
+        return new HttpResult<>(serverFacade.queryServerByIds(queryByServerByIds));
+    }
+
     @ApiOperation(value = "查询server列表")
     @PostMapping(value = "/query/by/group", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> queryServerByServerGroup(@RequestBody ServerParam.QueryByServerGroup queryByServerGroup) {

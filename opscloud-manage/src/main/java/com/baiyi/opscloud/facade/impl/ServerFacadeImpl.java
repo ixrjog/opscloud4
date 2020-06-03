@@ -28,6 +28,7 @@ import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -82,7 +83,23 @@ public class ServerFacadeImpl implements ServerFacade {
         if (ocServer == null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
         BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-        wrapper.setBody(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
+        wrapper.setBody(getServerVO(ocServer));
+        return wrapper;
+    }
+
+    private ServerVO.Server getServerVO(OcServer ocServer) {
+        return serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class));
+    }
+
+
+    @Override
+    public BusinessWrapper<Boolean> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds) {
+        List<ServerVO.Server> result = Lists.newArrayList();
+        queryByServerByIds.getIds().forEach(e -> {
+            OcServer ocServer = ocServerService.queryOcServerById(e);
+            result.add(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
+        });
+        BusinessWrapper wrapper = new BusinessWrapper(result);
         return wrapper;
     }
 

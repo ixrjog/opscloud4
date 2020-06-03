@@ -31,7 +31,7 @@ import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseProcess implements IXTermProcess, InitializingBean {
+public abstract class BaseProcess implements IXTermProcess, InitializingBean{
 
     @Resource
     protected UserFacade userFacade;

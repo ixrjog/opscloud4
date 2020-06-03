@@ -38,18 +38,20 @@ public class CommandProcess extends BaseProcess implements IXTermProcess {
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         CommandMessage xtermMessage = (CommandMessage) getMessage(message);
-        if(StringUtils.isEmpty(xtermMessage.getData()))
+        if (StringUtils.isEmpty(xtermMessage.getData()))
             return;
         if (!isBatch(ocTerminalSession)) {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
-            jSchSession.getCommander().print(xtermMessage.getData());
+            printCommand(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId(), xtermMessage.getData());
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId());
-            for (String instanceId : sessionMap.keySet()) {
-                JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), instanceId);
-                jSchSession.getCommander().print(xtermMessage.getData());
-            }
+            sessionMap.keySet().forEach(e -> printCommand(ocTerminalSession.getSessionId(), e, xtermMessage.getData()));
         }
+    }
+
+    private void printCommand(String sessionId, String instanceId, String cmd) {
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(sessionId, instanceId);
+        if (jSchSession == null) return;
+        jSchSession.getCommander().print(cmd);
     }
 
     @Override

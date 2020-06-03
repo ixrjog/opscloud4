@@ -19,6 +19,8 @@ public interface ServerFacade {
 
     BusinessWrapper<Boolean> queryServerById(int id);
 
+    BusinessWrapper<Boolean> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds);
+
     DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup);
@@ -32,7 +34,6 @@ public interface ServerFacade {
     BusinessWrapper<Boolean> updateServer(ServerVO.Server server);
 
     BusinessWrapper<Boolean> deleteServerById(int id);
-
 
 
 }
