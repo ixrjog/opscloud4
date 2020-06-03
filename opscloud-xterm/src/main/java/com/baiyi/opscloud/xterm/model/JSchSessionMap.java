@@ -17,7 +17,7 @@ public class JSchSessionMap {
     }
 
     public static Boolean getBatchBySessionId(String sessionId) {
-      return  batchMap.get(sessionId);
+        return batchMap.get(sessionId);
     }
 
     public static void addSession(JSchSession jSchSession) {
@@ -27,6 +27,7 @@ public class JSchSessionMap {
             jSchSessionMap.put(jSchSession.getSessionId(), sessionMap);
         }
         sessionMap.put(jSchSession.getInstanceId(), jSchSession);
+
     }
 
     public static Map<String, JSchSession> getBySessionId(String sessionId) {

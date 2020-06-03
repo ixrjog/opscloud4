@@ -12,7 +12,6 @@ import com.baiyi.opscloud.facade.AuthBaseFacade;
 import com.baiyi.opscloud.facade.TerminalBaseFacade;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.xterm.message.InitialMessage;
-import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.baiyi.opscloud.xterm.task.SentOutputTask;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -40,7 +39,7 @@ public class XTermWSController implements InitializingBean {
     private static CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
 
     // 当前会话 uuid
-    private final String sessionId = UUID.randomUUID().toString();
+    private String sessionId = null;
 
     private Session session = null;
 
@@ -49,7 +48,7 @@ public class XTermWSController implements InitializingBean {
     // 超时时间1H
     public static final Long WEBSOCKET_TIMEOUT = 60 * 60 * 1000L;
 
-    private static OcTerminalSession ocTerminalSession;
+    private OcTerminalSession ocTerminalSession;
 
     private static TerminalBaseFacade terminalFacade;
 
@@ -71,12 +70,10 @@ public class XTermWSController implements InitializingBean {
      */
     @OnOpen
     public void onOpen(Session session) {
-
-        JSchSessionMap.getBySessionId(sessionId);
-
+        this.sessionId = UUID.randomUUID().toString();
         OcTerminalSession ocTerminalSession = TerminalSessionBuilder.build(sessionId, serverAddr);
         terminalFacade.addOcTerminalSession(ocTerminalSession);
-        XTermWSController.ocTerminalSession = ocTerminalSession;
+        this.ocTerminalSession = ocTerminalSession;
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
         log.info("有连接加入，当前连接数为：{}", cnt);
@@ -106,7 +103,7 @@ public class XTermWSController implements InitializingBean {
      * @param message 客户端发送过来的消息
      */
     @OnMessage
-    public void onMessage(String message) {
+    public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         // log.info("来自客户端的消息：{}", message);
         SessionUtils.setUsername(ocTerminalSession.getUsername());
