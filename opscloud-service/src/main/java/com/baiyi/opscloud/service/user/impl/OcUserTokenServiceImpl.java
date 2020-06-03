@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.user.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserToken;
 import com.baiyi.opscloud.mapper.opscloud.OcUserTokenMapper;
 import com.baiyi.opscloud.service.user.OcUserTokenService;
+import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -31,6 +32,7 @@ public class OcUserTokenServiceImpl implements OcUserTokenService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("valid", true);
         criteria.andEqualTo("token", token);
+        PageHelper.startPage(1 ,1);
         return ocUserTokenMapper.selectOneByExample(example);
     }
 

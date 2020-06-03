@@ -2,7 +2,7 @@ package com.baiyi.opscloud.builder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTemplate;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
@@ -14,7 +14,7 @@ import org.yaml.snakeyaml.nodes.Tag;
  */
 public class CloudInstanceTemplateBuilder {
 
-    public static OcCloudInstanceTemplate build(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate, Integer id) {
+    public static OcCloudInstanceTemplate build(CloudInstanceTemplateVO.InstanceTemplate instanceTemplate, Integer id) {
         OcCloudInstanceTemplate cit = covert(instanceTemplate);
         Yaml yaml = new Yaml();
         cit.setTemplateYaml(yaml.dumpAs(instanceTemplate, Tag.MAP, DumperOptions.FlowStyle.BLOCK));// 序列化对象为YAML-BLOCK格式);
@@ -23,7 +23,7 @@ public class CloudInstanceTemplateBuilder {
     }
 
 
-    private static OcCloudInstanceTemplate covert(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate) {
+    private static OcCloudInstanceTemplate covert(CloudInstanceTemplateVO.InstanceTemplate instanceTemplate) {
         return BeanCopierUtils.copyProperties(instanceTemplate, OcCloudInstanceTemplate.class);
     }
 }

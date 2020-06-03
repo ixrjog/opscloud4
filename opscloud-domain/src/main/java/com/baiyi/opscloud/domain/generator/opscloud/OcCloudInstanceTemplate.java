@@ -42,10 +42,10 @@ public class OcCloudInstanceTemplate {
     @Column(name = "usage_count")
     private Integer usageCount;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     private String comment;

@@ -59,7 +59,7 @@ public class CloseProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
+    protected BaseMessage getMessage(String message) {
         return null;
     }
 }

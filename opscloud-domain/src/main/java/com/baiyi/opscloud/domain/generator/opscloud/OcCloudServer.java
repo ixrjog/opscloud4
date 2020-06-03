@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_cloud_server")
 public class OcCloudServer {
@@ -17,6 +17,9 @@ public class OcCloudServer {
 
     @Column(name = "instance_name")
     private String instanceName;
+
+    @Column(name = "region_id")
+    private String regionId;
 
     private String zone;
 
@@ -81,10 +84,16 @@ public class OcCloudServer {
     @Column(name = "power_mgmt")
     private Boolean powerMgmt;
 
-    @Column(name = "create_time")
+    /**
+     * 电源状态
+     */
+    @Column(name = "power_status")
+    private Integer powerStatus;
+
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     private String comment;
@@ -149,6 +158,14 @@ public class OcCloudServer {
      */
     public void setInstanceName(String instanceName) {
         this.instanceName = instanceName;
+    }
+
+    public String getRegionId() {
+        return regionId;
+    }
+
+    public void setRegionId(String regionId) {
+        this.regionId = regionId;
     }
 
     /**
@@ -417,6 +434,14 @@ public class OcCloudServer {
      */
     public void setPowerMgmt(Boolean powerMgmt) {
         this.powerMgmt = powerMgmt;
+    }
+
+    public Integer getPowerStatus() {
+        return powerStatus;
+    }
+
+    public void setPowerStatus(Integer powerStatus) {
+        this.powerStatus = powerStatus;
     }
 
     /**

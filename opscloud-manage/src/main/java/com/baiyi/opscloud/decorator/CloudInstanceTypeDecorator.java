@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTypeVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,7 +19,7 @@ public class CloudInstanceTypeDecorator {
     @Resource
     private AliyunInstance aliyunInstance;
 
-    public OcCloudInstanceTypeVO.CloudInstanceType decorator(OcCloudInstanceTypeVO.CloudInstanceType cloudInstanceType,String regionId, Integer extend) {
+    public CloudInstanceTypeVO.CloudInstanceType decorator(CloudInstanceTypeVO.CloudInstanceType cloudInstanceType, String regionId, Integer extend) {
         if (extend != null && extend == 1) {
             Map<String, Set<String>> map = aliyunInstance.getInstanceTypeZoneMap(regionId);
             if(map.containsKey(cloudInstanceType.getInstanceTypeId()))

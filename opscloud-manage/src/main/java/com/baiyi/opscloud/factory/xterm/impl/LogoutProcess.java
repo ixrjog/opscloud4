@@ -33,7 +33,7 @@ public class LogoutProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
-        LogoutMessage baseMessage = (LogoutMessage) getXTermMessage(message);
+        LogoutMessage baseMessage = (LogoutMessage) getMessage(message);
 
         sessionInstanceClosed(ocTerminalSession, baseMessage.getInstanceId()); // 设置关闭会话
         writeAuditLog(ocTerminalSession, baseMessage.getInstanceId()); // 写审计日志
@@ -48,8 +48,7 @@ public class LogoutProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        LogoutMessage xtermMessage = new GsonBuilder().create().fromJson(message, LogoutMessage.class);
-        return xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, LogoutMessage.class);
     }
 }

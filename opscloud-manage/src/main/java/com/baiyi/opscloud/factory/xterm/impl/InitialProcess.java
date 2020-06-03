@@ -39,13 +39,14 @@ public class InitialProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session,OcTerminalSession ocTerminalSession) {
-        InitialMessage xtermMessage = (InitialMessage) getXTermMessage(message);
+        InitialMessage xtermMessage = (InitialMessage) getMessage(message);
         OcUser ocUser =  userFacade.getOcUserBySession();
         BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
         if (!wrapper.isSuccess())
             return;
         Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
         boolean isAdmin = isOps(ocUser);
+        heartbeat(ocTerminalSession.getSessionId());
         for (String instanceId : xtermMessage.getInstanceIds()) {
             if (!serverTreeHostPatternMap.containsKey(instanceId))
                 continue;
@@ -57,9 +58,8 @@ public class InitialProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        InitialMessage xtermMessage = new GsonBuilder().create().fromJson(message, InitialMessage.class);
-        return xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, InitialMessage.class);
     }
 
 }

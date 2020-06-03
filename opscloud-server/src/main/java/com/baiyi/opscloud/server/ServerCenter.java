@@ -65,4 +65,24 @@ public class ServerCenter {
     }
 
 
+    public Boolean disable(OcServer ocServer) {
+        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
+        for (String key : serverContainer.keySet()) {
+            IServer iServer = serverContainer.get(key);
+            if (!iServer.disable(ocServer))
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
+
+
+    public Boolean enable(OcServer ocServer) {
+        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
+        for (String key : serverContainer.keySet()) {
+            IServer iServer = serverContainer.get(key);
+            if (!iServer.enable(ocServer))
+                return Boolean.FALSE;
+        }
+        return Boolean.TRUE;
+    }
 }

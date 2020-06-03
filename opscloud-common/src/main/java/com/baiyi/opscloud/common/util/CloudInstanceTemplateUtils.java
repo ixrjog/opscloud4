@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.common.util;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import org.yaml.snakeyaml.Yaml;
@@ -13,15 +13,15 @@ import org.yaml.snakeyaml.Yaml;
  */
 public class CloudInstanceTemplateUtils {
 
-    public static OcCloudInstanceTemplateVO.InstanceTemplate convert(String templateYAML) {
+    public static CloudInstanceTemplateVO.InstanceTemplate convert(String templateYAML) {
         Yaml yaml = new Yaml();
         Object result = yaml.load(templateYAML);
         try {
             Gson gson = new GsonBuilder().create();
-            OcCloudInstanceTemplateVO.InstanceTemplate it = gson.fromJson(JSON.toJSONString(result), OcCloudInstanceTemplateVO.InstanceTemplate.class);
+            CloudInstanceTemplateVO.InstanceTemplate it = gson.fromJson(JSON.toJSONString(result), CloudInstanceTemplateVO.InstanceTemplate.class);
             return it;
         } catch (Exception e) {
-            return  new OcCloudInstanceTemplateVO.InstanceTemplate();
+            return  new CloudInstanceTemplateVO.InstanceTemplate();
         }
     }
 }

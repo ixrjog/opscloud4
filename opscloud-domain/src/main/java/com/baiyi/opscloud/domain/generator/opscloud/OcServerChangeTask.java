@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_server_change_task")
 public class OcServerChangeTask {
@@ -14,6 +14,12 @@ public class OcServerChangeTask {
      */
     @Column(name = "task_id")
     private String taskId;
+
+    /**
+     * 服务器id
+     */
+    @Column(name = "server_id")
+    private Integer serverId;
 
     /**
      * 服务器组id
@@ -61,12 +67,18 @@ public class OcServerChangeTask {
      * 任务状态
      */
     @Column(name = "task_status")
-    private String taskStatus;
+    private Integer taskStatus;
 
-    @Column(name = "create_time")
+    @Column(name = "start_time")
+    private Date startTime;
+
+    @Column(name = "end_time")
+    private Date endTime;
+
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**
@@ -99,6 +111,24 @@ public class OcServerChangeTask {
      */
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    /**
+     * 获取服务器id
+     *
+     * @return server_id - 服务器id
+     */
+    public Integer getServerId() {
+        return serverId;
+    }
+
+    /**
+     * 设置服务器id
+     *
+     * @param serverId 服务器id
+     */
+    public void setServerId(Integer serverId) {
+        this.serverId = serverId;
     }
 
     /**
@@ -232,7 +262,7 @@ public class OcServerChangeTask {
      *
      * @return task_status - 任务状态
      */
-    public String getTaskStatus() {
+    public Integer getTaskStatus() {
         return taskStatus;
     }
 
@@ -241,8 +271,36 @@ public class OcServerChangeTask {
      *
      * @param taskStatus 任务状态
      */
-    public void setTaskStatus(String taskStatus) {
+    public void setTaskStatus(Integer taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    /**
+     * @return start_time
+     */
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    /**
+     * @param startTime
+     */
+    public void setStartTime(Date startTime) {
+        this.startTime = startTime;
+    }
+
+    /**
+     * @return end_time
+     */
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    /**
+     * @param endTime
+     */
+    public void setEndTime(Date endTime) {
+        this.endTime = endTime;
     }
 
     /**

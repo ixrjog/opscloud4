@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudServerVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import org.springframework.stereotype.Service;
@@ -29,10 +29,10 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     private OcCloudServerService ocCloudServerService;
 
     @Override
-    public DataTable<OcCloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
+    public DataTable<CloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
         DataTable<OcCloudServer> table = ocCloudServerService.queryOcCloudServerByParam(pageQuery);
-        List<OcCloudServerVO.CloudServer> page = BeanCopierUtils.copyListProperties(table.getData(), OcCloudServerVO.CloudServer.class);
-        DataTable<OcCloudServerVO.CloudServer> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<CloudServerVO.CloudServer> page = BeanCopierUtils.copyListProperties(table.getData(), CloudServerVO.CloudServer.class);
+        DataTable<CloudServerVO.CloudServer> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 

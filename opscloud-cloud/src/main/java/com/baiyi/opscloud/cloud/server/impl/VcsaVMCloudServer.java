@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.server.impl;
 
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.builder.OcCloudServerBuilder;
+import com.baiyi.opscloud.cloud.server.builder.CloudServerBuilder;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
@@ -59,12 +59,16 @@ public class VcsaVMCloudServer<T> extends BaseCloudServer<T> implements ICloudSe
     protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof VMInstance)) return null;
         VMInstance i = (VMInstance) instance;
-        return OcCloudServerBuilder.build(i, vcsaVM.getZone());
+        return CloudServerBuilder.build(i, vcsaVM.getZone());
     }
 
     @Override
     protected BusinessWrapper<Boolean> power(OcCloudServer ocCloudserver, Boolean action){
         return vcsaVM.power(ocCloudserver.getInstanceName(),action);
+    }
+
+    protected int getPowerStatus(String regionId, String instanceId) {
+        return -1;
     }
 
 }

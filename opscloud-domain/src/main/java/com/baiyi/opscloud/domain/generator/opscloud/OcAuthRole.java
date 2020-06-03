@@ -35,10 +35,10 @@ public class OcAuthRole {
     @Column(name = "resource_name")
     private String resourceName;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**

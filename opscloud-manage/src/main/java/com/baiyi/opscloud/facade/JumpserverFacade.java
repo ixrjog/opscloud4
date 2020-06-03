@@ -22,6 +22,13 @@ public interface JumpserverFacade {
      */
     BusinessWrapper<Boolean> syncUsers();
 
+    /**
+     * 同步用户
+     * @return
+     */
+    BusinessWrapper<Boolean> syncUserById(String id);
+
+
     BusinessWrapper<Boolean> setUserActive(String id);
 
     /**

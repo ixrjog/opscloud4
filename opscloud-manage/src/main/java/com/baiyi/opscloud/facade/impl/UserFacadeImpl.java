@@ -398,6 +398,19 @@ public class UserFacadeImpl implements UserFacade {
         return new BusinessWrapper<>(ErrorEnum.USER_RESIGNATION_ERROR);
     }
 
+    @Override
+    public BusinessWrapper<Boolean> beReinstatedUser(int userId) {
+        OcUser ocUser = ocUserService.queryOcUserById(userId);
+        // 禁用用户
+        Boolean result = accountCenter.active(ocUser, true);
+        if (result) {
+            ocUser.setIsActive(true);
+            ocUserService.updateOcUser(ocUser);
+            return BusinessWrapper.SUCCESS;
+        }
+        return new BusinessWrapper<>(ErrorEnum.USER_RESIGNATION_ERROR);
+    }
+
 
     private void syncUserPermission(OcUserVO.User user) {
         // OcUser ocUser= ocUserService.queryOcUserByUsername(user.getUsername());

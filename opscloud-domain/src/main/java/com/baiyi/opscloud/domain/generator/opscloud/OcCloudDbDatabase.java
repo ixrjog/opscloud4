@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_cloud_db_database")
 public class OcCloudDbDatabase {
@@ -60,10 +60,10 @@ Deleting：删除中
     @Column(name = "env_type")
     private Integer envType;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**

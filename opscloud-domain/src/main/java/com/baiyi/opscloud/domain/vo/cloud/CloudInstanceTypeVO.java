@@ -12,7 +12,7 @@ import java.util.Set;
  * @Date 2020/3/23 2:01 下午
  * @Version 1.0
  */
-public class OcCloudInstanceTypeVO {
+public class CloudInstanceTypeVO {
 
     @Data
     @NoArgsConstructor

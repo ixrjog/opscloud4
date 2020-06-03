@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.server;
 
+import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
 import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -28,6 +29,8 @@ public class ServerVO {
         private OcEnvVO.Env env;
 
         private ServerGroupVO.ServerGroup serverGroup;
+
+        private CloudServerVO.CloudServer cloudServer;
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;

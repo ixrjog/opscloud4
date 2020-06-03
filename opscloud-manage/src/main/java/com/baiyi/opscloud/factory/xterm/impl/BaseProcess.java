@@ -3,6 +3,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.*;
@@ -30,7 +31,7 @@ import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseProcess implements IXTermProcess, InitializingBean {
+public abstract class BaseProcess implements IXTermProcess, InitializingBean{
 
     @Resource
     protected UserFacade userFacade;
@@ -59,7 +60,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     @Resource
     protected RedisUtil redisUtil;
 
-    abstract protected BaseMessage getXTermMessage(String message);
+    abstract protected BaseMessage getMessage(String message);
 
     protected boolean isOps(OcUser ocUser) {
         return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
@@ -117,6 +118,10 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     protected void writeAuditLog(OcTerminalSession ocTerminalSession, String instanceId) {
         AuditLogHandler.writeAuditLog(ocTerminalSession.getSessionId(), instanceId);
+    }
+
+    protected void heartbeat(String sessionId){
+        redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60 * 1000L);
     }
 
     /**

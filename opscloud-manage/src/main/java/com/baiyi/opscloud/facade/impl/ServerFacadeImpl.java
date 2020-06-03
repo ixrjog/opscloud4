@@ -12,7 +12,10 @@ import com.baiyi.opscloud.decorator.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -25,7 +28,7 @@ import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
-import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -72,6 +75,32 @@ public class ServerFacadeImpl implements ServerFacade {
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
         return toServerDataTable(table);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> queryServerById(int id) {
+        OcServer ocServer = ocServerService.queryOcServerById(id);
+        if (ocServer == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
+        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
+        wrapper.setBody(getServerVO(ocServer));
+        return wrapper;
+    }
+
+    private ServerVO.Server getServerVO(OcServer ocServer) {
+        return serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class));
+    }
+
+
+    @Override
+    public BusinessWrapper<Boolean> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds) {
+        List<ServerVO.Server> result = Lists.newArrayList();
+        queryByServerByIds.getIds().forEach(e -> {
+            OcServer ocServer = ocServerService.queryOcServerById(e);
+            result.add(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
+        });
+        BusinessWrapper wrapper = new BusinessWrapper(result);
+        return wrapper;
     }
 
     @Override
@@ -193,33 +222,5 @@ public class ServerFacadeImpl implements ServerFacade {
         return BusinessWrapper.SUCCESS;
     }
 
-    /**
-     * 带列号
-     *
-     * @return
-     */
-    @Override
-    public String acqServerName(OcServer ocServer) {
-        OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
-        if (ocEnv == null || ocEnv.getEnvName().equals("prod")) {
-            return Joiner.on("-").join(ocServer.getName(), ocServer.getSerialNumber());
-        } else {
-            return Joiner.on("-").join(ocServer.getName(), ocEnv.getEnvName(), ocServer.getSerialNumber());
-        }
-    }
 
-    /**
-     * 不带列号
-     *
-     * @return
-     */
-    @Override
-    public String acqHostname(OcServer ocServer) {
-        OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
-        if (ocEnv == null || ocEnv.getEnvName().equals("prod")) {
-            return ocServer.getName();
-        } else {
-            return Joiner.on("-").join(ocServer.getName(), ocEnv.getEnvName());
-        }
-    }
 }

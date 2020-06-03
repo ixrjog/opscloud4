@@ -26,7 +26,7 @@ public interface ZabbixHostServer {
 
     List<ZabbixHostInterface> getHostInterfaceList(String hostid);
 
-    ZabbixHost updateHostStatus(String hostid, int status);
+    boolean updateHostStatus(String hostid, int status);
 
     boolean updateHostTemplates(String hostid, Map<String, String> templateMap);
 

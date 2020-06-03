@@ -5,9 +5,9 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBDatabaseParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudDBParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudDatabaseSlowLogVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBAccountVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBDatabaseVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudDBVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBAccountVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBDatabaseVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudDBVO;
 import com.baiyi.opscloud.facade.CloudDBFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -32,7 +32,7 @@ public class CloudDBController {
 
     @ApiOperation(value = "分页查询云数据库实例列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudDBVO.CloudDB>> fuzzyQueryCloudDBPage(@RequestBody @Valid CloudDBParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudDBVO.CloudDB>> fuzzyQueryCloudDBPage(@RequestBody @Valid CloudDBParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudDBFacade.fuzzyQueryCloudDBPage(pageQuery));
     }
 
@@ -50,7 +50,7 @@ public class CloudDBController {
 
     @ApiOperation(value = "云数据库实例账户授权")
     @PutMapping(value = "/account/privilege", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> privilegeCloudDBAccount(@RequestBody @Valid OcCloudDBAccountVO.PrivilegeAccount privilegeAccount) {
+    public HttpResult<Boolean> privilegeCloudDBAccount(@RequestBody @Valid CloudDBAccountVO.PrivilegeAccount privilegeAccount) {
         return new HttpResult<>(cloudDBFacade.privilegeAccount(privilegeAccount));
     }
 
@@ -62,13 +62,13 @@ public class CloudDBController {
 
     @ApiOperation(value = "分页查询云数据库列表")
     @PostMapping(value = "/database/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcCloudDBDatabaseVO.CloudDBDatabase>> fuzzyQueryCloudDBDatabasePage(@RequestBody @Valid CloudDBDatabaseParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<CloudDBDatabaseVO.CloudDBDatabase>> fuzzyQueryCloudDBDatabasePage(@RequestBody @Valid CloudDBDatabaseParam.PageQuery pageQuery) {
         return new HttpResult<>(cloudDBFacade.fuzzyQueryCloudDBDatabasePage(pageQuery));
     }
 
     @ApiOperation(value = "更新云数据库信息")
     @PutMapping(value = "/database/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateCloudDBDatabase(@RequestBody @Valid OcCloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase) {
+    public HttpResult<Boolean> updateCloudDBDatabase(@RequestBody @Valid CloudDBDatabaseVO.CloudDBDatabase cloudDBDatabase) {
         return new HttpResult<>(cloudDBFacade.updateBaseCloudDBDatabase(cloudDBDatabase));
     }
 

@@ -143,6 +143,8 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
                 usersUser = UsersUserBuilder.build(ocUser);
                 usersUser.setId(checkUsersUser.getId());
+                if (!StringUtils.isEmpty(checkUsersUser.getPublicKey())) // 写入publicKey
+                    usersUser.setPublicKey(checkUsersUser.getPublicKey());
                 usersUserService.updateUsersUser(usersUser);
             }
         }
@@ -173,7 +175,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
      */
     private String getAssetsNodeKey() {
         AssetsNode lastNode = assetsNodeService.queryAssetsNodeLastOne();
-        //jumpserverDao.getAssetsNodeLastOne();
         String[] keys = lastNode.getKey().split(":");
         if (keys.length == 1)
             return "1:1";

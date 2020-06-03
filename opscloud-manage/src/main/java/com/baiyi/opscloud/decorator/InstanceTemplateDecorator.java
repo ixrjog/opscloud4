@@ -5,8 +5,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceType;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpc;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTypeVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTypeVO;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTypeService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcSecurityGroupService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcService;
@@ -42,25 +42,25 @@ public class InstanceTemplateDecorator {
     private OcCloudVpcService ocCloudVpcService;
 
 
-    private OcCloudInstanceTemplateVO.InstanceTemplate builder(OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
-        OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate = new OcCloudInstanceTemplateVO.InstanceTemplate();
+    private CloudInstanceTemplateVO.InstanceTemplate builder(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+        CloudInstanceTemplateVO.InstanceTemplate instanceTemplate = new CloudInstanceTemplateVO.InstanceTemplate();
         instanceTemplate.setCloudType(cloudInstanceTemplate.getCloudType());
         if (!StringUtils.isEmpty(cloudInstanceTemplate.getRegionId()))
             instanceTemplate.setRegionId(cloudInstanceTemplate.getRegionId());
         return instanceTemplate;
     }
 
-    public OcCloudInstanceTemplateVO.InstanceTemplate decorator(OcCloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
-        OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate = cloudInstanceTemplate.getInstanceTemplate();
+    public CloudInstanceTemplateVO.InstanceTemplate decorator(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+        CloudInstanceTemplateVO.InstanceTemplate instanceTemplate = cloudInstanceTemplate.getInstanceTemplate();
         if (instanceTemplate == null)
             return builder(cloudInstanceTemplate);
 
         instanceTemplate.setRegionId(cloudInstanceTemplate.getRegionId());
         // 重新组装
         if (instanceTemplate.getInstance() != null && !StringUtils.isEmpty(instanceTemplate.getInstance().getTypeId())) {
-            OcCloudInstanceTypeVO.CloudInstanceType cloudInstanceType = getCloudInstanceType(instanceTemplate);
+            CloudInstanceTypeVO.CloudInstanceType cloudInstanceType = getCloudInstanceType(instanceTemplate);
             if (cloudInstanceType != null) {
-                OcCloudInstanceTemplateVO.Instance instance = new OcCloudInstanceTemplateVO.Instance();
+                CloudInstanceTemplateVO.Instance instance = new CloudInstanceTemplateVO.Instance();
                 instance.setCpuCoreCount(cloudInstanceType.getCpuCoreCount());
                 instance.setMemorySize(cloudInstanceType.getMemorySize());
                 instance.setTypeFamily(cloudInstanceType.getInstanceTypeFamily());
@@ -71,7 +71,7 @@ public class InstanceTemplateDecorator {
             }
         }
         // 组装虚拟交换机
-        List<OcCloudInstanceTemplateVO.VSwitch> vswitchs = getVswitchs(cloudInstanceTemplate.getVswitchChecked());
+        List<CloudInstanceTemplateVO.VSwitch> vswitchs = getVswitchs(cloudInstanceTemplate.getVswitchChecked());
         if (!vswitchs.isEmpty())
             instanceTemplate.setVswitchs(getVswitchs(cloudInstanceTemplate.getVswitchChecked()));
         // 组装vpc
@@ -94,14 +94,14 @@ public class InstanceTemplateDecorator {
         return instanceTemplate;
     }
 
-    private List<OcCloudInstanceTemplateVO.VSwitch> getVswitchs(List<String> vswitchChecked) {
-        List<OcCloudInstanceTemplateVO.VSwitch> vswitchs = Lists.newArrayList();
+    private List<CloudInstanceTemplateVO.VSwitch> getVswitchs(List<String> vswitchChecked) {
+        List<CloudInstanceTemplateVO.VSwitch> vswitchs = Lists.newArrayList();
         if (vswitchChecked == null) return vswitchs;
         for (String vswitchId : vswitchChecked) {
             if (vswitchId == null) continue;
             OcCloudVpcVswitch ocCloudVpcVswitch = ocCloudVpcVswitchService.queryOcCloudVpcVswitchByVswitchId(vswitchId);
             if (ocCloudVpcVswitch == null) continue;
-            OcCloudInstanceTemplateVO.VSwitch vSwitch = new OcCloudInstanceTemplateVO.VSwitch();
+            CloudInstanceTemplateVO.VSwitch vSwitch = new CloudInstanceTemplateVO.VSwitch();
             vSwitch.setVswitchId(ocCloudVpcVswitch.getVswitchId());
             vSwitch.setVswitchName(ocCloudVpcVswitch.getVswitchName());
             vSwitch.setZoneId(ocCloudVpcVswitch.getZoneId());
@@ -110,14 +110,14 @@ public class InstanceTemplateDecorator {
         return vswitchs;
     }
 
-    private OcCloudInstanceTypeVO.CloudInstanceType getCloudInstanceType(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate) {
+    private CloudInstanceTypeVO.CloudInstanceType getCloudInstanceType(CloudInstanceTemplateVO.InstanceTemplate instanceTemplate) {
         OcCloudInstanceType ocCloudInstanceType = new OcCloudInstanceType();
         ocCloudInstanceType.setCloudType(instanceTemplate.getCloudType());
         ocCloudInstanceType.setInstanceTypeId(instanceTemplate.getInstance().getTypeId());
         ocCloudInstanceType = ocCloudInstanceTypeService.queryOcCloudInstanceByUniqueKey(ocCloudInstanceType);
         if (ocCloudInstanceType == null)
-            return new OcCloudInstanceTypeVO.CloudInstanceType();
-        OcCloudInstanceTypeVO.CloudInstanceType cloudInstanceType = BeanCopierUtils.copyProperties(ocCloudInstanceType, OcCloudInstanceTypeVO.CloudInstanceType.class);
+            return new CloudInstanceTypeVO.CloudInstanceType();
+        CloudInstanceTypeVO.CloudInstanceType cloudInstanceType = BeanCopierUtils.copyProperties(ocCloudInstanceType, CloudInstanceTypeVO.CloudInstanceType.class);
         return cloudInstanceTypeDecorator.decorator(cloudInstanceType, instanceTemplate.getRegionId(), 1);
     }
 }

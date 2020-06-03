@@ -37,7 +37,7 @@ public class DuplicateSessionProcess extends BaseProcess implements IXTermProces
 
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
-        DuplicateSessionMessage baseMessage = (DuplicateSessionMessage) getXTermMessage(message);
+        DuplicateSessionMessage baseMessage = (DuplicateSessionMessage) getMessage(message);
 
         OcUser ocUser =  userFacade.getOcUserBySession();
 
@@ -53,9 +53,8 @@ public class DuplicateSessionProcess extends BaseProcess implements IXTermProces
 
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        DuplicateSessionMessage xtermMessage = new GsonBuilder().create().fromJson(message, DuplicateSessionMessage.class);
-        return xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, DuplicateSessionMessage.class);
     }
 
 }

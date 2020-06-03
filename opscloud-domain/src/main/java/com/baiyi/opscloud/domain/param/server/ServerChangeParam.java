@@ -23,13 +23,17 @@ public class ServerChangeParam {
         @NotNull
         private Integer serverGroupId;
 
-        @ApiModelProperty(value = "上线/下线数量")
+        @ApiModelProperty(value = "服务器id")
         @NotNull
-        private Integer number;
+        private Integer serverId;
 
-        @ApiModelProperty(value = "任务id")
+        @ApiModelProperty(value = "服务器id")
         @NotNull
         private String taskId;
+
+        @ApiModelProperty(value = "变更类型")
+        @NotNull
+        private String changeType;
 
     }
 

@@ -33,14 +33,13 @@ public class BatchCommandProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
-        BatchCommandMessage xtermMessage = (BatchCommandMessage) getXTermMessage(message);
+        BatchCommandMessage xtermMessage = (BatchCommandMessage) getMessage(message);
         JSchSessionMap.setBatch(ocTerminalSession.getSessionId(), xtermMessage.getIsBatch());
     }
 
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        BatchCommandMessage xtermMessage = new GsonBuilder().create().fromJson(message, BatchCommandMessage.class);
-        return xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, BatchCommandMessage.class);
     }
 
 }

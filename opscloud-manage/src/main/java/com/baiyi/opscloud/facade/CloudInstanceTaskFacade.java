@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTask;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTaskVO;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTaskVO;
 public interface CloudInstanceTaskFacade {
     void doCreateInstanceTask(OcCloudInstanceTask ocCloudInstanceTask, CreateCloudInstanceBO createCloudInstanceBO);
 
-    OcCloudInstanceTaskVO.CloudInstanceTask queryCloudInstanceTask(int taskId);
+    CloudInstanceTaskVO.CloudInstanceTask queryCloudInstanceTask(int taskId);
 
-    OcCloudInstanceTaskVO.CloudInstanceTask queryLastCloudInstanceTask(int templateId);
+    CloudInstanceTaskVO.CloudInstanceTask queryLastCloudInstanceTask(int templateId);
 }

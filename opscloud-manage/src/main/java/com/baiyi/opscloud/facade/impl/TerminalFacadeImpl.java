@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.decorator.TerminalSessionDecorator;
 import com.baiyi.opscloud.decorator.TerminalSessionInstanceDecorator;
 import com.baiyi.opscloud.domain.DataTable;
@@ -13,7 +14,6 @@ import com.baiyi.opscloud.facade.TerminalFacade;
 import com.baiyi.opscloud.service.terminal.OcTerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.OcTerminalSessionService;
 import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
-import com.google.common.base.Joiner;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -62,7 +62,7 @@ public class TerminalFacadeImpl implements TerminalFacade {
     public void closeInvalidSession() {
         List<OcTerminalSession> list = ocTerminalSessionService.queryOcTerminalSessionByActive();
         list.forEach(e -> {
-            String key = Joiner.on("#").join(e.getSessionId(), "heartbeat");
+            String key = CacheKeyUtils.getTermSessionHeartbeatKey(e.getSessionId());
             if (!redisUtil.hasKey(key)) {
                 List<OcTerminalSessionInstance> instanceList = ocTerminalSessionInstanceService.queryOcTerminalSessionInstanceBySessionId(e.getSessionId());
                 instanceList.forEach(i -> {

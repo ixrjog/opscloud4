@@ -167,9 +167,8 @@ public class ZabbixHost extends BaseServer implements IServer {
     private Boolean updateHostStatus(OcServer ocServer, int status) {
         com.baiyi.opscloud.zabbix.entry.ZabbixHost host = zabbixHostServer.getHost(getManageIp(ocServer));
         // 主机不存在
-        if (host == null) return Boolean.FALSE;
-        com.baiyi.opscloud.zabbix.entry.ZabbixHost preHost = zabbixHostServer.updateHostStatus(host.getHostid(), status);
-        return preHost != null;
+        if (host == null) return Boolean.TRUE;
+        return zabbixHostServer.updateHostStatus(host.getHostid(), status);
     }
 
     /**

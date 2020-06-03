@@ -28,14 +28,14 @@ import java.util.Map;
  * @Date 2019/11/27 4:30 PM
  * @Version 1.0
  */
-public class OcCloudServerBuilder {
+public class CloudServerBuilder {
 
     public static final String ECS_SYSTEM_DISK_TYPE = "system";
     public static final String ECS_DATA_DISK_TYPE = "data";
 
 
     public static OcCloudServer build(VMInstance instance, String zone) {
-        OcCloudServerBO ocCloudserverBO = OcCloudServerBO.builder()
+        CloudServerBO ocCloudserverBO = CloudServerBO.builder()
                 .instanceName(instance.getConfigInfoName())
                 .serverName(instance.getConfigInfoName())
                 .zone(zone)
@@ -79,7 +79,7 @@ public class OcCloudServerBuilder {
      * @return
      */
     public static OcCloudServer build(ESXiInstance esxiInstance, String zone) {
-        OcCloudServerBO ocCloudServerBO = OcCloudServerBO.builder()
+        CloudServerBO ocCloudServerBO = CloudServerBO.builder()
                 .instanceName(esxiInstance.getHostSummary().config.name)
                 .serverName(esxiInstance.getHostSummary().config.name)
                 .zone(zone)
@@ -121,13 +121,14 @@ public class OcCloudServerBuilder {
     public static OcCloudServer build(AwsEC2Instance awsEC2Instance, String instanceDetail) {
         com.amazonaws.services.ec2.model.Instance instance = awsEC2Instance.getInstance();
         Map<String, Integer> volumeSizeMap = AwsUtils.getEC2VolumeSizeMap(awsEC2Instance.getVolumeList());
-        OcCloudServerBO ocCloudServerBO = OcCloudServerBO.builder()
+        CloudServerBO ocCloudServerBO = CloudServerBO.builder()
                 .systemDiskSize(volumeSizeMap.get("systemDiskSize"))
                 .dataDiskSize(volumeSizeMap.get("dataDiskSize"))
                 .createdTime(instance.getLaunchTime())
                 .vpcId(instance.getVpcId())
                 .instanceName(AwsUtils.getEC2InstanceName(instance))
                 .instanceType(instance.getInstanceType())
+
                 .zone(instance.getPlacement().getAvailabilityZone())
                 .instanceId(instance.getInstanceId())
                 .cpu(instance.getCpuOptions().getCoreCount() * instance.getCpuOptions().getThreadsPerCore())
@@ -169,7 +170,7 @@ public class OcCloudServerBuilder {
         String vpcId = "";
         if (instance.getVpcAttributes() != null)
             vpcId = instance.getVpcAttributes().getVpcId();
-        OcCloudServerBO ocCloudServerBO = OcCloudServerBO.builder()
+        CloudServerBO ocCloudServerBO = CloudServerBO.builder()
                 .instanceType(instance.getInstanceType())
                 .instanceName(instance.getInstanceName())
                 .instanceId(instance.getInstanceId())
@@ -185,6 +186,7 @@ public class OcCloudServerBuilder {
                 .createdTime(TimeUtils.acqGmtDate(instance.getCreationTime()))
                 .vpcId(vpcId)
                 .comment(instance.getDescription())
+                .regionId(instance.getRegionId())
                 .zone(instance.getZoneId())
                 .imageId(instance.getImageId())
                 .renewalStatus(aliyunECSInstance.getRenewalStatus())
@@ -223,7 +225,7 @@ public class OcCloudServerBuilder {
                     break;
                 }
             }
-        OcCloudServerBO ocCloudserverBO = OcCloudServerBO.builder()
+        CloudServerBO ocCloudserverBO = CloudServerBO.builder()
                 .instanceType("ZabbixHost")
                 .instanceName(hostInstance.getHost().getName())
                 .instanceId(hostInstance.getHost().getHostid())
@@ -238,7 +240,7 @@ public class OcCloudServerBuilder {
         return covert(ocCloudserverBO);
     }
 
-    private static OcCloudServer covert(OcCloudServerBO ocCloudserverBO){
+    private static OcCloudServer covert(CloudServerBO ocCloudserverBO){
         return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudServer.class);
     }
 

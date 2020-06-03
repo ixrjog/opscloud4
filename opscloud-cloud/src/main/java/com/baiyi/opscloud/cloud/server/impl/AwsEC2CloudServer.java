@@ -3,7 +3,7 @@ package com.baiyi.opscloud.cloud.server.impl;
 import com.amazonaws.services.ec2.model.Instance;
 import com.baiyi.opscloud.aws.ec2.AwsEC2;
 import com.baiyi.opscloud.cloud.server.ICloudServer;
-import com.baiyi.opscloud.cloud.server.builder.OcCloudServerBuilder;
+import com.baiyi.opscloud.cloud.server.builder.CloudServerBuilder;
 import com.baiyi.opscloud.cloud.server.decorator.EC2InstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AwsEC2Instance;
 import com.baiyi.opscloud.cloud.server.util.AwsUtils;
@@ -63,9 +63,12 @@ public class AwsEC2CloudServer<T> extends BaseCloudServer<T> implements ICloudSe
     protected OcCloudServer getCloudServer(T instance) {
         if (!(instance instanceof AwsEC2Instance)) return null;
         AwsEC2Instance i = (AwsEC2Instance) instance;
-        return OcCloudServerBuilder.build(i, getInstanceDetail(instance));
+        return CloudServerBuilder.build(i, getInstanceDetail(instance));
     }
 
+    protected int getPowerStatus(String regionId, String instanceId) {
+       return -1;
+    }
 
     @Override
     protected int getCloudServerType() {

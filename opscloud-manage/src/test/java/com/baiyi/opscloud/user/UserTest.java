@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.junit.jupiter.api.Test;
@@ -22,6 +23,9 @@ public class UserTest extends BaseUnit {
     private OcUserService ocUserService;
 
     @Resource
+    private UserFacade userFacade;
+
+    @Resource
     private UserPermissionFacade userPermissionFacade;
 
     @Test
@@ -32,7 +36,7 @@ public class UserTest extends BaseUnit {
         pageQuery.setPage(1);
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
         System.err.println(JSON.toJSONString(table));
-        for(OcUser ocUser : table.getData()){
+        for (OcUser ocUser : table.getData()) {
             ocUser.setUuid(UUIDUtils.getUUID());
             ocUserService.updateOcUser(ocUser);
         }
@@ -40,11 +44,38 @@ public class UserTest extends BaseUnit {
     }
 
     @Test
-    void accessLevelTest(){
+    void accessLevelTest() {
         OcUser ocUser = ocUserService.queryOcUserByUsername("xujian");
         int accessLevel = userPermissionFacade.getUserAccessLevel(ocUser);
         System.err.println(JSON.toJSONString(accessLevel));
     }
 
+    @Test
+    void aa() {
+        String userStr =
+
+
+                "shiluo\n" +
+             
+                "zuobing";
+
+        String[] users = userStr.split("\\n");
+        for (String user : users) {
+            System.err.println(user);
+            OcUser ocUser =
+                    ocUserService.queryOcUserByUsername(user);
+            if (ocUser == null) continue;
+
+            userFacade.retireUser(ocUser.getId());
+
+        }
+
+    }
+
+    @Test
+    void beReinstatedUserTest() {
+       userFacade.beReinstatedUser(993);
+
+    }
 
 }

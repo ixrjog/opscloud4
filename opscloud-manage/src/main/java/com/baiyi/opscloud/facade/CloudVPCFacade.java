@@ -5,10 +5,10 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam;
 import com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudInstanceTemplateVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCSecurityGroupVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVPCVO;
-import com.baiyi.opscloud.domain.vo.cloud.OcCloudVSwitchVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVPCSecurityGroupVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVPCVO;
+import com.baiyi.opscloud.domain.vo.cloud.CloudVSwitchVO;
 
 import java.util.List;
 
@@ -19,13 +19,13 @@ import java.util.List;
  */
 public interface CloudVPCFacade {
 
-    DataTable<OcCloudVPCVO.CloudVpc> fuzzyQueryCloudVPCPage(CloudVPCParam.PageQuery pageQuery);
+    DataTable<CloudVPCVO.CloudVpc> fuzzyQueryCloudVPCPage(CloudVPCParam.PageQuery pageQuery);
 
-    DataTable<OcCloudVPCVO.CloudVpc> queryCloudVPCPage(CloudVPCParam.PageQuery pageQuery);
+    DataTable<CloudVPCVO.CloudVpc> queryCloudVPCPage(CloudVPCParam.PageQuery pageQuery);
 
-    DataTable<OcCloudVPCSecurityGroupVO.SecurityGroup> queryCloudVPCSecurityGroupPage(CloudVPCSecurityGroupParam.PageQuery pageQuery);
+    DataTable<CloudVPCSecurityGroupVO.SecurityGroup> queryCloudVPCSecurityGroupPage(CloudVPCSecurityGroupParam.PageQuery pageQuery);
 
-    DataTable<OcCloudVSwitchVO.VSwitch> queryCloudVPCVSwitchPage(CloudVPCVSwitchParam.PageQuery pageQuery);
+    DataTable<CloudVSwitchVO.VSwitch> queryCloudVPCVSwitchPage(CloudVPCVSwitchParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> syncCloudVPCByKey(String key);
 
@@ -37,5 +37,5 @@ public interface CloudVPCFacade {
 
     BusinessWrapper<Boolean> setCloudVPCVSwitchActive(int id);
 
-    List<OcCloudVSwitchVO.VSwitch> updateOcCloudVpcVSwitch(OcCloudInstanceTemplateVO.InstanceTemplate instanceTemplate, List<OcCloudInstanceTemplateVO.VSwitch> vswitchList);
+    List<CloudVSwitchVO.VSwitch> updateOcCloudVpcVSwitch(CloudInstanceTemplateVO.InstanceTemplate instanceTemplate, List<CloudInstanceTemplateVO.VSwitch> vswitchList);
 }

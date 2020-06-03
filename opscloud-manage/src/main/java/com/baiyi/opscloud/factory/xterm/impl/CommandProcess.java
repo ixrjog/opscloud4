@@ -8,7 +8,9 @@ import com.baiyi.opscloud.xterm.message.CommandMessage;
 import com.baiyi.opscloud.xterm.model.JSchSession;
 import com.baiyi.opscloud.xterm.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.websocket.Session;
 import java.util.Map;
@@ -19,6 +21,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
+@Slf4j
 public class CommandProcess extends BaseProcess implements IXTermProcess {
 
     /**
@@ -34,25 +37,26 @@ public class CommandProcess extends BaseProcess implements IXTermProcess {
 
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
-        CommandMessage xtermMessage = (CommandMessage) getXTermMessage(message);
-
+        CommandMessage xtermMessage = (CommandMessage) getMessage(message);
+        if (StringUtils.isEmpty(xtermMessage.getData()))
+            return;
         if (!isBatch(ocTerminalSession)) {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
-            jSchSession.getCommander().print(xtermMessage.getData());
-           //  List<SessionOutput> list = SessionOutputUtil.getOutput(session.getId());
+            printCommand(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId(), xtermMessage.getData());
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId());
-            for (String instanceId : sessionMap.keySet()) {
-                JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), instanceId);
-                jSchSession.getCommander().print(xtermMessage.getData());
-            }
+            sessionMap.keySet().forEach(e -> printCommand(ocTerminalSession.getSessionId(), e, xtermMessage.getData()));
         }
     }
 
+    private void printCommand(String sessionId, String instanceId, String cmd) {
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(sessionId, instanceId);
+        if (jSchSession == null) return;
+        jSchSession.getCommander().print(cmd);
+    }
+
     @Override
-    protected BaseMessage getXTermMessage(String message) {
-        CommandMessage xtermMessage = new GsonBuilder().create().fromJson(message, CommandMessage.class);
-        return xtermMessage;
+    protected BaseMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, CommandMessage.class);
     }
 
 }

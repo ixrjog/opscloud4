@@ -87,6 +87,8 @@ public class UserSettingFacadeImpl implements UserSettingFacade, InitializingBea
         Map<String, String> xtermSettingGroup = Maps.newHashMap();
         xtermSettingGroup.put("XTERM_FOREGROUND", "#FFFFFF"); // 字体
         xtermSettingGroup.put("XTERM_BACKGROUND", "#5b5d66");  // 背景色
+        xtermSettingGroup.put("XTERM_ROWS", "30");  // 终端行数
+        xtermSettingGroup.put("XTERM_LAYOUT", "0");  // 终端窗口布局
         settingGroupMap.put(UserSettingGroup.XTERM.getName(), xtermSettingGroup);
     }
 

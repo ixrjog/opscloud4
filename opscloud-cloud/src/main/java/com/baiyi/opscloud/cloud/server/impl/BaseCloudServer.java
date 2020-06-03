@@ -280,9 +280,20 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     }
 
     @Override
+    public int queryPowerStatus(Integer id) {
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerById(id);
+        int powerStatus = getPowerStatus(ocCloudServer.getRegionId(), ocCloudServer.getInstanceId());
+        ocCloudServer.setPowerStatus(powerStatus);
+        ocCloudServerService.updateOcCloudServer(ocCloudServer);
+        return powerStatus;
+    }
+
+    abstract int getPowerStatus(String regionId, String instanceId);
+
+    @Override
     public void offline(int serverId) {
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(getCloudServerType(), serverId);
-        if(ocCloudServer == null) return;
+        if (ocCloudServer == null) return;
         ocCloudServer.setServerStatus(CloudServerStatus.OFFLINE.getStatus());
         ocCloudServerService.updateOcCloudServer(ocCloudServer);
     }

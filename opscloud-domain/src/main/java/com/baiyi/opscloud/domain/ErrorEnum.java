@@ -73,7 +73,7 @@ public enum ErrorEnum {
     SERVER_TASK_NOT_EXIST(11007, "服务器任务不存在！"),
     SERVER_TASK_MEMBER_NOT_EXIST(11007, "服务器子任务不存在！"),
     SERVER_TASK_HAS_FINALIIZED_AND_CANNOT_BE_MODIFIED(11007, "任务已经结束！"),
-
+    SERVER_TASK_TIMEOUT(11007, "任务超时！"),
     // serverGrooup
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),
     SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器组名称不合规！"),
@@ -161,8 +161,11 @@ public enum ErrorEnum {
 
     KEYBOX_PUBLIC_KEY_IS_EMPTY(60001, "公钥不能为空！"),
     KEYBOX_PRIVATE_KEY_IS_EMPTY(60001, "私钥不能为空！"),
-    KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！")
+    KEYBOX_PASSPHRASE_IS_EMPTY(60001, "密码不能为空！"),
 
+    SERVER_CHANGE_TASK_RUNNING(60001, "当前服务器变更任务执行中！"),
+    SERVER_CHANGE_TASK_RESUBMISSION(60001, "当前服务器变更任务重复提交！"),
+    SERVER_CHANGE_TASK_GROUP_ID_INCORRECT(60001, "服务器组id不正确！")
     ;
 
     private int code;
