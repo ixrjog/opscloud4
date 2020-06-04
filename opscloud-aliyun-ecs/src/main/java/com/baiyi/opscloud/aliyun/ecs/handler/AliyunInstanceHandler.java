@@ -93,15 +93,11 @@ public class AliyunInstanceHandler {
         try {
             CreateInstanceResponse response
                     = client.getAcsResponse(createInstanceRequest);
-            BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-            wrapper.setBody(response.getInstanceId());
-            return wrapper;
+            return new BusinessWrapper(response.getInstanceId());
         } catch (ServerException e) {
-            BusinessWrapper wrapper = new BusinessWrapper(35000, e.getErrCode());
-            return wrapper;
+            return new BusinessWrapper(35000, e.getErrCode());
         } catch (ClientException e) {
-            BusinessWrapper wrapper = new BusinessWrapper(35000, e.getErrCode());
-            return wrapper;
+            return new BusinessWrapper(35000, e.getErrCode());
         }
     }
 

@@ -52,9 +52,7 @@ public abstract class BaseExecutor implements InitializingBean, IAnsibleExecutor
     }
 
     protected BusinessWrapper<Boolean> getResultWrapper(OcServerTask ocServerTask) {
-        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-        wrapper.setBody(ocServerTask);
-        return wrapper;
+        return new BusinessWrapper(ocServerTask);
     }
 
     protected BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
@@ -62,9 +60,7 @@ public abstract class BaseExecutor implements InitializingBean, IAnsibleExecutor
         if (!redisUtil.hasKey(key))
             return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);
         Map<String, String> serverTreeHostPatternMap = (Map<String, String>) redisUtil.get(key);
-        BusinessWrapper wrapper = new BusinessWrapper(Boolean.TRUE);
-        wrapper.setBody(serverTreeHostPatternMap);
-        return wrapper;
+        return new BusinessWrapper(serverTreeHostPatternMap);
     }
 
     // public abstract BusinessWrapper<Boolean> executorByParam(T executorParam);

@@ -148,9 +148,10 @@
        oc_server_change_task
        oc_server_change_task_flow
        oc_server_group_property
+       oc_setting
        -->
 
-        <table tableName="oc_server_group_property">
+        <table tableName="oc_setting">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

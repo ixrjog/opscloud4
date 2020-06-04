@@ -120,9 +120,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
         } else {
             ocCloudInstanceTemplateService.updateOcCloudInstanceTemplate(pre);
         }
-        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-        wrapper.setBody(cloudInstanceTemplateDecorator.decorator(pre));
-        return wrapper;
+        return new BusinessWrapper(cloudInstanceTemplateDecorator.decorator(pre));
     }
 
     @Override
@@ -192,9 +190,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
         } else {
             ocCloudInstanceTemplateService.updateOcCloudInstanceTemplate(pre);
         }
-        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-        wrapper.setBody(cloudInstanceTemplateDecorator.decorator(pre));
-        return wrapper;
+        return new BusinessWrapper(cloudInstanceTemplateDecorator.decorator(pre));
     }
 
     @Override
