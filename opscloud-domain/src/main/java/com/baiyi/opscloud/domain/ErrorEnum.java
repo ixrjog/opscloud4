@@ -78,6 +78,9 @@ public enum ErrorEnum {
     SERVERGROUP_NAME_ALREADY_EXIST(12001, "服务器组名称已存在！"),
     SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES(12002, "服务器组名称不合规！"),
     SERVERGROUP_NOT_EXIST(12003, "服务器组不存在！"),
+    SERVERGROUP_ID_EMPTY(12003, "服务器组Id为空！"),
+    SERVERGROUP_PROPERTY_ENV_TYPE_EMPTY(12003, "服务器组扩展属性环境为空！"),
+    SERVERGROUP_PROPERTY_KV_EMPTY(12003, "服务器组扩展属性键/值为空！"),
     SERVERGROUP_HAS_USED(12004, "服务器组正在使用！"),
     // serverGroupType
     SERVERGROUP_TYPE_NAME_ALREADY_EXIST(12001, "服务器组类型名称已存在！"),

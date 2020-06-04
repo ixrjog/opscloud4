@@ -146,9 +146,11 @@
        oc_terminal_session
        oc_terminal_session_instance
        oc_server_change_task
-       oc_server_change_task_flow  -->
+       oc_server_change_task_flow
+       oc_server_group_property
+       -->
 
-        <table tableName="oc_server_change_task_flow">
+        <table tableName="oc_server_group_property">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

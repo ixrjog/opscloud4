@@ -14,14 +14,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
-import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
-import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
-import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
-import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.server.*;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
+import com.baiyi.opscloud.service.server.OcServerGroupPropertyService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerGroupTypeService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -29,6 +27,7 @@ import com.baiyi.opscloud.service.user.OcUserService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -71,7 +70,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     private AttributeAnsible attributeAnsible;
 
     @Resource
-    private ServerFacade serverFacade;
+    private OcServerGroupPropertyService ocServerGroupPropertyService;
 
     @Resource
     private RedisUtil redisUtil;
@@ -245,6 +244,50 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
+    public Map<Integer, Map<String, String>> queryServerGroupPropertyMap(int id) {
+        Map<Integer, Map<String, String>> propertyEnvMap = Maps.newHashMap();
+        List<OcServerGroupProperty> serverGroupProperties = ocServerGroupPropertyService.queryOcServerGroupPropertyByServerGroupId(id);
+        serverGroupProperties.forEach(e -> {
+            Map<String, String> propertyMap = propertyEnvMap.get(e.getEnvType());
+            if (propertyMap == null)
+                propertyMap = Maps.newHashMap();
+            propertyMap.put(e.getPropertyName(), e.getPropertyValue());
+            propertyEnvMap.put(e.getEnvType(), propertyMap);
+        });
+        return propertyEnvMap;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveServerGroupProperty(ServerGroupPropertyVO.ServerGroupProperty serverGroupProperty) {
+        if (serverGroupProperty.getEnvType() == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_PROPERTY_ENV_TYPE_EMPTY);
+        if (StringUtils.isEmpty(serverGroupProperty.getPropertyName()) || StringUtils.isEmpty(serverGroupProperty.getPropertyValue()))
+            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_PROPERTY_KV_EMPTY);
+        if (IDUtils.isEmpty(serverGroupProperty.getServerGroupId())) {
+            return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_ID_EMPTY);
+        } else {
+            if (ocServerGroupService.queryOcServerGroupById(serverGroupProperty.getServerGroupId()) == null)
+                return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
+        }
+
+        OcServerGroupProperty pre = BeanCopierUtils.copyProperties(serverGroupProperty, OcServerGroupProperty.class);
+        OcServerGroupProperty ocServerGroupProperty = ocServerGroupPropertyService.queryOcServerGroupPropertyByUniqueKey(pre);
+        if (ocServerGroupProperty == null) {
+            ocServerGroupPropertyService.addOcServerGroupProperty(pre);
+        } else {
+            pre.setId(ocServerGroupProperty.getId());
+            ocServerGroupPropertyService.updateOcServerGroupProperty(pre);
+        }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delServerGroupPropertyById(int id) {
+        ocServerGroupPropertyService.deleteOcServerGroupPropertyById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
     public BusinessWrapper<Boolean> saveServerGroupAttribute(ServerAttributeVO.ServerAttribute serverAttribute) {
         return serverAttributeFacade.saveServerAttribute(serverAttribute);
     }
@@ -265,7 +308,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         int treeSize = 0;
         for (OcServerGroup ocServerGroup : serverGroupList) {
             Map<String, List<OcServer>> serverGroupMap = attributeAnsible.grouping(ocServerGroup);
-            treeSize += getServerGroupMapSize( serverGroupMap );
+            treeSize += getServerGroupMapSize(serverGroupMap);
             // 组装缓存
             assembleServerTreeHostPatternMap(serverTreeHostPatternMap, serverGroupMap);
             treeList.add(serverTreeDecorator.decorator(ocServerGroup, serverGroupMap));
@@ -289,17 +332,17 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         }
     }
 
-    private int getServerGroupMapSize(Map<String, List<OcServer>> serverGroupMap ){
-        int size =0;
-        if(serverGroupMap.isEmpty())
+    private int getServerGroupMapSize(Map<String, List<OcServer>> serverGroupMap) {
+        int size = 0;
+        if (serverGroupMap.isEmpty())
             return size;
-        for(String key:serverGroupMap.keySet())
+        for (String key : serverGroupMap.keySet())
             size += serverGroupMap.get(key).size();
         return size;
     }
 
     @Override
-    public  BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
+    public BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), uuid);
         if (!redisUtil.hasKey(key))
             return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);

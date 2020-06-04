@@ -42,7 +42,7 @@ public class ServerController {
 
     @ApiOperation(value = "批量查询server列表")
     @PostMapping(value = "/ids/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> queryServerByIds(@RequestBody @Valid ServerParam.QueryByServerIds queryByServerByIds) {
+    public HttpResult<Boolean> queryServerByIds(@RequestBody ServerParam.QueryByServerIds queryByServerByIds) {
         return new HttpResult<>(serverFacade.queryServerByIds(queryByServerByIds));
     }
 
