@@ -1,7 +1,12 @@
 package com.baiyi.opscloud.service.oc.impl;
 
+import com.baiyi.opscloud.domain.generator.opscloud.OcSetting;
+import com.baiyi.opscloud.mapper.opscloud.OcSettingMapper;
 import com.baiyi.opscloud.service.oc.OcSettingService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
+
+import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -10,4 +15,15 @@ import org.springframework.stereotype.Service;
  */
 @Service
 public class OcSettingServiceImpl implements OcSettingService {
+
+    @Resource
+    private OcSettingMapper ocSettingMapper;
+
+    @Override
+    public OcSetting queryOcSettingByName(String name) {
+        Example example = new Example(OcSetting.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", name);
+        return ocSettingMapper.selectOneByExample(example);
+    }
 }

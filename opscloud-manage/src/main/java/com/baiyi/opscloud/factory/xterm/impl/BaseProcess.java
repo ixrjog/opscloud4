@@ -2,6 +2,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.base.OcSettingName;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
@@ -21,8 +22,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
 import java.util.Date;
-
-import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
 
 
 /**
@@ -60,6 +59,9 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
     @Resource
     protected RedisUtil redisUtil;
 
+    @Resource
+    protected SettingFacade settingFacade;
+
     abstract protected BaseMessage getMessage(String message);
 
     protected boolean isOps(OcUser ocUser) {
@@ -86,7 +88,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
 
         SSHKeyCredential sshKeyCredential;
         if (loginType) {
-            sshKeyCredential = keyboxFacade.getSSHKeyCredential(HIGH_AUTHORITY_ACCOUNT); // 高权限
+            sshKeyCredential = keyboxFacade.getSSHKeyCredential(settingFacade.querySetting(OcSettingName.SERVER_HIGH_AUTHORITY_ACCOUNT)); // 高权限
         } else {
             sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());  // 普通用户
         }

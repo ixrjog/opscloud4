@@ -2,12 +2,14 @@ package com.baiyi.opscloud.factory.attribute.impl;
 
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.common.base.OcSettingName;
 import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.ServerBaseFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
+import com.baiyi.opscloud.facade.SettingFacade;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -24,8 +26,6 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-
-import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
 
 
 /**
@@ -45,6 +45,9 @@ public class AttributeAnsible extends AttributeBase {
 
     @Resource
     private ServerFacade serverFacade;
+
+    @Resource
+    private SettingFacade settingFacade;
 
     @Resource
     private ServerAttributeFacade serverAttributeFacade;
@@ -132,7 +135,7 @@ public class AttributeAnsible extends AttributeBase {
     private String acqHostLine(OcServer ocServer) {
         String serverName = ServerBaseFacade.acqServerName(ocServer);
         return Joiner.on(" ").join(getManageIp(ocServer),
-                "ansible_ssh_user=" + HIGH_AUTHORITY_ACCOUNT ,
+                "ansible_ssh_user=" + settingFacade.querySetting(OcSettingName.SERVER_HIGH_AUTHORITY_ACCOUNT) ,
                 "cloudServerType=" + getCloudServerType(ocServer),
                 "hostname=" + serverName,
                 "#", serverName, "\n");
