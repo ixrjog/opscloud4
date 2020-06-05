@@ -4,7 +4,7 @@ import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.PlaybookUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAnsiblePlaybook;
-import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTags;
 import com.baiyi.opscloud.domain.vo.ansible.playbook.PlaybookTask;
 import com.google.common.collect.Lists;
@@ -26,8 +26,8 @@ public class AnsiblePlaybookDecorator {
     @Resource
     private AnsibleConfig ansibleConfig;
 
-    public OcAnsiblePlaybookVO.AnsiblePlaybook decorator(OcAnsiblePlaybook ocAnsiblePlaybook) {
-        OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook = BeanCopierUtils.copyProperties(ocAnsiblePlaybook, OcAnsiblePlaybookVO.AnsiblePlaybook.class);
+    public AnsiblePlaybookVO.AnsiblePlaybook decorator(OcAnsiblePlaybook ocAnsiblePlaybook) {
+        AnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook = BeanCopierUtils.copyProperties(ocAnsiblePlaybook, AnsiblePlaybookVO.AnsiblePlaybook.class);
         try{
             PlaybookTags tags = PlaybookUtils.buildTags(ansiblePlaybook.getTags());
             invokeTags(ansiblePlaybook, tags);
@@ -41,7 +41,7 @@ public class AnsiblePlaybookDecorator {
         return ansiblePlaybook;
     }
 
-    private void invokeTags(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook, PlaybookTags tags) {
+    private void invokeTags(AnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook, PlaybookTags tags) {
         Set<String> selectedTags = Sets.newHashSet();
         List<PlaybookTask> tasks = tags.getTasks();
         if(tasks == null || tasks.isEmpty()){

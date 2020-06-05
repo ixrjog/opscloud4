@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserCredential;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
+import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.jumpserver.api.JumpserverAPI;
 import com.baiyi.opscloud.jumpserver.builder.UsersUserBuilder;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
@@ -182,7 +182,7 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
         UsersUser usersUser = saveUsersUser(ocUser);
         if (usersUser == null)
             return false;
-        return jumpserverAPI.pushKey(ocUser, usersUser, BeanCopierUtils.copyProperties(credential, OcUserCredentialVO.UserCredential.class));
+        return jumpserverAPI.pushKey(ocUser, usersUser, BeanCopierUtils.copyProperties(credential, UserCredentialVO.UserCredential.class));
 
     }
 

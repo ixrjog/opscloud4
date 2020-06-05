@@ -4,10 +4,13 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
+import com.baiyi.opscloud.domain.param.ansible.ServerTaskHistoryParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
-import com.baiyi.opscloud.domain.vo.ansible.OcAnsiblePlaybookVO;
-import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
+import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
+import com.baiyi.opscloud.domain.vo.ansible.AnsibleScriptVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
+
+import javax.validation.Valid;
 
 /**
  * @Author baiyi
@@ -16,19 +19,21 @@ import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
  */
 public interface ServerTaskFacade {
 
-    DataTable<OcAnsiblePlaybookVO.AnsiblePlaybook> queryPlaybookPage(AnsiblePlaybookParam.PageQuery pageQuery);
+    DataTable<ServerTaskVO.ServerTask> queryTaskHistoryPage(@Valid ServerTaskHistoryParam.PageQuery pageQuery);
 
-    DataTable<OcAnsibleScriptVO.AnsibleScript> queryScriptPage(AnsibleScriptParam.PageQuery pageQuery);
+    DataTable<AnsiblePlaybookVO.AnsiblePlaybook> queryPlaybookPage(AnsiblePlaybookParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> addScript(OcAnsibleScriptVO.AnsibleScript ansibleScript);
+    DataTable<AnsibleScriptVO.AnsibleScript> queryScriptPage(AnsibleScriptParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> updateScript(OcAnsibleScriptVO.AnsibleScript ansibleScript);
+    BusinessWrapper<Boolean> addScript(AnsibleScriptVO.AnsibleScript ansibleScript);
+
+    BusinessWrapper<Boolean> updateScript(AnsibleScriptVO.AnsibleScript ansibleScript);
 
     BusinessWrapper<Boolean> deleteScriptById(int id);
 
-    BusinessWrapper<Boolean> addPlaybook(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
+    BusinessWrapper<Boolean> addPlaybook(AnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
 
-    BusinessWrapper<Boolean> updatePlaybook(OcAnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
+    BusinessWrapper<Boolean> updatePlaybook(AnsiblePlaybookVO.AnsiblePlaybook ansiblePlaybook);
 
     BusinessWrapper<Boolean> deletePlaybookById(int id);
 

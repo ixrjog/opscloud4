@@ -12,7 +12,7 @@ import java.util.List;
  * @Date 2020/2/22 8:52 下午
  * @Version 1.0
  */
-public class OcBusinessTagVO {
+public class BusinessTagVO {
 
     @Data
     @NoArgsConstructor

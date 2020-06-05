@@ -11,7 +11,7 @@ import java.util.Date;
  * @Date 2020/4/28 3:09 下午
  * @Version 1.0
  */
-public class OcWorkorderVO {
+public class WorkorderVO {
 
     @Data
     @NoArgsConstructor

@@ -4,8 +4,8 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
-import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
+import com.baiyi.opscloud.domain.vo.tag.BusinessTagVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 
 import java.util.List;
 
@@ -16,19 +16,19 @@ import java.util.List;
  */
 public interface TagFacade {
 
-    DataTable<OcTagVO.Tag> queryTagPage(TagParam.PageQuery pageQuery);
+    DataTable<TagVO.Tag> queryTagPage(TagParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> addTag(OcTagVO.Tag tag);
+    BusinessWrapper<Boolean> addTag(TagVO.Tag tag);
 
-    BusinessWrapper<Boolean> updateTag(OcTagVO.Tag tag);
+    BusinessWrapper<Boolean> updateTag(TagVO.Tag tag);
 
     BusinessWrapper<Boolean> deleteTagById(int id);
 
-    List<OcTagVO.Tag> queryBusinessTag(TagParam.BusinessQuery businessQuery);
+    List<TagVO.Tag> queryBusinessTag(TagParam.BusinessQuery businessQuery);
 
-    List<OcTagVO.Tag> queryNotInBusinessTag(TagParam.BusinessQuery businessQuery);
+    List<TagVO.Tag> queryNotInBusinessTag(TagParam.BusinessQuery businessQuery);
 
-    BusinessWrapper<Boolean> updateBusinessTag(OcBusinessTagVO.BusinessTag businessTag);
+    BusinessWrapper<Boolean> updateBusinessTag(BusinessTagVO.BusinessTag businessTag);
 
     List<OcBusinessTag> queryOcBusinessTagByBusinessTypeAndBusinessId(int businessType, int businessId);
 

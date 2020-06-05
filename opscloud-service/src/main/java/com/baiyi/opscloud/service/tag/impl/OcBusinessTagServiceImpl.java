@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.tag.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
-import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
+import com.baiyi.opscloud.domain.vo.tag.BusinessTagVO;
 import com.baiyi.opscloud.mapper.opscloud.OcBusinessTagMapper;
 import com.baiyi.opscloud.service.tag.OcBusinessTagService;
 import org.springframework.stereotype.Service;
@@ -22,7 +22,7 @@ public class OcBusinessTagServiceImpl implements OcBusinessTagService {
     private OcBusinessTagMapper ocBusinessTagMapper;
 
     @Override
-    public OcBusinessTag queryOcBusinessTagByUniqueKey(OcBusinessTagVO.BusinessTag businessTag) {
+    public OcBusinessTag queryOcBusinessTagByUniqueKey(BusinessTagVO.BusinessTag businessTag) {
         return ocBusinessTagMapper.queryOcBusinessTagByUniqueKey(businessTag);
     }
 
@@ -36,7 +36,7 @@ public class OcBusinessTagServiceImpl implements OcBusinessTagService {
     }
 
     @Override
-    public void deleteOcBusinessTagByUniqueKey(OcBusinessTagVO.BusinessTag businessTag) {
+    public void deleteOcBusinessTagByUniqueKey(BusinessTagVO.BusinessTag businessTag) {
         ocBusinessTagMapper.deleteOcBusinessTagByUniqueKey(businessTag);
     }
 

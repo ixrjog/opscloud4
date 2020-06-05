@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
@@ -80,7 +80,7 @@ public class TicketServerGroupHandler<T> extends BaseTicketHandler<T> implements
     }
 
     @Override
-    protected BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry) {
+    protected BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry) {
         OcWorkorderTicketEntry ocWorkorderTicketEntry = ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryById(entry.getId());
         ocWorkorderTicketEntry.setEntryDetail(JSON.toJSONString(entry.getTicketEntry()));
         ocWorkorderTicketEntryService.updateOcWorkorderTicketEntry(ocWorkorderTicketEntry);

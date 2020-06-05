@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.base.TicketSubscribeType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
 import com.baiyi.opscloud.service.ticket.OcWorkorderApprovalMemberService;
@@ -108,7 +108,7 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
     }
 
     @Override
-    public Boolean isAllowApproval(OcUser ocUser, OcWorkorderTicketVO.Ticket ticket) {
+    public Boolean isAllowApproval(OcUser ocUser, WorkorderTicketVO.Ticket ticket) {
         // 查询下级流程
         if (ticket.getFlowId() == null || ticket.getFlowId() == 0)
             return Boolean.FALSE;

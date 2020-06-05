@@ -5,11 +5,12 @@ import com.baiyi.opscloud.ansible.handler.TaskLogRecorder;
 import com.baiyi.opscloud.common.util.AnsibleUtils;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IOUtils;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskMemberVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 import com.baiyi.opscloud.service.env.OcEnvService;
@@ -46,6 +47,13 @@ public class ServerTaskDecorator {
 
     @Resource
     private TaskLogRecorder taskLogRecorder;
+
+    public ServerTaskVO.ServerTask decorator(OcServerTask ocServerTask) {
+        ServerTaskVO.ServerTask serverTask = BeanCopierUtils.copyProperties(ocServerTask, ServerTaskVO.ServerTask.class);
+        List<OcServerTaskMember> memberList = ocServerTaskMemberService.queryOcServerTaskMemberByTaskId(serverTask.getId());
+        serverTask.setMembers(BeanCopierUtils.copyListProperties(memberList, ServerTaskMemberVO.ServerTaskMember.class));
+        return serverTask;
+    }
 
     public ServerTaskVO.ServerTask decorator(ServerTaskVO.ServerTask serverTask) {
         List<OcServerTaskMember> memberList = ocServerTaskMemberService.queryOcServerTaskMemberByTaskId(serverTask.getId());
@@ -114,7 +122,7 @@ public class ServerTaskDecorator {
         OcServer ocServer = ocServerService.queryOcServerById(serverTaskMember.getServerId());
         if (ocServer == null) return serverTaskMember;
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
-        serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, OcEnvVO.Env.class));
+        serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, EnvVO.Env.class));
         serverTaskMember.setSuccess(serverTaskMember.getExitValue() != null && serverTaskMember.getExitValue() == 0);
         serverTaskMember.setShowErrorLog(false); // 不显示错误日志
         if (serverTaskMember.getFinalized() == 1) {

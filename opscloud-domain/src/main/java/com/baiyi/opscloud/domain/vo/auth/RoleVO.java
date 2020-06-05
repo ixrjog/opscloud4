@@ -6,7 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 
-public class OcRoleVO {
+public class RoleVO {
 
     @Data
     @NoArgsConstructor

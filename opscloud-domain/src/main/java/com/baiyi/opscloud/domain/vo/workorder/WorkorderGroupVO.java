@@ -1,30 +1,33 @@
-package com.baiyi.opscloud.domain.vo.org;
+package com.baiyi.opscloud.domain.vo.workorder;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2020/4/22 1:27 下午
+ * @Date 2020/4/26 1:27 下午
  * @Version 1.0
  */
-public class OcOrgDepartmentVO {
+public class WorkorderGroupVO {
+
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Department {
+    public static class WorkorderGroup {
+
+        private List<WorkorderVO.Workorder> workorders;
 
         private Integer id;
         private String name;
-        private Integer parentId;
-        private Integer deptHiding;
-        private Integer deptType;
-        private Integer deptOrder;
+        private Integer workorderType;
+        private String comment;
         private Date createTime;
         private Date updateTime;
-        private String comment;
+
     }
+
 }

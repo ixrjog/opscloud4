@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
@@ -28,9 +28,9 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     private OcAuthRoleService ocAuthRoleService;
 
     @Override
-    public void syncUserBusinessPermission(List<OcUserVO.User> userList, int businessType, int businessId) {
+    public void syncUserBusinessPermission(List<UserVO.User> userList, int businessType, int businessId) {
         try {
-            for (OcUserVO.User user : userList) {
+            for (UserVO.User user : userList) {
                 OcUserPermission ocUserPermission = new OcUserPermission();
                 ocUserPermission.setBusinessType(businessType);
                 ocUserPermission.setBusinessId(businessId);

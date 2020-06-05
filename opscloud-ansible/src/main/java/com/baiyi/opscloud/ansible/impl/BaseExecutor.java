@@ -63,7 +63,6 @@ public abstract class BaseExecutor implements InitializingBean, IAnsibleExecutor
         return new BusinessWrapper(serverTreeHostPatternMap);
     }
 
-    // public abstract BusinessWrapper<Boolean> executorByParam(T executorParam);
 
     @Override
     public String getKey() {

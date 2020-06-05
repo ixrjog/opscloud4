@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.TagFacade;
@@ -45,7 +45,7 @@ public class ServerDecorator {
         // 装饰 环境信息
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(server.getEnvType());
         if (ocEnv != null) {
-            OcEnvVO.Env env = BeanCopierUtils.copyProperties(ocEnv, OcEnvVO.Env.class);
+            EnvVO.Env env = BeanCopierUtils.copyProperties(ocEnv, EnvVO.Env.class);
             server.setEnv(env);
         }
         // 装饰 服务器组信息

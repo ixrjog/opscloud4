@@ -17,24 +17,24 @@ import java.util.Map;
 public class ServerTaskBuilder {
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskExecutor) {
-        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 0);
+        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 0, 0);
     }
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskExecutor) {
-        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 1);
+        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 1, 0);
     }
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskExecutor) {
-        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 2);
+        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 2, 0);
     }
 
-    public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, String paramJson, int taskType) {
+    public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, String paramJson, int taskType, int systemType) {
         ServerTaskBO serverTaskBO = ServerTaskBO.builder()
                 .userId(ocUser != null ? ocUser.getId() : 0)
                 .taskType(taskType)
                 .userDetail(JSON.toJSONString(ocUser))
                 .executorParam(paramJson)
-                .systemType(ocUser != null ? 1 : 0)
+                .systemType(systemType)
                 .serverTargetDetail(JSON.toJSONString(serverTreeHostPatternMap))
                 .build();
 

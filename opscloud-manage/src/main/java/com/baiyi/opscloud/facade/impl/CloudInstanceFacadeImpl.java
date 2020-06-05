@@ -25,7 +25,7 @@ import com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTypeVO;
 import com.baiyi.opscloud.domain.vo.cloud.CloudVSwitchVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.CloudInstanceFacade;
 import com.baiyi.opscloud.facade.CloudInstanceTaskFacade;
 import com.baiyi.opscloud.facade.CloudVPCFacade;
@@ -166,7 +166,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
         if (ocUser == null) {
             ocCloudInstanceTask = CloudInstanceTaskBuilder.build(createCloudInstanceBO);
         } else {
-            ocCloudInstanceTask = CloudInstanceTaskBuilder.build(createCloudInstanceBO, BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class));
+            ocCloudInstanceTask = CloudInstanceTaskBuilder.build(createCloudInstanceBO, BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
         }
         ocCloudInstanceTaskService.addOcCloudInstanceTask(ocCloudInstanceTask);
         // 执行任务

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.factory.ticket.entry;
 
-import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class UserGroupEntry implements ITicketEntry{
 
-    private OcUserGroupVO.UserGroup userGroup;
+    private UserGroupVO.UserGroup userGroup;
 
     public String getName() {
         return this. userGroup.getName();

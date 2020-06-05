@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
  * @Date 2020/2/19 10:50 上午
  * @Version 1.0
  */
-public class OcRoleResourceVO {
+public class RoleResourceVO {
 
     @Data
     @NoArgsConstructor

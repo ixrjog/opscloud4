@@ -5,7 +5,7 @@ import com.baiyi.opscloud.bo.CloudInstanceTaskBO;
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTask;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 
 /**
  * @Author baiyi
@@ -27,7 +27,7 @@ public class CloudInstanceTaskBuilder {
         return covert(cloudInstanceTaskBO);
     }
 
-    public static OcCloudInstanceTask build(CreateCloudInstanceBO createCloudInstanceBO, OcUserVO.User user) {
+    public static OcCloudInstanceTask build(CreateCloudInstanceBO createCloudInstanceBO, UserVO.User user) {
         OcCloudInstanceTask ocCloudInstanceTask = build(createCloudInstanceBO);
         ocCloudInstanceTask.setUserId(user.getId());
         ocCloudInstanceTask.setUserDetail(JSON.toJSONString(user));

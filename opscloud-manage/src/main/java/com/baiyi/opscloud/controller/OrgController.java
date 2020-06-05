@@ -5,8 +5,8 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
 import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import io.swagger.annotations.Api;
@@ -32,7 +32,7 @@ public class OrgController {
 
     @ApiOperation(value = "分页查询查询部门列表")
     @PostMapping(value = "/department/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcOrgDepartmentVO.Department>> queryDepartmentPage(@RequestBody @Valid DepartmentParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<OrgDepartmentVO.Department>> queryDepartmentPage(@RequestBody @Valid DepartmentParam.PageQuery pageQuery) {
         return new HttpResult<>(orgFacade.queryDepartmentPage(pageQuery));
     }
 
@@ -56,19 +56,19 @@ public class OrgController {
 
     @ApiOperation(value = "新增部门")
     @PostMapping(value = "/department/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addDepartment(@RequestBody @Valid OcOrgDepartmentVO.Department department) {
+    public HttpResult<Boolean> addDepartment(@RequestBody @Valid OrgDepartmentVO.Department department) {
         return new HttpResult<>(orgFacade.addDepartment(department));
     }
 
     @ApiOperation(value = "更新部门")
     @PutMapping(value = "/department/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateDepartment(@RequestBody @Valid OcOrgDepartmentVO.Department department) {
+    public HttpResult<Boolean> updateDepartment(@RequestBody @Valid OrgDepartmentVO.Department department) {
         return new HttpResult<>(orgFacade.updateDepartment(department));
     }
 
     @ApiOperation(value = "查询部门")
     @GetMapping(value = "/department/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcOrgDepartmentVO.Department> queryDepartmentById(@Valid int id) {
+    public HttpResult<OrgDepartmentVO.Department> queryDepartmentById(@Valid int id) {
         return new HttpResult<>(orgFacade.queryDepartmentById(id));
     }
 
@@ -80,7 +80,7 @@ public class OrgController {
 
     @ApiOperation(value = "分页查询成员列表")
     @PostMapping(value = "/department/member/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcOrgDepartmentMemberVO.DepartmentMember>> queryDepartmentMemberPage(@RequestBody @Valid DepartmentMemberParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<OrgDepartmentMemberVO.DepartmentMember>> queryDepartmentMemberPage(@RequestBody @Valid DepartmentMemberParam.PageQuery pageQuery) {
         return new HttpResult<>(orgFacade.queryDepartmentMemberPage(pageQuery));
     }
 

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketSubscribe;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -33,7 +33,7 @@ public class TicketCreatedSubscribe extends BaseTicketSubscribe implements ITick
     }
 
     @Override
-    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket,String ticketPhase) {
+    public void invokeFlowStep(WorkorderTicketVO.Ticket ticket, String ticketPhase) {
         ApprovalStepsVO.ApprovalStep approvalStep = ApprovalStepsVO.ApprovalStep.builder()
                 .title("填写")
                 .description("填写完成后提交申请")
@@ -44,7 +44,7 @@ public class TicketCreatedSubscribe extends BaseTicketSubscribe implements ITick
     }
 
     @Override
-    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket){
+    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket){
         return Lists.newArrayList();
     }
 }

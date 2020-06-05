@@ -12,14 +12,14 @@ import java.util.List;
  * @Date 2020/2/24 4:54 下午
  * @Version 1.0
  */
-public class OcUserGroupVO {
+public class UserGroupVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class UserGroup {
 
-        private List<OcUserVO.User> users;
+        private List<UserVO.User> users;
 
         @ApiModelProperty(value = "主键")
         private Integer id;

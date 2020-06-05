@@ -10,35 +10,37 @@ import java.util.Date;
 
 /**
  * @Author baiyi
- * @Date 2020/2/27 1:17 下午
+ * @Date 2020/2/26 6:05 下午
  * @Version 1.0
  */
-public class OcUserCredentialVO {
+public class UserApiTokenVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class UserCredential {
+    public static class UserApiToken {
+
         @ApiModelProperty(value = "主键")
         private Integer id;
-
-        @ApiModelProperty(value = "用户id")
-        private Integer userId;
 
         @ApiModelProperty(value = "用户名")
         private String username;
 
-        @ApiModelProperty(value = "标题")
-        private String title;
+        @ApiModelProperty(value = "是否有效")
+        private Boolean valid;
 
-        @ApiModelProperty(value = "凭据类型")
-        private Integer credentialType;
+        @ApiModelProperty(value = "登录唯一标识")
+        private String token;
 
-        @ApiModelProperty(value = "凭据内容")
-        private String credential;
+        @ApiModelProperty(value = "令牌id")
+        private String tokenId;
 
-        @ApiModelProperty(value = "凭据指纹")
-        private String fingerprint;
+        @ApiModelProperty(value = "过期时间")
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        private Date expiredTime;
+
+        @ApiModelProperty(value = "留言")
+        private String comment;
 
         @ApiModelProperty(value = "创建时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -48,5 +50,4 @@ public class OcUserCredentialVO {
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date updateTime;
     }
-
 }

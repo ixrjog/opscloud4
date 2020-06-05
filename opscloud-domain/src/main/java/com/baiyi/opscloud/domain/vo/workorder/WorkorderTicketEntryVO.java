@@ -12,7 +12,7 @@ import java.util.Date;
  * @Date 2020/4/29 9:34 上午
  * @Version 1.0
  */
-public class OcWorkorderTicketEntryVO {
+public class WorkorderTicketEntryVO {
 
     @Data
     @NoArgsConstructor

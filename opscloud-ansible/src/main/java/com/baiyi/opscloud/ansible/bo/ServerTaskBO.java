@@ -34,7 +34,7 @@ public class ServerTaskBO {
     private Integer stopType = 0;
 
     @Builder.Default
-    private Integer systemType = 0;
+    private Integer systemType = 0; // 0 用户执行  1 变更管理  2 日志清理
 
     private Integer exitValue;
 

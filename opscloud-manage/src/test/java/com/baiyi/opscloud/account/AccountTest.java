@@ -2,7 +2,7 @@ package com.baiyi.opscloud.account;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.domain.vo.auth.OcUserRoleVO;
+import com.baiyi.opscloud.domain.vo.auth.UserRoleVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ public class AccountTest extends BaseUnit {
     void testAddBaseRole() {
         List<OcUser> userList = ocUserService.queryOcUserActive();
         for (OcUser ocUser : userList) {
-            OcUserRoleVO.UserRole userRole = new OcUserRoleVO.UserRole();
+            UserRoleVO.UserRole userRole = new UserRoleVO.UserRole();
             userRole.setUsername(ocUser.getUsername());
             userRole.setRoleId(5);
 

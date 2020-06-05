@@ -5,10 +5,10 @@ import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -55,27 +55,27 @@ public class UserDecorator {
     private PersonRepo personRepo;
 
     // from mysql
-    public OcUserVO.User decorator(OcUserVO.User user, Integer extend) {
+    public UserVO.User decorator(UserVO.User user, Integer extend) {
         user.setPassword("");
         if (extend != null && extend == 1) {
             // 装饰 用户组
             List<OcUserGroup> userGroupList = ocUserGroupService.queryOcUserGroupByUserId(user.getId());
-            user.setUserGroups(BeanCopierUtils.copyListProperties(userGroupList, OcUserGroupVO.UserGroup.class));
+            user.setUserGroups(BeanCopierUtils.copyListProperties(userGroupList, UserGroupVO.UserGroup.class));
             // 装饰 服务器组
             List<OcServerGroup> serverGroupList = ocServerGroupService.queryUserPermissionOcServerGroupByUserId(user.getId());
             user.setServerGroups(convert(user, serverGroupList));
             // 装饰 ApiToken
             List<OcUserApiToken> userApiTokens = ocUserApiTokenService.queryOcUserApiTokenByUsername(user.getUsername());
-            List<OcUserApiTokenVO.UserApiToken> apiTokens = BeanCopierUtils.copyListProperties(userApiTokens, OcUserApiTokenVO.UserApiToken.class).stream().map(e -> {
+            List<UserApiTokenVO.UserApiToken> apiTokens = BeanCopierUtils.copyListProperties(userApiTokens, UserApiTokenVO.UserApiToken.class).stream().map(e -> {
                 e.setToken("申请后不可查看");
                 return e;
             }).collect(Collectors.toList());
             user.setApiTokens(apiTokens);
             // 装饰 凭据
             List<OcUserCredential> credentials = ocUserCredentialService.queryOcUserCredentialByUserId(user.getId());
-            Map<String, OcUserCredentialVO.UserCredential> credentialMap = Maps.newHashMap();
+            Map<String, UserCredentialVO.UserCredential> credentialMap = Maps.newHashMap();
             for (OcUserCredential credential : credentials)
-                credentialMap.put(CredentialType.getName(credential.getCredentialType()), BeanCopierUtils.copyProperties(credential, OcUserCredentialVO.UserCredential.class));
+                credentialMap.put(CredentialType.getName(credential.getCredentialType()), BeanCopierUtils.copyProperties(credential, UserCredentialVO.UserCredential.class));
             user.setCredentialMap(credentialMap);
             // 用户属性
             Map<String, Object> attributeMap = Maps.newHashMap();
@@ -85,22 +85,22 @@ public class UserDecorator {
         return user;
     }
 
-    public OcUserVO.User decoratorFromLdapRepo(OcUserVO.User user, Integer extend) {
+    public UserVO.User decoratorFromLdapRepo(UserVO.User user, Integer extend) {
         user.setPassword("");
         if (extend != null && extend == 1) {
             List<String> groupNameList = personRepo.searchUserGroupByUsername(user.getUsername());
-            List<OcUserGroupVO.UserGroup> userGroups = Lists.newArrayList();
+            List<UserGroupVO.UserGroup> userGroups = Lists.newArrayList();
             for (String groupName : groupNameList) {
                 OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupByName(groupName);
                 if (ocUserGroup != null)
-                    userGroups.add(BeanCopierUtils.copyProperties(ocUserGroup, OcUserGroupVO.UserGroup.class));
+                    userGroups.add(BeanCopierUtils.copyProperties(ocUserGroup, UserGroupVO.UserGroup.class));
             }
             user.setUserGroups(userGroups);
         }
         return user;
     }
 
-    private List<ServerGroupVO.ServerGroup> convert(OcUserVO.User user, List<OcServerGroup> serverGroupList) {
+    private List<ServerGroupVO.ServerGroup> convert(UserVO.User user, List<OcServerGroup> serverGroupList) {
         return serverGroupList.stream().map(e -> {
             ServerGroupVO.ServerGroup serverGroup = BeanCopierUtils.copyProperties(e, ServerGroupVO.ServerGroup.class);
             OcUserPermission permission = new OcUserPermission();

@@ -16,21 +16,21 @@ import java.util.Map;
  * @Date 2020/2/20 11:20 上午
  * @Version 1.0
  */
-public class OcUserVO {
+public class UserVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class User {
 
-        private Map<String, OcUserCredentialVO.UserCredential> credentialMap;
+        private Map<String, UserCredentialVO.UserCredential> credentialMap;
 
-        private List<OcUserGroupVO.UserGroup> userGroups;
+        private List<UserGroupVO.UserGroup> userGroups;
 
         private List<ServerGroupVO.ServerGroup> serverGroups;
 
         // 只显示有效的ApiToken
-        private List<OcUserApiTokenVO.UserApiToken> apiTokens;
+        private List<UserApiTokenVO.UserApiToken> apiTokens;
 
         private  Map<String, Object> attributeMap;
 

@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
-import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,9 +24,9 @@ public class ServerVO {
     @ApiModel
     public static class Server {
 
-        private List<OcTagVO.Tag> tags;
+        private List<TagVO.Tag> tags;
 
-        private OcEnvVO.Env env;
+        private EnvVO.Env env;
 
         private ServerGroupVO.ServerGroup serverGroup;
 

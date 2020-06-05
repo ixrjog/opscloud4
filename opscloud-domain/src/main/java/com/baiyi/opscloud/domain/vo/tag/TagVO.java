@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.vo.auth;
+package com.baiyi.opscloud.domain.vo.tag;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -10,24 +10,26 @@ import java.util.Date;
 
 /**
  * @Author baiyi
- * @Date 2020/2/15 5:23 下午
+ * @Date 2020/2/22 1:17 下午
  * @Version 1.0
  */
-public class OcGroupVO {
-
+public class TagVO {
 
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Group {
+    public static class Tag {
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;
 
-        @ApiModelProperty(value = "资源组名称")
-        private String groupCode;
+        @ApiModelProperty(value = "标签key")
+        private String tagKey;
 
-        @ApiModelProperty(value = "资源描述")
+        @ApiModelProperty(value = "颜色值")
+        private String color;
+
+        @ApiModelProperty(value = "描述")
         private String comment;
 
         @ApiModelProperty(value = "创建时间")

@@ -7,9 +7,9 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderGroupVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.facade.WorkorderFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -35,49 +35,49 @@ public class WorkorderController {
 
     @ApiOperation(value = "分页工单组列表")
     @PostMapping(value = "/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcWorkorderGroupVO.WorkorderGroup>> queryWorkorderGroupPage(@RequestBody @Valid WorkorderGroupParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<WorkorderGroupVO.WorkorderGroup>> queryWorkorderGroupPage(@RequestBody @Valid WorkorderGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(workorderFacade.queryWorkorderGroupPage(pageQuery));
     }
 
     @ApiOperation(value = "保存工单组")
     @PostMapping(value = "/group/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveWorkorderGroup(@RequestBody @Valid OcWorkorderGroupVO.WorkorderGroup workorderGroup) {
+    public HttpResult<Boolean> saveWorkorderGroup(@RequestBody @Valid WorkorderGroupVO.WorkorderGroup workorderGroup) {
         return new HttpResult<>(workorderFacade.saveWorkorderGroup(workorderGroup));
     }
 
     @ApiOperation(value = "查询我的工单")
     @PostMapping(value = "/ticket/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicketPage queryMyTicketPage) {
+    public HttpResult<DataTable<WorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicketPage queryMyTicketPage) {
         return new HttpResult<>(workorderFacade.queryMyTicketPage(queryMyTicketPage));
     }
 
     @ApiOperation(value = "查询工单")
     @PostMapping(value = "/ticket/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<OcWorkorderTicketVO.Ticket>> queryWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryTicketPage queryTicketPage) {
+    public HttpResult<DataTable<WorkorderTicketVO.Ticket>> queryWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryTicketPage queryTicketPage) {
         return new HttpResult<>(workorderFacade.queryTicketPage(queryTicketPage));
     }
 
     @ApiOperation(value = "工作台查询工单组详情")
     @GetMapping(value = "/group/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<OcWorkorderGroupVO.WorkorderGroup>> queryWorkbenchWorkorderGroup() {
+    public HttpResult<List<WorkorderGroupVO.WorkorderGroup>> queryWorkbenchWorkorderGroup() {
         return new HttpResult<>(workorderFacade.queryWorkbenchWorkorderGroup());
     }
 
     @ApiOperation(value = "创建工单票据")
     @PostMapping(value = "/ticket/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcWorkorderTicketVO.Ticket> createWorkorderTicket(@RequestBody @Valid WorkorderTicketParam.CreateTicket createTicket) {
+    public HttpResult<WorkorderTicketVO.Ticket> createWorkorderTicket(@RequestBody @Valid WorkorderTicketParam.CreateTicket createTicket) {
         return new HttpResult<>(workorderFacade.createWorkorderTicket(createTicket));
     }
 
     @ApiOperation(value = "查询工单票据详情")
     @GetMapping(value = "/ticket/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<OcWorkorderTicketVO.Ticket> queryWorkorderTicket(@Valid WorkorderTicketParam.QueryTicket queryTicket) {
+    public HttpResult<WorkorderTicketVO.Ticket> queryWorkorderTicket(@Valid WorkorderTicketParam.QueryTicket queryTicket) {
         return new HttpResult<>(workorderFacade.queryWorkorderTicket(queryTicket));
     }
 
     @ApiOperation(value = "提交工单票据")
     @PutMapping(value = "/ticket/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> submitWorkorderTicket(@RequestBody @Valid OcWorkorderTicketVO.Ticket ticket) {
+    public HttpResult<Boolean> submitWorkorderTicket(@RequestBody @Valid WorkorderTicketVO.Ticket ticket) {
         return new HttpResult<>(workorderFacade.submitWorkorderTicket(ticket));
     }
 
@@ -95,13 +95,13 @@ public class WorkorderController {
 
     @ApiOperation(value = "工单票据添加条目")
     @PostMapping(value = "/ticket/entry/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addWorkorderTicketEntry(@RequestBody @Valid OcWorkorderTicketEntryVO.Entry entry) {
+    public HttpResult<Boolean> addWorkorderTicketEntry(@RequestBody @Valid WorkorderTicketEntryVO.Entry entry) {
         return new HttpResult<>(workorderFacade.addTicketEntry(entry));
     }
 
     @ApiOperation(value = "工单票据更新条目")
     @PostMapping(value = "/ticket/entry/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateWorkorderTicketEntry(@RequestBody @Valid OcWorkorderTicketEntryVO.Entry entry) {
+    public HttpResult<Boolean> updateWorkorderTicketEntry(@RequestBody @Valid WorkorderTicketEntryVO.Entry entry) {
         return new HttpResult<>(workorderFacade.updateTicketEntry(entry));
     }
 
@@ -125,7 +125,7 @@ public class WorkorderController {
      */
     @ApiOperation(value = "工单配置-用户组查询")
     @PostMapping(value = "/ticket/server/group/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<OcWorkorderTicketEntryVO.Entry>> queryUserTicketServerGroupPage(@RequestBody @Valid ServerGroupParam.UserTicketOcServerGroupQuery queryParam) {
+    public HttpResult<List<WorkorderTicketEntryVO.Entry>> queryUserTicketServerGroupPage(@RequestBody @Valid ServerGroupParam.UserTicketOcServerGroupQuery queryParam) {
         return new HttpResult<>(workorderFacade.queryUserTicketOcServerGroupByParam(queryParam));
     }
 
@@ -137,7 +137,7 @@ public class WorkorderController {
      */
     @ApiOperation(value = "工单配置-用户组查询")
     @PostMapping(value = "/ticket/user/group/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<OcWorkorderTicketEntryVO.Entry>> queryUserTicketUserGroupPage(@RequestBody @Valid UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
+    public HttpResult<List<WorkorderTicketEntryVO.Entry>> queryUserTicketUserGroupPage(@RequestBody @Valid UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
         return new HttpResult<>(workorderFacade.queryUserTicketOcUserGroupByParam(queryParam));
     }
 
@@ -149,7 +149,7 @@ public class WorkorderController {
      */
     @ApiOperation(value = "工单配置-平台角色查询")
     @PostMapping(value = "/ticket/role/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<OcWorkorderTicketEntryVO.Entry>> queryUserTicketAuthRolePage(@RequestBody @Valid RoleParam.UserTicketOcAuthRoleQuery queryParam) {
+    public HttpResult<List<WorkorderTicketEntryVO.Entry>> queryUserTicketAuthRolePage(@RequestBody @Valid RoleParam.UserTicketOcAuthRoleQuery queryParam) {
         return new HttpResult<>(workorderFacade.queryUserTicketOcAuthRoleByParam(queryParam));
     }
 

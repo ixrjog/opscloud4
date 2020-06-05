@@ -7,10 +7,10 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 
 /**
  * @Author baiyi
@@ -19,37 +19,37 @@ import com.baiyi.opscloud.domain.vo.user.OcUserVO;
  */
 public interface UserFacade {
 
-    DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery);
+    DataTable<UserVO.User> queryUserPage(UserParam.PageQuery pageQuery);
 
-    OcUserVO.User queryUserDetail();
+    UserVO.User queryUserDetail();
 
-    OcUserVO.User queryUserDetailByUsername(String username);
+    UserVO.User queryUserDetailByUsername(String username);
 
-    DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
+    DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken);
+    BusinessWrapper<Boolean> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken);
 
     BusinessWrapper<Boolean> delUserApiToken(int id);
 
-    BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential);
+    BusinessWrapper<Boolean> saveUserCredentia(UserCredentialVO.UserCredential userCredential);
 
     String getRandomPassword();
 
-    BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user);
+    BusinessWrapper<Boolean> updateBaseUser(UserVO.User user);
 
-    BusinessWrapper<Boolean> createUser(OcUserVO.User user);
+    BusinessWrapper<Boolean> createUser(UserVO.User user);
 
-    DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery);
+    DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> grantUserUserGroup(UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission);
 
     BusinessWrapper<Boolean> revokeUserUserGroup(UserBusinessGroupParam.UserUserGroupPermission userUserGroupPermission);
 
-    DataTable<OcUserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
+    DataTable<UserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
-    DataTable<OcUserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
+    DataTable<UserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
-    BusinessWrapper<Boolean> addUserGroup(OcUserGroupVO.UserGroup userGroup);
+    BusinessWrapper<Boolean> addUserGroup(UserGroupVO.UserGroup userGroup);
 
     BusinessWrapper<Boolean> syncUserGroup();
 

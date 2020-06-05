@@ -13,7 +13,7 @@ import java.util.Date;
  * @Date 2020/2/21 5:33 下午
  * @Version 1.0
  */
-public class OcEnvVO {
+public class EnvVO {
 
     @Data
     @NoArgsConstructor

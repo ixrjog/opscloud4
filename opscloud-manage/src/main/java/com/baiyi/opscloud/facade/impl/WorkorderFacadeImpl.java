@@ -18,9 +18,9 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
 import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderGroupVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.facade.WorkorderFacade;
@@ -96,15 +96,15 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     public final static int AGREE_TYPE = 1;
 
     @Override
-    public DataTable<OcWorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery) {
+    public DataTable<WorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery) {
         DataTable<OcWorkorderGroup> table = ocWorkorderGroupService.queryOcWorkorderGroupByParam(pageQuery);
-        List<OcWorkorderGroupVO.WorkorderGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcWorkorderGroupVO.WorkorderGroup.class);
-        DataTable<OcWorkorderGroupVO.WorkorderGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<WorkorderGroupVO.WorkorderGroup> page = BeanCopierUtils.copyListProperties(table.getData(), WorkorderGroupVO.WorkorderGroup.class);
+        DataTable<WorkorderGroupVO.WorkorderGroup> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveWorkorderGroup(OcWorkorderGroupVO.WorkorderGroup workorderGroup) {
+    public BusinessWrapper<Boolean> saveWorkorderGroup(WorkorderGroupVO.WorkorderGroup workorderGroup) {
         OcWorkorderGroup ocWorkorderGroup = BeanCopierUtils.copyProperties(workorderGroup, OcWorkorderGroup.class);
         if (workorderGroup.getId() == null || workorderGroup.getId() == 0) {
             ocWorkorderGroupService.addOcWorkorderGroup(ocWorkorderGroup);
@@ -115,26 +115,26 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public List<OcWorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup() {
-        List<OcWorkorderGroupVO.WorkorderGroup> list = BeanCopierUtils.copyListProperties(ocWorkorderGroupService.queryOcWorkorderGroupAll(), OcWorkorderGroupVO.WorkorderGroup.class);
+    public List<WorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup() {
+        List<WorkorderGroupVO.WorkorderGroup> list = BeanCopierUtils.copyListProperties(ocWorkorderGroupService.queryOcWorkorderGroupAll(), WorkorderGroupVO.WorkorderGroup.class);
         return list.stream().map(e -> workorderGroupDecorator.decorator(e)).collect(Collectors.toList());
     }
 
     @Override
-    public OcWorkorderTicketVO.Ticket createWorkorderTicket(WorkorderTicketParam.CreateTicket createTicket) {
+    public WorkorderTicketVO.Ticket createWorkorderTicket(WorkorderTicketParam.CreateTicket createTicket) {
         ITicketHandler ticketHandler = WorkorderTicketFactory.getTicketHandlerByKey(createTicket.getWorkorderKey());
         return ticketHandler.createTicket(userFacade.getOcUserBySession());
     }
 
     @Override
-    public OcWorkorderTicketVO.Ticket queryWorkorderTicket(WorkorderTicketParam.QueryTicket queryTicket) {
+    public WorkorderTicketVO.Ticket queryWorkorderTicket(WorkorderTicketParam.QueryTicket queryTicket) {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(queryTicket.getId());
-        OcWorkorderTicketVO.Ticket ticket = BeanCopierUtils.copyProperties(ocWorkorderTicket, OcWorkorderTicketVO.Ticket.class);
+        WorkorderTicketVO.Ticket ticket = BeanCopierUtils.copyProperties(ocWorkorderTicket, WorkorderTicketVO.Ticket.class);
         return workorderTicketDecorator.decorator(ticket);
     }
 
     @Override
-    public BusinessWrapper<Boolean> submitWorkorderTicket(OcWorkorderTicketVO.Ticket ticket) {
+    public BusinessWrapper<Boolean> submitWorkorderTicket(WorkorderTicketVO.Ticket ticket) {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(ticket.getId());
         // 校验用户
         if (!SessionUtils.getUsername().equals(ocWorkorderTicket.getUsername()))
@@ -233,12 +233,12 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> addTicketEntry(OcWorkorderTicketEntryVO.Entry entry) {
+    public BusinessWrapper<Boolean> addTicketEntry(WorkorderTicketEntryVO.Entry entry) {
         return WorkorderTicketFactory.getTicketHandlerByKey(entry.getEntryKey()).addTicketEntry(userFacade.getOcUserBySession(), entry);
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry) {
+    public BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry) {
         return WorkorderTicketFactory.getTicketHandlerByKey(entry.getEntryKey()).updateTicketEntry(userFacade.getOcUserBySession(), entry);
     }
 
@@ -294,7 +294,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam) {
+    public List<WorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam) {
         List<OcServerGroup> list = ocServerGroupService.queryUserTicketOcServerGroupByParam(queryParam);
         return list.stream().map(e ->
                 WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e)
@@ -302,7 +302,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
+    public List<WorkorderTicketEntryVO.Entry> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
         OcUser ocUser = userFacade.getOcUserBySession();
         queryParam.setUserId(ocUser.getId());
 
@@ -313,7 +313,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam) {
+    public List<WorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam) {
         OcUser ocUser = userFacade.getOcUserBySession();
         queryParam.setUsername(ocUser.getUsername());
         List<OcAuthRole> list = ocAuthRoleService.queryUserTicketOcAuthRoleByParam(queryParam);
@@ -323,7 +323,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage queryPage) {
+    public DataTable<WorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage queryPage) {
         OcUser ocUser = userFacade.getOcUserBySession();
         queryPage.setUserId(ocUser.getId());
         DataTable<OcWorkorderTicket> table = ocWorkorderTicketService.queryMyOcWorkorderTicketByParam(queryPage);
@@ -331,14 +331,14 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     }
 
     @Override
-    public DataTable<OcWorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery) {
+    public DataTable<WorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery) {
         DataTable<OcWorkorderTicket> table = ocWorkorderTicketService.queryOcWorkorderTicketByParam(pageQuery);
         return getTicketDataTable(table);
     }
 
-    private DataTable<OcWorkorderTicketVO.Ticket> getTicketDataTable(DataTable<OcWorkorderTicket> table) {
-        List<OcWorkorderTicketVO.Ticket> page = BeanCopierUtils.copyListProperties(table.getData(), OcWorkorderTicketVO.Ticket.class);
-        DataTable<OcWorkorderTicketVO.Ticket> dataTable = new DataTable<>(page.stream().map(e -> workorderTicketDecorator.decorator(e)
+    private DataTable<WorkorderTicketVO.Ticket> getTicketDataTable(DataTable<OcWorkorderTicket> table) {
+        List<WorkorderTicketVO.Ticket> page = BeanCopierUtils.copyListProperties(table.getData(), WorkorderTicketVO.Ticket.class);
+        DataTable<WorkorderTicketVO.Ticket> dataTable = new DataTable<>(page.stream().map(e -> workorderTicketDecorator.decorator(e)
         ).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }

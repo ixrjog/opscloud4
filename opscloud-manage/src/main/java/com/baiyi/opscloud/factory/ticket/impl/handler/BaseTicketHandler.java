@@ -10,8 +10,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketFactory;
 import com.baiyi.opscloud.factory.ticket.entry.ITicketEntry;
@@ -61,7 +61,7 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     }
 
     @Override
-    public OcWorkorderTicketVO.Ticket createTicket(OcUser ocUser) {
+    public WorkorderTicketVO.Ticket createTicket(OcUser ocUser) {
         OcWorkorder ocWorkorder = acqOcWorkorder();
         ocUser.setPassword("");
         OcWorkorderTicket ocWorkorderTicket = WorkorderTicketBuilder.build(ocUser, ocWorkorder);
@@ -75,8 +75,8 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
         return getTicket(ocWorkorderTicket);
     }
 
-    private OcWorkorderTicketVO.Ticket getTicket(OcWorkorderTicket ocWorkorderTicket) {
-        OcWorkorderTicketVO.Ticket ticket = BeanCopierUtils.copyProperties(ocWorkorderTicket, OcWorkorderTicketVO.Ticket.class);
+    private WorkorderTicketVO.Ticket getTicket(OcWorkorderTicket ocWorkorderTicket) {
+        WorkorderTicketVO.Ticket ticket = BeanCopierUtils.copyProperties(ocWorkorderTicket, WorkorderTicketVO.Ticket.class);
         return workorderTicketDecorator.decorator(ticket);
     }
 
@@ -88,8 +88,8 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     }
 
     @Override
-    public OcWorkorderTicketEntryVO.Entry convertTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) {
-        OcWorkorderTicketEntryVO.Entry entry = BeanCopierUtils.copyProperties(ocWorkorderTicketEntry, OcWorkorderTicketEntryVO.Entry.class);
+    public WorkorderTicketEntryVO.Entry convertTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) {
+        WorkorderTicketEntryVO.Entry entry = BeanCopierUtils.copyProperties(ocWorkorderTicketEntry, WorkorderTicketEntryVO.Entry.class);
         entry.setTicketEntry(getTicketEntry(ocWorkorderTicketEntry));
         return entry;
     }
@@ -108,7 +108,7 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
 //    }
 
     @Override
-    public BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, OcWorkorderTicketEntryVO.Entry entry) {
+    public BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryVO.Entry entry) {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(entry.getWorkorderTicketId());
         if (!ocWorkorderTicket.getUsername().equals(SessionUtils.getUsername()))
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
@@ -119,14 +119,14 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, OcWorkorderTicketEntryVO.Entry entry) {
+    public BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, WorkorderTicketEntryVO.Entry entry) {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(entry.getWorkorderTicketId());
         if (!ocWorkorderTicket.getUsername().equals(SessionUtils.getUsername()))
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
         return updateTicketEntry(entry);
     }
 
-    protected abstract BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry);
+    protected abstract BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry);
 
 
 //    @Override

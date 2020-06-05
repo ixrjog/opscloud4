@@ -5,8 +5,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
 import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 
 /**
@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
  */
 public interface OrgFacade {
 
-    DataTable<OcOrgDepartmentVO.Department> queryDepartmentPage(DepartmentParam.PageQuery pageQuery);
+    DataTable<OrgDepartmentVO.Department> queryDepartmentPage(DepartmentParam.PageQuery pageQuery);
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId);
 
@@ -24,17 +24,17 @@ public interface OrgFacade {
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree();
 
-    BusinessWrapper<Boolean> addDepartment(OcOrgDepartmentVO.Department department);
+    BusinessWrapper<Boolean> addDepartment(OrgDepartmentVO.Department department);
 
-    OcOrgDepartmentVO.Department queryDepartmentById(int id);
+    OrgDepartmentVO.Department queryDepartmentById(int id);
 
     BusinessWrapper<Boolean> delDepartmentById(int id);
 
-    BusinessWrapper<Boolean> updateDepartment(OcOrgDepartmentVO.Department department);
+    BusinessWrapper<Boolean> updateDepartment(OrgDepartmentVO.Department department);
 
     BusinessWrapper<Boolean> dropDepartmentTree(int draggingParentId, int dropParentId, String dropType);
 
-    DataTable<OcOrgDepartmentMemberVO.DepartmentMember> queryDepartmentMemberPage(DepartmentMemberParam.PageQuery pageQuery);
+    DataTable<OrgDepartmentMemberVO.DepartmentMember> queryDepartmentMemberPage(DepartmentMemberParam.PageQuery pageQuery);
 
     BusinessWrapper<Boolean> addDepartmentMember(int departmentId, int userId);
 
