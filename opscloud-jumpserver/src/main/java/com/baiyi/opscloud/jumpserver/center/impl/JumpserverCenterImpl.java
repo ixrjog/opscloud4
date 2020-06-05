@@ -362,6 +362,24 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     }
 
     @Override
+    public boolean delAssetsAsset(String assetId) {
+        try {
+            log.info("Jumpserver删除资产，assetId={}", assetId);
+            // 删除资产节点绑定关系
+            AssetsAssetNodes assetsAssetNodes = assetsAssetNodesService.queryAssetsAssetNodesByAssetId(assetId);
+            if(assetsAssetNodes != null)
+                assetsAssetNodesService.delAssetsAssetNodes(assetsAssetNodes.getId());
+            // 删除资产账户绑定
+            assetsSystemuserAssetsService.deleteAssetsSystemuserAssetsByAssetId(assetId);
+            assetsAssetService.deleteAssetsAssetById(assetId);
+            return true;
+        } catch (Exception e) {
+            log.error("删除资产错误，{}", e.getMessage());
+            return false;
+        }
+    }
+
+    @Override
     public boolean activeUsersUser(String username, boolean active) {
         log.info("JUMPSERVER设置用Active,username = {}, active = {}", username, active);
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);

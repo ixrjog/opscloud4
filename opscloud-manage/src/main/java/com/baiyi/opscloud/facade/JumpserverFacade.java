@@ -31,12 +31,16 @@ public interface JumpserverFacade {
 
     BusinessWrapper<Boolean> setUserActive(String id);
 
+    BusinessWrapper<Boolean> delUserByUsername(String username);
+
     /**
      * 同步资产
      *
      * @return
      */
     BusinessWrapper<Boolean> syncAssets();
+
+    BusinessWrapper<Boolean> delAssetById(String assetId);
 
     DataTable<JumpserverUsersUserVO.UsersUser> fuzzyQueryUserPage(UsersUserPageParam.PageQuery pageQuery);
 

@@ -100,8 +100,13 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
 
     @Override
     public BusinessWrapper<Boolean> setUserActive(String id) {
-
         return jumpserverCenter.setUserActive(id);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delUserByUsername(String username) {
+        jumpserverCenter.delUsersUser(username);
+        return BusinessWrapper.SUCCESS;
     }
 
 
@@ -113,6 +118,12 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     @Override
     public BusinessWrapper<Boolean> syncAssets() {
         getIServer().sync();
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delAssetById(String assetId) {
+        jumpserverCenter.delAssetsAsset(assetId);
         return BusinessWrapper.SUCCESS;
     }
 
