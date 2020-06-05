@@ -33,6 +33,7 @@ public class ServerTaskMemberVO {
         private Integer taskId;
         private String hostPattern;
         private Integer serverId;
+        private Integer envType;
         private String manageIp;
         private String comment;
         private Integer finalized;

@@ -23,7 +23,10 @@ public class ServerTaskVO {
 
         private Map<String, List<ServerTaskMemberVO.ServerTaskMember>> memberMap;
 
-        private List<ServerTaskMemberVO.ServerTaskMember> members;
+        private String ago;
+
+        private Map<String, String>  serverTarget;
+
         private UserVO.User user;
 
         // Statistics

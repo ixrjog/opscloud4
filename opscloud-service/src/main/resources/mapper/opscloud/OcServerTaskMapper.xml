@@ -35,6 +35,7 @@
                 and task_type = #{taskType}
             </if>
         </where>
+        order by create_time desc
     </select>
 
 </mapper>

@@ -19,11 +19,12 @@ public class ServerTaskMemberBuilder {
                 .hostPattern(hostPattern)
                 .manageIp(manageIp)
                 .serverId(ocServer.getId())
+                .envType(ocServer.getEnvType())
                 .build();
         return covert(serverTaskMemberBO);
     }
 
-    private static  OcServerTaskMember covert(  ServerTaskMemberBO serverTaskMemberBO) {
-        return  BeanCopierUtils.copyProperties(serverTaskMemberBO, OcServerTaskMember.class);
+    private static OcServerTaskMember covert(ServerTaskMemberBO serverTaskMemberBO) {
+        return BeanCopierUtils.copyProperties(serverTaskMemberBO, OcServerTaskMember.class);
     }
 }
