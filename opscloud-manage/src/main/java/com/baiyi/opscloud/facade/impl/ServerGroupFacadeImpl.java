@@ -244,7 +244,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public Map<Integer, Map<String, String>> queryServerGroupPropertyMap(int id) {
+    public BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(int id) {
         Map<Integer, Map<String, String>> propertyEnvMap = Maps.newHashMap();
         List<OcServerGroupProperty> serverGroupProperties = ocServerGroupPropertyService.queryOcServerGroupPropertyByServerGroupId(id);
         serverGroupProperties.forEach(e -> {
@@ -254,7 +254,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             propertyMap.put(e.getPropertyName(), e.getPropertyValue());
             propertyEnvMap.put(e.getEnvType(), propertyMap);
         });
-        return propertyEnvMap;
+        return  new BusinessWrapper(propertyEnvMap);
     }
 
     @Override

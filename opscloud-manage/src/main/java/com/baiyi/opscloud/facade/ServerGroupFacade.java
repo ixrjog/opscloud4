@@ -44,7 +44,7 @@ public interface ServerGroupFacade {
 
     BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(int id);
 
-    Map<Integer, Map<String, String>> queryServerGroupPropertyMap(int id);
+    BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(int id);
 
     BusinessWrapper<Boolean> saveServerGroupProperty(ServerGroupPropertyVO.ServerGroupProperty serverGroupProperty);
 
