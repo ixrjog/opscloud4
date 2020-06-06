@@ -194,17 +194,17 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> executorCommand(ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
+    public BusinessWrapper<OcServerTask> executorCommand(ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
         return ExecutorFactory.getAnsibleExecutorByKey(AnsibleCommandExecutor.COMPONENT_NAME).executorByParam(serverTaskCommandExecutor);
     }
 
     @Override
-    public BusinessWrapper<Boolean> executorScript(ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
+    public BusinessWrapper<OcServerTask> executorScript(ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
         return ExecutorFactory.getAnsibleExecutorByKey(AnsibleScriptExecutor.COMPONENT_NAME).executorByParam(serverTaskScriptExecutor);
     }
 
     @Override
-    public BusinessWrapper<Boolean> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor) {
+    public BusinessWrapper<OcServerTask> executorPlaybook(ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor) {
         return ExecutorFactory.getAnsibleExecutorByKey(AnsiblePlaybookExecutor.COMPONENT_NAME).executorByParam(serverTaskPlaybookExecutor);
     }
 

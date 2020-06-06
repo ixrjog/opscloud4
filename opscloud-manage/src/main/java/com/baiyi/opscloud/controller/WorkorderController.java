@@ -107,13 +107,13 @@ public class WorkorderController {
 
     @ApiOperation(value = "删除工单票据添加条目")
     @DeleteMapping(value = "/ticket/entry/del", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> delWorkorderTicketEntry(@RequestParam int id) {
+    public HttpResult<Boolean> delWorkorderTicketEntryById(@RequestParam int id) {
         return new HttpResult<>(workorderFacade.delWorkorderTicketEntryById(id));
     }
 
     @ApiOperation(value = "删除工单")
     @DeleteMapping(value = "/ticket/del", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> delWorkorderTicket(@RequestParam int id) {
+    public HttpResult<Boolean> delWorkorderTicketById(@RequestParam int id) {
         return new HttpResult<>(workorderFacade.delWorkorderTicketById(id));
     }
 

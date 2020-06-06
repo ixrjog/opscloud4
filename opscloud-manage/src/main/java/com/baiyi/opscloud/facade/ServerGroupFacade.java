@@ -42,7 +42,7 @@ public interface ServerGroupFacade {
 
     BusinessWrapper<Boolean> revokeUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission);
 
-    List<ServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
+    BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(int id);
 
     Map<Integer, Map<String, String>> queryServerGroupPropertyMap(int id);
 

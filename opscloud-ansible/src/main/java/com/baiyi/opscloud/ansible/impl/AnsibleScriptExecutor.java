@@ -34,7 +34,7 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
     private OcAnsibleScriptService ocAnsibleScriptService;
 
     @Override
-    public BusinessWrapper<Boolean> executorByParam(ServerTaskExecutorParam.TaskExecutor taskExecutor) {
+    public BusinessWrapper<OcServerTask> executorByParam(ServerTaskExecutorParam.TaskExecutor taskExecutor) {
         if (!(taskExecutor instanceof ServerTaskExecutorParam.ServerTaskScriptExecutor))
             return new BusinessWrapper(ErrorEnum.EXECUTOR_PARAM_TYPE_ERROR);
         ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor = (ServerTaskExecutorParam.ServerTaskScriptExecutor) taskExecutor;
@@ -51,7 +51,7 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
     }
 
     @Override
-    public BusinessWrapper<Boolean> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer) {
+    public BusinessWrapper<OcServerTask> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer) {
         if (!(taskExecutor instanceof ServerTaskExecutorParam.ServerTaskScriptExecutor))
             return new BusinessWrapper(ErrorEnum.EXECUTOR_PARAM_TYPE_ERROR);
         ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor = (ServerTaskExecutorParam.ServerTaskScriptExecutor) taskExecutor;
@@ -65,7 +65,7 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
         return executor(ocServerTask, serverTaskScriptExecutor);
     }
 
-    private BusinessWrapper<Boolean> executor(OcServerTask ocServerTask, ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
+    private BusinessWrapper<OcServerTask> executor(OcServerTask ocServerTask, ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
         addOcServerTask(ocServerTask);
         // 重新写入脚本
         OcAnsibleScript ocAnsibleScript = ocAnsibleScriptService.queryOcAnsibleScriptById(serverTaskScriptExecutor.getScriptId());

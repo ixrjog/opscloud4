@@ -30,7 +30,6 @@ public class AuthController {
     @Resource
     private AuthFacade authFacade;
 
-    // role
     @ApiOperation(value = "分页查询role列表")
     @GetMapping(value = "/role/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<RoleVO.Role>> queryRolePage(@Valid RoleParam.PageQuery pageQuery) {

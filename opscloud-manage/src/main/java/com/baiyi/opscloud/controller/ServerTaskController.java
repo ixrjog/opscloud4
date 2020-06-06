@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.controller;
 
-import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
 import com.baiyi.opscloud.domain.param.ansible.AnsibleScriptParam;
 import com.baiyi.opscloud.domain.param.ansible.ServerTaskHistoryParam;
@@ -90,19 +90,19 @@ public class ServerTaskController {
 
     @ApiOperation(value = "批量命令")
     @PostMapping(value = "/command/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<BusinessWrapper<Boolean>> executorCommand(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
+    public HttpResult<OcServerTask> executorCommand(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor) {
         return new HttpResult(serverTaskFacade.executorCommand(serverTaskCommandExecutor));
     }
 
     @ApiOperation(value = "批量脚本")
     @PostMapping(value = "/script/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<BusinessWrapper<Boolean>> executorScript(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
+    public HttpResult<OcServerTask> executorScript(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor) {
         return new HttpResult(serverTaskFacade.executorScript(serverTaskScriptExecutor));
     }
 
     @ApiOperation(value = "执行playbook")
     @PostMapping(value = "/playbook/executor", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<BusinessWrapper<Boolean>> executorPlaybook(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor) {
+    public HttpResult<OcServerTask> executorPlaybook(@RequestBody @Valid ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor) {
         return new HttpResult(serverTaskFacade.executorPlaybook(serverTaskPlaybookExecutor));
     }
 

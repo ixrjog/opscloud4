@@ -51,7 +51,7 @@ public abstract class BaseExecutor implements InitializingBean, IAnsibleExecutor
         ocServerTaskService.addOcServerTask(ocServerTask);
     }
 
-    protected BusinessWrapper<Boolean> getResultWrapper(OcServerTask ocServerTask) {
+    protected BusinessWrapper<OcServerTask> getResultWrapper(OcServerTask ocServerTask) {
         return new BusinessWrapper(ocServerTask);
     }
 

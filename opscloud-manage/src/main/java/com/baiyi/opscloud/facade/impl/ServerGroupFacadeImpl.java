@@ -238,9 +238,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public List<ServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id) {
+    public BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(int id) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(id);
-        return serverAttributeFacade.queryServerGroupAttribute(ocServerGroup);
+        return new BusinessWrapper(serverAttributeFacade.queryServerGroupAttribute(ocServerGroup));
     }
 
     @Override

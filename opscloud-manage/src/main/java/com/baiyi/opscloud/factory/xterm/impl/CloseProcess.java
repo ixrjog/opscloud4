@@ -40,7 +40,7 @@ public class CloseProcess extends BaseProcess implements IXTermProcess {
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
                 writeAuditLog(ocTerminalSession, instanceId); // 写审计日志
-                sessionInstanceClosed(ocTerminalSession, instanceId); // 设置关闭会话
+                closeSessionInstance(ocTerminalSession, instanceId); // 设置关闭会话
             } catch (Exception e) {
                 e.printStackTrace();
             }

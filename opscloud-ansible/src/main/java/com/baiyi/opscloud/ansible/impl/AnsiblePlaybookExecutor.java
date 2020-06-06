@@ -32,7 +32,7 @@ public class AnsiblePlaybookExecutor extends BaseExecutor implements IAnsibleExe
     private OcAnsiblePlaybookService ocAnsiblePlaybookService;
 
     @Override
-    public BusinessWrapper<Boolean> executorByParam(ServerTaskExecutorParam.TaskExecutor taskExecutor) {
+    public BusinessWrapper<OcServerTask> executorByParam(ServerTaskExecutorParam.TaskExecutor taskExecutor) {
         if (!(taskExecutor instanceof ServerTaskExecutorParam.ServerTaskPlaybookExecutor))
             return new BusinessWrapper(ErrorEnum.EXECUTOR_PARAM_TYPE_ERROR);
         ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor = (ServerTaskExecutorParam.ServerTaskPlaybookExecutor) taskExecutor;
@@ -57,8 +57,8 @@ public class AnsiblePlaybookExecutor extends BaseExecutor implements IAnsibleExe
     }
 
     @Override
-    public BusinessWrapper<Boolean> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer) {
-        return BusinessWrapper.SUCCESS;
+    public BusinessWrapper<OcServerTask> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer) {
+        return new BusinessWrapper<>();
     }
 
 }

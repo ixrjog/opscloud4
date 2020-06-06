@@ -41,7 +41,7 @@ public class AccountCenter {
      * @param loginParam
      * @return
      */
-    public BusinessWrapper<Boolean> loginCheck(LogParam.LoginParam loginParam) {
+    public BusinessWrapper<LogVO.LoginVO> loginCheck(LogParam.LoginParam loginParam) {
         com.baiyi.opscloud.ldap.credential.PersonCredential credential = PersonCredential.builder()
                 .username(loginParam.getUsername())
                 .password(loginParam.getPassword())

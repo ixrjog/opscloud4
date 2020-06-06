@@ -32,7 +32,7 @@ import java.util.Date;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseProcess implements IXTermProcess, InitializingBean{
+public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     @Resource
     protected UserFacade userFacade;
@@ -69,6 +69,12 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
 
     abstract protected BaseMessage getMessage(String message);
 
+    /**
+     * 判断用户访问级别 >= ops
+     *
+     * @param ocUser
+     * @return
+     */
     protected boolean isOps(OcUser ocUser) {
         return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
     }
@@ -112,12 +118,12 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
         return isBatch;
     }
 
-    protected void sessionInstanceClosed(OcTerminalSession ocTerminalSession, String instanceId) {
+    protected void closeSessionInstance(OcTerminalSession ocTerminalSession, String instanceId) {
         try {
             OcTerminalSessionInstance ocTerminalSessionInstance = terminalFacade.queryOcTerminalSessionInstanceByUniqueKey(ocTerminalSession.getSessionId(), instanceId);
             ocTerminalSessionInstance.setCloseTime(new Date());
             ocTerminalSessionInstance.setIsClosed(true);
-            ocTerminalSessionInstance.setOutputSize(IOUtils.fileSize(xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(),instanceId)));
+            ocTerminalSessionInstance.setOutputSize(IOUtils.fileSize(xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(), instanceId)));
             terminalFacade.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
         } catch (Exception e) {
 
@@ -128,17 +134,15 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
         AuditLogHandler.writeAuditLog(ocTerminalSession.getSessionId(), instanceId);
     }
 
-    protected void heartbeat(String sessionId){
+    protected void heartbeat(String sessionId) {
         redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60 * 1000L);
     }
 
     /**
      * 注册
-     *
-     * @throws Exception
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         XTermProcessFactory.register(this);
     }
 

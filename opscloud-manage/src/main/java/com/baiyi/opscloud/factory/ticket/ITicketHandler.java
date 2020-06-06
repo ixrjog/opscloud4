@@ -18,31 +18,14 @@ public interface ITicketHandler {
      **/
     void executorTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
 
-    //BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
-
     BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser,  WorkorderTicketEntryVO.Entry entry);
 
     BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser,  WorkorderTicketEntryVO.Entry entry);
-
-   // BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
 
     WorkorderTicketEntryVO.Entry convertTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
 
     WorkorderTicketVO.Ticket createTicket(OcUser ocUser);
 
     String getKey();
-
-    // disagree  agree
-
-
-//
-//    /**
-//     * 审批拒绝
-//     * @param ticketId
-//     * @return
-//     */
-//    BusinessWrapper<Boolean> disapproveTicket(int ticketId);
-//
-//    BusinessWrapper<Boolean> createTicket();
 
 }

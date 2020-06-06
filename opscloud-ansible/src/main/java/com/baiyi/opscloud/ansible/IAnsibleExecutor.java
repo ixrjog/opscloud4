@@ -2,6 +2,7 @@ package com.baiyi.opscloud.ansible;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 
 /**
@@ -18,7 +19,7 @@ public interface IAnsibleExecutor {
      * @param taskExecutor
      * @return
      */
-    BusinessWrapper<Boolean> executorByParam(ServerTaskExecutorParam.TaskExecutor taskExecutor);
+    BusinessWrapper<OcServerTask> executorByParam(ServerTaskExecutorParam.TaskExecutor taskExecutor);
 
     /**
      * 内部接口
@@ -26,7 +27,7 @@ public interface IAnsibleExecutor {
      * @param ocServer
      * @return
      */
-    BusinessWrapper<Boolean> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer);
+    BusinessWrapper<OcServerTask> executor(ServerTaskExecutorParam.TaskExecutor taskExecutor, OcServer ocServer);
 
 
 }
