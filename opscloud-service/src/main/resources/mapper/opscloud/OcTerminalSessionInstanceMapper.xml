@@ -11,6 +11,7 @@
     <result column="duplicate_instance_id" jdbcType="VARCHAR" property="duplicateInstanceId" />
     <result column="system_user" jdbcType="VARCHAR" property="systemUser" />
     <result column="host_ip" jdbcType="VARCHAR" property="hostIp" />
+    <result column="output_size" jdbcType="BIGINT" property="outputSize" />
     <result column="is_closed" jdbcType="BIT" property="isClosed" />
     <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
     <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />

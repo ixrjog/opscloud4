@@ -2,6 +2,7 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IOUtils;
+import com.baiyi.opscloud.common.util.bae64.FileSizeUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.term.TerminalSessionInstanceVO;
 import com.baiyi.opscloud.xterm.config.XTermConfig;
@@ -37,6 +38,7 @@ public class TerminalSessionInstanceDecorator {
             auditLog.setIsEmpty(false);
         }
         terminalSessionInstance.setAuditLog(auditLog);
+        terminalSessionInstance.setOutputFileSize(FileSizeUtils.formetFileSize(terminalSessionInstance.getOutputSize()));
         return terminalSessionInstance;
     }
 

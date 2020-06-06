@@ -22,6 +22,7 @@ public class CloseProcess extends BaseProcess implements IXTermProcess {
 
     /**
      * 关闭所有XTerm
+     *
      * @return
      */
 
@@ -33,13 +34,13 @@ public class CloseProcess extends BaseProcess implements IXTermProcess {
     @Override
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId());
-        if(sessionMap == null) return;
+        if (sessionMap == null) return;
         for (String instanceId : sessionMap.keySet()) {
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
-                sessionInstanceClosed( ocTerminalSession,instanceId); // 设置关闭会话
                 writeAuditLog(ocTerminalSession, instanceId); // 写审计日志
+                sessionInstanceClosed(ocTerminalSession, instanceId); // 设置关闭会话
             } catch (Exception e) {
                 e.printStackTrace();
             }

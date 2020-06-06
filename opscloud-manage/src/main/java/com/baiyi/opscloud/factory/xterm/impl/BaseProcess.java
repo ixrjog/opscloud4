@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.OcSettingName;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -13,6 +14,7 @@ import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
+import com.baiyi.opscloud.xterm.config.XTermConfig;
 import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
@@ -61,6 +63,9 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
 
     @Resource
     protected SettingFacade settingFacade;
+
+    @Resource
+    private XTermConfig xtermConfig;
 
     abstract protected BaseMessage getMessage(String message);
 
@@ -112,6 +117,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
             OcTerminalSessionInstance ocTerminalSessionInstance = terminalFacade.queryOcTerminalSessionInstanceByUniqueKey(ocTerminalSession.getSessionId(), instanceId);
             ocTerminalSessionInstance.setCloseTime(new Date());
             ocTerminalSessionInstance.setIsClosed(true);
+            ocTerminalSessionInstance.setOutputSize(IOUtils.fileSize(xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(),instanceId)));
             terminalFacade.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
         } catch (Exception e) {
 

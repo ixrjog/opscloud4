@@ -28,6 +28,8 @@ public class TerminalSessionInstanceVO {
         private String systemUser;
         private String hostIp;
         private Boolean isClosed;
+        private Long outputSize;
+        private String outputFileSize; // 输入文件容量
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date openTime;
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")

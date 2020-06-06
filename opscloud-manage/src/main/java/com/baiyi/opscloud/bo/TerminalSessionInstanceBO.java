@@ -21,6 +21,8 @@ public class TerminalSessionInstanceBO {
     private String systemUser;
     private String hostIp;
     @Builder.Default
+    private Long outputSize = 0L;
+    @Builder.Default
     private Boolean isClosed = false;
     @Builder.Default
     private Date openTime = new Date();
