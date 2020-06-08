@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -67,9 +68,15 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
     @Override
     public BusinessWrapper<Boolean> delOcUserPermission(OcUserPermission ocUserPermission) {
+        // 删除服务器组授权
         OcUserPermission permission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
         if (permission != null)
             ocUserPermissionService.delOcUserPermissionById(permission.getId());
+        // 删除高权限
+        ocUserPermission.setBusinessType(BusinessType.SERVER_ADMINISTRATOR_ACCOUNT.getType());
+        OcUserPermission permissionAdminAccout = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
+        if (permissionAdminAccout != null)
+            ocUserPermissionService.delOcUserPermissionById(permissionAdminAccout.getId());
         return BusinessWrapper.SUCCESS;
     }
 

@@ -69,7 +69,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "复职")
-    @PutMapping(value = "/reinstated",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/reinstate",  produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> beReinstatedUser( @Valid int id) {
         return new HttpResult<>(userFacade.beReinstatedUser(id));
     }
@@ -116,19 +116,19 @@ public class UserController {
         return new HttpResult<>(userFacade.createUser(user));
     }
 
-    @ApiOperation(value = "同步user")
+    @ApiOperation(value = "同步用户")
     @GetMapping(value = "/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncUser() {
         return new HttpResult<>(userFacade.syncUser());
     }
 
-    @ApiOperation(value = "分页查询user授权的用户组列表")
+    @ApiOperation(value = "分页查询用户授权的用户组列表")
     @GetMapping(value = "/include/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<UserGroupVO.UserGroup>> queryUserIncludeUserGroupPage(@Valid UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserIncludeUserGroupPage(pageQuery));
     }
 
-    @ApiOperation(value = "分页查询user未授权的用户组列表")
+    @ApiOperation(value = "分页查询用户未授权的用户组列表")
     @GetMapping(value = "/exclude/group/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<UserGroupVO.UserGroup>> queryUserExcludeUserGroupPage(@Valid UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserExcludeUserGroupPage(pageQuery));
@@ -153,19 +153,19 @@ public class UserController {
         return new HttpResult<>(userFacade.revokeUserUserGroup(userUserGroupPermission));
     }
 
-    @ApiOperation(value = "新增user group")
+    @ApiOperation(value = "新增用户组")
     @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addTag(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
         return new HttpResult<>(userFacade.addUserGroup(userGroup));
     }
 
-    @ApiOperation(value = "同步user group")
+    @ApiOperation(value = "同步用户组")
     @GetMapping(value = "/group/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncUserGroup() {
         return new HttpResult<>(userFacade.syncUserGroup());
     }
 
-    @ApiOperation(value = "查询user授权的服务器树")
+    @ApiOperation(value = "查询用户授权的服务器树")
     @PostMapping(value = "/server/tree/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ServerTreeVO.MyServerTree> queryUserServerTree(@RequestBody @Valid UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
         return new HttpResult<>(userFacade.queryUserServerTree(userServerTreeQuery));

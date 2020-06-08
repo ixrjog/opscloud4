@@ -16,6 +16,9 @@ import org.springframework.stereotype.Service;
 @Service
 public class JasyptUtils {
 
+    private JasyptUtils() {
+    }
+
     /**
      * Jasypt生成加密结果
      *
