@@ -38,6 +38,12 @@ public class ServerGroupController {
         return new HttpResult<>(serverGroupFacade.queryServerGroupPage(pageQuery));
     }
 
+    @ApiOperation(value = "按id查询serverGroup详情")
+    @GetMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ServerGroupVO.ServerGroup>> queryServerGroupById(@Valid int id) {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupPage(pageQuery));
+    }
+
     @ApiOperation(value = "新增serverGroup")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> addServerGroup(@RequestBody @Valid ServerGroupVO.ServerGroup serverGroup) {

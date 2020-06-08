@@ -20,6 +20,8 @@ public interface ServerGroupFacade {
 
     DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery);
 
+    BusinessWrapper<ServerGroupVO.ServerGroup> queryServerGroupById(int id);
+
     BusinessWrapper<Boolean> addServerGroup(ServerGroupVO.ServerGroup serverGroup);
 
     BusinessWrapper<Boolean> updateServerGroup(ServerGroupVO.ServerGroup serverGroup);

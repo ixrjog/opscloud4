@@ -94,6 +94,12 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
+    public BusinessWrapper<ServerGroupVO.ServerGroup> queryServerGroupById(int id) {
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(id);
+        return new BusinessWrapper<>(BeanCopierUtils.copyProperties(ocServerGroup, ServerGroupVO.ServerGroup.class));
+    }
+
+    @Override
     public BusinessWrapper<Boolean> addServerGroup(ServerGroupVO.ServerGroup serverGroup) {
         return saveServerGroup(serverGroup, ACTION_ADD);
     }
@@ -254,7 +260,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             propertyMap.put(e.getPropertyName(), e.getPropertyValue());
             propertyEnvMap.put(e.getEnvType(), propertyMap);
         });
-        return  new BusinessWrapper(propertyEnvMap);
+        return new BusinessWrapper(propertyEnvMap);
     }
 
     @Override
