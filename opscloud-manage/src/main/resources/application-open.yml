@@ -25,6 +25,8 @@ spring:
         max-idle: 20
         max-active: 100
         min-idle: 0
+  jackson:
+    time-zone: GMT+8
 
 app:
   datasource:

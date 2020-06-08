@@ -30,9 +30,9 @@ public class TerminalSessionInstanceVO {
         private Boolean isClosed;
         private Long outputSize;
         private String outputFileSize; // 输入文件容量
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date openTime;
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
 
     }
