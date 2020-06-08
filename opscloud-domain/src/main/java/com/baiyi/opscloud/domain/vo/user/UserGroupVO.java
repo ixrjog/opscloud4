@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class UserGroupVO {
         @ApiModelProperty(value = "主键")
         private Integer id;
 
+        @NotBlank(message = "用户组名称不能为空")
         @ApiModelProperty(value = "用户组名称")
         private String name;
 

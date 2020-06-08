@@ -35,9 +35,9 @@ public interface UserFacade {
 
     String getRandomPassword();
 
-    BusinessWrapper<Boolean> updateBaseUser(UserVO.User user);
+    BusinessWrapper<Boolean> updateBaseUser(UserParam.UpdateUser updateUser);
 
-    BusinessWrapper<Boolean> createUser(UserVO.User user);
+    BusinessWrapper<Boolean> createUser(UserParam.CreateUser createUser);
 
     DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery);
 
@@ -50,6 +50,8 @@ public interface UserFacade {
     DataTable<UserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
     BusinessWrapper<Boolean> addUserGroup(UserGroupVO.UserGroup userGroup);
+
+    BusinessWrapper<Boolean> updateUserGroup(UserGroupVO.UserGroup userGroup);
 
     BusinessWrapper<Boolean> syncUserGroup();
 

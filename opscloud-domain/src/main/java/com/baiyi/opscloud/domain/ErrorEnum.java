@@ -37,6 +37,7 @@ public enum ErrorEnum {
     USER_PHONE_NON_COMPLIANCE_WITH_RULES(12002, "用户手机号不合规！"),
     USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
     USER_NOT_EXIST(12002, "用户不存在！"),
+    USER_IS_UNACTIVE(12002, "用户被禁用不能修改信息！"),
     // Account is disabled
     ACCOUNT_IS_DISABLE(12002, "账户被禁用！"),
     //applyUserApiToken

@@ -106,7 +106,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public UserVO.User queryUserDetailByUsername(String username){
+    public UserVO.User queryUserDetailByUsername(String username) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(username);
         UserVO.User user = BeanCopierUtils.copyProperties(ocUser, UserVO.User.class);
         return userDecorator.decorator(user, 1);
@@ -198,12 +198,18 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateBaseUser(UserVO.User user) {
+    public BusinessWrapper<Boolean> updateBaseUser(UserParam.UpdateUser updateUser) {
+        // 查询用户是否有效
+        OcUser checkUser = ocUserService.queryOcUserByUsername(updateUser.getUsername());
+        if (checkUser == null)
+            return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
+        if (!checkUser.getIsActive())
+            return new BusinessWrapper<>(ErrorEnum.USER_IS_UNACTIVE);
         // 公共接口需要2次鉴权
-        BusinessWrapper<Boolean> wrapper = enhancedAuthority(user.getId(), URLResource.USER_UPDATE);
+        BusinessWrapper<Boolean> wrapper = enhancedAuthority(checkUser.getId(), URLResource.USER_UPDATE);
         if (!wrapper.isSuccess())
             return wrapper;
-        OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
+        OcUser ocUser = BeanCopierUtils.copyProperties(updateUser, OcUser.class);
         String password = ""; // 用户密码原文
         // 用户尝试修改密码
         if (!StringUtils.isEmpty(ocUser.getPassword())) {
@@ -231,20 +237,12 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> createUser(UserVO.User user) {
-        if (StringUtils.isEmpty(user.getUsername()))
-            return new BusinessWrapper(ErrorEnum.USER_USERNAME_IS_NULL);
-        if (StringUtils.isEmpty(user.getPassword()))
-            return new BusinessWrapper(ErrorEnum.USER_PASSWORD_IS_NULL);
-        if (StringUtils.isEmpty(user.getDisplayName()))
-            return new BusinessWrapper(ErrorEnum.USER_DISPLAYNAME_IS_NULL);
-        if (StringUtils.isEmpty(user.getEmail()))
-            return new BusinessWrapper(ErrorEnum.USER_EMAIL_IS_NULL);
-        if (!RegexUtils.isUsernameRule(user.getUsername()))
+    public BusinessWrapper<Boolean> createUser(UserParam.CreateUser createUser) {
+        if (!RegexUtils.isUsernameRule(createUser.getUsername()))
             return new BusinessWrapper(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
-        if (!RegexUtils.checkPasswordRule(user.getPassword()))
+        if (!RegexUtils.checkPasswordRule(createUser.getPassword()))
             return new BusinessWrapper<>(ErrorEnum.USER_PASSWORD_NON_COMPLIANCE_WITH_RULES);
-        OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
+        OcUser ocUser = BeanCopierUtils.copyProperties(createUser, OcUser.class);
         ocUser.setIsActive(true);
         ocUser.setSource("ldap");
         ocUser.setUuid(UUIDUtils.getUUID());
@@ -321,6 +319,15 @@ public class UserFacadeImpl implements UserFacade {
             return new BusinessWrapper(ErrorEnum.USERGROUP_NAME_ALREADY_EXIST);
         OcUserGroup ocUserGroup = BeanCopierUtils.copyProperties(userGroup, OcUserGroup.class);
         ocUserGroupService.addOcUserGroup(ocUserGroup);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> updateUserGroup(UserGroupVO.UserGroup userGroup) {
+        OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupByName(userGroup.getName());
+        ocUserGroup.setInWorkorder(userGroup.getInWorkorder());
+        ocUserGroup.setComment(userGroup.getComment());
+        ocUserGroupService.updateOcUserGroup(ocUserGroup);
         return BusinessWrapper.SUCCESS;
     }
 

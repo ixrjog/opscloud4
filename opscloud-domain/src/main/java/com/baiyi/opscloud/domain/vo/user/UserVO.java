@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -52,6 +53,7 @@ public class UserVO {
         @ApiModelProperty(value = "姓名")
         private String name;
 
+        @Email
         @ApiModelProperty(value = "邮箱")
         private String email;
 
@@ -77,13 +79,6 @@ public class UserVO {
         @ApiModelProperty(value = "留言")
         private String comment;
 
-//        @ApiModelProperty(value = "创建时间")
-//        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-//        private Date createTime;
-//
-//        @ApiModelProperty(value = "更新时间")
-//        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-//        private Date updateTime;
     }
 
 }

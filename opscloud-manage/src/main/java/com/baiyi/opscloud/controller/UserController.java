@@ -16,6 +16,7 @@ import com.baiyi.opscloud.facade.UserSettingFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -104,16 +105,16 @@ public class UserController {
         return new HttpResult<>(userFacade.saveUserCredentia(userCredential));
     }
 
-    @ApiOperation(value = "更新user信息")
+    @ApiOperation(value = "更新用户信息")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateUser(@RequestBody @Valid UserVO.User user) {
-        return new HttpResult<>(userFacade.updateBaseUser(user));
+    public HttpResult<Boolean> updateUser(@RequestBody @Validated UserParam.UpdateUser updateUser) {
+        return new HttpResult<>(userFacade.updateBaseUser(updateUser));
     }
 
-    @ApiOperation(value = "创建user")
+    @ApiOperation(value = "创建用户")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> createUser(@RequestBody @Valid UserVO.User user) {
-        return new HttpResult<>(userFacade.createUser(user));
+    public HttpResult<Boolean> createUser(@RequestBody @Validated UserParam.CreateUser createUser) {
+        return new HttpResult<>(userFacade.createUser(createUser));
     }
 
     @ApiOperation(value = "同步用户")
@@ -155,8 +156,14 @@ public class UserController {
 
     @ApiOperation(value = "新增用户组")
     @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+    public HttpResult<Boolean> addUserGroup(@RequestBody @Validated UserGroupVO.UserGroup userGroup) {
         return new HttpResult<>(userFacade.addUserGroup(userGroup));
+    }
+
+    @ApiOperation(value = "更新用户组")
+    @PutMapping(value = "/group/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateUserGroup(@RequestBody @Validated UserGroupVO.UserGroup userGroup) {
+        return new HttpResult<>(userFacade.updateUserGroup(userGroup));
     }
 
     @ApiOperation(value = "同步用户组")
