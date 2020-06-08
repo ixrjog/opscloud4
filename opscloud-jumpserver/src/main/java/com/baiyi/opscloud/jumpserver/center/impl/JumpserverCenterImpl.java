@@ -141,7 +141,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             }
         } else {
             if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
-                usersUser = UsersUserBuilder.build(ocUser);
+                usersUser = UsersUserBuilder.build(ocUser, checkUsersUser.getRole());
                 usersUser.setId(checkUsersUser.getId());
                 if (!StringUtils.isEmpty(checkUsersUser.getPublicKey())) // 写入publicKey
                     usersUser.setPublicKey(checkUsersUser.getPublicKey());
