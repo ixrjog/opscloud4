@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.task;
 
-import com.baiyi.opscloud.config.OpscloudConfig;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,13 +14,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class AttributeTask {
-
-    @Resource
-    private OpscloudConfig opscloudConfig;
-
-    @Resource
-    private TaskUtil taskUtil;
+public class AttributeTask extends BaseTask {
 
     @Resource
     private AttributeFacade attributeFacade;
@@ -33,15 +26,22 @@ public class AttributeTask {
     /**
      * 执行ansible配置文件生成任务
      */
-    @Scheduled(cron = "* */2 * * * ?")
+    @Scheduled(initialDelay = 10000, fixedRate = 60 * 1000)
     public void createAnsibleHostsConsumer() {
-        if (!opscloudConfig.getOpenTask()) return;
-        if (taskUtil.isTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY)) return;
         if (taskUtil.getSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC) == 0) return;
-        log.info("任务: buildAnsibleHosts 开始执行!");
-        attributeFacade.createAnsibleHosts();
-        log.info("任务: buildAnsibleHosts 执行完成!");
+        if (!tryLock(5)) return;
+        attributeFacade.createAnsibleHostsTask();
+        unlock();
     }
 
+    @Override
+    protected String getLock() {
+        return TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY;
+    }
+
+    @Override
+    protected String getTaskName() {
+        return "Ansible配置文件生成任务";
+    }
 
 }

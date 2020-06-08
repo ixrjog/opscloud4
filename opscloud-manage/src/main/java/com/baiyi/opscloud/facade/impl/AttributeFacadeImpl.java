@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
-import com.baiyi.opscloud.task.TaskUtil;
+import com.baiyi.opscloud.task.util.TaskUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +15,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.ansible.config.AnsibleConfig.ANSIBLE_HOSTS;
-import static com.baiyi.opscloud.task.AttributeTask.TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY;
 import static com.baiyi.opscloud.task.AttributeTask.TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC;
 
 /**
@@ -39,8 +38,7 @@ public class AttributeFacadeImpl implements AttributeFacade {
     private TaskUtil taskUtil;
 
 
-    public void createAnsibleHosts() {
-        taskUtil.setTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY, 5);
+    public void createAnsibleHostsTask() {
         taskUtil.clearSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
         try {
             String context = attributeAnsible.getHeadInfo();
@@ -54,7 +52,6 @@ public class AttributeFacadeImpl implements AttributeFacade {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        taskUtil.delTaskLock(TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY);
     }
 
 }

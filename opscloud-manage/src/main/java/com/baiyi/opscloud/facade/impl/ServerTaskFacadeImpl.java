@@ -217,7 +217,7 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
 
     @Override
     public BusinessWrapper<Boolean> createAnsibleHosts() {
-        attributeFacade.createAnsibleHosts();
+        attributeFacade.createAnsibleHostsTask();
         return BusinessWrapper.SUCCESS;
     }
 

@@ -59,7 +59,7 @@ public class TerminalFacadeImpl implements TerminalFacade {
     }
 
     @Override
-    public void closeInvalidSession() {
+    public void closeInvalidSessionTask() {
         List<OcTerminalSession> list = ocTerminalSessionService.queryOcTerminalSessionByActive();
         list.forEach(e -> {
             String key = CacheKeyUtils.getTermSessionHeartbeatKey(e.getSessionId());

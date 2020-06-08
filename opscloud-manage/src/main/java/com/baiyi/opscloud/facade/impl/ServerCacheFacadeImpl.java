@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.facade.ServerCacheFacade;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
-import com.baiyi.opscloud.task.TaskUtil;
+import com.baiyi.opscloud.task.util.TaskUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

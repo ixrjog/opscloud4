@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.task;
+package com.baiyi.opscloud.task.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.TimeUtils;
@@ -48,7 +48,7 @@ public class TaskUtil {
      * @param taskKey
      * @return
      */
-    public boolean isTaskLock(String taskKey) {
+    public boolean tryLock(String taskKey) {
         return redisUtil.hasKey(taskKey);
     }
 
@@ -58,7 +58,7 @@ public class TaskUtil {
      * @param taskKey
      * @param minute  锁定最大时间
      */
-    public void setTaskLock(String taskKey, int minute) {
+    public void lock(String taskKey, int minute) {
         if (minute == 0)
             minute = MAX_MINUTE;
         redisUtil.set(taskKey, true, TimeUtils.minuteTime * minute);
@@ -69,7 +69,7 @@ public class TaskUtil {
      *
      * @param taskKey
      */
-    public void delTaskLock(String taskKey) {
+    public void unlock(String taskKey) {
         redisUtil.del(taskKey);
     }
 

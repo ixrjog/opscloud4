@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.xterm.config.XTermConfig;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Component;
  * @Date 2020/5/25 3:08 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class AuditLogHandler {
 
@@ -34,11 +36,12 @@ public class AuditLogHandler {
         try {
             if (redisUtil.hasKey(cacheKey)) {
                 // 追加内容
-                String log = (String)redisUtil.get(cacheKey);
+                String log = (String) redisUtil.get(cacheKey);
                 IOUtils.appendFile(log, xtermConfig.getAuditLogPath(sessionId, instanceId));
                 redisUtil.del(cacheKey); // 清空缓存
             }
         } catch (Exception e) {
+            log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
         }
     }
 }
