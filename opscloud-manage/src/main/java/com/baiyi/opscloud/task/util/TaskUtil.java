@@ -61,7 +61,7 @@ public class TaskUtil {
     public void lock(String taskKey, int minute) {
         if (minute == 0)
             minute = MAX_MINUTE;
-        redisUtil.set(taskKey, true, TimeUtils.minuteTime * minute);
+        redisUtil.set(taskKey, true, 60 * minute);
     }
 
     /**

@@ -39,7 +39,7 @@ import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
 public class AnsibleExecutorHandler {
 
     // 100 分钟
-    public static final Long MAX_TIMEOUT = 6000000L;
+    public static final Long MAX_TIMEOUT = 6000L;
 
     @Resource
     private OcServerTaskMemberService ocServerTaskMemberService;

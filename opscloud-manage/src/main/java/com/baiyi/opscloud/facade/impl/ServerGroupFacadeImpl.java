@@ -327,7 +327,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
                 .build();
         // 缓存1小时
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), myServerTree.getUuid());
-        redisUtil.set(key, serverTreeHostPatternMap, TimeUtils.hourTime);
+        redisUtil.set(key, serverTreeHostPatternMap, 3600);
         return myServerTree;
     }
 

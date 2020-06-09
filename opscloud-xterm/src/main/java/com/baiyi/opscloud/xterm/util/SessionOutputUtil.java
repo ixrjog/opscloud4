@@ -177,7 +177,7 @@ public class SessionOutputUtil {
         } else {
             logRepo = auditLog;
         }
-        redisUtil.set(cacheKey, logRepo, 100 * 60 * 1000L);
+        redisUtil.set(cacheKey, logRepo, 6000 );
 
         if (logRepo.length() > 10240)
             AuditLogHandler.writeAuditLog(sessionId, instanceId);

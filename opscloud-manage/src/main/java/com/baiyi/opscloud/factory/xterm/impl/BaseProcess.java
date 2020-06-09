@@ -135,7 +135,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     }
 
     protected void heartbeat(String sessionId) {
-        redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60 * 1000L);
+        redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60L);
     }
 
     /**
