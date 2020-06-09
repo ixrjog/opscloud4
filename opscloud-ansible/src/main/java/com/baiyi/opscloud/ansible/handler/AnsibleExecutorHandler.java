@@ -39,7 +39,7 @@ import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
 public class AnsibleExecutorHandler {
 
     // 100 分钟
-    public static final Long MAX_TIMEOUT = 6000L;
+    public static final Long MAX_TIMEOUT = 6000000L;
 
     @Resource
     private OcServerTaskMemberService ocServerTaskMemberService;
@@ -189,7 +189,7 @@ public class AnsibleExecutorHandler {
                         throw new TaskStopException();
                     }
                     // 日志长度超过阈值
-                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH){
+                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH) {
                         executorEngine.killedProcess();
                         taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskLogExceededLimit();

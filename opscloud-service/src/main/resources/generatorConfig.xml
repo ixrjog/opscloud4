@@ -151,7 +151,7 @@
        oc_setting
        -->
 
-        <table tableName="oc_setting">
+        <table tableName="oc_aliyun_ram_user">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>
