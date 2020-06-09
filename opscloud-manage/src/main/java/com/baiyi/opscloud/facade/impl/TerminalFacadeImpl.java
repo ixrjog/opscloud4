@@ -64,6 +64,7 @@ public class TerminalFacadeImpl implements TerminalFacade {
     public void closeInvalidSessionTask() {
         List<OcTerminalSession> list = ocTerminalSessionService.queryOcTerminalSessionByActive();
         list.forEach(e -> {
+            log.info("扫描会话 sessionId = {} ！", e.getSessionId());
             String key = CacheKeyUtils.getTermSessionHeartbeatKey(e.getSessionId());
             if (!redisUtil.hasKey(key)) {
                 List<OcTerminalSessionInstance> instanceList = ocTerminalSessionInstanceService.queryOcTerminalSessionInstanceBySessionId(e.getSessionId());
