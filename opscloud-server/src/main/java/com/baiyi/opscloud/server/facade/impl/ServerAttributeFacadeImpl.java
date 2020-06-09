@@ -147,10 +147,9 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
         List<ServerAttributeVO.ServerAttribute> list = queryServerGroupAttribute(ocServerGroup);
         for (ServerAttributeVO.ServerAttribute sa : list) {
             AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
-            serverGroupAttributeMap.putAll(toServerAttributeMap(attributeGroup.getAttributes()));
+            serverGroupAttributeMap.putAll(convertServerAttributeMap(attributeGroup.getAttributes()));
         }
         redisUtil.set(key, serverGroupAttributeMap, 60 * 60 * 24 * 7);
-        //   list.stream().collect(Collectors.toMap(ServerAttribute::getName, a -> a, (k1, k2) -> k1));
         return serverGroupAttributeMap;
     }
 
@@ -164,14 +163,14 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
         List<ServerAttributeVO.ServerAttribute> list = queryServerAttribute(ocServer);
         for (ServerAttributeVO.ServerAttribute sa : list) {
             AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
-            serverAttributeMap.putAll(toServerAttributeMap(attributeGroup.getAttributes()));
+            serverAttributeMap.putAll(convertServerAttributeMap(attributeGroup.getAttributes()));
         }
         redisUtil.set(key, serverAttributeMap, 60 * 60 * 24 * 7);
         return serverAttributeMap;
     }
 
 
-    private Map<String, String> toServerAttributeMap(List<ServerAttribute> list) {
+    private Map<String, String> convertServerAttributeMap(List<ServerAttribute> list) {
         if (list == null || list.isEmpty())
             return Maps.newHashMap();
         return list.stream().collect(Collectors.toMap(ServerAttribute::getName, ServerAttribute::getValue, (k1, k2) -> k1));
