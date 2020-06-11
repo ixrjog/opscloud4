@@ -79,10 +79,9 @@ public class ServerPowerOnConsumer extends BaseServerChangeConsumer implements I
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
                     return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TIMEOUT);
                 }
-
                 TimeUnit.SECONDS.sleep(5); // 5秒延迟
                 int powerStatus = iCloudServer.queryPowerStatus(ocCloudServer.getId());
-                if (powerStatus == CloudServerPowerStatus.RUNNING.getStatus() ) { //  已关闭
+                if (powerStatus == CloudServerPowerStatus.RUNNING.getStatus()) {
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow);
                     exit = true;
                 }

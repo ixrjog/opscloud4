@@ -20,7 +20,10 @@ public class AliyunRamUserBO {
     private String ramUsername;
     private String ramDisplayName;
     private String mobile;
-    private Integer accessKeys;
+    @Builder.Default
+    private Integer accessKeys = 0;
+    @Builder.Default
+    private Integer ramType = 0;
     private String comment;
     private Date createDate;
     private Date updateDate;

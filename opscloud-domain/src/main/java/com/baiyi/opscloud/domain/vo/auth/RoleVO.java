@@ -31,13 +31,6 @@ public class RoleVO {
         @ApiModelProperty(value = "是否支持工单", example = "1")
         private Integer inWorkorder;
 
-//        @ApiModelProperty(value = "创建时间")
-//        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-//        private Date createTime;
-//
-//        @ApiModelProperty(value = "更新时间")
-//        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-//        private Date updateTime;
     }
 
 

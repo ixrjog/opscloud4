@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_aliyun_ram_user")
 public class OcAliyunRamUser {
@@ -28,6 +28,12 @@ public class OcAliyunRamUser {
 
     @Column(name = "access_keys")
     private Integer accessKeys;
+
+    /**
+     * 账户类型
+     */
+    @Column(name = "ram_type")
+    private Integer ramType;
 
     private String comment;
 
@@ -149,6 +155,24 @@ public class OcAliyunRamUser {
      */
     public void setAccessKeys(Integer accessKeys) {
         this.accessKeys = accessKeys;
+    }
+
+    /**
+     * 获取账户类型
+     *
+     * @return ram_type - 账户类型
+     */
+    public Integer getRamType() {
+        return ramType;
+    }
+
+    /**
+     * 设置账户类型
+     *
+     * @param ramType 账户类型
+     */
+    public void setRamType(Integer ramType) {
+        this.ramType = ramType;
     }
 
     /**

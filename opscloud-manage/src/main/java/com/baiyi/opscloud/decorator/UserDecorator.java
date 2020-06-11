@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.vo.user.UserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.facade.AliyunRAMFacade;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
@@ -54,6 +55,9 @@ public class UserDecorator {
     @Resource
     private PersonRepo personRepo;
 
+    @Resource
+    private AliyunRAMFacade aliyunRAMFacade;
+
     // from mysql
     public UserVO.User decorator(UserVO.User user, Integer extend) {
         user.setPassword("");
@@ -81,6 +85,8 @@ public class UserDecorator {
             Map<String, Object> attributeMap = Maps.newHashMap();
             attributeMap.put("jumpserverPubkey", jumpserverCenter.checkUserPubkeyExist(user.getUsername()));
             user.setAttributeMap(attributeMap);
+            // AliyunRAM
+            user.setRamUsers(aliyunRAMFacade.queryRamUsersByUsername(user.getId()));
         }
         return user;
     }

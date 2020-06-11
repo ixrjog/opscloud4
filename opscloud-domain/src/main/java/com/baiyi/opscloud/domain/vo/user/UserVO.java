@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.user;
 
+import com.baiyi.opscloud.domain.vo.cloud.AliyunRAMVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -30,10 +31,11 @@ public class UserVO {
 
         private List<ServerGroupVO.ServerGroup> serverGroups;
 
-        // 只显示有效的ApiToken
-        private List<UserApiTokenVO.UserApiToken> apiTokens;
+        private List<UserApiTokenVO.UserApiToken> apiTokens; // 只显示有效的ApiToken
 
-        private  Map<String, Object> attributeMap;
+        private Map<String, Object> attributeMap;
+
+        private List<AliyunRAMVO.RAMUser> ramUsers;
 
         @ApiModelProperty(value = "主键")
         private Integer id;

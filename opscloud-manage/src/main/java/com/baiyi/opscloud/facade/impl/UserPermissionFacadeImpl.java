@@ -31,13 +31,13 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public void syncUserBusinessPermission(List<UserVO.User> userList, int businessType, int businessId) {
         try {
-            for (UserVO.User user : userList) {
+            userList.forEach(e -> {
                 OcUserPermission ocUserPermission = new OcUserPermission();
                 ocUserPermission.setBusinessType(businessType);
                 ocUserPermission.setBusinessId(businessId);
-                ocUserPermission.setUserId(user.getId());
+                ocUserPermission.setUserId(e.getId());
                 addOcUserPermission(ocUserPermission);
-            }
+            });
         } catch (Exception e) {
         }
     }
@@ -45,13 +45,13 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public void syncUserBusinessPermission(int userId, int businessType, List<Integer> businessIds) {
         try {
-            for (Integer businessId : businessIds) {
+            businessIds.forEach(e -> {
                 OcUserPermission ocUserPermission = new OcUserPermission();
                 ocUserPermission.setBusinessType(businessType);
-                ocUserPermission.setBusinessId(businessId);
+                ocUserPermission.setBusinessId(e);
                 ocUserPermission.setUserId(userId);
                 addOcUserPermission(ocUserPermission);
-            }
+            });
         } catch (Exception e) {
         }
     }
@@ -61,7 +61,6 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
         OcUserPermission checkOcUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
         if (checkOcUserPermission == null)
             ocUserPermissionService.addOcUserPermission(ocUserPermission);
-        //   return new BusinessWrapper<>(ErrorEnum.USER_PERMISSION_EXIST);
         return BusinessWrapper.SUCCESS;
     }
 

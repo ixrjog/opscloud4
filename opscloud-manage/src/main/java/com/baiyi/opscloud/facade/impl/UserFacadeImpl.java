@@ -420,7 +420,6 @@ public class UserFacadeImpl implements UserFacade {
 
 
     private void syncUserPermission(UserVO.User user) {
-        // OcUser ocUser= ocUserService.queryOcUserByUsername(user.getUsername());
         List<UserGroupVO.UserGroup> userGroups = userDecorator.decoratorFromLdapRepo(user, 1).getUserGroups();
         userPermissionFacade.syncUserBusinessPermission(user.getId(), BusinessType.USERGROUP.getType(), userGroups.stream().map(e -> e.getId()).collect(Collectors.toList()));
     }

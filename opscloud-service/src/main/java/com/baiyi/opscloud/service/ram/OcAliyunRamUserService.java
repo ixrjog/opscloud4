@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.ram;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
+import com.baiyi.opscloud.domain.param.cloud.AliyunRAMUserParam;
 
 import java.util.List;
 
@@ -20,4 +22,9 @@ public interface OcAliyunRamUserService {
     void updateOcAliyunRamUser(OcAliyunRamUser ocAliyunRamUser);
 
     void deleteOcAliyunRamUserById(int id);
+
+    DataTable<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.PageQuery pageQuery);
+
+    List<OcAliyunRamUser> queryUserPermissionRamUserByUserId(int userId);
+
 }

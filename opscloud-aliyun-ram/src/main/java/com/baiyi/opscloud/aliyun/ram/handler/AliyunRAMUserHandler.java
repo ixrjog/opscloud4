@@ -2,25 +2,30 @@ package com.baiyi.opscloud.aliyun.ram.handler;
 
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
+import com.aliyuncs.ram.model.v20150501.ListAccessKeysRequest;
+import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersRequest;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
  * @Date 2020/6/9 11:11 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
-public class AliyunRAMHandler {
+public class AliyunRAMUserHandler {
 
     @Resource
     private AliyunCore aliyunCore;
@@ -29,6 +34,7 @@ public class AliyunRAMHandler {
 
     /**
      * 查询账户下所有用户
+     *
      * @param aliyunAccount
      * @return
      */
@@ -38,6 +44,8 @@ public class AliyunRAMHandler {
         String marker = "";
         while (true) {
             ListUsersResponse responseMarker = listUsers(client, marker);
+            if (responseMarker.getUsers() == null)
+                return users;
             users.addAll(responseMarker.getUsers());
             if (!responseMarker.getIsTruncated()) {
                 return users;
@@ -53,17 +61,33 @@ public class AliyunRAMHandler {
         if (!StringUtils.isEmpty(marker))
             request.setMarker(marker);
         try {
-            ListUsersResponse response
-                    = client.getAcsResponse(request);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
+            return client.getAcsResponse(request);
         } catch (ClientException e) {
             e.printStackTrace();
         }
         return null;
     }
 
+
+    /**
+     * 查询用户激活的AccessKey
+     *
+     * @param username
+     * @return
+     */
+    public List<ListAccessKeysResponse.AccessKey> getUserAccessKeys(AliyunAccount aliyunAccount, String username) {
+        log.error("查询RAM用户 {} AK", username);
+        ListAccessKeysRequest request = new ListAccessKeysRequest();
+        request.setUserName(username);
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        try {
+            return client.getAcsResponse(request)
+                    .getAccessKeys().stream().filter(e -> e.getStatus().equalsIgnoreCase("Active")).collect(Collectors.toList());
+        } catch (ClientException e) {
+            log.error("查询RAM用户AK错误: {}", e.getMessage());
+        }
+        return Collections.EMPTY_LIST;
+    }
 
     private IAcsClient acqAcsClient(String regionId, AliyunAccount aliyunAccount) {
         return aliyunCore.getAcsClient(regionId, aliyunAccount);
