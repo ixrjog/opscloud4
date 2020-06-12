@@ -50,14 +50,12 @@ public class TicketServerGroupHandler<T> extends BaseTicketHandler<T> implements
 
     @Override
     protected ITicketEntry acqITicketEntry(Object ticketEntry) {
-        ServerGroupEntry entry = new ObjectMapper().convertValue(ticketEntry, ServerGroupEntry.class);
-        return entry;
+        return new ObjectMapper().convertValue(ticketEntry, ServerGroupEntry.class);
     }
 
     @Override
     protected T getTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) throws JsonSyntaxException {
-        ServerGroupEntry entry = new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), ServerGroupEntry.class);
-        return (T) entry;
+        return (T) new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), ServerGroupEntry.class);
     }
 
     @Override

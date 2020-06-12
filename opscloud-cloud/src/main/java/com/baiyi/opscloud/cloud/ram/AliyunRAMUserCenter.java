@@ -3,6 +3,8 @@ package com.baiyi.opscloud.cloud.ram;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 
 import java.util.List;
 
@@ -13,6 +15,10 @@ import java.util.List;
  */
 
 public interface AliyunRAMUserCenter {
+
+    BusinessWrapper<OcAliyunRamUser> createRamUser(String accountUid, OcUser ocUser);
+
+    BusinessWrapper<Boolean> deleteRamUser(OcAliyunRamUser ocAliyunRamUser);
 
     List<ListUsersResponse.User> getUsers(AliyunAccount aliyunAccount);
 

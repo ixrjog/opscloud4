@@ -5,6 +5,12 @@ import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
+import com.baiyi.opscloud.service.ram.OcAliyunRamUserService;
+import com.baiyi.opscloud.service.user.OcUserService;
+import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -21,10 +27,19 @@ public class AliyunRAMTest extends BaseUnit {
     private AliyunRAMUserCenter aliyunRAMUserCenter;
 
     @Resource
+    private OcAliyunRamUserService ocAliyunRamUserService;
+
+    @Resource
     private AliyunRAMPolicyCenter aliyunRAMPolicyCenter;
 
     @Resource
     private AliyunCore aliyunCore;
+
+    @Resource
+    private OcUserService ocUserService;
+
+    @Resource
+    private StringEncryptor stringEncryptor;
 
     @Test
     void testGetUsers() {
@@ -51,4 +66,25 @@ public class AliyunRAMTest extends BaseUnit {
     void testSyncPolicies() {
         aliyunRAMPolicyCenter.syncPolicies();
     }
+
+    @Test
+    void testDeleteRamUser() {
+        // modao
+        OcAliyunRamUser ocAliyunRamUser = ocAliyunRamUserService.queryOcAliyunRamUserByUniqueKey("1255805305757185", "modao");
+        aliyunRAMUserCenter.deleteRamUser(ocAliyunRamUser);
+    }
+
+
+    @Test
+    void testCreateRamUser() {
+        // "1267986359450069"  "1255805305757185"
+        // modao
+        OcUser ocUser = ocUserService.queryOcUserByUsername("modao");
+        String passwd = "";
+        ocUser.setPassword(passwd);
+        System.err.println(passwd);
+        BusinessWrapper<OcAliyunRamUser> wrapper = aliyunRAMUserCenter.createRamUser("1255805305757185", ocUser);
+        System.err.println(JSON.toJSONString(wrapper));
+    }
+
 }

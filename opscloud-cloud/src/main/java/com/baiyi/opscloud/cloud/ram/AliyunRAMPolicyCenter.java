@@ -17,4 +17,6 @@ public interface AliyunRAMPolicyCenter {
 
     BusinessWrapper<Boolean> syncPolicies();
 
+//    void deleteUserPolicies();
+
 }

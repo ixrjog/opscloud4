@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.service.ram;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -14,4 +17,6 @@ public interface OcAliyunRamPermissionService {
     void deleteOcAliyunRamPermissionById(int id);
 
     OcAliyunRamPermission queryOcAliyunRamPermissionByUniqueKey(OcAliyunRamPermission ocAliyunRamPermission);
+
+    List<OcAliyunRamPermission> queryOcAliyunRamPermissionByOcAliyunRamUser(OcAliyunRamUser ocAliyunRamUser);
 }

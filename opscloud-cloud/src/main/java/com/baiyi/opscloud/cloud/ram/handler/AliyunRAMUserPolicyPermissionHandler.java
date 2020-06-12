@@ -77,11 +77,17 @@ public class AliyunRAMUserPolicyPermissionHandler {
         return ocAliyunRamPolicy;
     }
 
-
     private Map<String, OcAliyunRamPolicy> getUserPolicyMap(OcAliyunRamUser ocAliyunRamUser) {
         List<OcAliyunRamPolicy> userPolicies = ocAliyunRamPolicyService.queryOcAliyunRamPolicyByUserPermission(ocAliyunRamUser.getAccountUid(), ocAliyunRamUser.getId());
         return userPolicies.stream().collect(Collectors.toMap(OcAliyunRamPolicy::getPolicyName, a -> a, (k1, k2) -> k1));
     }
 
+    /**
+     * 删除用户账户的的所有授权
+     * @param ocAliyunRamUser
+     */
+    public void deleteOcAliyunRamPermissionByOcAliyunRamUser(OcAliyunRamUser ocAliyunRamUser) {
+        ocAliyunRamPermissionService.queryOcAliyunRamPermissionByOcAliyunRamUser(ocAliyunRamUser).forEach(e-> ocAliyunRamPermissionService.deleteOcAliyunRamPermissionById(e.getId()));
+    }
 
 }

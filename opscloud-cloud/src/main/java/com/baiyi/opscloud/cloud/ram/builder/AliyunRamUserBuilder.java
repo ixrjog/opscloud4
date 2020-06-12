@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.cloud.ram.builder;
 
+import com.aliyuncs.ram.model.v20150501.CreateUserResponse;
+import com.aliyuncs.ram.model.v20150501.GetUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.cloud.ram.bo.AliyunRamUserBO;
@@ -23,6 +25,33 @@ public class AliyunRamUserBuilder {
                 .mobile(user.getMobilePhone())
                 .createDate(TimeUtils.acqGmtDate(user.getCreateDate()))
                 .updateDate(TimeUtils.acqGmtDate(user.getUpdateDate()))
+                .comment(user.getComments())
+                .build();
+        return convert(aliyunRamUserBO);
+    }
+
+    public static OcAliyunRamUser build(AliyunAccount aliyunAccount,GetUserResponse.User user) {
+        AliyunRamUserBO aliyunRamUserBO = AliyunRamUserBO.builder()
+                .accountUid(aliyunAccount.getUid())
+                .ramUserId(user.getUserId())
+                .ramUsername(user.getUserName())
+                .ramDisplayName(user.getDisplayName())
+                .mobile(user.getMobilePhone())
+                .createDate(TimeUtils.acqGmtDate(user.getCreateDate()))
+                .updateDate(TimeUtils.acqGmtDate(user.getUpdateDate()))
+                .comment(user.getComments())
+                .build();
+        return convert(aliyunRamUserBO);
+    }
+
+    public static OcAliyunRamUser build(AliyunAccount aliyunAccount, CreateUserResponse.User user) {
+        AliyunRamUserBO aliyunRamUserBO = AliyunRamUserBO.builder()
+                .accountUid(aliyunAccount.getUid())
+                .ramUserId(user.getUserId())
+                .ramUsername(user.getUserName())
+                .ramDisplayName(user.getDisplayName())
+                .mobile(user.getMobilePhone())
+                .createDate(TimeUtils.acqGmtDate(user.getCreateDate()))
                 .comment(user.getComments())
                 .build();
         return convert(aliyunRamUserBO);

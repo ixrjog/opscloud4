@@ -1,12 +1,14 @@
 package com.baiyi.opscloud.service.ram.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
 import com.baiyi.opscloud.mapper.opscloud.OcAliyunRamPermissionMapper;
 import com.baiyi.opscloud.service.ram.OcAliyunRamPermissionService;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -37,6 +39,15 @@ public class OcAliyunRamPermissionServiceImpl implements OcAliyunRamPermissionSe
         criteria.andEqualTo("userId", ocAliyunRamPermission.getUserId());
         criteria.andEqualTo("policyId", ocAliyunRamPermission.getPolicyId());
         return ocAliyunRamPermissionMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public  List<OcAliyunRamPermission> queryOcAliyunRamPermissionByOcAliyunRamUser(OcAliyunRamUser ocAliyunRamUser){
+        Example example = new Example(OcAliyunRamPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("accountUid", ocAliyunRamUser.getAccountUid());
+        criteria.andEqualTo("userId", ocAliyunRamUser.getId());
+        return ocAliyunRamPermissionMapper.selectByExample(example);
     }
 
 }

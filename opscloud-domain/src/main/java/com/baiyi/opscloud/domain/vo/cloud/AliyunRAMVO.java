@@ -22,6 +22,7 @@ public class AliyunRAMVO {
 
         private List<RAMPolicy> policies;
         private String ramAccount;
+        private String ramAccountLoginUrl;
 
         private Integer id;
         private String accountUid;

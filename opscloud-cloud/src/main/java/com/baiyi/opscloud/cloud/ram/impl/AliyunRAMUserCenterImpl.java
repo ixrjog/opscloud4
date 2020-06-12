@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.cloud.ram.impl;
 
+import com.aliyuncs.ram.model.v20150501.CreateUserResponse;
+import com.aliyuncs.ram.model.v20150501.GetUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
@@ -24,6 +26,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -50,6 +53,49 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
 
     @Resource
     private OcUserService ocUserService;
+
+    public static final boolean CREATE_LOGIN_PROFILE = true;
+
+    @Override
+    public BusinessWrapper<OcAliyunRamUser> createRamUser(String accountUid, OcUser ocUser) {
+        // 查询账户是否存在
+        List<OcAliyunRamUser> ramUserList =
+                ocAliyunRamUserService.queryUserPermissionRamUserByUserId(ocUser.getId()).stream().filter(e -> e.getAccountUid().equals(accountUid)).collect(Collectors.toList());
+        if (!ramUserList.isEmpty())
+            return new BusinessWrapper<>(ramUserList.get(0));
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(accountUid);
+        BusinessWrapper<GetUserResponse.User> getUserWrapper = aliyunRAMUserHandler.getRamUser(aliyunAccount, ocUser);
+        if (getUserWrapper.isSuccess())
+            return new BusinessWrapper<>(addRamUser(aliyunAccount, getUserWrapper.getBody()));
+        BusinessWrapper<CreateUserResponse.User> createUserWrapper = aliyunRAMUserHandler.createRamUser(aliyunAccount, ocUser, CREATE_LOGIN_PROFILE);
+        if (!createUserWrapper.isSuccess())
+            return new BusinessWrapper<>(createUserWrapper.getCode(), createUserWrapper.getDesc());
+        return new BusinessWrapper<>(addRamUser(aliyunAccount, createUserWrapper.getBody()));
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteRamUser(OcAliyunRamUser ocAliyunRamUser) {
+        // 删除账户绑定关系
+        unbindUserPermission(ocAliyunRamUser);
+        // 删除策略关系
+        aliyunRAMUserPolicyPermissionHandler.deleteOcAliyunRamPermissionByOcAliyunRamUser(ocAliyunRamUser);
+        // 删除账户
+        ocAliyunRamUserService.deleteOcAliyunRamUserById(ocAliyunRamUser.getId());
+        return BusinessWrapper.SUCCESS;
+    }
+
+    private OcAliyunRamUser addRamUser(AliyunAccount aliyunAccount, GetUserResponse.User user) {
+        OcAliyunRamUser ocAliyunRamUser = AliyunRamUserBuilder.build(aliyunAccount, user);
+        saveRamUser(aliyunAccount, ocAliyunRamUser);
+        return ocAliyunRamUser;
+    }
+
+    private OcAliyunRamUser addRamUser(AliyunAccount aliyunAccount, CreateUserResponse.User user) {
+        OcAliyunRamUser ocAliyunRamUser = AliyunRamUserBuilder.build(aliyunAccount, user);
+        saveRamUser(aliyunAccount, ocAliyunRamUser);
+        return ocAliyunRamUser;
+    }
+
 
     @Override
     public List<ListUsersResponse.User> getUsers(AliyunAccount aliyunAccount) {
@@ -92,6 +138,19 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
         bindUserPermission(ocAliyunRamUser);
         aliyunRAMUserPolicyPermissionHandler.syncUserPolicyPermission(aliyunAccount, ocAliyunRamUser);
     }
+
+    private void unbindUserPermission(OcAliyunRamUser ocAliyunRamUser) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(ocAliyunRamUser.getRamUsername());
+        if (ocUser == null) return;
+        OcUserPermission pre = new OcUserPermission();
+        pre.setUserId(ocUser.getId());
+        pre.setBusinessType(BusinessType.ALIYUN_RAM_ACCOUNT.getType());
+        pre.setBusinessId(ocAliyunRamUser.getId());
+        OcUserPermission ocUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(pre);
+        if (ocUserPermission != null)
+            ocUserPermissionService.delOcUserPermissionById(ocUserPermission.getId());
+    }
+
 
     private void bindUserPermission(OcAliyunRamUser ocAliyunRamUser) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(ocAliyunRamUser.getRamUsername());

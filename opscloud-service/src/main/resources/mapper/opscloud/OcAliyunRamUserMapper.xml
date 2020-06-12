@@ -29,6 +29,9 @@
                 ram_username like "%" #{queryName} "%"
                 or ram_display_name like "%" #{queryName} "%"
             </if>
+            <if test="accountUid != null and accountUid != ''">
+                and account_uid = #{accountUid}
+            </if>
             <if test="hasKeys != null and hasKeys">
                 and access_keys != 0
             </if>
