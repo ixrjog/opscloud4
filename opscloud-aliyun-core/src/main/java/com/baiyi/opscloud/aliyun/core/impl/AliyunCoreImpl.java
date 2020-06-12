@@ -7,6 +7,8 @@ import com.aliyuncs.profile.IClientProfile;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.vo.cloud.AliyunAccountVO;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -24,6 +26,12 @@ public class AliyunCoreImpl implements AliyunCore {
 
     @Resource
     private AliyunCoreConfig aliyunCoreConfig;
+
+    @Override
+    public List<AliyunAccountVO.AliyunAccount> queryAliyunAccount() {
+       return BeanCopierUtils.copyListProperties(getAccounts(),AliyunAccountVO.AliyunAccount.class);
+    }
+
 
     @Override
     public List<AliyunAccount> getAccounts() {

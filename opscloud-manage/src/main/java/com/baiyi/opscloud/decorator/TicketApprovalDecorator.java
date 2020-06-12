@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketFlow;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderService;
@@ -29,7 +29,7 @@ public class TicketApprovalDecorator {
     private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
 
     // 组装 TicketApproval
-    public void decorator(OcWorkorderTicketVO.Ticket ticket) {
+    public void decorator(WorkorderTicketVO.Ticket ticket) {
         ApprovalStepsVO.ApprovalDetail approvalDetail = new ApprovalStepsVO.ApprovalDetail();
         List<ApprovalStepsVO.ApprovalStep> approvalStepList = Lists.newArrayList();
 

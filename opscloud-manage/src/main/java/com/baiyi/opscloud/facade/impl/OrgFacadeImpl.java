@@ -14,8 +14,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
 import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
@@ -168,7 +168,7 @@ public class OrgFacadeImpl implements OrgFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> addDepartment(OcOrgDepartmentVO.Department department) {
+    public BusinessWrapper<Boolean> addDepartment(OrgDepartmentVO.Department department) {
         OcOrgDepartment ocOrgDepartment = BeanCopierUtils.copyProperties(department, OcOrgDepartment.class);
         ocOrgDepartment.setDeptOrder(128);
         if (department.getParentId() == null || department.getParentId() <= 0)
@@ -179,7 +179,7 @@ public class OrgFacadeImpl implements OrgFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateDepartment(OcOrgDepartmentVO.Department department) {
+    public BusinessWrapper<Boolean> updateDepartment(OrgDepartmentVO.Department department) {
         OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(department.getId());
         ocOrgDepartment.setName(department.getName());
         ocOrgDepartment.setDeptType(department.getDeptType());
@@ -189,9 +189,9 @@ public class OrgFacadeImpl implements OrgFacade {
     }
 
     @Override
-    public OcOrgDepartmentVO.Department queryDepartmentById(int id) {
+    public OrgDepartmentVO.Department queryDepartmentById(int id) {
         OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(id);
-        return BeanCopierUtils.copyProperties(ocOrgDepartment, OcOrgDepartmentVO.Department.class);
+        return BeanCopierUtils.copyProperties(ocOrgDepartment, OrgDepartmentVO.Department.class);
     }
 
     @Override
@@ -213,9 +213,9 @@ public class OrgFacadeImpl implements OrgFacade {
     }
 
     @Override
-    public DataTable<OcOrgDepartmentVO.Department> queryDepartmentPage(DepartmentParam.PageQuery pageQuery) {
+    public DataTable<OrgDepartmentVO.Department> queryDepartmentPage(DepartmentParam.PageQuery pageQuery) {
         DataTable<OcOrgDepartment> table = ocOrgDepartmentService.queryOcOrgDepartmentParam(pageQuery);
-        List<OcOrgDepartmentVO.Department> page = BeanCopierUtils.copyListProperties(table.getData(), OcOrgDepartmentVO.Department.class);
+        List<OrgDepartmentVO.Department> page = BeanCopierUtils.copyListProperties(table.getData(), OrgDepartmentVO.Department.class);
         return new DataTable<>(page, table.getTotalNum());
     }
 
@@ -256,9 +256,9 @@ public class OrgFacadeImpl implements OrgFacade {
     }
 
     @Override
-    public DataTable<OcOrgDepartmentMemberVO.DepartmentMember> queryDepartmentMemberPage(DepartmentMemberParam.PageQuery pageQuery) {
+    public DataTable<OrgDepartmentMemberVO.DepartmentMember> queryDepartmentMemberPage(DepartmentMemberParam.PageQuery pageQuery) {
         DataTable<OcOrgDepartmentMember> table = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberParam(pageQuery);
-        List<OcOrgDepartmentMemberVO.DepartmentMember> page = BeanCopierUtils.copyListProperties(table.getData(), OcOrgDepartmentMemberVO.DepartmentMember.class);
+        List<OrgDepartmentMemberVO.DepartmentMember> page = BeanCopierUtils.copyListProperties(table.getData(), OrgDepartmentMemberVO.DepartmentMember.class);
         return new DataTable<>(page.stream().map(e -> departmentMemberDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 

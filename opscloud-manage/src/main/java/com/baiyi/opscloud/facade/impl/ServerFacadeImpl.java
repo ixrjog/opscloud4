@@ -7,6 +7,7 @@ import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CloudServerKey;
 import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.decorator.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -78,29 +79,26 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> queryServerById(int id) {
+    public BusinessWrapper<ServerVO.Server> queryServerById(int id) {
         OcServer ocServer = ocServerService.queryOcServerById(id);
         if (ocServer == null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
-        BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-        wrapper.setBody(getServerVO(ocServer));
-        return wrapper;
+        return new BusinessWrapper(getServerVO(ocServer));
     }
 
     private ServerVO.Server getServerVO(OcServer ocServer) {
         return serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class));
     }
 
-
     @Override
-    public BusinessWrapper<Boolean> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds) {
+    public BusinessWrapper<List<ServerVO.Server>> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds) {
         List<ServerVO.Server> result = Lists.newArrayList();
         queryByServerByIds.getIds().forEach(e -> {
             OcServer ocServer = ocServerService.queryOcServerById(e);
-            result.add(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
+            if (ocServer != null)
+                result.add(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
         });
-        BusinessWrapper wrapper = new BusinessWrapper(result);
-        return wrapper;
+        return new BusinessWrapper(result);
     }
 
     @Override
@@ -110,9 +108,9 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup) {
+    public BusinessWrapper<List<ServerVO.Server>> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup) {
         Integer serverGroupId = queryByServerGroup.getServerGroupId();
-        if (serverGroupId == null || serverGroupId <= 0) {
+        if (IDUtils.isEmpty(serverGroupId)) {
             if (!StringUtils.isEmpty(queryByServerGroup.getServerGroupName())) {
                 OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupByName(queryByServerGroup.getServerGroupName());
                 if (ocServerGroup != null)
@@ -127,9 +125,9 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
-    public List<ServerAttributeVO.ServerAttribute> queryServerAttribute(int id) {
+    public BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerAttribute(int id) {
         OcServer ocServer = ocServerService.queryOcServerById(id);
-        return serverAttributeFacade.queryServerAttribute(ocServer);
+        return new BusinessWrapper(serverAttributeFacade.queryServerAttribute(ocServer));
     }
 
     @Override

@@ -51,6 +51,11 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     }
 
     @Override
+    public void updateOcUserGroup(OcUserGroup ocUserGroup) {
+        ocUserGroupMapper.updateByPrimaryKey(ocUserGroup);
+    }
+
+    @Override
     public OcUserGroup queryOcUserGroupByName(String name) {
         Example example = new Example(OcUserGroup.class);
         Example.Criteria criteria = example.createCriteria();
@@ -70,6 +75,6 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
 
     @Override
     public List<OcUserGroup> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
-      return   ocUserGroupMapper.queryUserTicketOcUserGroupByParam(queryParam);
+        return ocUserGroupMapper.queryUserTicketOcUserGroupByParam(queryParam);
     }
 }

@@ -54,8 +54,6 @@ public class AnsibleTest extends BaseUnit {
 
     @Test
     void bTest() {
-      //  System.err.println(UUIDUtils.getUUID());
-
         Set<String>  tags = Sets.newHashSet();
         tags.add("test1");
         tags.add("test2");
@@ -67,21 +65,14 @@ public class AnsibleTest extends BaseUnit {
     void aaaTest() {
 
         long startTime = new Date().getTime();
-        attributeFacadeImpl.createAnsibleHosts();
+        attributeFacadeImpl.createAnsibleHostsTask();
         long endTime = new Date().getTime();
         System.err.println("消耗时间:" + (endTime - startTime));
-
-
-//        List<OcServerGroup> serverGroupList = ocServerGroupService.queryAll();
-//        for (OcServerGroup ocServerGroup : serverGroupList)
-//            attributeAnsible.evictBuild(ocServerGroup);
 
     }
 
     @Test
     void executorTest() {
-        //CommandLine commandLine = CommandLine.parse("ping www.baidu.com");
-
         ansibleExecutor.executorTest(100000L);
         System.err.println("111111");
     }

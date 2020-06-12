@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.vo.server;
 
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -20,7 +20,7 @@ public class ServerTaskMemberVO {
     @ApiModel
     public static class ServerTaskMember {
 
-        private OcEnvVO.Env env;
+        private EnvVO.Env env;
         /** 格式化执行结果 **/
         private AnsibleResult result;
 
@@ -33,6 +33,7 @@ public class ServerTaskMemberVO {
         private Integer taskId;
         private String hostPattern;
         private Integer serverId;
+        private Integer envType;
         private String manageIp;
         private String comment;
         private Integer finalized;

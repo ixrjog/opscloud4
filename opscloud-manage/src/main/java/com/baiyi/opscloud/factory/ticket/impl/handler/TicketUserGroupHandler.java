@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.base.WorkorderKey;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
 import com.baiyi.opscloud.factory.ticket.entry.ITicketEntry;
@@ -40,15 +40,13 @@ public class TicketUserGroupHandler<T> extends BaseTicketHandler<T> implements I
     }
 
     @Override
-    protected ITicketEntry acqITicketEntry(Object  ticketEntry) {
-        UserGroupEntry entry = new ObjectMapper().convertValue(ticketEntry, UserGroupEntry.class);
-        return entry;
+    protected ITicketEntry acqITicketEntry(Object ticketEntry) {
+        return new ObjectMapper().convertValue(ticketEntry, UserGroupEntry.class);
     }
 
     @Override
     protected T getTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) throws JsonSyntaxException {
-        UserGroupEntry entry = new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), UserGroupEntry.class);
-        return (T) entry;
+        return (T) new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), UserGroupEntry.class);
     }
 
     @Override
@@ -64,7 +62,7 @@ public class TicketUserGroupHandler<T> extends BaseTicketHandler<T> implements I
     }
 
     @Override
-    protected BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry) {
+    protected BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry) {
         return BusinessWrapper.SUCCESS;
     }
 }

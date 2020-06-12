@@ -21,6 +21,9 @@ public class OcServerTaskMember {
     @Column(name = "server_id")
     private Integer serverId;
 
+    @Column(name = "env_type")
+    private Integer envType;
+
     /**
      * 管理ip
      */
@@ -125,6 +128,14 @@ public class OcServerTaskMember {
      */
     public void setServerId(Integer serverId) {
         this.serverId = serverId;
+    }
+
+    public Integer getEnvType() {
+        return envType;
+    }
+
+    public void setEnvType(Integer envType) {
+        this.envType = envType;
     }
 
     /**

@@ -17,15 +17,15 @@ public interface ServerFacade {
 
     DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> queryServerById(int id);
+    BusinessWrapper<ServerVO.Server> queryServerById(int id);
 
-    BusinessWrapper<Boolean> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds);
+    BusinessWrapper<List<ServerVO.Server>> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds);
 
     DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup);
+    BusinessWrapper<List<ServerVO.Server>> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup);
 
-    List<ServerAttributeVO.ServerAttribute> queryServerAttribute(int id);
+    BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerAttribute(int id);
 
     BusinessWrapper<Boolean> saveServerAttribute(ServerAttributeVO.ServerAttribute serverAttribute);
 

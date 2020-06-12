@@ -5,13 +5,16 @@ import com.baiyi.opscloud.ansible.handler.TaskLogRecorder;
 import com.baiyi.opscloud.common.util.AnsibleUtils;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IOUtils;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
+import com.baiyi.opscloud.common.util.TimeAgoUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskMemberVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.server.OcServerTaskMemberService;
@@ -20,10 +23,12 @@ import com.google.common.collect.Maps;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.lang.reflect.Type;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +51,18 @@ public class ServerTaskDecorator {
 
     @Resource
     private TaskLogRecorder taskLogRecorder;
+
+    public ServerTaskVO.ServerTask decorator(OcServerTask ocServerTask) {
+        ServerTaskVO.ServerTask serverTask = BeanCopierUtils.copyProperties(ocServerTask, ServerTaskVO.ServerTask.class);
+        Type type = new TypeToken<Map<String, String>>() {
+        }.getType();
+        serverTask.setServerTarget(new GsonBuilder().create().fromJson(serverTask.getServerTargetDetail(), type));
+        // user
+        serverTask.setUser(new GsonBuilder().create().fromJson(serverTask.getUserDetail(), UserVO.User.class));
+
+        serverTask.setAgo(TimeAgoUtils.format(serverTask.getCreateTime()));
+        return serverTask;
+    }
 
     public ServerTaskVO.ServerTask decorator(ServerTaskVO.ServerTask serverTask) {
         List<OcServerTaskMember> memberList = ocServerTaskMemberService.queryOcServerTaskMemberByTaskId(serverTask.getId());
@@ -112,9 +129,9 @@ public class ServerTaskDecorator {
         ServerTaskMemberVO.ServerTaskMember serverTaskMember = BeanCopierUtils.copyProperties(member, ServerTaskMemberVO.ServerTaskMember.class);
         serverTaskMember.setHide(false);
         OcServer ocServer = ocServerService.queryOcServerById(serverTaskMember.getServerId());
+        OcEnv ocEnv = ocEnvService.queryOcEnvByType(member.getEnvType());
+        serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, EnvVO.Env.class));
         if (ocServer == null) return serverTaskMember;
-        OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
-        serverTaskMember.setEnv(BeanCopierUtils.copyProperties(ocEnv, OcEnvVO.Env.class));
         serverTaskMember.setSuccess(serverTaskMember.getExitValue() != null && serverTaskMember.getExitValue() == 0);
         serverTaskMember.setShowErrorLog(false); // 不显示错误日志
         if (serverTaskMember.getFinalized() == 1) {

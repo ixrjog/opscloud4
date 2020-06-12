@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupPropertyVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.facade.ServerGroupFacade;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -34,6 +36,12 @@ public class ServerGroupController {
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ServerGroupVO.ServerGroup>> queryServerGroupPage(@Valid ServerGroupParam.PageQuery pageQuery) {
         return new HttpResult<>(serverGroupFacade.queryServerGroupPage(pageQuery));
+    }
+
+    @ApiOperation(value = "按id查询serverGroup详情")
+    @GetMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ServerGroupVO.ServerGroup> queryServerGroupById(@Valid int id) {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupById(id));
     }
 
     @ApiOperation(value = "新增serverGroup")
@@ -117,6 +125,23 @@ public class ServerGroupController {
         return new HttpResult<>(serverGroupFacade.saveServerGroupAttribute(serverAttribute));
     }
 
+    @ApiOperation(value = "查询服务器组扩展属性")
+    @GetMapping(value = "/property/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<Integer, Map<String, String>>> queryServerGroupProperty(@RequestParam int id) {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupPropertyMap(id));
+    }
+
+    @ApiOperation(value = "保存服务器组扩展属性")
+    @PutMapping(value = "/property/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveServerGroupProperty(@RequestBody @Valid ServerGroupPropertyVO.ServerGroupProperty serverGroupProperty) {
+        return new HttpResult<>(serverGroupFacade.saveServerGroupProperty(serverGroupProperty));
+    }
+
+    @ApiOperation(value = "删除服务器组扩展属性")
+    @DeleteMapping(value = "/property/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> delServerGroupProperty(int id) {
+        return new HttpResult<>(serverGroupFacade.delServerGroupPropertyById(id));
+    }
 
 
 }

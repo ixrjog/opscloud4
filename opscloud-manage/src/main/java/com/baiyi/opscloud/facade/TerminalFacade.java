@@ -16,5 +16,5 @@ public interface TerminalFacade {
 
     TerminalSessionInstanceVO.TerminalSessionInstance  querySessionInstanceById(int id);
 
-    void closeInvalidSession();
+    void closeInvalidSessionTask();
 }

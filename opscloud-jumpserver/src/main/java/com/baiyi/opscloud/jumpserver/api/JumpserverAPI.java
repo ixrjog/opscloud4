@@ -3,7 +3,7 @@ package com.baiyi.opscloud.jumpserver.api;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
+import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.jumpserver.api.bo.Token;
 import com.baiyi.opscloud.jumpserver.api.bo.UsersPubkeyUpdateResult;
 import com.baiyi.opscloud.jumpserver.config.JumpserverConfig;
@@ -61,7 +61,7 @@ public class JumpserverAPI {
         return tokenObj.getToken();
     }
 
-    public boolean pushKey(OcUser ocUser, UsersUser usersUser, OcUserCredentialVO.UserCredential credential) {
+    public boolean pushKey(OcUser ocUser, UsersUser usersUser, UserCredentialVO.UserCredential credential) {
         Map<String, String> paramsMap = Maps.newHashMap();
         String uid = UUIDUtils.convertUUID(usersUser.getId());
         paramsMap.put("id", uid);

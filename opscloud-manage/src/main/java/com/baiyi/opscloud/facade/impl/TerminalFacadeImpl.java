@@ -14,6 +14,7 @@ import com.baiyi.opscloud.facade.TerminalFacade;
 import com.baiyi.opscloud.service.terminal.OcTerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.OcTerminalSessionService;
 import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -26,6 +27,7 @@ import java.util.stream.Collectors;
  * @Date 2020/5/25 4:30 下午
  * @Version 1.0
  */
+@Slf4j
 @Service
 public class TerminalFacadeImpl implements TerminalFacade {
 
@@ -59,23 +61,35 @@ public class TerminalFacadeImpl implements TerminalFacade {
     }
 
     @Override
-    public void closeInvalidSession() {
+    public void closeInvalidSessionTask() {
         List<OcTerminalSession> list = ocTerminalSessionService.queryOcTerminalSessionByActive();
         list.forEach(e -> {
+            log.info("扫描会话 sessionId = {} ！", e.getSessionId());
             String key = CacheKeyUtils.getTermSessionHeartbeatKey(e.getSessionId());
             if (!redisUtil.hasKey(key)) {
                 List<OcTerminalSessionInstance> instanceList = ocTerminalSessionInstanceService.queryOcTerminalSessionInstanceBySessionId(e.getSessionId());
-                instanceList.forEach(i -> {
-                    AuditLogHandler.writeAuditLog(e.getSessionId(), i.getInstanceId());
-                    i.setIsClosed(true);
-                    i.setCloseTime(new Date());
-                    ocTerminalSessionInstanceService.updateOcTerminalSessionInstance(i);
-                });
-                e.setIsClosed(true);
-                e.setCloseTime(new Date());
-                ocTerminalSessionService.updateOcTerminalSession(e);
+                if (instanceList != null)
+                    instanceList.forEach(i -> closeInvalidSessionInstance(e.getSessionId(), i));
+                closeInvalidSession(e);
+            } else {
+                log.info("会话 sessionId = {} 心跳存在！", e.getSessionId());
             }
         });
+    }
+
+    private void closeInvalidSession(OcTerminalSession ocTerminalSession) {
+        ocTerminalSession.setIsClosed(true);
+        ocTerminalSession.setCloseTime(new Date());
+        ocTerminalSessionService.updateOcTerminalSession(ocTerminalSession);
+    }
+
+    private void closeInvalidSessionInstance(String sessionId, OcTerminalSessionInstance ocTerminalSessionInstance) {
+        if (ocTerminalSessionInstance.getIsClosed()) return;
+        log.info("会话 sessionId = {} , 实例 instanceId = {} , 心跳丢失尝试写入日志！", sessionId, ocTerminalSessionInstance.getInstanceId());
+        AuditLogHandler.writeAuditLog(sessionId, ocTerminalSessionInstance.getInstanceId());
+        ocTerminalSessionInstance.setIsClosed(true);
+        ocTerminalSessionInstance.setCloseTime(new Date());
+        ocTerminalSessionInstanceService.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
     }
 
 }

@@ -17,5 +17,7 @@ public interface OcUserPermissionService {
 
     OcUserPermission queryOcUserPermissionByUniqueKey(OcUserPermission ocUserPermission);
 
-    List<OcUserPermission> queryUserBusinessPermissionByUserId(int userId, int businessId) ;
+    List<OcUserPermission> queryUserBusinessPermissionByUserId(int userId, int businessId);
+
+    List<OcUserPermission> queryUserBusinessPermissionByBusinessId(int businessType, int businessId);
 }

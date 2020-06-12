@@ -23,7 +23,7 @@ public class TerminalSessionDecorator {
     private OcTerminalSessionInstanceService ocTerminalSessionInstanceService;
 
     @Resource
-    private  TerminalSessionInstanceDecorator terminalSessionInstanceDecorator;
+    private TerminalSessionInstanceDecorator terminalSessionInstanceDecorator;
 
     public TerminalSessionVO.TerminalSession decorator(OcTerminalSession ocTerminalSession, Integer extend) {
         TerminalSessionVO.TerminalSession terminalSession = BeanCopierUtils.copyProperties(ocTerminalSession, TerminalSessionVO.TerminalSession.class);
@@ -31,7 +31,7 @@ public class TerminalSessionDecorator {
             List<OcTerminalSessionInstance> instanceList = ocTerminalSessionInstanceService.queryOcTerminalSessionInstanceBySessionId(ocTerminalSession.getSessionId());
             terminalSession.setSessionInstances(
                     instanceList.stream().map(i ->
-                            terminalSessionInstanceDecorator.decorator( i , 0)
+                            terminalSessionInstanceDecorator.decorator(i, 0)
                     ).collect(Collectors.toList()));
         }
         return terminalSession;

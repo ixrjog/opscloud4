@@ -27,6 +27,7 @@ public class ServerTaskMemberBO {
     @Builder.Default
     private String taskStatus= ServerTaskStatus.QUEUE.getStatus();
     private Integer serverId;
+    private Integer envType;
 
     private String taskResult ;
     private Date createTime;

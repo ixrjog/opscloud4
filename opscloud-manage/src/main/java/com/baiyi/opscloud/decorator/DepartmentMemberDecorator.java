@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartment;
 import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartmentMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
@@ -34,7 +34,7 @@ public class DepartmentMemberDecorator {
     @Resource
     private OcOrgDepartmentService ocOrgDepartmentService;
 
-    public OcOrgDepartmentMemberVO.DepartmentMember decorator(OcOrgDepartmentMemberVO.DepartmentMember departmentMember) {
+    public OrgDepartmentMemberVO.DepartmentMember decorator(OrgDepartmentMemberVO.DepartmentMember departmentMember) {
         OcUser ocUser = ocUserService.queryOcUserById(departmentMember.getUserId());
         if (ocUser != null) {
             departmentMember.setDisplayName(ocUser.getDisplayName());
@@ -93,8 +93,8 @@ public class DepartmentMemberDecorator {
                 ).collect(Collectors.toList()));
             }
             if (deptMembers.size() != 0) {
-                List<OcOrgDepartmentMemberVO.DepartmentMember> alternativeDeptMembers
-                        = BeanCopierUtils.copyListProperties(deptMembers, OcOrgDepartmentMemberVO.DepartmentMember.class).stream().map(a -> decorator(a)).collect(Collectors.toList());
+                List<OrgDepartmentMemberVO.DepartmentMember> alternativeDeptMembers
+                        = BeanCopierUtils.copyListProperties(deptMembers, OrgDepartmentMemberVO.DepartmentMember.class).stream().map(a -> decorator(a)).collect(Collectors.toList());
                 OrgApprovalVO.OrgApproval orgApproval = OrgApprovalVO.OrgApproval.builder()
                         .preferenceDeptMember(getPreferenceDeptMember(alternativeDeptMembers))
                         .alternativeDeptMembers(alternativeDeptMembers)
@@ -108,8 +108,8 @@ public class DepartmentMemberDecorator {
                 .build();
     }
 
-    private OcOrgDepartmentMemberVO.DepartmentMember getPreferenceDeptMember(List<OcOrgDepartmentMemberVO.DepartmentMember> alternativeDeptMembers) {
-        for (OcOrgDepartmentMemberVO.DepartmentMember member : alternativeDeptMembers) {
+    private OrgDepartmentMemberVO.DepartmentMember getPreferenceDeptMember(List<OrgDepartmentMemberVO.DepartmentMember> alternativeDeptMembers) {
+        for (OrgDepartmentMemberVO.DepartmentMember member : alternativeDeptMembers) {
             if (member.getIsLeader() == 1)
                 return member;
         }

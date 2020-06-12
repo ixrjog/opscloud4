@@ -10,7 +10,7 @@ public interface AttributeFacade {
     /**
      * 创建Ansible主机文件
      */
-    void createAnsibleHosts();
+    void createAnsibleHostsTask();
 
 
 }

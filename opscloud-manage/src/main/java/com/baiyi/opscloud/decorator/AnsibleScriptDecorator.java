@@ -3,7 +3,7 @@ package com.baiyi.opscloud.decorator;
 import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAnsibleScript;
-import com.baiyi.opscloud.domain.vo.ansible.OcAnsibleScriptVO;
+import com.baiyi.opscloud.domain.vo.ansible.AnsibleScriptVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,8 +19,8 @@ public class AnsibleScriptDecorator {
     @Resource
     private AnsibleConfig ansibleConfig;
 
-    public OcAnsibleScriptVO.AnsibleScript decorator(OcAnsibleScript ocAnsibleScript) {
-        OcAnsibleScriptVO.AnsibleScript ansibleScript = BeanCopierUtils.copyProperties(ocAnsibleScript, OcAnsibleScriptVO.AnsibleScript.class);
+    public AnsibleScriptVO.AnsibleScript decorator(OcAnsibleScript ocAnsibleScript) {
+        AnsibleScriptVO.AnsibleScript ansibleScript = BeanCopierUtils.copyProperties(ocAnsibleScript, AnsibleScriptVO.AnsibleScript.class);
         ansibleScript.setPath(ansibleConfig.getScriptPath(ocAnsibleScript));
         return ansibleScript;
     }

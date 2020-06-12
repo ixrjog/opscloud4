@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunRamPolicyMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPolicy">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="account_uid" jdbcType="VARCHAR" property="accountUid"/>
+        <result column="policy_name" jdbcType="VARCHAR" property="policyName"/>
+        <result column="policy_type" jdbcType="VARCHAR" property="policyType"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="default_version" jdbcType="VARCHAR" property="defaultVersion"/>
+        <result column="attachment_count" jdbcType="INTEGER" property="attachmentCount"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_date" jdbcType="TIMESTAMP" property="createDate"/>
+        <result column="update_date" jdbcType="TIMESTAMP" property="updateDate"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAliyunRamPolicyByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ram_policy
+        <where>
+            <if test="queryName != null and queryName != ''">
+                ( policy_name like "%" #{queryName} "%"
+                or description like "%" #{queryName} "%"
+                or comment like "%" #{queryName} "%" )
+            </if>
+            <if test="accountUid != null and accountUid != ''">
+                and account_uid = #{accountUid}
+            </if>
+            <if test="inWorkorder != null">
+                and in_workorder = #{inWorkorder}
+            </if>
+        </where>
+        order by attachment_count desc
+    </select>
+
+    <select id="queryOcAliyunRamPolicyByUserPermission"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ram_policy where id in
+        ( select policy_id from oc_aliyun_ram_permission where account_uid = #{accountUid}  and  user_id = #{userId} )
+    </select>
+
+    <!--    工单票据查询用户可以申请的策略列表-->
+    <select id="queryUserTicketOcRamPolicyByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam$UserTicketOcRamPolicyQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ram_policy
+        where
+        in_workorder = 1
+        <if test="accountUid != null and accountUid != ''">
+            and account_uid = #{accountUid}
+        </if>
+        --  排除本人已授权的策略
+        <if test="null != ramUserIds and ramUserIds.size > 0">
+           and id not in ( select policy_id from oc_aliyun_ram_permission where user_id in
+           <foreach collection="ramUserIds" item="ramUserId" open="(" separator="," close=")">#{ramUserId}</foreach> )
+        </if>
+        --  排除ticket中的
+        and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+        <if test="queryName != null and queryName != ''">
+            and ( policy_name like "%" #{queryName} "%" or description like "%" #{queryName} "%" )
+        </if>
+        order by replace( policy_name, #{queryName}, '' )
+    </select>
+
+
+</mapper>

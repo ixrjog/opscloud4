@@ -7,8 +7,8 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.OcTag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
-import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
+import com.baiyi.opscloud.domain.vo.tag.BusinessTagVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.facade.TagFacade;
 import com.baiyi.opscloud.service.tag.OcBusinessTagService;
 import com.baiyi.opscloud.service.tag.OcTagService;
@@ -38,24 +38,24 @@ public class TagFacadeImpl implements TagFacade {
     public static final boolean ACTION_UPDATE = false;
 
     @Override
-    public DataTable<OcTagVO.Tag> queryTagPage(TagParam.PageQuery pageQuery) {
+    public DataTable<TagVO.Tag> queryTagPage(TagParam.PageQuery pageQuery) {
         DataTable<OcTag> table = ocTagService.queryOcTagByParam(pageQuery);
-        List<OcTagVO.Tag> page = BeanCopierUtils.copyListProperties(table.getData(), OcTagVO.Tag.class);
-        DataTable<OcTagVO.Tag> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<TagVO.Tag> page = BeanCopierUtils.copyListProperties(table.getData(), TagVO.Tag.class);
+        DataTable<TagVO.Tag> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> addTag(OcTagVO.Tag tag) {
+    public BusinessWrapper<Boolean> addTag(TagVO.Tag tag) {
         return saveTag(tag, ACTION_ADD);
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateTag(OcTagVO.Tag tag) {
+    public BusinessWrapper<Boolean> updateTag(TagVO.Tag tag) {
         return saveTag(tag, ACTION_UPDATE);
     }
 
-    private BusinessWrapper<Boolean> saveTag(OcTagVO.Tag tag, boolean action) {
+    private BusinessWrapper<Boolean> saveTag(TagVO.Tag tag, boolean action) {
         OcTag checkOcTagKey = ocTagService.queryOcTagByKey(tag.getTagKey());
         OcTag ocTag = BeanCopierUtils.copyProperties(tag, OcTag.class);
         // 对象存在 && 新增
@@ -86,20 +86,20 @@ public class TagFacadeImpl implements TagFacade {
     }
 
     @Override
-    public List<OcTagVO.Tag> queryBusinessTag(TagParam.BusinessQuery businessQuery) {
+    public List<TagVO.Tag> queryBusinessTag(TagParam.BusinessQuery businessQuery) {
         List<OcTag> ocTagList = ocTagService.queryOcTagByParam(businessQuery);
-        return BeanCopierUtils.copyListProperties(ocTagList, OcTagVO.Tag.class);
+        return BeanCopierUtils.copyListProperties(ocTagList, TagVO.Tag.class);
     }
 
     @Override
-    public List<OcTagVO.Tag> queryNotInBusinessTag(TagParam.BusinessQuery businessQuery) {
+    public List<TagVO.Tag> queryNotInBusinessTag(TagParam.BusinessQuery businessQuery) {
         List<OcTag> ocTagList = ocTagService.queryOcTagNotInByParam(businessQuery);
-        return BeanCopierUtils.copyListProperties(ocTagList, OcTagVO.Tag.class);
+        return BeanCopierUtils.copyListProperties(ocTagList, TagVO.Tag.class);
     }
 
     @Transactional
     @Override
-    public BusinessWrapper<Boolean> updateBusinessTag(OcBusinessTagVO.BusinessTag businessTag) {
+    public BusinessWrapper<Boolean> updateBusinessTag(BusinessTagVO.BusinessTag businessTag) {
         TagParam.BusinessQuery businessQuery = new TagParam.BusinessQuery();
         businessQuery.setBusinessType(businessTag.getBusinessType());
         businessQuery.setBusinessId(businessTag.getBusinessId());
@@ -132,12 +132,12 @@ public class TagFacadeImpl implements TagFacade {
             deleteTagById(ocBusinessTag.getId());
     }
 
-    private OcBusinessTag getOcBusinessTag(OcBusinessTagVO.BusinessTag businessTag, int tagId) {
+    private OcBusinessTag getOcBusinessTag(BusinessTagVO.BusinessTag businessTag, int tagId) {
         businessTag.setTagId(tagId);
         return BeanCopierUtils.copyProperties(businessTag, OcBusinessTag.class);
     }
 
-    private OcBusinessTag queryOcBusinessTag(OcBusinessTagVO.BusinessTag businessTag, int tagId) {
+    private OcBusinessTag queryOcBusinessTag(BusinessTagVO.BusinessTag businessTag, int tagId) {
         businessTag.setTagId(tagId);
         return ocBusinessTagService.queryOcBusinessTagByUniqueKey(businessTag);
     }

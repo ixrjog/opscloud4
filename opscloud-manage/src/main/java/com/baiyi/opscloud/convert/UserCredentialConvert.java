@@ -3,7 +3,7 @@ package com.baiyi.opscloud.convert;
 import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.util.SSHUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserCredential;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
+import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import org.springframework.util.StringUtils;
 
 /**
@@ -14,7 +14,7 @@ import org.springframework.util.StringUtils;
 public class UserCredentialConvert {
 
 
-    public static OcUserCredential convertOcUserCredential(OcUserCredentialVO.UserCredential userCredential) {
+    public static OcUserCredential convertOcUserCredential(UserCredentialVO.UserCredential userCredential) {
         OcUserCredential ocUserCredential = new OcUserCredential();
 
         ocUserCredential.setCredentialType(userCredential.getCredentialType());

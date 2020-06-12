@@ -12,7 +12,9 @@ public enum BusinessType {
     USERGROUP(4),
     CLOUD_DATABASE(5),
     /** 服务器器管理员账户 **/
-    SERVER_ADMINISTRATOR_ACCOUNT(6);
+    SERVER_ADMINISTRATOR_ACCOUNT(6),
+    ALIYUN_RAM_ACCOUNT(7)
+    ;
 
     private int type;
 

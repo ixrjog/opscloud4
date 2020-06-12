@@ -5,7 +5,6 @@ import com.baiyi.opscloud.ansible.config.AnsibleConfig;
 import com.baiyi.opscloud.ansible.executor.ExecutorEngine;
 import com.baiyi.opscloud.common.base.ServerTaskStopType;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
@@ -70,7 +69,7 @@ public class TaskLogRecorder {
 
     public void abortTask(int taskId) {
         String key = getAbortTaskKey(taskId);
-        redisUtil.set(key, ServerTaskStopType.SERVER_TASK_STOP.getType(), TimeUtils.minuteTime * 5);
+        redisUtil.set(key, ServerTaskStopType.SERVER_TASK_STOP.getType(), 5 * 60);
     }
 
     public int getAbortTask(int taskId) {
@@ -85,7 +84,7 @@ public class TaskLogRecorder {
 
     public void abortTaskMember(int memberId, int stopType) {
         String key = getAbortTaskMemberKey(memberId);
-        redisUtil.set(key, stopType, TimeUtils.minuteTime * 5);
+        redisUtil.set(key, stopType, 5 * 60);
     }
 
     public int getAbortTaskMember(int memberId) {

@@ -58,6 +58,12 @@ public class JumpserverController {
         return new HttpResult<>(jumpserverFacade.syncUserById(id));
     }
 
+    @ApiOperation(value = "删除用户")
+    @DeleteMapping(value = "/user/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteUserByUsername(@RequestParam @Valid String username) {
+        return new HttpResult<>(jumpserverFacade.delUserByUsername(username));
+    }
+
     @ApiOperation(value = "设置用户是否有效")
     @GetMapping(value = "/user/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> setUserActive(@RequestParam String id) {
@@ -74,6 +80,12 @@ public class JumpserverController {
     @GetMapping(value = "/asset/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncAsset() {
         return new HttpResult<>(jumpserverFacade.syncAssets());
+    }
+
+    @ApiOperation(value = "删除资产")
+    @DeleteMapping(value = "/asset/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteAssetById(@RequestParam @Valid String assetId) {
+        return new HttpResult<>(jumpserverFacade.delAssetById(assetId));
     }
 
     @ApiOperation(value = "分页查询资产节点列表")

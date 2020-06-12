@@ -9,7 +9,9 @@ public enum  WorkorderKey {
 
     SERVER_GROUP("SERVER_GROUP"),
     AUTH_ROLE("AUTH_ROLE"),
-    USER_GROUP("USER_GROUP");
+    USER_GROUP("USER_GROUP"),
+    RAM_POLICY("RAM_POLICY")
+    ;
 
     private String key;
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.factory.ticket.entry;
 
-import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
+import com.baiyi.opscloud.domain.vo.auth.RoleVO;
 import lombok.Builder;
 import lombok.Data;
 
@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 public class AuthRoleEntry implements ITicketEntry {
 
-    private OcRoleVO.Role role;
+    private RoleVO.Role role;
 
     public String getName() {
         return this.role.getRoleName();

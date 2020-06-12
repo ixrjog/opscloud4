@@ -2,6 +2,7 @@ package com.baiyi.opscloud.aliyun.core;
 
 import com.aliyuncs.IAcsClient;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.domain.vo.cloud.AliyunAccountVO;
 
 import java.util.List;
 
@@ -13,6 +14,12 @@ import java.util.List;
 public interface AliyunCore {
 
     List<String> getRegionIds();
+
+    /**
+     * 对外查询主账户列表
+     * @return
+     */
+    List<AliyunAccountVO.AliyunAccount> queryAliyunAccount();
 
     List<AliyunAccount> getAccounts();
 

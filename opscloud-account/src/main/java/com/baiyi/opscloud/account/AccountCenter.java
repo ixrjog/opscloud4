@@ -41,15 +41,15 @@ public class AccountCenter {
      * @param loginParam
      * @return
      */
-    public BusinessWrapper<Boolean> loginCheck(LogParam.LoginParam loginParam) {
+    public BusinessWrapper<LogVO.LoginVO> loginCheck(LogParam.LoginParam loginParam) {
         com.baiyi.opscloud.ldap.credential.PersonCredential credential = PersonCredential.builder()
                 .username(loginParam.getUsername())
                 .password(loginParam.getPassword())
                 .build();
         OcUser ocUser = ocUserService.queryOcUserByUsername(loginParam.getUsername());
-        if(ocUser == null )
+        if (ocUser == null)
             return new BusinessWrapper(ErrorEnum.USER_NOT_EXIST);
-        if( !ocUser.getIsActive())
+        if (!ocUser.getIsActive())
             return new BusinessWrapper(ErrorEnum.ACCOUNT_IS_DISABLE);
         // 验证通过
         if (ldapHandler.loginCheck(credential)) {
@@ -60,10 +60,8 @@ public class AccountCenter {
             loginVO.setUuid(ocUser.getUuid());
             loginVO.setToken(token);
             ocAuthFacade.setOcUserPassword(ocUser, loginParam.getPassword());
-            BusinessWrapper wrapper = BusinessWrapper.SUCCESS;
-            wrapper.setBody(loginVO);
             initialUser(ocUser);
-            return wrapper;
+            return new BusinessWrapper(loginVO);
         } else {
             return new BusinessWrapper(ErrorEnum.USER_LOGIN_FAILUER);
         }

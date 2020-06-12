@@ -2,7 +2,9 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
+import com.baiyi.opscloud.common.base.OcSettingName;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
 import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -12,6 +14,7 @@ import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
+import com.baiyi.opscloud.xterm.config.XTermConfig;
 import com.baiyi.opscloud.xterm.handler.AuditLogHandler;
 import com.baiyi.opscloud.xterm.message.BaseMessage;
 import com.baiyi.opscloud.xterm.model.HostSystem;
@@ -22,8 +25,6 @@ import org.springframework.beans.factory.InitializingBean;
 import javax.annotation.Resource;
 import java.util.Date;
 
-import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
-
 
 /**
  * @Author baiyi
@@ -31,7 +32,7 @@ import static com.baiyi.opscloud.common.base.Global.HIGH_AUTHORITY_ACCOUNT;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseProcess implements IXTermProcess, InitializingBean{
+public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     @Resource
     protected UserFacade userFacade;
@@ -60,8 +61,20 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
     @Resource
     protected RedisUtil redisUtil;
 
+    @Resource
+    protected SettingFacade settingFacade;
+
+    @Resource
+    private XTermConfig xtermConfig;
+
     abstract protected BaseMessage getMessage(String message);
 
+    /**
+     * 判断用户访问级别 >= ops
+     *
+     * @param ocUser
+     * @return
+     */
     protected boolean isOps(OcUser ocUser) {
         return userPermissionFacade.checkAccessLevel(ocUser, AccessLevel.OPS.getLevel()).isSuccess();
     }
@@ -86,7 +99,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
 
         SSHKeyCredential sshKeyCredential;
         if (loginType) {
-            sshKeyCredential = keyboxFacade.getSSHKeyCredential(HIGH_AUTHORITY_ACCOUNT); // 高权限
+            sshKeyCredential = keyboxFacade.getSSHKeyCredential(settingFacade.querySetting(OcSettingName.SERVER_HIGH_AUTHORITY_ACCOUNT)); // 高权限
         } else {
             sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());  // 普通用户
         }
@@ -105,11 +118,12 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
         return isBatch;
     }
 
-    protected void sessionInstanceClosed(OcTerminalSession ocTerminalSession, String instanceId) {
+    protected void closeSessionInstance(OcTerminalSession ocTerminalSession, String instanceId) {
         try {
             OcTerminalSessionInstance ocTerminalSessionInstance = terminalFacade.queryOcTerminalSessionInstanceByUniqueKey(ocTerminalSession.getSessionId(), instanceId);
             ocTerminalSessionInstance.setCloseTime(new Date());
             ocTerminalSessionInstance.setIsClosed(true);
+            ocTerminalSessionInstance.setOutputSize(IOUtils.fileSize(xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(), instanceId)));
             terminalFacade.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
         } catch (Exception e) {
 
@@ -120,17 +134,15 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean{
         AuditLogHandler.writeAuditLog(ocTerminalSession.getSessionId(), instanceId);
     }
 
-    protected void heartbeat(String sessionId){
-        redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60 * 1000L);
+    protected void heartbeat(String sessionId) {
+        redisUtil.set(CacheKeyUtils.getTermSessionHeartbeatKey(sessionId), true, 60L);
     }
 
     /**
      * 注册
-     *
-     * @throws Exception
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         XTermProcessFactory.register(this);
     }
 

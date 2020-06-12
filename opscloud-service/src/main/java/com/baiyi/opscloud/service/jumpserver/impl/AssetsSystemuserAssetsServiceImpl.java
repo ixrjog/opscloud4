@@ -40,8 +40,8 @@ public class AssetsSystemuserAssetsServiceImpl implements AssetsSystemuserAssets
     @Override
     public void deleteAssetsSystemuserAssetsByAssetId(String assetId) {
         List<AssetsSystemuserAssets> list = queryAssetsSystemuserAssetsByAssetId(assetId);
-        for (AssetsSystemuserAssets assetsSystemuserAssets : list)
-            deleteAssetsSystemuserAssetsById(assetsSystemuserAssets.getId());
+        list.forEach(e -> deleteAssetsSystemuserAssetsById(e.getId()));
+
     }
 
     @Override

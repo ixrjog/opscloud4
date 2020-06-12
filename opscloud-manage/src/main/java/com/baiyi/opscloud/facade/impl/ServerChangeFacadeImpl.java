@@ -45,7 +45,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
      */
 
     @Override
-    public BusinessWrapper<Boolean> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
+    public BusinessWrapper<String> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
         BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
         if (!wrapper.isSuccess()) return wrapper;
@@ -61,7 +61,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
+    public BusinessWrapper<String> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
         BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
         if (!wrapper.isSuccess()) return wrapper;
@@ -94,10 +94,10 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     }
 
     @Override
-    public ServerChangeTaskVO.ServerChangeTask queryServerChangeTask(String taskId) {
+    public BusinessWrapper<ServerChangeTaskVO.ServerChangeTask> queryServerChangeTask(String taskId) {
         OcServerChangeTask task = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(taskId);
         ServerChangeTaskVO.ServerChangeTask serverChangeTask = BeanCopierUtils.copyProperties(task, ServerChangeTaskVO.ServerChangeTask.class);
-        return serverChangeTaskDecorator.decorator(serverChangeTask);
+        return new BusinessWrapper(serverChangeTaskDecorator.decorator(serverChangeTask));
     }
 
 

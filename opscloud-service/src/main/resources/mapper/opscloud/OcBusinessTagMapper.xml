@@ -14,7 +14,7 @@
     </resultMap>
 
     <select id="queryOcBusinessTagByUniqueKey"
-            parameterType="com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO$BusinessTag"
+            parameterType="com.baiyi.opscloud.domain.vo.tag.BusinessTagVO$BusinessTag"
             resultMap="BaseResultMap">
        select * from oc_business_tag
            where business_id = #{businessId}
@@ -23,7 +23,7 @@
     </select>
 
     <delete id="deleteOcBusinessTagByUniqueKey"
-            parameterType="com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO$BusinessTag">
+            parameterType="com.baiyi.opscloud.domain.vo.tag.BusinessTagVO$BusinessTag">
        delete from oc_business_tag
             where business_id = #{businessId}
             and tag_id = #{tagId}

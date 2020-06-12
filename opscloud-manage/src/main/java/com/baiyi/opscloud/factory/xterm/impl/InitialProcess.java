@@ -38,9 +38,9 @@ public class InitialProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    public void xtermProcess(String message, Session session,OcTerminalSession ocTerminalSession) {
+    public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         InitialMessage xtermMessage = (InitialMessage) getMessage(message);
-        OcUser ocUser =  userFacade.getOcUserBySession();
+        OcUser ocUser = userFacade.getOcUserBySession();
         BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
         if (!wrapper.isSuccess())
             return;
@@ -51,9 +51,9 @@ public class InitialProcess extends BaseProcess implements IXTermProcess {
             if (!serverTreeHostPatternMap.containsKey(instanceId))
                 continue;
             String host = serverTreeHostPatternMap.get(instanceId);
-            HostSystem hostSystem = buildHostSystem(ocUser, host, xtermMessage,isAdmin);
+            HostSystem hostSystem = buildHostSystem(ocUser, host, xtermMessage, isAdmin);
             RemoteInvokeHandler.openSSHTermOnSystem(ocTerminalSession.getSessionId(), instanceId, hostSystem);
-            terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession,hostSystem));
+            terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession, hostSystem));
         }
     }
 

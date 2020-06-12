@@ -3,8 +3,8 @@ package com.baiyi.opscloud.factory.ticket;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 
 /**
  * @Author baiyi
@@ -18,31 +18,14 @@ public interface ITicketHandler {
      **/
     void executorTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
 
-    //BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
+    BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser,  WorkorderTicketEntryVO.Entry entry);
 
-    BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser,  OcWorkorderTicketEntryVO.Entry entry);
+    BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser,  WorkorderTicketEntryVO.Entry entry);
 
-    BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser,  OcWorkorderTicketEntryVO.Entry entry);
+    WorkorderTicketEntryVO.Entry convertTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
 
-   // BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry);
-
-    OcWorkorderTicketEntryVO.Entry convertTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry);
-
-    OcWorkorderTicketVO.Ticket createTicket(OcUser ocUser);
+    WorkorderTicketVO.Ticket createTicket(OcUser ocUser);
 
     String getKey();
-
-    // disagree  agree
-
-
-//
-//    /**
-//     * 审批拒绝
-//     * @param ticketId
-//     * @return
-//     */
-//    BusinessWrapper<Boolean> disapproveTicket(int ticketId);
-//
-//    BusinessWrapper<Boolean> createTicket();
 
 }

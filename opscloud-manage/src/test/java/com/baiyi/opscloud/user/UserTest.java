@@ -56,8 +56,8 @@ public class UserTest extends BaseUnit {
 
 
                 "shiluo\n" +
-             
-                "zuobing";
+
+                        "zuobing";
 
         String[] users = userStr.split("\\n");
         for (String user : users) {
@@ -74,7 +74,9 @@ public class UserTest extends BaseUnit {
 
     @Test
     void beReinstatedUserTest() {
-       userFacade.beReinstatedUser(993);
+        OcUser ocUser = ocUserService.queryOcUserByUsername("guannan");
+        System.err.println(JSON.toJSONString(ocUser));
+        userFacade.beReinstatedUser(ocUser.getId());
 
     }
 

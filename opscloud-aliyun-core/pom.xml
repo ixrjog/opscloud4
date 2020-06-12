@@ -12,6 +12,20 @@
     <artifactId>opscloud-aliyun-core</artifactId>
 
     <dependencies>
+
+<!--        ALIYUN SDK-->
+<!--        阿里云开发工具包（SDK）-->
+<!--        https://developer.aliyun.com/tools/sdk?spm=a2c4g.11186623.2.7.f0a34475oKJuPs#/java-->
+<!--        https://mvnrepository.com/artifact/com.aliyun/aliyun-java-sdk-core-->
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-domain</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-common</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.aliyun</groupId>
             <artifactId>aliyun-java-sdk-core</artifactId>

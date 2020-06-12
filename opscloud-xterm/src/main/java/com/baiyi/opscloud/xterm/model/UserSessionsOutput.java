@@ -35,7 +35,6 @@ public class UserSessionsOutput {
     //instance id, host output
     Map<String, SessionOutput> sessionOutputMap = new ConcurrentHashMap<>();
 
-
     public Map<String, SessionOutput> getSessionOutputMap() {
         return sessionOutputMap;
     }

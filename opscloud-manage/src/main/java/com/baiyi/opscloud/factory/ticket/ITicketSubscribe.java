@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketSubscribe;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 
 import java.util.List;
 
@@ -35,7 +35,7 @@ public interface ITicketSubscribe {
      */
     void unsubscribe(OcWorkorderTicket ocWorkorderTicket);
 
-    void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase);
+    void invokeFlowStep(WorkorderTicketVO.Ticket ticket, String ticketPhase);
 
     /**
      * 当前步骤用户是否可审批
@@ -43,8 +43,8 @@ public interface ITicketSubscribe {
      * @param ticket
      * @return
      */
-    Boolean isAllowApproval(OcUser ocUser, OcWorkorderTicketVO.Ticket ticket);
+    Boolean isAllowApproval(OcUser ocUser, WorkorderTicketVO.Ticket ticket);
 
-    List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket);
+    List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket);
 
 }

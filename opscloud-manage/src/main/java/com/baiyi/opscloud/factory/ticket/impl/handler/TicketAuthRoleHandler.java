@@ -3,8 +3,8 @@ package com.baiyi.opscloud.factory.ticket.impl.handler;
 import com.baiyi.opscloud.common.base.WorkorderKey;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
-import com.baiyi.opscloud.domain.vo.auth.OcUserRoleVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.auth.UserRoleVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
 import com.baiyi.opscloud.facade.AuthFacade;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
 import com.baiyi.opscloud.factory.ticket.entry.AuthRoleEntry;
@@ -41,21 +41,19 @@ public class TicketAuthRoleHandler<T> extends BaseTicketHandler<T> implements IT
 
     @Override
     protected ITicketEntry acqITicketEntry(Object  ticketEntry) {
-        AuthRoleEntry entry = new ObjectMapper().convertValue(ticketEntry, AuthRoleEntry.class);
-        return entry;
+        return new ObjectMapper().convertValue(ticketEntry, AuthRoleEntry.class);
     }
 
     @Override
     protected T getTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) throws JsonSyntaxException {
-        AuthRoleEntry entry = new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), AuthRoleEntry.class);
-        return (T) entry;
+        return (T) new GsonBuilder().create().fromJson(ocWorkorderTicketEntry.getEntryDetail(), AuthRoleEntry.class);
     }
 
     @Override
     protected void executorTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry, T entry) {
         AuthRoleEntry authRoleEntry = (AuthRoleEntry) entry;
 
-        OcUserRoleVO.UserRole userRole = new OcUserRoleVO.UserRole();
+        UserRoleVO.UserRole userRole = new UserRoleVO.UserRole();
         userRole.setRoleId(authRoleEntry.getRole().getId());
         userRole.setUsername(getUser(ocWorkorderTicketEntry.getWorkorderTicketId()).getUsername());
 
@@ -64,7 +62,7 @@ public class TicketAuthRoleHandler<T> extends BaseTicketHandler<T> implements IT
     }
 
     @Override
-    protected BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry) {
+    protected BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry) {
         return BusinessWrapper.SUCCESS;
     }
 }

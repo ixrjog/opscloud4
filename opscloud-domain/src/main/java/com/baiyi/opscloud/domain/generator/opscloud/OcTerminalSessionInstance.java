@@ -39,6 +39,9 @@ public class OcTerminalSessionInstance {
     @Column(name = "host_ip")
     private String hostIp;
 
+    @Column(name = "output_size")
+    private Long outputSize;
+
     /**
      * 是否关闭
      */
@@ -165,6 +168,14 @@ public class OcTerminalSessionInstance {
      */
     public void setHostIp(String hostIp) {
         this.hostIp = hostIp;
+    }
+
+    public Long getOutputSize() {
+        return outputSize;
+    }
+
+    public void setOutputSize(Long outputSize) {
+        this.outputSize = outputSize;
     }
 
     /**

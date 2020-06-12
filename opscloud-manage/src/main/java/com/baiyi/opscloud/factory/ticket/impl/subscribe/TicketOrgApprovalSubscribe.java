@@ -8,10 +8,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketSubscribe;
-import com.baiyi.opscloud.domain.vo.org.OcOrgDepartmentMemberVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
@@ -57,7 +57,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
                 addTicketSubscribe(ocWorkorderTicket, orgApproval.getPreferenceDeptMember().getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
             }
             if (orgApproval.getAlternativeDeptMembers() != null) {
-                for (OcOrgDepartmentMemberVO.DepartmentMember member : orgApproval.getAlternativeDeptMembers())
+                for (OrgDepartmentMemberVO.DepartmentMember member : orgApproval.getAlternativeDeptMembers())
                     addTicketSubscribe(ocWorkorderTicket, member.getUserId(), TicketSubscribeType.ORG_APPROVAL.getType());
             }
         }
@@ -65,7 +65,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
     }
 
     @Override
-    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase) {
+    public void invokeFlowStep(WorkorderTicketVO.Ticket ticket, String ticketPhase) {
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ticket.getUserId());
         ApprovalStepsVO.ApprovalStep approvalStep = ApprovalStepsVO.ApprovalStep.builder()
                 .title("上级审批")
@@ -88,7 +88,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
     }
 
     @Override
-    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket){
+    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket){
         return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.ORG_APPROVAL.getType());
     }
 

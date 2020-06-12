@@ -141,7 +141,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
             }
         } else {
             if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
-                usersUser = UsersUserBuilder.build(ocUser);
+                usersUser = UsersUserBuilder.build(ocUser, checkUsersUser.getRole());
                 usersUser.setId(checkUsersUser.getId());
                 if (!StringUtils.isEmpty(checkUsersUser.getPublicKey())) // 写入publicKey
                     usersUser.setPublicKey(checkUsersUser.getPublicKey());
@@ -359,6 +359,24 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         AssetsSystemuserAssets assetsSystemuserAssets = assetsSystemuserAssetsService.queryAssetsSystemuserAssetsByUniqueKey(pre);
         if (assetsSystemuserAssets == null)
             assetsSystemuserAssetsService.addAssetsSystemuserAssets(pre);
+    }
+
+    @Override
+    public boolean delAssetsAsset(String assetId) {
+        try {
+            log.info("Jumpserver删除资产，assetId={}", assetId);
+            // 删除资产节点绑定关系
+            AssetsAssetNodes assetsAssetNodes = assetsAssetNodesService.queryAssetsAssetNodesByAssetId(assetId);
+            if(assetsAssetNodes != null)
+                assetsAssetNodesService.delAssetsAssetNodes(assetsAssetNodes.getId());
+            // 删除资产账户绑定
+            assetsSystemuserAssetsService.deleteAssetsSystemuserAssetsByAssetId(assetId);
+            assetsAssetService.deleteAssetsAssetById(assetId);
+            return true;
+        } catch (Exception e) {
+            log.error("删除资产错误，{}", e.getMessage());
+            return false;
+        }
     }
 
     @Override

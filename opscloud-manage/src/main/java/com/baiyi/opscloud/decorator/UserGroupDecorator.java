@@ -2,8 +2,8 @@ package com.baiyi.opscloud.decorator;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.google.common.collect.Lists;
@@ -27,23 +27,23 @@ public class UserGroupDecorator {
     private GroupRepo groupRepo;
 
     // from mysql
-    public OcUserGroupVO.UserGroup decorator(OcUserGroupVO.UserGroup userGroup, Integer extend) {
+    public UserGroupVO.UserGroup decorator(UserGroupVO.UserGroup userGroup, Integer extend) {
         if (extend != null && extend == 1) {
             List<OcUser> userList = ocUserService.queryOcUserByUserGroupId(userGroup.getId());
-            userGroup.setUsers(BeanCopierUtils.copyListProperties(userList, OcUserVO.User.class));
+            userGroup.setUsers(BeanCopierUtils.copyListProperties(userList, UserVO.User.class));
         }
         return userGroup;
     }
 
-    public OcUserGroupVO.UserGroup decoratorFromLdapRepo(OcUserGroupVO.UserGroup userGroup, Integer extend) {
+    public UserGroupVO.UserGroup decoratorFromLdapRepo(UserGroupVO.UserGroup userGroup, Integer extend) {
         if (extend != null && extend == 1) {
             List<String> usernameList = groupRepo.queryGroupMember(userGroup.getName());
             //Map<String, OcUserVO.User> userMap = Maps.newHashMap();
-            List<OcUserVO.User> users = Lists.newArrayList();
+            List<UserVO.User> users = Lists.newArrayList();
             for (String username : usernameList) {
                 OcUser ocUser = ocUserService.queryOcUserByUsername(username);
                 if (ocUser != null)
-                    users.add(BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class));
+                    users.add(BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
             }
             userGroup.setUsers(users);
         }

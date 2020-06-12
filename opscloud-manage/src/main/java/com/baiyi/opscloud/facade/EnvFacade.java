@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 
 /**
  * @Author baiyi
@@ -12,11 +12,11 @@ import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
  */
 public interface EnvFacade {
 
-    DataTable<OcEnvVO.Env> queryEnvPage(EnvParam.PageQuery pageQuery);
+    DataTable<EnvVO.Env> queryEnvPage(EnvParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> addEnv(OcEnvVO.Env env);
+    BusinessWrapper<Boolean> addEnv(EnvVO.Env env);
 
-    BusinessWrapper<Boolean> updateEnv(OcEnvVO.Env env);
+    BusinessWrapper<Boolean> updateEnv(EnvVO.Env env);
 
     BusinessWrapper<Boolean> deleteEnvById(int id);
 }

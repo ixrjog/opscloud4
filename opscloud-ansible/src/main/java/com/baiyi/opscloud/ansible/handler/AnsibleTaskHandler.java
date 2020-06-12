@@ -70,7 +70,7 @@ public class AnsibleTaskHandler {
     private OcServerService ocServerService;
 
     @Resource
-    private  TaskLogRecorder taskLogRecorder;
+    private TaskLogRecorder taskLogRecorder;
 
     @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void call(OcServerTask ocServerTask, ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskPlaybookExecutor, String playbookPath) {
@@ -114,7 +114,6 @@ public class AnsibleTaskHandler {
             // 判断任务是否结束
             if (finalizedSize == ocServerTask.getTaskSize()) {
                 ocServerTask.setFinalized(1);
-                //   ocServerTask.setExitValue(0);
                 ocServerTaskService.updateOcServerTask(ocServerTask);
                 exit = true;
             }
@@ -227,7 +226,7 @@ public class AnsibleTaskHandler {
                 exit = true;
             }
             // 判断主任务是否结束
-            if(taskLogRecorder.getAbortTask(ocServerTask.getId()) != 0)  {
+            if (taskLogRecorder.getAbortTask(ocServerTask.getId()) != 0) {
                 if (ocServerTask.getStopType() == ServerTaskStopType.SERVER_TASK_STOP.getType())
                     exit = true;
                 try {
@@ -268,25 +267,25 @@ public class AnsibleTaskHandler {
     }
 
     private void executorScript(List<OcServerTaskMember> memberList, AnsibleArgsBO args) {
-        for (OcServerTaskMember member : memberList) {
+        memberList.forEach(member -> {
             // 执行队列状态
             member.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
             ocServerTaskMemberService.updateOcServerTaskMember(member);
             args.setPattern(member.getManageIp());
             CommandLine commandLine = AnsibleScriptArgsBuilder.build(ansibleConfig, args);
             executorCommand(member, commandLine);
-        }
+        });
     }
 
     private void executorPlaybook(List<OcServerTaskMember> memberList, AnsiblePlaybookArgsBO args) {
-        for (OcServerTaskMember member : memberList) {
+        memberList.forEach(member -> {
             // 执行队列状态
             member.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
             ocServerTaskMemberService.updateOcServerTaskMember(member);
             args.setHosts(member.getManageIp());
             CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansibleConfig, args);
             executorCommand(member, commandLine);
-        }
+        });
     }
 
     /**

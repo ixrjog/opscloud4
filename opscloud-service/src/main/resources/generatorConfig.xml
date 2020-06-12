@@ -146,9 +146,15 @@
        oc_terminal_session
        oc_terminal_session_instance
        oc_server_change_task
-       oc_server_change_task_flow  -->
+       oc_server_change_task_flow
+       oc_server_group_property
+       oc_setting
+       oc_aliyun_ram_user
+       oc_aliyun_ram_policy
+       oc_aliyun_ram_permission
+       -->
 
-        <table tableName="oc_server_change_task_flow">
+        <table tableName="oc_aliyun_ram_permission">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

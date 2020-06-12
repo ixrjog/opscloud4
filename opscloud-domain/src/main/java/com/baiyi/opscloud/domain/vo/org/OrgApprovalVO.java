@@ -32,12 +32,12 @@ public class OrgApprovalVO {
         /**
          * 首选审批人
          **/
-        private OcOrgDepartmentMemberVO.DepartmentMember preferenceDeptMember;
+        private OrgDepartmentMemberVO.DepartmentMember preferenceDeptMember;
 
         /**
          * 备选审批人
          **/
         @Builder.Default
-        private List<OcOrgDepartmentMemberVO.DepartmentMember> alternativeDeptMembers = Lists.newArrayList();
+        private List<OrgDepartmentMemberVO.DepartmentMember> alternativeDeptMembers = Lists.newArrayList();
     }
 }

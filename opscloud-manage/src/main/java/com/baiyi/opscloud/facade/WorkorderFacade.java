@@ -3,13 +3,14 @@ package com.baiyi.opscloud.facade;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderGroupVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderGroupVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 
 import java.util.List;
 
@@ -20,17 +21,15 @@ import java.util.List;
  */
 public interface WorkorderFacade {
 
-    DataTable<OcWorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery);
+    DataTable<WorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> saveWorkorderGroup(OcWorkorderGroupVO.WorkorderGroup workorderGroup);
+    BusinessWrapper<Boolean> saveWorkorderGroup(WorkorderGroupVO.WorkorderGroup workorderGroup);
 
-    List<OcWorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup();
+    List<WorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup();
 
-    // WorkorderTicketParam.CreateTicket createTicket
+    WorkorderTicketVO.Ticket createWorkorderTicket(WorkorderTicketParam.CreateTicket createTicket);
 
-    OcWorkorderTicketVO.Ticket createWorkorderTicket(WorkorderTicketParam.CreateTicket createTicket);
-
-    OcWorkorderTicketVO.Ticket queryWorkorderTicket(WorkorderTicketParam.QueryTicket queryTicket);
+    WorkorderTicketVO.Ticket queryWorkorderTicket(WorkorderTicketParam.QueryTicket queryTicket);
 
     /**
      * 提交工单票据
@@ -38,15 +37,15 @@ public interface WorkorderFacade {
      * @param ticket
      * @return
      */
-    BusinessWrapper<Boolean> submitWorkorderTicket(OcWorkorderTicketVO.Ticket ticket);
+    BusinessWrapper<Boolean> submitWorkorderTicket(WorkorderTicketVO.Ticket ticket);
 
     BusinessWrapper<Boolean> agreeWorkorderTicket(int ticketId);
 
     BusinessWrapper<Boolean> disagreeWorkorderTicket(int ticketId);
 
-    BusinessWrapper<Boolean> addTicketEntry(OcWorkorderTicketEntryVO.Entry entry);
+    BusinessWrapper<Boolean> addTicketEntry(WorkorderTicketEntryVO.Entry entry);
 
-    BusinessWrapper<Boolean> updateTicketEntry(OcWorkorderTicketEntryVO.Entry entry);
+    BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry);
 
     /**
      * 删除工单条目
@@ -64,11 +63,13 @@ public interface WorkorderFacade {
      */
     BusinessWrapper<Boolean> delWorkorderTicketById(int id);
 
-    List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam);
+    List<WorkorderTicketEntryVO.Entry> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery queryParam);
 
-    List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam);
+    List<WorkorderTicketEntryVO.Entry> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam);
 
-    List<OcWorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
+    List<WorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
+
+    List<WorkorderTicketEntryVO.Entry> queryUserTicketRAMPolicyParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam);
 
     /**
      * 我的工单
@@ -76,8 +77,8 @@ public interface WorkorderFacade {
      * @param pageQuery
      * @return
      */
-    DataTable<OcWorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage pageQuery);
+    DataTable<WorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage pageQuery);
 
-    DataTable<OcWorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery);
+    DataTable<WorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery);
 
 }

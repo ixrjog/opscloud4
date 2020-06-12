@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcEnv;
 import com.baiyi.opscloud.domain.param.env.EnvParam;
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.facade.EnvFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -33,24 +33,24 @@ public class EnvFacadeImpl implements EnvFacade {
     public static final boolean ACTION_UPDATE = false;
 
     @Override
-    public DataTable<OcEnvVO.Env> queryEnvPage(EnvParam.PageQuery pageQuery) {
+    public DataTable<EnvVO.Env> queryEnvPage(EnvParam.PageQuery pageQuery) {
         DataTable<OcEnv> table = ocEnvService.queryOcEnvByParam(pageQuery);
-        List<OcEnvVO.Env> page = BeanCopierUtils.copyListProperties(table.getData(), OcEnvVO.Env.class);
-        DataTable<OcEnvVO.Env> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<EnvVO.Env> page = BeanCopierUtils.copyListProperties(table.getData(), EnvVO.Env.class);
+        DataTable<EnvVO.Env> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> addEnv(OcEnvVO.Env env) {
+    public BusinessWrapper<Boolean> addEnv(EnvVO.Env env) {
         return saveEnv(env, ACTION_ADD);
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateEnv(OcEnvVO.Env env) {
+    public BusinessWrapper<Boolean> updateEnv(EnvVO.Env env) {
         return saveEnv(env, ACTION_UPDATE);
     }
 
-    private BusinessWrapper<Boolean> saveEnv(OcEnvVO.Env env, boolean action) {
+    private BusinessWrapper<Boolean> saveEnv(EnvVO.Env env, boolean action) {
         OcEnv checkOcEnvName = ocEnvService.queryOcEnvByName(env.getEnvName());
         OcEnv ocEnv = BeanCopierUtils.copyProperties(env, OcEnv.class);
         // 对象存在 && 新增

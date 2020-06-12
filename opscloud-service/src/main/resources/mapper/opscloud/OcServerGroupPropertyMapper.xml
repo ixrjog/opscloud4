@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerGroupPropertyMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcServerGroupProperty">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId" />
+    <result column="env_type" jdbcType="INTEGER" property="envType" />
+    <result column="property_name" jdbcType="VARCHAR" property="propertyName" />
+    <result column="property_value" jdbcType="VARCHAR" property="propertyValue" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

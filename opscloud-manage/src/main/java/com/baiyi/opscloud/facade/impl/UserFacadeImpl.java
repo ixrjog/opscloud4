@@ -21,10 +21,10 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserCredentialVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
@@ -93,7 +93,7 @@ public class UserFacadeImpl implements UserFacade {
     private ServerGroupFacade serverGroupFacade;
 
     @Override
-    public DataTable<OcUserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
+    public DataTable<UserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
         if (pageQuery.getIsActive() == null)
             pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
@@ -101,19 +101,19 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public OcUserVO.User queryUserDetail() {
+    public UserVO.User queryUserDetail() {
         return queryUserDetailByUsername(SessionUtils.getUsername());
     }
 
     @Override
-    public OcUserVO.User queryUserDetailByUsername(String username){
+    public UserVO.User queryUserDetailByUsername(String username) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(username);
-        OcUserVO.User user = BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class);
+        UserVO.User user = BeanCopierUtils.copyProperties(ocUser, UserVO.User.class);
         return userDecorator.decorator(user, 1);
     }
 
     @Override
-    public DataTable<OcUserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery) {
+    public DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery) {
         if (pageQuery.getIsActive() == null)
             pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.fuzzyQueryUserByParam(pageQuery);
@@ -121,7 +121,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> applyUserApiToken(OcUserApiTokenVO.UserApiToken userApiToken) {
+    public BusinessWrapper<Boolean> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken) {
         if (StringUtils.isEmpty(userApiToken.getComment()))
             return new BusinessWrapper(ErrorEnum.USER_APPLY_API_TOKEN_COMMENT_IS_NULL);
         if (userApiToken.getExpiredTime() == null)
@@ -129,7 +129,7 @@ public class UserFacadeImpl implements UserFacade {
         UserApiTokenConvert.convertOcUserApiToken(userApiToken);
         OcUserApiToken ocUserApiToken = UserApiTokenConvert.convertOcUserApiToken(userApiToken);
         ocUserApiTokenService.addOcUserApiToken(ocUserApiToken);
-        return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserApiToken, OcUserApiTokenVO.UserApiToken.class));
+        return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserApiToken, UserApiTokenVO.UserApiToken.class));
     }
 
     @Override
@@ -161,7 +161,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveUserCredentia(OcUserCredentialVO.UserCredential userCredential) {
+    public BusinessWrapper<Boolean> saveUserCredentia(UserCredentialVO.UserCredential userCredential) {
         // 公共接口需要2次鉴权
         BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(), URLResource.USER_CREDENTIAL_SAVE);
         if (!wrapper.isSuccess())
@@ -184,11 +184,11 @@ public class UserFacadeImpl implements UserFacade {
         // sshkey push
         if (!StringUtils.isEmpty(ocUser.getPassword()) && userCredential.getCredentialType() == CredentialType.SSH_PUB_KEY.getType())
             accountCenter.pushSSHKey(ocUser);
-        return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, OcUserCredentialVO.UserCredential.class));
+        return new BusinessWrapper(BeanCopierUtils.copyProperties(ocUserCredential, UserCredentialVO.UserCredential.class));
     }
 
-    private DataTable<OcUserVO.User> toUserPage(DataTable<OcUser> table, Integer extend) {
-        List<OcUserVO.User> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserVO.User.class);
+    private DataTable<UserVO.User> toUserPage(DataTable<OcUser> table, Integer extend) {
+        List<UserVO.User> page = BeanCopierUtils.copyListProperties(table.getData(), UserVO.User.class);
         return new DataTable<>(page.stream().map(e -> userDecorator.decorator(e, extend)).collect(Collectors.toList()), table.getTotalNum());
     }
 
@@ -198,12 +198,18 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateBaseUser(OcUserVO.User user) {
+    public BusinessWrapper<Boolean> updateBaseUser(UserParam.UpdateUser updateUser) {
+        // 查询用户是否有效
+        OcUser checkUser = ocUserService.queryOcUserByUsername(updateUser.getUsername());
+        if (checkUser == null)
+            return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
+        if (!checkUser.getIsActive())
+            return new BusinessWrapper<>(ErrorEnum.USER_IS_UNACTIVE);
         // 公共接口需要2次鉴权
-        BusinessWrapper<Boolean> wrapper = enhancedAuthority(user.getId(), URLResource.USER_UPDATE);
+        BusinessWrapper<Boolean> wrapper = enhancedAuthority(checkUser.getId(), URLResource.USER_UPDATE);
         if (!wrapper.isSuccess())
             return wrapper;
-        OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
+        OcUser ocUser = BeanCopierUtils.copyProperties(updateUser, OcUser.class);
         String password = ""; // 用户密码原文
         // 用户尝试修改密码
         if (!StringUtils.isEmpty(ocUser.getPassword())) {
@@ -231,20 +237,12 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> createUser(OcUserVO.User user) {
-        if (StringUtils.isEmpty(user.getUsername()))
-            return new BusinessWrapper(ErrorEnum.USER_USERNAME_IS_NULL);
-        if (StringUtils.isEmpty(user.getPassword()))
-            return new BusinessWrapper(ErrorEnum.USER_PASSWORD_IS_NULL);
-        if (StringUtils.isEmpty(user.getDisplayName()))
-            return new BusinessWrapper(ErrorEnum.USER_DISPLAYNAME_IS_NULL);
-        if (StringUtils.isEmpty(user.getEmail()))
-            return new BusinessWrapper(ErrorEnum.USER_EMAIL_IS_NULL);
-        if (!RegexUtils.isUsernameRule(user.getUsername()))
+    public BusinessWrapper<Boolean> createUser(UserParam.CreateUser createUser) {
+        if (!RegexUtils.isUsernameRule(createUser.getUsername()))
             return new BusinessWrapper(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
-        if (!RegexUtils.checkPasswordRule(user.getPassword()))
+        if (!RegexUtils.checkPasswordRule(createUser.getPassword()))
             return new BusinessWrapper<>(ErrorEnum.USER_PASSWORD_NON_COMPLIANCE_WITH_RULES);
-        OcUser ocUser = BeanCopierUtils.copyProperties(user, OcUser.class);
+        OcUser ocUser = BeanCopierUtils.copyProperties(createUser, OcUser.class);
         ocUser.setIsActive(true);
         ocUser.setSource("ldap");
         ocUser.setUuid(UUIDUtils.getUUID());
@@ -253,10 +251,10 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public DataTable<OcUserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery) {
+    public DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryOcUserGroupByParam(pageQuery);
-        List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
-        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
+        List<UserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), UserGroupVO.UserGroup.class);
+        DataTable<UserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
         return dataTable;
     }
 
@@ -297,23 +295,23 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public DataTable<OcUserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
+    public DataTable<UserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryUserIncludeOcUserGroupByParam(pageQuery);
-        List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
-        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<UserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), UserGroupVO.UserGroup.class);
+        DataTable<UserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public DataTable<OcUserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
+    public DataTable<UserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryUserExcludeOcUserGroupByParam(pageQuery);
-        List<OcUserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), OcUserGroupVO.UserGroup.class);
-        DataTable<OcUserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
+        List<UserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), UserGroupVO.UserGroup.class);
+        DataTable<UserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
         return dataTable;
     }
 
     @Override
-    public BusinessWrapper<Boolean> addUserGroup(OcUserGroupVO.UserGroup userGroup) {
+    public BusinessWrapper<Boolean> addUserGroup(UserGroupVO.UserGroup userGroup) {
         if (!RegexUtils.isUserGroupNameRule(userGroup.getName()))
             return new BusinessWrapper(ErrorEnum.USERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
         OcUserGroup checkOcUserGroupName = ocUserGroupService.queryOcUserGroupByName(userGroup.getName());
@@ -321,6 +319,15 @@ public class UserFacadeImpl implements UserFacade {
             return new BusinessWrapper(ErrorEnum.USERGROUP_NAME_ALREADY_EXIST);
         OcUserGroup ocUserGroup = BeanCopierUtils.copyProperties(userGroup, OcUserGroup.class);
         ocUserGroupService.addOcUserGroup(ocUserGroup);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> updateUserGroup(UserGroupVO.UserGroup userGroup) {
+        OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupByName(userGroup.getName());
+        ocUserGroup.setInWorkorder(userGroup.getInWorkorder());
+        ocUserGroup.setComment(userGroup.getComment());
+        ocUserGroupService.updateOcUserGroup(ocUserGroup);
         return BusinessWrapper.SUCCESS;
     }
 
@@ -337,7 +344,7 @@ public class UserFacadeImpl implements UserFacade {
                 UserGroupBO userGroupBO = UserGroupBO.builder()
                         .name(group.getGroupName())
                         .build();
-                OcUserGroupVO.UserGroup userGroup = BeanCopierUtils.copyProperties(userGroupBO, OcUserGroupVO.UserGroup.class);
+                UserGroupVO.UserGroup userGroup = BeanCopierUtils.copyProperties(userGroupBO, UserGroupVO.UserGroup.class);
                 addUserGroup(userGroup);
                 syncUserGroupPermission(userGroup);
             } catch (Exception e) {
@@ -358,7 +365,7 @@ public class UserFacadeImpl implements UserFacade {
         for (String username : usernameList) {
             OcUser ocUser = ocUserService.queryOcUserByUsername(username);
             if (ocUser == null) continue;
-            syncUserPermission(BeanCopierUtils.copyProperties(ocUser, OcUserVO.User.class));
+            syncUserPermission(BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
         }
         return BusinessWrapper.SUCCESS;
     }
@@ -412,14 +419,13 @@ public class UserFacadeImpl implements UserFacade {
     }
 
 
-    private void syncUserPermission(OcUserVO.User user) {
-        // OcUser ocUser= ocUserService.queryOcUserByUsername(user.getUsername());
-        List<OcUserGroupVO.UserGroup> userGroups = userDecorator.decoratorFromLdapRepo(user, 1).getUserGroups();
+    private void syncUserPermission(UserVO.User user) {
+        List<UserGroupVO.UserGroup> userGroups = userDecorator.decoratorFromLdapRepo(user, 1).getUserGroups();
         userPermissionFacade.syncUserBusinessPermission(user.getId(), BusinessType.USERGROUP.getType(), userGroups.stream().map(e -> e.getId()).collect(Collectors.toList()));
     }
 
 
-    private void syncUserGroupPermission(OcUserGroupVO.UserGroup userGroup) {
+    private void syncUserGroupPermission(UserGroupVO.UserGroup userGroup) {
         OcUserGroup ocUserGroup = ocUserGroupService.queryOcUserGroupByName(userGroup.getName());
         userPermissionFacade.syncUserBusinessPermission(userGroupDecorator.decoratorFromLdapRepo(userGroup, 1).getUsers(), BusinessType.USERGROUP.getType(), ocUserGroup.getId());
     }

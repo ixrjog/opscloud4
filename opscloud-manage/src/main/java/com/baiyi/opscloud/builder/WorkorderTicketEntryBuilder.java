@@ -4,18 +4,20 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.bo.WorkorderTicketEntryBO;
 import com.baiyi.opscloud.common.base.WorkorderKey;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup;
-import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketEntryParam;
-import com.baiyi.opscloud.domain.vo.auth.OcRoleVO;
+import com.baiyi.opscloud.domain.vo.auth.RoleVO;
+import com.baiyi.opscloud.domain.vo.cloud.AliyunAccountVO;
+import com.baiyi.opscloud.domain.vo.cloud.AliyunRAMVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
-import com.baiyi.opscloud.domain.vo.user.OcUserGroupVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
 import com.baiyi.opscloud.factory.ticket.entry.AuthRoleEntry;
+import com.baiyi.opscloud.factory.ticket.entry.RAMPolicyEntry;
 import com.baiyi.opscloud.factory.ticket.entry.ServerGroupEntry;
 import com.baiyi.opscloud.factory.ticket.entry.UserGroupEntry;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -34,7 +36,7 @@ public class WorkorderTicketEntryBuilder {
         return covert(workorderTicketEntryBO);
     }
 
-    public static OcWorkorderTicketEntryVO.Entry build(int ticketId, OcServerGroup ocServerGroup) {
+    public static WorkorderTicketEntryVO.Entry build(int ticketId, OcServerGroup ocServerGroup) {
         ServerGroupEntry entry = ServerGroupEntry.builder()
                 .serverGroup(BeanCopierUtils.copyProperties(ocServerGroup, ServerGroupVO.ServerGroup.class))
                 .build();
@@ -51,9 +53,9 @@ public class WorkorderTicketEntryBuilder {
         return covertVO(workorderTicketEntryBO);
     }
 
-    public static OcWorkorderTicketEntryVO.Entry build(int ticketId, OcAuthRole ocAuthRole) {
-        AuthRoleEntry entry =  AuthRoleEntry.builder()
-                .role(BeanCopierUtils.copyProperties(ocAuthRole, OcRoleVO.Role.class))
+    public static WorkorderTicketEntryVO.Entry build(int ticketId, OcAuthRole ocAuthRole) {
+        AuthRoleEntry entry = AuthRoleEntry.builder()
+                .role(BeanCopierUtils.copyProperties(ocAuthRole, RoleVO.Role.class))
                 .build();
 
         WorkorderTicketEntryBO workorderTicketEntryBO = WorkorderTicketEntryBO.builder()
@@ -68,9 +70,9 @@ public class WorkorderTicketEntryBuilder {
         return covertVO(workorderTicketEntryBO);
     }
 
-    public static OcWorkorderTicketEntryVO.Entry build(int ticketId, OcUserGroup ocUserGroup) {
+    public static WorkorderTicketEntryVO.Entry build(int ticketId, OcUserGroup ocUserGroup) {
         UserGroupEntry entry = UserGroupEntry.builder()
-                .userGroup(BeanCopierUtils.copyProperties(ocUserGroup, OcUserGroupVO.UserGroup.class))
+                .userGroup(BeanCopierUtils.copyProperties(ocUserGroup, UserGroupVO.UserGroup.class))
                 .build();
         WorkorderTicketEntryBO workorderTicketEntryBO = WorkorderTicketEntryBO.builder()
                 .workorderTicketId(ticketId)
@@ -84,8 +86,32 @@ public class WorkorderTicketEntryBuilder {
         return covertVO(workorderTicketEntryBO);
     }
 
-    private static OcWorkorderTicketEntryVO.Entry covertVO(WorkorderTicketEntryBO workorderTicketEntryBO) {
-        return BeanCopierUtils.copyProperties(workorderTicketEntryBO, OcWorkorderTicketEntryVO.Entry.class);
+
+    public static WorkorderTicketEntryVO.Entry build(int ticketId, OcAliyunRamPolicy ocAliyunRamPolicy, List<AliyunAccountVO.AliyunAccount> aliyunAccounts) {
+        AliyunRAMVO.RAMPolicy ramPolicy = BeanCopierUtils.copyProperties(ocAliyunRamPolicy, AliyunRAMVO.RAMPolicy.class);
+        ramPolicy.setCreateDate(null);
+        ramPolicy.setUpdateDate(null);
+        aliyunAccounts.forEach(e->{
+            if(e.getUid().equals(ramPolicy.getAccountUid()))
+                ramPolicy.setAccountName(e.getName());
+        });
+        RAMPolicyEntry entry = RAMPolicyEntry.builder()
+                .ramPolicy(ramPolicy)
+                .build();
+        WorkorderTicketEntryBO workorderTicketEntryBO = WorkorderTicketEntryBO.builder()
+                .workorderTicketId(ticketId)
+                .name(ocAliyunRamPolicy.getPolicyName())
+                .businessId(ocAliyunRamPolicy.getId())
+                .entryKey(WorkorderKey.RAM_POLICY.getKey())
+                .comment(ocAliyunRamPolicy.getDescription())
+                .ticketEntry(entry)
+                .entryDetail(JSON.toJSONString(entry))
+                .build();
+        return covertVO(workorderTicketEntryBO);
+    }
+
+    private static WorkorderTicketEntryVO.Entry covertVO(WorkorderTicketEntryBO workorderTicketEntryBO) {
+        return BeanCopierUtils.copyProperties(workorderTicketEntryBO, WorkorderTicketEntryVO.Entry.class);
     }
 
     private static OcWorkorderTicketEntry covert(WorkorderTicketEntryBO workorderTicketEntryBO) {

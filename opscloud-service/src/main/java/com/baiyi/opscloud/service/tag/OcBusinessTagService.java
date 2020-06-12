@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.tag;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
-import com.baiyi.opscloud.domain.vo.tag.OcBusinessTagVO;
+import com.baiyi.opscloud.domain.vo.tag.BusinessTagVO;
 
 import java.util.List;
 
@@ -12,11 +12,11 @@ import java.util.List;
  */
 public interface OcBusinessTagService {
 
-    OcBusinessTag queryOcBusinessTagByUniqueKey(OcBusinessTagVO.BusinessTag businessTag);
+    OcBusinessTag queryOcBusinessTagByUniqueKey(BusinessTagVO.BusinessTag businessTag);
 
     List<OcBusinessTag> queryOcBusinessTagByBusinessTypeAndBusinessId(int businessType, int businessId);
 
-    void deleteOcBusinessTagByUniqueKey(OcBusinessTagVO.BusinessTag businessTag);
+    void deleteOcBusinessTagByUniqueKey(BusinessTagVO.BusinessTag businessTag);
 
     void addOcBusinessTag(OcBusinessTag ocBusinessTag);
 

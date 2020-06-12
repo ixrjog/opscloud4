@@ -189,7 +189,7 @@ public class AnsibleExecutorHandler {
                         throw new TaskStopException();
                     }
                     // 日志长度超过阈值
-                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH){
+                    if (member.getOutputMsg().length() >= MAX_LOG_LENGTH) {
                         executorEngine.killedProcess();
                         taskLogRecorder.recorderLog(member.getId(), executorEngine);
                         throw new TaskLogExceededLimit();

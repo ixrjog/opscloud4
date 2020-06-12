@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.cloud;
 
-import com.baiyi.opscloud.domain.vo.env.OcEnvVO;
-import com.baiyi.opscloud.domain.vo.tag.OcTagVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -23,9 +23,9 @@ public class CloudDBDatabaseVO {
     @ApiModel
     public static class CloudDBDatabase {
 
-        private List<OcTagVO.Tag> tags;
+        private List<TagVO.Tag> tags;
 
-        private OcEnvVO.Env env;
+        private EnvVO.Env env;
 
         @ApiModelProperty(value = "云数据库类型")
         private Integer cloudDbType;

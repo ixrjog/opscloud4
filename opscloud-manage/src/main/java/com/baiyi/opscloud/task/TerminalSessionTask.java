@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.task;
 
-import com.baiyi.opscloud.config.OpscloudConfig;
 import com.baiyi.opscloud.facade.TerminalFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -15,13 +14,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class TerminalSessionTask {
-
-    @Resource
-    private OpscloudConfig opscloudConfig;
-
-    @Resource
-    private TaskUtil taskUtil;
+public class TerminalSessionTask extends BaseTask {
 
     @Resource
     private TerminalFacade terminalFacade;
@@ -29,16 +22,24 @@ public class TerminalSessionTask {
     // Terminal
     public static final String TASK_TERMINAL_SESSION_KEY = "TASK_TERMINAL_SESSION_KEY";
 
-
     /**
      * 关闭无效会话
      */
-    @Scheduled(cron = "* */1 * * * ?")
+    @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000 )
     public void closeInvalidSession() {
-        if (!opscloudConfig.getOpenTask()) return;
-        if (taskUtil.isTaskLock(TASK_TERMINAL_SESSION_KEY)) return;
-        log.info("任务: closeInvalidSession 开始执行!");
-        terminalFacade.closeInvalidSession();
-        log.info("任务: closeInvalidSession 执行完成!");
+        if (!tryLock(2)) return;
+        terminalFacade.closeInvalidSessionTask();
+        unlock();
     }
+
+    @Override
+    protected String getLock() {
+        return TASK_TERMINAL_SESSION_KEY;
+    }
+
+    @Override
+    protected String getTaskName() {
+        return "WebXTerm会话关闭任务";
+    }
+
 }

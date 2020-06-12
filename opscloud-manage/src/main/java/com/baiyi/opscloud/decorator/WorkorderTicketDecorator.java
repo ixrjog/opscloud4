@@ -8,10 +8,10 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderVO;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
@@ -50,12 +50,12 @@ public class WorkorderTicketDecorator {
     @Resource
     private UserPermissionFacade userPermissionFacade;
 
-    public OcWorkorderTicketVO.Ticket decorator(OcWorkorderTicketVO.Ticket ticket) {
+    public WorkorderTicketVO.Ticket decorator(WorkorderTicketVO.Ticket ticket) {
         // 工单
         OcWorkorder ocWorkorder = ocWorkorderService.queryOcWorkorderById(ticket.getWorkorderId());
-        ticket.setWorkorder(BeanCopierUtils.copyProperties(ocWorkorder, OcWorkorderVO.Workorder.class));
+        ticket.setWorkorder(BeanCopierUtils.copyProperties(ocWorkorder, WorkorderVO.Workorder.class));
         // 发起人
-        ticket.setUser(new GsonBuilder().create().fromJson(ticket.getUserDetail(), OcUserVO.User.class));
+        ticket.setUser(new GsonBuilder().create().fromJson(ticket.getUserDetail(), UserVO.User.class));
         if (ticket.getStartTime() != null)
             ticket.setAgo(TimeAgoUtils.format(ticket.getStartTime()));
         ticket.setIsInApproval(isInApproval(ticket));  // 审批流程中（给前端按钮使用）
@@ -73,7 +73,7 @@ public class WorkorderTicketDecorator {
         return ticket;
     }
 
-    private boolean isInApproval(OcWorkorderTicketVO.Ticket ticket) {
+    private boolean isInApproval(WorkorderTicketVO.Ticket ticket) {
         // 审批结束 工单完成
         if (ticket.getTicketStatus() != 0) return false;
         if (ticket.getTicketPhase().equals(TicketPhase.CREATED.getPhase()))
@@ -92,7 +92,7 @@ public class WorkorderTicketDecorator {
      * @param ticket
      * @return
      */
-    private boolean isAllowDelete(OcWorkorderTicketVO.Ticket ticket) {
+    private boolean isAllowDelete(WorkorderTicketVO.Ticket ticket) {
         // 审批结束 工单完成
         if (ticket.getTicketPhase().equals(TicketPhase.FINALIZED.getPhase()))
             return false;
@@ -101,7 +101,7 @@ public class WorkorderTicketDecorator {
         return wrapper.isSuccess();
     }
 
-    private List<OcWorkorderTicketEntryVO.Entry> convertTicketEntries(List<OcWorkorderTicketEntry> ticketEntryList) {
+    private List<WorkorderTicketEntryVO.Entry> convertTicketEntries(List<OcWorkorderTicketEntry> ticketEntryList) {
         return ticketEntryList.stream().map(e -> {
             ITicketHandler ticketHandler = WorkorderTicketFactory.getTicketHandlerByKey(e.getEntryKey());
             return ticketHandler.convertTicketEntry(e);

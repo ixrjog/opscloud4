@@ -24,6 +24,7 @@
         <module>opscloud-server</module>
         <module>opscloud-ansible</module>
         <module>opscloud-xterm</module>
+        <module>opscloud-aliyun-ram</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -265,6 +266,11 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-xterm</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-ram</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

@@ -6,12 +6,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
-import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
-import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
-import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
-import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.server.*;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -21,6 +19,8 @@ import java.util.List;
 public interface ServerGroupFacade {
 
     DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery);
+
+    BusinessWrapper<ServerGroupVO.ServerGroup> queryServerGroupById(int id);
 
     BusinessWrapper<Boolean> addServerGroup(ServerGroupVO.ServerGroup serverGroup);
 
@@ -44,9 +44,15 @@ public interface ServerGroupFacade {
 
     BusinessWrapper<Boolean> revokeUserServerGroup(ServerGroupParam.UserServerGroupPermission userServerGroupPermission);
 
-    List<ServerAttributeVO.ServerAttribute> queryServerGroupAttribute(int id);
+    BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(int id);
+
+    BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(int id);
+
+    BusinessWrapper<Boolean> saveServerGroupProperty(ServerGroupPropertyVO.ServerGroupProperty serverGroupProperty);
 
     BusinessWrapper<Boolean> saveServerGroupAttribute(ServerAttributeVO.ServerAttribute serverAttribute);
+
+    BusinessWrapper<Boolean> delServerGroupPropertyById(int id);
 
     ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery, OcUser ocUser);
 

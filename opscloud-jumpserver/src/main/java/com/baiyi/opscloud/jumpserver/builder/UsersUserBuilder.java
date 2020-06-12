@@ -28,6 +28,12 @@ public class UsersUserBuilder {
         return covert(usersUserBO);
     }
 
+    public static UsersUser build(OcUser ocUser,String role) {
+        UsersUser usersUser =build(ocUser);
+        usersUser.setRole(role);
+        return usersUser;
+    }
+
     private static UsersUser covert(UsersUserBO usersUserBO) {
         return BeanCopierUtils.copyProperties(usersUserBO, UsersUser.class);
     }

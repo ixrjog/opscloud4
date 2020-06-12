@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.base.TicketSubscribeType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
-import com.baiyi.opscloud.domain.vo.workorder.OcWorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.baiyi.opscloud.service.workorder.OcWorkorderApprovalGroupService;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +47,7 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
     }
 
     @Override
-    public void invokeFlowStep(OcWorkorderTicketVO.Ticket ticket, String ticketPhase) {
+    public void invokeFlowStep(WorkorderTicketVO.Ticket ticket, String ticketPhase) {
         OcWorkorder ocWorkorder = getOcWorkorderById(ticket.getWorkorderId());
         if (ocWorkorder.getApprovalGroupId() == 0)
             return;
@@ -63,7 +63,7 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
     }
 
     @Override
-    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(OcWorkorderTicketVO.Ticket ticket) {
+    public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket) {
         return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
     }
 

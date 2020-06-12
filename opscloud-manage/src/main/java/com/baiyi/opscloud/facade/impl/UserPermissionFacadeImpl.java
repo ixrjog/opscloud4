@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
-import com.baiyi.opscloud.domain.vo.user.OcUserVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
@@ -28,15 +29,15 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     private OcAuthRoleService ocAuthRoleService;
 
     @Override
-    public void syncUserBusinessPermission(List<OcUserVO.User> userList, int businessType, int businessId) {
+    public void syncUserBusinessPermission(List<UserVO.User> userList, int businessType, int businessId) {
         try {
-            for (OcUserVO.User user : userList) {
+            userList.forEach(e -> {
                 OcUserPermission ocUserPermission = new OcUserPermission();
                 ocUserPermission.setBusinessType(businessType);
                 ocUserPermission.setBusinessId(businessId);
-                ocUserPermission.setUserId(user.getId());
+                ocUserPermission.setUserId(e.getId());
                 addOcUserPermission(ocUserPermission);
-            }
+            });
         } catch (Exception e) {
         }
     }
@@ -44,13 +45,13 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public void syncUserBusinessPermission(int userId, int businessType, List<Integer> businessIds) {
         try {
-            for (Integer businessId : businessIds) {
+            businessIds.forEach(e -> {
                 OcUserPermission ocUserPermission = new OcUserPermission();
                 ocUserPermission.setBusinessType(businessType);
-                ocUserPermission.setBusinessId(businessId);
+                ocUserPermission.setBusinessId(e);
                 ocUserPermission.setUserId(userId);
                 addOcUserPermission(ocUserPermission);
-            }
+            });
         } catch (Exception e) {
         }
     }
@@ -60,16 +61,21 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
         OcUserPermission checkOcUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
         if (checkOcUserPermission == null)
             ocUserPermissionService.addOcUserPermission(ocUserPermission);
-        //   return new BusinessWrapper<>(ErrorEnum.USER_PERMISSION_EXIST);
         return BusinessWrapper.SUCCESS;
     }
 
 
     @Override
     public BusinessWrapper<Boolean> delOcUserPermission(OcUserPermission ocUserPermission) {
+        // 删除服务器组授权
         OcUserPermission permission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
         if (permission != null)
             ocUserPermissionService.delOcUserPermissionById(permission.getId());
+        // 删除高权限
+        ocUserPermission.setBusinessType(BusinessType.SERVER_ADMINISTRATOR_ACCOUNT.getType());
+        OcUserPermission permissionAdminAccout = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
+        if (permissionAdminAccout != null)
+            ocUserPermissionService.delOcUserPermissionById(permissionAdminAccout.getId());
         return BusinessWrapper.SUCCESS;
     }
 

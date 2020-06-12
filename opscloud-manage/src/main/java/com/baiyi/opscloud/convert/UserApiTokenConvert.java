@@ -3,7 +3,7 @@ package com.baiyi.opscloud.convert;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserApiToken;
-import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
+import com.baiyi.opscloud.domain.vo.user.UserApiTokenVO;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.vo.user.OcUserApiTokenVO;
  */
 public class UserApiTokenConvert {
 
-    public static OcUserApiToken convertOcUserApiToken (OcUserApiTokenVO.UserApiToken userApiToken) {
+    public static OcUserApiToken convertOcUserApiToken (UserApiTokenVO.UserApiToken userApiToken) {
         OcUserApiToken ocUserApiToken = new OcUserApiToken();
         ocUserApiToken.setValid(true);
         ocUserApiToken.setComment(userApiToken.getComment());

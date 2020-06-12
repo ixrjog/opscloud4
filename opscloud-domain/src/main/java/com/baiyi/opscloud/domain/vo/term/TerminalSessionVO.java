@@ -28,7 +28,7 @@ public class TerminalSessionVO {
         private String username;
         private String remoteAddr;
         private Boolean isClosed;
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
         private String termHostname;
         private String termAddr;

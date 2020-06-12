@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.server;
 
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,12 @@ public class ServerTaskVO {
     public static class ServerTask {
 
         private Map<String, List<ServerTaskMemberVO.ServerTaskMember>> memberMap;
+
+        private String ago;
+
+        private Map<String, String>  serverTarget;
+
+        private UserVO.User user;
 
         // Statistics
         private ServerTastStatistics taskStatistics;

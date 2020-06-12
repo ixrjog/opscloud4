@@ -98,6 +98,7 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
 
     @Override
     public List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery userTicketOcServerGroupQuery) {
+        PageHelper.startPage(userTicketOcServerGroupQuery.getPage(), userTicketOcServerGroupQuery.getLength().intValue());
         return ocServerGroupMapper.queryUserTicketOcServerGroupByParam(userTicketOcServerGroupQuery);
     }
 

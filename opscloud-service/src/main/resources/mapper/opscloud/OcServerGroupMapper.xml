@@ -26,6 +26,7 @@
                 and grp_type = #{grpType}
             </if>
         </where>
+        order by replace( name, #{name}, '' )
     </select>
 
     <!--  oc_user_permission  2-->
@@ -77,13 +78,15 @@
         <where>
             in_workorder = 1
             <if test="queryName != null and queryName != ''">
-              and name like "%" #{queryName} "%"
+                and name like "%" #{queryName} "%"
             </if>
-            --  排除用户已授权的服务器组
+            -- 排除用户已授权的服务器组
             <!--  and id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} ) -->
-            --  排除ticket中的服务器组
-            and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+            -- 排除ticket中的服务器组
+            and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id =
+            #{workorderTicketId} )
         </where>
+        order by replace( name, #{queryName}, '' )
     </select>
 
 

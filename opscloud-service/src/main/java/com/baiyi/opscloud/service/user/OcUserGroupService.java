@@ -21,6 +21,8 @@ public interface OcUserGroupService {
 
     void addOcUserGroup(OcUserGroup ocUserGroup);
 
+    void updateOcUserGroup(OcUserGroup ocUserGroup);
+
     OcUserGroup queryOcUserGroupByName(String name);
 
     OcUserGroup queryOcUserGroupById(int id);
