@@ -24,4 +24,6 @@ public interface AliyunRAMUserCenter {
 
     BusinessWrapper<Boolean> syncUsers();
 
+    BusinessWrapper<Boolean> syncUser(OcAliyunRamUser ocAliyunRamUser);
+
 }

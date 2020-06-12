@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.cloud;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -44,6 +45,10 @@ public class AliyunRAMVO {
     @NoArgsConstructor
     @ApiModel
     public static class RAMPolicy {
+
+        @ApiModelProperty(value = "主账户名称")
+        private String accountName;
+
         private Integer id;
         private String accountUid;
         private String policyName;

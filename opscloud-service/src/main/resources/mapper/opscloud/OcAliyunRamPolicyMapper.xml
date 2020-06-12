@@ -46,5 +46,27 @@
         ( select policy_id from oc_aliyun_ram_permission where account_uid = #{accountUid}  and  user_id = #{userId} )
     </select>
 
+    <!--    工单票据查询用户可以申请的策略列表-->
+    <select id="queryUserTicketOcRamPolicyByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam$UserTicketOcRamPolicyQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ram_policy
+        where
+        in_workorder = 1
+        <if test="accountUid != null and accountUid != ''">
+            and account_uid = #{accountUid}
+        </if>
+        --  排除本人已授权的策略
+        <if test="null != ramUserIds and ramUserIds.size > 0">
+           and id not in ( select policy_id from oc_aliyun_ram_permission where user_id in
+           <foreach collection="ramUserIds" item="ramUserId" open="(" separator="," close=")">#{ramUserId}</foreach> )
+        </if>
+        --  排除ticket中的
+        and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+        <if test="queryName != null and queryName != ''">
+            and ( policy_name like "%" #{queryName} "%" or description like "%" #{queryName} "%" )
+        </if>
+        order by replace( policy_name, #{queryName}, '' )
+    </select>
+
 
 </mapper>

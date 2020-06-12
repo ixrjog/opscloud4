@@ -12,4 +12,7 @@ public interface OcAliyunRamPolicyMapper extends Mapper<OcAliyunRamPolicy> {
     List<OcAliyunRamPolicy> queryOcAliyunRamPolicyByUserPermission(@Param("accountUid") String accountUid, @Param("userId") int userId);
 
     List<OcAliyunRamPolicy> queryOcAliyunRamPolicyByParam(AliyunRAMPolicyParam.PageQuery pageQuery);
+
+    List<OcAliyunRamPolicy>queryUserTicketOcRamPolicyByParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam);
+
 }

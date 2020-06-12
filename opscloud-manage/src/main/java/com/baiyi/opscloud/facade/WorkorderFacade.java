@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
@@ -25,8 +26,6 @@ public interface WorkorderFacade {
     BusinessWrapper<Boolean> saveWorkorderGroup(WorkorderGroupVO.WorkorderGroup workorderGroup);
 
     List<WorkorderGroupVO.WorkorderGroup> queryWorkbenchWorkorderGroup();
-
-    // WorkorderTicketParam.CreateTicket createTicket
 
     WorkorderTicketVO.Ticket createWorkorderTicket(WorkorderTicketParam.CreateTicket createTicket);
 
@@ -69,6 +68,8 @@ public interface WorkorderFacade {
     List<WorkorderTicketEntryVO.Entry> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam);
 
     List<WorkorderTicketEntryVO.Entry> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
+
+    List<WorkorderTicketEntryVO.Entry> queryUserTicketRAMPolicyParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam);
 
     /**
      * 我的工单

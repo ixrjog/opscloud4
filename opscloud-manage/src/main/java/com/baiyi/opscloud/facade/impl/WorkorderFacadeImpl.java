@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.builder.WorkorderTicketEntryBuilder;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.TicketPhase;
@@ -13,10 +14,12 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
+import com.baiyi.opscloud.domain.vo.cloud.AliyunAccountVO;
 import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderGroupVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
@@ -30,6 +33,8 @@ import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketFactory;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
+import com.baiyi.opscloud.service.ram.OcAliyunRamPolicyService;
+import com.baiyi.opscloud.service.ram.OcAliyunRamUserService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketEntryService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
@@ -37,6 +42,7 @@ import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketSubscribeService;
 import com.baiyi.opscloud.service.user.OcUserGroupService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderGroupService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -51,6 +57,9 @@ import java.util.stream.Collectors;
  */
 @Service
 public class WorkorderFacadeImpl implements WorkorderFacade {
+
+    @Resource
+    private AliyunCore aliyunCore;
 
     @Resource
     private OcWorkorderGroupService ocWorkorderGroupService;
@@ -80,6 +89,13 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     private OcAuthRoleService ocAuthRoleService;
 
     @Resource
+    private OcAliyunRamPolicyService ocAliyunRamPolicyService;
+
+
+    @Resource
+    private OcAliyunRamUserService ocAliyunRamUserService;
+
+    @Resource
     private WorkorderTicketDecorator workorderTicketDecorator;
 
     @Resource
@@ -87,6 +103,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Resource
     private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
+
     @Resource
     private OcWorkorderTicketSubscribeService ocWorkorderTicketSubscribeService;
 
@@ -319,6 +336,23 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
         List<OcAuthRole> list = ocAuthRoleService.queryUserTicketOcAuthRoleByParam(queryParam);
         return list.stream().map(e ->
                 WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e)
+        ).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<WorkorderTicketEntryVO.Entry> queryUserTicketRAMPolicyParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam) {
+        OcUser ocUser = userFacade.getOcUserBySession();
+        queryParam.setUsername(ocUser.getUsername());
+        List<AliyunAccountVO.AliyunAccount> aliyunAccounts =  aliyunCore.queryAliyunAccount();
+        List<OcAliyunRamUser> ramUsers = ocAliyunRamUserService.queryUserPermissionRamUserByUserId(ocUser.getId());
+        if (ramUsers != null && !ramUsers.isEmpty()){
+            queryParam.setRamUserIds(ramUsers.stream().map(e -> e.getId()).collect(Collectors.toList()));
+        }else{
+            queryParam.setRamUserIds(Lists.newArrayList());
+        }
+        List<OcAliyunRamPolicy> list = ocAliyunRamPolicyService.queryUserTicketOcRamPolicyByParam(queryParam);
+        return list.stream().map(e ->
+                WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e,aliyunAccounts)
         ).collect(Collectors.toList());
     }
 

@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.aliyun.core.AliyunCore;
+import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.ram.handler.AliyunRAMUserPolicyHandler;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMPolicyCenter;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMUserCenter;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
@@ -30,6 +33,9 @@ import java.util.stream.Collectors;
 public class AliyunRAMFacadeImpl implements AliyunRAMFacade {
 
     @Resource
+    private AliyunCore aliyunCore;
+
+    @Resource
     private OcAliyunRamUserService ocAliyunRamUserService;
 
     @Resource
@@ -43,6 +49,9 @@ public class AliyunRAMFacadeImpl implements AliyunRAMFacade {
 
     @Resource
     private AliyunRAMDecorator aliyunRAMDecorator;
+
+    @Resource
+    private AliyunRAMUserPolicyHandler aliyunRAMUserPolicyHandler;
 
     @Override
     public DataTable<AliyunRAMVO.RAMUser> queryRAMUserPage(AliyunRAMUserParam.PageQuery pageQuery) {
@@ -82,5 +91,14 @@ public class AliyunRAMFacadeImpl implements AliyunRAMFacade {
         List<OcAliyunRamUser> ramUserList = ocAliyunRamUserService.queryUserPermissionRamUserByUserId(userId);
         if (ramUserList == null) return Lists.newArrayList();
         return BeanCopierUtils.copyListProperties(ramUserList, AliyunRAMVO.RAMUser.class).stream().map(e -> aliyunRAMDecorator.decorator(e, 1)).collect(Collectors.toList());
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> attachPolicyToUser(OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ramPolicy.getAccountUid());
+        BusinessWrapper<Boolean> wrapper = aliyunRAMUserPolicyHandler.attachPolicyToUser(aliyunAccount, ocAliyunRamUser, ramPolicy);
+        if (!wrapper.isSuccess())
+            return wrapper;
+        return aliyunRAMUserCenter.syncUser(ocAliyunRamUser);
     }
 }

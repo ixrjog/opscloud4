@@ -73,4 +73,10 @@ public class OcAliyunRamPolicyServiceImpl implements OcAliyunRamPolicyService {
         return ocAliyunRamPolicyMapper.queryOcAliyunRamPolicyByUserPermission(accountUid, ramUserId);
     }
 
+    @Override
+    public List<OcAliyunRamPolicy> queryUserTicketOcRamPolicyByParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam) {
+        PageHelper.startPage(queryParam.getPage(), queryParam.getLength().intValue());
+        return ocAliyunRamPolicyMapper.queryUserTicketOcRamPolicyByParam(queryParam);
+    }
+
 }

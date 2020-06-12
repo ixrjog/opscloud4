@@ -29,4 +29,6 @@ public interface OcAliyunRamPolicyService {
 
     List<OcAliyunRamPolicy> queryOcAliyunRamPolicyByUserPermission(String accountUid, Integer ramUserId);
 
+    List<OcAliyunRamPolicy> queryUserTicketOcRamPolicyByParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam);
+
 }

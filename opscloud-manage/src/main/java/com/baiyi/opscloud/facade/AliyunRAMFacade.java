@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
 import com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam;
 import com.baiyi.opscloud.domain.param.cloud.AliyunRAMUserParam;
 import com.baiyi.opscloud.domain.vo.cloud.AliyunRAMVO;
@@ -26,4 +27,6 @@ public interface AliyunRAMFacade {
     BusinessWrapper<Boolean> setRAMPolicyWorkorderById(int id);
 
     List<AliyunRAMVO.RAMUser> queryRamUsersByUsername(int userId);
+
+    BusinessWrapper<Boolean> attachPolicyToUser(OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy);
 }

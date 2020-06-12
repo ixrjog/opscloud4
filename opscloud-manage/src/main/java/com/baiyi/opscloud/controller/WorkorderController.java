@@ -3,6 +3,7 @@ package com.baiyi.opscloud.controller;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.param.cloud.AliyunRAMPolicyParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
@@ -151,6 +152,18 @@ public class WorkorderController {
     @PostMapping(value = "/ticket/role/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<WorkorderTicketEntryVO.Entry>> queryUserTicketAuthRolePage(@RequestBody @Valid RoleParam.UserTicketOcAuthRoleQuery queryParam) {
         return new HttpResult<>(workorderFacade.queryUserTicketOcAuthRoleByParam(queryParam));
+    }
+
+    /**
+     * 工单配置-RAM策略查询
+     *
+     * @param queryParam
+     * @return
+     */
+    @ApiOperation(value = "工单配置-RAM策略查询")
+    @PostMapping(value = "/ticket/ram/policy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkorderTicketEntryVO.Entry>> queryUserTicketRAMPolicyPage(@RequestBody @Valid AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam) {
+        return new HttpResult<>(workorderFacade.queryUserTicketRAMPolicyParam(queryParam));
     }
 
 }

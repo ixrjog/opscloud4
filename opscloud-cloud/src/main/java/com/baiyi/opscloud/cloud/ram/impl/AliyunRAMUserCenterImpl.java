@@ -113,6 +113,13 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
         return BusinessWrapper.SUCCESS;
     }
 
+    @Override
+    public BusinessWrapper<Boolean> syncUser(OcAliyunRamUser ocAliyunRamUser) {
+        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocAliyunRamUser.getAccountUid());
+        aliyunRAMUserPolicyPermissionHandler.syncUserPolicyPermission(aliyunAccount, ocAliyunRamUser);
+        return BusinessWrapper.SUCCESS;
+    }
+
     private void syncUsers(AliyunAccount aliyunAccount, List<ListUsersResponse.User> users, Map<String, OcAliyunRamUser> ramUserMap) {
         if (users == null) return;
         users.forEach(e -> {
