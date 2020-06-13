@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcWorkorderTicketMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="workorder_id" jdbcType="INTEGER" property="workorderId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="flow_id" jdbcType="INTEGER" property="flowId"/>
+        <result column="ticket_phase" jdbcType="VARCHAR" property="ticketPhase"/>
+        <result column="ticket_status" jdbcType="INTEGER" property="ticketStatus"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="user_detail" jdbcType="LONGVARCHAR" property="userDetail"/>
+    </resultMap>
+
+    <select id="queryMyTicketByParam" parameterType="com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam$QueryMyTicketPage"
+            resultMap="BaseResultMap">
+        select * from oc_workorder_ticket
+        where ticket_status = 0
+              and ( user_id = #{userId} or id in ( select ticket_id from oc_workorder_ticket_subscribe where user_id = #{userId} and subscribe_active = true ) )
+    </select>
+
+    <select id="queryTicketByParam" parameterType="com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam$QueryTicketPage"
+            resultMap="BaseResultMap">
+        select * from oc_workorder_ticket
+        <where>
+            <if test="ticketPhase != null and ticketPhase != ''">
+                and ticket_phase = #{ticketPhase}
+            </if>
+            <if test="username != null and username != ''">
+                and username like "%" #{username} "%"
+            </if>
+            <if test="ticketStatus != null and ticketStatus != -1">
+                and ticket_status = #{ticketStatus}
+            </if>
+        </where>
+        order by update_time desc
+    </select>
+</mapper>

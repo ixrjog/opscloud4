@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.jumpserver.AssetsSystemuserMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.jumpserver.AssetsSystemuser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="CHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="password" jdbcType="VARCHAR" property="password" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="date_updated" jdbcType="TIMESTAMP" property="dateUpdated" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="protocol" jdbcType="VARCHAR" property="protocol" />
+    <result column="auto_push" jdbcType="BIT" property="autoPush" />
+    <result column="shell" jdbcType="VARCHAR" property="shell" />
+    <result column="login_mode" jdbcType="VARCHAR" property="loginMode" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="private_key" jdbcType="LONGVARCHAR" property="privateKey" />
+    <result column="public_key" jdbcType="LONGVARCHAR" property="publicKey" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="sudo" jdbcType="LONGVARCHAR" property="sudo" />
+  </resultMap>
+</mapper>

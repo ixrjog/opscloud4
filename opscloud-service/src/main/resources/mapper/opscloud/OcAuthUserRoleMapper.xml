@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAuthUserRoleMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAuthUserRole">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="role_id" jdbcType="INTEGER" property="roleId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAuthUserRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.UserRoleParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_auth_user_role
+        <where>
+            <if test="username != null and username != ''">
+                and username like "%" #{username} "%"
+            </if>
+            <if test="roleId != null and roleId > 0">
+                and role_id = #{roleId}
+            </if>
+        </where>
+    </select>
+
+    <select id="authenticationByUsernameAndResourceName" resultType="java.lang.Integer">
+        select count(*) from oc_auth_role
+        where resource_name = #{resourceName}
+        and id in (select role_id from oc_auth_user_role where username = #{username} )
+  </select>
+
+
+</mapper>

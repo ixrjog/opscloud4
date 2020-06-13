@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerTaskMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcServerTask">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="task_type" jdbcType="INTEGER" property="taskType"/>
+        <result column="system_type" jdbcType="INTEGER" property="systemType"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="task_size" jdbcType="INTEGER" property="taskSize"/>
+        <result column="finalized" jdbcType="INTEGER" property="finalized"/>
+        <result column="stop_type" jdbcType="INTEGER" property="stopType"/>
+        <result column="exit_value" jdbcType="INTEGER" property="exitValue"/>
+        <result column="task_status" jdbcType="VARCHAR" property="taskStatus"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="executor_param" jdbcType="LONGVARCHAR" property="executorParam"/>
+        <result column="user_detail" jdbcType="LONGVARCHAR" property="userDetail"/>
+        <result column="server_target_detail" jdbcType="LONGVARCHAR" property="serverTargetDetail"/>
+    </resultMap>
+
+    <select id="queryOcServerTaskByParam"
+            parameterType="com.baiyi.opscloud.domain.param.ansible.ServerTaskHistoryParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_task
+        <where>
+            system_type = 0
+            <if test="userId != null and userId > 0">
+                and user_id = #{userId}
+            </if>
+            <if test="taskType != null">
+                and task_type = #{taskType}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+</mapper>

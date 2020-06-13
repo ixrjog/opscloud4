@@ -1,0 +1,7 @@
+# version : API版本目前支持4.0
+zabbix:
+  version: 4.0
+  url: ENC(edArL7NztPhj9nyqzMrcMZ0mvpncr3t5/0oamHBBpqUs2D9T2YnNnNp63fxHOgN02AfVnJQrZCk=)
+  user: zabbix
+  password: ENC(TuF9JGK3j4+ZEHmaUB3OiiOn9Vb0yRRLq92XrQQ3CwLBU2W3TrJnXX5hw8voL+ZB)
+  zone: office

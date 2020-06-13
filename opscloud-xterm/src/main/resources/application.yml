@@ -1,0 +1,17 @@
+server:
+  servlet:
+    context-path: /opscloud-xterm
+
+spring:
+  profiles:
+    active: @env@
+    include: common
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
+  jackson:
+    time-zone: GMT+8
+  jmx:
+    enabled: false

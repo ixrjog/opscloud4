@@ -1,0 +1,290 @@
+package com.baiyi.opscloud.facade.impl;
+
+import com.baiyi.opscloud.bo.AuthMenuBO;
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.MenuUtils;
+import com.baiyi.opscloud.common.util.SessionUtils;
+import com.baiyi.opscloud.decorator.ResourceDecorator;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.param.auth.GroupParam;
+import com.baiyi.opscloud.domain.param.auth.ResourceParam;
+import com.baiyi.opscloud.domain.param.auth.RoleParam;
+import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
+import com.baiyi.opscloud.domain.vo.auth.*;
+import com.baiyi.opscloud.domain.vo.auth.menu.MenuVO;
+import com.baiyi.opscloud.facade.AuthFacade;
+import com.baiyi.opscloud.service.auth.*;
+import com.baiyi.opscloud.service.user.OcUserService;
+import com.google.common.collect.Lists;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
+
+/**
+ * @Author baiyi
+ * @Date 2020/2/13 8:21 下午
+ * @Version 1.0
+ */
+@Service
+public class AuthFacadeImpl implements AuthFacade {
+
+    @Resource
+    private OcAuthRoleService ocAuthRoleService;
+
+    @Resource
+    private OcAuthResourceService ocAuthResourceService;
+
+    @Resource
+    private OcAuthGroupService ocAuthGroupService;
+
+    @Resource
+    private OcAuthRoleResourceService ocAuthRoleResourceService;
+
+    @Resource
+    private OcAuthUserRoleService ocAuthUserRoleService;
+
+    @Resource
+    private OcUserService ocUserService;
+
+    @Resource
+    private ResourceDecorator resourceDecorator;
+
+    @Resource
+    private OcAuthMenuService ocAuthMenuService;
+
+    @Override
+    public DataTable<RoleVO.Role> queryRolePage(RoleParam.PageQuery pageQuery) {
+        DataTable<OcAuthRole> table = ocAuthRoleService.queryOcAuthRoleByParam(pageQuery);
+        List<RoleVO.Role> page = BeanCopierUtils.copyListProperties(table.getData(), RoleVO.Role.class);
+        DataTable<RoleVO.Role> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public void addRole(RoleVO.Role role) {
+        OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(role, OcAuthRole.class);
+        ocAuthRoleService.addOcAuthRole(ocAuthRole);
+    }
+
+    @Override
+    public void updateRole(RoleVO.Role role) {
+        OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(role, OcAuthRole.class);
+        ocAuthRoleService.updateOcAuthRole(ocAuthRole);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteRoleById(int id) {
+        // 此处要判断是否有用户绑定role
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(id);
+        if (ocAuthRole == null)
+            return new BusinessWrapper<>(ErrorEnum.AUTH_ROLE_NOT_EXIST);
+        int count = ocAuthUserRoleService.countByRoleId(id);
+        if (count == 0) {
+            ocAuthRoleService.deleteOcAuthRoleById(id);
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.AUTH_ROLE_HAS_USED);
+        }
+    }
+
+    @Override
+    public DataTable<ResourceVO.Resource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
+        DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleBindOcAuthResourceByParam(pageQuery);
+        List<ResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), ResourceVO.Resource.class);
+        DataTable<ResourceVO.Resource> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public DataTable<ResourceVO.Resource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
+        DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleUnbindOcAuthResourceByParam(pageQuery);
+        List<ResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), ResourceVO.Resource.class);
+        DataTable<ResourceVO.Resource> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public void bindRoleResource(RoleResourceVO.RoleResource roleResource) {
+        OcAuthRoleResource ocAuthRoleResource = BeanCopierUtils.copyProperties(roleResource, OcAuthRoleResource.class);
+        ocAuthRoleResourceService.addOcAuthRoleResource(ocAuthRoleResource);
+    }
+
+    @Override
+    public void unbindRoleResource(int ocRoleResourceId) {
+        ocAuthRoleResourceService.delOcAuthRoleResourceById(ocRoleResourceId);
+    }
+
+    @Override
+    public DataTable<ResourceVO.Resource> queryResourcePage(ResourceParam.PageQuery pageQuery) {
+        DataTable<OcAuthResource> table = ocAuthResourceService.queryOcAuthResourceByParam(pageQuery);
+        List<ResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), ResourceVO.Resource.class);
+        DataTable<ResourceVO.Resource> dataTable = new DataTable<>(page.stream().map(e -> resourceDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public void addResource(ResourceVO.Resource resource) {
+        OcAuthResource ocAuthResource = BeanCopierUtils.copyProperties(resource, OcAuthResource.class);
+        ocAuthResourceService.addOcAuthResource(ocAuthResource);
+    }
+
+    @Override
+    public void updateResource(ResourceVO.Resource resource) {
+        OcAuthResource ocAuthResource = BeanCopierUtils.copyProperties(resource, OcAuthResource.class);
+        ocAuthResourceService.updateOcAuthResource(ocAuthResource);
+    }
+
+    @Override
+    public void updateResourceNeedAuth(ResourceVO.Resource resource) {
+        OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceById(resource.getId());
+        ocAuthResource.setNeedAuth(resource.getNeedAuth());
+        ocAuthResourceService.updateOcAuthResource(ocAuthResource);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteResourceById(int id) {
+        // 此处要判断是否有用户绑定role
+        OcAuthResource ocAuthResource = ocAuthResourceService.queryOcAuthResourceById(id);
+        if (ocAuthResource == null)
+            return new BusinessWrapper<>(ErrorEnum.AUTH_RESOURCE_NOT_EXIST);
+        // 判断role绑定的资源
+        int count = ocAuthRoleResourceService.countByResourceId(id);
+        if (count == 0) {
+            ocAuthResourceService.deleteOcAuthResourceById(id);
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.AUTH_RESOURCE_HAS_USED);
+        }
+    }
+
+    @Override
+    public DataTable<GroupVO.Group> queryGroupPage(GroupParam.PageQuery pageQuery) {
+        DataTable<OcAuthGroup> table = ocAuthGroupService.queryOcAuthGroupByParam(pageQuery);
+        List<GroupVO.Group> page = BeanCopierUtils.copyListProperties(table.getData(), GroupVO.Group.class);
+        DataTable<GroupVO.Group> dataTable = new DataTable<>(page, table.getTotalNum());
+        return dataTable;
+    }
+
+    @Override
+    public void addGroup(GroupVO.Group group) {
+        OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(group, OcAuthGroup.class);
+        ocAuthGroupService.addOcAuthGroup(ocAuthGroup);
+    }
+
+    @Override
+    public void updateGroup(GroupVO.Group group) {
+        OcAuthGroup ocAuthGroup = BeanCopierUtils.copyProperties(group, OcAuthGroup.class);
+        ocAuthGroupService.updateOcAuthGroup(ocAuthGroup);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteGroupById(int id) {
+        // 此处要判断是否有用户绑定role
+        OcAuthGroup ocAuthGroup = ocAuthGroupService.queryOcAuthGroupById(id);
+        if (ocAuthGroup == null)
+            return new BusinessWrapper<>(ErrorEnum.AUTH_GROUP_NOT_EXIST);
+        int count = ocAuthResourceService.countByGroupId(id);
+        if (count == 0) {
+            ocAuthGroupService.deleteOcAuthGroupById(id);
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.AUTH_GROUP_HAS_USED);
+        }
+    }
+
+    @Override
+    public DataTable<UserRoleVO.UserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery) {
+        DataTable<OcAuthUserRole> table = ocAuthUserRoleService.queryOcAuthUserRoleByParam(pageQuery);
+        List<UserRoleVO.UserRole> page = BeanCopierUtils.copyListProperties(table.getData(), UserRoleVO.UserRole.class);
+        DataTable<UserRoleVO.UserRole> dataTable = new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
+        return dataTable;
+    }
+
+    /**
+     * 插入用户信息
+     *
+     * @param userRole
+     * @return
+     */
+    private UserRoleVO.UserRole invokeOcUser(UserRoleVO.UserRole userRole) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(userRole.getUsername());
+        userRole.setDisplayName(ocUser.getDisplayName());
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(userRole.getRoleId());
+        userRole.setRoleName(ocAuthRole.getRoleName());
+        userRole.setRoleComment(ocAuthRole.getComment());
+        return userRole;
+    }
+
+    @Override
+    public void addUserRole(UserRoleVO.UserRole userRole) {
+        try {
+            OcAuthUserRole ocAuthUserRole = BeanCopierUtils.copyProperties(userRole, OcAuthUserRole.class);
+            ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
+        } catch (Exception e) {
+        }
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteUserRoleById(int id) {
+        OcAuthUserRole ocAuthUserRole = ocAuthUserRoleService.queryOcAuthUserRoleById(id);
+        if (ocAuthUserRole == null)
+            return new BusinessWrapper<>(ErrorEnum.AUTH_USER_ROLE_NOT_EXIST);
+        ocAuthUserRoleService.deleteOcAuthUserRoleById(id);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> authenticationByResourceName(String resourceName) {
+        String username = SessionUtils.getUsername();
+        if (ocAuthUserRoleService.authenticationByUsernameAndResourceName(username, resourceName))
+            return BusinessWrapper.SUCCESS;
+        return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
+    }
+
+    @Override
+    public List<MenuVO> queryUserMenu() {
+        List<MenuVO> menu = Lists.newArrayList();
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryTopOcAuthRoleByUsername(SessionUtils.getUsername());
+        if (ocAuthRole == null)
+            return menu;
+        OcAuthMenu ocAuthMenu = ocAuthMenuService.queryOcAuthMenuByRoleId(ocAuthRole.getId(), 0);
+        if (ocAuthMenu == null)
+            return menu;
+        return MenuUtils.buildMenu(ocAuthMenu);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> saveRoleMenu(AuthMenuVO.Menu menu) {
+        OcAuthMenu ocAuthMenu = BeanCopierUtils.copyProperties(menu, OcAuthMenu.class);
+        // ocAuthMenu.setMenu(JSONFormat.format(ocAuthMenu.getMenu()));
+        if (menu.getId() == null || menu.getId() == 0) {
+            ocAuthMenuService.addOcAuthMenu(ocAuthMenu);
+        } else {
+            ocAuthMenuService.updateOcAuthMenu(ocAuthMenu);
+        }
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public AuthMenuVO.Menu queryRoleMenuByRoleId(int roleId) {
+        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(roleId);
+        OcAuthMenu ocAuthMenu = ocAuthMenuService.queryOcAuthMenuByRoleId(roleId, 0);
+        if (ocAuthMenu == null) {
+            AuthMenuBO authMenuBO = AuthMenuBO.builder()
+                    .roleId(roleId)
+                    .comment(ocAuthRole.getRoleName())
+                    .build();
+            ocAuthMenu = BeanCopierUtils.copyProperties(authMenuBO, OcAuthMenu.class);
+            ocAuthMenuService.addOcAuthMenu(ocAuthMenu);
+        }
+        AuthMenuVO.Menu menu = BeanCopierUtils.copyProperties(ocAuthMenu, AuthMenuVO.Menu.class);
+        menu.setRoleName(ocAuthRole.getRoleName());
+        return menu;
+    }
+
+}

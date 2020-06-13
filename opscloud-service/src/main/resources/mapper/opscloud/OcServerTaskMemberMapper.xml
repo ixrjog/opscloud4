@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerTaskMemberMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcServerTaskMember">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="task_id" jdbcType="INTEGER" property="taskId" />
+    <result column="host_pattern" jdbcType="VARCHAR" property="hostPattern" />
+    <result column="server_id" jdbcType="INTEGER" property="serverId" />
+    <result column="env_type" jdbcType="INTEGER" property="envType" />
+    <result column="manage_ip" jdbcType="VARCHAR" property="manageIp" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="finalized" jdbcType="INTEGER" property="finalized" />
+    <result column="stop_type" jdbcType="INTEGER" property="stopType" />
+    <result column="exit_value" jdbcType="INTEGER" property="exitValue" />
+    <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
+    <result column="task_result" jdbcType="VARCHAR" property="taskResult" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="output_msg" jdbcType="LONGVARCHAR" property="outputMsg" />
+    <result column="error_msg" jdbcType="LONGVARCHAR" property="errorMsg" />
+  </resultMap>
+</mapper>

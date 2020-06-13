@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAuthResourceMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAuthResource">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="group_id" jdbcType="INTEGER" property="groupId"/>
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="need_auth" jdbcType="INTEGER" property="needAuth"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAuthResourceByParam" parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_auth_resource
+        <where>
+            <if test="groupId != null and groupId > 0">
+                and group_id = #{groupId}
+            </if>
+            <if test="resourceName != null and resourceName != ''">
+                and resource_name like "%" #{resourceName} "%"
+            </if>
+            <if test="needAuth != null and needAuth != -1">
+                and need_auth = #{needAuth}
+            </if>
+        </where>
+    </select>
+
+    <!--  查询角色已绑定资源-->
+    <select id="queryOcAuthRoleBindResourceByParam"
+            parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$BindResourcePageQuery"
+            resultMap="BaseResultMap">
+        select a0.id, a1.group_id, a1.resource_name, a1.comment, a1.need_auth, a1.create_time, a1.update_time
+          from oc_auth_role_resource a0
+          join oc_auth_resource a1 on a0.resource_id = a1.id
+          where a0.role_id = #{roleId}
+          and a1.group_id = #{groupId}
+  </select>
+
+    <!--  查询角色未绑定资源-->
+    <select id="queryOcAuthRoleUnbindResourceByParam"
+            parameterType="com.baiyi.opscloud.domain.param.auth.ResourceParam$BindResourcePageQuery"
+            resultMap="BaseResultMap">
+    select * from oc_auth_resource
+        where id not in
+        ( select resource_id FROM oc_auth_role_resource WHERE role_id = #{roleId} GROUP BY resource_id )
+        and group_id = #{groupId}
+        and need_auth = 1
+  </select>
+
+</mapper>

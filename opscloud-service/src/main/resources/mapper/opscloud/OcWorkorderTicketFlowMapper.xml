@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcWorkorderTicketFlowMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketFlow">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="ticket_id" jdbcType="INTEGER" property="ticketId" />
+    <result column="user_id" jdbcType="INTEGER" property="userId" />
+    <result column="username" jdbcType="VARCHAR" property="username" />
+    <result column="flow_name" jdbcType="VARCHAR" property="flowName" />
+    <result column="approval_type" jdbcType="INTEGER" property="approvalType" />
+    <result column="flow_parent_id" jdbcType="INTEGER" property="flowParentId" />
+    <result column="approval_group_id" jdbcType="INTEGER" property="approvalGroupId" />
+    <result column="approval_status" jdbcType="INTEGER" property="approvalStatus" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

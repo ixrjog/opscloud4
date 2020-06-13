@@ -1,0 +1,26 @@
+#  https://help.aliyun.com/document_detail/26263.html?spm=a2c4g.11186623.6.1572.7d5f45d97s6XFx
+#  cloud:
+#    db:
+#      account:
+#        prefix: 账户前缀
+#        type: 账户类型
+#
+#  账号类型，取值：
+#    Normal：普通账号
+#    Super：高权限账号
+#    Sysadmin：具备超级权限（SA）的账号（仅SQL Server支持）
+#    默认值：Normal。
+
+#  https://help.aliyun.com/document_detail/26263.html?spm=a2c4g.11186623.6.1577.22b919c12eSKzy
+#  数据库账号名称。
+#  说明
+#  名称唯一。
+#  以字母开头，以字母或数字结尾。
+#  由小写字母、数字或下划线组成。
+#  长度为2~16个字符。
+#  其他非法字符，见禁用关键字表。
+
+cloud:
+  db:
+    prefix: oc
+    type: Normal

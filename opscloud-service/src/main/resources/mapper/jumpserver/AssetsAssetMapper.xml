@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.jumpserver.AssetsAssetMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="CHAR" property="id" />
+    <result column="ip" jdbcType="VARCHAR" property="ip" />
+    <result column="hostname" jdbcType="VARCHAR" property="hostname" />
+    <result column="port" jdbcType="INTEGER" property="port" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
+    <result column="public_ip" jdbcType="VARCHAR" property="publicIp" />
+    <result column="number" jdbcType="VARCHAR" property="number" />
+    <result column="vendor" jdbcType="VARCHAR" property="vendor" />
+    <result column="model" jdbcType="VARCHAR" property="model" />
+    <result column="sn" jdbcType="VARCHAR" property="sn" />
+    <result column="cpu_model" jdbcType="VARCHAR" property="cpuModel" />
+    <result column="cpu_count" jdbcType="INTEGER" property="cpuCount" />
+    <result column="cpu_cores" jdbcType="INTEGER" property="cpuCores" />
+    <result column="memory" jdbcType="VARCHAR" property="memory" />
+    <result column="disk_total" jdbcType="VARCHAR" property="diskTotal" />
+    <result column="disk_info" jdbcType="VARCHAR" property="diskInfo" />
+    <result column="os" jdbcType="VARCHAR" property="os" />
+    <result column="os_version" jdbcType="VARCHAR" property="osVersion" />
+    <result column="os_arch" jdbcType="VARCHAR" property="osArch" />
+    <result column="hostname_raw" jdbcType="VARCHAR" property="hostnameRaw" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="admin_user_id" jdbcType="CHAR" property="adminUserId" />
+    <result column="domain_id" jdbcType="CHAR" property="domainId" />
+    <result column="protocol" jdbcType="VARCHAR" property="protocol" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+    <result column="cpu_vcpus" jdbcType="INTEGER" property="cpuVcpus" />
+    <result column="protocols" jdbcType="VARCHAR" property="protocols" />
+    <result column="platform_id" jdbcType="INTEGER" property="platformId" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+
+  <select id="fuzzyQueryAssetsAssetPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select a0.* from assets_asset a0
+    <if test="assetsNodeId != null and assetsNodeId != ''">
+        join assets_asset_nodes a1 on a0.id = a1.asset_id
+    </if>
+    <where>
+      <if test="assetsNodeId != null and assetsNodeId != ''">
+        a1.node_id = #{assetsNodeId}
+      </if>
+      <if test="queryName != null and queryName != ''">
+        and a0.ip like "%" #{queryName} "%"
+        or a0.hostname like "%" #{queryName} "%"
+        or a0.public_ip like "%" #{queryName} "%"
+        or a0.os like "%" #{queryName} "%"
+        or a0.os_version like "%" #{queryName} "%"
+      </if>
+      <if test="isActive != null and isActive != -1">
+        and a0.is_active = #{isActive}
+      </if>
+    </where>
+  </select>
+
+</mapper>

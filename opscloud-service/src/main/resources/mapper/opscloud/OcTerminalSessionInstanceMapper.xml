@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcTerminalSessionInstanceMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcTerminalSessionInstance">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
+    <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
+    <result column="duplicate_instance_id" jdbcType="VARCHAR" property="duplicateInstanceId" />
+    <result column="system_user" jdbcType="VARCHAR" property="systemUser" />
+    <result column="host_ip" jdbcType="VARCHAR" property="hostIp" />
+    <result column="output_size" jdbcType="BIGINT" property="outputSize" />
+    <result column="is_closed" jdbcType="BIT" property="isClosed" />
+    <result column="open_time" jdbcType="TIMESTAMP" property="openTime" />
+    <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

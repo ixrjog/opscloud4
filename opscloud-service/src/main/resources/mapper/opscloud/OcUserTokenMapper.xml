@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcUserTokenMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcUserToken">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="token" jdbcType="VARCHAR" property="token"/>
+        <result column="valid" jdbcType="BIT" property="valid"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <!-- 判断用户Token是否可访问某个资源 -->
+    <select id="checkUserHasResourceAuthorize" parameterType="string" resultType="int">
+       select count(*) from oc_user_token a0
+          join oc_auth_user_role a1 on a0.username = a1.username and a0.token = #{token}
+          join oc_auth_role_resource a2 on a1.role_id = a2.role_id
+          join oc_auth_resource a3 on a2.resource_id = a3.id and a3.resource_name = #{resourceName}
+    </select>
+
+    <!-- 判断用户Token是否为某个角色-->
+    <select id="checkUserHasRole" parameterType="string" resultType="int">
+       select count(*) from oc_auth_user_role where username =
+          ( select username from oc_user_token where token = #{token} and valid = 1 )
+          and role_id = ( select id from oc_auth_role where role_name = #{roleName} )
+    </select>
+
+</mapper>

@@ -1,0 +1,22 @@
+# o - organization（组织-公司）
+# ou - organization unit（组织单元-部门）
+# c - countryName（国家）
+# dc - domainComponent（域名）
+# sn - suer name（真实名称）
+# cn - common name（常用名称
+
+spring:
+  ldap:
+    urls: ENC(W+aUwvSsdmps/HtysEqvAKsvauZnfrrLsHTolq33i3RrWhm2wBDJdw==)
+    base: ou=system
+    username: 'cn=Directory Manager'
+    password: ENC(QSZbx+hCSXh68Pp0H9Z58a/psPfgeP9vMBlkj18q9BC4UcYE1u/J7NcX42LRctPl)
+
+ldap:
+  custom:  {userId: cn,
+            userBaseDN: ou=users,
+            userObjectClass: inetorgperson,
+            groupId: cn,
+            groupBaseDN: ou=groups,
+            groupObjectClass: groupOfUniqueNames,
+            groupMember: uniqueMember}

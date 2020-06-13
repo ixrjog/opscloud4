@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudInstanceTypeMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceType">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="cloud_type" jdbcType="INTEGER" property="cloudType"/>
+        <result column="instance_type_family" jdbcType="VARCHAR" property="instanceTypeFamily"/>
+        <result column="instance_type_id" jdbcType="VARCHAR" property="instanceTypeId"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="cpu_core_count" jdbcType="INTEGER" property="cpuCoreCount"/>
+        <result column="memory_size" jdbcType="REAL" property="memorySize"/>
+        <result column="instance_family_level" jdbcType="VARCHAR" property="instanceFamilyLevel"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="fuzzyQueryOcCloudInstanceTypeByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.CloudInstanceTypeParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_cloud_instance_type
+        <where>
+            <if test="cpuCoreCount != null and cpuCoreCount > 0">
+                cpu_core_count = #{cpuCoreCount}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( instance_type_family like "%" #{queryName} "%"
+                or instance_type_id like "%" #{queryName} "%"
+                or memory_size like "%" #{queryName} "%"
+                or instance_family_level like "%" #{queryName} "%"
+                or comment like "%" #{queryName} "%" )
+            </if>
+        </where>
+    </select>
+
+
+    <select id="queryCpuCoreGroup" resultType="java.lang.Integer">
+        select cpu_core_count
+           from oc_cloud_instance_type
+           where cloud_type = #{cloudType}
+           group by cpu_core_count
+           order by cpu_core_count
+    </select>
+
+</mapper>

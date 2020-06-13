@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.jumpserver.AssetsNodeMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="CHAR" property="id" />
+    <result column="key" jdbcType="VARCHAR" property="key" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="child_mark" jdbcType="INTEGER" property="childMark" />
+    <result column="date_create" jdbcType="TIMESTAMP" property="dateCreate" />
+    <result column="org_id" jdbcType="VARCHAR" property="orgId" />
+  </resultMap>
+
+  <select id="queryAssetsNodeLastOne" resultMap="BaseResultMap">
+     select * from assets_node
+       order by date_create desc
+       limit 1
+  </select>
+
+  <select id="queryAssetsAssetPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from assets_node
+    <where>
+      <if test="value != null and value != ''">
+        value like "%" #{value} "%"
+      </if>
+    </where>
+  </select>
+
+  <select id="queryAssetsNodeRoot" resultMap="BaseResultMap">
+    select * from assets_node
+    where `key` = '1' limit 1
+   </select>
+
+</mapper>

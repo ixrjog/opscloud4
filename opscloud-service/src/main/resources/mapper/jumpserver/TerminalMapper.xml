@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.jumpserver.TerminalMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.jumpserver.Terminal">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <result column="id" jdbcType="CHAR" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="remote_addr" jdbcType="VARCHAR" property="remoteAddr" />
+    <result column="ssh_port" jdbcType="INTEGER" property="sshPort" />
+    <result column="http_port" jdbcType="INTEGER" property="httpPort" />
+    <result column="is_accepted" jdbcType="BIT" property="isAccepted" />
+    <result column="is_deleted" jdbcType="BIT" property="isDeleted" />
+    <result column="date_created" jdbcType="TIMESTAMP" property="dateCreated" />
+    <result column="user_id" jdbcType="CHAR" property="userId" />
+    <result column="command_storage" jdbcType="VARCHAR" property="commandStorage" />
+    <result column="replay_storage" jdbcType="VARCHAR" property="replayStorage" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+</mapper>

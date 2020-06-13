@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudInstanceTemplateMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudInstanceTemplate">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="cloud_type" jdbcType="INTEGER" property="cloudType" />
+    <result column="template_name" jdbcType="VARCHAR" property="templateName" />
+    <result column="region_id" jdbcType="VARCHAR" property="regionId" />
+    <result column="image_id" jdbcType="VARCHAR" property="imageId" />
+    <result column="vpc_id" jdbcType="VARCHAR" property="vpcId" />
+    <result column="vpc_name" jdbcType="VARCHAR" property="vpcName" />
+    <result column="security_group_id" jdbcType="VARCHAR" property="securityGroupId" />
+    <result column="security_group_name" jdbcType="VARCHAR" property="securityGroupName" />
+    <result column="io_optimized" jdbcType="VARCHAR" property="ioOptimized" />
+    <result column="usage_count" jdbcType="INTEGER" property="usageCount" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+    <result column="template_yaml" jdbcType="LONGVARCHAR" property="templateYaml" />
+  </resultMap>
+
+  <select id="fuzzyQueryOcCloudInstanceTemplateByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.CloudInstanceTemplateParam$PageQuery" resultMap="BaseResultMap">
+    select * from oc_cloud_instance_template
+    <where>
+      <if test="cloudType != null">
+        cloud_type = #{cloudType}
+      </if>
+      <if test="queryName != null and queryName != ''">
+        and ( template_name like "%" #{queryName} "%"
+        or region_id like "%" #{queryName} "%"
+        or image_id like "%" #{queryName} "%"
+        or vpc_name like "%" #{queryName} "%"
+        or security_group_id like "%" #{queryName} "%"
+        or security_group_name like "%" #{queryName} "%"
+        or comment like "%" #{queryName} "%" )
+      </if>
+    </where>
+  </select>
+
+</mapper>
