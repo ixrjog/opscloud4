@@ -26,7 +26,6 @@ import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.facade.TagFacade;
 import com.baiyi.opscloud.server.ServerCenter;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
-import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.collect.Lists;
@@ -53,9 +52,6 @@ public class ServerFacadeImpl implements ServerFacade {
 
     @Resource
     private OcServerGroupService ocServerGroupService;
-
-    @Resource
-    private OcEnvService ocEnvService;
 
     @Resource
     private ServerAttributeFacade serverAttributeFacade;

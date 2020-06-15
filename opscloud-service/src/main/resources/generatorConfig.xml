@@ -152,9 +152,11 @@
        oc_aliyun_ram_user
        oc_aliyun_ram_policy
        oc_aliyun_ram_permission
+       oc_aliyun_log
+       oc_aliyun_log_member
        -->
 
-        <table tableName="oc_aliyun_ram_permission">
+        <table tableName="oc_aliyun_log_member">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
     </context>

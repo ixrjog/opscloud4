@@ -92,14 +92,20 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
     }
 
     @Override
-    public List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
-        return ocServerGroupMapper.queryUserPermissionOcServerGroupByParam(userServerTreeQuery);
+    public List<OcServerGroup> queryUserPermissionOcServerGroupByParam(UserServerTreeParam.UserServerTreeQuery queryParam) {
+        return ocServerGroupMapper.queryUserPermissionOcServerGroupByParam(queryParam);
     }
 
     @Override
-    public List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery userTicketOcServerGroupQuery) {
-        PageHelper.startPage(userTicketOcServerGroupQuery.getPage(), userTicketOcServerGroupQuery.getLength().intValue());
-        return ocServerGroupMapper.queryUserTicketOcServerGroupByParam(userTicketOcServerGroupQuery);
+    public List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery pageQuery) {
+        PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        return ocServerGroupMapper.queryUserTicketOcServerGroupByParam(pageQuery);
+    }
+
+    @Override
+    public List<OcServerGroup> queryLogMemberOcServerGroupByParam(ServerGroupParam.LogMemberServerGroupQuery pageQuery) {
+        PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        return ocServerGroupMapper.queryLogMemberOcServerGroupByParam(pageQuery);
     }
 
 }

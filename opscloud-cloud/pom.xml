@@ -50,6 +50,11 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aliyun-log</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-service</artifactId>
         </dependency>
         <dependency>
@@ -59,6 +64,10 @@
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-common</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aliyun-log</artifactId>
         </dependency>
     </dependencies>
 

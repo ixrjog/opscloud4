@@ -42,7 +42,7 @@ public class OcAliyunRamPermissionServiceImpl implements OcAliyunRamPermissionSe
     }
 
     @Override
-    public  List<OcAliyunRamPermission> queryOcAliyunRamPermissionByOcAliyunRamUser(OcAliyunRamUser ocAliyunRamUser){
+    public List<OcAliyunRamPermission> queryOcAliyunRamPermissionByOcAliyunRamUser(OcAliyunRamUser ocAliyunRamUser) {
         Example example = new Example(OcAliyunRamPermission.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("accountUid", ocAliyunRamUser.getAccountUid());

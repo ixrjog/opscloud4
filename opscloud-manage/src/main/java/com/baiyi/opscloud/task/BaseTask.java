@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.task;
 
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.config.OpscloudConfig;
 import com.baiyi.opscloud.task.util.TaskUtil;
 import com.google.common.base.Joiner;
@@ -21,6 +22,9 @@ public abstract class BaseTask {
     protected TaskUtil taskUtil;
 
     @Resource
+    protected RedisUtil redisUtil;
+
+    @Resource
     private OpscloudConfig opscloudConfig;
 
     protected boolean tryLock(int lockMinute) {
@@ -35,7 +39,6 @@ public abstract class BaseTask {
         taskUtil.unlock(getLock());
         log.info(Joiner.on(": ").join(getTaskName(), "执行结束！"));
     }
-
 
     abstract String getLock();
 

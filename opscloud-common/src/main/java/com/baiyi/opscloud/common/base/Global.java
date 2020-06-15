@@ -14,11 +14,11 @@ public class Global {
     public static final String SERVER_ATTRIBUTE_ANSIBLE_SUBGROUP = "ansible_subgroup";
 
     public static final String SERVER_ATTRIBUTE_ZABBIX_BIDIRECTIONAL_SYNC = "zabbix_bidirectional_sync";
-    public static final String SERVER_ATTRIBUTE_ZABBIX_PROXY ="zabbix_proxy";
-    public static final String SERVER_ATTRIBUTE_ZABBIX_TEMPLATES ="zabbix_templates";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_PROXY = "zabbix_proxy";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_TEMPLATES = "zabbix_templates";
     public static final String SERVER_ATTRIBUTE_ZABBIX_HOST_MACROS = "zabbix_host_macros";
-    public static final String SERVER_ATTRIBUTE_ZABBIX_SYSDISK_VOLUME_NAME ="zabbix_sysdisk_volume_name";
-    public static final String SERVER_ATTRIBUTE_ZABBIX_DATADISK_VOLUME_NAME ="zabbix_datadisk_volume_name";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_SYSDISK_VOLUME_NAME = "zabbix_sysdisk_volume_name";
+    public static final String SERVER_ATTRIBUTE_ZABBIX_DATADISK_VOLUME_NAME = "zabbix_datadisk_volume_name";
 
     // JUMPSERVER
     public static final String JUMPSERVER_SETTINGS_KEY = "jumpserver:settings";
@@ -33,6 +33,8 @@ public class Global {
 
     // 高权限账户
     // public static final String HIGH_AUTHORITY_ACCOUNT = "admin";
+
+    public static final String ENV_PROD = "prod";
 
 
 }

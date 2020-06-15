@@ -89,5 +89,18 @@
         order by replace( name, #{queryName}, '' )
     </select>
 
+    <select id="queryLogMemberOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$LogMemberServerGroupQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        <where>
+            -- 排除LogMember中的服务器组
+            id not in ( select server_group_id from oc_aliyun_log_member where log_id = #{logId} )
+            <if test="queryName != null and queryName != ''">
+             and ( name like "%" #{queryName} "%" or comment like "%" #{queryName} "%" )
+            </if>
+        </where>
+        order by replace( name, #{queryName}, '' )
+    </select>
 
 </mapper>
