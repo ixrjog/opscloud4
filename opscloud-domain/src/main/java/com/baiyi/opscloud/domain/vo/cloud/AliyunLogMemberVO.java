@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.domain.vo.cloud;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +33,6 @@ public class AliyunLogMemberVO {
         private String serverGroupName;
         private String topic;
         private String comment;
-        @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
         private Date lastPushTime;
         private Date createTime;
         private Date updateTime;
