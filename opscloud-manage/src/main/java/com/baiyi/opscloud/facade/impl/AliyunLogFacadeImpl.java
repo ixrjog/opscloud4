@@ -166,7 +166,8 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     public void pushTask(Set<Integer> keySet) {
         keySet.forEach(e -> {
                     List<OcAliyunLogMember> members = ocAliyunLogMemberService.queryOcAliyunLogMemberByServerGroupId(e);
-                    members.forEach(m -> pushLogMember(m.getId()));
+                    if (members != null)
+                        members.forEach(m -> pushLogMember(m.getId()));
                 }
         );
     }

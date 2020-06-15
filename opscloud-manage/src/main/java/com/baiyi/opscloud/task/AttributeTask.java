@@ -27,7 +27,7 @@ public class AttributeTask extends BaseTask {
      * 执行ansible配置文件生成任务
      */
     @Scheduled(initialDelay = 10000, fixedRate = 60 * 1000)
-    public void createAnsibleHostsConsumer() {
+    public void createAnsibleHostsConsumerTask() {
         if (taskUtil.getSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC) == 0) return;
         if (!tryLock(5)) return;
         attributeFacade.createAnsibleHostsTask();

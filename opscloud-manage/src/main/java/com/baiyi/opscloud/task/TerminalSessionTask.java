@@ -26,7 +26,7 @@ public class TerminalSessionTask extends BaseTask {
      * 关闭无效会话
      */
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
-    public void closeInvalidSession() {
+    public void closeInvalidSessionTask() {
         if (!tryLock(2)) return;
         terminalFacade.closeInvalidSessionTask();
         unlock();
