@@ -97,12 +97,12 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
     @Override
     public BusinessWrapper<Boolean> syncCloudDB() {
         Map<String, ICloudDB> context = CloudDBFactory.getCloudDBContainer();
-        for (String key : context.keySet()) {
+        context.keySet().forEach(k -> {
             try {
-                context.get(key).syncDBInstance();
+                context.get(k).syncDBInstance();
             } catch (Exception e) {
             }
-        }
+        });
         return new BusinessWrapper<>(true);
     }
 
@@ -141,7 +141,6 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
 
         String key = CloudDBType.getName(ocCloudDb.getCloudDbType());
         ICloudDB iCloudDB = CloudDBFactory.getCloudDBByKey(key);
-
         // 新增账户
         for (String accountPrivilege : privilegeAccount.getPrivileges()) {
             if (!accountMap.containsKey(accountPrivilege)) {
@@ -152,13 +151,12 @@ public class CloudDBFacadeImpl implements CloudDBFacade {
             }
         }
         // 删除账户
-        for (String privilege : accountMap.keySet()) {
-            OcCloudDbAccount ocCloudDbAccount = accountMap.get(privilege);
-            //BusinessWrapper<Boolean> wrapper = iCloudDB.reokeAccountPrivilege(ocCloudDb, ocCloudDbAccount);
+        accountMap.keySet().forEach(k -> {
+            OcCloudDbAccount ocCloudDbAccount = accountMap.get(k);
             BusinessWrapper<Boolean> wrapper = iCloudDB.deleteAccount(ocCloudDb, ocCloudDbAccount);
             if (wrapper.isSuccess())
                 ocCloudDBAccountService.delOcCloudDbAccountById(ocCloudDbAccount.getId());
-        }
+        });
         return BusinessWrapper.SUCCESS;
     }
 

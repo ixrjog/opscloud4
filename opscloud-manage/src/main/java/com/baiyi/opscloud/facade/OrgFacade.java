@@ -20,6 +20,11 @@ public interface OrgFacade {
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId);
 
+    /**
+     * 查询组织架构拓扑
+     * @param parentId 当值为 -1 则按setting配置查询
+     * @return
+     */
     OrgChartVO.OrgChart queryOrgChart(int parentId);
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree();

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.bo.OrgDepartmentMemberBO;
+import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.decorator.DepartmentDecorator;
 import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
@@ -14,11 +15,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
+import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
-import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
+import com.baiyi.opscloud.facade.SettingFacade;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
@@ -58,7 +60,12 @@ public class OrgFacadeImpl implements OrgFacade {
     @Resource
     private UserFacade userFacade;
 
+    @Resource
+    private SettingFacade settingFacade;
+
     public static final int ROOT_PARENT_ID = 0;
+
+    public static final int QUERY_BY_SETTING = -1;
 
     /**
      * @param draggingParentId
@@ -232,6 +239,10 @@ public class OrgFacadeImpl implements OrgFacade {
 
     @Override
     public OrgChartVO.OrgChart queryOrgChart(int parentId) {
+        if (parentId == QUERY_BY_SETTING) {
+            String id = settingFacade.querySetting(SettingName.ORG_DEPT_ID);
+            parentId = Integer.valueOf(id);
+        }
         List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
         List<OrgChartVO.Children> children = orgDecorator.deptListToChart(deptList);
         OcOrgDepartmentMember ocOrgDepartmentMember = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByLeader(parentId);
@@ -344,8 +355,7 @@ public class OrgFacadeImpl implements OrgFacade {
         List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userId);
         if (members != null)
             try {
-                for (OcOrgDepartmentMember ocOrgDepartmentMember : members)
-                    ocOrgDepartmentMemberService.deleteOcOrgDepartmentMemberById(ocOrgDepartmentMember.getId());
+                members.forEach(e -> ocOrgDepartmentMemberService.deleteOcOrgDepartmentMemberById(e.getId()));
             } catch (Exception e) {
                 return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_DELETE_ERROR);
             }
@@ -355,7 +365,7 @@ public class OrgFacadeImpl implements OrgFacade {
     @Override
     public BusinessWrapper<Boolean> checkUserInTheDepartment() {
         List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userFacade.getOcUserBySession().getId());
-        if(members == null || members.size() == 0)
+        if (members == null || members.size() == 0)
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT);
         return BusinessWrapper.SUCCESS;
     }

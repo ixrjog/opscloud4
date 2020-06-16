@@ -52,7 +52,7 @@ public class LdapAccount extends BaseAccount implements IAccount {
 
     @Override
     protected List<OcUser> getUserList() {
-        return personRepo.getPersonList().stream().map(e -> OcUserBuilder.build(e)).collect(Collectors.toList());
+        return personRepo.getPersonList().stream().map(OcUserBuilder::build).collect(Collectors.toList());
     }
 
 
@@ -92,7 +92,7 @@ public class LdapAccount extends BaseAccount implements IAccount {
             OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleByName(BASE_ROLE_NAME);
             ocAuthUserRole.setRoleId(ocAuthRole.getId());
             ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -161,7 +161,7 @@ public class LdapAccount extends BaseAccount implements IAccount {
             //ocUserService.updateOcUser(ocUser);
             personRepo.update(person);
             return Boolean.TRUE;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return Boolean.FALSE;
     }

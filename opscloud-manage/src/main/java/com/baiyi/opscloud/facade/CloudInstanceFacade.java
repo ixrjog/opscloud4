@@ -19,11 +19,11 @@ public interface CloudInstanceFacade {
 
     DataTable<CloudInstanceTemplateVO.CloudInstanceTemplate> fuzzyQueryCloudInstanceTemplatePage(CloudInstanceTemplateParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> saveCloudInstanceTemplate(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
+    BusinessWrapper<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplate(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
 
     BusinessWrapper<Boolean> createCloudInstance( CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance);
 
-    BusinessWrapper<Boolean> saveCloudInstanceTemplateYAML(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
+    BusinessWrapper<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplateYAML(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
 
     DataTable<CloudInstanceTypeVO.CloudInstanceType> fuzzyQueryCloudInstanceTypePage(CloudInstanceTypeParam.PageQuery pageQuery);
 

@@ -50,9 +50,9 @@ public class UserSettingFacadeImpl implements UserSettingFacade, InitializingBea
         // 当前用户配置
         List<OcUserSetting> settings = ocUserSettingService.queryOcUserSettingBySettingGroup(ocUser.getId(), userSetting.getSettingGroup());
 
-        for (String key : userSetting.getSettingMap().keySet()) {
-            String settingValue = userSetting.getSettingMap().get(key);
-            OcUserSetting ocUserSetting = getOcUserSettingByName(key, settings);
+        userSetting.getSettingMap().keySet().forEach(k->{
+            String settingValue = userSetting.getSettingMap().get(k);
+            OcUserSetting ocUserSetting = getOcUserSettingByName(k, settings);
             if (ocUserSetting != null) {
                 ocUserSetting.setSettingValue(settingValue);
                 ocUserSettingService.updateOcUserSetting(ocUserSetting);
@@ -61,12 +61,12 @@ public class UserSettingFacadeImpl implements UserSettingFacade, InitializingBea
                         .settingGroup(userSetting.getSettingGroup())
                         .userId(ocUser.getId())
                         .username(ocUser.getUsername())
-                        .name(key)
+                        .name(k)
                         .settingValue(settingValue)
                         .build();
                 ocUserSettingService.addOcUserSetting(BeanCopierUtils.copyProperties(userSettingBO, OcUserSetting.class));
             }
-        }
+        });
         return BusinessWrapper.SUCCESS;
     }
 

@@ -6,7 +6,7 @@ import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunImageHandler;
 import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.cloud.image.ICloudImage;
-import com.baiyi.opscloud.cloud.image.builder.OcCloudImageBuilder;
+import com.baiyi.opscloud.cloud.image.builder.CloudImageBuilder;
 import com.baiyi.opscloud.common.base.CloudType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
@@ -40,8 +40,7 @@ public class AliyunCloudImage<T> extends BaseCloudImage<T> implements ICloudImag
     @Override
     protected List<T> getCloudImageList() {
         List<DescribeImagesResponse.Image> cloudImageList = Lists.newArrayList();
-        for (String regionId : aliyunCore.getRegionIds())
-            cloudImageList.addAll(aliyunImageHandler.getImageList(regionId, true));
+        aliyunCore.getRegionIds().forEach(i -> cloudImageList.addAll(aliyunImageHandler.getImageList(i, true)));
         return (List<T>) cloudImageList;
     }
 
@@ -56,7 +55,7 @@ public class AliyunCloudImage<T> extends BaseCloudImage<T> implements ICloudImag
     protected OcCloudImage getCloudImage(CloudAccount account, T cloudImage) {
         if (!(cloudImage instanceof DescribeImagesResponse.Image)) return null;
         DescribeImagesResponse.Image image = (DescribeImagesResponse.Image) cloudImage;
-        return OcCloudImageBuilder.build(account, image, getCloudImageDetail(cloudImage));
+        return CloudImageBuilder.build(account, image, getCloudImageDetail(cloudImage));
     }
 
     @Override

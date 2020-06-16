@@ -9,6 +9,8 @@ import com.baiyi.opscloud.domain.param.ansible.ServerTaskHistoryParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.AnsibleScriptVO;
+import com.baiyi.opscloud.domain.vo.ansible.AnsibleVersionVO;
+import com.baiyi.opscloud.domain.vo.preview.PreviewFileVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 
 import javax.validation.Valid;
@@ -52,7 +54,7 @@ public interface ServerTaskFacade {
 
     BusinessWrapper<Boolean> abortServerTaskMember(int memberId);
 
-    BusinessWrapper<Boolean> queryAnsibleVersion();
+    BusinessWrapper<AnsibleVersionVO.AnsibleVersion> queryAnsibleVersion();
 
-    BusinessWrapper<Boolean> previewAnsibleHosts();
+    BusinessWrapper<PreviewFileVO> previewAnsibleHosts();
 }

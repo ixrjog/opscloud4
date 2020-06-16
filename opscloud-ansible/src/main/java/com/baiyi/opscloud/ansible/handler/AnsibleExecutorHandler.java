@@ -24,7 +24,6 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.Date;
 
 import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
@@ -221,12 +220,8 @@ public class AnsibleExecutorHandler {
                     .tastResult("LOG_EXCEEDED_LIMIT")
                     .build();
             saveServerTaskMember(member, taskStatus);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            // 日志流转码错误 暂不处理
-            e.printStackTrace();
-        } catch (IOException e) {
+        }  // 日志流转码错误 暂不处理
+        catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }

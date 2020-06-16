@@ -19,7 +19,6 @@ import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -63,10 +62,8 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
      * @param ocWorkorderTicket
      */
     protected void addTicketSubscribe(OcWorkorder ocWorkorder, OcWorkorderTicket ocWorkorderTicket) {
-        List<OcWorkorderApprovalMember> list = ocWorkorderApprovalMemberService.queryOcWorkorderApprovalMemberByGroupId(ocWorkorder.getApprovalGroupId());
-        for (OcWorkorderApprovalMember member : list) {
-            addTicketSubscribe(ocWorkorderTicket, member.getUserId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
-        }
+        ocWorkorderApprovalMemberService.queryOcWorkorderApprovalMemberByGroupId(ocWorkorder.getApprovalGroupId()).forEach(e ->
+                addTicketSubscribe(ocWorkorderTicket, e.getUserId(), TicketSubscribeType.USERGROUP_APPROVAL.getType()));
     }
 
     @Override
@@ -81,11 +78,10 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
      * @param ocWorkorderTicket
      */
     protected void resetTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, int subscribeType) {
-        List<OcWorkorderTicketSubscribe> list = ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ocWorkorderTicket.getId(), subscribeType);
-        for (OcWorkorderTicketSubscribe subscribe : list) {
-            subscribe.setSubscribeActive(false);
-            ocWorkorderTicketSubscribeService.updateOcWorkorderTicketSubscribe(subscribe);
-        }
+        ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ocWorkorderTicket.getId(), subscribeType).forEach(e -> {
+            e.setSubscribeActive(false);
+            ocWorkorderTicketSubscribeService.updateOcWorkorderTicketSubscribe(e);
+        });
     }
 
     protected void saveWorkorderTicket(OcWorkorderTicket ocWorkorderTicket) {
@@ -100,10 +96,9 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
                 .username(ocUser.getUsername())
                 .subscribeType(subscribeType)
                 .build();
-
         try {
             ocWorkorderTicketSubscribeService.addOcWorkorderTicketSubscribe(BeanCopierUtils.copyProperties(subscribeBO, OcWorkorderTicketSubscribe.class));
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -122,7 +117,7 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
             return Boolean.FALSE;
         ITicketSubscribe iTicketSubscribe = WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(ocWorkorderTicketFlow.getFlowName());
         List<OcWorkorderTicketSubscribe> subscribes = iTicketSubscribe.queryTicketSubscribes(ticket);
-        return subscribes.stream().filter(e -> e.getUserId().equals(ocUser.getId()) && e.getSubscribeActive()).collect(Collectors.toList()).size() == 1;
+        return subscribes.stream().filter(e -> e.getUserId().equals(ocUser.getId()) && e.getSubscribeActive()).count() == 1;
     }
 
     /**

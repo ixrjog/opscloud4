@@ -84,7 +84,7 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
             return "本人拥有审批权";
         if (orgApproval.getPreferenceDeptMember() != null)
             return orgApproval.getPreferenceDeptMember().getDisplayName();
-        return Joiner.on(",").join(orgApproval.getAlternativeDeptMembers().stream().map(e -> e.getDisplayName()).collect(Collectors.toList()));
+        return Joiner.on(",").join(orgApproval.getAlternativeDeptMembers().stream().map(OrgDepartmentMemberVO.DepartmentMember::getDisplayName).collect(Collectors.toList()));
     }
 
     @Override

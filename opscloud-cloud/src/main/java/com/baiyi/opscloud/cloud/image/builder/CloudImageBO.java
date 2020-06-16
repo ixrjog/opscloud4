@@ -12,7 +12,7 @@ import java.util.Date;
  */
 @Data
 @Builder
-public class OcCloudImageBO {
+public class CloudImageBO {
 
     private Integer id;
     private String uid;

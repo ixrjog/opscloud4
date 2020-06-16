@@ -5,13 +5,12 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.exceptions.ServerException;
-import com.baiyi.opscloud.aliyun.core.AliyunCore;
+import com.baiyi.opscloud.aliyun.ecs.base.BaseAliyunECS;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
@@ -21,12 +20,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AliyunInstanceHandler {
-
-    public static final int QUERY_PAGE_SIZE = 50;
-
-    @Resource
-    private AliyunCore aliyunCore;
+public class AliyunInstanceHandler extends BaseAliyunECS {
 
     public List<DescribeZonesResponse.Zone> getZoneList(String regionId) {
         try {
@@ -43,12 +37,7 @@ public class AliyunInstanceHandler {
     private DescribeZonesResponse getDescribeZonesResponse(String regionId, DescribeZonesRequest describe) {
         IAcsClient client = acqAcsClient(regionId);
         try {
-            DescribeZonesResponse response
-                    = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -65,8 +54,7 @@ public class AliyunInstanceHandler {
         try {
             DescribeInstanceTypesRequest describe = new DescribeInstanceTypesRequest();
             describe.setSysRegionId(regionId);
-            DescribeInstanceTypesResponse response = getDescribeInstanceTypesResponse(regionId, describe);
-            return response.getInstanceTypes();
+            return getDescribeInstanceTypesResponse(regionId, describe).getInstanceTypes();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -76,26 +64,19 @@ public class AliyunInstanceHandler {
     private DescribeInstanceTypesResponse getDescribeInstanceTypesResponse(String regionId, DescribeInstanceTypesRequest describe) {
         IAcsClient client = acqAcsClient(regionId);
         try {
-            DescribeInstanceTypesResponse response
-                    = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    public BusinessWrapper<Boolean> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest) {
+    public BusinessWrapper<String> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest) {
         IAcsClient client = acqAcsClient(regionId);
         try {
             CreateInstanceResponse response
                     = client.getAcsResponse(createInstanceRequest);
             return new BusinessWrapper(response.getInstanceId());
-        } catch (ServerException e) {
-            return new BusinessWrapper(35000, e.getErrCode());
         } catch (ClientException e) {
             return new BusinessWrapper(35000, e.getErrCode());
         }
@@ -132,9 +113,7 @@ public class AliyunInstanceHandler {
     private AllocatePublicIpAddressResponse getAllocatePublicIpAddressResponse(String regionId, AllocatePublicIpAddressRequest allocatePublicIpAddressRequest) {
         IAcsClient client = acqAcsClient(regionId);
         try {
-            AllocatePublicIpAddressResponse response
-                    = client.getAcsResponse(allocatePublicIpAddressRequest);
-            return response;
+            return client.getAcsResponse(allocatePublicIpAddressRequest);
         } catch (ServerException e) {
             e.printStackTrace();
             return null;
@@ -146,11 +125,7 @@ public class AliyunInstanceHandler {
     private DescribeInstancesResponse getInstancesResponse(String regionId, DescribeInstancesRequest describe) {
         IAcsClient client = acqAcsClient(regionId);
         try {
-            DescribeInstancesResponse response = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -167,7 +142,6 @@ public class AliyunInstanceHandler {
     public boolean startInstance(String regionId, String instanceId) {
         StartInstanceRequest describe = new StartInstanceRequest();
         describe.setInstanceId(instanceId);
-        //schedulerManager.registerJob(() -> {   });
         return startInstanceResponse(regionId, describe);
     }
 
@@ -201,9 +175,5 @@ public class AliyunInstanceHandler {
         }
     }
 
-
-    private IAcsClient acqAcsClient(String regionId) {
-        return aliyunCore.getAcsClient(regionId);
-    }
 
 }

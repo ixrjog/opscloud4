@@ -253,7 +253,7 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> queryAnsibleVersion() {
+    public BusinessWrapper<AnsibleVersionVO.AnsibleVersion> queryAnsibleVersion() {
         AnsibleVersionVO.AnsibleVersion version = new AnsibleVersionVO.AnsibleVersion();
         try {
             TaskResult ansibleVersion = ansibleTaskHandler.getAnsibleVersion();
@@ -266,13 +266,11 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
             version.setPlaybookVersion(playbookVersion.getOutputStream().toString("utf8"));
         } catch (UnsupportedEncodingException e) {
         }
-        BusinessWrapper wrapper = new BusinessWrapper(true);
-        wrapper.setBody(version);
-        return wrapper;
+        return new BusinessWrapper(version);
     }
 
     @Override
-    public BusinessWrapper<Boolean> previewAnsibleHosts() {
+    public BusinessWrapper<PreviewFileVO> previewAnsibleHosts() {
         String path = Joiner.on("/").join(ansibleConfig.acqInventoryPath(), AnsibleConfig.ANSIBLE_HOSTS);
         String ansibleHosts = IOUtils.readFile(path);
         PreviewFileVO previewFile = PreviewFileVO.builder()
@@ -281,9 +279,8 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
                 .content(ansibleHosts)
                 .comment("Ansible主机配置文件")
                 .build();
-        BusinessWrapper wrapper = new BusinessWrapper(true);
-        wrapper.setBody(previewFile);
-        return wrapper;
+        return new BusinessWrapper(previewFile);
+
     }
 
 

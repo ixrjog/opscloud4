@@ -49,9 +49,7 @@ public class TerminalFacadeImpl implements TerminalFacade {
     @Override
     public DataTable<TerminalSessionVO.TerminalSession> queryTerminalSessionPage(TermSessionParam.PageQuery pageQuery) {
         DataTable<OcTerminalSession> table = ocTerminalSessionService.queryTerminalSessionByParam(pageQuery);
-        DataTable<TerminalSessionVO.TerminalSession> dataTable
-                = new DataTable<>(table.getData().stream().map(e -> terminalSessionDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(table.getData().stream().map(e -> terminalSessionDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override

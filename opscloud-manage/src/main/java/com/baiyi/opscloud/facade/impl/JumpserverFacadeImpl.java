@@ -48,13 +48,11 @@ import java.util.stream.Collectors;
 @Service
 public class JumpserverFacadeImpl implements JumpserverFacade {
 
-
     @Resource
     private OcUserService ocUserService;
 
     @Resource
     private JumpserverCenter jumpserverCenter;
-
 
     @Resource
     private UsersUserService usersUserService;
@@ -140,33 +138,28 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
     public DataTable<JumpserverUsersUserVO.UsersUser> fuzzyQueryUserPage(UsersUserPageParam.PageQuery pageQuery) {
         DataTable<UsersUser> table = usersUserService.fuzzyQueryUsersUserPage(pageQuery);
         List<JumpserverUsersUserVO.UsersUser> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverUsersUserVO.UsersUser.class);
-        DataTable<JumpserverUsersUserVO.UsersUser> dataTable
-                = new DataTable<>(page.stream().map(e -> usersUserDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> usersUserDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
     public DataTable<JumpserverUsersUserVO.UsersUser> fuzzyQueryAdminUserPage(UsersUserPageParam.PageQuery pageQuery) {
         DataTable<UsersUser> table = usersUserService.fuzzyQueryAdminUsersUserPage(pageQuery);
         List<JumpserverUsersUserVO.UsersUser> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverUsersUserVO.UsersUser.class);
-        DataTable<JumpserverUsersUserVO.UsersUser> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return  new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
     public DataTable<JumpserverAssetsAssetVO.AssetsAsset> fuzzyQueryAssetPage(AssetsAssetPageParam.PageQuery pageQuery) {
         DataTable<AssetsAsset> table = assetsAssetService.fuzzyQueryAssetsAssetPage(pageQuery);
         List<JumpserverAssetsAssetVO.AssetsAsset> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverAssetsAssetVO.AssetsAsset.class);
-        DataTable<JumpserverAssetsAssetVO.AssetsAsset> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
     public DataTable<JumpserverAssetsNodeVO.AssetsNode> queryAssetsNodePage(AssetsNodePageParam.PageQuery pageQuery) {
         DataTable<AssetsNode> table = assetsNodeService.queryAssetsNodePage(pageQuery);
         List<JumpserverAssetsNodeVO.AssetsNode> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverAssetsNodeVO.AssetsNode.class);
-        DataTable<JumpserverAssetsNodeVO.AssetsNode> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override

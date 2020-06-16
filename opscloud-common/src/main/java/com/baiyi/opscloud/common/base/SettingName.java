@@ -5,10 +5,12 @@ package com.baiyi.opscloud.common.base;
  * @Date 2020/6/4 5:14 下午
  * @Version 1.0
  */
-public class OcSettingName {
+public class SettingName {
 
     public static final String SERVER_ACCOUNT = "SERVER_ACCOUNT";
 
     public static final String SERVER_HIGH_AUTHORITY_ACCOUNT = "SERVER_HIGH_AUTHORITY_ACCOUNT";
+
+    public static final String ORG_DEPT_ID = "ORG_DEPT_ID";
 
 }

@@ -116,8 +116,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     public DataTable<WorkorderGroupVO.WorkorderGroup> queryWorkorderGroupPage(WorkorderGroupParam.PageQuery pageQuery) {
         DataTable<OcWorkorderGroup> table = ocWorkorderGroupService.queryOcWorkorderGroupByParam(pageQuery);
         List<WorkorderGroupVO.WorkorderGroup> page = BeanCopierUtils.copyListProperties(table.getData(), WorkorderGroupVO.WorkorderGroup.class);
-        DataTable<WorkorderGroupVO.WorkorderGroup> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -188,7 +187,7 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
         OcWorkorderTicketSubscribe ocWorkorderTicketSubscribe = ticketSubscribe.queryTicketSubscribe(ocWorkorderTicket, ocUser);
         if (ocWorkorderTicketSubscribe == null) {
-            if (ocUser.getId() == ocWorkorderTicket.getUserId()) {
+            if (ocUser.getId().equals(ocWorkorderTicket.getUserId())) {
                 OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocWorkorderTicket.getUserId());
                 if (orgApproval.getIsApprovalAuthority()) {
                     ocWorkorderTicketFlow.setUserId(ocUser.getId());
@@ -343,16 +342,16 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
     public List<WorkorderTicketEntryVO.Entry> queryUserTicketRAMPolicyParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam) {
         OcUser ocUser = userFacade.getOcUserBySession();
         queryParam.setUsername(ocUser.getUsername());
-        List<AliyunAccountVO.AliyunAccount> aliyunAccounts =  aliyunCore.queryAliyunAccount();
+        List<AliyunAccountVO.AliyunAccount> aliyunAccounts = aliyunCore.queryAliyunAccount();
         List<OcAliyunRamUser> ramUsers = ocAliyunRamUserService.queryUserPermissionRamUserByUserId(ocUser.getId());
-        if (ramUsers != null && !ramUsers.isEmpty()){
-            queryParam.setRamUserIds(ramUsers.stream().map(e -> e.getId()).collect(Collectors.toList()));
-        }else{
+        if (ramUsers != null && !ramUsers.isEmpty()) {
+            queryParam.setRamUserIds(ramUsers.stream().map(OcAliyunRamUser::getId).collect(Collectors.toList()));
+        } else {
             queryParam.setRamUserIds(Lists.newArrayList());
         }
         List<OcAliyunRamPolicy> list = ocAliyunRamPolicyService.queryUserTicketOcRamPolicyByParam(queryParam);
         return list.stream().map(e ->
-                WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e,aliyunAccounts)
+                WorkorderTicketEntryBuilder.build(queryParam.getWorkorderTicketId(), e, aliyunAccounts)
         ).collect(Collectors.toList());
     }
 
@@ -372,9 +371,8 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     private DataTable<WorkorderTicketVO.Ticket> getTicketDataTable(DataTable<OcWorkorderTicket> table) {
         List<WorkorderTicketVO.Ticket> page = BeanCopierUtils.copyListProperties(table.getData(), WorkorderTicketVO.Ticket.class);
-        DataTable<WorkorderTicketVO.Ticket> dataTable = new DataTable<>(page.stream().map(e -> workorderTicketDecorator.decorator(e)
+        return new DataTable<>(page.stream().map(e -> workorderTicketDecorator.decorator(e)
         ).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
     }
 
 }

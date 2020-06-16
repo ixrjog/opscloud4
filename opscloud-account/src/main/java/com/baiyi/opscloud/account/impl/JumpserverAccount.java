@@ -177,8 +177,6 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
     public Boolean pushSSHKey(OcUser ocUser) {
         OcUserCredential credential = getOcUserSSHPubKey(ocUser);
         if (credential == null) return Boolean.FALSE;
-        //return jumpserverCenter.pushKey(user,BeanCopierUtils.copyProperties(credential,OcUserCredentialVO.UserCredential.class));
-
         UsersUser usersUser = saveUsersUser(ocUser);
         if (usersUser == null)
             return false;

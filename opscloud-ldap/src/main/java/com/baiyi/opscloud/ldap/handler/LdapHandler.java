@@ -19,7 +19,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import javax.naming.NamingException;
 import javax.naming.directory.*;
 import java.util.Collections;
 import java.util.List;
@@ -32,27 +31,6 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 @Slf4j
 @Component
 public class LdapHandler {
-
-//    @Value("${spring.ldap.base}")
-//    private String base;
-
-//    @Value("${ldap.user.id}")
-//    private String userId;
-//
-//    @Value("${ldap.user.baseDN}")
-//    private String userBaseDN;
-//
-//    @Value("${ldap.user.objectClass}")
-//    private String userObjectClass;
-
-//    @Value("${ldap.group.id}")
-//    private String groupId;
-//
-//    @Value("${ldap.group.baseDN}")
-//    private String groupBaseDN;
-//
-//    @Value("${ldap.group.objectClass}")
-//    private String groupObjectClass;
 
     @Resource
     private LdapTemplate ldapTemplate;
@@ -75,7 +53,6 @@ public class LdapHandler {
      * @return
      */
     public List<String> queryPersonNameList() {
-
         return ldapTemplate.search(
                 query().where("objectclass").is(ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS)), (AttributesMapper<String>) attrs -> (String) attrs.get(ldapConfig.getCustomByKey(LdapConfig.USER_ID)).get());
     }
@@ -268,12 +245,7 @@ public class LdapHandler {
             String userDN = ldapConfig.buildUserFullDN(username);
             groupList = ldapTemplate.search(LdapQueryBuilder.query().base(groupBaseDN)
                             .where(groupMember).is(userDN).and(userId).like("*"),
-                    new AttributesMapper<String>() {
-                        @Override
-                        public String mapFromAttributes(Attributes attributes) throws NamingException {
-                            return attributes.get(userId).get(0).toString();
-                        }
-                    }
+                    (AttributesMapper<String>) attributes -> attributes.get(userId).get(0).toString()
             );
         } catch (Exception e) {
             log.warn("username={} search ldap group error={}", username, e.getMessage(), e);

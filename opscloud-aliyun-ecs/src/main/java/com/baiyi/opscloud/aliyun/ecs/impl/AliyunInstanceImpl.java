@@ -72,7 +72,7 @@ public class AliyunInstanceImpl implements AliyunInstance {
     }
 
     @Override
-    public BusinessWrapper<Boolean> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest) {
+    public BusinessWrapper<String> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest) {
         return aliyunInstanceHandler.getCreateInstanceResponse(regionId, createInstanceRequest);
     }
 

@@ -32,8 +32,7 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     public DataTable<CloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
         DataTable<OcCloudServer> table = ocCloudServerService.queryOcCloudServerByParam(pageQuery);
         List<CloudServerVO.CloudServer> page = BeanCopierUtils.copyListProperties(table.getData(), CloudServerVO.CloudServer.class);
-        DataTable<CloudServerVO.CloudServer> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -49,7 +48,7 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     public BusinessWrapper<Boolean> syncCloudServerByKey(String key) {
         ICloudServer cloudServer = CloudServerFactory.getCloudServerByKey(key);
         cloudServer.sync();
-        return new BusinessWrapper<>(true);
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override

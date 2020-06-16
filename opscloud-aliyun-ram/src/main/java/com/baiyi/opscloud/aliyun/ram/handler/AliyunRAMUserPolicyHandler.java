@@ -4,15 +4,13 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ram.model.v20150501.AttachPolicyToUserRequest;
 import com.aliyuncs.ram.model.v20150501.DetachPolicyFromUserRequest;
-import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.ram.base.BaseAliyunRAM;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
 import com.baiyi.opscloud.domain.vo.cloud.AliyunRAMVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -20,10 +18,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class AliyunRAMUserPolicyHandler {
-
-    @Resource
-    private AliyunCore aliyunCore;
+public class AliyunRAMUserPolicyHandler extends BaseAliyunRAM {
 
     public BusinessWrapper<Boolean> attachPolicyToUser(AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
         AttachPolicyToUserRequest request = new AttachPolicyToUserRequest();
@@ -55,8 +50,4 @@ public class AliyunRAMUserPolicyHandler {
         return BusinessWrapper.SUCCESS;
     }
 
-
-    private IAcsClient acqAcsClient(AliyunAccount aliyunAccount) {
-        return aliyunCore.getAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
-    }
 }

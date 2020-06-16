@@ -43,7 +43,7 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "保存模版")
     @PostMapping(value = "/template/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveCloudInstanceTemplate(@RequestBody @Valid CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public HttpResult<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplate(@RequestBody @Valid CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         return new HttpResult<>(cloudInstanceFacade.saveCloudInstanceTemplate(cloudInstanceTemplate));
     }
 
@@ -55,7 +55,7 @@ public class CloudInstanceController {
 
     @ApiOperation(value = "保存模版YAML")
     @PostMapping(value = "/template/yaml/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveCloudInstanceTemplateYAML(@RequestBody @Valid CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public HttpResult<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplateYAML(@RequestBody @Valid CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         return new HttpResult<>(cloudInstanceFacade.saveCloudInstanceTemplateYAML(cloudInstanceTemplate));
     }
 

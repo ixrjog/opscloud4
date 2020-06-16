@@ -256,14 +256,15 @@ public class AnsibleTaskHandler {
     }
 
     private void executorCommand(List<OcServerTaskMember> memberList, AnsibleArgsBO args) {
-        for (OcServerTaskMember member : memberList) {
+
+        memberList.forEach(m->{
             // 执行队列状态
-            member.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
-            ocServerTaskMemberService.updateOcServerTaskMember(member);
-            args.setPattern(member.getManageIp());
+            m.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
+            ocServerTaskMemberService.updateOcServerTaskMember(m);
+            args.setPattern(m.getManageIp());
             CommandLine commandLine = AnsibleCommandArgsBuilder.build(ansibleConfig, args);
-            executorCommand(member, commandLine);
-        }
+            executorCommand(m, commandLine);
+        });
     }
 
     private void executorScript(List<OcServerTaskMember> memberList, AnsibleArgsBO args) {
@@ -304,11 +305,11 @@ public class AnsibleTaskHandler {
     }
 
     private void createTaskMember(OcServerTask ocServerTask, Map<String, String> taskServerMap) {
-        for (String hostPattern : taskServerMap.keySet()) {
-            String manageIp = taskServerMap.get(hostPattern);
+        taskServerMap.keySet().forEach(k->{
+            String manageIp = taskServerMap.get(k);
             OcServer ocServer = ocServerService.queryOcServerByIp(manageIp);
-            ocServerTaskMemberService.addOcServerTaskMember(ServerTaskMemberBuilder.build(ocServerTask, hostPattern, manageIp, ocServer));
-        }
+            ocServerTaskMemberService.addOcServerTaskMember(ServerTaskMemberBuilder.build(ocServerTask, k, manageIp, ocServer));
+        });
     }
 
     private Map<String, String> getTaskServerMap(Map<String, String> serverTreeHostPatternMap, Set<String> hostPatterns) {

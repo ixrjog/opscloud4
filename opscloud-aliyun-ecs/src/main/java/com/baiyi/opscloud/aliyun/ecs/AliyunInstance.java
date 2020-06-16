@@ -38,5 +38,5 @@ public interface AliyunInstance {
 
     boolean startInstance(String regionId, String instanceId) throws Exception;
 
-    BusinessWrapper<Boolean> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest);
+    BusinessWrapper<String> getCreateInstanceResponse(String regionId, CreateInstanceRequest createInstanceRequest);
 }

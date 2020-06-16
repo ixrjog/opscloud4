@@ -36,8 +36,7 @@ public class EnvFacadeImpl implements EnvFacade {
     public DataTable<EnvVO.Env> queryEnvPage(EnvParam.PageQuery pageQuery) {
         DataTable<OcEnv> table = ocEnvService.queryOcEnvByParam(pageQuery);
         List<EnvVO.Env> page = BeanCopierUtils.copyListProperties(table.getData(), EnvVO.Env.class);
-        DataTable<EnvVO.Env> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -54,9 +53,8 @@ public class EnvFacadeImpl implements EnvFacade {
         OcEnv checkOcEnvName = ocEnvService.queryOcEnvByName(env.getEnvName());
         OcEnv ocEnv = BeanCopierUtils.copyProperties(env, OcEnv.class);
         // 对象存在 && 新增
-        if (checkOcEnvName != null && action) {
+        if (checkOcEnvName != null && action)
             return new BusinessWrapper<>(ErrorEnum.ENV_NAME_ALREADY_EXIST);
-        }
         if (action) {
             ocEnvService.addOcEnv(ocEnv);
         } else {

@@ -137,8 +137,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
             return saveOcUserListByLdap(getUserList());
         List<OcAccount> accountList = getOcAccountList();
         Map<String, OcAccount> map = getAccountMap(null);
-        for (OcAccount account : accountList)
-            saveOcAccount(account, map);
+        accountList.forEach(e -> saveOcAccount(e, map));
         delAccountByMap(map);
         return Boolean.TRUE;
     }
@@ -150,10 +149,10 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
 
     private void delAccountByMap(Map<String, OcAccount> accountMap) {
         if (accountMap.isEmpty()) return;
-        for (String key : accountMap.keySet()) {
-            OcAccount ocAccount = accountMap.get(key);
+        accountMap.keySet().forEach(k->{
+            OcAccount ocAccount = accountMap.get(k);
             ocAccountService.delOcAccount(ocAccount.getId());
-        }
+        });
     }
 
 

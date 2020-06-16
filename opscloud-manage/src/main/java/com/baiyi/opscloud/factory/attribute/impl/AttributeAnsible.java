@@ -2,7 +2,7 @@ package com.baiyi.opscloud.factory.attribute.impl;
 
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.common.base.Global;
-import com.baiyi.opscloud.common.base.OcSettingName;
+import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
@@ -135,7 +135,7 @@ public class AttributeAnsible extends AttributeBase {
     private String acqHostLine(OcServer ocServer) {
         String serverName = ServerBaseFacade.acqServerName(ocServer);
         return Joiner.on(" ").join(getManageIp(ocServer),
-                "ansible_ssh_user=" + settingFacade.querySetting(OcSettingName.SERVER_HIGH_AUTHORITY_ACCOUNT) ,
+                "ansible_ssh_user=" + settingFacade.querySetting(SettingName.SERVER_HIGH_AUTHORITY_ACCOUNT) ,
                 "cloudServerType=" + getCloudServerType(ocServer),
                 "hostname=" + serverName,
                 "#", serverName, "\n");

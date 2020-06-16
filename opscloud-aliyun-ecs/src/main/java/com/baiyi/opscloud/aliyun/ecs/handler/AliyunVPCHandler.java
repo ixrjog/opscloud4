@@ -3,12 +3,10 @@ package com.baiyi.opscloud.aliyun.ecs.handler;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
-import com.baiyi.opscloud.aliyun.core.AliyunCore;
+import com.baiyi.opscloud.aliyun.ecs.base.BaseAliyunECS;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -17,12 +15,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AliyunVPCHandler {
-
-    @Resource
-    private AliyunCore aliyunCore;
-
-    public static final int QUERY_PAGE_SIZE = 50;
+public class AliyunVPCHandler extends BaseAliyunECS {
 
     /**
      * 查询所有VPC
@@ -31,7 +24,7 @@ public class AliyunVPCHandler {
      * @return
      */
     public List<DescribeVpcsResponse.Vpc> getVPCList(String regionId) {
-        List<DescribeVpcsResponse.Vpc> vpcList = Lists.newArrayList();
+        List<DescribeVpcsResponse.Vpc> vpcs = Lists.newArrayList();
         try {
             DescribeVpcsRequest describe = new DescribeVpcsRequest();
             describe.setRegionId(regionId);
@@ -40,26 +33,21 @@ public class AliyunVPCHandler {
             int pageNumber = 1;
             while (QUERY_PAGE_SIZE <= size) {
                 describe.setPageNumber(pageNumber);
-                DescribeVpcsResponse response = getDescribeVpcsResponse(describe, regionId);
-                vpcList.addAll(response.getVpcs());
-                size = response.getVpcs().size();
+                List<DescribeVpcsResponse.Vpc> vpcList = getDescribeVpcsResponse(describe, regionId).getVpcs();
+                vpcs.addAll(vpcList);
+                size = vpcList.size();
                 pageNumber++;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return vpcList;
+        return vpcs;
     }
 
     private DescribeVpcsResponse getDescribeVpcsResponse(DescribeVpcsRequest describe, String regionId) {
         IAcsClient client = acqAcsClient(regionId);
         try {
-            DescribeVpcsResponse response
-                    = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -74,7 +62,7 @@ public class AliyunVPCHandler {
      * @return
      */
     public List<DescribeVSwitchesResponse.VSwitch> getVSwitchList(String regionId, String vpcId) {
-        List<DescribeVSwitchesResponse.VSwitch> vSwitchList = Lists.newArrayList();
+        List<DescribeVSwitchesResponse.VSwitch> vSwitchs = Lists.newArrayList();
         DescribeVSwitchesRequest describe = new DescribeVSwitchesRequest();
         describe.setSysRegionId(regionId);
         describe.setVpcId(vpcId);
@@ -83,12 +71,12 @@ public class AliyunVPCHandler {
         int pageNumber = 1;
         while (QUERY_PAGE_SIZE <= size) {
             describe.setPageNumber(pageNumber);
-            DescribeVSwitchesResponse response = getDescribeVSwitchesResponse(regionId, describe);
-            vSwitchList.addAll(response.getVSwitches());
-            size = response.getVSwitches().size();
+            List<DescribeVSwitchesResponse.VSwitch> vSwitchList = getDescribeVSwitchesResponse(regionId, describe).getVSwitches();
+            vSwitchs.addAll(vSwitchList);
+            size = vSwitchList.size();
             pageNumber++;
         }
-        return vSwitchList;
+        return vSwitchs;
     }
 
     /**
@@ -104,9 +92,6 @@ public class AliyunVPCHandler {
             DescribeVSwitchesResponse response
                     = client.getAcsResponse(describe);
             return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -120,7 +105,7 @@ public class AliyunVPCHandler {
      * @param vpcId
      */
     public List<DescribeSecurityGroupsResponse.SecurityGroup> getSecurityGroupList(String regionId, String vpcId) {
-        List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroupList = Lists.newArrayList();
+        List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroups = Lists.newArrayList();
         DescribeSecurityGroupsRequest describe = new DescribeSecurityGroupsRequest();
         describe.setSysRegionId(regionId);
         describe.setVpcId(vpcId);
@@ -130,12 +115,12 @@ public class AliyunVPCHandler {
         int pageNumber = 1;
         while (QUERY_PAGE_SIZE <= size) {
             describe.setPageNumber(pageNumber);
-            DescribeSecurityGroupsResponse response = getDescribeSecurityGroupsResponse(regionId, describe);
-            securityGroupList.addAll(response.getSecurityGroups());
-            size = response.getSecurityGroups().size();
+            List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroupList = getDescribeSecurityGroupsResponse(regionId, describe).getSecurityGroups();
+            securityGroups.addAll(securityGroupList);
+            size = securityGroupList.size();
             pageNumber++;
         }
-        return securityGroupList;
+        return securityGroups;
     }
 
     /**
@@ -151,17 +136,10 @@ public class AliyunVPCHandler {
             DescribeSecurityGroupsResponse response
                     = client.getAcsResponse(describe);
             return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-
-    private IAcsClient acqAcsClient(String regionId) {
-        return aliyunCore.getAcsClient(regionId);
-    }
 }

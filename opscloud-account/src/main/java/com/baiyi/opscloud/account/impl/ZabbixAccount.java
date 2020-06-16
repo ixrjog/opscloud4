@@ -38,12 +38,12 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
 
     @Override
     protected List<OcUser> getUserList() {
-        return zabbixUserServer.getAllZabbixUser().stream().map(e -> OcUserBuilder.build(e)).collect(Collectors.toList());
+        return zabbixUserServer.getAllZabbixUser().stream().map(OcUserBuilder::build).collect(Collectors.toList());
     }
 
     @Override
     protected List<OcAccount> getOcAccountList() {
-        return zabbixUserServer.getAllZabbixUser().stream().map(e -> OcAccountBuilder.build(e)).collect(Collectors.toList());
+        return zabbixUserServer.getAllZabbixUser().stream().map(OcAccountBuilder::build).collect(Collectors.toList());
     }
 
     @Override
@@ -93,7 +93,7 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
                     .sendto(user.getEmail())
                     .build();
             mediaList.add(mailMedia);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         try {
             RegexUtils.isPhone(user.getPhone());
@@ -102,7 +102,7 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
                     .sendto(user.getPhone())
                     .build();
             mediaList.add(mailMedia);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return mediaList;
     }

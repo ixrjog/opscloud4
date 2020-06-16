@@ -2,7 +2,7 @@ package com.baiyi.opscloud.factory.xterm.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
-import com.baiyi.opscloud.common.base.OcSettingName;
+import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.bae64.CacheKeyUtils;
@@ -99,7 +99,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
         SSHKeyCredential sshKeyCredential;
         if (loginType) {
-            sshKeyCredential = keyboxFacade.getSSHKeyCredential(settingFacade.querySetting(OcSettingName.SERVER_HIGH_AUTHORITY_ACCOUNT)); // 高权限
+            sshKeyCredential = keyboxFacade.getSSHKeyCredential(settingFacade.querySetting(SettingName.SERVER_HIGH_AUTHORITY_ACCOUNT)); // 高权限
         } else {
             sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());  // 普通用户
         }

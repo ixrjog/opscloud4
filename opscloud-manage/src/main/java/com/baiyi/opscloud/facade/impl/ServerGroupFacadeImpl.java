@@ -89,8 +89,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.PageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryOcServerGroupByParam(pageQuery);
         List<ServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class);
-        DataTable<ServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -148,8 +147,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public DataTable<ServerGroupTypeVO.ServerGroupType> queryServerGroupTypePage(ServerGroupTypeParam.PageQuery pageQuery) {
         DataTable<OcServerGroupType> table = ocServerGroupTypeService.queryOcServerGroupTypeByParam(pageQuery);
         List<ServerGroupTypeVO.ServerGroupType> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupTypeVO.ServerGroupType.class);
-        DataTable<ServerGroupTypeVO.ServerGroupType> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -199,16 +197,14 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public DataTable<ServerGroupVO.ServerGroup> queryUserIncludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryUserIncludeOcServerGroupByParam(pageQuery);
         List<ServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class);
-        DataTable<ServerGroupVO.ServerGroup> dataTable = new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> serverGroupDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
     public DataTable<ServerGroupVO.ServerGroup> queryUserExcludeServerGroupPage(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
         DataTable<OcServerGroup> table = ocServerGroupService.queryUserExcludeOcServerGroupByParam(pageQuery);
         List<ServerGroupVO.ServerGroup> page = BeanCopierUtils.copyListProperties(table.getData(), ServerGroupVO.ServerGroup.class);
-        DataTable<ServerGroupVO.ServerGroup> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -348,14 +344,12 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
+    public BusinessWrapper<Map<String, String>> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), uuid);
         if (!redisUtil.hasKey(key))
             return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);
         Map<String, String> serverTreeHostPatternMap = (Map<String, String>) redisUtil.get(key);
-        BusinessWrapper wrapper = new BusinessWrapper(Boolean.TRUE);
-        wrapper.setBody(serverTreeHostPatternMap);
-        return wrapper;
+        return new BusinessWrapper(serverTreeHostPatternMap);
     }
 
 }

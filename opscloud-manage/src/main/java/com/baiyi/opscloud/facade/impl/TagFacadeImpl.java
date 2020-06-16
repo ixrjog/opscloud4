@@ -41,8 +41,7 @@ public class TagFacadeImpl implements TagFacade {
     public DataTable<TagVO.Tag> queryTagPage(TagParam.PageQuery pageQuery) {
         DataTable<OcTag> table = ocTagService.queryOcTagByParam(pageQuery);
         List<TagVO.Tag> page = BeanCopierUtils.copyListProperties(table.getData(), TagVO.Tag.class);
-        DataTable<TagVO.Tag> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override

@@ -27,11 +27,11 @@ public interface UserFacade {
 
     DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
 
-    BusinessWrapper<Boolean> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken);
+    BusinessWrapper<UserApiTokenVO.UserApiToken> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken);
 
     BusinessWrapper<Boolean> delUserApiToken(int id);
 
-    BusinessWrapper<Boolean> saveUserCredentia(UserCredentialVO.UserCredential userCredential);
+    BusinessWrapper<UserCredentialVO.UserCredential> saveUserCredentia(UserCredentialVO.UserCredential userCredential);
 
     String getRandomPassword();
 

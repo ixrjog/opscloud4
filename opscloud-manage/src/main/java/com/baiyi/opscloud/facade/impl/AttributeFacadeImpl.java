@@ -7,7 +7,6 @@ import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.AttributeFacade;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
-import com.baiyi.opscloud.task.util.TaskUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -15,7 +14,6 @@ import javax.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.ansible.config.AnsibleConfig.ANSIBLE_HOSTS;
-import static com.baiyi.opscloud.task.AttributeTask.TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC;
 
 /**
  * @Author baiyi
@@ -34,12 +32,8 @@ public class AttributeFacadeImpl implements AttributeFacade {
     @Resource
     private AnsibleConfig ansibleConfig;
 
-    @Resource
-    private TaskUtil taskUtil;
-
     @Override
     public void createAnsibleHostsTask() {
-        taskUtil.clearSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
         try {
             String context = attributeAnsible.getHeadInfo();
             List<OcServerGroup> serverGroupList = ocServerGroupService.queryAll();

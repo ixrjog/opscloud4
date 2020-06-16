@@ -41,10 +41,10 @@ public class InitialProcess extends BaseProcess implements IXTermProcess {
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         InitialMessage xtermMessage = (InitialMessage) getMessage(message);
         OcUser ocUser = userFacade.getOcUserBySession();
-        BusinessWrapper wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
+        BusinessWrapper<Map<String, String>> wrapper = serverGroupFacade.getServerTreeHostPatternMap(xtermMessage.getUuid(), ocUser);
         if (!wrapper.isSuccess())
             return;
-        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
+        Map<String, String> serverTreeHostPatternMap = wrapper.getBody();
         boolean isAdmin = isOps(ocUser);
         heartbeat(ocTerminalSession.getSessionId());
         for (String instanceId : xtermMessage.getInstanceIds()) {

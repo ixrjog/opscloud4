@@ -89,7 +89,7 @@ public class UserController {
 
     @ApiOperation(value = "用户申请ApiToken")
     @PostMapping(value = "/token/apply", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> applyUserApiToken(@RequestBody @Valid UserApiTokenVO.UserApiToken userApiToken) {
+    public HttpResult<UserApiTokenVO.UserApiToken> applyUserApiToken(@RequestBody @Valid UserApiTokenVO.UserApiToken userApiToken) {
         return new HttpResult<>(userFacade.applyUserApiToken(userApiToken));
     }
 
@@ -101,7 +101,7 @@ public class UserController {
 
     @ApiOperation(value = "用户保存凭据")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.UserCredential userCredential) {
+    public HttpResult<UserCredentialVO.UserCredential> saveUserCredential(@RequestBody @Valid UserCredentialVO.UserCredential userCredential) {
         return new HttpResult<>(userFacade.saveUserCredentia(userCredential));
     }
 

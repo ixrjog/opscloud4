@@ -3,8 +3,8 @@ package com.baiyi.opscloud.aliyun.ram.handler;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ram.model.v20150501.*;
-import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.ram.base.BaseAliyunRAM;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -13,7 +13,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -25,12 +24,9 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class AliyunRAMUserHandler {
+public class AliyunRAMUserHandler extends BaseAliyunRAM {
 
-    @Resource
-    private AliyunCore aliyunCore;
 
-    public static final int MAX_ITEMS = 100;
     public static final boolean NO_PASSWORD_RESET_REQUIRED = false;
 
     /**
@@ -196,8 +192,4 @@ public class AliyunRAMUserHandler {
         }
     }
 
-
-    private IAcsClient acqAcsClient(AliyunAccount aliyunAccount) {
-        return aliyunCore.getAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
-    }
 }

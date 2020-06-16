@@ -67,5 +67,4 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
         return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
     }
 
-
 }

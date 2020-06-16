@@ -24,7 +24,6 @@ public class AliyunLogTask extends BaseTask {
 
     public static final String TASK_ALIYUN_LOG_KEY = "TASK_ALIYUN_LOG_KEY";
 
-
     /**
      * 执行阿里云日志服务推送任务
      */

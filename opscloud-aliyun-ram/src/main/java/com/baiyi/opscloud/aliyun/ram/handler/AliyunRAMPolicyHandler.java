@@ -6,14 +6,13 @@ import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserRequest;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesRequest;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.ram.base.BaseAliyunRAM;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
@@ -24,12 +23,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class AliyunRAMPolicyHandler {
-
-    @Resource
-    private AliyunCore aliyunCore;
-
-    public static final int MAX_ITEMS = 100;
+public class AliyunRAMPolicyHandler extends BaseAliyunRAM {
 
     public static final String ALL_POLICIES = "";
 
@@ -43,7 +37,7 @@ public class AliyunRAMPolicyHandler {
     public List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(AliyunAccount aliyunAccount, String username) {
         ListPoliciesForUserRequest request = new ListPoliciesForUserRequest();
         request.setUserName(username);
-        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
+        IAcsClient client = acqAcsClient(aliyunAccount);
         try {
             return client.getAcsResponse(request).getPolicies();
         } catch (ClientException e) {
@@ -58,11 +52,10 @@ public class AliyunRAMPolicyHandler {
      * @return
      */
     public List<ListPoliciesResponse.Policy> getPolicies(AliyunAccount aliyunAccount) {
-        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
         List<ListPoliciesResponse.Policy> policies = Lists.newArrayList();
         String marker = "";
         while (true) {
-            ListPoliciesResponse responseMarker = listPolicies(client, ALL_POLICIES, marker);
+            ListPoliciesResponse responseMarker = listPolicies(acqAcsClient(aliyunAccount), ALL_POLICIES, marker);
             if (responseMarker.getPolicies() == null)
                 return policies;
             policies.addAll(responseMarker.getPolicies());
@@ -89,7 +82,5 @@ public class AliyunRAMPolicyHandler {
         return null;
     }
 
-    private IAcsClient acqAcsClient(String regionId, AliyunAccount aliyunAccount) {
-        return aliyunCore.getAcsClient(regionId, aliyunAccount);
-    }
+
 }

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.bo.AuthMenuBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.common.util.MenuUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.decorator.ResourceDecorator;
@@ -96,16 +97,14 @@ public class AuthFacadeImpl implements AuthFacade {
     public DataTable<ResourceVO.Resource> queryRoleBindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleBindOcAuthResourceByParam(pageQuery);
         List<ResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), ResourceVO.Resource.class);
-        DataTable<ResourceVO.Resource> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
     public DataTable<ResourceVO.Resource> queryRoleUnbindResourcePage(ResourceParam.BindResourcePageQuery pageQuery) {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryRoleUnbindOcAuthResourceByParam(pageQuery);
         List<ResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), ResourceVO.Resource.class);
-        DataTable<ResourceVO.Resource> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -123,8 +122,7 @@ public class AuthFacadeImpl implements AuthFacade {
     public DataTable<ResourceVO.Resource> queryResourcePage(ResourceParam.PageQuery pageQuery) {
         DataTable<OcAuthResource> table = ocAuthResourceService.queryOcAuthResourceByParam(pageQuery);
         List<ResourceVO.Resource> page = BeanCopierUtils.copyListProperties(table.getData(), ResourceVO.Resource.class);
-        DataTable<ResourceVO.Resource> dataTable = new DataTable<>(page.stream().map(e -> resourceDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> resourceDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -166,8 +164,7 @@ public class AuthFacadeImpl implements AuthFacade {
     public DataTable<GroupVO.Group> queryGroupPage(GroupParam.PageQuery pageQuery) {
         DataTable<OcAuthGroup> table = ocAuthGroupService.queryOcAuthGroupByParam(pageQuery);
         List<GroupVO.Group> page = BeanCopierUtils.copyListProperties(table.getData(), GroupVO.Group.class);
-        DataTable<GroupVO.Group> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -201,8 +198,7 @@ public class AuthFacadeImpl implements AuthFacade {
     public DataTable<UserRoleVO.UserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery) {
         DataTable<OcAuthUserRole> table = ocAuthUserRoleService.queryOcAuthUserRoleByParam(pageQuery);
         List<UserRoleVO.UserRole> page = BeanCopierUtils.copyListProperties(table.getData(), UserRoleVO.UserRole.class);
-        DataTable<UserRoleVO.UserRole> dataTable = new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     /**
@@ -261,8 +257,7 @@ public class AuthFacadeImpl implements AuthFacade {
     @Override
     public BusinessWrapper<Boolean> saveRoleMenu(AuthMenuVO.Menu menu) {
         OcAuthMenu ocAuthMenu = BeanCopierUtils.copyProperties(menu, OcAuthMenu.class);
-        // ocAuthMenu.setMenu(JSONFormat.format(ocAuthMenu.getMenu()));
-        if (menu.getId() == null || menu.getId() == 0) {
+        if (IDUtils.isEmpty(menu.getId())) {
             ocAuthMenuService.addOcAuthMenu(ocAuthMenu);
         } else {
             ocAuthMenuService.updateOcAuthMenu(ocAuthMenu);

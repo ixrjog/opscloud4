@@ -40,7 +40,6 @@ import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.nodes.Tag;
 
 import javax.annotation.Resource;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -104,7 +103,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveCloudInstanceTemplate(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public BusinessWrapper<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplate(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         OcCloudInstanceTemplate pre = BeanCopierUtils.copyProperties(cloudInstanceTemplate, OcCloudInstanceTemplate.class);
         if (pre.getCloudType() == null)
             return new BusinessWrapper<>(ErrorEnum.CLOUD_TYPE_IS_NULL);
@@ -176,7 +175,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
 
 
     @Override
-    public BusinessWrapper<Boolean> saveCloudInstanceTemplateYAML(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
+    public BusinessWrapper<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplateYAML(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate) {
         // YAML对象
         CloudInstanceTemplateVO.InstanceTemplate instanceTemplate = CloudInstanceTemplateUtils.convert(cloudInstanceTemplate.getTemplateYAML());
         // 通过YAML对象组装模版
@@ -261,16 +260,11 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
      * @param vswitchList
      */
     private void filterVSwitchListByZoneId(String zoneId, List<CloudInstanceTemplateVO.VSwitch> vswitchList) {
-        Iterator<CloudInstanceTemplateVO.VSwitch> iter = vswitchList.iterator();
-        while (iter.hasNext()) {
-            if (!zoneId.equals(iter.next().getZoneId()))
-                iter.remove();
-        }
+        vswitchList.removeIf(vSwitch -> !zoneId.equals(vSwitch.getZoneId()));
     }
 
     private void delTypeMap(Map<String, OcCloudInstanceType> typeMap) {
-        for (String instanceTypeId : typeMap.keySet())
-            ocCloudInstanceTypeService.deleteOcCloudInstanceById(typeMap.get(instanceTypeId).getId());
+        typeMap.keySet().forEach(k -> ocCloudInstanceTypeService.deleteOcCloudInstanceById(typeMap.get(k).getId()));
     }
 
     private Map<String, OcCloudInstanceType> getInstanceTypeMap(List<OcCloudInstanceType> typeList) {

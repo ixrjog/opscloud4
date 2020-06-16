@@ -37,19 +37,15 @@ public class AwsEC2Impl implements AwsEC2, InitializingBean {
 
     @Override
     public List<Instance> getInstanceList() {
-        boolean done = false;
         DescribeInstancesRequest request = new DescribeInstancesRequest();
         List<Instance> instanceList = Lists.newArrayList();
-        while (!done) {
+        while (true) {
             DescribeInstancesResult response = ec2.describeInstances(request);
-            for (Reservation reservation : response.getReservations())
-                instanceList.addAll(reservation.getInstances());
+            response.getReservations().forEach(e -> instanceList.addAll(e.getInstances()));
             request.setNextToken(response.getNextToken());
-            if (response.getNextToken() == null) {
-                done = true;
-            }
+            if (response.getNextToken() == null) return instanceList;
         }
-        return instanceList;
+
     }
 
     @Override

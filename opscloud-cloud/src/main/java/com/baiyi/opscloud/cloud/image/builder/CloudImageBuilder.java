@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage;
  * @Date 2020/3/18 10:00 上午
  * @Version 1.0
  */
-public class OcCloudImageBuilder {
+public class CloudImageBuilder {
 
     /**
      * aliyun image
@@ -22,7 +22,7 @@ public class OcCloudImageBuilder {
      * @return
      */
     public static OcCloudImage build(CloudAccount account, DescribeImagesResponse.Image image, String imageDetail) {
-        OcCloudImageBO ocCloudImageBO = OcCloudImageBO.builder()
+        CloudImageBO bo = CloudImageBO.builder()
                 .uid(account.getUid())
                 .accountName(account.getName())
                 .regionId(account.getRegionId())
@@ -42,11 +42,11 @@ public class OcCloudImageBuilder {
                 .osType(image.getOSType())
                 .platform(image.getPlatform())
                 .build();
-        return covert(ocCloudImageBO);
+        return covert(bo);
     }
 
-    private static OcCloudImage covert(OcCloudImageBO ocCloudImageBO) {
-        return BeanCopierUtils.copyProperties(ocCloudImageBO, OcCloudImage.class);
+    private static OcCloudImage covert(CloudImageBO bo) {
+        return BeanCopierUtils.copyProperties(bo, OcCloudImage.class);
     }
 
 }

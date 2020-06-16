@@ -56,6 +56,6 @@ public interface ServerGroupFacade {
 
     ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery, OcUser ocUser);
 
-    BusinessWrapper<Boolean> getServerTreeHostPatternMap(String uuid, OcUser ocUser);
+    BusinessWrapper<Map<String, String>> getServerTreeHostPatternMap(String uuid, OcUser ocUser);
 
 }

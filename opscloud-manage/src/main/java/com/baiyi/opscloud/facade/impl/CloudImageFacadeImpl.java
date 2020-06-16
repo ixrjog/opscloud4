@@ -31,8 +31,7 @@ public class CloudImageFacadeImpl implements CloudImageFacade {
     public DataTable<CloudImageVO.CloudImage> fuzzyQueryCloudImagePage(CloudImageParam.PageQuery pageQuery) {
         DataTable<OcCloudImage> table = ocCloudImageService.fuzzyQueryOcCloudImageByParam(pageQuery);
         List<CloudImageVO.CloudImage> page = BeanCopierUtils.copyListProperties(table.getData(), CloudImageVO.CloudImage.class);
-        DataTable<CloudImageVO.CloudImage> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override

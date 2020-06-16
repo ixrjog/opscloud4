@@ -9,6 +9,8 @@ import com.baiyi.opscloud.domain.param.ansible.ServerTaskHistoryParam;
 import com.baiyi.opscloud.domain.param.server.ServerTaskExecutorParam;
 import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.ansible.AnsibleScriptVO;
+import com.baiyi.opscloud.domain.vo.ansible.AnsibleVersionVO;
+import com.baiyi.opscloud.domain.vo.preview.PreviewFileVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTaskVO;
 import com.baiyi.opscloud.facade.ServerTaskFacade;
 import io.swagger.annotations.Api;
@@ -132,13 +134,13 @@ public class ServerTaskController {
 
     @ApiOperation(value = "查询Ansible版本")
     @GetMapping(value = "/ansible/version", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> queryAnsibleVersion() {
+    public HttpResult<AnsibleVersionVO.AnsibleVersion> queryAnsibleVersion() {
         return new HttpResult<>(serverTaskFacade.queryAnsibleVersion());
     }
 
     @ApiOperation(value = "预览Ansible主机配置文件")
     @GetMapping(value = "/ansible/hosts/preview", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> previewAnsibleHosts() {
+    public HttpResult<PreviewFileVO> previewAnsibleHosts() {
         return new HttpResult<>(serverTaskFacade.previewAnsibleHosts());
     }
 }

@@ -66,9 +66,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
             ocUserDocument = UserDocumentBuilder.build(ocUser, ocDocument);
             ocUserDocumentService.addOcUserDocument(ocUserDocument);
         }
-        DocumentVO.UserDoc userDoc = BeanCopierUtils.copyProperties(ocUserDocument, DocumentVO.UserDoc.class);
-        return userDoc;
-
+        return BeanCopierUtils.copyProperties(ocUserDocument, DocumentVO.UserDoc.class);
     }
 
     @Override

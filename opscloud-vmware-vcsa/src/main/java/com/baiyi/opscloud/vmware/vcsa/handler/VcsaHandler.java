@@ -58,7 +58,7 @@ public class VcsaHandler {
             ManagedEntity mes = new InventoryNavigator(serviceInstance.getRootFolder()).searchManagedEntity(type, name);
             return mes;
         } catch (RemoteException e) {
-            log.error("VCSA查询VM列表错误,{}", e);
+            log.error("VCSA 查询VM列表错误, {}", e);
             serviceInstance.getRootFolder().getServerConnection().logout();
         }
         return null;

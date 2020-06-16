@@ -41,28 +41,21 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
 
     @Override
     public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunAccount aliyunAccount, String dbInstanceId) {
-        List<DescribeDatabasesResponse.Database> databaseList =
-                aliyunRDSMysqlHandler.getDatabaseList(aliyunAccount, dbInstanceId);
-        List<DescribeDatabasesResponse.Database> result = Lists.newArrayList();
-        for (DescribeDatabasesResponse.Database database : databaseList) {
-            if (database.getDBName().indexOf("__") == 0) continue; // 过滤内部数据库
-            result.add(database);
-        }
-        return result;
+        return aliyunRDSMysqlHandler.getDatabaseList(aliyunAccount, dbInstanceId)
+                .stream().filter(e -> e.getDBName().indexOf("__") != 0).collect(Collectors.toList());
     }
 
     @Override
     public Map<String, List<DescribeDBInstancesResponse.DBInstance>> getDBInstanceMap() {
         List<AliyunAccount> accounts = aliyunCore.getAccounts();
         Map<String, List<DescribeDBInstancesResponse.DBInstance>> instanceMap = Maps.newHashMap();
-        for (AliyunAccount aliyunAccount : accounts) {
+        accounts.forEach(e -> {
             // 遍历所有可用区
             List<DescribeDBInstancesResponse.DBInstance> dbInstanceList = Lists.newArrayList();
-            for (String regionId : aliyunAccount.getRegionIds()) {
-                dbInstanceList.addAll(aliyunRDSMysqlHandler.getDbInstanceList(regionId, aliyunAccount));
-            }
-            instanceMap.put(aliyunAccount.getUid(), dbInstanceList);
-        }
+            for (String regionId : e.getRegionIds())
+                dbInstanceList.addAll(aliyunRDSMysqlHandler.getDbInstanceList(regionId, e));
+            instanceMap.put(e.getUid(), dbInstanceList);
+        });
         return instanceMap;
     }
 
@@ -81,7 +74,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
                 }
                 List<DescribeDBInstancesResponse.DBInstance> subList = dbInstanceList.subList(i, i + toIndex);
                 // 查询ids
-                String dbInstanceIds = Joiner.on(",").join(subList.stream().map(e -> e.getDBInstanceId()).collect(Collectors.toList()));
+                String dbInstanceIds = Joiner.on(",").join(subList.stream().map(DescribeDBInstancesResponse.DBInstance::getDBInstanceId).collect(Collectors.toList()));
                 dbInstanceAttributeList.addAll(aliyunRDSMysqlHandler.getDbInstanceAttribute(aliyunAccount, dbInstanceIds));
             }
             dbInstanceAttributeMap.put(uid, dbInstanceAttributeList);
@@ -106,12 +99,10 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
         if (databaseList.isEmpty())
             return BusinessWrapper.SUCCESS;
         DescribeAccountsResponse.DBInstanceAccount dbInstanceAccount = aliyunRDSMysqlHandler.getAccount(aliyunAccount, ocCloudDbAccount);
-
-        Map<String, DescribeAccountsResponse.DBInstanceAccount.DatabasePrivilege> databasePrivilegeMap =
-                dbInstanceAccount.getDatabasePrivileges().stream().collect(Collectors.toMap(DescribeAccountsResponse.DBInstanceAccount.DatabasePrivilege::getDBName, a -> a, (k1, k2) -> k1));
-
         if (dbInstanceAccount == null)
             return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_DESCRIBE_ACCOUNT_ERROR);
+        Map<String, DescribeAccountsResponse.DBInstanceAccount.DatabasePrivilege> databasePrivilegeMap =
+                dbInstanceAccount.getDatabasePrivileges().stream().collect(Collectors.toMap(DescribeAccountsResponse.DBInstanceAccount.DatabasePrivilege::getDBName, a -> a, (k1, k2) -> k1));
         for (DescribeDatabasesResponse.Database database : databaseList) {
             if (databasePrivilegeMap.containsKey(database.getDBName())) continue; // 已授权
             BusinessWrapper<Boolean> wrapper = aliyunRDSMysqlHandler.grantAccountPrivilege(aliyunAccount, ocCloudDbAccount, database.getDBName());
@@ -145,7 +136,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
         request.setDBName(pageQuery.getDbName());
         request.setStartTime(pageQuery.getStartTime());
         request.setEndTime(pageQuery.getEndTime());
-        request.setPageSize(pageQuery.getLength() < 30?30:pageQuery.getLength());
+        request.setPageSize(pageQuery.getLength() < 30 ? 30 : pageQuery.getLength());
         request.setPageNumber(pageQuery.getPage());
         DescribeSlowLogsResponse response = aliyunRDSMysqlHandler.describeDBInstancesResponse(request, aliyunAccount);
         if (response != null) {

@@ -2,7 +2,6 @@ package com.baiyi.opscloud.aliyun.rds.mysql.handler;
 
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.exceptions.ServerException;
 import com.aliyuncs.rds.model.v20140815.*;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
@@ -38,8 +37,6 @@ public class AliyunRDSMysqlHandler {
             DeleteAccountResponse response = client.getAcsResponse(request);
             if (!StringUtils.isEmpty(response.getRequestId()))
                 return BusinessWrapper.SUCCESS;
-        } catch (ServerException e) {
-            e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -64,8 +61,6 @@ public class AliyunRDSMysqlHandler {
             RevokeAccountPrivilegeResponse response = client.getAcsResponse(request);
             if (!StringUtils.isEmpty(response.getRequestId()))
                 return BusinessWrapper.SUCCESS;
-        } catch (ServerException e) {
-            e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -91,8 +86,6 @@ public class AliyunRDSMysqlHandler {
             GrantAccountPrivilegeResponse response = client.getAcsResponse(request);
             if (!StringUtils.isEmpty(response.getRequestId()))
                 return BusinessWrapper.SUCCESS;
-        } catch (ServerException e) {
-            e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -118,8 +111,6 @@ public class AliyunRDSMysqlHandler {
             CreateAccountResponse response = client.getAcsResponse(request);
             if (!StringUtils.isEmpty(response.getRequestId()))
                 return BusinessWrapper.SUCCESS;
-        } catch (ServerException e) {
-            e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -142,8 +133,6 @@ public class AliyunRDSMysqlHandler {
             if (response.getAccounts() == null || response.getAccounts().size() == 0)
                 return null;
             return response.getAccounts().get(0);
-        } catch (ServerException e) {
-            e.printStackTrace();
         } catch (ClientException e) {
             e.printStackTrace();
         }
@@ -156,26 +145,22 @@ public class AliyunRDSMysqlHandler {
         describe.setPageSize(QUERY_PAGE_SIZE);
         IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
         int size = QUERY_PAGE_SIZE;
-        List<DescribeDatabasesResponse.Database> databaseList = Lists.newArrayList();
+        List<DescribeDatabasesResponse.Database> databases = Lists.newArrayList();
         int pageNumber = 1;
         // 返回值无总数，使用其它算法取所有数据库
         while (QUERY_PAGE_SIZE <= size) {
             describe.setPageNumber(pageNumber);
             DescribeDatabasesResponse response = describeDatabasesResponse(describe, client);
-            databaseList.addAll(response.getDatabases());
+            databases.addAll(response.getDatabases());
             size = response.getDatabases().size();
             pageNumber++;
         }
-        return databaseList;
+        return databases;
     }
 
     private DescribeDatabasesResponse describeDatabasesResponse(DescribeDatabasesRequest describe, IAcsClient client) {
         try {
-            DescribeDatabasesResponse response = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -196,9 +181,6 @@ public class AliyunRDSMysqlHandler {
             IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
             DescribeDBInstanceAttributeResponse response = client.getAcsResponse(describe);
             return response.getItems();
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -206,31 +188,25 @@ public class AliyunRDSMysqlHandler {
     }
 
     private List<DescribeDBInstancesResponse.DBInstance> getInstanceList(IAcsClient iAcsClient) {
-        List<DescribeDBInstancesResponse.DBInstance> instanceList = Lists.newArrayList();
+        List<DescribeDBInstancesResponse.DBInstance> instances = Lists.newArrayList();
         DescribeDBInstancesRequest describe = new DescribeDBInstancesRequest();
         describe.setPageSize(QUERY_PAGE_SIZE);
-        DescribeDBInstancesResponse response = describeDBInstancesResponse(describe, iAcsClient);
-        instanceList.addAll(response.getItems());
-        //cacheInstanceRenewAttribute(regionId, response);
-        // 获取总数
-        int totalCount = response.getTotalRecordCount();
-        // 循环次数
-        int cnt = (totalCount + QUERY_PAGE_SIZE - 1) / QUERY_PAGE_SIZE;
-        for (int i = 1; i < cnt; i++) {
-            describe.setPageNumber(i + 1);
-            response = describeDBInstancesResponse(describe, iAcsClient);
-            instanceList.addAll(response.getItems());
+        // DescribeDBInstancesResponse response = describeDBInstancesResponse(describe, iAcsClient);
+        int size = QUERY_PAGE_SIZE;
+        int pageNumber = 1;
+        while (QUERY_PAGE_SIZE <= size) {
+            describe.setPageNumber(pageNumber);
+            DescribeDBInstancesResponse response = describeDBInstancesResponse(describe, iAcsClient);
+            instances.addAll(response.getItems());
+            size = response.getTotalRecordCount();
+            pageNumber++;
         }
-        return instanceList;
+        return instances;
     }
 
     private DescribeDBInstancesResponse describeDBInstancesResponse(DescribeDBInstancesRequest describe, IAcsClient client) {
         try {
-            DescribeDBInstancesResponse response = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -238,13 +214,9 @@ public class AliyunRDSMysqlHandler {
     }
 
     public DescribeSlowLogsResponse describeDBInstancesResponse(DescribeSlowLogsRequest describe, AliyunAccount aliyunAccount) {
-        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(),aliyunAccount);
+        IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
         try {
-            DescribeSlowLogsResponse response = client.getAcsResponse(describe);
-            return response;
-        } catch (ServerException e) {
-            e.printStackTrace();
-            return null;
+            return client.getAcsResponse(describe);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -254,7 +226,5 @@ public class AliyunRDSMysqlHandler {
     private IAcsClient acqAcsClient(String regionId, AliyunAccount aliyunAccount) {
         return aliyunCore.getAcsClient(regionId, aliyunAccount);
     }
-
-
 
 }

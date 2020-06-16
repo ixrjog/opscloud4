@@ -133,8 +133,7 @@ public class ServerFacadeImpl implements ServerFacade {
 
     private DataTable<ServerVO.Server> toServerDataTable(DataTable<OcServer> table) {
         List<ServerVO.Server> page = BeanCopierUtils.copyListProperties(table.getData(), ServerVO.Server.class);
-        DataTable<ServerVO.Server> dataTable = new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -150,12 +149,7 @@ public class ServerFacadeImpl implements ServerFacade {
         if (ocServerGroupService.queryOcServerGroupById(server.getServerGroupId()) == null)
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
         // 校验SN
-        Integer serialNumber = 0;
-        try {
-            serialNumber = Integer.valueOf(server.getSerialNumber());
-        } catch (Exception e) {
-            // 序号错误
-        }
+        Integer serialNumber = server.getSerialNumber();
         if (serialNumber == 0) {
             serialNumber = ocServerService.queryOcServerMaxSerialNumber(server.getServerGroupId(), server.getEnvType());
             server.setSerialNumber(serialNumber + 1);

@@ -121,7 +121,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken) {
+    public BusinessWrapper<UserApiTokenVO.UserApiToken> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken) {
         if (StringUtils.isEmpty(userApiToken.getComment()))
             return new BusinessWrapper(ErrorEnum.USER_APPLY_API_TOKEN_COMMENT_IS_NULL);
         if (userApiToken.getExpiredTime() == null)
@@ -161,9 +161,9 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> saveUserCredentia(UserCredentialVO.UserCredential userCredential) {
+    public BusinessWrapper<UserCredentialVO.UserCredential> saveUserCredentia(UserCredentialVO.UserCredential userCredential) {
         // 公共接口需要2次鉴权
-        BusinessWrapper<Boolean> wrapper = enhancedAuthority(userCredential.getUserId(), URLResource.USER_CREDENTIAL_SAVE);
+        BusinessWrapper wrapper = enhancedAuthority(userCredential.getUserId(), URLResource.USER_CREDENTIAL_SAVE);
         if (!wrapper.isSuccess())
             return wrapper;
         if (userCredential.getCredentialType() == null)
@@ -254,8 +254,7 @@ public class UserFacadeImpl implements UserFacade {
     public DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryOcUserGroupByParam(pageQuery);
         List<UserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), UserGroupVO.UserGroup.class);
-        DataTable<UserGroupVO.UserGroup> dataTable = new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page.stream().map(e -> userGroupDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -298,16 +297,14 @@ public class UserFacadeImpl implements UserFacade {
     public DataTable<UserGroupVO.UserGroup> queryUserIncludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryUserIncludeOcUserGroupByParam(pageQuery);
         List<UserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), UserGroupVO.UserGroup.class);
-        DataTable<UserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
     public DataTable<UserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
         DataTable<OcUserGroup> table = ocUserGroupService.queryUserExcludeOcUserGroupByParam(pageQuery);
         List<UserGroupVO.UserGroup> page = BeanCopierUtils.copyListProperties(table.getData(), UserGroupVO.UserGroup.class);
-        DataTable<UserGroupVO.UserGroup> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return new DataTable<>(page, table.getTotalNum());
     }
 
     @Override
@@ -339,17 +336,17 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public BusinessWrapper<Boolean> syncUserGroup() {
         List<Group> groupList = groupRepo.getGroupList();
-        for (Group group : groupList) {
+        groupList.forEach(g -> {
             try {
                 UserGroupBO userGroupBO = UserGroupBO.builder()
-                        .name(group.getGroupName())
+                        .name(g.getGroupName())
                         .build();
                 UserGroupVO.UserGroup userGroup = BeanCopierUtils.copyProperties(userGroupBO, UserGroupVO.UserGroup.class);
                 addUserGroup(userGroup);
                 syncUserGroupPermission(userGroup);
             } catch (Exception e) {
             }
-        }
+        });
         return BusinessWrapper.SUCCESS;
     }
 
@@ -361,12 +358,12 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     public BusinessWrapper<Boolean> syncUser() {
         accountCenter.sync(AccountCenter.LDAP_ACCOUNT_KEY); // 同步Ldap用户数据
-        List<String> usernameList = personRepo.getAllPersonNames();
-        for (String username : usernameList) {
-            OcUser ocUser = ocUserService.queryOcUserByUsername(username);
-            if (ocUser == null) continue;
-            syncUserPermission(BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
-        }
+        personRepo.getAllPersonNames().forEach(e -> {
+            OcUser ocUser = ocUserService.queryOcUserByUsername(e);
+            if (ocUser != null)
+                syncUserPermission(BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
+        });
+
         return BusinessWrapper.SUCCESS;
     }
 
@@ -417,7 +414,6 @@ public class UserFacadeImpl implements UserFacade {
         }
         return new BusinessWrapper<>(ErrorEnum.USER_RESIGNATION_ERROR);
     }
-
 
     private void syncUserPermission(UserVO.User user) {
         List<UserGroupVO.UserGroup> userGroups = userDecorator.decoratorFromLdapRepo(user, 1).getUserGroups();

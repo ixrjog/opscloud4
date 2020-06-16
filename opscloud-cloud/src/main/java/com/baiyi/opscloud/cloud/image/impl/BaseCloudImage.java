@@ -32,10 +32,7 @@ public abstract class BaseCloudImage<T> implements InitializingBean, ICloudImage
         CloudAccount cloudAccount = getCloudAccount();
         if (cloudAccount == null) return Boolean.FALSE;
         Map<String, OcCloudImage> cloudImageMap = getCloudImageMap(Lists.newArrayList());
-        List<T> cloudImageList = getCloudImageList();
-        for (T cloudImage : cloudImageList)
-            saveOcCloudImage(cloudAccount, cloudImage, cloudImageMap);
-
+       getCloudImageList().forEach(i->saveOcCloudImage(cloudAccount, i, cloudImageMap));
         return Boolean.TRUE;
     }
 

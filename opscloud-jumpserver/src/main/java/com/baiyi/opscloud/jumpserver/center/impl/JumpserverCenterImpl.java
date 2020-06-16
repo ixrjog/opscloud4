@@ -423,7 +423,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     public BusinessWrapper<Boolean> setUserActive(String id) {
         UsersUser usersUser = usersUserService.queryUsersUserById(id);
         if (usersUser == null)
-            return new BusinessWrapper(false);
+            return new BusinessWrapper(ErrorEnum.USER_NOT_EXIST);
         usersUser.setIsActive(!usersUser.getIsActive());
         usersUserService.updateUsersUser(usersUser);
         return BusinessWrapper.SUCCESS;

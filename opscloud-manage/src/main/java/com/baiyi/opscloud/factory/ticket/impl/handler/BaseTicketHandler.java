@@ -94,19 +94,6 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
         return entry;
     }
 
-
-//    @Override
-//    public BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry) {
-//        OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(ticketEntry.getTicketId());
-//        if (!ocWorkorderTicket.getUsername().equals(SessionUtils.getUsername()))
-//            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
-//        ITicketEntry iTicketEntry = acqITicketEntry(ticketEntry);
-//        OcWorkorderTicketEntry ocWorkorderTicketEntry = WorkorderTicketEntryBuilder.build(ticketEntry, iTicketEntry.getName());
-//
-//        ocWorkorderTicketEntryService.addOcWorkorderTicketEntry(ocWorkorderTicketEntry);
-//        return BusinessWrapper.SUCCESS;
-//    }
-
     @Override
     public BusinessWrapper<Boolean> addTicketEntry(OcUser ocUser, WorkorderTicketEntryVO.Entry entry) {
         OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(entry.getWorkorderTicketId());
@@ -127,26 +114,6 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     }
 
     protected abstract BusinessWrapper<Boolean> updateTicketEntry(WorkorderTicketEntryVO.Entry entry);
-
-
-//    @Override
-//    public BusinessWrapper<Boolean> updateTicketEntry(OcUser ocUser, WorkorderTicketEntryParam.TicketEntry ticketEntry) {
-//        OcWorkorderTicket ocWorkorderTicket = ocWorkorderTicketService.queryOcWorkorderTicketById(ticketEntry.getTicketId());
-//        if (!ocWorkorderTicket.getUsername().equals(SessionUtils.getUsername()))
-//            return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
-//
-//        OcWorkorderTicketEntry pre = ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryById(ticketEntry.getId());
-//
-//        ITicketEntry iTicketEntry = acqITicketEntry(ticketEntry);
-//        OcWorkorderTicketEntry ocWorkorderTicketEntry = WorkorderTicketEntryBuilder.build(ticketEntry, iTicketEntry.getName());
-//        ocWorkorderTicketEntry.setId(pre.getId());
-//
-//        ocWorkorderTicketEntryService.updateOcWorkorderTicketEntry(ocWorkorderTicketEntry);
-//        return BusinessWrapper.SUCCESS;
-//    }
-
-
-    // protected abstract ITicketEntry acqITicketEntry(WorkorderTicketEntryParam.TicketEntry ticketEntry);
 
     protected abstract ITicketEntry acqITicketEntry(Object ticketEntry);
 
