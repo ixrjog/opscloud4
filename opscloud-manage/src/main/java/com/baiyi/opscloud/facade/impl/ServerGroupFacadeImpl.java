@@ -81,7 +81,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
 
     @Resource
     private ServerCacheFacade serverCacheFacade;
-    
+
     public static final boolean ACTION_ADD = true;
     public static final boolean ACTION_UPDATE = false;
 
@@ -132,8 +132,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         if (ocServerGroup == null)
             return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
         // 判断server绑定的资源
-        int count = ocServerService.countByServerGroupId(id);
-        if (count == 0) {
+        if (ocServerService.countByServerGroupId(id) == 0) {
             // 清理缓存
             serverCacheFacade.evictServerGroupCache(ocServerGroup);
             ocServerGroupService.deleteOcServerGroupById(id);
