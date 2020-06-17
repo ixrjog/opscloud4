@@ -258,13 +258,12 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
         try {
             TaskResult ansibleVersion = ansibleTaskHandler.getAnsibleVersion();
             version.setVersion(ansibleVersion.getOutputStream().toString("utf8"));
-        } catch (UnsupportedEncodingException e) {
-
+        } catch (UnsupportedEncodingException ignored) {
         }
         try {
             TaskResult playbookVersion = ansibleTaskHandler.getAnsiblePlaybookVersion();
             version.setPlaybookVersion(playbookVersion.getOutputStream().toString("utf8"));
-        } catch (UnsupportedEncodingException e) {
+        } catch (UnsupportedEncodingException ignored) {
         }
         return new BusinessWrapper(version);
     }
@@ -280,7 +279,6 @@ public class ServerTaskFacadeImpl implements ServerTaskFacade {
                 .comment("Ansible主机配置文件")
                 .build();
         return new BusinessWrapper(previewFile);
-
     }
 
 

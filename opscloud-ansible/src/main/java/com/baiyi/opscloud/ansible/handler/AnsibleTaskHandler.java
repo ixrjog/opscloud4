@@ -177,7 +177,7 @@ public class AnsibleTaskHandler {
                 exit = true;
             try {
                 Thread.sleep(1000);
-            } catch (Exception e) {
+            } catch (InterruptedException ignored) {
             }
         }
     }
@@ -256,8 +256,7 @@ public class AnsibleTaskHandler {
     }
 
     private void executorCommand(List<OcServerTaskMember> memberList, AnsibleArgsBO args) {
-
-        memberList.forEach(m->{
+        memberList.forEach(m -> {
             // 执行队列状态
             m.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
             ocServerTaskMemberService.updateOcServerTaskMember(m);
@@ -268,24 +267,24 @@ public class AnsibleTaskHandler {
     }
 
     private void executorScript(List<OcServerTaskMember> memberList, AnsibleArgsBO args) {
-        memberList.forEach(member -> {
+        memberList.forEach(m -> {
             // 执行队列状态
-            member.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
-            ocServerTaskMemberService.updateOcServerTaskMember(member);
-            args.setPattern(member.getManageIp());
+            m.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
+            ocServerTaskMemberService.updateOcServerTaskMember(m);
+            args.setPattern(m.getManageIp());
             CommandLine commandLine = AnsibleScriptArgsBuilder.build(ansibleConfig, args);
-            executorCommand(member, commandLine);
+            executorCommand(m, commandLine);
         });
     }
 
     private void executorPlaybook(List<OcServerTaskMember> memberList, AnsiblePlaybookArgsBO args) {
-        memberList.forEach(member -> {
+        memberList.forEach(m -> {
             // 执行队列状态
-            member.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
-            ocServerTaskMemberService.updateOcServerTaskMember(member);
-            args.setHosts(member.getManageIp());
+            m.setTaskStatus(ServerTaskStatus.EXECUTE_QUEUE.getStatus());
+            ocServerTaskMemberService.updateOcServerTaskMember(m);
+            args.setHosts(m.getManageIp());
             CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansibleConfig, args);
-            executorCommand(member, commandLine);
+            executorCommand(m, commandLine);
         });
     }
 
@@ -305,7 +304,7 @@ public class AnsibleTaskHandler {
     }
 
     private void createTaskMember(OcServerTask ocServerTask, Map<String, String> taskServerMap) {
-        taskServerMap.keySet().forEach(k->{
+        taskServerMap.keySet().forEach(k -> {
             String manageIp = taskServerMap.get(k);
             OcServer ocServer = ocServerService.queryOcServerByIp(manageIp);
             ocServerTaskMemberService.addOcServerTaskMember(ServerTaskMemberBuilder.build(ocServerTask, k, manageIp, ocServer));
@@ -314,9 +313,10 @@ public class AnsibleTaskHandler {
 
     private Map<String, String> getTaskServerMap(Map<String, String> serverTreeHostPatternMap, Set<String> hostPatterns) {
         Map<String, String> taskServerMap = Maps.newHashMap();
-        for (String hostPattern : hostPatterns)
-            if (serverTreeHostPatternMap.containsKey(hostPattern))
-                taskServerMap.put(hostPattern, serverTreeHostPatternMap.get(hostPattern));
+        hostPatterns.forEach(e -> {
+            if (serverTreeHostPatternMap.containsKey(e))
+                taskServerMap.put(e, serverTreeHostPatternMap.get(e));
+        });
         return taskServerMap;
     }
 

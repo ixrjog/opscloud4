@@ -68,6 +68,7 @@
                 and grp_type = #{grpType}
             </if>
         </where>
+        order by replace( name, #{queryName}, '' )
     </select>
 
     <!--    工单票据查询用户可以申请的服务器组列表-->

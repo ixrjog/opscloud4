@@ -32,6 +32,7 @@ import org.springframework.util.StringUtils;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -80,8 +81,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
 
     @Resource
     private ServerCacheFacade serverCacheFacade;
-
-
+    
     public static final boolean ACTION_ADD = true;
     public static final boolean ACTION_UPDATE = false;
 
@@ -234,7 +234,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocUserPermission.getBusinessId());
             accountCenter.revoke(ocUser, ocServerGroup.getName());
             return BusinessWrapper.SUCCESS;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return new BusinessWrapper(ErrorEnum.USER_REVOKE_SERVERGROUP_ERROR);
     }
@@ -307,19 +307,20 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         Map<String, String> serverTreeHostPatternMap = Maps.newHashMap();
 
         List<TreeVO.Tree> treeList = Lists.newArrayList();
-        int treeSize = 0;
-        for (OcServerGroup ocServerGroup : serverGroupList) {
-            Map<String, List<OcServer>> serverGroupMap = attributeAnsible.grouping(ocServerGroup);
-            treeSize += getServerGroupMapSize(serverGroupMap);
+        AtomicInteger treeSize = new AtomicInteger();
+
+        serverGroupList.forEach(e -> {
+            Map<String, List<OcServer>> serverGroupMap = attributeAnsible.grouping(e);
+            treeSize.addAndGet(getServerGroupMapSize(serverGroupMap));
             // 组装缓存
             assembleServerTreeHostPatternMap(serverTreeHostPatternMap, serverGroupMap);
-            treeList.add(serverTreeDecorator.decorator(ocServerGroup, serverGroupMap));
-        }
+            treeList.add(serverTreeDecorator.decorator(e, serverGroupMap));
+        });
         ServerTreeVO.MyServerTree myServerTree = ServerTreeVO.MyServerTree.builder()
                 .userId(ocUser.getId())
                 .uuid(UUIDUtils.getUUID())
                 .tree(treeList)
-                .size(treeSize)
+                .size(treeSize.get())
                 .build();
         // 缓存1小时
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), myServerTree.getUuid());
@@ -328,10 +329,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     private void assembleServerTreeHostPatternMap(Map<String, String> serverTreeHostPatternMap, Map<String, List<OcServer>> serverGroupMap) {
-        for (String key : serverGroupMap.keySet()) {
-            for (OcServer ocServer : serverGroupMap.get(key))
-                serverTreeHostPatternMap.put(ServerBaseFacade.acqServerName(ocServer), serverAttributeFacade.getManageIp(ocServer));
-        }
+        serverGroupMap.keySet().forEach(k ->
+                serverGroupMap.get(k).forEach(s -> serverTreeHostPatternMap.put(ServerBaseFacade.acqServerName(s), serverAttributeFacade.getManageIp(s)))
+        );
     }
 
     private int getServerGroupMapSize(Map<String, List<OcServer>> serverGroupMap) {
@@ -344,12 +344,11 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     }
 
     @Override
-    public BusinessWrapper<Map<String, String>> getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
+    public BusinessWrapper getServerTreeHostPatternMap(String uuid, OcUser ocUser) {
         String key = RedisKeyUtils.getMyServerTreeKey(ocUser.getId(), uuid);
         if (!redisUtil.hasKey(key))
             return new BusinessWrapper<>(ErrorEnum.SERVER_TASK_TREE_NOT_EXIST);
-        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) redisUtil.get(key);
-        return new BusinessWrapper(serverTreeHostPatternMap);
+        return new BusinessWrapper(redisUtil.get(key));
     }
 
 }

@@ -42,7 +42,6 @@ public class DocumentController {
         return new HttpResult<>(documentFacade.queryUserDocByType(docType));
     }
 
-
     @ApiOperation(value = "更新帮助文档")
     @PutMapping(value = "/user/save",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> saveUserDoc(@RequestBody @Valid DocumentVO.UserDoc userDoc) {
