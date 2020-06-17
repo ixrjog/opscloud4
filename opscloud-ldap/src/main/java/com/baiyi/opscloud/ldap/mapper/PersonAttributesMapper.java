@@ -25,7 +25,11 @@ public class PersonAttributesMapper implements AttributesMapper<Person> {
     public Person mapFromAttributes(Attributes attrs) throws NamingException {
         Person person = new Person();
         person.setUsername((String)attrs.get("cn").get());
-        person.setDisplayName((String)attrs.get("displayName").get());
+        try{
+            person.setDisplayName((String)attrs.get("displayName").get());
+        }catch (NullPointerException e){
+            person.setDisplayName(person.getUsername());
+        }
         try{
             person.setMobile((String)attrs.get("mobile").get());
         }catch (NullPointerException e){

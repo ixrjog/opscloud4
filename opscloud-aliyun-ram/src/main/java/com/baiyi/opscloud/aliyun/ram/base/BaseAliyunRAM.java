@@ -15,7 +15,7 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public abstract  class BaseAliyunRAM {
+public abstract class BaseAliyunRAM {
 
     @Resource
     private AliyunCore aliyunCore;

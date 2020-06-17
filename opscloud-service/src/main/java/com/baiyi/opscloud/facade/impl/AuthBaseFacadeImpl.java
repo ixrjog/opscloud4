@@ -58,7 +58,7 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST);
 
         if (ocAuthResource.getNeedAuth() == 0) // 此接口不需要鉴权
-            return new BusinessWrapper<>(true);
+            return BusinessWrapper.SUCCESS;
 
         if (StringUtils.isEmpty(token))  // request请求中没有Token
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN);

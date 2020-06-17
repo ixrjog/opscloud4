@@ -27,7 +27,7 @@ public class AliyunVPCHandler extends BaseAliyunECS {
         List<DescribeVpcsResponse.Vpc> vpcs = Lists.newArrayList();
         try {
             DescribeVpcsRequest describe = new DescribeVpcsRequest();
-            describe.setRegionId(regionId);
+            describe.setSysRegionId(regionId);
             describe.setPageSize(QUERY_PAGE_SIZE);
             int size = QUERY_PAGE_SIZE;
             int pageNumber = 1;
