@@ -1,7 +1,6 @@
 server:
   servlet:
     context-path: /oc3
-
 spring:
   profiles:
     active: @env@

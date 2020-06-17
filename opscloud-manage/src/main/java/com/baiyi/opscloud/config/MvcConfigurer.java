@@ -6,6 +6,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.unit.DataSize;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -21,22 +22,31 @@ public class MvcConfigurer implements WebMvcConfigurer {
 //    @Resource
 //    private AuthInterceptor authInterceptor;
 
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+        configurer.enable();
+    }
+
+//    @Bean
+//    public ServletRegistrationBean apiV1ServletBean(WebApplicationContext wac) {
+//        DispatcherServlet ds = new DispatcherServlet(wac);
+//        ServletRegistrationBean bean = new ServletRegistrationBean(ds, "/oc3/*");
+//        bean.setName("opscloud-api");
+//        return bean;
+//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        registry
-                .addResourceHandler("/webjars/**")
-                .addResourceLocations("/webjars/")
+        registry.addResourceHandler("/webjars/**").addResourceLocations("/webjars/")
                 .resourceChain(false);
-//        registry
-//                .addResourceHandler("/**").addResourceLocations("classpath:/static/")
-//                .resourceChain(false);
-//        registry.addResourceHandler("/index.html").addResourceLocations("classpath:/static/");
-//        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
-//        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
-//        registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/");
-//        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
-//        registry.addResourceHandler("/icon.ico").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/**").addResourceLocations("classpath:/static/")
+                .resourceChain(false);
+        registry.addResourceHandler("/index.html").addResourceLocations("classpath:/static/");
+        registry.addResourceHandler("/js/**").addResourceLocations("classpath:/static/js/");
+        registry.addResourceHandler("/css/**").addResourceLocations("classpath:/static/css/");
+        registry.addResourceHandler("/fonts/**").addResourceLocations("classpath:/static/fonts/");
+        registry.addResourceHandler("/img/**").addResourceLocations("classpath:/static/img/");
+        registry.addResourceHandler("/icon.ico").addResourceLocations("classpath:/static/");
 
     }
 
