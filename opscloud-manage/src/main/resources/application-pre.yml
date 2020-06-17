@@ -14,11 +14,10 @@ opscloud:
 
 spring:
   profiles:
-    include: common,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud,ansible-prod,xterm-prod
+    include: common,zabbix-pre,ldap-pre,jumpserver-pre,aliyun-pre,aws-pre,gitlab-pre,vcsa-pre,cloud,ansible-pre,xterm-pre
   redis:
-    host: ENC(sBuaHDKOePEPRK1vHNSljfdIJ/74yA0UdxZSwHcV1v4JO72BD25l7McR88uLE6RcZPiZFhjh4Qg=)
+    host: 127.0.0.1
     port: 6379
-    password: ENC(9UKYRdhJ4j1RUBbuiJJRwefDjwWmgjvrMI1h+xYZvvA=)
     jedis:
       pool:
         max-wait: 5000
@@ -31,9 +30,9 @@ spring:
 app:
   datasource:
     opscloud:
-      url: ENC(iamzmQ8yCfJWaY7BcNdHzxGNHPXtIgFkJeglE5yellgs6hfQoqRJMo57zf6+LlBzrgLlPSC0Oidt6HNRHeE/MTMcOaT+uDq8T+7pUk+Tx6CMEAkQHiWozs9kkC2rlm1idCxVADnRNmPlLp4a3eh/puZXu1YwORPVNETO5QQUpPfR1Qjn4t1ycVs3GM7K3sQC3dmwdZwbnbCOV4/OCQ4/FGHNlpu8MLsQSuoDGJ3H1EN8+U713PgFZ6OiXLGTzvi/sh6EWszLx9j87oMmzM9g6MkZ9tAmkdsE8iJNnZO3nAfFfuv9YZoG+iilAKFuvmVPQ9/aJNSAQ2fQU285JIyBH411oHZ8bdVNL268W+2Y+LcN0m0V9fTuoIHlcXU0OzQh)
-      username: opscloud
-      password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
+      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/opscloud-pre?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=UTC&allowMultiQueries=true
+      username: opscloud_pre
+      password: ENC(tphcAyBC3+vzEgnFf8ZCPAiSLbaUDWxsqH0vtw5uujo=)
       driver-class-name: com.mysql.jdbc.Driver
       minimum-idle: 3
       maximum-pool-size: 15

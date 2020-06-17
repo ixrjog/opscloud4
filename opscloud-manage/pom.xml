@@ -76,6 +76,18 @@
             </properties>
         </profile>
         <profile>
+            <id>open</id>
+            <properties>
+                <env>open</env>
+            </properties>
+        </profile>
+        <profile>
+            <id>pre</id>
+            <properties>
+                <env>pre</env>
+            </properties>
+        </profile>
+        <profile>
             <id>prod</id>
             <properties>
                 <env>prod</env>
@@ -91,6 +103,8 @@
                 <excludes>
                     <exclude>application-dev.yml</exclude>
                     <exclude>application-test.yml</exclude>
+                    <exclude>application-open.yml</exclude>
+                    <exclude>application-pre.yml</exclude>
                     <exclude>application-prod.yml</exclude>
 
                     <exclude>static/fonts/**</exclude>

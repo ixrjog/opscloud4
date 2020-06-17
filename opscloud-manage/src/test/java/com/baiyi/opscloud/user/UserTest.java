@@ -2,6 +2,7 @@ package com.baiyi.opscloud.user;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -70,6 +71,14 @@ public class UserTest extends BaseUnit {
 
         }
 
+    }
+
+    @Test
+    void b() {
+        OcUser ocUser =
+                ocUserService.queryOcUserByUsername("ouyanggw");
+        boolean r = RegexUtils.isPhone(ocUser.getPhone());
+        System.err.println(r);
     }
 
     @Test

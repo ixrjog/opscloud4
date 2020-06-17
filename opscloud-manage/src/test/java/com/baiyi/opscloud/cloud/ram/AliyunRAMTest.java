@@ -70,7 +70,7 @@ public class AliyunRAMTest extends BaseUnit {
     @Test
     void testDeleteRamUser() {
         // modao
-        OcAliyunRamUser ocAliyunRamUser = ocAliyunRamUserService.queryOcAliyunRamUserByUniqueKey("1255805305757185", "modao");
+        OcAliyunRamUser ocAliyunRamUser = ocAliyunRamUserService.queryOcAliyunRamUserByUniqueKey("1267986359450069", "ouyanggw");
         aliyunRAMUserCenter.deleteRamUser(ocAliyunRamUser);
     }
 
@@ -79,11 +79,11 @@ public class AliyunRAMTest extends BaseUnit {
     void testCreateRamUser() {
         // "1267986359450069"  "1255805305757185"
         // modao
-        OcUser ocUser = ocUserService.queryOcUserByUsername("modao");
+        OcUser ocUser = ocUserService.queryOcUserByUsername("ouyanggw");
         String passwd = "";
         ocUser.setPassword(passwd);
         System.err.println(passwd);
-        BusinessWrapper<OcAliyunRamUser> wrapper = aliyunRAMUserCenter.createRamUser("1255805305757185", ocUser);
+        BusinessWrapper<OcAliyunRamUser> wrapper = aliyunRAMUserCenter.createRamUser("1267986359450069", ocUser);
         System.err.println(JSON.toJSONString(wrapper));
     }
 
