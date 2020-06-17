@@ -12,10 +12,13 @@ import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
 
 /**
  * @Author baiyi
@@ -45,10 +48,10 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> syncCloudServerByKey(String key) {
+    @Async(value = ASYNC_POOL_TASK_EXECUTOR)
+    public void syncCloudServerByKey(String key) {
         ICloudServer cloudServer = CloudServerFactory.getCloudServerByKey(key);
         cloudServer.sync();
-        return BusinessWrapper.SUCCESS;
     }
 
     @Override

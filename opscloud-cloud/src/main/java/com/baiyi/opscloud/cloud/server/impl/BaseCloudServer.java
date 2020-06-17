@@ -45,6 +45,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
     public static final boolean POWER_ON = true;
     public static final boolean POWER_OFF = false;
 
+
     /**
      * 同步接口
      *

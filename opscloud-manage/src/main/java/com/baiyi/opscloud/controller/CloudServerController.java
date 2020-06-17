@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.controller;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
@@ -41,7 +42,8 @@ public class CloudServerController {
     @ApiOperation(value = "同步指定的云主机")
     @GetMapping(value = "/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncCloudServerByKey(@RequestParam String key) {
-        return new HttpResult<>(cloudServerFacade.syncCloudServerByKey(key));
+        cloudServerFacade.syncCloudServerByKey(key);
+        return new HttpResult<>(BusinessWrapper.SUCCESS);
     }
 
 

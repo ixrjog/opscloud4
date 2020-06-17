@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTaskVO;
  * @Version 1.0
  */
 public interface CloudInstanceTaskFacade {
+
     void doCreateInstanceTask(OcCloudInstanceTask ocCloudInstanceTask, CreateCloudInstanceBO createCloudInstanceBO);
 
     CloudInstanceTaskVO.CloudInstanceTask queryCloudInstanceTask(int taskId);

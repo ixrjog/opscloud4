@@ -16,7 +16,7 @@ public interface CloudServerFacade {
 
     BusinessWrapper<Boolean> deleteCloudServerById(int id);
 
-    BusinessWrapper<Boolean> syncCloudServerByKey(String key);
+    void syncCloudServerByKey(String key);
 
     void updateCloudServerStatus(int id, int serverId, int cloudServerStatus);
 
