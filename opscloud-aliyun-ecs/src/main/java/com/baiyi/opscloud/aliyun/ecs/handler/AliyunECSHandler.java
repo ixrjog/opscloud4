@@ -11,6 +11,7 @@ import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.Collection;
 import java.util.List;
 
@@ -21,6 +22,10 @@ import java.util.List;
  */
 @Component
 public class AliyunECSHandler extends BaseAliyunECS {
+
+
+    @Resource
+    private AliyunInstanceHandler aliyunInstanceHandler;
 
     public List<DescribeInstanceAutoRenewAttributeResponse.InstanceRenewAttribute> getInstanceRenewAttribute(String regionId, DescribeInstanceAutoRenewAttributeRequest describe) {
         IAcsClient client = acqAcsClient(regionId);
@@ -45,16 +50,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
         }
     }
 
-    public DescribeInstancesResponse getInstancesResponse(String regionId, DescribeInstancesRequest describe) {
-        IAcsClient client;
-        client = acqAcsClient(regionId);
-        try {
-            return client.getAcsResponse(describe);
-        } catch (ClientException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
+
 
     public DescribeInstancesResponse.Instance getInstance(String regionId, String instanceId) {
         DescribeInstancesRequest describe = new DescribeInstancesRequest();
@@ -62,7 +58,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
         instanceIds.add(instanceId);
         describe.setInstanceIds(JSONUtils.writeValueAsString(instanceIds));
         try {
-            DescribeInstancesResponse response = getInstancesResponse(regionId, describe);
+            DescribeInstancesResponse response = aliyunInstanceHandler.getInstancesResponse(regionId, describe);
             return response.getInstances().get(0);
         } catch (Exception e) {
             return null;
@@ -79,7 +75,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
             // 循环取值
             while (QUERY_PAGE_SIZE <= size) {
                 describe.setPageNumber(pageNumber);
-                DescribeInstancesResponse response = getInstancesResponse(regionId, describe);
+                DescribeInstancesResponse response = aliyunInstanceHandler.getInstancesResponse(regionId, describe);
                 instanceList.addAll(response.getInstances());
                 size = response.getTotalCount();
                 pageNumber++;

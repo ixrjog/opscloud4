@@ -8,6 +8,8 @@ import com.aliyuncs.exceptions.ServerException;
 import com.baiyi.opscloud.aliyun.ecs.base.BaseAliyunECS;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.google.common.collect.Lists;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -122,7 +124,8 @@ public class AliyunInstanceHandler extends BaseAliyunECS {
         }
     }
 
-    private DescribeInstancesResponse getInstancesResponse(String regionId, DescribeInstancesRequest describe) {
+    @Retryable(value = ClientException.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
+    public DescribeInstancesResponse getInstancesResponse(String regionId, DescribeInstancesRequest describe) {
         IAcsClient client = acqAcsClient(regionId);
         try {
             return client.getAcsResponse(describe);
@@ -174,6 +177,9 @@ public class AliyunInstanceHandler extends BaseAliyunECS {
             return Lists.newArrayList();
         }
     }
+
+
+
 
 
 }
