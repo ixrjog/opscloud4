@@ -14,7 +14,7 @@ opscloud:
 
 spring:
   profiles:
-    include: common,zabbix-pre,ldap-pre,jumpserver-pre,aliyun-pre,aws-pre,gitlab-pre,vcsa-pre,cloud,ansible-pre,xterm-pre
+    include: common,account-pre,zabbix-pre,ldap-pre,jumpserver-pre,aliyun-pre,aws-pre,gitlab-pre,vcsa-pre,cloud,ansible-pre,xterm-pre
   redis:
     host: 127.0.0.1
     port: 6379

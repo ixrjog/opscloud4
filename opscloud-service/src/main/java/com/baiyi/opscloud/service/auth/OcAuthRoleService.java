@@ -35,4 +35,6 @@ public interface OcAuthRoleService {
     OcAuthRole queryOcAuthRoleByName(String roleName);
 
     List<OcAuthRole> queryUserTicketOcAuthRoleByParam(RoleParam.UserTicketOcAuthRoleQuery queryParam);
+
+    List<OcAuthRole> queryAllOcAuthRole();
 }

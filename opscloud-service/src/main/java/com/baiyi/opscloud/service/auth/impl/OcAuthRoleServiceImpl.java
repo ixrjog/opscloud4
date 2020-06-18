@@ -75,4 +75,8 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
         return ocAuthRoleMapper.queryUserTicketOcAuthRoleByParam(queryParam);
     }
 
+    @Override
+    public List<OcAuthRole> queryAllOcAuthRole() {
+        return ocAuthRoleMapper.selectAll();
+    }
 }

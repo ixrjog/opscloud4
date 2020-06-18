@@ -3,10 +3,7 @@ package com.baiyi.opscloud.factory.attribute.impl;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
-import com.baiyi.opscloud.facade.ServerFacade;
-import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
-import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
@@ -29,19 +26,10 @@ import java.util.Map;
 public abstract class AttributeBase {
 
     @Resource
-    private OcServerGroupService ocServerGroupService;
-
-    @Resource
     private OcServerService ocServerService;
 
     @Resource
-    private ServerFacade serverFacade;
-
-    @Resource
     private OcEnvService ocEnvService;
-
-    @Resource
-    private ServerAttributeFacade serverAttributeFacade;
 
     /**
      * 按环境分组
@@ -53,27 +41,27 @@ public abstract class AttributeBase {
         List<OcServer> serverList = ocServerService.queryOcServerByServerGroupId(ocServerGroup.getId());
         Map<String, List<OcServer>> map = Maps.newHashMap();
         if (CollectionUtils.isEmpty(serverList)) return map;
-
-        for (OcServer ocServer : serverList) {
-            String groupingName =  convertSubgroupName(ocServerGroup,ocServer.getEnvType());
+        serverList.forEach(e -> {
+            String groupingName = convertSubgroupName(ocServerGroup, e.getEnvType());
             if (map.containsKey(groupingName)) {
-                map.get(groupingName).add(ocServer);
+                map.get(groupingName).add(e);
             } else {
                 List<OcServer> list = Lists.newArrayList();
-                list.add(ocServer);
+                list.add(e);
                 map.put(groupingName, list);
             }
-        }
+        });
         return map;
     }
 
     /**
      * ddd-prod
+     *
      * @param ocServerGroup
      * @param envType
      * @return
      */
-    protected String convertSubgroupName(OcServerGroup ocServerGroup,int envType){
+    protected String convertSubgroupName(OcServerGroup ocServerGroup, int envType) {
         return Joiner.on("-").join(ocServerGroup.getName().replace("group_", ""), getEnvName(envType));
     }
 

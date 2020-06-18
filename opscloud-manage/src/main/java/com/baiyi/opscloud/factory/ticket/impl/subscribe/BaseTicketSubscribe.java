@@ -46,6 +46,8 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
     @Resource
     private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
 
+    protected static final int ACTIVE = 1;
+
     @Override
     public OcWorkorderTicketSubscribe queryTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, OcUser ocUser) {
         return null;
@@ -74,8 +76,8 @@ public abstract class BaseTicketSubscribe implements ITicketSubscribe, Initializ
 
     /**
      * 重置所有订阅用户无效
-     *
      * @param ocWorkorderTicket
+     * @param subscribeType
      */
     protected void resetTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, int subscribeType) {
         ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ocWorkorderTicket.getId(), subscribeType).forEach(e -> {

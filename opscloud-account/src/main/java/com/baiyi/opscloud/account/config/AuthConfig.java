@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.account.config;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "opscloud", ignoreInvalidFields = true)
-public class OpscloudConfig {
+@ConfigurationProperties(prefix = "auth", ignoreInvalidFields = true)
+public class AuthConfig {
 
-    private String version;
-    private Boolean openTask; // 启用任务
-
+    private String externalAuthentication; // 外部认证
+    private OpscloudAdmin admin;
 }

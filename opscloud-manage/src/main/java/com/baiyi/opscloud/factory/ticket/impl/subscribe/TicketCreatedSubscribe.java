@@ -40,7 +40,7 @@ public class TicketCreatedSubscribe extends BaseTicketSubscribe implements ITick
                 .build();
         ticket.getApprovalDetail().getApprovalSteps().add(approvalStep);
         if(TicketPhase.CREATED.getPhase().equals(ticketPhase))
-            ticket.getApprovalDetail().setActive(1);
+            ticket.getApprovalDetail().setActive(ACTIVE);
     }
 
     @Override

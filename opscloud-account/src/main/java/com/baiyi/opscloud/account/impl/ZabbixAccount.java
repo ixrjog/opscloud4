@@ -2,8 +2,8 @@ package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.base.AccountType;
-import com.baiyi.opscloud.account.builder.OcAccountBuilder;
-import com.baiyi.opscloud.account.builder.OcUserBuilder;
+import com.baiyi.opscloud.account.builder.AccountBuilder;
+import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.account.convert.ZabbixUserConvert;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.ZabbixUtils;
@@ -38,12 +38,12 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
 
     @Override
     protected List<OcUser> getUserList() {
-        return zabbixUserServer.getAllZabbixUser().stream().map(OcUserBuilder::build).collect(Collectors.toList());
+        return zabbixUserServer.getAllZabbixUser().stream().map(UserBuilder::build).collect(Collectors.toList());
     }
 
     @Override
     protected List<OcAccount> getOcAccountList() {
-        return zabbixUserServer.getAllZabbixUser().stream().map(OcAccountBuilder::build).collect(Collectors.toList());
+        return zabbixUserServer.getAllZabbixUser().stream().map(AccountBuilder::build).collect(Collectors.toList());
     }
 
     @Override

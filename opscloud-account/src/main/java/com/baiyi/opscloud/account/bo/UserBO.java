@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.account.builder;
+package com.baiyi.opscloud.account.bo;
 
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import lombok.Builder;
@@ -13,7 +13,7 @@ import java.util.Date;
  */
 @Builder
 @Data
-public class OcUserBO {
+public class UserBO {
 
     private Integer id;
     private String username;

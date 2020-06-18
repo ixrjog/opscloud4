@@ -2,6 +2,7 @@ package com.baiyi.opscloud.factory.ticket.impl.subscribe;
 
 import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.base.TicketSubscribeType;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
@@ -49,7 +50,7 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
     @Override
     public void invokeFlowStep(WorkorderTicketVO.Ticket ticket, String ticketPhase) {
         OcWorkorder ocWorkorder = getOcWorkorderById(ticket.getWorkorderId());
-        if (ocWorkorder.getApprovalGroupId() == 0)
+        if (IDUtils.isEmpty(ocWorkorder.getApprovalGroupId()))
             return;
         OcWorkorderApprovalGroup ocWorkorderApprovalGroup = ocWorkorderApprovalGroupService.queryOcWorkorderApprovalGroupById(ocWorkorder.getApprovalGroupId());
         ApprovalStepsVO.ApprovalStep approvalStep = ApprovalStepsVO.ApprovalStep.builder()

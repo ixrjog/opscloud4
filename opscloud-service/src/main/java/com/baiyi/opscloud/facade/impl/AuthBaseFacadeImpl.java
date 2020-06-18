@@ -9,11 +9,13 @@ import com.baiyi.opscloud.facade.AuthBaseFacade;
 import com.baiyi.opscloud.service.auth.OcAuthResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleResourceService;
 import com.baiyi.opscloud.service.auth.OcAuthRoleService;
+import com.baiyi.opscloud.service.auth.OcAuthUserRoleService;
 import com.baiyi.opscloud.service.user.OcUserApiTokenService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.baiyi.opscloud.service.user.OcUserTokenService;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -45,6 +47,9 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
     private OcAuthRoleResourceService ocAuthRoleResourceService;
 
     @Resource
+    private OcAuthUserRoleService ocAuthUserRoleService;
+
+    @Resource
     private StringEncryptor stringEncryptor;
 
     @Resource
@@ -69,10 +74,8 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
             // 从ApiToken校验
             return checkUserApiHasResourceAuthorize(token, resourceName, new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_TOKEN_INVALID));
         }
-
         // 校验用户是否可以访问资源路径
-        int nums = ocUserTokenService.checkUserHasResourceAuthorize(token, resourceName);
-        if (nums == 0) {
+        if (ocUserTokenService.checkUserHasResourceAuthorize(token, resourceName) == 0) {
             if (ocUserTokenService.checkUserHasRole(token, SUPER_ADMIN) == 0) {
                 return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
             } else {
@@ -96,7 +99,7 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
         ocAuthRoleResourceService.addOcAuthRoleResource(ocAuthRoleResource);
     }
 
-    public BusinessWrapper<Boolean> checkUserApiHasResourceAuthorize(String token, String resourceName, BusinessWrapper<Boolean> wrapper) {
+    private BusinessWrapper<Boolean> checkUserApiHasResourceAuthorize(String token, String resourceName, BusinessWrapper<Boolean> wrapper) {
         OcUserApiToken ocUserApiToken = ocUserApiTokenService.queryOcUserApiTokenByTokenAndValid(token);
         if (ocUserApiToken == null) return wrapper; // 校验失败返回上级错误
         if (TimeUtils.calculateDateExpired(ocUserApiToken.getExpiredTime())) {
@@ -105,12 +108,11 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
             ocUserApiTokenService.updateOcUserApiToken(ocUserApiToken);
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_TOKEN_INVALID);
         }
-        int nums = ocUserApiTokenService.checkUserHasResourceAuthorize(token, resourceName);
-        if (nums == 0) {
+        if (ocUserApiTokenService.checkUserHasResourceAuthorize(token, resourceName) == 0) {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_API_FAILUER);
         } else {
             SessionUtils.setUsername(ocUserApiToken.getUsername());
-            return new BusinessWrapper<>(true);
+            return BusinessWrapper.SUCCESS;
         }
     }
 
@@ -122,11 +124,16 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
         return ocUserToken.getUsername();
     }
 
+    /**
+     * 吊销Token
+     *
+     * @param username
+     */
     @Override
     public void revokeUserToken(String username) {
-        OcUserToken ocUserToken = ocUserTokenService.queryOcUserTokenByTokenAndValid(username);
-        if(ocUserToken == null) return;
-        ocUserTokenService.updateOcUserTokenInvalid(ocUserToken);
+        List<OcUserToken> tokens = ocUserTokenService.queryOcUserTokenByUsername(username);
+        if (!CollectionUtils.isEmpty(tokens))
+            tokens.forEach(e -> ocUserTokenService.updateOcUserTokenInvalid(e));
     }
 
     /**
@@ -137,10 +144,7 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
      */
     @Override
     public void setUserToken(String username, String token) {
-        List<OcUserToken> ocUserTokenList = ocUserTokenService.queryOcUserTokenByUsername(username);
-        // 吊销Token
-        if (!ocUserTokenList.isEmpty())
-            for (OcUserToken ocUserToken : ocUserTokenList) ocUserTokenService.updateOcUserTokenInvalid(ocUserToken);
+        revokeUserToken(username); // 吊销Token
         OcUserToken ocUserToken = new OcUserToken();
         ocUserToken.setValid(true);
         ocUserToken.setUsername(username);
@@ -158,4 +162,18 @@ public class AuthBaseFacadeImpl implements AuthBaseFacade {
         ocUser.setPassword(stringEncryptor.encrypt(password));
         ocUserService.updateOcUser(ocUser);
     }
+
+    @Override
+    public void authorizedAdminAllRole(OcUser ocUser) {
+        ocAuthRoleService.queryAllOcAuthRole().forEach(e -> {
+            try{
+                OcAuthUserRole ocAuthUserRole = new OcAuthUserRole();
+                ocAuthUserRole.setRoleId(e.getId());
+                ocAuthUserRole.setUsername(ocUser.getUsername());
+                ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
+            }catch (Exception ignored){
+            }
+        });
+    }
+
 }

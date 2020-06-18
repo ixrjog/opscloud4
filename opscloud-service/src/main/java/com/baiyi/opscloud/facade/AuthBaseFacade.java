@@ -35,4 +35,12 @@ public interface AuthBaseFacade {
      * @param password
      */
     void setOcUserPassword(OcUser ocUser, String password);
+
+
+    /**
+     * 授权管理员所有角色
+     *
+     * @param ocUser
+     */
+    void authorizedAdminAllRole(OcUser ocUser);
 }
