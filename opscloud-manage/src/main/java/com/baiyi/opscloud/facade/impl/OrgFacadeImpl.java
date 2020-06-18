@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.bo.OrgDepartmentMemberBO;
 import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.decorator.DepartmentDecorator;
 import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
 import com.baiyi.opscloud.decorator.OrgDecorator;
@@ -26,6 +27,7 @@ import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -146,8 +148,7 @@ public class OrgFacadeImpl implements OrgFacade {
         }
         return BusinessWrapper.SUCCESS;
     }
-
-
+    
     /**
      * 插入节点内部
      *
@@ -159,7 +160,7 @@ public class OrgFacadeImpl implements OrgFacade {
         List<OcOrgDepartment> children = queryDepartmentByParentId(dropDept.getId());
         draggingDept.setParentId(dropDept.getId());
         draggingDept.setDeptOrder(0);
-        if (children != null && !children.isEmpty()) {
+        if (!CollectionUtils.isEmpty(children)) {
             for (int i = 1; i < children.size() + 1; i++) {
                 children.get(i).setDeptOrder(i);
                 ocOrgDepartmentService.updateOcOrgDepartment(children.get(i));
@@ -178,11 +179,17 @@ public class OrgFacadeImpl implements OrgFacade {
     public BusinessWrapper<Boolean> addDepartment(OrgDepartmentVO.Department department) {
         OcOrgDepartment ocOrgDepartment = BeanCopierUtils.copyProperties(department, OcOrgDepartment.class);
         ocOrgDepartment.setDeptOrder(128);
-        if (department.getParentId() == null || department.getParentId() <= 0)
-            ocOrgDepartment.setParentId(1);
+        tryRootDept(ocOrgDepartment);
         ocOrgDepartment.setDeptHiding(0);
         ocOrgDepartmentService.addOcOrgDepartment(ocOrgDepartment);
         return BusinessWrapper.SUCCESS;
+    }
+
+    private void tryRootDept(OcOrgDepartment ocOrgDepartment) {
+        if (IDUtils.isEmpty(ocOrgDepartment.getParentId()))
+            ocOrgDepartment.setParentId(1);
+        if (CollectionUtils.isEmpty(ocOrgDepartmentService.queryOcOrgDepartmentByParentId(0)))
+            ocOrgDepartment.setParentId(0);
     }
 
     @Override
@@ -230,36 +237,41 @@ public class OrgFacadeImpl implements OrgFacade {
     public DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId) {
         List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
         List<TreeVO.DeptTree> tree = departmentDecorator.deptListToTree(deptList);
-        DepartmentTreeVO.DepartmentTree departmentTree = DepartmentTreeVO.DepartmentTree.builder()
+        return DepartmentTreeVO.DepartmentTree.builder()
                 .parentId(ROOT_PARENT_ID)
                 .tree(tree)
                 .build();
-        return departmentTree;
     }
 
     @Override
     public OrgChartVO.OrgChart queryOrgChart(int parentId) {
-        if (parentId == QUERY_BY_SETTING) {
-            String id = settingFacade.querySetting(SettingName.ORG_DEPT_ID);
-            parentId = Integer.valueOf(id);
+        try {
+            if (parentId == QUERY_BY_SETTING) {
+                String id = settingFacade.querySetting(SettingName.ORG_DEPT_ID);
+                parentId = Integer.parseInt(id);
+            }
+            List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
+            List<OrgChartVO.Children> children = orgDecorator.deptListToChart(deptList);
+            OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(parentId);
+            return OrgChartVO.OrgChart.builder()
+                    .id(parentId)
+                    .children(children)
+                    .name(queryLeaderName(parentId))
+                    .title(ocOrgDepartment.getName())
+                    .build();
+        } catch (Exception e) {
+            return OrgChartVO.OrgChart.builder().build();
         }
-        List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
-        List<OrgChartVO.Children> children = orgDecorator.deptListToChart(deptList);
+    }
+
+    private String queryLeaderName(int parentId) {
         OcOrgDepartmentMember ocOrgDepartmentMember = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByLeader(parentId);
-        String name = "空缺";
         if (ocOrgDepartmentMember != null) {
             OcUser ocUser = ocUserService.queryOcUserById(ocOrgDepartmentMember.getUserId());
             if (ocUser != null)
-                name = ocUser.getDisplayName();
+                return ocUser.getDisplayName();
         }
-        OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(parentId);
-        OrgChartVO.OrgChart orgChart = OrgChartVO.OrgChart.builder()
-                .id(parentId)
-                .children(children)
-                .name(name)
-                .title(ocOrgDepartment.getName())
-                .build();
-        return orgChart;
+        return "空缺";
     }
 
     private List<OcOrgDepartment> queryDepartmentByParentId(int parentId) {
@@ -365,7 +377,7 @@ public class OrgFacadeImpl implements OrgFacade {
     @Override
     public BusinessWrapper<Boolean> checkUserInTheDepartment() {
         List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userFacade.getOcUserBySession().getId());
-        if (members == null || members.size() == 0)
+        if (CollectionUtils.isEmpty(members))
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT);
         return BusinessWrapper.SUCCESS;
     }
