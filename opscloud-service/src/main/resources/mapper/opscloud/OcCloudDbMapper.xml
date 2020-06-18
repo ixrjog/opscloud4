@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudDbMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudDb">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="uid" jdbcType="VARCHAR" property="uid" />
+    <result column="account_name" jdbcType="VARCHAR" property="accountName" />
+    <result column="cloud_db_type" jdbcType="INTEGER" property="cloudDbType" />
+    <result column="region_id" jdbcType="VARCHAR" property="regionId" />
+    <result column="db_instance_id" jdbcType="VARCHAR" property="dbInstanceId" />
+    <result column="db_instance_description" jdbcType="VARCHAR" property="dbInstanceDescription" />
+    <result column="db_instance_type" jdbcType="VARCHAR" property="dbInstanceType" />
+    <result column="engine" jdbcType="VARCHAR" property="engine" />
+    <result column="engine_version" jdbcType="VARCHAR" property="engineVersion" />
+    <result column="zone" jdbcType="VARCHAR" property="zone" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="db_instance_status" jdbcType="VARCHAR" property="dbInstanceStatus" />
+    <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
+    <result column="instance_network_type" jdbcType="VARCHAR" property="instanceNetworkType" />
+    <result column="connection_mode" jdbcType="VARCHAR" property="connectionMode" />
+    <result column="db_instance_net_type" jdbcType="VARCHAR" property="dbInstanceNetType" />
+    <result column="db_Instance_storage_type" jdbcType="VARCHAR" property="dbInstanceStorageType" />
+    <result column="db_Instance_class" jdbcType="VARCHAR" property="dbInstanceClass" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="category" jdbcType="VARCHAR" property="category" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+
+  <select id="fuzzyQueryOcCloudDbByParam" parameterType="com.baiyi.opscloud.domain.param.cloud.CloudDBParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_cloud_db
+    <where>
+      <if test="cloudDbType != null">
+        cloud_db_type = #{cloudDbType}
+      </if>
+      <if test="queryName != null and queryName != ''">
+        and uid like "%" #{queryName} "%"
+        or account_name like "%" #{queryName} "%"
+        or db_instance_id like "%" #{queryName} "%"
+        or db_instance_description like "%" #{queryName} "%"
+        or engine_version like "%" #{queryName} "%"
+        or zone like "%" #{queryName} "%"
+      </if>
+    </where>
+  </select>
+
+</mapper>

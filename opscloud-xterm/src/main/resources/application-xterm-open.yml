@@ -1,0 +1,6 @@
+# auditPath 审计日志目录
+# openAudit false|true 开启审计日志
+
+xterm:
+  auditPath: /data/opscloud-data/xterm/audit
+  openAudit: true

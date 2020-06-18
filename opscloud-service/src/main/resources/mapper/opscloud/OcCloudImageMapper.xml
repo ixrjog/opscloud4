@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudImageMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudImage">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="uid" jdbcType="VARCHAR" property="uid"/>
+        <result column="account_name" jdbcType="VARCHAR" property="accountName"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="image_id" jdbcType="VARCHAR" property="imageId"/>
+        <result column="image_name" jdbcType="VARCHAR" property="imageName"/>
+        <result column="image_size" jdbcType="INTEGER" property="imageSize"/>
+        <result column="cloud_type" jdbcType="INTEGER" property="cloudType"/>
+        <result column="image_owner_alias" jdbcType="VARCHAR" property="imageOwnerAlias"/>
+        <result column="is_supportIo_optimized" jdbcType="INTEGER" property="isSupportioOptimized"/>
+        <result column="is_support_cloudinit" jdbcType="INTEGER" property="isSupportCloudinit"/>
+        <result column="os_name" jdbcType="VARCHAR" property="osName"/>
+        <result column="os_name_en" jdbcType="VARCHAR" property="osNameEn"/>
+        <result column="architecture" jdbcType="VARCHAR" property="architecture"/>
+        <result column="image_status" jdbcType="VARCHAR" property="imageStatus"/>
+        <result column="creation_time" jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="os_type" jdbcType="VARCHAR" property="osType"/>
+        <result column="platform" jdbcType="VARCHAR" property="platform"/>
+        <result column="is_active" jdbcType="INTEGER" property="isActive"/>
+        <result column="is_deleted" jdbcType="INTEGER" property="isDeleted"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+        <result column="image_detail" jdbcType="LONGVARCHAR" property="imageDetail"/>
+    </resultMap>
+
+    <select id="fuzzyQueryOcCloudImageByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.CloudImageParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_cloud_image
+        <where>
+            <if test="cloudType != null">
+                cloud_type = #{cloudType}
+            </if>
+            <if test="isActive != null and isActive != -1">
+                and is_active = #{isActive}
+            </if>
+            <if test="isDeleted != null and isDeleted != -1">
+                and is_deleted = #{isDeleted}
+            </if>
+            <if test="regionId != null and regionId != ''">
+                and region_id = #{regionId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( image_id like "%" #{queryName} "%"
+                or image_name like "%" #{queryName} "%"
+                or os_name like "%" #{queryName} "%"
+                or os_name_en like "%" #{queryName} "%"
+                or platform like "%" #{queryName} "%" )
+            </if>
+        </where>
+        order by creation_time desc
+    </select>
+
+</mapper>

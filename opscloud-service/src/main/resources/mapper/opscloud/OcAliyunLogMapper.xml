@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunLogMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunLog">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="account_uid" jdbcType="VARCHAR" property="accountUid"/>
+        <result column="project" jdbcType="VARCHAR" property="project"/>
+        <result column="logstore" jdbcType="VARCHAR" property="logstore"/>
+        <result column="config" jdbcType="VARCHAR" property="config"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAliyunLogByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunLogParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_log
+        <where>
+            <if test="queryName != null and queryName != ''">
+                project like "%" #{queryName} "%"
+                or logstore like "%" #{queryName} "%"
+                or config like "%" #{queryName} "%"
+            </if>
+        </where>
+        order by replace( project , #{queryName} , '' )
+    </select>
+
+</mapper>

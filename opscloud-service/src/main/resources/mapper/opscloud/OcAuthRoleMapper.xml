@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAuthRoleMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
+        <result column="access_level" jdbcType="INTEGER" property="accessLevel"/>
+        <result column="resource_name" jdbcType="VARCHAR" property="resourceName"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAuthRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.RoleParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_auth_role
+        <where>
+            <if test="roleName != null and roleName != ''">
+                role_name like "%" #{roleName} "%"
+            </if>
+            <if test="resourceName != null and resourceName != ''">
+                and resource_name like "%" #{resourceName} "%"
+            </if>
+        </where>
+    </select>
+
+    <select id="queryTopOcAuthRoleByUsername" resultMap="BaseResultMap">
+       select * from oc_auth_role
+          where id in ( select role_id from oc_auth_user_role where username = #{username} )
+          order by access_level desc
+          limit 1
+    </select>
+
+    <select id="queryOcAuthRoleAccessLevelByUsername" resultType="java.lang.Integer">
+        select access_level from oc_auth_role
+        where id in ( select role_id from oc_auth_user_role where username = #{username} )
+        order by access_level desc limit 1
+    </select>
+
+    <!--    工单票据查询用户可以申请的角色列表-->
+    <select id="queryUserTicketOcAuthRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.RoleParam$UserTicketOcAuthRoleQuery"
+            resultMap="BaseResultMap">
+        select * from oc_auth_role
+        where
+           in_workorder = 1
+           --  排除本人已申请的角色
+           and id not in ( select role_id from oc_auth_user_role where username = #{username} )
+           --  排除ticket中的role_id
+           and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+           <if test="queryName != null and queryName != ''">
+              and role_name like "%" #{queryName} "%"
+           </if>
+    </select>
+
+
+
+
+
+</mapper>

@@ -1,0 +1,7 @@
+# version : API版本目前支持4.0
+zabbix:
+  version: 4.0
+  url: http://zabbix.opscloud.top/api_jsonrpc.php
+  user: zabbix
+  password: zabbix
+  zone: office

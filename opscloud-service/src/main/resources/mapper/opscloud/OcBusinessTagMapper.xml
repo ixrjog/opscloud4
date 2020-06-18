@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcBusinessTagMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="business_id" jdbcType="INTEGER" property="businessId"/>
+        <result column="tag_id" jdbcType="INTEGER" property="tagId"/>
+        <result column="business_type" jdbcType="INTEGER" property="businessType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcBusinessTagByUniqueKey"
+            parameterType="com.baiyi.opscloud.domain.vo.tag.BusinessTagVO$BusinessTag"
+            resultMap="BaseResultMap">
+       select * from oc_business_tag
+           where business_id = #{businessId}
+           and tag_id = #{tagId}
+           and business_type = #{businessType}
+    </select>
+
+    <delete id="deleteOcBusinessTagByUniqueKey"
+            parameterType="com.baiyi.opscloud.domain.vo.tag.BusinessTagVO$BusinessTag">
+       delete from oc_business_tag
+            where business_id = #{businessId}
+            and tag_id = #{tagId}
+            and business_type = #{businessType}
+    </delete>
+
+</mapper>

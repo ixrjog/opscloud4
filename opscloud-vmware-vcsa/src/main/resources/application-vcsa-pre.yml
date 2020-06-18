@@ -1,0 +1,7 @@
+# VMware vCenter Server Application
+
+vcsa:
+  host: 10.200.1.51:4430
+  user: administrator@sso.ops.yangege.cn
+  password: ENC(QPa0W2QKde5T8+pwA7tuBiLOQWyVDFN4)
+  zone: office

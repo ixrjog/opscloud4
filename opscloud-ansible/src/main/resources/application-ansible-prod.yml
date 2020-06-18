@@ -1,0 +1,24 @@
+# 生产环境 CentOS 7
+# yum install ansible
+
+# https://docs.ansible.com/ansible/latest/reference_appendices/config.html
+# ansible.cfg
+# 忽略主机文件中的特殊字符比如`-`
+# force_valid_group_names = ignore
+# 禁用警告信息
+# deprecation_warnings = False
+
+# inventoryPath: ${dataPath}/inventory
+# scriptPath: ${dataPath}/script
+# playbookPath: ${dataPath}/playbook
+# privateKey: ${dataPath}/private_key/id_rsa
+
+# 开发者建议: 虽然可以自定义路径，但建议使用oc数据目录下的相对路径
+# oc数据目录 /data/opscloud-data oc集群服务器可用NAS存储
+# 例如 /data/opscloud-data/ansible
+ansible:
+  version: 2.9.6
+  bin: /bin/ansible
+  dataPath: /data/opscloud-data/ansible
+  playbookBin: /bin/ansible-playbook
+  logPath: /data/opscloud-data/log/ansible

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerGroupTypeMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcServerGroupType">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="grp_type" jdbcType="INTEGER" property="grpType" />
+    <result column="color" jdbcType="VARCHAR" property="color" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
+  </resultMap>
+
+  <select id="queryOcServerGroupTypeByParam"
+          parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_server_group_type
+    <where>
+      <if test="name != null and name != ''">
+        and name like "%" #{name} "%"
+      </if>
+      <if test="grpType != null and grpType >= 0">
+        and grp_type = #{grpType}
+      </if>
+    </where>
+  </select>
+
+</mapper>

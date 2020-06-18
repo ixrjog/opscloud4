@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcUserMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcUser">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="uuid" jdbcType="VARCHAR" property="uuid"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="display_name" jdbcType="VARCHAR" property="displayName"/>
+        <result column="email" jdbcType="VARCHAR" property="email"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="last_login" jdbcType="TIMESTAMP" property="lastLogin"/>
+        <result column="wechat" jdbcType="VARCHAR" property="wechat"/>
+        <result column="phone" jdbcType="VARCHAR" property="phone"/>
+        <result column="created_by" jdbcType="VARCHAR" property="createdBy"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryByUsername" resultMap="BaseResultMap">
+        select * from oc_user where username = #{username}
+    </select>
+
+    <select id="queryOcUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$UserPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_user
+        <where>
+            <if test="username != null and username != ''">
+                username like "%" #{username} "%"
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+        </where>
+    </select>
+
+    <select id="fuzzyQueryUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$UserPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_user
+        <where>
+            <if test="queryName != null and queryName != ''">
+               ( username like "%" #{queryName} "%"
+                or name like "%" #{queryName} "%"
+                or display_name like "%" #{queryName} "%"
+                or email like "%" #{queryName} "%"
+                or phone like "%" #{queryName} "%"
+                or wechat like "%" #{queryName} "%" )
+            </if>
+            <if test="isActive != null">
+                and is_active = #{isActive}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateBaseUser">
+        update oc_user
+        <trim prefix="set" suffixOverrides=",">
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="password != null and password != ''">
+                password = #{password},
+            </if>
+            <if test="displayName != null and displayName != ''">
+                display_name = #{displayName},
+            </if>
+            <if test="email != null and email != ''">
+                email = #{email},
+            </if>
+            <if test="phone != null and phone != ''">
+                phone = #{phone},
+            </if>
+            <if test="wechat != null">
+                wechat = #{wechat},
+            </if>
+            <if test="comment != null">
+                comment = #{comment},
+            </if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <!--  business_type = 4 userGroup-->
+    <select id="queryOcUserByUserGroupId" resultMap="BaseResultMap">
+        select * from oc_user
+           where id in ( select user_id from oc_user_permission where business_type = 4 and business_id = #{userGroupId} )
+    </select>
+
+
+</mapper>

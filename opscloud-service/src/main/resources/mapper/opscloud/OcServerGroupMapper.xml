@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcServerGroupMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="grp_type" jdbcType="INTEGER" property="grpType"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        <where>
+            <if test="name != null and name != ''">
+                and name like "%" #{name} "%"
+            </if>
+            <if test="grpType != null and grpType >= 0">
+                and grp_type = #{grpType}
+            </if>
+        </where>
+        order by replace( name, #{name}, '' )
+    </select>
+
+    <!--  oc_user_permission  2-->
+    <select id="queryUserOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$UserServerGroupPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        where id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId})
+    </select>
+
+    <select id="queryUserExcludeOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$UserServerGroupPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        where id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId})
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
+    </select>
+
+    <!--    business_type = 2 serverGroup-->
+    <select id="queryUserPermissionOcServerGroupByUserId" resultMap="BaseResultMap">
+        select * from oc_server_group
+        where id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
+    </select>
+
+    <select id="queryUserPermissionOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserServerTreeParam$UserServerTreeQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        <where>
+            <if test="userId != null and userId > 0">
+                id in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} )
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and name like "%" #{queryName} "%"
+            </if>
+            <if test="grpType != null and grpType > 0">
+                and grp_type = #{grpType}
+            </if>
+        </where>
+        order by replace( name, #{queryName}, '' )
+    </select>
+
+    <!--    工单票据查询用户可以申请的服务器组列表-->
+    <select id="queryUserTicketOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$UserTicketOcServerGroupQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        <where>
+            in_workorder = 1
+            <if test="queryName != null and queryName != ''">
+                and name like "%" #{queryName} "%"
+            </if>
+            -- 排除用户已授权的服务器组
+            <!--  and id not in ( select business_id from oc_user_permission where business_type = 2 and user_id = #{userId} ) -->
+            -- 排除ticket中的服务器组
+            and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id =
+            #{workorderTicketId} )
+        </where>
+        order by replace( name, #{queryName}, '' )
+    </select>
+
+    <select id="queryLogMemberOcServerGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerGroupParam$LogMemberServerGroupQuery"
+            resultMap="BaseResultMap">
+        select * from oc_server_group
+        <where>
+            -- 排除LogMember中的服务器组
+            id not in ( select server_group_id from oc_aliyun_log_member where log_id = #{logId} )
+            <if test="queryName != null and queryName != ''">
+             and ( name like "%" #{queryName} "%" or comment like "%" #{queryName} "%" )
+            </if>
+        </where>
+        order by replace( name, #{queryName}, '' )
+    </select>
+
+</mapper>

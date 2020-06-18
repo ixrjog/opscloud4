@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKeyboxMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKeybox">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="system_user" jdbcType="VARCHAR" property="systemUser" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="passphrase" jdbcType="VARCHAR" property="passphrase" />
+    <result column="key_type" jdbcType="INTEGER" property="keyType" />
+    <result column="default_key" jdbcType="INTEGER" property="defaultKey" />
+    <result column="fingerprint" jdbcType="VARCHAR" property="fingerprint" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="public_key" jdbcType="LONGVARCHAR" property="publicKey" />
+    <result column="private_key" jdbcType="LONGVARCHAR" property="privateKey" />
+  </resultMap>
+
+
+  <select id="queryOcKeyboxByParam"
+          parameterType="com.baiyi.opscloud.domain.param.keybox.KeyboxParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_keybox
+    <where>
+      <if test="querySystemUser != null and querySystemUser != ''">
+        system_user like "%" #{querySystemUser} "%"
+      </if>
+    </where>
+  </select>
+
+</mapper>

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcEnvMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcEnv">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="env_name" jdbcType="VARCHAR" property="envName" />
+    <result column="env_type" jdbcType="INTEGER" property="envType" />
+    <result column="color" jdbcType="VARCHAR" property="color" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+  <select id="queryOcEnvByParam"
+          parameterType="com.baiyi.opscloud.domain.param.env.EnvParam$PageQuery"
+          resultMap="BaseResultMap">
+    select * from oc_env
+    <where>
+      <if test="envName != null and envName!= ''">
+        and env_name like "%" #{envName} "%"
+      </if>
+      <if test="envType != null and envType >= 0">
+        and env_type = #{envType}
+      </if>
+    </where>
+  </select>
+
+</mapper>

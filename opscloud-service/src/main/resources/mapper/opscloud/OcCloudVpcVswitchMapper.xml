@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudVpcVswitchMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcVswitch">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="zone_id" jdbcType="VARCHAR" property="zoneId"/>
+        <result column="vpc_id" jdbcType="VARCHAR" property="vpcId"/>
+        <result column="vswitch_name" jdbcType="VARCHAR" property="vswitchName"/>
+        <result column="vswitch_id" jdbcType="VARCHAR" property="vswitchId"/>
+        <result column="vswitch_status" jdbcType="VARCHAR" property="vswitchStatus"/>
+        <result column="cidr_block" jdbcType="VARCHAR" property="cidrBlock"/>
+        <result column="cloud_type" jdbcType="INTEGER" property="cloudType"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="creation_time" jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="available_ip_address_count" jdbcType="INTEGER" property="availableIpAddressCount"/>
+        <result column="is_active" jdbcType="INTEGER" property="isActive"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryOcCloudVpcVswitchByVpcIdAndZoneIds" resultMap="BaseResultMap">
+        select * from oc_cloud_vpc_vswitch
+        where is_active = 1 and vpc_id = #{vpcId}
+        and zone_id in
+        <foreach collection="zoneIds" item="zoneId" index="index" open="(" close=")" separator=",">
+            #{zoneId}
+        </foreach>
+    </select>
+
+    <select id="queryOcCloudVPCSecurityGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.CloudVPCVSwitchParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_cloud_vpc_vswitch
+        <where>
+            <if test="isActive != null and isActive != -1">
+                and is_active = #{isActive}
+            </if>
+            <if test="vpcId != null and vpcId != ''">
+                and vpc_id = #{vpcId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( vswitch_id like "%" #{queryName} "%"
+                or vswitch_name like "%" #{queryName} "%"
+                or zone_id like "%" #{queryName} "%"
+                or cidr_block like "%" #{queryName} "%"
+                or description like "%" #{queryName} "%" )
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

@@ -1,0 +1,36 @@
+server:
+  servlet:
+    context-path: /oc3
+spring:
+  profiles:
+    active: @env@
+    include: common
+  http:
+    encoding:
+      force: true
+      charset: utf-8
+      enabled: true
+  jackson:
+    time-zone: GMT+8
+  jmx:
+    enabled: false
+
+mapper:
+  mappers:
+    - tk.mybatis.mapper.common.Mapper
+  not-empty: true
+  identity: MYSQL
+  before: false
+
+pagehelper:
+  helper-dialect: mysql
+  reasonable: true
+  support-methods-arguments: true
+  params: count=countSql
+
+# mybatis
+mybatis:
+  type-aliases-package: com.baiyi.opscloud.domain
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    map-underscore-to-camel-case: true

@@ -1,0 +1,27 @@
+# 阿里云AK配置
+# uid 企业别名（主账户id）
+# regionIds 数组可以写多个
+
+aliyun:
+  accounts:
+    -
+      uid: 1000000000000001
+      master: true
+      name: '主账户'
+      accessKeyId: YOUR_ACCESS_KEY_ID
+      secret: YOUR_SECRET_KEY
+      regionId: cn-hangzhou
+      regionIds:
+        - cn-hangzhou
+        - cn-hongkong
+        - us-west-1
+        - cn-shanghai
+    -
+      uid: 1000000000000002
+      master: false
+      name: '第2账户'
+      accessKeyId: YOUR_ACCESS_KEY_ID
+      secret: YOUR_SECRET_KEY
+      regionId: cn-hangzhou
+      regionIds:
+        - cn-hangzhou

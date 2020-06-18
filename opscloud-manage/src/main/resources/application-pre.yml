@@ -1,0 +1,57 @@
+logging:
+  path: /logs/opscloud
+  level:
+    # swagger 警告日志忽略
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+
+# 白名单配置
+white:
+  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
+
+opscloud:
+  version: 3.0
+  openTask: true
+
+spring:
+  profiles:
+    include: common,account-pre,zabbix-pre,ldap-pre,jumpserver-pre,aliyun-pre,aws-pre,gitlab-pre,vcsa-pre,cloud,ansible-pre,xterm-pre
+  redis:
+    host: 127.0.0.1
+    port: 6379
+    jedis:
+      pool:
+        max-wait: 5000
+        max-idle: 20
+        max-active: 100
+        min-idle: 0
+    password:
+  jackson:
+    time-zone: GMT+8
+
+app:
+  datasource:
+    opscloud:
+      url: jdbc:mysql://rm-bp1x04709pb2t44p4125010.mysql.rds.aliyuncs.com:3306/opscloud-pre?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=UTC&allowMultiQueries=true
+      username: opscloud_pre
+      password: ENC(tphcAyBC3+vzEgnFf8ZCPAiSLbaUDWxsqH0vtw5uujo=)
+      driver-class-name: com.mysql.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 15
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
+    jumpserver:
+      url: ENC(Es1I9fzvijR2ExH5OQPALDWDcazs0XJz2nULeHtGJ344E1hFLHne2E4kPQqhgJYATwoX98bMhMWKBy9NtSoEB03U/aqVpskwNsKBQU9b6eujeiwnigLacHzbrEipJUtX9Pk3HCYuh1w5QP0g+AwQdxhLOu/smxsvc36yzR121IPZoDJ+FpXT64U+2BPlLnfK)
+      username: jumpserver2
+      password: ENC(pB1+m3990SC/Kk89SIPr7rcLyYCfBPyDB9+F/5Xa9isM6hPubAz3CUX6zUioNIkq)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 15
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
+
+
+# java -jar -Djasypt.encryptor.password=${password}
+#jasypt:
+#  encryptor:
+#    password: ${password}
+

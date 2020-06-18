@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudVpcSecurityGroupMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcCloudVpcSecurityGroup">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="vpc_id" jdbcType="VARCHAR" property="vpcId"/>
+        <result column="security_group_name" jdbcType="VARCHAR" property="securityGroupName"/>
+        <result column="security_group_id" jdbcType="VARCHAR" property="securityGroupId"/>
+        <result column="security_group_type" jdbcType="VARCHAR" property="securityGroupType"/>
+        <result column="cloud_type" jdbcType="INTEGER" property="cloudType"/>
+        <result column="description" jdbcType="VARCHAR" property="description"/>
+        <result column="creation_time" jdbcType="TIMESTAMP" property="creationTime"/>
+        <result column="is_active" jdbcType="INTEGER" property="isActive"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryOcCloudVPCSecurityGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.CloudVPCSecurityGroupParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_cloud_vpc_security_group
+        <where>
+            <if test="isActive != null and isActive != -1">
+                and is_active = #{isActive}
+            </if>
+            <if test="vpcId != null and vpcId != ''">
+                and vpc_id = #{vpcId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( security_group_name like "%" #{queryName} "%"
+                or security_group_id like "%" #{queryName} "%"
+                or description like "%" #{queryName} "%" )
+            </if>
+        </where>
+    </select>
+
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunLogMemberMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunLogMember">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="log_id" jdbcType="INTEGER" property="logId"/>
+        <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId"/>
+        <result column="server_group_name" jdbcType="VARCHAR" property="serverGroupName"/>
+        <result column="topic" jdbcType="VARCHAR" property="topic"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="last_push_time" jdbcType="TIMESTAMP" property="lastPushTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAliyunLogMemberByParam"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunLogMemberParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_log_member
+        <where>
+            log_id = #{logId}
+            <if test="queryName != null and queryName != ''">
+              and ( server_group_name like "%" #{queryName} "%" or topic like "%" #{queryName} "%" )
+            </if>
+        </where>
+        order by replace( server_group_name , #{queryName} , '' )
+    </select>
+
+</mapper>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcUserGroupMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcUserGroup">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="grp_type" jdbcType="INTEGER" property="grpType"/>
+        <result column="source" jdbcType="VARCHAR" property="source"/>
+        <result column="in_workorder" jdbcType="INTEGER" property="inWorkorder"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryOcUserGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_user_group
+        <where>
+            <if test="name != null and name != ''">
+                and name like "%" #{name} "%"
+            </if>
+            <if test="grpType != null">
+                and grp_type = #{grpType}
+            </if>
+        </where>
+    </select>
+
+    <!--  oc_user_permission  4-->
+    <select id="queryUserOcUserGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam$UserUserGroupPageQuery"
+            resultMap="BaseResultMap">
+       select * from oc_user_group
+       where id in ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId})
+    </select>
+
+    <select id="queryUserExcludeOcUserGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam$UserUserGroupPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_user_group
+        where id not in ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId})
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
+    </select>
+
+    <select id="queryOcUserGroupByUserId" resultMap="BaseResultMap">
+        select * from oc_user_group where id in
+        ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId} )
+    </select>
+
+    <!--    工单票据查询用户可以申请的用户组列表-->
+    <select id="queryUserTicketOcUserGroupByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam$UserTicketOcUserGroupQuery"
+            resultMap="BaseResultMap">
+        select * from oc_user_group
+        where
+            in_workorder = 1
+            and id not in ( select business_id from oc_user_permission where business_type = 4 and user_id = #{userId})
+            --  排除ticket中的服务器组
+            and id not in ( select business_id from oc_workorder_ticket_entry where workorder_ticket_id = #{workorderTicketId} )
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
+    </select>
+
+
+</mapper>
