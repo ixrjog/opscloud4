@@ -21,7 +21,7 @@ public class UserParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class UserPageQuery extends PageParam {
 
         @ApiModelProperty(value = "模糊查询")
         private String queryName;

@@ -31,7 +31,7 @@ public class UserTest extends BaseUnit {
 
     @Test
     void updateUsersUuid() {
-        UserParam.PageQuery pageQuery = new UserParam.PageQuery();
+        UserParam.UserPageQuery pageQuery = new UserParam.UserPageQuery();
         pageQuery.setUsername("");
         pageQuery.setLength(10000);
         pageQuery.setPage(1);

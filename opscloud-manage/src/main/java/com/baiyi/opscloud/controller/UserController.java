@@ -47,8 +47,14 @@ public class UserController {
      */
     @ApiOperation(value = "分页查询user列表")
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<UserVO.User>> queryUserPage(@Valid UserParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<UserVO.User>> queryUserPage(@Valid UserParam.UserPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页模糊查询用户列表")
+    @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<UserVO.User>> fuzzyQueryUserPage(@RequestBody @Valid UserParam.UserPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.fuzzyQueryUserPage(pageQuery));
     }
 
     @ApiOperation(value = "查询user详情")
@@ -73,12 +79,6 @@ public class UserController {
     @PutMapping(value = "/reinstate",  produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> beReinstatedUser( @Valid int id) {
         return new HttpResult<>(userFacade.beReinstatedUser(id));
-    }
-
-    @ApiOperation(value = "分页查询user列表")
-    @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<UserVO.User>> fuzzyQueryUserPage(@RequestBody @Valid UserParam.PageQuery pageQuery) {
-        return new HttpResult<>(userFacade.fuzzyQueryUserPage(pageQuery));
     }
 
     @ApiOperation(value = "获取一个随机密码")

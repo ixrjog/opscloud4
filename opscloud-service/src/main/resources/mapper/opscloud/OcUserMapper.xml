@@ -27,7 +27,7 @@
         select * from oc_user where username = #{username}
     </select>
 
-    <select id="queryOcUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery"
+    <select id="queryOcUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$UserPageQuery"
             resultMap="BaseResultMap">
         select * from oc_user
         <where>
@@ -40,7 +40,7 @@
         </where>
     </select>
 
-    <select id="fuzzyQueryUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$PageQuery"
+    <select id="fuzzyQueryUserByParam" parameterType="com.baiyi.opscloud.domain.param.user.UserParam$UserPageQuery"
             resultMap="BaseResultMap">
         select * from oc_user
         <where>

@@ -93,7 +93,7 @@ public class UserFacadeImpl implements UserFacade {
     private ServerGroupFacade serverGroupFacade;
 
     @Override
-    public DataTable<UserVO.User> queryUserPage(UserParam.PageQuery pageQuery) {
+    public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         if (pageQuery.getIsActive() == null)
             pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
@@ -113,7 +113,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery) {
+    public DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.UserPageQuery pageQuery) {
         if (pageQuery.getIsActive() == null)
             pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.fuzzyQueryUserByParam(pageQuery);

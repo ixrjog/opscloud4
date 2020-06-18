@@ -25,9 +25,9 @@ public interface OcUserService {
 
     void delOcUserByUsername(String username);
 
-    DataTable<OcUser> queryOcUserByParam(UserParam.PageQuery pageQuery);
+    DataTable<OcUser> queryOcUserByParam(UserParam.UserPageQuery pageQuery);
 
-    DataTable<OcUser> fuzzyQueryUserByParam(UserParam.PageQuery pageQuery);
+    DataTable<OcUser> fuzzyQueryUserByParam(UserParam.UserPageQuery pageQuery);
 
     List<OcUser> queryOcUserByUserGroupId(int userGroupId);
 

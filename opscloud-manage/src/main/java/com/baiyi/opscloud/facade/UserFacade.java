@@ -19,13 +19,13 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
  */
 public interface UserFacade {
 
-    DataTable<UserVO.User> queryUserPage(UserParam.PageQuery pageQuery);
+    DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery);
 
     UserVO.User queryUserDetail();
 
     UserVO.User queryUserDetailByUsername(String username);
 
-    DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.PageQuery pageQuery);
+    DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.UserPageQuery pageQuery);
 
     BusinessWrapper<UserApiTokenVO.UserApiToken> applyUserApiToken(UserApiTokenVO.UserApiToken userApiToken);
 
