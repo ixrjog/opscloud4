@@ -304,7 +304,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
                 .filter(g -> ocServerService.countByServerGroupId(g.getId()) != 0).collect(Collectors.toList());
         // 缓存
         Map<String, String> serverTreeHostPatternMap = Maps.newHashMap();
-
         List<TreeVO.Tree> treeList = Lists.newArrayList();
         AtomicInteger treeSize = new AtomicInteger();
 

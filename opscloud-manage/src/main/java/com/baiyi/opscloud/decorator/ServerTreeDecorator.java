@@ -4,11 +4,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.ServerBaseFacade;
-import com.baiyi.opscloud.facade.ServerFacade;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -20,9 +18,6 @@ import java.util.stream.Collectors;
  */
 @Component
 public class ServerTreeDecorator {
-
-    @Resource
-    private ServerFacade serverFacade;
 
     public TreeVO.Tree decorator(OcServerGroup ocServerGroup, Map<String, List<OcServer>> serverGroupMap) {
         List<TreeVO.Tree> childrens = serverGroupMap.keySet().stream().map(subName -> TreeVO.Tree.builder()
@@ -44,11 +39,14 @@ public class ServerTreeDecorator {
         return serverList.stream().map(this::apply).collect(Collectors.toList());
     }
 
-    private TreeVO.Tree apply(OcServer e) {
-        String serverName = ServerBaseFacade.acqServerName(e);
+    private TreeVO.Tree apply(OcServer server) {
+        String serverName = ServerBaseFacade.acqServerName(server);
         return TreeVO.Tree.builder()
                 .id(serverName)
-                .label(Joiner.on(":").join(serverName, e.getPrivateIp()))
+                .disabled(!server.getIsActive())
+                .label(Joiner.on(":").join(serverName, server.getPrivateIp()))
                 .build();
     }
+
+
 }
