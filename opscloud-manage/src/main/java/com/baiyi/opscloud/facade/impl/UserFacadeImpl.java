@@ -79,12 +79,14 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private OcUserApiTokenService ocUserApiTokenService;
 
-
     @Resource
     private AuthBaseFacade ocAuthFacade;
 
     @Resource
     private AuthFacade authFacade;
+
+    @Resource
+    private UserFacade userFacade;
 
     @Resource
     private OcUserCredentialService ocUserCredentialService;
@@ -369,7 +371,7 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery) {
-        OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
+        OcUser ocUser = userFacade.getOcUserBySession();
         userServerTreeQuery.setUserId(ocUser.getId());
         return serverGroupFacade.queryUserServerTree(userServerTreeQuery, ocUser);
     }

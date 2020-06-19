@@ -6,6 +6,9 @@
 \cp pom.xml /Users/liangjian/Documents/workspace/baiyi/opscloud-github/
 \cp README.md /Users/liangjian/Documents/workspace/baiyi/opscloud-github/
 \cp opscloud.iml /Users/liangjian/Documents/workspace/baiyi/opscloud-github/
+\cp -r ./other /Users/liangjian/Documents/workspace/baiyi/opscloud-github/
+
+
 
 \cp -r ./opscloud-* /Users/liangjian/Documents/workspace/baiyi/opscloud-gitee/
 \cp .gitignore /Users/liangjian/Documents/workspace/baiyi/opscloud-gitee/

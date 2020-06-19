@@ -18,6 +18,7 @@ public class TreeVO {
     public static class Tree {
         private String id;
         private String label;
+        private Boolean disabled;
         private List<TreeVO.Tree> children;
     }
 
