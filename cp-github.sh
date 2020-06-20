@@ -17,3 +17,5 @@
 \cp pom.xml /Users/liangjian/Documents/workspace/baiyi/opscloud-gitee/
 \cp README.md /Users/liangjian/Documents/workspace/baiyi/opscloud-gitee/
 \cp opscloud.iml /Users/liangjian/Documents/workspace/baiyi/opscloud-gitee/
+\cp -r ./other /Users/liangjian/Documents/workspace/baiyi/opscloud-gitee/
+
