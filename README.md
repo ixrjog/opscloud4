@@ -13,8 +13,8 @@ Opscloud面向云的DevOps平台，为企业内的研发提供运维服务
 开源协议：<a style="color:#2b669a" href="http://www.gnu.org/licenses/old-licenses/gpl-2.0.html" target="_blank">GNU General Public License v2</a>
 
 ### 帮助文档
-https://www.kancloud.cn/ixrjog/opscloud/1780645
-<a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud/1780645" target="_blank">帮助文档 https://www.kancloud.cn/ixrjog/opscloud/1780645</a>
+
+<a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud/1780645" target="_blank">帮助文档: https://www.kancloud.cn/ixrjog/opscloud/1780645</a>
 
 ### 最佳用户体验
   + 显示器分辨率大于或等于1080P
