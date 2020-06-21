@@ -96,8 +96,6 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
-        if (pageQuery.getIsActive() == null)
-            pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.queryOcUserByParam(pageQuery);
         return toUserPage(table, pageQuery.getExtend());
     }
@@ -116,8 +114,6 @@ public class UserFacadeImpl implements UserFacade {
 
     @Override
     public DataTable<UserVO.User> fuzzyQueryUserPage(UserParam.UserPageQuery pageQuery) {
-        if (pageQuery.getIsActive() == null)
-            pageQuery.setIsActive(true);
         DataTable<OcUser> table = ocUserService.fuzzyQueryUserByParam(pageQuery);
         return toUserPage(table, pageQuery.getExtend());
     }

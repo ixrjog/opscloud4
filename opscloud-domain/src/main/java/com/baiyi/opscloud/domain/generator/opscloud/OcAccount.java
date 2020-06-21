@@ -69,6 +69,8 @@ public class OcAccount {
      */
     private String phone;
 
+    @Column(name = "ssh_key")
+    private Integer sshKey;
     /**
      * 创建时间
      */
@@ -313,6 +315,14 @@ public class OcAccount {
      */
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public Integer getSshKey() {
+        return sshKey;
+    }
+
+    public void setSshKey(Integer sshKey) {
+        this.sshKey = sshKey;
     }
 
     /**

@@ -32,7 +32,7 @@ public class UserParam {
         @ApiModelProperty(value = "用户名")
         private String username;
 
-        @ApiModelProperty(value = "是否激活，默认为true")
+        @ApiModelProperty(value = "是否激活")
         private Boolean isActive;
 
     }

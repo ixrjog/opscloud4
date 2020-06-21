@@ -32,7 +32,6 @@ public class AliyunCoreImpl implements AliyunCore {
        return BeanCopierUtils.copyListProperties(getAccounts(),AliyunAccountVO.AliyunAccount.class);
     }
 
-
     @Override
     public List<AliyunAccount> getAccounts() {
         return aliyunCoreConfig.getAccounts();

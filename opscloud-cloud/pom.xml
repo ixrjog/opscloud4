@@ -36,6 +36,10 @@
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-vmware-vcsa</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-tencent-cloud-cvm</artifactId>
+        </dependency>
 
         <!--cloud-db-->
         <dependency>

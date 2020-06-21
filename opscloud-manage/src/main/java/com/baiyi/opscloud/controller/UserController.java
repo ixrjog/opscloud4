@@ -70,14 +70,14 @@ public class UserController {
     }
 
     @ApiOperation(value = "离职")
-    @PutMapping(value = "/retire",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> retireUser( @Valid int id) {
+    @PutMapping(value = "/retire", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> retireUser(@RequestParam @Valid int id) {
         return new HttpResult<>(userFacade.retireUser(id));
     }
 
     @ApiOperation(value = "复职")
-    @PutMapping(value = "/reinstate",  produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> beReinstatedUser( @Valid int id) {
+    @PutMapping(value = "/reinstate", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> beReinstatedUser(@RequestParam @Valid int id) {
         return new HttpResult<>(userFacade.beReinstatedUser(id));
     }
 

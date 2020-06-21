@@ -79,11 +79,11 @@ public class AliyunRAMTest extends BaseUnit {
     void testCreateRamUser() {
         // "1267986359450069"  "1255805305757185"
         // modao
-        OcUser ocUser = ocUserService.queryOcUserByUsername("ouyanggw");
+        OcUser ocUser = ocUserService.queryOcUserByUsername("jiaoteng");
         String passwd = "";
         ocUser.setPassword(passwd);
         System.err.println(passwd);
-        BusinessWrapper<OcAliyunRamUser> wrapper = aliyunRAMUserCenter.createRamUser("1267986359450069", ocUser);
+        BusinessWrapper<OcAliyunRamUser> wrapper = aliyunRAMUserCenter.createRamUser("1255805305757185", ocUser);
         System.err.println(JSON.toJSONString(wrapper));
     }
 

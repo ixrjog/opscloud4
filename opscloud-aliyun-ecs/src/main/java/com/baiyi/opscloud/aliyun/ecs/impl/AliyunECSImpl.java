@@ -13,7 +13,6 @@ import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,9 +34,8 @@ public class AliyunECSImpl implements AliyunECS {
     @Override
     public List<DescribeInstancesResponse.Instance> getInstanceList() {
         List<String> regionIds = aliyunCore.getRegionIds();
-        List<DescribeInstancesResponse.Instance> instanceList = new ArrayList<>();
-        for (String regionId : regionIds)
-            instanceList.addAll(aliyunECSHandler.getInstanceList(regionId));
+        List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
+        regionIds.forEach(e -> instanceList.addAll(aliyunECSHandler.getInstanceList(e)));
         return instanceList;
     }
 

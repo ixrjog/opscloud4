@@ -14,7 +14,7 @@ opscloud:
 
 spring:
   profiles:
-    include: common,account-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud,ansible-prod,xterm-prod
+    include: common,account-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud,ansible-prod,xterm-prod,tencent-cloud-prod
   redis:
     host: ENC(sBuaHDKOePEPRK1vHNSljfdIJ/74yA0UdxZSwHcV1v4JO72BD25l7McR88uLE6RcZPiZFhjh4Qg=)
     port: 6379

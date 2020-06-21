@@ -1,0 +1,10 @@
+tencent:
+  cloud:
+    account:
+      uid: 100000000001
+      secretId: YOUR_SECRET_ID
+      secretKey: YOUR_SECRET_KEY
+      regionId: ap-shanghai
+      zones:
+        - ap-shanghai-1
+        - ap-shanghai-2
