@@ -34,7 +34,6 @@ public class ServerTaskController {
     @Resource
     private ServerTaskFacade serverTaskFacade;
 
-
     @ApiOperation(value = "分页查询任务列表")
     @PostMapping(value = "/history/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<ServerTaskVO.ServerTask>> queryTaskHistoryPage(@RequestBody @Valid ServerTaskHistoryParam.PageQuery pageQuery) {

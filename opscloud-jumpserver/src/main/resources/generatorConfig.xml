@@ -109,7 +109,7 @@
 <!--        assets_asset-->
 <!--        terminal-->
 <!--        terminal_session-->
-        <table tableName="terminal_session">
+        <table tableName="ops_adhoc_hosts">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

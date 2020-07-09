@@ -1,8 +1,9 @@
 logging:
-  path: /logs/opscloud
   level:
     # swagger 警告日志忽略
     io.swagger.models.parameters.AbstractSerializableParameter: error
+  file:
+    path: /logs/opscloud
 
 # 白名单配置
 white:
@@ -14,7 +15,7 @@ opscloud:
 
 spring:
   profiles:
-    include: common,account-pre,zabbix-pre,ldap-pre,jumpserver-pre,aliyun-pre,aws-pre,gitlab-pre,vcsa-pre,cloud,ansible-pre,xterm-pre,tencent-cloud-pre
+    include: common,account-pre,zabbix-pre,ldap-pre,jumpserver-pre,aliyun-pre,aws-pre,gitlab-pre,vcsa-pre,cloud,ansible-pre,xterm-pre,tencent-cloud-pre,kubernetes-pre
   redis:
     host: 127.0.0.1
     port: 6379

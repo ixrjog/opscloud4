@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.ldap.entry.Person;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
+import org.gitlab.api.models.GitlabUser;
 
 /**
  * @Author baiyi
@@ -26,25 +27,35 @@ public class UserBuilder {
     }
 
     public static OcUser build(ZabbixUser zabbixUser) {
-        UserBO ocUserBO = UserBO.builder()
+        UserBO bo = UserBO.builder()
                 .username(zabbixUser.getAlias())
                 .displayName(zabbixUser.getName())
                 .source("zabbix")
                 .build();
-        return convert(ocUserBO);
+        return convert(bo);
     }
 
     public static OcUser build(OpscloudAdmin admin) {
-        UserBO ocUserBO = UserBO.builder()
+        UserBO bo = UserBO.builder()
                 .username(admin.getUsername())
                 .displayName(admin.getUsername())
                 .source("local")
                 .build();
-        return convert(ocUserBO);
+        return convert(bo);
     }
 
+    public static OcUser build(GitlabUser gitlabUser) {
+        UserBO bo = UserBO.builder()
+                .username(gitlabUser.getUsername())
+                .displayName(gitlabUser.getName())
+                .email(gitlabUser.getEmail())
+                .isActive("active".equals(gitlabUser.getState()))
+                .source("gitlab")
+                .build();
+        return convert(bo);
+    }
 
-    private static OcUser convert(UserBO bo){
+    private static OcUser convert(UserBO bo) {
         return BeanCopierUtils.copyProperties(bo, OcUser.class);
     }
 

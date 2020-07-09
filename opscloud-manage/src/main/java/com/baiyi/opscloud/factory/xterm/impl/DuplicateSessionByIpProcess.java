@@ -44,6 +44,7 @@ public class DuplicateSessionByIpProcess extends BaseProcess implements IXTermPr
 
         JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), baseMessage.getDuplicateInstanceId());
 
+        assert jSchSession != null;
         String host = jSchSession.getHostSystem().getHost();
         boolean isAdmin = isOps(ocUser);
         HostSystem hostSystem = buildHostSystem(ocUser, host, baseMessage, isAdmin);

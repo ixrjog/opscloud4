@@ -58,5 +58,28 @@ public class TencentCloudCVMHandler extends BaseTencentCloudCVM {
         }
     }
 
+    /**
+     * 查询所有CVM实例
+     *
+     * @return
+     */
+    public Instance getInstance(String instanceId) {
+        try {
+            // 实例化一个cvm实例信息查询请求对象,每个接口都会对应一个request对象。
+            DescribeInstancesRequest req = new DescribeInstancesRequest();
+            // 填充请求参数,这里request对象的成员变量即对应接口的入参
+            // 你可以通过官网接口文档或跳转到request对象的定义处查看请求参数的定义
+            Filter respFilter = new Filter(); // 创建Filter对象, 以zone的维度来查询cvm实例
+            respFilter.set("instance-id", instanceId);
+            req.setFilters(new Filter[]{respFilter}); // Filters 是成员为Filter对象的列表
+            req.setOffset(0L);
+            req.setLimit(1L);
+            DescribeInstancesResponse resp = cvmClient.DescribeInstances(req);
+            return resp.getInstanceSet()[0];
+        } catch (TencentCloudSDKException e) {
+            return null;
+        }
+    }
+
 
 }

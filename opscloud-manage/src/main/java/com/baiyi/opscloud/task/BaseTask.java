@@ -3,7 +3,6 @@ package com.baiyi.opscloud.task;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.config.OpscloudConfig;
 import com.baiyi.opscloud.task.util.TaskUtil;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -27,20 +26,31 @@ public abstract class BaseTask {
     @Resource
     private OpscloudConfig opscloudConfig;
 
-    protected boolean tryLock(int lockMinute) {
-        if (!opscloudConfig.getOpenTask()) return false;
-        if (taskUtil.tryLock(getLock())) return false;
-        taskUtil.lock(getLock(), lockMinute);
-        log.info(Joiner.on(": ").join(getTaskName(), "开始执行！"));
-        return true;
+    private static final int LOCK_MINUTE = 5;
+
+    /**
+     * 尝试加锁
+     *
+     * @return
+     */
+    protected boolean tryLock() {
+        if (!opscloudConfig.getOpenTask()) return true;
+        if (taskUtil.tryLock(getLock())) return true;
+        taskUtil.lock(getLock(), getLockMinute());
+        log.info("{} : 开始执行!", getTaskName());
+        return false;
     }
 
     protected void unlock() {
         taskUtil.unlock(getLock());
-        log.info(Joiner.on(": ").join(getTaskName(), "执行结束！"));
+        log.info("{} : 执行结束!", getTaskName());
     }
 
     abstract String getLock();
 
     abstract String getTaskName();
+
+    protected int getLockMinute() {
+        return LOCK_MINUTE;
+    }
 }

@@ -7,8 +7,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 
-import static com.baiyi.opscloud.common.base.Topic.TASK_ALIYUN_LOG_TOPIC;
-
 /**
  * @Author baiyi
  * @Date 2020/4/10 3:50 下午
@@ -31,7 +29,7 @@ public class AttributeTask extends BaseTask {
     @Scheduled(initialDelay = 10000, fixedRate = 60 * 1000)
     public void createAnsibleHostsConsumerTask() {
         if (taskUtil.getSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC) == 0) return;
-        if (!tryLock(5)) return;
+        if (tryLock()) return;
         clearTopic();
         attributeFacade.createAnsibleHostsTask();
         unlock();

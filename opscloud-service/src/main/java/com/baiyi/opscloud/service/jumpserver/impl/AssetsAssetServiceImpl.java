@@ -51,6 +51,11 @@ public class AssetsAssetServiceImpl implements AssetsAssetService {
     }
 
     @Override
+    public List<AssetsAsset> queryAll() {
+        return assetsAssetMapper.selectAll();
+    }
+
+    @Override
     public void updateAssetsAsset(AssetsAsset assetsAsset) {
         assetsAssetMapper.updateByPrimaryKey(assetsAsset);
     }

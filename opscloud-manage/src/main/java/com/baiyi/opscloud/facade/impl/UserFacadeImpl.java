@@ -11,8 +11,8 @@ import com.baiyi.opscloud.common.base.URLResource;
 import com.baiyi.opscloud.common.util.*;
 import com.baiyi.opscloud.convert.UserApiTokenConvert;
 import com.baiyi.opscloud.convert.UserCredentialConvert;
-import com.baiyi.opscloud.decorator.UserDecorator;
-import com.baiyi.opscloud.decorator.UserGroupDecorator;
+import com.baiyi.opscloud.decorator.user.UserDecorator;
+import com.baiyi.opscloud.decorator.user.UserGroupDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -207,30 +207,34 @@ public class UserFacadeImpl implements UserFacade {
         BusinessWrapper<Boolean> wrapper = enhancedAuthority(checkUser.getId(), URLResource.USER_UPDATE);
         if (!wrapper.isSuccess())
             return wrapper;
-        OcUser ocUser = BeanCopierUtils.copyProperties(updateUser, OcUser.class);
+        OcUser preUser = BeanCopierUtils.copyProperties(updateUser, OcUser.class);
         String password = ""; // 用户密码原文
         // 用户尝试修改密码
-        if (!StringUtils.isEmpty(ocUser.getPassword())) {
-            if (!RegexUtils.checkPasswordRule(ocUser.getPassword()))
-                return new BusinessWrapper<>(ErrorEnum.USER_PASSWORD_NON_COMPLIANCE_WITH_RULES);
-            password = ocUser.getPassword();
+        if (!StringUtils.isEmpty(preUser.getPassword())) {
+            try {
+                RegexUtils.checkPasswordRule(preUser.getPassword());
+            } catch (RuntimeException e) {
+                return new BusinessWrapper<>(11000, e.getMessage());
+            }
+            password = preUser.getPassword();
             // 加密
-            ocUser.setPassword(stringEncryptor.encrypt(password));
+            preUser.setPassword(stringEncryptor.encrypt(password));
         }
         // 校验手机
-        if (!StringUtils.isEmpty(ocUser.getPhone())) {
-            if (!RegexUtils.isPhone(ocUser.getPhone()))
+        if (!StringUtils.isEmpty(preUser.getPhone())) {
+            if (!RegexUtils.isPhone(preUser.getPhone()))
                 return new BusinessWrapper<>(ErrorEnum.USER_PHONE_NON_COMPLIANCE_WITH_RULES);
         }
         // 校验邮箱
-        if (!StringUtils.isEmpty(ocUser.getEmail())) {
-            if (!RegexUtils.isEmail(ocUser.getEmail()))
+        if (!StringUtils.isEmpty(preUser.getEmail())) {
+            if (!RegexUtils.isEmail(preUser.getEmail()))
                 return new BusinessWrapper<>(ErrorEnum.USER_EMAIL_NON_COMPLIANCE_WITH_RULES);
         }
-        ocUserService.updateBaseOcUser(ocUser); // 更新数据库
+        ocUserService.updateBaseOcUser(preUser); // 更新数据库
+        preUser = ocUserService.queryOcUserByUsername(preUser.getUsername());
         if (!StringUtils.isEmpty(password))
-            ocUser.setPassword(password);
-        accountCenter.update(ocUser); // 更新账户中心所有实例
+            preUser.setPassword(password);
+        accountCenter.update(preUser); // 更新账户中心所有实例
         return BusinessWrapper.SUCCESS;
     }
 
@@ -238,8 +242,11 @@ public class UserFacadeImpl implements UserFacade {
     public BusinessWrapper<Boolean> createUser(UserParam.CreateUser createUser) {
         if (!RegexUtils.isUsernameRule(createUser.getUsername()))
             return new BusinessWrapper(ErrorEnum.USER_USERNAME_NON_COMPLIANCE_WITH_RULES);
-        if (!RegexUtils.checkPasswordRule(createUser.getPassword()))
-            return new BusinessWrapper<>(ErrorEnum.USER_PASSWORD_NON_COMPLIANCE_WITH_RULES);
+        try {
+            RegexUtils.checkPasswordRule(createUser.getPassword());
+        } catch (RuntimeException e) {
+            return new BusinessWrapper<>(11000, e.getMessage());
+        }
         OcUser ocUser = BeanCopierUtils.copyProperties(createUser, OcUser.class);
         ocUser.setIsActive(true);
         ocUser.setSource("ldap");
@@ -268,7 +275,7 @@ public class UserFacadeImpl implements UserFacade {
             boolean result = iAccount.grant(ocUser, ocUserGroup.getName());
             if (result)
                 return BusinessWrapper.SUCCESS;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return new BusinessWrapper(ErrorEnum.USER_GRANT_USERGROUP_ERROR);
     }
@@ -286,7 +293,7 @@ public class UserFacadeImpl implements UserFacade {
             boolean result = iAccount.revoke(ocUser, ocUserGroup.getName());
             if (result)
                 return BusinessWrapper.SUCCESS;
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return new BusinessWrapper(ErrorEnum.USER_REVOKE_USERGROUP_ERROR);
     }
@@ -342,7 +349,7 @@ public class UserFacadeImpl implements UserFacade {
                 UserGroupVO.UserGroup userGroup = BeanCopierUtils.copyProperties(userGroupBO, UserGroupVO.UserGroup.class);
                 addUserGroup(userGroup);
                 syncUserGroupPermission(userGroup);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         });
         return BusinessWrapper.SUCCESS;
@@ -361,7 +368,6 @@ public class UserFacadeImpl implements UserFacade {
             if (ocUser != null)
                 syncUserPermission(BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
         });
-
         return BusinessWrapper.SUCCESS;
     }
 
@@ -415,7 +421,7 @@ public class UserFacadeImpl implements UserFacade {
 
     private void syncUserPermission(UserVO.User user) {
         List<UserGroupVO.UserGroup> userGroups = userDecorator.decoratorFromLdapRepo(user, 1).getUserGroups();
-        userPermissionFacade.syncUserBusinessPermission(user.getId(), BusinessType.USERGROUP.getType(), userGroups.stream().map(e -> e.getId()).collect(Collectors.toList()));
+        userPermissionFacade.syncUserBusinessPermission(user.getId(), BusinessType.USERGROUP.getType(), userGroups.stream().map(UserGroupVO.UserGroup::getId).collect(Collectors.toList()));
     }
 
 

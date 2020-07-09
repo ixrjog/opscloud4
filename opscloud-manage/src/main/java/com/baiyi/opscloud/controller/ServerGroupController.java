@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.param.server.SeverGroupPropertyParam;
 import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupPropertyVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
@@ -129,6 +130,12 @@ public class ServerGroupController {
     @GetMapping(value = "/property/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Map<Integer, Map<String, String>>> queryServerGroupProperty(@RequestParam int id) {
         return new HttpResult<>(serverGroupFacade.queryServerGroupPropertyMap(id));
+    }
+
+    @ApiOperation(value = "查询服务器组扩展属性")
+    @PostMapping(value = "/property/set/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<Integer, Map<String, String>>> queryServerGroupPropertyBySet(@RequestBody @Valid SeverGroupPropertyParam.PropertyParam propertyParam) {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupPropertyMap(propertyParam));
     }
 
     @ApiOperation(value = "保存服务器组扩展属性")

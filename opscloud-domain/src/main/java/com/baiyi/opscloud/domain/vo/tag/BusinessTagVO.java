@@ -5,7 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @Author baiyi
@@ -29,7 +29,7 @@ public class BusinessTagVO {
         private Integer tagId;
 
         @ApiModelProperty(value = "标签key")
-        private List<Integer> tagIds;
+        private Set<Integer> tagIds;
 
     }
 }

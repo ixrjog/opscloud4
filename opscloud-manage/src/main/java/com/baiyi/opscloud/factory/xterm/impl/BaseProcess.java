@@ -62,7 +62,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     protected RedisUtil redisUtil;
 
     @Resource
-    protected SettingFacade settingFacade;
+    protected SettingBaseFacade settingFacade;
 
     @Resource
     private XTermConfig xtermConfig;
@@ -88,21 +88,12 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
         boolean loginType = false;
         if (baseMessage.getLoginUserType() == 1) {
-            if (isAdmin) {
-                loginType = true;
-            } else {
-                OcUserPermission checkUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
-                if (checkUserPermission != null)
-                    loginType = true;
-            }
+            loginType = isAdmin || ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission) != null;
         }
 
-        SSHKeyCredential sshKeyCredential;
-        if (loginType) {
-            sshKeyCredential = keyboxFacade.getSSHKeyCredential(settingFacade.querySetting(SettingName.SERVER_HIGH_AUTHORITY_ACCOUNT)); // 高权限
-        } else {
-            sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());  // 普通用户
-        }
+        SSHKeyCredential sshKeyCredential = loginType ? keyboxFacade.getSSHKeyCredential(settingFacade.querySetting(SettingName.SERVER_HIGH_AUTHORITY_ACCOUNT))
+                : keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());
+
         HostSystem hostSystem = new HostSystem();
         hostSystem.setHost(host);
         hostSystem.setSshKeyCredential(sshKeyCredential);
@@ -113,9 +104,7 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
     protected Boolean isBatch(OcTerminalSession ocTerminalSession) {
         Boolean isBatch = JSchSessionMap.getBatchBySessionId(ocTerminalSession.getSessionId());
-        if (isBatch == null)
-            isBatch = Boolean.FALSE;
-        return isBatch;
+        return isBatch == null ? false : isBatch;
     }
 
     protected void closeSessionInstance(OcTerminalSession ocTerminalSession, String instanceId) {
@@ -125,13 +114,16 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
             ocTerminalSessionInstance.setIsClosed(true);
             ocTerminalSessionInstance.setOutputSize(IOUtils.fileSize(xtermConfig.getAuditLogPath(ocTerminalSession.getSessionId(), instanceId)));
             terminalFacade.updateOcTerminalSessionInstance(ocTerminalSessionInstance);
-        } catch (Exception e) {
-
+        } catch (Exception ignored) {
         }
     }
 
     protected void writeAuditLog(OcTerminalSession ocTerminalSession, String instanceId) {
         AuditLogHandler.writeAuditLog(ocTerminalSession.getSessionId(), instanceId);
+    }
+
+    protected void writeCommanderLog(StringBuffer commander, OcTerminalSession ocTerminalSession, String instanceId) {
+        AuditLogHandler.writeCommanderLog(commander, ocTerminalSession.getSessionId(), instanceId);
     }
 
     protected void heartbeat(String sessionId) {

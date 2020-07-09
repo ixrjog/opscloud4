@@ -52,6 +52,15 @@ public class CommandProcess extends BaseProcess implements IXTermProcess {
         JSchSession jSchSession = JSchSessionMap.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) return;
         jSchSession.getCommander().print(cmd);
+
+//        char[] cs = cmd.toCharArray();
+//        for (char c : cs) {
+//            if (c == '\u007F') {
+//                jSchSession.appendCmd("\\b");
+//            } else {
+//                jSchSession.appendCmd(c);
+//            }
+//        }
     }
 
     @Override

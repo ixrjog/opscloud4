@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
-import com.baiyi.opscloud.account.base.AccountType;
+import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUserGroups;
@@ -65,10 +65,9 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
     }
 
     @Override
-    public Boolean sync() {
+    public void sync() {
         List<OcUser> userList = ocUserService.queryOcUserActive();
-        userList.forEach(e -> syncUsersUser(e));
-        return true;
+        userList.forEach(this::syncUsersUser);
     }
 
     @Override
@@ -79,13 +78,14 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
 
     private void syncUsersUser(OcUser ocUser) {
         // 只同步有服务器组授权的用户
-        try{
+        try {
             List<OcServerGroup> serverGroupList = ocServerGroupService.queryUserPermissionOcServerGroupByUserId(ocUser.getId());
             if (serverGroupList.isEmpty()) return;
             UsersUser usersUser = jumpserverCenter.saveUsersUser(ocUser);
             bindUserGroups(usersUser, serverGroupList);
-        }catch (Exception e){
-            log.error("Jumpserver同步用户错误! username = {}; error = {}",ocUser.getUsername() ,e.getMessage());
+            pushSSHKey(ocUser);
+        } catch (Exception e) {
+            log.error("Jumpserver同步用户错误! username = {}; error = {}", ocUser.getUsername(), e.getMessage());
         }
     }
 
@@ -96,10 +96,8 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
      * @param serverGroupList
      */
     private void bindUserGroups(UsersUser usersUser, List<OcServerGroup> serverGroupList) {
-        for (OcServerGroup ocServerGroup : serverGroupList)
-            jumpserverCenter.bindUserGroups(usersUser, ocServerGroup);
+        serverGroupList.forEach(e -> jumpserverCenter.bindUserGroups(usersUser, e));
     }
-
 
     /**
      * 创建
@@ -123,17 +121,24 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
 
     @Override
     public Boolean update(OcUser user) {
-        UsersUser usersUser = jumpserverCenter.saveUsersUser(user);
-        if (usersUser == null)
-            return Boolean.FALSE;
-        return Boolean.TRUE;
+        return jumpserverCenter.saveUsersUser(user) != null;
     }
 
     @Override
     public Boolean grant(OcUser ocUser, String resource) {
         UsersUser usersUser = createUsersUser(ocUser);
-        //UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
         if (usersUser == null) return Boolean.FALSE;
+        return authorize(usersUser, resource, GRANT);
+    }
+
+    @Override
+    public Boolean revoke(OcUser ocUser, String resource) {
+        UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
+        if (usersUser == null) return Boolean.TRUE;
+        return authorize(usersUser, resource, REVOKE);
+    }
+
+    private Boolean authorize(UsersUser usersUser, String resource, boolean action) {
         String name = JumpserverUtils.toUsergroupName(resource);
         UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
         if (usersUsergroup == null) return Boolean.FALSE;
@@ -141,24 +146,11 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
         pre.setUsergroupId(usersUsergroup.getId());
         pre.setUserId(usersUser.getId());
         UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
-        if (usersUserGroups == null)
+        if (usersUserGroups == null && action)
             usersUserGroupsService.addUsersUserGroups(pre);
-        return Boolean.TRUE;
-    }
-
-    @Override
-    public Boolean revoke(OcUser ocUser, String resource) {
-        UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser == null) return Boolean.TRUE;
-        String name = JumpserverUtils.toUsergroupName(resource);
-        UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
-        if (usersUsergroup == null) return Boolean.TRUE;
-        UsersUserGroups pre = new UsersUserGroups();
-        pre.setUsergroupId(usersUsergroup.getId());
-        pre.setUserId(usersUser.getId());
-        UsersUserGroups usersUserGroups = usersUserGroupsService.queryUsersUserGroupsByUniqueKey(pre);
-        if (usersUserGroups != null)
+        if (usersUserGroups != null && !action)
             usersUserGroupsService.delUsersUserGroupsById(usersUserGroups.getId());
+
         return Boolean.TRUE;
     }
 
@@ -181,7 +173,6 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
         if (usersUser == null)
             return false;
         return jumpserverAPI.pushKey(ocUser, usersUser, BeanCopierUtils.copyProperties(credential, UserCredentialVO.UserCredential.class));
-
     }
 
     private UsersUser createUsersUser(OcUser ocUser) {
@@ -208,8 +199,8 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
             if (checkUsersUser.getEmail().equals(ocUser.getEmail())) {
                 usersUser = checkUsersUser;
                 usersUser.setName(ocUser.getDisplayName());
-                usersUser.setPhone(ocUser.getPhone() == null ? "" : ocUser.getPhone());
-                usersUser.setWechat(ocUser.getWechat() == null ? "" : ocUser.getWechat());
+                usersUser.setPhone(StringUtils.isEmpty(ocUser.getPhone()) ? "" : ocUser.getPhone());
+                usersUser.setWechat(StringUtils.isEmpty(ocUser.getWechat()) ? "" : ocUser.getWechat());
                 usersUserService.updateUsersUser(usersUser);
             }
         }

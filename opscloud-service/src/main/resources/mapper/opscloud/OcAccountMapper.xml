@@ -19,6 +19,7 @@
     <result column="last_login" jdbcType="INTEGER" property="lastLogin" />
     <result column="wechat" jdbcType="VARCHAR" property="wechat" />
     <result column="phone" jdbcType="VARCHAR" property="phone" />
+    <result column="ssh_key" jdbcType="INTEGER" property="sshKey" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />

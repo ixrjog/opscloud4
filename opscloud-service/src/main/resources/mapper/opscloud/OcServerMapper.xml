@@ -42,7 +42,7 @@
                 and a0.server_group_id = #{serverGroupId}
             </if>
             <if test="queryIp != null and queryIp != ''">
-                and a0.private_ip like "%" #{queryIp} "%" or a0.public_ip like "%" #{queryIp} "%"
+                and a0.private_ip = #{queryIp} or a0.public_ip = #{queryIp}
             </if>
             <if test="envType != null and envType >= 0">
                 and a0.env_type = #{envType}

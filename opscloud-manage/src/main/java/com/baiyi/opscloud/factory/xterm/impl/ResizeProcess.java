@@ -38,7 +38,7 @@ public class ResizeProcess extends BaseProcess implements IXTermProcess {
         try {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId());
             RemoteInvokeHandler.invokeChannelPtySize((ChannelShell)jSchSession.getChannel(),xtermMessage);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 

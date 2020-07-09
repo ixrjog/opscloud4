@@ -7,10 +7,10 @@
 
 spring:
   ldap:
-    urls: ldap://192.168.1.100:389
+    urls: ldap://127.0.0.1:10389
     base: ou=system
-    username: 'cn=Directory Manager'
-    password: 123456
+    username: 'uid=admin,ou=system'
+    password: secret
 
 ldap:
   custom:  {userId: cn,

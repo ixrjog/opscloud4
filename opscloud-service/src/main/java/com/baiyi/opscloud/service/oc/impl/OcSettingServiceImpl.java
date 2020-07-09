@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -25,5 +26,15 @@ public class OcSettingServiceImpl implements OcSettingService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", name);
         return ocSettingMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<OcSetting> queryAll() {
+        return ocSettingMapper.selectAll();
+    }
+
+    @Override
+    public void updateOcSetting(OcSetting ocSetting) {
+        ocSettingMapper.updateByPrimaryKey(ocSetting);
     }
 }

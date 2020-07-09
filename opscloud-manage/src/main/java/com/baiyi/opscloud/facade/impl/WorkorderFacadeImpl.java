@@ -6,9 +6,9 @@ import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
-import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
-import com.baiyi.opscloud.decorator.WorkorderGroupDecorator;
-import com.baiyi.opscloud.decorator.WorkorderTicketDecorator;
+import com.baiyi.opscloud.decorator.department.DepartmentMemberDecorator;
+import com.baiyi.opscloud.decorator.workorder.WorkorderGroupDecorator;
+import com.baiyi.opscloud.decorator.workorder.WorkorderTicketDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -90,7 +90,6 @@ public class WorkorderFacadeImpl implements WorkorderFacade {
 
     @Resource
     private OcAliyunRamPolicyService ocAliyunRamPolicyService;
-
 
     @Resource
     private OcAliyunRamUserService ocAliyunRamUserService;

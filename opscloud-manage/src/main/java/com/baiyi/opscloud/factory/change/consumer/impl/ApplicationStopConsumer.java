@@ -37,7 +37,7 @@ import java.util.concurrent.TimeUnit;
 @Component
 public class ApplicationStopConsumer extends BaseServerChangeConsumer implements IServerChangeConsumer {
 
-    private static final int APPLICTION_STOP_SCRIPT_ID = 14;
+    private static final int APPLICATION_STOP_SCRIPT_ID = 14;
 
     private static final long TASK_TIMEOUT = 2 * 60 * 1000L;
 
@@ -102,7 +102,7 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
 
     private ServerTaskExecutorParam.ServerTaskScriptExecutor buildTaskExecutorParam(OcServer ocServer) {
         ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = new ServerTaskExecutorParam.ServerTaskScriptExecutor();
-        taskExecutor.setScriptId(APPLICTION_STOP_SCRIPT_ID);
+        taskExecutor.setScriptId(APPLICATION_STOP_SCRIPT_ID);
         taskExecutor.setTaskType(1);
         taskExecutor.setConcurrent(1);
         Set<String> hostPatterns = Sets.newHashSet();

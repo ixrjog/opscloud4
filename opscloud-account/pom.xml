@@ -26,6 +26,10 @@
         </dependency>
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-gitlab</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-service</artifactId>
         </dependency>
         <dependency>

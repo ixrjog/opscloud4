@@ -7,8 +7,6 @@ import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import com.google.common.collect.Lists;
 import org.springframework.util.StringUtils;
 
-import java.util.List;
-
 /**
  * @Author baiyi
  * @Date 2020/3/30 2:07 下午
@@ -53,7 +51,6 @@ public class CreateInstanceRequestBuilder {
         //createInstanceRequest.setPassword(passwd); // 设置系统密码
         // 网络计费类型，按流量计费还是按固定带宽计费。 PayByTraffic（默认）：按使用流量计费。
         // createInstanceRequest.setInternetChargeType("PayByTraffic");
-
         // 磁盘配置/系统盘
         CloudInstanceTemplateVO.DiskDetail sysDisk = createCloudInstance.getCreateCloudInstance().getDisk().getSysDisk();
         createInstanceRequest.setSystemDiskCategory(sysDisk.getCategory());
@@ -64,24 +61,29 @@ public class CreateInstanceRequestBuilder {
             createInstanceRequest.setSystemDiskSize(sysDisk.getSize());
         }
         // 磁盘配置/数据盘
-        CloudInstanceTemplateVO.DiskDetail dataDisk = createCloudInstance.getCreateCloudInstance().getDisk().getDataDisk();
-        if (dataDisk.getSize() > 0) {
-            CreateInstanceRequest.DataDisk disk = new CreateInstanceRequest.DataDisk();
-            dataDisk.setCategory(dataDisk.getCategory());
-            dataDisk.setSize(dataDisk.getSize());
-
-            /**
-             * 数据盘n的磁盘大小（n从1开始编号）。 以GB为单位，取值范围为：
-             cloud：5 ~ 2000
-             cloud_efficiency：20 ~ 32768
-             cloud_ssd：20 ~ 32768
-             ephemeral_ssd：5 ~ 800
-             */
-            List<CreateInstanceRequest.DataDisk> dataDiskList = Lists.newArrayList();
-            dataDiskList.add(disk);
-            createInstanceRequest.setDataDisks(dataDiskList);
-        }
+        invokeDataDisk(createInstanceRequest, createCloudInstance.getCreateCloudInstance().getDisk().getDataDisk());
         return createInstanceRequest;
+    }
+
+    /**
+     * 磁盘配置/数据盘
+     *
+     * @param createInstanceRequest
+     * @param dataDisk
+     */
+    private static void invokeDataDisk(CreateInstanceRequest createInstanceRequest, CloudInstanceTemplateVO.DiskDetail dataDisk) {
+        if (dataDisk.getSize() <= 0) return;
+        CreateInstanceRequest.DataDisk disk = new CreateInstanceRequest.DataDisk();
+        disk.setCategory(dataDisk.getCategory());
+        disk.setSize(dataDisk.getSize());
+        /**
+         * 数据盘n的磁盘大小（n从1开始编号）。 以GB为单位，取值范围为：
+         cloud：5 ~ 2000
+         cloud_efficiency：20 ~ 32768
+         cloud_ssd：20 ~ 32768
+         ephemeral_ssd：5 ~ 800
+         */
+        createInstanceRequest.setDataDisks(Lists.newArrayList(disk));
     }
 
 

@@ -94,8 +94,12 @@ public class AliyunInstanceHandler extends BaseAliyunECS {
         DescribeInstancesRequest describe = new DescribeInstancesRequest();
         describe.setPageSize(QUERY_PAGE_SIZE);
         describe.setStatus("Stopped");
-        DescribeInstancesResponse response = getInstancesResponse(regionId, describe);
-        return response.getInstances();
+        try {
+            DescribeInstancesResponse response = getInstancesResponse(regionId, describe);
+            return response.getInstances();
+        } catch (ClientException ce) {
+            return null;
+        }
     }
 
     public String allocateInstancePublicIp(String regionId, String instanceId) {
@@ -125,14 +129,9 @@ public class AliyunInstanceHandler extends BaseAliyunECS {
     }
 
     @Retryable(value = ClientException.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
-    public DescribeInstancesResponse getInstancesResponse(String regionId, DescribeInstancesRequest describe) {
+    public DescribeInstancesResponse getInstancesResponse(String regionId, DescribeInstancesRequest describe) throws ClientException {
         IAcsClient client = acqAcsClient(regionId);
-        try {
-            return client.getAcsResponse(describe);
-        } catch (ClientException e) {
-            e.printStackTrace();
-            return null;
-        }
+        return client.getAcsResponse(describe);
     }
 
     /**
@@ -177,9 +176,5 @@ public class AliyunInstanceHandler extends BaseAliyunECS {
             return Lists.newArrayList();
         }
     }
-
-
-
-
 
 }

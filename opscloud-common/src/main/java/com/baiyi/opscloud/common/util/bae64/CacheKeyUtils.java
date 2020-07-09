@@ -13,6 +13,11 @@ public class CacheKeyUtils {
         return Joiner.on("#").join(sessionId, instanceId, "auditLog");
     }
 
+    public static String getTermCommanderLogKey(String sessionId, String instanceId) {
+        return Joiner.on("#").join(sessionId, instanceId, "commander");
+    }
+
+
     public static String getTermSessionHeartbeatKey(String sessionId) {
         return Joiner.on("#").join(sessionId, "heartbeat");
     }

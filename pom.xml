@@ -28,6 +28,7 @@
         <module>opscloud-aliyun-log</module>
         <module>opscloud-tencent-cloud-core</module>
         <module>opscloud-tencent-cloud-cvm</module>
+        <module>opscloud-kubernetes</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -292,6 +293,13 @@
                 <artifactId>opscloud-tencent-cloud-cvm</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-kubernetes</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

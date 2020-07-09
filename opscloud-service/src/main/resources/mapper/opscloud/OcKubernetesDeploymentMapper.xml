@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKubernetesDeploymentMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesDeployment">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
+    <result column="instance_id" jdbcType="INTEGER" property="instanceId" />
+    <result column="namespace_id" jdbcType="INTEGER" property="namespaceId" />
+    <result column="namespace" jdbcType="VARCHAR" property="namespace" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="label_app" jdbcType="VARCHAR" property="labelApp" />
+    <result column="available_replicas" jdbcType="INTEGER" property="availableReplicas" />
+    <result column="replicas" jdbcType="INTEGER" property="replicas" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="deployment_detail" jdbcType="LONGVARCHAR" property="deploymentDetail" />
+  </resultMap>
+
+    <select id="queryOcKubernetesDeploymentByParam" parameterType="com.baiyi.opscloud.domain.param.kubernetes.KubernetesDeploymentParam$PageQuery" resultMap="BaseResultMap">
+        select * from oc_kubernetes_deployment
+        <where>
+            <if test="namespaceId != null and namespaceId &gt; 0">
+                namespace_id = #{namespaceId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( name like "%" #{queryName} "%" or label_app like "%" #{queryName} "%" )
+            </if>
+        </where>
+    </select>
+
+
+</mapper>

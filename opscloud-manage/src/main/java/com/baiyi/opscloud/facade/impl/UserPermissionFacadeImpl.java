@@ -30,29 +30,32 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
     @Override
     public void syncUserBusinessPermission(List<UserVO.User> userList, int businessType, int businessId) {
-        try {
-            userList.forEach(e -> {
+        userList.forEach(e -> {
+            try {
                 OcUserPermission ocUserPermission = new OcUserPermission();
                 ocUserPermission.setBusinessType(businessType);
                 ocUserPermission.setBusinessId(businessId);
                 ocUserPermission.setUserId(e.getId());
                 addOcUserPermission(ocUserPermission);
-            });
-        } catch (Exception e) {
-        }
+            } catch (Exception ignored) {
+            }
+        });
     }
 
     @Override
     public void syncUserBusinessPermission(int userId, int businessType, List<Integer> businessIds) {
         try {
             businessIds.forEach(e -> {
-                OcUserPermission ocUserPermission = new OcUserPermission();
-                ocUserPermission.setBusinessType(businessType);
-                ocUserPermission.setBusinessId(e);
-                ocUserPermission.setUserId(userId);
-                addOcUserPermission(ocUserPermission);
+                try {
+                    OcUserPermission ocUserPermission = new OcUserPermission();
+                    ocUserPermission.setBusinessType(businessType);
+                    ocUserPermission.setBusinessId(e);
+                    ocUserPermission.setUserId(userId);
+                    addOcUserPermission(ocUserPermission);
+                } catch (Exception ignored) {
+                }
             });
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
@@ -93,6 +96,15 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
         } else {
             return new BusinessWrapper<>(ErrorEnum.AUTHENTICATION_FAILUER);
         }
+    }
+
+    @Override
+    public boolean tryUserBusinessPermission(int userId, int businessType, int businessId) {
+        OcUserPermission ocUserPermission = new OcUserPermission();
+        ocUserPermission.setBusinessType(businessType);
+        ocUserPermission.setBusinessId(businessId);
+        ocUserPermission.setUserId(userId);
+        return ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission) != null;
     }
 
 }

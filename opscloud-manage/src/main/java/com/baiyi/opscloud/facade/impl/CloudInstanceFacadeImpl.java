@@ -13,9 +13,9 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.CloudInstanceTemplateUtils;
 import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
-import com.baiyi.opscloud.decorator.CloudInstanceTemplateDecorator;
-import com.baiyi.opscloud.decorator.CloudInstanceTypeDecorator;
-import com.baiyi.opscloud.decorator.InstanceTemplateDecorator;
+import com.baiyi.opscloud.decorator.cloud.CloudInstanceTemplateDecorator;
+import com.baiyi.opscloud.decorator.cloud.CloudInstanceTypeDecorator;
+import com.baiyi.opscloud.decorator.cloud.InstanceTemplateDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -160,13 +160,10 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
                 .ocCloudVpcSecurityGroup(ocCloudVpcSecurityGroup)
                 .ocServerGroup(ocServerGroup)
                 .build();
-        OcCloudInstanceTask ocCloudInstanceTask;
+
         OcUser ocUser = ocUserService.queryOcUserByUsername(SessionUtils.getUsername());
-        if (ocUser == null) {
-            ocCloudInstanceTask = CloudInstanceTaskBuilder.build(createCloudInstanceBO);
-        } else {
-            ocCloudInstanceTask = CloudInstanceTaskBuilder.build(createCloudInstanceBO, BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
-        }
+        OcCloudInstanceTask ocCloudInstanceTask = ocUser == null ? CloudInstanceTaskBuilder.build(createCloudInstanceBO)
+                : CloudInstanceTaskBuilder.build(createCloudInstanceBO, BeanCopierUtils.copyProperties(ocUser, UserVO.User.class));
         ocCloudInstanceTaskService.addOcCloudInstanceTask(ocCloudInstanceTask);
         // 执行任务
         cloudInstanceTaskFacade.doCreateInstanceTask(ocCloudInstanceTask, createCloudInstanceBO);

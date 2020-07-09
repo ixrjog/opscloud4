@@ -31,7 +31,6 @@ Opscloud面向云的DevOps平台，为企业内的研发提供运维服务
   + 代码即文档，全接口API
   + 前后端分离，支持跨域部署
   + Java Springboot 开源的DevOps
-  + 这是个人项目，基本也是个人完成，前端用了vue2(d2admin框架非常炫酷)
 
 + 自动化运维特性
   + 外部平台或工具原生API调用

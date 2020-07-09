@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.ServerFacade;
+import com.baiyi.opscloud.server.factory.ServerFactory;
 import com.baiyi.opscloud.service.server.OcServerService;
 import org.junit.jupiter.api.Test;
 
@@ -25,6 +26,13 @@ public class ServerTest extends BaseUnit {
 
     @Resource
     private ServerFacade serverFacade;
+
+    @Test
+    void testJumpserverAssetSync() {
+      IServer iServer = ServerFactory.getIServerByKey("JumpserverAsset");
+      iServer.sync();
+    }
+
 
     @Test
     void test() {

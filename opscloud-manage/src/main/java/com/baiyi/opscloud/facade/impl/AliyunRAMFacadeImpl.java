@@ -6,7 +6,7 @@ import com.baiyi.opscloud.aliyun.ram.handler.AliyunRAMUserPolicyHandler;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMPolicyCenter;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMUserCenter;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.decorator.AliyunRAMDecorator;
+import com.baiyi.opscloud.decorator.aliyun.AliyunRAMDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPolicy;

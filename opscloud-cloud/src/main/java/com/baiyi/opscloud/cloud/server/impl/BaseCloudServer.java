@@ -109,7 +109,7 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
                 addOcCloudServer(instance);
             }
             map.remove(instanceId);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
     }

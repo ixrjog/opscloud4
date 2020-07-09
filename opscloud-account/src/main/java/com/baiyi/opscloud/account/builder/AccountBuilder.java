@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.account.builder;
 
-import com.baiyi.opscloud.account.base.AccountType;
+import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.account.bo.AccountBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
+import org.gitlab.api.models.GitlabUser;
 
 
 /**
@@ -21,6 +22,18 @@ public class AccountBuilder {
                 .displayName(user.getName())
                 .isActive(true)
                 .accountType(AccountType.ZABBIX.getType())
+                .build();
+        return convert(bo);
+    }
+
+    public static OcAccount build(GitlabUser gitlabUser) {
+        AccountBO bo = AccountBO.builder()
+                .accountId(gitlabUser.getId().toString())
+                .username(gitlabUser.getUsername())
+                .displayName(gitlabUser.getName())
+                .email(gitlabUser.getEmail())
+                .isActive("active".equals(gitlabUser.getState()))
+                .accountType(AccountType.GITLAB.getType())
                 .build();
         return convert(bo);
     }

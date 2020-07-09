@@ -21,4 +21,8 @@ public class XTermConfig {
     public String getAuditLogPath(String sessionId,String instanceId){
         return Joiner.on("/").join(auditPath,sessionId,instanceId + ".log");
     }
+
+    public String getCommanderLogPath(String sessionId,String instanceId){
+        return Joiner.on("/").join(auditPath,sessionId,instanceId + "_commander.log");
+    }
 }

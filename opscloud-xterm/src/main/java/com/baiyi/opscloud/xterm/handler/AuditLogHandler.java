@@ -44,4 +44,17 @@ public class AuditLogHandler {
             log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
         }
     }
+
+    public static void writeCommanderLog(StringBuffer commander, String sessionId, String instanceId) {
+        try {
+            String log = new String(commander);
+            log.replaceAll("(\n|\r\n)\\s+", "");
+            while (log.contains("\b")) {
+                log = log.replaceFirst(".\b", ""); // 退格处理
+            }
+            IOUtils.appendFile(log, xtermConfig.getCommanderLogPath(sessionId, instanceId));
+        } catch (Exception e) {
+            log.error("Web终端命令日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
+        }
+    }
 }

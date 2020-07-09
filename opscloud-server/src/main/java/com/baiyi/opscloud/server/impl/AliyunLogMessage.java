@@ -25,8 +25,7 @@ public class AliyunLogMessage extends BaseServer implements IServer {
     private RedisUtil redisUtil;
 
     @Override
-    public Boolean sync() {
-        return true;
+    public void sync() {
     }
 
     @Override

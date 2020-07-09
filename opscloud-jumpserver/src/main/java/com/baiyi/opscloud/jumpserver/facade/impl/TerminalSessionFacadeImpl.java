@@ -27,7 +27,6 @@ public class TerminalSessionFacadeImpl implements TerminalSessionFacade{
     public DataTable<JumpserverTerminalSessionVO.TerminalSession> queryTerminalSessionPage(PageParam pageQuery) {
         DataTable<TerminalSession> table = terminalSessionService.queryTerminalSessionPage(pageQuery);
         List<JumpserverTerminalSessionVO.TerminalSession> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverTerminalSessionVO.TerminalSession.class);
-        DataTable<JumpserverTerminalSessionVO.TerminalSession> dataTable = new DataTable<>(page, table.getTotalNum());
-        return dataTable;
+        return  new DataTable<>(page, table.getTotalNum());
     }
 }

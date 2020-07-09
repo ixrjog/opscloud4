@@ -21,4 +21,6 @@ public interface OcBusinessTagService {
     void addOcBusinessTag(OcBusinessTag ocBusinessTag);
 
     void deleteOcBusinessTagById(int id);
+
+    int countOcTagHasUsed(int tagId);
 }

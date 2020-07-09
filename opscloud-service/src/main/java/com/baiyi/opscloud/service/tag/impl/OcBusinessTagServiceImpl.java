@@ -50,4 +50,12 @@ public class OcBusinessTagServiceImpl implements OcBusinessTagService {
         ocBusinessTagMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public int countOcTagHasUsed(int tagId) {
+        Example example = new Example(OcBusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("tagId", tagId);
+        return ocBusinessTagMapper.selectCountByExample(example);
+    }
+
 }

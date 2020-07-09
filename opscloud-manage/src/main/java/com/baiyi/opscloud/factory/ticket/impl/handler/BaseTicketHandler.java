@@ -3,7 +3,7 @@ package com.baiyi.opscloud.factory.ticket.impl.handler;
 import com.baiyi.opscloud.builder.WorkorderTicketBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
-import com.baiyi.opscloud.decorator.WorkorderTicketDecorator;
+import com.baiyi.opscloud.decorator.workorder.WorkorderTicketDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -17,6 +17,7 @@ import com.baiyi.opscloud.factory.ticket.WorkorderTicketFactory;
 import com.baiyi.opscloud.factory.ticket.entry.ITicketEntry;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketEntryService;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketService;
+import com.baiyi.opscloud.service.user.OcUserService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderService;
 import com.google.gson.JsonSyntaxException;
 import lombok.extern.slf4j.Slf4j;
@@ -42,6 +43,9 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     @Resource
     private OcWorkorderService ocWorkorderService;
 
+    @Resource
+    private OcUserService ocUserService;
+    
     @Resource
     private WorkorderTicketDecorator workorderTicketDecorator;
 
@@ -134,7 +138,6 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
         return ocWorkorderService.queryOcWorkorderByWorkorderKey(acqWorkorderKey());
     }
 
-
     /**
      * 执行器
      *
@@ -147,10 +150,7 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
 
     protected OcUser getUser(int ticketId) {
         OcWorkorderTicket ocWorkorderTicket = getOcWorkorderTicket(ticketId);
-        OcUser ocUser = new OcUser();
-        ocUser.setId(ocWorkorderTicket.getUserId());
-        ocUser.setUsername(ocWorkorderTicket.getUsername());
-        return ocUser;
+        return  ocUserService.queryOcUserById(ocWorkorderTicket.getUserId());
     }
 
     private OcWorkorderTicket getOcWorkorderTicket(int ticketId) {
@@ -176,6 +176,5 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     public void afterPropertiesSet() throws Exception {
         WorkorderTicketFactory.register(this);
     }
-
 
 }

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.factory.ticket.impl.subscribe;
 
 import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.base.TicketSubscribeType;
-import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
+import com.baiyi.opscloud.decorator.department.DepartmentMemberDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;

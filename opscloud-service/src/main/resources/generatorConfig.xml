@@ -154,11 +154,22 @@
        oc_aliyun_ram_permission
        oc_aliyun_log
        oc_aliyun_log_member
+       oc_kubernetes_cluster
+       oc_kubernetes_cluster_namespace
+       oc_kubernetes_deployment
+       oc_kubernetes_template
+       oc_kubernetes_service
+       oc_kubernetes_service_prot
+       oc_kubernetes_application
+       oc_kubernetes_application_instance
+       oc_kubernetes_service
+       oc_profile_subscription
        -->
 
-        <table tableName="oc_aliyun_log_member">
+        <table tableName="oc_profile_subscription">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
+
     </context>
 
 </generatorConfiguration>

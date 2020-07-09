@@ -28,4 +28,5 @@ public interface OcTagService {
     List<OcTag> queryOcTagByParam(TagParam.BusinessQuery businessQuery);
 
     List<OcTag> queryOcTagNotInByParam(TagParam.BusinessQuery businessQuery);
+
 }

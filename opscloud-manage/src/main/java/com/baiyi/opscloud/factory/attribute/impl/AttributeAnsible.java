@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.ServerBaseFacade;
-import com.baiyi.opscloud.facade.SettingFacade;
+import com.baiyi.opscloud.facade.SettingBaseFacade;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -42,7 +42,7 @@ public class AttributeAnsible extends AttributeBase {
     private OcServerService ocServerService;
 
     @Resource
-    private SettingFacade settingFacade;
+    private SettingBaseFacade settingFacade;
 
     @Resource
     private ServerAttributeFacade serverAttributeFacade;

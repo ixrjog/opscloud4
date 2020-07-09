@@ -134,7 +134,7 @@ public class SessionOutputUtil {
         List<SessionOutput> outputList = new ArrayList<>();
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
-            for (String instanceId : userSessionsOutput.getSessionOutputMap().keySet()) {
+            userSessionsOutput.getSessionOutputMap().keySet().forEach(instanceId->{
                 //get output chars and set to output
                 try {
                     SessionOutput sessionOutput = userSessionsOutput.getSessionOutputMap().get(instanceId);
@@ -148,7 +148,7 @@ public class SessionOutputUtil {
                 } catch (Exception ex) {
                     log.error(ex.toString(), ex);
                 }
-            }
+            });
         }
         return outputList;
     }

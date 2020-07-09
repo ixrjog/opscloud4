@@ -13,6 +13,8 @@ public interface OcAccountService {
 
     OcAccount queryOcAccountByAccountId(int accountType, String accountId);
 
+    OcAccount queryOcAccountByUsername(int accountType, String username);
+
     List<OcAccount> queryOcAccountByAccountType(int accountType);
 
     void addOcAccount(OcAccount ocAccount);

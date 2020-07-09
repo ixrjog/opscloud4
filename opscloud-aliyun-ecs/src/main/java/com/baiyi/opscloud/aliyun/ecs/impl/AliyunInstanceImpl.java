@@ -14,6 +14,7 @@ import org.springframework.cache.annotation.Cacheable;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -56,19 +57,17 @@ public class AliyunInstanceImpl implements AliyunInstance {
     public Map<String, Set<String>> getInstanceTypeZoneMap(String regionId) {
         List<DescribeZonesResponse.Zone> list
                 = aliyunInstanceHandler.getZoneList(regionId);
-        Map<String, Set<String>> map = Maps.newHashMap();
-        for (DescribeZonesResponse.Zone zone : list) {
-            for (String type : zone.getAvailableInstanceTypes()) {
-                if (map.containsKey(type)) {
-                    map.get(type).add(zone.getZoneId());
-                } else {
-                    Set<String> set = Sets.newHashSet();
-                    set.add(zone.getZoneId());
-                    map.put(type, set);
-                }
+        Map<String, Set<String>> zoneMap = Maps.newHashMap();
+        list.forEach(zone -> zone.getAvailableInstanceTypes().forEach(t -> {
+            if (zoneMap.containsKey(t)) {
+                zoneMap.get(t).add(zone.getZoneId());
+            } else {
+                Set<String> set = Sets.newHashSet();
+                set.add(zone.getZoneId());
+                zoneMap.put(t, set);
             }
-        }
-        return map;
+        }));
+        return zoneMap;
     }
 
     @Override
@@ -80,7 +79,7 @@ public class AliyunInstanceImpl implements AliyunInstance {
     @Retryable(value = Exception.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
     public DescribeInstancesResponse.Instance getStoppedInstance(String regionId, String hostname) throws Exception {
         List<DescribeInstancesResponse.Instance> instanceList = aliyunInstanceHandler.getStoppedInstance(regionId);
-        if (instanceList == null || instanceList.isEmpty())
+        if (CollectionUtils.isEmpty(instanceList))
             throw new Exception();
         for (DescribeInstancesResponse.Instance instance : instanceList) {
             if (instance.getHostName().equals(hostname))
@@ -112,8 +111,8 @@ public class AliyunInstanceImpl implements AliyunInstance {
     }
 
     @Override
-    public  List<DescribeInstancesResponse.Instance> getInstanceList(String regionId, List<String> instanceIds){
-        return aliyunInstanceHandler.getInstanceList(regionId,instanceIds);
+    public List<DescribeInstancesResponse.Instance> getInstanceList(String regionId, List<String> instanceIds) {
+        return aliyunInstanceHandler.getInstanceList(regionId, instanceIds);
     }
 
 

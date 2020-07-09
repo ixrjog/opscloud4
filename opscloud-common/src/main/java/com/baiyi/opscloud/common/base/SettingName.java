@@ -13,4 +13,8 @@ public class SettingName {
 
     public static final String ORG_DEPT_ID = "ORG_DEPT_ID";
 
+    public static final String JUMPSERVER_ASSETS_ADMINUSER_ID = "JUMPSERVER_ASSETS_ADMINUSER_ID";
+    public static final String JUMPSERVER_ASSETS_SYSTEMUSER_ID = "JUMPSERVER_ASSETS_SYSTEMUSER_ID";
+    public static final String JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID = "JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID";
+
 }

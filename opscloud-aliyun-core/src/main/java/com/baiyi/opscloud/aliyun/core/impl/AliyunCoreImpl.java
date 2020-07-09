@@ -70,8 +70,7 @@ public class AliyunCoreImpl implements AliyunCore {
             defRegionId = regionId;
         }
         IClientProfile profile = DefaultProfile.getProfile(defRegionId, aliyunAccount.getAccessKeyId(), aliyunAccount.getSecret());
-        IAcsClient client = new DefaultAcsClient(profile);
-        return client;
+        return new DefaultAcsClient(profile);
     }
 
     @Override

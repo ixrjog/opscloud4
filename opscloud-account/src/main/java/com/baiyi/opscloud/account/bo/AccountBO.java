@@ -28,6 +28,8 @@ public class AccountBO {
     private Integer lastLogin;
     private String wechat;
     private String phone;
+    @Builder.Default
+    private Integer sshKey = 0;
     private Date createTime;
     private Date updateTime;
     private String comment;

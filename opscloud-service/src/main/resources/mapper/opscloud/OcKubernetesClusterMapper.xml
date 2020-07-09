@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKubernetesClusterMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesCluster">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="master_url" jdbcType="VARCHAR" property="masterUrl"/>
+        <result column="env_type" jdbcType="INTEGER" property="envType"/>
+        <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId"/>
+        <result column="server_group_name" jdbcType="VARCHAR" property="serverGroupName"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+        <result column="kubeconfig" jdbcType="LONGVARCHAR" property="kubeconfig"/>
+    </resultMap>
+
+    <select id="queryOcKubernetesClusterByParam"
+            parameterType="com.baiyi.opscloud.domain.param.kubernetes.KubernetesClusterParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_kubernetes_cluster
+        <where>
+            <if test="queryName != null and queryName != ''">
+                name like "%" #{queryName} "%" or comment like "%" #{queryName} "%"
+            </if>
+        </where>
+    </select>
+
+</mapper>

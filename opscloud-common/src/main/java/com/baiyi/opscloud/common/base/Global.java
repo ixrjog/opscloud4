@@ -20,14 +20,10 @@ public class Global {
     public static final String SERVER_ATTRIBUTE_ZABBIX_SYSDISK_VOLUME_NAME = "zabbix_sysdisk_volume_name";
     public static final String SERVER_ATTRIBUTE_ZABBIX_DATADISK_VOLUME_NAME = "zabbix_datadisk_volume_name";
 
-    // JUMPSERVER
-    public static final String JUMPSERVER_SETTINGS_KEY = "jumpserver:settings";
-    public static final String JUMPSERVER_ASSETS_ADMINUSER_ID_KEY = "assetsAdminuserId";
-    public static final String JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY = "assetsSystemuserId";
-    public static final String JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY = "assetsAdminSystemuserId";
-
 
     public static final String ASYNC_POOL_TASK_EXECUTOR = "asyncPoolTaskExecutor";
+
+    public static final String ASYNC_POOL_TASK_COMMON = "asyncPoolTaskCommon";
 
     public static final String BASE_ROLE_NAME = "base";
 

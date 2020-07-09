@@ -76,8 +76,6 @@ public class AliyunLogMachineGroupHandler extends BaseAliyunLog {
         } catch (LogException lg) {
             return new BusinessWrapper(10000,lg.GetErrorMessage());
         }
-
-
     }
 
     /**

@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKubernetesApplicationInstanceMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesApplicationInstance">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="application_id" jdbcType="INTEGER" property="applicationId"/>
+        <result column="instance_name" jdbcType="VARCHAR" property="instanceName"/>
+        <result column="env_type" jdbcType="INTEGER" property="envType"/>
+        <result column="env_label" jdbcType="VARCHAR" property="envLabel"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="template_variable" jdbcType="LONGVARCHAR" property="templateVariable"/>
+    </resultMap>
+
+    <select id="queryOcKubernetesApplicationInstanceByParam"
+            parameterType="com.baiyi.opscloud.domain.param.kubernetes.KubernetesApplicationInstanceParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_kubernetes_application_instance
+        <where>
+            <if test="queryName != null and queryName != ''">
+                instance_name like "%" #{queryName} "%" or env_label like "%" #{queryName} "%"
+            </if>
+            <if test="envType != null">
+                and env_type = #{envType}
+            </if>
+            <if test="applicationId != null">
+                and application_id = #{applicationId}
+            </if>
+        </where>
+        order by replace( instance_name, #{queryName}, '' )
+    </select>
+
+</mapper>

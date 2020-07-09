@@ -15,6 +15,7 @@
 
   <select id="queryAssetsNodeLastOne" resultMap="BaseResultMap">
      select * from assets_node
+       where `key` like "1:%"
        order by date_create desc
        limit 1
   </select>

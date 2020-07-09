@@ -30,7 +30,7 @@ public class AliyunLogTask extends BaseTask {
     @Scheduled(initialDelay = 10000, fixedRate = 60 * 1000)
     public void aliyunLogPushTask() {
         if (!redisUtil.hasKey(TASK_ALIYUN_LOG_TOPIC)) return;
-        if (!tryLock(5)) return;
+        if (tryLock()) return;
         Set<Integer> keySet = (Set<Integer>) redisUtil.get(TASK_ALIYUN_LOG_TOPIC);
         clearTopic();
         aliyunLogFacade.pushTask(keySet);

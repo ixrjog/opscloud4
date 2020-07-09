@@ -46,7 +46,6 @@ public class LogoutProcess extends BaseProcess implements IXTermProcess {
         jSchSession.setSessionOutput(null);
         jSchSession.setInstanceId(null);
         jSchSession.setHostSystem(null);
-
         jSchSession = null;
         JSchSessionMap.removeSession(ocTerminalSession.getSessionId(), baseMessage.getInstanceId());
     }

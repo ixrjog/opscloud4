@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.aliyun;
 
 import com.alibaba.fastjson.JSON;
+import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeZonesResponse;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.aliyun.core.AliyunCore;
+import com.baiyi.opscloud.aliyun.ecs.AliyunECS;
 import com.baiyi.opscloud.aliyun.ecs.AliyunInstance;
 import com.baiyi.opscloud.aliyun.ecs.base.AliyunInstanceTypeVO;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunInstanceHandler;
@@ -14,6 +15,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.internal.util.collections.Sets;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -35,7 +37,8 @@ public class AliyunInstanceTest extends BaseUnit {
     private  CloudInstanceFacade cloudInstanceFacade;
 
     @Resource
-    private AliyunCore aliyunCore;
+    private AliyunECS aliyunECS;
+
 
     @Test
     void testGetType() {
@@ -69,6 +72,15 @@ public class AliyunInstanceTest extends BaseUnit {
     @Test
     void testSyncType(){
         cloudInstanceFacade.syncInstanceType(CloudType.ALIYUN.getType());
+    }
+
+
+    @Test
+    void testGetInstanceList(){
+        System.err.println(new Date());
+        List<DescribeInstancesResponse.Instance> list = aliyunECS.getInstanceList();
+        System.err.println(new Date());
+        System.err.println(list);
     }
 
 

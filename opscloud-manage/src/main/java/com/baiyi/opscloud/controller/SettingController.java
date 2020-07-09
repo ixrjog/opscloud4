@@ -1,14 +1,13 @@
 package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.HttpResult;
-import com.baiyi.opscloud.facade.SettingFacade;
+import com.baiyi.opscloud.domain.param.setting.SettingParam;
+import com.baiyi.opscloud.facade.SettingBaseFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.Map;
@@ -24,12 +23,24 @@ import java.util.Map;
 public class SettingController {
 
     @Resource
-    private SettingFacade settingFacade;
+    private SettingBaseFacade settingFacade;
 
     @ApiOperation(value = "查询全局配置")
     @GetMapping(value = "/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Map<String, String>> queryServerGroupProperty(@RequestParam String name) {
+    public HttpResult<Map<String, String>> querySettingMap(@RequestParam String name) {
         return new HttpResult<>(settingFacade.querySettingMap(name));
+    }
+
+    @ApiOperation(value = "查询全局配置")
+    @GetMapping(value = "/all/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, String>> querySettingMap() {
+        return new HttpResult<>(settingFacade.querySettingMap());
+    }
+
+    @ApiOperation(value = "更新全局配置")
+    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateSetting(@RequestBody @Validated SettingParam.UpdateSettingParam updateSettingParam) {
+        return new HttpResult<>(settingFacade.updateSetting(updateSettingParam));
     }
 
 }

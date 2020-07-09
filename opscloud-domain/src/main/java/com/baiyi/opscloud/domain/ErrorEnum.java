@@ -169,7 +169,14 @@ public enum ErrorEnum {
 
     SERVER_CHANGE_TASK_RUNNING(60001, "当前服务器变更任务执行中！"),
     SERVER_CHANGE_TASK_RESUBMISSION(60001, "当前服务器变更任务重复提交！"),
-    SERVER_CHANGE_TASK_GROUP_ID_INCORRECT(60001, "服务器组id不正确！")
+    SERVER_CHANGE_TASK_GROUP_ID_INCORRECT(60001, "服务器组id不正确！"),
+
+    KUBERNETES_NAMESPACE_NOT_EXIST(70001, "Kubernetes命名空间不存在！"),
+    KUBERNETES_CLUSTER_NOT_EXIST(70001, "Kubernetes集群不存在！"),
+    KUBERNETES_CREATE_DEPLOYMENT_ERROR(70001, "Kubernetes创建Deployment错误！"),
+    KUBERNETES_DELETE_DEPLOYMENT_ERROR(70001, "Kubernetes删除Deployment错误！"),
+    KUBERNETES_CREATE_SERVICE_ERROR(70001, "Kubernetes创建Service错误！"),
+    KUBERNETES_DELETE_SERVICE_ERROR(70001, "Kubernetes删除Service错误！"),
     ;
 
     private int code;

@@ -98,5 +98,4 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
         return -1;
     }
 
-
 }

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.common.util.MenuUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
-import com.baiyi.opscloud.decorator.ResourceDecorator;
+import com.baiyi.opscloud.decorator.auth.ResourceDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;

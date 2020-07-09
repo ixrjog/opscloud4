@@ -23,16 +23,13 @@ import java.util.List;
 @Component
 public class AliyunECSHandler extends BaseAliyunECS {
 
-
     @Resource
     private AliyunInstanceHandler aliyunInstanceHandler;
 
     public List<DescribeInstanceAutoRenewAttributeResponse.InstanceRenewAttribute> getInstanceRenewAttribute(String regionId, DescribeInstanceAutoRenewAttributeRequest describe) {
         IAcsClient client = acqAcsClient(regionId);
         try {
-            DescribeInstanceAutoRenewAttributeResponse response
-                    = client.getAcsResponse(describe);
-            return response.getInstanceRenewAttributes();
+            return client.getAcsResponse(describe).getInstanceRenewAttributes();
         } catch (ClientException e) {
             e.printStackTrace();
             return null;
@@ -40,8 +37,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
     }
 
     public DescribeDisksResponse getDisksResponse(String regionId, DescribeDisksRequest request) {
-        IAcsClient client;
-        client = acqAcsClient(regionId);
+        IAcsClient client = acqAcsClient(regionId);
         try {
             return client.getAcsResponse(request);
         } catch (Exception e) {
@@ -49,8 +45,6 @@ public class AliyunECSHandler extends BaseAliyunECS {
             return null;
         }
     }
-
-
 
     public DescribeInstancesResponse.Instance getInstance(String regionId, String instanceId) {
         DescribeInstancesRequest describe = new DescribeInstancesRequest();
@@ -69,15 +63,15 @@ public class AliyunECSHandler extends BaseAliyunECS {
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         try {
             DescribeInstancesRequest describe = new DescribeInstancesRequest();
-            describe.setPageSize(QUERY_PAGE_SIZE);
-            int size = QUERY_PAGE_SIZE;
+            describe.setPageSize(QUERY_INSTANCE_PAGE_SIZE);
+            int size = QUERY_INSTANCE_PAGE_SIZE;
             int pageNumber = 1;
             // 循环取值
-            while (QUERY_PAGE_SIZE <= size) {
+            while (QUERY_INSTANCE_PAGE_SIZE <= size) {
                 describe.setPageNumber(pageNumber);
                 DescribeInstancesResponse response = aliyunInstanceHandler.getInstancesResponse(regionId, describe);
                 instanceList.addAll(response.getInstances());
-                size = response.getTotalCount();
+                size = response.getInstances() != null ? response.getInstances().size() : 0;
                 pageNumber++;
             }
         } catch (Exception e) {
@@ -85,25 +79,6 @@ public class AliyunECSHandler extends BaseAliyunECS {
         }
         return instanceList;
     }
-//    public List<DescribeInstancesResponse.Instance> getInstanceList(String regionId) {
-//        List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
-//        DescribeInstancesRequest describe = new DescribeInstancesRequest();
-//        describe.setPageSize(QUERY_PAGE_SIZE);
-//        DescribeInstancesResponse response = getInstancesResponse(regionId, describe);
-//        instanceList.addAll(response.getInstances());
-//        //cacheInstanceRenewAttribute(regionId, response);
-//        // 获取总数
-//        int totalCount = response.getTotalCount();
-//        // 循环次数
-//        int cnt = (totalCount + QUERY_PAGE_SIZE - 1) / QUERY_PAGE_SIZE;
-//        for (int i = 1; i < cnt; i++) {
-//            describe.setPageNumber(i + 1);
-//            response = getInstancesResponse(regionId, describe);
-//            instanceList.addAll(response.getInstances());
-//            //cacheInstanceRenewAttribute(regionId, response);
-//        }
-//        return instanceList;
-//    }
 
     public BusinessWrapper<Boolean> start(String regionId, String instanceId) {
         try {

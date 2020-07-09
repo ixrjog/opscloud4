@@ -73,15 +73,12 @@ public class TagFacadeImpl implements TagFacade {
         OcTag ocTag = ocTagService.queryOcTagById(id);
         if (ocTag == null)
             return new BusinessWrapper<>(ErrorEnum.TAG_NOT_EXIST);
-        // 判断server绑定的资源
-        // int count = ocServerService.countByEnvType(ocEnv.getEnvType());
-        int count = 0;
-        if (count == 0) {
+        // 判断tag是否被使用
+        if (ocBusinessTagService.countOcTagHasUsed(id) == 0) {
             ocTagService.deleteOcTagById(id);
             return BusinessWrapper.SUCCESS;
-        } else {
-            return new BusinessWrapper<>(ErrorEnum.TAG_HAS_USED);
         }
+        return new BusinessWrapper<>(ErrorEnum.TAG_HAS_USED);
     }
 
     @Override
@@ -105,18 +102,19 @@ public class TagFacadeImpl implements TagFacade {
         // 业务对象所有的标签
         List<OcTag> tagList = ocTagService.queryOcTagByParam(businessQuery);
         Map<Integer, OcTag> tagMap = getTagMap(tagList);
-        for (Integer tagId : businessTag.getTagIds()) {
+
+        businessTag.getTagIds().forEach(tagId -> {
             OcBusinessTag ocBusinessTag = queryOcBusinessTag(businessTag, tagId);
             if (ocBusinessTag == null) {
                 ocBusinessTagService.addOcBusinessTag(getOcBusinessTag(businessTag, tagId));
             } else {
                 tagMap.remove(tagId);
             }
-        }
-        for (Integer tagId : tagMap.keySet()) {
+        });
+        tagMap.keySet().forEach(tagId -> {
             businessTag.setTagId(tagId);
             ocBusinessTagService.deleteOcBusinessTagByUniqueKey(businessTag);
-        }
+        });
         return BusinessWrapper.SUCCESS;
     }
 
@@ -149,8 +147,7 @@ public class TagFacadeImpl implements TagFacade {
          * apple1,apple12的id都为1。
          * 可以用 (k1,k2)->k1 来设置，如果有重复的key,则保留key1,舍弃key2
          */
-        Map<Integer, OcTag> tagMap = tagList.stream().collect(Collectors.toMap(OcTag::getId, a -> a, (k1, k2) -> k1));
-        return tagMap;
+        return tagList.stream().collect(Collectors.toMap(OcTag::getId, a -> a, (k1, k2) -> k1));
     }
 
 }

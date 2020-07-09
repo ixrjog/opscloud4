@@ -22,6 +22,8 @@ public interface UserPermissionFacade {
 
     BusinessWrapper<Boolean> delOcUserPermission(OcUserPermission ocUserPermission);
 
+    boolean tryUserBusinessPermission(int userId, int businessType, int businessId);
+
     /**
      * 查询用户的访问级别
      * @param ocUser

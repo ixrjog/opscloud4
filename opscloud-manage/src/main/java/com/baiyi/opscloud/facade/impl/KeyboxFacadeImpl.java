@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.SSHUtils;
-import com.baiyi.opscloud.decorator.KeyboxDecorator;
+import com.baiyi.opscloud.decorator.keybox.KeyboxDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;

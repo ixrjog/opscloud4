@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKubernetesTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesTemplate">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="template_type" jdbcType="VARCHAR" property="templateType"/>
+        <result column="env_type" jdbcType="INTEGER" property="envType"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="template_yaml" jdbcType="LONGVARCHAR" property="templateYaml"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+
+    <select id="queryKubernetesTemplateByParam"
+            parameterType="com.baiyi.opscloud.domain.param.kubernetes.KubernetesTemplateParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_kubernetes_template
+        <where>
+            <if test="envType != null">
+                env_type = #{envType}
+            </if>
+            <if test="templateType != null and templateType != ''">
+                and template_type = #{templateType}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and ( name like "%" #{queryName} "%" or comment like "%" #{queryName} "%" )
+            </if>
+        </where>
+    </select>
+</mapper>

@@ -15,7 +15,9 @@ public interface OcServerGroupPropertyService {
 
     List<OcServerGroupProperty> queryOcServerGroupPropertyByServerGroupId(int serverGroupId);
 
-    List<OcServerGroupProperty> queryOcServerGroupPropertyByServerGroupIdAndEnvType(int serverGroupId,int envType);
+    List<OcServerGroupProperty> queryOcServerGroupPropertyByServerGroupIdAndEnvType(int serverGroupId, int envType);
+
+    List<OcServerGroupProperty> queryOcServerGroupPropertyByServerGroupIdAndEnvTypeAnd(int serverGroupId, int envType, String propertyName);
 
     void addOcServerGroupProperty(OcServerGroupProperty ocServerGroupProperty);
 

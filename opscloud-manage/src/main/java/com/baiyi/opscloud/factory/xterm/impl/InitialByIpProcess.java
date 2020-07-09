@@ -37,29 +37,29 @@ public class InitialByIpProcess extends BaseProcess implements IXTermProcess {
     }
 
     @Override
-    public void xtermProcess(String message, Session session,OcTerminalSession ocTerminalSession) {
+    public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         InitialIpMessage xtermMessage = (InitialIpMessage) getMessage(message);
         xtermMessage.setLoginUserType(1);
-        OcUser ocUser =  userFacade.getOcUserBySession();
+        OcUser ocUser = userFacade.getOcUserBySession();
         String ip = xtermMessage.getIp();
 
         boolean isAdmin = isOps(ocUser);
         // 鉴权
-        if(!isAdmin){
+        if (!isAdmin) {
             OcServer ocServer = ocServerService.queryOcServerByIp(ip);
             OcUserPermission ocUserPermission = new OcUserPermission();
             ocUserPermission.setUserId(ocUser.getId());
             ocUserPermission.setBusinessId(ocServer.getServerGroupId());
             ocUserPermission.setBusinessType(BusinessType.SERVERGROUP.getType());
             OcUserPermission checkUserPermission = ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission);
-            if(checkUserPermission == null)
+            if (checkUserPermission == null)
                 return;
         }
 
         HostSystem hostSystem = buildHostSystem(ocUser, ip, xtermMessage, isAdmin);
         RemoteInvokeHandler.openSSHTermOnSystem(ocTerminalSession.getSessionId(), xtermMessage.getInstanceId(), hostSystem);
         heartbeat(ocTerminalSession.getSessionId());
-        terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession,hostSystem));
+        terminalFacade.addOcTerminalSessionInstance(TerminalSessionInstanceBuilder.build(ocTerminalSession, hostSystem));
     }
 
 

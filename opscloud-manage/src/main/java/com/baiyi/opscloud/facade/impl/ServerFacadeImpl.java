@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.base.CloudServerStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.common.util.RegexUtils;
-import com.baiyi.opscloud.decorator.ServerDecorator;
+import com.baiyi.opscloud.decorator.server.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;

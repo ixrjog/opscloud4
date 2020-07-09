@@ -6,8 +6,8 @@ import com.baiyi.opscloud.cloud.log.AliyunLogCenter;
 import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.decorator.AliyunLogDecorator;
-import com.baiyi.opscloud.decorator.AliyunLogMemberDecorator;
+import com.baiyi.opscloud.decorator.aliyun.AliyunLogDecorator;
+import com.baiyi.opscloud.decorator.aliyun.AliyunLogMemberDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -111,9 +111,9 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     public BusinessWrapper<Boolean> pushLogMember(int id) {
         OcAliyunLogMember ocAliyunLogMember = ocAliyunLogMemberService.queryOcAliyunLogMemberById(id);
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocAliyunLogMember.getServerGroupId());
-        OcEnv ocEnv = ocEnvService.queryOcEnvByName(Global.ENV_PROD);
+        // 过滤器
         List<OcServer> serverList = ocServerService.queryOcServerByServerGroupId(ocAliyunLogMember.getServerGroupId())
-                .stream().filter(e -> ocEnv.getEnvType().equals(e.getEnvType()) && e.getServerType() == CloudServerType.ECS.getType()).collect(Collectors.toList());
+                .stream().filter(this::isFilterServer).collect(Collectors.toList());
         AliyunLogMemberVO.LogMember logMember = BeanCopierUtils.copyProperties(ocAliyunLogMember, AliyunLogMemberVO.LogMember.class);
         logMember.setServerGroup(ocServerGroup);
         OcAliyunLog ocAliyunLog = ocAliyunLogService.queryOcAliyunLogById(ocAliyunLogMember.getLogId());
@@ -121,6 +121,13 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         logMember.setMachineList(Lists.newArrayList(serverList.stream().map(OcServer::getPrivateIp).collect(Collectors.toList())));
         updateOcAliyunLogMemberLastPushTime(ocAliyunLogMember);
         return aliyunLogCenter.pushMachineGroup(logMember);
+    }
+
+    private boolean isFilterServer(OcServer ocServer) {
+        if (!ocServer.getIsActive()) return false; // 过滤无效服务器
+        // 过滤环境类型（只留线上机器）
+        OcEnv ocEnv = ocEnvService.queryOcEnvByName(Global.ENV_PROD);
+        return ocEnv.getEnvType().equals(ocServer.getEnvType()) && ocServer.getServerType() == CloudServerType.ECS.getType();
     }
 
     private void updateOcAliyunLogMemberLastPushTime(OcAliyunLogMember ocAliyunLogMember) {

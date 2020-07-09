@@ -2,6 +2,6 @@
 # openAudit false|true 开启审计日志
 
 xterm:
-  auditPath: /Users/liangjian/Documents/workspace/opscloud-data/xterm/audit
+  auditPath: ${HOME}/Documents/workspace/opscloud-data/xterm/audit
   openAudit: true
 

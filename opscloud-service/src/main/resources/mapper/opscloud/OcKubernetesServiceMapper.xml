@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKubernetesServiceMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesService">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="application_id" jdbcType="INTEGER" property="applicationId" />
+    <result column="instance_id" jdbcType="INTEGER" property="instanceId" />
+    <result column="namespace_id" jdbcType="INTEGER" property="namespaceId" />
+    <result column="namespace" jdbcType="VARCHAR" property="namespace" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="cluster_ip" jdbcType="VARCHAR" property="clusterIp" />
+    <result column="service_type" jdbcType="VARCHAR" property="serviceType" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="service_yaml" jdbcType="LONGVARCHAR" property="serviceYaml" />
+    <result column="service_detail" jdbcType="LONGVARCHAR" property="serviceDetail" />
+  </resultMap>
+
+    <select id="queryOcKubernetesServiceByParam" parameterType="com.baiyi.opscloud.domain.param.kubernetes.KubernetesServiceParam$PageQuery" resultMap="BaseResultMap">
+        select * from oc_kubernetes_service
+        <where>
+            <if test="namespaceId != null and namespaceId &gt; 0">
+                namespace_id = #{namespaceId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and name like "%" #{queryName} "%"
+            </if>
+            <if test="queryPort != null and queryPort &gt; 0">
+                and id in ( select service_id from oc_kubernetes_service_port where node_port = #{queryPort} or port =
+                #{queryPort} )
+            </if>
+        </where>
+        order by replace( name, #{queryName}, '' )
+    </select>
+</mapper>

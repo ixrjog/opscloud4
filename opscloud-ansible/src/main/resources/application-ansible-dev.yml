@@ -16,6 +16,6 @@
 ansible:
   version: 2.9.6
   bin: /usr/local/bin/ansible
-  dataPath: /Users/liangjian/Documents/workspace/opscloud-data/ansible
+  dataPath: ${HOME}/Documents/workspace/opscloud-data/ansible
   playbookBin: /usr/local/bin/ansible-playbook
-  logPath: /Users/liangjian/Documents/workspace/opscloud-data/log/ansible
+  logPath: ${HOME}/Documents/workspace/opscloud-data/log/ansible

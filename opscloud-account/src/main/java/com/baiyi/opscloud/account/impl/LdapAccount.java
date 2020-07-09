@@ -2,9 +2,9 @@ package com.baiyi.opscloud.account.impl;
 
 
 import com.baiyi.opscloud.account.IAccount;
-import com.baiyi.opscloud.account.base.AccountType;
 import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
+import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.common.util.PasswordUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;

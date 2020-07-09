@@ -11,10 +11,10 @@ import com.google.common.collect.Lists;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -35,6 +35,8 @@ public class AliyunECSImpl implements AliyunECS {
     public List<DescribeInstancesResponse.Instance> getInstanceList() {
         List<String> regionIds = aliyunCore.getRegionIds();
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
+        if (CollectionUtils.isEmpty(regionIds))
+            return instanceList;
         regionIds.forEach(e -> instanceList.addAll(aliyunECSHandler.getInstanceList(e)));
         return instanceList;
     }
@@ -51,7 +53,7 @@ public class AliyunECSImpl implements AliyunECS {
         request.setInstanceId(instanceId);
         DescribeDisksResponse response = aliyunECSHandler.getDisksResponse(regionId, request);
         if (response == null || response.getRequestId().isEmpty()) return Lists.newArrayList();
-        return response.getDisks().stream().map(e -> BeanCopierUtils.copyProperties(e, ECSDisk.class)).collect(Collectors.toList());
+        return BeanCopierUtils.copyListProperties(response.getDisks(), ECSDisk.class);
     }
 
     @Cacheable(cacheNames = "aliyunECSRenew")

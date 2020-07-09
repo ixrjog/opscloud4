@@ -5,18 +5,22 @@ import com.baiyi.opscloud.builder.UserPermissionBuilder;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.*;
-import com.baiyi.opscloud.decorator.ServerGroupDecorator;
-import com.baiyi.opscloud.decorator.ServerTreeDecorator;
+import com.baiyi.opscloud.decorator.server.ServerGroupDecorator;
+import com.baiyi.opscloud.decorator.server.ServerTreeDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.param.server.SeverGroupPropertyParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 import com.baiyi.opscloud.domain.vo.server.*;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
-import com.baiyi.opscloud.facade.*;
+import com.baiyi.opscloud.facade.ServerBaseFacade;
+import com.baiyi.opscloud.facade.ServerCacheFacade;
+import com.baiyi.opscloud.facade.ServerGroupFacade;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
 import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupPropertyService;
@@ -27,6 +31,7 @@ import com.baiyi.opscloud.service.user.OcUserService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -248,14 +253,29 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(int id) {
         Map<Integer, Map<String, String>> propertyEnvMap = Maps.newHashMap();
         List<OcServerGroupProperty> serverGroupProperties = ocServerGroupPropertyService.queryOcServerGroupPropertyByServerGroupId(id);
-        serverGroupProperties.forEach(e -> {
-            Map<String, String> propertyMap = propertyEnvMap.get(e.getEnvType());
-            if (propertyMap == null)
-                propertyMap = Maps.newHashMap();
-            propertyMap.put(e.getPropertyName(), e.getPropertyValue());
-            propertyEnvMap.put(e.getEnvType(), propertyMap);
+        if (!CollectionUtils.isEmpty(serverGroupProperties))
+            serverGroupProperties.forEach(e -> invokePropertyEnvMap(e, propertyEnvMap));
+        return new BusinessWrapper(propertyEnvMap);
+    }
+
+    @Override
+    public BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(SeverGroupPropertyParam.PropertyParam propertyParam) {
+        Map<Integer, Map<String, String>> propertyEnvMap = Maps.newHashMap();
+        if (propertyParam.getPropertyNameSet() == null ) return new BusinessWrapper(propertyEnvMap);
+        propertyParam.getPropertyNameSet().forEach(k -> {
+            List<OcServerGroupProperty> properties = ocServerGroupPropertyService.queryOcServerGroupPropertyByServerGroupIdAndEnvTypeAnd(propertyParam.getServerGroupId(), propertyParam.getEnvType(), k);
+            if (!CollectionUtils.isEmpty(properties))
+                properties.forEach(e -> invokePropertyEnvMap(e, propertyEnvMap));
         });
         return new BusinessWrapper(propertyEnvMap);
+    }
+
+    private void invokePropertyEnvMap(OcServerGroupProperty e, Map<Integer, Map<String, String>> propertyEnvMap) {
+        Map<String, String> propertyMap = propertyEnvMap.get(e.getEnvType());
+        if (propertyMap == null)
+            propertyMap = Maps.newHashMap();
+        propertyMap.put(e.getPropertyName(), e.getPropertyValue());
+        propertyEnvMap.put(e.getEnvType(), propertyMap);
     }
 
     @Override
@@ -270,7 +290,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
             if (ocServerGroupService.queryOcServerGroupById(serverGroupProperty.getServerGroupId()) == null)
                 return new BusinessWrapper<>(ErrorEnum.SERVERGROUP_NOT_EXIST);
         }
-
         OcServerGroupProperty pre = BeanCopierUtils.copyProperties(serverGroupProperty, OcServerGroupProperty.class);
         OcServerGroupProperty ocServerGroupProperty = ocServerGroupPropertyService.queryOcServerGroupPropertyByUniqueKey(pre);
         if (ocServerGroupProperty == null) {

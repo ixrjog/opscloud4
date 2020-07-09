@@ -12,10 +12,10 @@ aliyun:
       secret: ENC(fSKtDCmkLBtszyTVR2sxAJvOSsVeP+5qrxRJiCdT3LaVOLg0gJxbiA==)
       regionId: cn-hangzhou
       regionIds:
-        - cn-hangzhou
+        - cn-shanghai
         - cn-hongkong
         - us-west-1
-        - cn-shanghai
+        - cn-hangzhou
     -
       uid: ENC(wAO3HMMqTOmcM9COe34HZ+U7aaoq7ivs7wJBP/wt3ic=)
       master: false

@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -130,7 +131,7 @@ public class AliyunRDSMysqlHandler {
         IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
         try {
             DescribeAccountsResponse response = client.getAcsResponse(request);
-            if (response.getAccounts() == null || response.getAccounts().size() == 0)
+            if (CollectionUtils.isEmpty(response.getAccounts()))
                 return null;
             return response.getAccounts().get(0);
         } catch (ClientException e) {

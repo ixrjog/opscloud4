@@ -35,28 +35,26 @@ public class CloseProcess extends BaseProcess implements IXTermProcess {
     public void xtermProcess(String message, Session session, OcTerminalSession ocTerminalSession) {
         Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(ocTerminalSession.getSessionId());
         if (sessionMap == null) return;
-        for (String instanceId : sessionMap.keySet()) {
+        for (String instanceId : sessionMap.keySet())
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
                 writeAuditLog(ocTerminalSession, instanceId); // 写审计日志
+              //  writeCommanderLog(jSchSession.getCommanderLog(),ocTerminalSession, instanceId); // 写命令日志
                 closeSessionInstance(ocTerminalSession, instanceId); // 设置关闭会话
             } catch (Exception e) {
                 e.printStackTrace();
             }
-        }
         try {
             sessionMap.clear();
             session.close();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (ocTerminalSession != null) {
-            ocTerminalSession.setCloseTime(new Date());
-            ocTerminalSession.setIsClosed(true);
-            terminalFacade.updateOcTerminalSession(ocTerminalSession);
-            ocTerminalSession = null;
-        }
+        ocTerminalSession.setCloseTime(new Date());
+        ocTerminalSession.setIsClosed(true);
+        terminalFacade.updateOcTerminalSession(ocTerminalSession);
+        ocTerminalSession = null;
     }
 
     @Override

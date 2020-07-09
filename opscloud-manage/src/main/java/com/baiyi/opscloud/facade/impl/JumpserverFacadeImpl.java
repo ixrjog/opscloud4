@@ -2,11 +2,10 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
-import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.common.util.TimeUtils;
-import com.baiyi.opscloud.decorator.UsersUserDecorator;
+import com.baiyi.opscloud.decorator.user.UsersUserDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -20,6 +19,7 @@ import com.baiyi.opscloud.domain.param.jumpserver.assetsNode.AssetsNodePageParam
 import com.baiyi.opscloud.domain.param.jumpserver.user.UsersUserPageParam;
 import com.baiyi.opscloud.domain.vo.jumpserver.*;
 import com.baiyi.opscloud.facade.JumpserverFacade;
+import com.baiyi.opscloud.facade.SettingBaseFacade;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.server.IServer;
 import com.baiyi.opscloud.server.decorator.JumpserverSettingsDecorator;
@@ -30,13 +30,11 @@ import com.baiyi.opscloud.service.jumpserver.AssetsNodeService;
 import com.baiyi.opscloud.service.jumpserver.TerminalService;
 import com.baiyi.opscloud.service.jumpserver.UsersUserService;
 import com.baiyi.opscloud.service.user.OcUserService;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -74,6 +72,9 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
 
     @Resource
     private TerminalService terminalService;
+
+    @Resource
+    private SettingBaseFacade settingBaseFacade;
 
     @Resource
     private RedisUtil redisUtil;
@@ -170,11 +171,9 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
 
     @Override
     public BusinessWrapper<Boolean> saveSettings(JumpserverSettingsVO.Settings settings) {
-        Map<String, String> settingsMap = Maps.newHashMap();
-        settingsMap.put(Global.JUMPSERVER_ASSETS_ADMINUSER_ID_KEY, settings.getAssetsAdminuserId());
-        settingsMap.put(Global.JUMPSERVER_ASSETS_SYSTEMUSER_ID_KEY, settings.getAssetsSystemuserId());
-        settingsMap.put(Global.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID_KEY, settings.getAssetsAdminSystemuserId());
-        redisUtil.set(Global.JUMPSERVER_SETTINGS_KEY, settingsMap, TimeUtils.dayTime * 1000);
+        settingBaseFacade.saveSetting(SettingName.JUMPSERVER_ASSETS_ADMINUSER_ID,settings.getAssetsAdminuserId());
+        settingBaseFacade.saveSetting(SettingName.JUMPSERVER_ASSETS_SYSTEMUSER_ID,settings.getAssetsSystemuserId());
+        settingBaseFacade.saveSetting(SettingName.JUMPSERVER_ASSETS_ADMIN_SYSTEMUSER_ID,settings.getAssetsAdminSystemuserId());
         return BusinessWrapper.SUCCESS;
     }
 

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.account.impl;
 
 import com.baiyi.opscloud.account.IAccount;
-import com.baiyi.opscloud.account.base.AccountType;
+import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.account.builder.AccountBuilder;
 import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.account.convert.ZabbixUserConvert;
@@ -87,21 +87,23 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
     private List<ZabbixUserMedia> getMediaList(OcUser user) {
         List<ZabbixUserMedia> mediaList = Lists.newArrayList();
         try {
-            RegexUtils.isEmail(user.getEmail());
-            ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
-                    .mediatypeid(ZabbixUserMedia.MEDIATYPE_MAIL)
-                    .sendto(user.getEmail())
-                    .build();
-            mediaList.add(mailMedia);
+            if(RegexUtils.isEmail(user.getEmail())){
+                ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
+                        .mediatypeid(ZabbixUserMedia.MEDIATYPE_MAIL)
+                        .sendto(user.getEmail())
+                        .build();
+                mediaList.add(mailMedia);
+            }
         } catch (Exception ignored) {
         }
         try {
-            RegexUtils.isPhone(user.getPhone());
-            ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
-                    .mediatypeid(ZabbixUserMedia.MEDIATYPE_PHONE)
-                    .sendto(user.getPhone())
-                    .build();
-            mediaList.add(mailMedia);
+           if(RegexUtils.isPhone(user.getPhone())) {
+               ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
+                       .mediatypeid(ZabbixUserMedia.MEDIATYPE_PHONE)
+                       .sendto(user.getPhone())
+                       .build();
+               mediaList.add(mailMedia);
+           }
         } catch (Exception ignored) {
         }
         return mediaList;

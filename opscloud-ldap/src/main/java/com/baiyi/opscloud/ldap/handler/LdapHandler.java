@@ -152,11 +152,11 @@ public class LdapHandler {
         Person checkPerson = getPersonWithDn(dn);
         if (checkPerson == null) return false;
         try {
-            if (!checkPerson.getDisplayName().equals(person.getDisplayName()))
+            if (!StringUtils.isEmpty(person.getDisplayName()) && !person.getDisplayName().equals(checkPerson.getDisplayName()))
                 modifyAttributes(dn, "displayName", person.getDisplayName());
-            if (!checkPerson.getEmail().equals(person.getEmail()))
+            if (!StringUtils.isEmpty(person.getEmail()) && !person.getEmail().equals(checkPerson.getEmail()))
                 modifyAttributes(dn, "mail", person.getEmail());
-            if (!checkPerson.getMobile().equals(person.getMobile()))
+            if (!StringUtils.isEmpty(person.getMobile()) && !person.getMobile().equals(checkPerson.getMobile()))
                 modifyAttributes(dn, "mobile", person.getMobile());
             if (!StringUtils.isEmpty(person.getUserPassword()))
                 modifyAttributes(dn, "userpassword", person.getUserPassword());

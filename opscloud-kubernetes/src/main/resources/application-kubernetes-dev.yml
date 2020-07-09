@@ -1,0 +1,34 @@
+# kubeconfig path = ${dataPath}/kubeconfig
+# namespace.filter 命名空间过滤
+# deployment.nomenclature
+# 无状态命名规范 配置为空会省略链接符号-
+# ${deployment.nomenclature.prefix}-${applicationInstanceName}-${envLabel}-${deployment.nomenclature.suffix}
+# service.nomenclature
+# 服务命名规范 配置为空会省略链接符号-
+# ${service.nomenclature.prefix}-${applicationInstanceName}-${envLabel}-${service.nomenclature.suffix}
+
+kubernetes:
+  version: 0.0.0
+  dataPath: ${HOME}/Documents/workspace/opscloud-data/kubernetes
+  namespace:
+    filter:
+      - default
+      - kube-node-lease
+      - kube-public
+      - kube-system
+      - upgrade-ns-logtail-ds
+  application:
+    envLabel:
+      test:
+        - dev
+        - daily
+      pre:
+        - pre
+  deployment:
+    nomenclature:
+      prefix:
+      suffix: 'deployment'
+  service:
+    nomenclature:
+      prefix:
+      suffix: 'lb'

@@ -18,7 +18,6 @@ public class AwsEC2Instance {
 
     private com.amazonaws.services.ec2.model.Instance instance;
     private List<EC2Volume> volumeList;
-
     private EC2InstanceType instanceType;
 
 }

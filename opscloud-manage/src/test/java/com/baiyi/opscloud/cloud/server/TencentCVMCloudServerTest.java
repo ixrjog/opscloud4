@@ -25,11 +25,14 @@ public class TencentCVMCloudServerTest extends BaseUnit {
         return CloudServerFactory.getCloudServerByKey(key);
     }
 
-
-
     @Test
-    void testGetDiskList() {
+    void testGetInstanceList() {
         List<Instance> list= tencentCloudCVMHandler.getInstanceList();
         System.err.println(list);
+    }
+    @Test
+    void testGetInstance() {
+        Instance i=  tencentCloudCVMHandler.getInstance("ins-qgaxfm1v");
+        System.err.println(i);
     }
 }

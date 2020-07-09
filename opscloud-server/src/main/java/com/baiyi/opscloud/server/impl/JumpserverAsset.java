@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.server.impl;
 
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
-import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAssetNodes;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUsergroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
@@ -16,12 +15,16 @@ import com.baiyi.opscloud.service.jumpserver.AssetsAssetService;
 import com.baiyi.opscloud.service.jumpserver.AssetsSystemuserAssetsService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -51,19 +54,36 @@ public class JumpserverAsset extends BaseServer implements IServer {
     private AssetsAssetService assetsAssetService;
 
     @Override
-    public Boolean sync() {
-        List<OcServerGroup> serverGroupList = getServerGroupList();
-        for (OcServerGroup ocServerGroup : serverGroupList) {
+    public void sync() {
+        Map<String, AssetsAsset> assetMap = getAssetMap();
+        getServerGroupList().forEach(e -> {
             // 创建资产节点（服务器组）
-            AssetsNode assetsNode = saveAssetsNode(ocServerGroup);
+            AssetsNode assetsNode = saveAssetsNode(e);
             if (assetsNode == null) {
-                log.error("Jumpserver 同步节点（服务器组）{} Error !", ocServerGroup.getName());
-                continue;
+                log.error("Jumpserver 同步节点（服务器组）{} Error !", e.getName());
+            } else {
+                // 同步资产并绑定 节点
+                getGroupServerList(e.getId()).forEach(s -> {
+                    try {
+                        AssetsAsset assetsAsset = saveAssets(s, assetsNode);
+                        assetMap.remove(assetsAsset.getId());
+                    } catch (Exception ex) {
+                        ex.printStackTrace();
+                    }
+                });
             }
-            // 同步资产并绑定 节点
-            getGroupServerList(ocServerGroup.getId()).forEach(e -> saveAssets(e, assetsNode));
-        }
-        return true;
+        });
+        deleteAssetByMap(assetMap);
+    }
+
+    private void deleteAssetByMap(Map<String, AssetsAsset> assetMap) {
+        assetMap.keySet().forEach(k -> deleteAssetsAsset(assetMap.get(k)));
+    }
+
+    private Map<String, AssetsAsset> getAssetMap() {
+        List<AssetsAsset> assets = assetsAssetService.queryAll();
+        if (CollectionUtils.isEmpty(assets)) return Maps.newHashMap();
+        return assets.stream().collect(Collectors.toMap(AssetsAsset::getId, a -> a, (k1, k2) -> k1));
     }
 
 
@@ -102,14 +122,13 @@ public class JumpserverAsset extends BaseServer implements IServer {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
         if (assetsAsset == null) return true;
         // 删除资产的节点绑定关系
-        AssetsAssetNodes assetsAssetNodes = assetsAssetNodesService.queryAssetsAssetNodesByAssetId(assetsAsset.getId());
-        if (assetsAssetNodes != null)
-            assetsAssetNodesService.delAssetsAssetNodes(assetsAssetNodes.getId());
-        // 删除资产的系统账户绑定关系(批量删除)
-        assetsSystemuserAssetsService.deleteAssetsSystemuserAssetsByAssetId(assetsAsset.getId());
-        // 删除资产
-        assetsAssetService.deleteAssetsAssetById(assetsAsset.getId());
-        return true;
+        return deleteAssetsAsset(assetsAsset);
+
+    }
+
+    private boolean deleteAssetsAsset(AssetsAsset assetsAsset) {
+        // 删除资产的节点绑定关系
+        return jumpserverCenter.delAssetsAsset(assetsAsset.getId());
     }
 
     @Override
@@ -139,12 +158,13 @@ public class JumpserverAsset extends BaseServer implements IServer {
      * @param ocServer
      * @param assetsNode
      */
-    private void saveAssets(OcServer ocServer, AssetsNode assetsNode) {
+    private AssetsAsset saveAssets(OcServer ocServer, AssetsNode assetsNode) {
         AssetsAsset assetsAsset = createAssetsAsset(ocServer, "");
         // 绑定资产到节点（节点就是oc服务器组）
         jumpserverCenter.bindAssetsAssetNodes(assetsAsset, assetsNode);
         // 资产绑定系统账户
         jumpserverCenter.bindAvssetsSystemuserAssets(assetsAsset.getId());
+        return assetsAsset;
     }
 
     /**
@@ -163,12 +183,12 @@ public class JumpserverAsset extends BaseServer implements IServer {
         String assetComment = Joiner.on(" ").skipNulls().join(pubIp, comment, ocServer.getComment());
         // 更新服务器信息
         if (assetsAsset != null) {
-            assetsAsset.setComment(assetComment == null ? "" : assetComment);
+            assetsAsset.setComment(assetComment);
             assetsAsset.setHostname(getHostname(ocServer));
             jumpserverCenter.updateAssetsAsset(assetsAsset);
         } else {
             String manageIp = getManageIp(ocServer);
-            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer),assetComment);
+            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer), assetComment);
             if (!StringUtils.isEmpty(comment))
                 assetsAsset.setComment(comment);
             jumpserverCenter.addAssetsAsset(assetsAsset);

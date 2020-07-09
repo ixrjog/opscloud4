@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcKubernetesServicePortMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesServicePort">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="service_id" jdbcType="INTEGER" property="serviceId" />
+    <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="node_port" jdbcType="INTEGER" property="nodePort" />
+    <result column="port" jdbcType="INTEGER" property="port" />
+    <result column="target_port" jdbcType="INTEGER" property="targetPort" />
+    <result column="protocol" jdbcType="VARCHAR" property="protocol" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+</mapper>

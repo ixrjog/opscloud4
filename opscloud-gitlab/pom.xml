@@ -18,6 +18,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-service</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.gitlab</groupId>
             <artifactId>java-gitlab-api</artifactId>
             <version>4.1.0</version>

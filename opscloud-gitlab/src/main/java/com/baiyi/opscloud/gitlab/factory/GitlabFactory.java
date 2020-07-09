@@ -21,7 +21,7 @@ public class GitlabFactory implements InitializingBean {
     private static GitlabAPI api;
 
     public GitlabAPI getAPI() {
-        return api;
+        return GitlabFactory.api;
     }
 
     private static String createRandomString() {

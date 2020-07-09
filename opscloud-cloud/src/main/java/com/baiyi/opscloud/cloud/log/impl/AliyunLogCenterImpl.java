@@ -28,7 +28,6 @@ public class AliyunLogCenterImpl implements AliyunLogCenter {
 
     @Override
     public List<Project> getProjects(String project) {
-        // return aliyunLogHandler.getProjects(project).stream().map(e -> e.getProjectName()).collect(Collectors.toList());
         return aliyunLogHandler.getProjects(project);
     }
 

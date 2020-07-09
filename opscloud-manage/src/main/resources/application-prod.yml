@@ -1,8 +1,9 @@
 logging:
-  path: /logs/opscloud
   level:
     # swagger 警告日志忽略
     io.swagger.models.parameters.AbstractSerializableParameter: error
+  file:
+    path: /logs/opscloud
 
 # 白名单配置
 white:
@@ -14,7 +15,7 @@ opscloud:
 
 spring:
   profiles:
-    include: common,account-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud,ansible-prod,xterm-prod,tencent-cloud-prod
+    include: common,account-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud,ansible-prod,xterm-prod,tencent-cloud-prod,kubernetes-prod
   redis:
     host: ENC(sBuaHDKOePEPRK1vHNSljfdIJ/74yA0UdxZSwHcV1v4JO72BD25l7McR88uLE6RcZPiZFhjh4Qg=)
     port: 6379
@@ -40,9 +41,9 @@ app:
       max-lifetime: 30000
       connection-test-query: SELECT 1
     jumpserver:
-      url: ENC(Es1I9fzvijR2ExH5OQPALDWDcazs0XJz2nULeHtGJ344E1hFLHne2E4kPQqhgJYATwoX98bMhMWKBy9NtSoEB03U/aqVpskwNsKBQU9b6eujeiwnigLacHzbrEipJUtX9Pk3HCYuh1w5QP0g+AwQdxhLOu/smxsvc36yzR121IPZoDJ+FpXT64U+2BPlLnfK)
-      username: jumpserver2
-      password: ENC(pB1+m3990SC/Kk89SIPr7rcLyYCfBPyDB9+F/5Xa9isM6hPubAz3CUX6zUioNIkq)
+      url: ENC(wNNUE2AqQuc+h2dUbo/iBOs/m2Ceg+ZeILvXaCsOHbGhyykkkXpDFZK5i48qTWbGM5UFJnyG8lUpeYIX5Gs3FvbXst8WuufL+cOVKdwWuL5aLXO16Wo4oQjn7QUNdB6rfsuAmQbuYFxiHAzVlpdrCmVgv7GYaW8EZA0MIUADmbR3zL4XsioHVfdLmEP8yEZB)
+      username: jumpserver201
+      password: ENC(B9F0hFLitEYDB3gUxgDf2I1/XzAb1ZynjiIo5cvoso0=)
       driver-class-name: com.mysql.cj.jdbc.Driver
       minimum-idle: 3
       maximum-pool-size: 15

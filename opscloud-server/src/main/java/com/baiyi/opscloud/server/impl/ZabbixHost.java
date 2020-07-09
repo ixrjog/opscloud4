@@ -53,8 +53,7 @@ public class ZabbixHost extends BaseServer implements IServer {
     private ZabbixHostgroupServer zabbixHostgroupServer;
 
     @Override
-    public Boolean sync() {
-        return true;
+    public void sync() {
     }
 
     @Override

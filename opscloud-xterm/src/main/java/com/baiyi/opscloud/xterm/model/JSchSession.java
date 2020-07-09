@@ -18,10 +18,13 @@ public class JSchSession {
      */
     private String instanceId;
     private PrintStream commander;
+
+
     private OutputStream inputToChannel;
     private Channel channel;
     private HostSystem hostSystem;
     private static SessionOutput sessionOutput;
+
 
     public void setSessionOutput(SessionOutput sessionOutput) {
         JSchSession.sessionOutput = sessionOutput;

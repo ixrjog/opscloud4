@@ -4,9 +4,9 @@ import com.baiyi.opscloud.bo.OrgDepartmentMemberBO;
 import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IDUtils;
-import com.baiyi.opscloud.decorator.DepartmentDecorator;
-import com.baiyi.opscloud.decorator.DepartmentMemberDecorator;
-import com.baiyi.opscloud.decorator.OrgDecorator;
+import com.baiyi.opscloud.decorator.department.DepartmentDecorator;
+import com.baiyi.opscloud.decorator.department.DepartmentMemberDecorator;
+import com.baiyi.opscloud.decorator.department.OrgDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -21,7 +21,7 @@ import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
-import com.baiyi.opscloud.facade.SettingFacade;
+import com.baiyi.opscloud.facade.SettingBaseFacade;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
@@ -63,7 +63,7 @@ public class OrgFacadeImpl implements OrgFacade {
     private UserFacade userFacade;
 
     @Resource
-    private SettingFacade settingFacade;
+    private SettingBaseFacade settingFacade;
 
     public static final int ROOT_PARENT_ID = 0;
 

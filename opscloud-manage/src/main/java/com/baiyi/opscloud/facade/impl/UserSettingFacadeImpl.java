@@ -13,6 +13,7 @@ import com.baiyi.opscloud.service.user.OcUserSettingService;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,7 +51,7 @@ public class UserSettingFacadeImpl implements UserSettingFacade, InitializingBea
         // 当前用户配置
         List<OcUserSetting> settings = ocUserSettingService.queryOcUserSettingBySettingGroup(ocUser.getId(), userSetting.getSettingGroup());
 
-        userSetting.getSettingMap().keySet().forEach(k->{
+        userSetting.getSettingMap().keySet().forEach(k -> {
             String settingValue = userSetting.getSettingMap().get(k);
             OcUserSetting ocUserSetting = getOcUserSettingByName(k, settings);
             if (ocUserSetting != null) {
@@ -72,7 +73,7 @@ public class UserSettingFacadeImpl implements UserSettingFacade, InitializingBea
 
     private OcUserSetting getOcUserSettingByName(String name, List<OcUserSetting> settings) {
         List<OcUserSetting> list = settings.stream().filter(e -> e.getName().equals(name)).collect(Collectors.toList());
-        if (list != null && !list.isEmpty())
+        if (!CollectionUtils.isEmpty(list))
             return list.get(0);
         return null;
     }

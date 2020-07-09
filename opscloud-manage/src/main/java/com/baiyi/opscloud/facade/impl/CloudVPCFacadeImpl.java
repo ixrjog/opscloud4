@@ -6,7 +6,7 @@ import com.baiyi.opscloud.cloud.vpc.ICloudVPC;
 import com.baiyi.opscloud.cloud.vpc.factory.CloudVPCFactory;
 import com.baiyi.opscloud.common.base.CloudType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.decorator.CloudVPCDecorator;
+import com.baiyi.opscloud.decorator.cloud.CloudVPCDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;

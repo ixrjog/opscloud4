@@ -120,5 +120,4 @@ public class OrgController {
         return new HttpResult<>(orgFacade.checkUserInTheDepartment());
     }
 
-
 }

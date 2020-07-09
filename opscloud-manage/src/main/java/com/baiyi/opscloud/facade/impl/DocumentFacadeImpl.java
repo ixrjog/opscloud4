@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.builder.UserDocumentBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
-import com.baiyi.opscloud.decorator.DocumentDecorator;
+import com.baiyi.opscloud.decorator.document.DocumentDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcDocument;

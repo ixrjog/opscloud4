@@ -8,3 +8,5 @@ tencent:
         zones:
            - ap-shanghai-1
            - ap-shanghai-2
+           - ap-shanghai-3
+           - ap-shanghai-4

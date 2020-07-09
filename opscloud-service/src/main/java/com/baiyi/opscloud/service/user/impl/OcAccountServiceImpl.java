@@ -38,6 +38,15 @@ public class OcAccountServiceImpl implements OcAccountService {
     }
 
     @Override
+    public OcAccount queryOcAccountByUsername(int accountType, String username) {
+        Example example = new Example(OcAccount.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("accountType", accountType);
+        criteria.andEqualTo("username", username);
+        return ocAccountMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void delOcAccount(int id) {
         ocAccountMapper.deleteByPrimaryKey(id);
     }

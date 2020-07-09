@@ -21,6 +21,7 @@ import org.springframework.util.StringUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 /**
@@ -35,7 +36,7 @@ public class CloudServerBuilder {
 
 
     public static OcCloudServer build(VMInstance instance, String zone) {
-        CloudServerBO ocCloudserverBO = CloudServerBO.builder()
+        CloudServerBO bo = CloudServerBO.builder()
                 .instanceName(instance.getConfigInfoName())
                 .serverName(instance.getConfigInfoName())
                 .zone(zone)
@@ -51,9 +52,9 @@ public class CloudServerBuilder {
             if (instance.getVmSummary() != null) {
                 VirtualMachineSummary vmSummary = instance.getVmSummary();
                 if (!StringUtils.isEmpty(vmSummary.getGuest().getIpAddress()))
-                    ocCloudserverBO.setPrivateIp(vmSummary.getGuest().getIpAddress());
+                    bo.setPrivateIp(vmSummary.getGuest().getIpAddress());
             }
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
 
         // Disk只记录总容量
@@ -61,13 +62,13 @@ public class CloudServerBuilder {
         for (VirtualMachineUsageOnDatastore vmUsageOnDatastore : vmStorageInfo.getPerDatastoreUsage()) {
             // committed 用量/  uncommitted 限制
             int size = (int) (vmUsageOnDatastore.getUncommitted() / 1024 / 1024 / 1024);
-            if (ocCloudserverBO.getSystemDiskSize() == 0) {
-                ocCloudserverBO.setSystemDiskSize(size);
+            if (bo.getSystemDiskSize() == 0) {
+                bo.setSystemDiskSize(size);
             } else {
-                ocCloudserverBO.setDataDiskSize(ocCloudserverBO.getDataDiskSize() + size);
+                bo.setDataDiskSize(bo.getDataDiskSize() + size);
             }
         }
-        return covert(ocCloudserverBO);
+        return covert(bo);
     }
 
 
@@ -79,7 +80,7 @@ public class CloudServerBuilder {
      * @return
      */
     public static OcCloudServer build(ESXiInstance esxiInstance, String zone) {
-        CloudServerBO ocCloudServerBO = CloudServerBO.builder()
+        CloudServerBO bo = CloudServerBO.builder()
                 .instanceName(esxiInstance.getHostSummary().config.name)
                 .serverName(esxiInstance.getHostSummary().config.name)
                 .zone(zone)
@@ -97,17 +98,17 @@ public class CloudServerBuilder {
             long capacityTotal = 0;
             for (DatastoreSummary datastoreSummary : esxiInstance.getDatastoreSummaryList())
                 capacityTotal += datastoreSummary.getCapacity();
-            ocCloudServerBO.setSystemDiskSize((int) (capacityTotal / 1024 / 1024 / 1024));
+            bo.setSystemDiskSize((int) (capacityTotal / 1024 / 1024 / 1024));
         }
         // 查询管理IP
         try {
             for (VirtualNicManagerNetConfig virtualNicManagerNetConfig : esxiInstance.getHostConfigInfo().getVirtualNicManagerInfo().netConfig)
                 for (HostVirtualNic hostVirtualNic : virtualNicManagerNetConfig.getCandidateVnic())
                     if (!StringUtils.isEmpty(hostVirtualNic.getSpec().ip.ipAddress))
-                        ocCloudServerBO.setPrivateIp(hostVirtualNic.getSpec().ip.ipAddress);
+                        bo.setPrivateIp(hostVirtualNic.getSpec().ip.ipAddress);
         } catch (Exception ignored) {
         }
-        return covert(ocCloudServerBO);
+        return covert(bo);
     }
 
 
@@ -121,14 +122,13 @@ public class CloudServerBuilder {
     public static OcCloudServer build(AwsEC2Instance awsEC2Instance, String instanceDetail) {
         com.amazonaws.services.ec2.model.Instance instance = awsEC2Instance.getInstance();
         Map<String, Integer> volumeSizeMap = AwsUtils.getEC2VolumeSizeMap(awsEC2Instance.getVolumeList());
-        CloudServerBO ocCloudServerBO = CloudServerBO.builder()
+        CloudServerBO bo = CloudServerBO.builder()
                 .systemDiskSize(volumeSizeMap.get("systemDiskSize"))
                 .dataDiskSize(volumeSizeMap.get("dataDiskSize"))
                 .createdTime(instance.getLaunchTime())
                 .vpcId(instance.getVpcId())
                 .instanceName(AwsUtils.getEC2InstanceName(instance))
                 .instanceType(instance.getInstanceType())
-
                 .zone(instance.getPlacement().getAvailabilityZone())
                 .instanceId(instance.getInstanceId())
                 .cpu(instance.getCpuOptions().getCoreCount() * instance.getCpuOptions().getThreadsPerCore())
@@ -139,7 +139,7 @@ public class CloudServerBuilder {
                 .cloudServerType(CloudServerType.EC2.getType())
                 .instanceDetail(instanceDetail)
                 .build();
-        return covert(ocCloudServerBO);
+        return covert(bo);
     }
 
     /**
@@ -153,24 +153,18 @@ public class CloudServerBuilder {
         DescribeInstancesResponse.Instance instance = aliyunECSInstance.getInstance();
         List<ECSDisk> diskList = aliyunECSInstance.getDiskList();
 
-        String privateIp;
-        if (instance.getInstanceNetworkType().equals("vpc")) {
-            privateIp = instance.getVpcAttributes().getPrivateIpAddress().get(0);
-        } else {
-            privateIp = instance.getInnerIpAddress().get(0);
-        }
-        String publicIp = "";
-        if (instance.getPublicIpAddress().size() != 0) {
-            publicIp = instance.getPublicIpAddress().get(0);
-        }
+        String privateIp = instance.getInstanceNetworkType().equals("vpc") ? instance.getVpcAttributes().getPrivateIpAddress().get(0) :
+                instance.getInnerIpAddress().get(0);
+
+        String publicIp = instance.getPublicIpAddress().size() != 0 ? instance.getPublicIpAddress().get(0) : "";
+
         // 弹性IP
         if (!StringUtils.isEmpty(instance.getEipAddress().getIpAddress())) {
             publicIp = instance.getEipAddress().getIpAddress();
         }
-        String vpcId = "";
-        if (instance.getVpcAttributes() != null)
-            vpcId = instance.getVpcAttributes().getVpcId();
-        CloudServerBO ocCloudServerBO = CloudServerBO.builder()
+        String vpcId = instance.getVpcAttributes() != null ? instance.getVpcAttributes().getVpcId() : "";
+
+        CloudServerBO bo = CloudServerBO.builder()
                 .instanceType(instance.getInstanceType())
                 .instanceName(instance.getInstanceName())
                 .instanceId(instance.getInstanceId())
@@ -192,22 +186,49 @@ public class CloudServerBuilder {
                 .renewalStatus(aliyunECSInstance.getRenewalStatus())
                 .build();
         if (instance.getInstanceChargeType().equalsIgnoreCase("PrePaid") && !StringUtils.isEmpty(instance.getExpiredTime()))
-            ocCloudServerBO.setExpiredTime(TimeUtils.acqGmtDate(instance.getExpiredTime()));
+            bo.setExpiredTime(TimeUtils.acqGmtDate(instance.getExpiredTime()));
         try {
             for (ECSDisk disk : diskList) {
                 if (disk.getType().equals(ECS_SYSTEM_DISK_TYPE)) {
-                    ocCloudServerBO.setSystemDiskSize(disk.getSize());
+                    bo.setSystemDiskSize(disk.getSize());
                     continue;
                 }
                 if (disk.getType().equals(ECS_DATA_DISK_TYPE)) {
-                    ocCloudServerBO.setDataDiskSize(disk.getSize());
+                    bo.setDataDiskSize(disk.getSize());
                     continue;
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return covert(ocCloudServerBO);
+        return covert(bo);
+    }
+
+    /**
+     * 腾讯云 CVM
+     *
+     * @param instance
+     */
+    public static OcCloudServer build(com.tencentcloudapi.cvm.v20170312.models.Instance instance, String instanceDetail) {
+        CloudServerBO bo = CloudServerBO.builder()
+                .zone(instance.getPlacement().getZone())
+                .instanceName(instance.getInstanceName())
+                .instanceId(instance.getInstanceId())
+                .cpu(instance.getCPU().intValue())
+                .memory(instance.getMemory().intValue() * 1024)
+                .privateIp(instance.getPrivateIpAddresses()[0])
+                .publicIp(instance.getPublicIpAddresses() != null && instance.getPublicIpAddresses().length != 0 ? instance.getPublicIpAddresses()[0] : "")
+                .createdTime(TimeUtils.acqGmtDate(instance.getCreatedTime()))
+                .expiredTime(instance.getExpiredTime() != null ? TimeUtils.acqGmtDate(instance.getExpiredTime()) : null)
+                .chargeType(instance.getInstanceChargeType())
+                .systemDiskSize(instance.getSystemDisk().getDiskSize().intValue())
+                .dataDiskSize(instance.getDataDisks() != null && instance.getDataDisks().length != 0 ? instance.getDataDisks()[0].getDiskSize().intValue() : 0)
+                .imageId(instance.getImageId())
+                .cloudServerType(CloudServerType.CVM.getType())
+                .instanceDetail(instanceDetail)
+                .instanceType(instance.getInstanceType())
+                .build();
+        return covert(bo);
     }
 
     /**
@@ -218,14 +239,19 @@ public class CloudServerBuilder {
      */
     public static OcCloudServer build(ZabbixHostInstance hostInstance, String instanceDetail, String zone) {
         String privateIp = "";
-        if (!CollectionUtils.isEmpty(hostInstance.getInterfaceList()))
-            for (ZabbixHostInterface hostInterface : hostInstance.getInterfaceList()) {
-                if (hostInterface.getType().equals("1") && !StringUtils.isEmpty(hostInterface.getIp())) {
-                    privateIp = hostInterface.getIp();
-                    break;
-                }
-            }
-        CloudServerBO ocCloudserverBO = CloudServerBO.builder()
+        if (!CollectionUtils.isEmpty(hostInstance.getInterfaceList())) {
+            List<ZabbixHostInterface> interfaces = hostInstance.getInterfaceList().stream().filter(e -> e.getType().equals("1") && !StringUtils.isEmpty(e.getIp())).collect(Collectors.toList());
+            if (!CollectionUtils.isEmpty(interfaces))
+                privateIp = interfaces.get(0).getIp();
+        }
+//
+//            for (ZabbixHostInterface hostInterface : hostInstance.getInterfaceList()) {
+//                if (hostInterface.getType().equals("1") && !StringUtils.isEmpty(hostInterface.getIp())) {
+//                    privateIp = hostInterface.getIp();
+//                    break;
+//                }
+//            }
+        CloudServerBO bo = CloudServerBO.builder()
                 .instanceType("ZabbixHost")
                 .instanceName(hostInstance.getHost().getName())
                 .instanceId(hostInstance.getHost().getHostid())
@@ -237,10 +263,10 @@ public class CloudServerBuilder {
                 .createdTime(new Date())
                 .zone(zone)
                 .build();
-        return covert(ocCloudserverBO);
+        return covert(bo);
     }
 
-    private static OcCloudServer covert(CloudServerBO ocCloudserverBO){
+    private static OcCloudServer covert(CloudServerBO ocCloudserverBO) {
         return BeanCopierUtils.copyProperties(ocCloudserverBO, OcCloudServer.class);
     }
 

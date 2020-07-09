@@ -193,29 +193,21 @@ public class AccountCenter implements InitializingBean {
             for (String key : accountContainer.keySet()) {
                 if (key.equals(LDAP_ACCOUNT_KEY)) continue;
                 IAccount account = accountContainer.get(key);
-                if (!account.update(user))
-                    return Boolean.FALSE;
+                account.update(user);
             }
         }
         return Boolean.TRUE;
     }
 
-    public Boolean pushSSHKey(OcUser user) {
+    public void pushSSHKey(OcUser user) {
         Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
-        for (String key : accountContainer.keySet()) {
-            if (key.equals(LDAP_ACCOUNT_KEY)) continue;
-            IAccount account = accountContainer.get(key);
-            if (!account.pushSSHKey(user))
-                return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
+        accountContainer.keySet().forEach(k -> accountContainer.get(k).pushSSHKey(user));
     }
 
-    public Boolean sync(String key) {
+    public void sync(String key) {
         IAccount account = AccountFactory.getAccountByKey(key);
-        return account.sync();
+        account.sync();
     }
-
 
     @Override
     public void afterPropertiesSet() {
@@ -232,7 +224,6 @@ public class AccountCenter implements InitializingBean {
         OpscloudAdmin admin = authConfig.getAdmin();
         if (StringUtils.isEmpty(admin.getUsername())) return;
         if (StringUtils.isEmpty(admin.getPassword())) return;
-
         OcUser ocUser = ocUserService.queryOcUserByUsername(admin.getUsername());
         if (ocUser != null) return;
         ocUser = UserBuilder.build(admin);

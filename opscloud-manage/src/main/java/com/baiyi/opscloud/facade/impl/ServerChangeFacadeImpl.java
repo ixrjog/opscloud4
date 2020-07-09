@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.builder.ServerChangeTaskBuilder;
 import com.baiyi.opscloud.common.base.ServerChangeType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.decorator.ServerChangeTaskDecorator;
+import com.baiyi.opscloud.decorator.server.ServerChangeTaskDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
@@ -47,8 +47,8 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     @Override
     public BusinessWrapper<String> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
-        BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
-        if (!wrapper.isSuccess()) return wrapper;
+        BusinessWrapper checkWrapper = checkServerChange(executeServerChangeParam, ocServer);
+        if (!checkWrapper .isSuccess()) return checkWrapper ;
 
         OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.OFFLINE.getType(),executeServerChangeParam.getTaskId());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
@@ -56,15 +56,14 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
         iServerChange.createFlow(ocServerChangeTask, ocServer);
         serverChangeHandler.executeChangeTask(ocServerChangeTask);
-        wrapper.setBody(ocServerChangeTask.getTaskId());
-        return wrapper;
+        return new BusinessWrapper<>(ocServerChangeTask.getTaskId());
     }
 
     @Override
     public BusinessWrapper<String> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
-        BusinessWrapper wrapper = checkServerChange(executeServerChangeParam, ocServer);
-        if (!wrapper.isSuccess()) return wrapper;
+        BusinessWrapper checkWrapper = checkServerChange(executeServerChangeParam, ocServer);
+        if (!checkWrapper .isSuccess()) return checkWrapper ;
 
         OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.ONLINE.getType(),executeServerChangeParam.getTaskId());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
@@ -72,8 +71,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.ONLINE.getType());
         iServerChange.createFlow(ocServerChangeTask, ocServer);
         serverChangeHandler.executeChangeTask(ocServerChangeTask);
-        wrapper.setBody(ocServerChangeTask.getTaskId());
-        return wrapper;
+        return new BusinessWrapper<>(ocServerChangeTask.getTaskId());
     }
 
     private BusinessWrapper<Boolean> checkServerChange(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam, OcServer ocServer) {

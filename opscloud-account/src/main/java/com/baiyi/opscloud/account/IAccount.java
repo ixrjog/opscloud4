@@ -16,7 +16,7 @@ public interface IAccount {
      *
      * @return
      */
-    Boolean sync();
+    void sync();
 
     Boolean sync(OcUser user);
 

@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.opscloud.domain.param.server.SeverGroupPropertyParam;
 import com.baiyi.opscloud.domain.param.user.UserServerTreeParam;
 import com.baiyi.opscloud.domain.vo.server.*;
 
@@ -47,6 +48,8 @@ public interface ServerGroupFacade {
     BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerGroupAttribute(int id);
 
     BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(int id);
+
+    BusinessWrapper<Map<Integer, Map<String, String>>> queryServerGroupPropertyMap(SeverGroupPropertyParam.PropertyParam propertyParam);
 
     BusinessWrapper<Boolean> saveServerGroupProperty(ServerGroupPropertyVO.ServerGroupProperty serverGroupProperty);
 

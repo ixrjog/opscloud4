@@ -16,6 +16,8 @@ public class BaseAliyunECS  {
 
     protected static final int QUERY_PAGE_SIZE = 50;
 
+    protected static final int QUERY_INSTANCE_PAGE_SIZE = 100;
+
     @Resource
     protected AliyunCore aliyunCore;
 

@@ -11,7 +11,7 @@ public interface IServer {
 
     String getKey();
 
-    Boolean sync();
+    void sync();
 
     Boolean disable(OcServer ocServer);
 

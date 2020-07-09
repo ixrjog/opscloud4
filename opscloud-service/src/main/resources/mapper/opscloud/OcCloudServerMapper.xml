@@ -43,7 +43,7 @@
         and cloud_server_type = #{cloudServerType}
       </if>
       <if test="serverName != null and serverName != ''">
-        and server_name like "%" #{serverName} "%"
+        and ( server_name like "%" #{serverName} "%" or instance_name like "%" #{serverName} "%" )
       </if>
       <if test="queryIp != null and queryIp != ''">
         and private_ip like "%" #{queryIp} "%" or public_ip like "%" #{queryIp} "%"
