@@ -14,23 +14,25 @@ Opscloud面向云的DevOps平台，为企业内的研发提供运维服务
 
 ### 帮助文档
 
-<a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud/1780645" target="_blank">帮助文档: https://www.kancloud.cn/ixrjog/opscloud/1780645</a>
+<a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud/1780645" target="_blank">传送门 https://www.kancloud.cn/ixrjog/opscloud/1780645</a>
 
-### 最佳用户体验
-  + 显示器分辨率大于或等于1080P
-  + 浏览器Chrome/Safari
++ 3.0.1版本发布
+  + 支持Kubernetes管理
+  + 容器堡垒机
+  + Ansible配置文件订阅
+  + 阿里云RAM管理
+  + 阿里云日志服务同步
+  + 支持Jumpserver2.0.1版本
+  + 多云支持-腾讯云CVM
 
 + API接口文档
-  + knife4j接口文档（ https://doc.xiaominfo.com/knife4j ）
   + example.org/oc3/doc.html
-  + example.org/oc3/swagger-ui.html
 
 + 平台特性
   + 基于角色的访问控制RBAC(Role-Based Access Control),LDAP完整支持
   + 配置文件加密（密码, AK），数据库敏感字段加密
   + 代码即文档，全接口API
   + 前后端分离，支持跨域部署
-  + Java Springboot 开源的DevOps
 
 + 自动化运维特性
   + 外部平台或工具原生API调用
@@ -47,7 +49,7 @@ Opscloud面向云的DevOps平台，为企业内的研发提供运维服务
   + 多云支持
     + 阿里云
     + AWS
-    + 腾讯云（未开发）
+    + 腾讯云
     + 私有云VMware-vSphere
   + 账户对多平台自动映射（免去日常权限申请和配置）
 
