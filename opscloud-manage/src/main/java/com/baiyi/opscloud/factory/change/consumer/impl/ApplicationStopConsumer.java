@@ -5,6 +5,7 @@ import com.baiyi.opscloud.ansible.IAnsibleExecutor;
 import com.baiyi.opscloud.ansible.factory.ExecutorFactory;
 import com.baiyi.opscloud.ansible.impl.AnsibleScriptExecutor;
 import com.baiyi.opscloud.common.base.ServerChangeFlow;
+import com.baiyi.opscloud.common.base.ServerTaskType;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -88,10 +89,8 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow);
                     exit = true;
                 }
-            } catch (Exception e) {
-
+            } catch (Exception ignored) {
             }
-
         }
         return BusinessWrapper.SUCCESS;
     }
@@ -103,13 +102,12 @@ public class ApplicationStopConsumer extends BaseServerChangeConsumer implements
     private ServerTaskExecutorParam.ServerTaskScriptExecutor buildTaskExecutorParam(OcServer ocServer) {
         ServerTaskExecutorParam.ServerTaskScriptExecutor taskExecutor = new ServerTaskExecutorParam.ServerTaskScriptExecutor();
         taskExecutor.setScriptId(APPLICATION_STOP_SCRIPT_ID);
-        taskExecutor.setTaskType(1);
+        taskExecutor.setTaskType(ServerTaskType.SCRIPT.getType());
         taskExecutor.setConcurrent(1);
         Set<String> hostPatterns = Sets.newHashSet();
         hostPatterns.add(ServerBaseFacade.acqServerName(ocServer));
         taskExecutor.setHostPatterns(hostPatterns);
         return taskExecutor;
     }
-
 
 }

@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.factory.xterm.IXTermProcess;
 import com.baiyi.opscloud.factory.xterm.XTermProcessFactory;
+import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
@@ -67,6 +68,9 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
     @Resource
     private XTermConfig xtermConfig;
 
+    @Resource
+    private ServerAttributeFacade serverAttributeFacade;
+
     abstract protected BaseMessage getMessage(String message);
 
     /**
@@ -96,6 +100,8 @@ public abstract class BaseProcess implements IXTermProcess, InitializingBean {
 
         HostSystem hostSystem = new HostSystem();
         hostSystem.setHost(host);
+        // 自定义 ssh 端口
+        hostSystem.setPort(Integer.parseInt(serverAttributeFacade.getSSHPort(ocServer)));
         hostSystem.setSshKeyCredential(sshKeyCredential);
         hostSystem.setInitialMessage(baseMessage);
 

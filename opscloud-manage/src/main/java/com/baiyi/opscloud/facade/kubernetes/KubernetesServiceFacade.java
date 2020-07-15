@@ -71,6 +71,11 @@ public class KubernetesServiceFacade extends BaseKubernetesFacade {
         return new DataTable<>(page.stream().map(e -> kubernetesServiceDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
     }
 
+    public BusinessWrapper<KubernetesServiceVO.Service> queryKubernetesServiceByParam(KubernetesServiceParam.QueryParam queryParam) {
+        OcKubernetesService ocKubernetesService = ocKubernetesServiceService.queryOcKubernetesServiceByInstanceId(queryParam.getInstanceId());
+        return new BusinessWrapper(kubernetesServiceDecorator.decorator(BeanCopierUtils.copyProperties(ocKubernetesService, KubernetesServiceVO.Service.class), queryParam.getExtend()));
+    }
+
     @Async(value = ASYNC_POOL_TASK_COMMON)
     public void syncKubernetesService(int namespaceId) {
         OcKubernetesClusterNamespace ocKubernetesClusterNamespace = ocKubernetesClusterNamespaceService.queryOcKubernetesClusterNamespaceById(namespaceId);
@@ -135,8 +140,8 @@ public class KubernetesServiceFacade extends BaseKubernetesFacade {
         if (ocKubernetesCluster == null)
             return new BusinessWrapper(ErrorEnum.KUBERNETES_CLUSTER_NOT_EXIST);
         io.fabric8.kubernetes.api.model.Service service = kubernetesServiceHandler.createOrReplaceService(ocKubernetesCluster.getName(), ocKubernetesClusterNamespace.getNamespace(), serviceTemplate.getTemplateYaml());
-        if (service  != null) {
-            saveKubernetesService(Maps.newHashMap(), ocKubernetesClusterNamespace, service );
+        if (service != null) {
+            saveKubernetesService(Maps.newHashMap(), ocKubernetesClusterNamespace, service);
             return BusinessWrapper.SUCCESS;
         }
         return new BusinessWrapper(ErrorEnum.KUBERNETES_CREATE_SERVICE_ERROR);
@@ -157,6 +162,15 @@ public class KubernetesServiceFacade extends BaseKubernetesFacade {
         boolean result = kubernetesServiceHandler.deleteService(ocKubernetesCluster.getName(), ocKubernetesClusterNamespace.getNamespace(), serviceName);
         if (result) return BusinessWrapper.SUCCESS;
         return new BusinessWrapper(ErrorEnum.KUBERNETES_CREATE_SERVICE_ERROR);
+    }
+
+    public BusinessWrapper<Boolean> deleteKubernetesServiceById(int id) {
+        OcKubernetesService ocKubernetesService = ocKubernetesServiceService.queryOcKubernetesServiceById(id);
+        if(ocKubernetesService != null){
+            kubernetesServicePortFacade.delKubernetesServicePortByServiceId(id);
+            ocKubernetesServiceService.deleteOcKubernetesServiceById(id);
+        }
+        return BusinessWrapper.SUCCESS;
     }
 
 }

@@ -8,6 +8,14 @@ oc-server-attributes:
           name: global_enable_public_ip_mgmt
           value: false
           content: "启用公网ip管理，此配置将作用于:zabbix,jumpserver,keybox"
+        -
+          name: ssh_port
+          value: 22
+          content: "ssh端口"
+        -
+          name: platform
+          value: Linux
+          content: "平台类型"
     -
       name: ansible
       comment: Ansible属性配置项

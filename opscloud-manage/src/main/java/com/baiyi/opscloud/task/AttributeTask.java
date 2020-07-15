@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.task;
 
 import com.baiyi.opscloud.facade.AttributeFacade;
+import com.baiyi.opscloud.facade.ProfileSubscriptionFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -19,6 +20,9 @@ public class AttributeTask extends BaseTask {
     @Resource
     private AttributeFacade attributeFacade;
 
+    @Resource
+    private ProfileSubscriptionFacade profileSubscriptionFacade;
+
     public static final String TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY = "TASK_SERVER_ATTRIBUTE_ANSIBLE_HOSTS_KEY";
 
     public static final String TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC = "TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC";
@@ -32,10 +36,11 @@ public class AttributeTask extends BaseTask {
         if (tryLock()) return;
         clearTopic();
         attributeFacade.createAnsibleHostsTask();
+        profileSubscriptionFacade.publishProfile("ANSIBLE_HOSTS");
         unlock();
     }
 
-    private void clearTopic(){
+    private void clearTopic() {
         taskUtil.clearSignalCount(TASK_SERVER_ATTRIBUTE_ANSIBLE_TOPIC);
     }
 

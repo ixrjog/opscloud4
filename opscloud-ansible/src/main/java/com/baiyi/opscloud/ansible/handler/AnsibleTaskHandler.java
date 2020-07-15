@@ -52,7 +52,7 @@ public class AnsibleTaskHandler {
     public static final String ANSIBLE_DEFAULT_BECOME_USER = "root";
 
     // 任务最大并发数
-    public static final int TASK_MAX_CONCURRENT = 10;
+    public static final int TASK_MAX_CONCURRENT = 40;
 
     @Resource
     private AnsibleConfig ansibleConfig;
@@ -123,7 +123,7 @@ public class AnsibleTaskHandler {
                 exit = true;
             try {
                 Thread.sleep(1000);
-            } catch (Exception e) {
+            } catch (Exception ignored) {
             }
         }
     }

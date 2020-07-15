@@ -42,5 +42,7 @@ public interface KubernetesApplicationFacade {
 
     DataTable<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstancePage(KubernetesApplicationInstanceParam.PageQuery pageQuery);
 
+    BusinessWrapper<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstanceById(int id);
+
     List<String> queryKubernetesApplicationInstanceLabel(int envType);
 }

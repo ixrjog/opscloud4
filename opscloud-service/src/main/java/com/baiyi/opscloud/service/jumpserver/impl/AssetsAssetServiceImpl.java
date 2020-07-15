@@ -44,10 +44,8 @@ public class AssetsAssetServiceImpl implements AssetsAssetService {
         Example example = new Example(AssetsAsset.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("hostname", hostname);
-        List<AssetsAsset> list = assetsAssetMapper.selectByExample(example);
-        if (list != null && !list.isEmpty())
-            return list.get(0);
-        return null;
+        PageHelper.startPage(1, 1);
+        return assetsAssetMapper.selectOneByExample(example);
     }
 
     @Override

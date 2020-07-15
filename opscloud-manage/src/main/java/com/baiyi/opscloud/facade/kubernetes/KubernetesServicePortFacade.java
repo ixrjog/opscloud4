@@ -58,4 +58,9 @@ public class KubernetesServicePortFacade {
         portMap.keySet().forEach(k -> ocKubernetesServicePortService.deleteOcKubernetesServicePortById(portMap.get(k).getId()));
     }
 
+    public void delKubernetesServicePortByServiceId(int id) {
+        ocKubernetesServicePortService.queryOcKubernetesServicePortByServiceId(id).forEach(e -> ocKubernetesServicePortService.deleteOcKubernetesServicePortById(e.getId())
+        );
+    }
+
 }

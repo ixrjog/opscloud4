@@ -9,6 +9,8 @@ import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.facade.SettingBaseFacade;
+import com.baiyi.opscloud.jumpserver.api.JumpserverAPI;
+import com.baiyi.opscloud.jumpserver.api.JumpserverAssetAPI;
 import com.baiyi.opscloud.jumpserver.bo.UsersUsergroupBO;
 import com.baiyi.opscloud.jumpserver.builder.AssetsNodeBuilder;
 import com.baiyi.opscloud.jumpserver.builder.PermsAssetpermissionBuilder;
@@ -20,9 +22,11 @@ import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -71,6 +75,12 @@ public class JumpserverCenterImpl implements JumpserverCenter {
 
     @Resource
     private SettingBaseFacade settingBaseFacade;
+
+    @Resource
+    private JumpserverAPI jumpserverAPI;
+
+    @Resource
+    private JumpserverAssetAPI jumpserverAssetAPI;
 
     public static final String DATE_EXPIRED = "2089-01-01 00:00:00";
     // 管理员用户组 绑定 根节点
@@ -310,8 +320,11 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     }
 
     @Override
-    public void addAssetsAsset(AssetsAsset assetsAsset) {
-        assetsAssetService.addAssetsAsset(assetsAsset);
+    public void addAssetsAsset(AssetsAsset assetsAsset, String nodeId) {
+        // 新增资产 写库
+        // assetsAssetService.addAssetsAsset(assetsAsset);
+        // API
+        jumpserverAssetAPI.createAsset(assetsAsset, nodeId);
     }
 
 
@@ -334,7 +347,11 @@ public class JumpserverCenterImpl implements JumpserverCenter {
                 return;
             assetsAssetNodesService.delAssetsAssetNodes(assetsAssetNodes.getId());
         } else {
-            assetsAssetNodesService.addAssetsAssetNodes(pre);
+            try {
+                assetsAssetNodesService.addAssetsAssetNodes(pre);
+            } catch (Exception ignored) {
+            }
+
         }
     }
 
@@ -352,7 +369,11 @@ public class JumpserverCenterImpl implements JumpserverCenter {
 
         AssetsSystemuserAssets assetsSystemuserAssets = assetsSystemuserAssetsService.queryAssetsSystemuserAssetsByUniqueKey(pre);
         if (assetsSystemuserAssets == null)
-            assetsSystemuserAssetsService.addAssetsSystemuserAssets(pre);
+            try {
+                assetsSystemuserAssetsService.addAssetsSystemuserAssets(pre);
+            } catch (Exception e) {
+                // 此错误不需要处理，由于通过API创建资产，不需要绑定账户
+            }
     }
 
     @Override
@@ -375,9 +396,9 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         }
 
         try {
-            OpsAdhocHosts opsAdhocHosts = opsAdhocHostsService.queryOpsAdhocHostsByAssetId(assetId);
-            if (opsAdhocHosts != null)
-                opsAdhocHostsService.deleteOpsAdhocHostsById(opsAdhocHosts.getId());
+            List<OpsAdhocHosts> list = opsAdhocHostsService.queryOpsAdhocHostsByAssetId(assetId);
+            if (!CollectionUtils.isEmpty(list))
+                list.forEach(e -> opsAdhocHostsService.deleteOpsAdhocHostsById(e.getId()));
         } catch (Exception e) {
             e.printStackTrace();
         }

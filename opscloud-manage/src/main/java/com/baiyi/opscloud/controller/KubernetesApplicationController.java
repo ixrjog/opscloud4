@@ -39,7 +39,6 @@ public class KubernetesApplicationController {
         return new HttpResult<>(kubernetesApplicationFacade.queryMyKubernetesApplicationPage(pageQuery));
     }
 
-
     @ApiOperation(value = "分页应用配置")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<KubernetesApplicationVO.Application>> queryKubernetesApplicationPage(@RequestBody @Valid KubernetesApplicationParam.PageQuery pageQuery) {
@@ -62,6 +61,12 @@ public class KubernetesApplicationController {
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteKubernetesApplicationById(@RequestParam int id) {
         return new HttpResult<>(kubernetesApplicationFacade.deleteKubernetesApplicationById(id));
+    }
+
+    @ApiOperation(value = "查询应用实例配置")
+    @GetMapping(value = "/instance/id/query",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstanceById(@RequestParam @Valid int id) {
+        return new HttpResult<>(kubernetesApplicationFacade.queryKubernetesApplicationInstanceById(id));
     }
 
     @ApiOperation(value = "分页查询应用实例配置")
@@ -99,7 +104,6 @@ public class KubernetesApplicationController {
     public HttpResult<Boolean> deleteKubernetesService(@RequestParam int id) {
         return new HttpResult<>(kubernetesApplicationFacade.deleteKubernetesServiceById(id));
     }
-
 
     @ApiOperation(value = "更新应用实例配置")
     @PutMapping(value = "/instance/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

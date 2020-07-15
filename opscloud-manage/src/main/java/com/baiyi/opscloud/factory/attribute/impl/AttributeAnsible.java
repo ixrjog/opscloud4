@@ -115,7 +115,7 @@ public class AttributeAnsible extends AttributeBase {
             comment = ocServerGroup.getName();
         StringBuilder result = new StringBuilder("# " + comment + "\n");
 
-        serverMap.keySet().forEach(k->{
+        serverMap.keySet().forEach(k -> {
             result.append(Joiner.on("").join("[", k, "]\n"));
             List<OcServer> serverList = serverMap.get(k);
             serverList.forEach(s -> result.append(acqHostLine(s)));
@@ -126,11 +126,19 @@ public class AttributeAnsible extends AttributeBase {
 
     private String acqHostLine(OcServer ocServer) {
         String serverName = ServerBaseFacade.acqServerName(ocServer);
-        return Joiner.on(" ").join(getManageIp(ocServer),
-                "ansible_ssh_user=" + settingFacade.querySetting(SettingName.SERVER_HIGH_AUTHORITY_ACCOUNT),
-                "cloudServerType=" + getCloudServerType(ocServer),
-                "hostname=" + serverName,
+        // 支持自定义端口
+        String port = serverAttributeFacade.getSSHPort(ocServer);
+        return Joiner.on(" ").skipNulls().join(getManageIp(ocServer),
+                link("ansible_ssh_user", settingFacade.querySetting(SettingName.SERVER_HIGH_AUTHORITY_ACCOUNT)),
+                link("ansible_ssh_port", "22".equalsIgnoreCase(port) ? null : port),
+                link("cloudServerType", getCloudServerType(ocServer)),
+                link("hostname", serverName),
                 "#", serverName, "\n");
+    }
+
+    private String link(String k, String v) {
+        if (StringUtils.isEmpty(v)) return null;
+        return Joiner.on("=").join(k, v);
     }
 
     private String getCloudServerType(OcServer ocServer) {

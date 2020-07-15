@@ -93,6 +93,12 @@ public class KubernetesApplicationFacadeImpl implements KubernetesApplicationFac
     }
 
     @Override
+    public BusinessWrapper<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstanceById(int id) {
+        OcKubernetesApplicationInstance ocKubernetesApplicationInstance = ocKubernetesApplicationInstanceService.queryOcKubernetesApplicationInstanceById(id);
+        return new BusinessWrapper<>(kubernetesApplicationInstanceDecorator.decorator(ocKubernetesApplicationInstance, 1));
+    }
+
+    @Override
     public List<String> queryKubernetesApplicationInstanceLabel(int envType) {
         OcEnv ocEnv = ocEnvService.queryOcEnvByType(envType);
         if (ocEnv == null) return Lists.newArrayList();

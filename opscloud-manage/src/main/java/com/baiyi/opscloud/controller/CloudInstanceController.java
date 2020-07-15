@@ -89,9 +89,9 @@ public class CloudInstanceController {
         return new HttpResult<>(cloudInstanceFacade.queryCloudInstanceTemplateVSwitch(templateId, zoneId));
     }
 
-    @ApiOperation(value = "创建ECS实例")
+    @ApiOperation(value = "创建ECS实例, 返回taskId")
     @PostMapping(value = "/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> createCloudInstance(@RequestBody @Valid CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance) {
+    public HttpResult<Integer> createCloudInstance(@RequestBody @Valid CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance) {
         return new HttpResult<>(cloudInstanceFacade.createCloudInstance(createCloudInstance));
     }
 

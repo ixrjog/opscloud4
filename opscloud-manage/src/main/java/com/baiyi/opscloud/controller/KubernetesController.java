@@ -133,6 +133,18 @@ public class KubernetesController {
         return new HttpResult<>(kubernetesFacade.queryKubernetesServicePage(pageQuery));
     }
 
+    @ApiOperation(value = "查询服务配置")
+    @PostMapping(value = "/service/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<KubernetesServiceVO.Service> queryKubernetesServicePage(@RequestBody @Valid KubernetesServiceParam.QueryParam queryParam ) {
+        return new HttpResult<>(kubernetesFacade.queryKubernetesServiceByParam(queryParam));
+    }
+
+    @ApiOperation(value = "删除服务配置")
+    @DeleteMapping(value = "/service/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteKubernetesServiceById(@RequestParam int id) {
+        return new HttpResult<>(kubernetesFacade.deleteKubernetesServiceById(id));
+    }
+
     @ApiOperation(value = "更新服务配置")
     @PutMapping(value = "/service/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncKubernetesService(@RequestParam @Valid int namespaceId) {

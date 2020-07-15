@@ -6,20 +6,20 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="subscription_type" jdbcType="VARCHAR" property="subscriptionType" />
     <result column="name" jdbcType="VARCHAR" property="name" />
+    <result column="subscription_type" jdbcType="VARCHAR" property="subscriptionType" />
+    <result column="server_group_id" jdbcType="INTEGER" property="serverGroupId" />
     <result column="host_pattern" jdbcType="VARCHAR" property="hostPattern" />
-    <result column="comment" jdbcType="VARCHAR" property="comment" />
+    <result column="script_id" jdbcType="INTEGER" property="scriptId" />
     <result column="server_task_id" jdbcType="INTEGER" property="serverTaskId" />
     <result column="execution_time" jdbcType="TIMESTAMP" property="executionTime" />
+    <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="vars" jdbcType="LONGVARCHAR" property="vars" />
   </resultMap>
 
-  <select id="queryOcProfileSubscriptionParam"
-          parameterType="com.baiyi.opscloud.domain.param.profile.ProfileSubscriptionParam$PageQuery"
-          resultMap="BaseResultMap">
+  <select id="queryOcProfileSubscriptionParam" parameterType="com.baiyi.opscloud.domain.param.profile.ProfileSubscriptionParam$PageQuery" resultMap="BaseResultMap">
     select * from oc_profile_subscription
     <where>
       <if test="queryName != null and queryName != ''">

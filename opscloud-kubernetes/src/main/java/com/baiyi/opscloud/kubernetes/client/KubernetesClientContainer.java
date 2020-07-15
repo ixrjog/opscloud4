@@ -23,7 +23,6 @@ import java.util.Map;
 @Component
 public class KubernetesClientContainer implements InitializingBean {
 
-
     private static final int CONNECTION_TIMEOUT = 30 * 1000;
     private static final int REQUEST_TIMEOUT = 30 * 1000;
     private static Map<String, KubernetesClient> clientContainer;
@@ -55,7 +54,10 @@ public class KubernetesClientContainer implements InitializingBean {
 
     private KubernetesClient buildClient(OcKubernetesCluster ocKubernetesCluster) {
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE, kubernetesConfig.acqKubeconfigPath(ocKubernetesCluster.getName()));
-        io.fabric8.kubernetes.client.Config config = new ConfigBuilder().withMasterUrl(ocKubernetesCluster.getMasterUrl()).withTrustCerts(true).build();
+        io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
+                .withMasterUrl(ocKubernetesCluster.getMasterUrl())
+                .withTrustCerts(true)
+                .build();
         config.setConnectionTimeout(CONNECTION_TIMEOUT);
         config.setRequestTimeout(REQUEST_TIMEOUT);
         return new DefaultKubernetesClient(config);

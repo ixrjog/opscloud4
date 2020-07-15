@@ -32,5 +32,7 @@ public interface ServerAttributeFacade {
 
     String getManageIp(OcServer ocServer);
 
+    String getSSHPort(OcServer ocServer);
+
     // Map<String, String> getServerAttributeMap(int serverId);
 }

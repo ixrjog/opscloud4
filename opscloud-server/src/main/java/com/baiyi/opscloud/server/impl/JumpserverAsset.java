@@ -10,9 +10,8 @@ import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.server.IServer;
 import com.baiyi.opscloud.server.builder.AssetsAssetBuilder;
 import com.baiyi.opscloud.server.decorator.JumpserverSettingsDecorator;
-import com.baiyi.opscloud.service.jumpserver.AssetsAssetNodesService;
 import com.baiyi.opscloud.service.jumpserver.AssetsAssetService;
-import com.baiyi.opscloud.service.jumpserver.AssetsSystemuserAssetsService;
+import com.baiyi.opscloud.service.jumpserver.AssetsNodeService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
@@ -45,13 +44,10 @@ public class JumpserverAsset extends BaseServer implements IServer {
     private JumpserverSettingsDecorator jumpserverSettingsDecorator;
 
     @Resource
-    private AssetsAssetNodesService assetsAssetNodesService;
-
-    @Resource
-    private AssetsSystemuserAssetsService assetsSystemuserAssetsService;
-
-    @Resource
     private AssetsAssetService assetsAssetService;
+
+    @Resource
+    private AssetsNodeService assetsNodeService;
 
     @Override
     public void sync() {
@@ -85,7 +81,6 @@ public class JumpserverAsset extends BaseServer implements IServer {
         if (CollectionUtils.isEmpty(assets)) return Maps.newHashMap();
         return assets.stream().collect(Collectors.toMap(AssetsAsset::getId, a -> a, (k1, k2) -> k1));
     }
-
 
     @Override
     public Boolean create(OcServer ocServer) {
@@ -137,7 +132,6 @@ public class JumpserverAsset extends BaseServer implements IServer {
         return assetsAsset != null;
     }
 
-
     private AssetsNode saveAssetsNode(OcServerGroup ocServerGroup) {
         // 创建资产节点（服务器组）
         AssetsNode assetsNode = jumpserverCenter.createAssetsNode(ocServerGroup);
@@ -188,12 +182,21 @@ public class JumpserverAsset extends BaseServer implements IServer {
             jumpserverCenter.updateAssetsAsset(assetsAsset);
         } else {
             String manageIp = getManageIp(ocServer);
-            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer), assetComment);
+            Integer port = getSSHPort(ocServer);
+            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer),port, assetComment);
             if (!StringUtils.isEmpty(comment))
                 assetsAsset.setComment(comment);
-            jumpserverCenter.addAssetsAsset(assetsAsset);
+            jumpserverCenter.addAssetsAsset( assetsAsset,acqNodeId(ocServer));
         }
         return assetsAsset;
+    }
+
+    private String acqNodeId(OcServer ocServer) {
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
+        AssetsNode assetsNode = assetsNodeService.queryAssetsNodeByValue(ocServerGroup.getName());
+        if(assetsNode != null)
+            return assetsNode.getId();
+        return null;
     }
 
     private String getAdminuserId() {

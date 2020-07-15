@@ -25,14 +25,14 @@ public class DepartmentDecorator {
         if (deptList == null || deptList.isEmpty())
             return null;
         List<TreeVO.DeptTree> treeList = Lists.newArrayList();
-        for (OcOrgDepartment ocOrgDepartment : deptList) {
+        deptList.forEach(e -> {
             TreeVO.DeptTree tree = TreeVO.DeptTree.builder()
-                    .id(ocOrgDepartment.getId())
-                    .label(ocOrgDepartment.getName())
+                    .id(e.getId())
+                    .label(e.getName())
                     .build();
             invokeChildren(tree);
             treeList.add(tree);
-        }
+        });
         return treeList;
     }
 
@@ -46,8 +46,7 @@ public class DepartmentDecorator {
         if (departmentTree == null)
             return;
         if (departmentTree.getTree() != null) {
-            for (TreeVO.DeptTree t : departmentTree.getTree())
-                invokeChildren(t);
+            departmentTree.getTree().forEach(this::invokeChildren);
             tree.setChildren(departmentTree.getTree());
         }
     }

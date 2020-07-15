@@ -8,6 +8,7 @@ import com.baiyi.opscloud.service.profile.OcProfileSubscriptionService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -28,6 +29,34 @@ public class OcProfileSubscriptionServiceImpl implements OcProfileSubscriptionSe
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcProfileSubscription> list = ocProfileSubscriptionMapper.queryOcProfileSubscriptionParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
+    }
+
+    @Override
+    public void addOcProfileSubscription(OcProfileSubscription ocProfileSubscription) {
+        ocProfileSubscriptionMapper.insert(ocProfileSubscription);
+    }
+
+    @Override
+    public void updateOcProfileSubscription(OcProfileSubscription ocProfileSubscription) {
+        ocProfileSubscriptionMapper.updateByPrimaryKey(ocProfileSubscription);
+    }
+
+    @Override
+    public void deleteOcProfileSubscriptionById(int id) {
+        ocProfileSubscriptionMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public OcProfileSubscription queryOcProfileSubscriptionById(int id) {
+        return ocProfileSubscriptionMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<OcProfileSubscription> queryOcProfileSubscriptionBySubscriptionType(String subscriptionType){
+        Example example = new Example(OcProfileSubscription.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("subscriptionType", subscriptionType);
+        return ocProfileSubscriptionMapper.selectByExample(example);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_aliyun_ram_policy")
 public class OcAliyunRamPolicy {
@@ -61,10 +61,10 @@ public class OcAliyunRamPolicy {
     /**
      * 策略更新时间
      */
-    @Column(name = "update_date")
+    @Column(name = "update_date", insertable = false, updatable = false)
     private Date updateDate;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
     @Column(name = "update_time")

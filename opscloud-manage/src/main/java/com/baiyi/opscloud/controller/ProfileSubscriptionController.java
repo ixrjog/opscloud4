@@ -8,9 +8,7 @@ import com.baiyi.opscloud.facade.ProfileSubscriptionFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -29,9 +27,27 @@ public class ProfileSubscriptionController {
     private ProfileSubscriptionFacade profileSubscriptionFacade;
 
     @ApiOperation(value = "分页查询配置文件订阅配置列表")
-    @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ProfileSubscriptionVO.ProfileSubscription>> queryProfileSubscriptionPage(@Valid ProfileSubscriptionParam.PageQuery pageQuery) {
+    @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ProfileSubscriptionVO.ProfileSubscription>> queryProfileSubscriptionPage(@RequestBody @Valid ProfileSubscriptionParam.PageQuery pageQuery) {
         return new HttpResult<>(profileSubscriptionFacade.queryProfileSubscriptionPage(pageQuery));
+    }
+
+    @ApiOperation(value = "新增订阅配置")
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addProfileSubscription(@RequestBody @Valid ProfileSubscriptionVO.ProfileSubscription profileSubscription) {
+        return new HttpResult<>(profileSubscriptionFacade.addProfileSubscription(profileSubscription));
+    }
+
+    @ApiOperation(value = "更新订阅配置")
+    @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateProfileSubscription(@RequestBody @Valid ProfileSubscriptionVO.ProfileSubscription profileSubscription) {
+        return new HttpResult<>(profileSubscriptionFacade.updateProfileSubscription(profileSubscription));
+    }
+
+    @ApiOperation(value = "发布")
+    @GetMapping(value = "/publish", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> publishProfile(@RequestParam @Valid int id) {
+        return new HttpResult<>(profileSubscriptionFacade.publishProfile(id));
     }
 
 }

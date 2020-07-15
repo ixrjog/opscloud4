@@ -123,7 +123,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> createCloudInstance(CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance) {
+    public BusinessWrapper<Integer> createCloudInstance(CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance) {
         // 校验模版
         OcCloudInstanceTemplate ocCloudInstanceTemplate = ocCloudInstanceTemplateService.queryOcCloudInstanceTemplateById(createCloudInstance.getTemplateId());
         if (ocCloudInstanceTemplate == null)
@@ -167,7 +167,7 @@ public class CloudInstanceFacadeImpl implements CloudInstanceFacade {
         ocCloudInstanceTaskService.addOcCloudInstanceTask(ocCloudInstanceTask);
         // 执行任务
         cloudInstanceTaskFacade.doCreateInstanceTask(ocCloudInstanceTask, createCloudInstanceBO);
-        return BusinessWrapper.SUCCESS;
+        return new BusinessWrapper(ocCloudInstanceTask.getId());
     }
 
 

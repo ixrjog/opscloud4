@@ -30,11 +30,10 @@ public class AnsibleCommandExecutor extends BaseExecutor implements IAnsibleExec
             return new BusinessWrapper(ErrorEnum.EXECUTOR_PARAM_TYPE_ERROR);
         ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskCommandExecutor = (ServerTaskExecutorParam.ServerTaskCommandExecutor) taskExecutor;
         OcUser ocUser = getOcUser();
-
-        BusinessWrapper wrapper = getServerTreeHostPatternMap(serverTaskCommandExecutor.getUuid(), ocUser);
+        BusinessWrapper<Map<String, String>> wrapper = getServerTreeHostPatternMap(serverTaskCommandExecutor.getUuid(), ocUser);
         if (!wrapper.isSuccess())
-            return wrapper;
-        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
+            return new BusinessWrapper<>(wrapper.getCode(), wrapper.getDesc());
+        Map<String, String> serverTreeHostPatternMap = wrapper.getBody();
 
         // 录入任务
         OcServerTask ocServerTask = ServerTaskBuilder.build(ocUser, serverTreeHostPatternMap, serverTaskCommandExecutor);

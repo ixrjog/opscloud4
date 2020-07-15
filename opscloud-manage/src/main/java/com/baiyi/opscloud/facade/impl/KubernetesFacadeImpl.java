@@ -195,7 +195,7 @@ public class KubernetesFacadeImpl implements KubernetesFacade {
         DataTable<OcKubernetesTemplate> table = getKubernetesTemplateDataTable(pageQuery);
         List<KubernetesTemplateVO.Template> page = BeanCopierUtils.copyListProperties(table.getData(), KubernetesTemplateVO.Template.class);
         OcKubernetesApplicationInstance ocKubernetesApplicationInstance = ocKubernetesApplicationInstanceService.queryOcKubernetesApplicationInstanceById(pageQuery.getInstanceId());
-        return new DataTable<>(page.stream().map(e -> kubernetesTemplateDecorator.decorator(e,ocKubernetesApplicationInstance)).collect(Collectors.toList()), table.getTotalNum());
+        return new DataTable<>(page.stream().map(e -> kubernetesTemplateDecorator.decorator(e, ocKubernetesApplicationInstance)).collect(Collectors.toList()), table.getTotalNum());
     }
 
     private DataTable<OcKubernetesTemplate> getKubernetesTemplateDataTable(KubernetesTemplateParam.PageQuery pageQuery) {
@@ -225,6 +225,16 @@ public class KubernetesFacadeImpl implements KubernetesFacade {
     @Override
     public DataTable<KubernetesServiceVO.Service> queryKubernetesServicePage(KubernetesServiceParam.PageQuery pageQuery) {
         return kubernetesServiceFacade.queryKubernetesServicePage(pageQuery);
+    }
+
+    @Override
+    public BusinessWrapper<KubernetesServiceVO.Service> queryKubernetesServiceByParam(KubernetesServiceParam.QueryParam queryParam) {
+        return kubernetesServiceFacade.queryKubernetesServiceByParam(queryParam);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> deleteKubernetesServiceById(int id){
+        return kubernetesServiceFacade.deleteKubernetesServiceById(id);
     }
 
 

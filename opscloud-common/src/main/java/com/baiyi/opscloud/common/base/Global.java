@@ -11,6 +11,8 @@ public class Global {
 
     public static final String SERVER_ATTRIBUTE_GLOBAL_ENABLE_PUBLIC_IP_MGMT = "global_enable_public_ip_mgmt";
 
+    public static final String SERVER_ATTRIBUTE_GLOBAL_SSH_PORT = "ssh_port";
+
     public static final String SERVER_ATTRIBUTE_ANSIBLE_SUBGROUP = "ansible_subgroup";
 
     public static final String SERVER_ATTRIBUTE_ZABBIX_BIDIRECTIONAL_SYNC = "zabbix_bidirectional_sync";
@@ -31,6 +33,8 @@ public class Global {
     // public static final String HIGH_AUTHORITY_ACCOUNT = "admin";
 
     public static final String ENV_PROD = "prod";
+
+    public static final String JUMPSERVER_ADMIN_TOKEN = "jumpserverAdminToken";
 
 
 }

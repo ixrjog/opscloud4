@@ -54,7 +54,7 @@ public interface JumpserverCenter {
 
     void updateAssetsAsset(AssetsAsset assetsAsset);
 
-    void addAssetsAsset(AssetsAsset assetsAsset);
+    void addAssetsAsset(AssetsAsset assetsAsset,String nodeId);
 
     void bindAssetsAssetNodes(AssetsAsset assetsAsset, AssetsNode assetsNode);
 

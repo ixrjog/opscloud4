@@ -22,6 +22,9 @@
             <if test="queryName != null and queryName != ''">
                 name like "%" #{queryName} "%" or comment like "%" #{queryName} "%"
             </if>
+            <if test="serverGroupId != null and serverGroupId > 0">
+                and server_group_id = #{serverGroupId}
+            </if>
         </where>
         order by replace( name, #{queryName}, '' )
     </select>

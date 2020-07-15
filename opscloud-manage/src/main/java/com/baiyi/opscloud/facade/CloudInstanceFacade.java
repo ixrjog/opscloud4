@@ -21,7 +21,7 @@ public interface CloudInstanceFacade {
 
     BusinessWrapper<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplate(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
 
-    BusinessWrapper<Boolean> createCloudInstance( CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance);
+    BusinessWrapper<Integer> createCloudInstance( CloudInstanceTemplateParam.CreateCloudInstance createCloudInstance);
 
     BusinessWrapper<CloudInstanceTemplateVO.CloudInstanceTemplate> saveCloudInstanceTemplateYAML(CloudInstanceTemplateVO.CloudInstanceTemplate cloudInstanceTemplate);
 

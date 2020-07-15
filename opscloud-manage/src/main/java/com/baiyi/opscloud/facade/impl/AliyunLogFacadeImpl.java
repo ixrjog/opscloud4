@@ -127,7 +127,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         if (!ocServer.getIsActive()) return false; // 过滤无效服务器
         // 过滤环境类型（只留线上机器）
         OcEnv ocEnv = ocEnvService.queryOcEnvByName(Global.ENV_PROD);
-        return ocEnv.getEnvType().equals(ocServer.getEnvType()) && ocServer.getServerType() == CloudServerType.ECS.getType();
+        return ocEnv.getEnvType().equals(ocServer.getEnvType()) && (ocServer.getServerType() == CloudServerType.ECS.getType() || ocServer.getServerType() == CloudServerType.EC2.getType());
     }
 
     private void updateOcAliyunLogMemberLastPushTime(OcAliyunLogMember ocAliyunLogMember) {
@@ -137,12 +137,9 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
 
     @Override
     public BusinessWrapper<Boolean> pushLog(int id) {
-        ocAliyunLogMemberService.queryOcAliyunLogMemberByLogId(id).forEach(e ->
-                pushLogMember(e.getId())
-        );
+        ocAliyunLogMemberService.queryOcAliyunLogMemberByLogId(id).forEach(e -> pushLogMember(e.getId()));
         return BusinessWrapper.SUCCESS;
     }
-
 
     @Override
     public BusinessWrapper<Boolean> addLogMember(AliyunLogMemberParam.AddLogMember addLogMember) {

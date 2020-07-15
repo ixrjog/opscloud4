@@ -50,8 +50,8 @@ public abstract class BaseServer implements InitializingBean, IServer {
         return ocServerGroup.getName();
     }
 
-    protected OcServerGroup getOcServerGroup(OcServer ocServer){
-        return  ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
+    protected OcServerGroup getOcServerGroup(OcServer ocServer) {
+        return ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
     }
 
     protected List<OcServerGroup> getServerGroupList() {
@@ -64,6 +64,10 @@ public abstract class BaseServer implements InitializingBean, IServer {
 
     protected String getManageIp(OcServer ocServer) {
         return serverAttributeFacade.getManageIp(ocServer);
+    }
+
+    protected Integer getSSHPort(OcServer ocServer) {
+        return Integer.parseInt(serverAttributeFacade.getSSHPort(ocServer));
     }
 
     protected Map<String, String> getServerAttributeMap(OcServer ocServer) {

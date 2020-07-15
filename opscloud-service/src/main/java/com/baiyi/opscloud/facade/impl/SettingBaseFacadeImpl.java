@@ -51,9 +51,9 @@ public class SettingBaseFacadeImpl implements SettingBaseFacade {
     }
 
     @Override
-    public BusinessWrapper<Boolean> updateSetting(SettingParam.UpdateSettingParam updateSettingParam){
+    public BusinessWrapper<Boolean> updateSetting(SettingParam.UpdateSettingParam updateSettingParam) {
         OcSetting ocSetting = ocSettingService.queryOcSettingByName(updateSettingParam.getName());
-        if(ocSetting == null) return new BusinessWrapper<>(10000,"配置项不存在");
+        if (ocSetting == null) return new BusinessWrapper<>(10000, "配置项不存在");
         ocSetting.setSettingValue(updateSettingParam.getSettingValue());
         ocSettingService.updateOcSetting(ocSetting);
         return BusinessWrapper.SUCCESS;

@@ -53,11 +53,9 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
     public List<OcServerAttribute> getServerAttribute(OcServer ocServer) {
         List<OcServerAttribute> serverAttributeList = Lists.newArrayList();
         // 服务器组属性
-        List<OcServerAttribute> list = getServerGroupAttribute(getOcServerGroup(ocServer));
-        for (OcServerAttribute serverGroupAttribute : list) {
+        getServerGroupAttribute(getOcServerGroup(ocServer)).forEach(e -> {
             // serverGroup的属性配置
-            AttributeGroup ag = ServerAttributeUtils.convert(serverGroupAttribute.getAttributes());
-
+            AttributeGroup ag = ServerAttributeUtils.convert(e.getAttributes());
             OcServerAttribute ocServerAttribute = ServerAttributeBuilder.build(ag.getName(), BusinessType.SERVER.getType(), ocServer.getId());
             OcServerAttribute preServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(ocServerAttribute);
             if (preServerAttribute == null) {
@@ -68,13 +66,13 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
                 try {
                     AttributeGroup attributeGroup = ServerAttributeUtils.convert(preServerAttribute.getAttributes());
                     serverAttributeList.add(ServerAttributeBuilder.build(preServerAttribute.getId(), ServerAttributeDecorator.decorator(ag, attributeGroup), ocServer));
-                } catch (Exception e) {
+                } catch (Exception ex) {
                     // 数据格式错误，删除数据后生成默认配置项
                     ocServerAttributeService.deleteOcServerAttributeById(preServerAttribute.getId());
                     serverAttributeList.add(ServerAttributeBuilder.build(ag, ocServer));
                 }
             }
-        }
+        });
         return serverAttributeList;
     }
 
@@ -86,8 +84,7 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
 
     public List<OcServerAttribute> getServerGroupAttribute(OcServerGroup ocServerGroup) {
         List<OcServerAttribute> serverAttributeList = Lists.newArrayList();
-        List<AttributeGroup> attributeGroups = attributeConfig.getGroups();
-        for (AttributeGroup ag : attributeGroups) {
+        attributeConfig.getGroups().forEach(ag -> {
             OcServerAttribute ocServerAttribute = ServerAttributeBuilder.build(ag.getName(), BusinessType.SERVERGROUP.getType(), ocServerGroup.getId());
             OcServerAttribute preServerAttribute = ocServerAttributeService.queryOcServerAttributeByUniqueKey(ocServerAttribute);
             if (preServerAttribute == null) {
@@ -104,7 +101,7 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
                     serverAttributeList.add(ServerAttributeBuilder.build(ag, ocServerGroup));
                 }
             }
-        }
+        });
         return serverAttributeList;
     }
 
@@ -120,8 +117,7 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
 
     @Override
     public void deleteServerAttributeByList(List<OcServerAttribute> serverAttributeList) {
-        for (OcServerAttribute serverAttribute : serverAttributeList)
-            ocServerAttributeService.deleteOcServerAttributeById(serverAttribute.getId());
+        serverAttributeList.forEach(e -> ocServerAttributeService.deleteOcServerAttributeById(e.getId()));
     }
 
     @Override
@@ -197,6 +193,16 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
                 return ocServer.getPublicIp();
         }
         return ocServer.getPrivateIp();
+    }
+
+    @Override
+    public String getSSHPort(OcServer ocServer) {
+        Map<String, String> map = getServerAttributeMap(ocServer);
+        if (map == null)
+            return "22";
+        if (map.containsKey(Global.SERVER_ATTRIBUTE_GLOBAL_SSH_PORT))
+            return map.get(Global.SERVER_ATTRIBUTE_GLOBAL_SSH_PORT);
+        return "22";
     }
 
 }

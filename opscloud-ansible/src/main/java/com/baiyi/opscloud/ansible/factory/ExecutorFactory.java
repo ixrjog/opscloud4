@@ -14,15 +14,15 @@ public class ExecutorFactory {
 
     static Map<String, IAnsibleExecutor> context = new ConcurrentHashMap<>();
 
-    public static IAnsibleExecutor  getAnsibleExecutorByKey(String key) {
+    public static IAnsibleExecutor getAnsibleExecutorByKey(String key) {
         return context.get(key);
     }
 
-    public static void register(IAnsibleExecutor  bean) {
+    public static void register(IAnsibleExecutor bean) {
         context.put(bean.getKey(), bean);
     }
 
-    public static Map<String, IAnsibleExecutor > getAnsibleExecutorContainer() {
+    public static Map<String, IAnsibleExecutor> getAnsibleExecutorContainer() {
         return context;
     }
 

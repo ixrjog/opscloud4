@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Table(name = "oc_profile_subscription")
 public class OcProfileSubscription {
@@ -10,15 +10,18 @@ public class OcProfileSubscription {
     private Integer id;
 
     /**
+     * 名称
+     */
+    private String name;
+
+    /**
      * 订阅类型
      */
     @Column(name = "subscription_type")
     private String subscriptionType;
 
-    /**
-     * 名称
-     */
-    private String name;
+    @Column(name = "server_group_id")
+    private Integer serverGroupId;
 
     /**
      * 主机模式
@@ -26,16 +29,22 @@ public class OcProfileSubscription {
     @Column(name = "host_pattern")
     private String hostPattern;
 
-    private String comment;
+    /**
+     * playbook脚本id
+     */
+    @Column(name = "script_id")
+    private Integer scriptId;
 
     /**
      * 最近执行的任务id
      */
-    @Column(name = "server_task_id")
+    @Column(name = "server_task_id", insertable = false, updatable = false)
     private Integer serverTaskId;
 
-    @Column(name = "execution_time")
+    @Column(name = "execution_time", insertable = false, updatable = false)
     private Date executionTime;
+
+    private String comment;
 
     @Column(name = "create_time")
     private Date createTime;
@@ -63,6 +72,24 @@ public class OcProfileSubscription {
     }
 
     /**
+     * 获取名称
+     *
+     * @return name - 名称
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * 设置名称
+     *
+     * @param name 名称
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * 获取订阅类型
      *
      * @return subscription_type - 订阅类型
@@ -81,21 +108,17 @@ public class OcProfileSubscription {
     }
 
     /**
-     * 获取名称
-     *
-     * @return name - 名称
+     * @return server_group_id
      */
-    public String getName() {
-        return name;
+    public Integer getServerGroupId() {
+        return serverGroupId;
     }
 
     /**
-     * 设置名称
-     *
-     * @param name 名称
+     * @param serverGroupId
      */
-    public void setName(String name) {
-        this.name = name;
+    public void setServerGroupId(Integer serverGroupId) {
+        this.serverGroupId = serverGroupId;
     }
 
     /**
@@ -117,17 +140,21 @@ public class OcProfileSubscription {
     }
 
     /**
-     * @return comment
+     * 获取playbook脚本id
+     *
+     * @return script_id - playbook脚本id
      */
-    public String getComment() {
-        return comment;
+    public Integer getScriptId() {
+        return scriptId;
     }
 
     /**
-     * @param comment
+     * 设置playbook脚本id
+     *
+     * @param scriptId playbook脚本id
      */
-    public void setComment(String comment) {
-        this.comment = comment;
+    public void setScriptId(Integer scriptId) {
+        this.scriptId = scriptId;
     }
 
     /**
@@ -160,6 +187,20 @@ public class OcProfileSubscription {
      */
     public void setExecutionTime(Date executionTime) {
         this.executionTime = executionTime;
+    }
+
+    /**
+     * @return comment
+     */
+    public String getComment() {
+        return comment;
+    }
+
+    /**
+     * @param comment
+     */
+    public void setComment(String comment) {
+        this.comment = comment;
     }
 
     /**

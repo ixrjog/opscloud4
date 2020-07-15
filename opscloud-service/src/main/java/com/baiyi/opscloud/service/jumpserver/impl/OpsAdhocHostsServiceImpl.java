@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -25,11 +26,11 @@ public class OpsAdhocHostsServiceImpl implements OpsAdhocHostsService {
     }
 
     @Override
-    public OpsAdhocHosts queryOpsAdhocHostsByAssetId(String assetId) {
+    public List<OpsAdhocHosts> queryOpsAdhocHostsByAssetId(String assetId) {
         Example example = new Example(OpsAdhocHosts.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("assetId", assetId);
-        return opsAdhocHostsMapper.selectOneByExample(example);
+        return opsAdhocHostsMapper.selectByExample(example);
     }
 
 }

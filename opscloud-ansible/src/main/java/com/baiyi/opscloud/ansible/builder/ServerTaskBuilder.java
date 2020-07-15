@@ -2,6 +2,7 @@ package com.baiyi.opscloud.ansible.builder;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.ansible.bo.ServerTaskBO;
+import com.baiyi.opscloud.common.base.ServerTaskType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -17,19 +18,19 @@ import java.util.Map;
 public class ServerTaskBuilder {
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskCommandExecutor serverTaskExecutor) {
-        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 0);
+        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), ServerTaskType.COMMAND.getType());
     }
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskExecutor) {
-        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 1);
+        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor),  ServerTaskType.SCRIPT.getType());
     }
 
     public static OcServerTask build(Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskExecutor) {
-        return build( serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 1);
+        return build( serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), ServerTaskType.SCRIPT.getType());
     }
 
     public static OcServerTask build(OcUser ocUser, Map<String, String> serverTreeHostPatternMap, ServerTaskExecutorParam.ServerTaskPlaybookExecutor serverTaskExecutor) {
-        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), 2);
+        return build(ocUser, serverTreeHostPatternMap, JSON.toJSONString(serverTaskExecutor), ServerTaskType.PLAYBOOK.getType());
     }
 
     public static OcServerTask build( Map<String, String> serverTreeHostPatternMap, String paramJson, int taskType) {

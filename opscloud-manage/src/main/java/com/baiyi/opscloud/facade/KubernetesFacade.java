@@ -44,6 +44,7 @@ public interface KubernetesFacade {
 
     /**
      * 查询实例模版
+     *
      * @param pageQuery
      * @return
      */
@@ -56,4 +57,8 @@ public interface KubernetesFacade {
     BusinessWrapper<Boolean> deleteKubernetesTemplateById(int id);
 
     DataTable<KubernetesServiceVO.Service> queryKubernetesServicePage(KubernetesServiceParam.PageQuery pageQuery);
+
+    BusinessWrapper<KubernetesServiceVO.Service> queryKubernetesServiceByParam(KubernetesServiceParam.QueryParam queryParam);
+
+    BusinessWrapper<Boolean> deleteKubernetesServiceById(int id);
 }

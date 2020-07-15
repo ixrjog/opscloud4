@@ -4,3 +4,6 @@ jumpserver:
   version: 2.0.1
   url: ENC(Q/NS5sdPUQZgQfdOlwu3dArnkxmHeRby4nWFQ441SqwIYD8fJ4xd/w==)
   coco: ENC(GSSUBZDGzDq8UNTwv9eRe9L+erLn+8wxeLLo3tuOMqc=)
+  admin:
+    username: admin
+    password: ENC(1aLKecChe6w/f1z1LZDfnWUASUu6bLb2WBCiiVTlzW5xnfDQXmzHm+3lwRLkDH0L87yhIG14tDV7954TEKCehA==)

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -96,6 +97,17 @@ public class TagFacadeImpl implements TagFacade {
     @Transactional
     @Override
     public BusinessWrapper<Boolean> updateBusinessTag(BusinessTagVO.BusinessTag businessTag) {
+        if (!IDUtils.isEmpty(businessTag.getBusinessId()))
+            return updateBusinessTagById(businessTag);
+        businessTag.getBusinessIds().forEach(id -> {
+                    BusinessTagVO.BusinessTag pre = BeanCopierUtils.copyProperties(businessTag, BusinessTagVO.BusinessTag.class);
+                    pre.setBusinessId(id);
+                    updateBusinessTagById(pre);
+                });
+        return BusinessWrapper.SUCCESS;
+    }
+
+    private BusinessWrapper<Boolean> updateBusinessTagById(BusinessTagVO.BusinessTag businessTag) {
         TagParam.BusinessQuery businessQuery = new TagParam.BusinessQuery();
         businessQuery.setBusinessType(businessTag.getBusinessType());
         businessQuery.setBusinessId(businessTag.getBusinessId());

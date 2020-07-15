@@ -26,13 +26,11 @@ public class ServerTreeDecorator {
                 .children(getServerChildrens(serverGroupMap.get(subName)))
                 .build()).collect(Collectors.toList());
 
-        TreeVO.Tree tree = TreeVO.Tree.builder()
+        return TreeVO.Tree.builder()
                 .id(ocServerGroup.getName())
                 .label(ocServerGroup.getName())
                 .children(childrens)
                 .build();
-
-        return tree;
     }
 
     private List<TreeVO.Tree> getServerChildrens(List<OcServer> serverList) {

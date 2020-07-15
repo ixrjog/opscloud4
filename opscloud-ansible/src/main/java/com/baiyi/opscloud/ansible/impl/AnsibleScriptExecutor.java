@@ -40,10 +40,10 @@ public class AnsibleScriptExecutor extends BaseExecutor implements IAnsibleExecu
         ServerTaskExecutorParam.ServerTaskScriptExecutor serverTaskScriptExecutor = (ServerTaskExecutorParam.ServerTaskScriptExecutor) taskExecutor;
         OcUser ocUser = getOcUser();
 
-        BusinessWrapper wrapper = getServerTreeHostPatternMap(serverTaskScriptExecutor.getUuid(), ocUser);
+        BusinessWrapper<Map<String, String>> wrapper = getServerTreeHostPatternMap(serverTaskScriptExecutor.getUuid(), ocUser);
         if (!wrapper.isSuccess())
-            return wrapper;
-        Map<String, String> serverTreeHostPatternMap = (Map<String, String>) wrapper.getBody();
+            return new BusinessWrapper(wrapper.getCode(), wrapper.getDesc());
+        Map<String, String> serverTreeHostPatternMap = wrapper.getBody();
 
         // 录入任务
         OcServerTask ocServerTask = ServerTaskBuilder.build(ocUser, serverTreeHostPatternMap, serverTaskScriptExecutor);
