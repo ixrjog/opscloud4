@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.kubernetes;
 
 import com.baiyi.opscloud.builder.kubernetes.KubernetesServiceBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.decorator.kubernetes.KubernetesServiceDecorator;
 import com.baiyi.opscloud.decorator.kubernetes.KubernetesTemplateDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -100,20 +101,25 @@ public class KubernetesServiceFacade extends BaseKubernetesFacade {
     private void saveKubernetesService(Map<String, OcKubernetesService> serviceMap, OcKubernetesClusterNamespace ocKubernetesClusterNamespace, io.fabric8.kubernetes.api.model.Service service) {
         OcKubernetesService pre = KubernetesServiceBuilder.build(ocKubernetesClusterNamespace, service);
         OcKubernetesService ocKubernetesService = ocKubernetesServiceService.queryOcKubernetesServiceByUniqueKey(ocKubernetesClusterNamespace.getId(), pre.getName());
-        if (ocKubernetesService == null) {
-            // 匹配应用实例
-            OcKubernetesApplicationInstance ocKubernetesApplicationInstance = getApplicationInstanceByService(service);
-            if (ocKubernetesApplicationInstance != null) {
-                pre.setApplicationId(ocKubernetesApplicationInstance.getApplicationId());
-                pre.setInstanceId(ocKubernetesApplicationInstance.getId());
-            }
+        if (ocKubernetesService != null)
+            pre = ocKubernetesService;
+        invokeKubernetesService(pre, service);
+        if (IDUtils.isEmpty(pre.getId())) {
             ocKubernetesServiceService.addOcKubernetesService(pre);
         } else {
-            pre.setId(ocKubernetesService.getId());
             ocKubernetesServiceService.updateOcKubernetesService(pre);
         }
         kubernetesServicePortFacade.saveKubernetesServicePort(pre, service);
         serviceMap.remove(pre.getName());
+    }
+
+    private void invokeKubernetesService(OcKubernetesService ocKubernetesService, io.fabric8.kubernetes.api.model.Service service) {
+        if (!IDUtils.isEmpty(ocKubernetesService.getInstanceId())) return;
+        OcKubernetesApplicationInstance ocKubernetesApplicationInstance = getApplicationInstanceByService(service);
+        if (ocKubernetesApplicationInstance != null) {
+            ocKubernetesService.setApplicationId(ocKubernetesApplicationInstance.getApplicationId());
+            ocKubernetesService.setInstanceId(ocKubernetesApplicationInstance.getId());
+        }
     }
 
     private OcKubernetesApplicationInstance getApplicationInstanceByService(io.fabric8.kubernetes.api.model.Service service) {
@@ -166,7 +172,7 @@ public class KubernetesServiceFacade extends BaseKubernetesFacade {
 
     public BusinessWrapper<Boolean> deleteKubernetesServiceById(int id) {
         OcKubernetesService ocKubernetesService = ocKubernetesServiceService.queryOcKubernetesServiceById(id);
-        if(ocKubernetesService != null){
+        if (ocKubernetesService != null) {
             kubernetesServicePortFacade.delKubernetesServicePortByServiceId(id);
             ocKubernetesServiceService.deleteOcKubernetesServiceById(id);
         }

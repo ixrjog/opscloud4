@@ -224,9 +224,8 @@ public class JumpserverCenterImpl implements JumpserverCenter {
      */
     private void bindPermsAssetpermissionSystemUsers(PermsAssetpermission permsAssetpermission) {
         String systemuserId = getSystemuserId();
-        if (StringUtils.isEmpty(systemuserId))
-            return;
-        bindPermsAssetpermissionAdminSystemUsers(permsAssetpermission, systemuserId);
+        if (!StringUtils.isEmpty(systemuserId))
+            bindPermsAssetpermissionAdminSystemUsers(permsAssetpermission, systemuserId);
     }
 
     /**

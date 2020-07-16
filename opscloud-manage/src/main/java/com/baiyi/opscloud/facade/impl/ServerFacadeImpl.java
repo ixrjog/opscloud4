@@ -206,9 +206,9 @@ public class ServerFacadeImpl implements ServerFacade {
         serverCenter.remove(ocServer);
         // 设置云服务器离线
         ICloudServer iCloudServer = CloudServerFactory.getCloudServerByKey(CloudServerKey.getKey(ocServer.getServerType()));
-        iCloudServer.offline(id);
+        if (iCloudServer != null)
+            iCloudServer.offline(id);
         return BusinessWrapper.SUCCESS;
     }
-
 
 }

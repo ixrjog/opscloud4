@@ -44,6 +44,7 @@ public class JumpserverAssetAPI {
      */
     public boolean createAsset(AssetsAsset assetsAsset, String nodeId) {
         Map<String, Object> paramsMap = Maps.newHashMap();
+        paramsMap.put("id",assetsAsset.getId());
         paramsMap.put("hostname", assetsAsset.getHostname());
         paramsMap.put("ip", assetsAsset.getIp());
         paramsMap.put("protocol", assetsAsset.getProtocol());
