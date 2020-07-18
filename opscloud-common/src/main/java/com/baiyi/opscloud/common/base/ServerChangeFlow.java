@@ -18,6 +18,7 @@ public enum ServerChangeFlow {
     SERVER_POWER_ON("SERVER_POWER_ON"),
     SERVER_OFFLINE("SERVER_OFFLINE"),
     SERVER_ONLINE("SERVER_ONLINE"),
+    SERVER_TRY_SSH("SERVER_TRY_SSH"),
     FINALIZED("FINALIZED");
 
     private String name;

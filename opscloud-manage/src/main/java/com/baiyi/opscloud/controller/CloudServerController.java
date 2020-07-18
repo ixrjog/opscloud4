@@ -46,5 +46,10 @@ public class CloudServerController {
         return new HttpResult<>(BusinessWrapper.SUCCESS);
     }
 
+    @ApiOperation(value = "释放云主机")
+    @PostMapping(value = "/delete/instance", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteCloudServer(@RequestBody @Valid  CloudServerParam.DeleteInstance param) {
+        return new HttpResult<>(cloudServerFacade.deleteCloudServer(param));
+    }
 
 }

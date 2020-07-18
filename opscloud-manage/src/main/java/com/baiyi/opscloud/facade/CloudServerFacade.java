@@ -20,4 +20,5 @@ public interface CloudServerFacade {
 
     void updateCloudServerStatus(int id, int serverId, int cloudServerStatus);
 
+    BusinessWrapper<Boolean> deleteCloudServer(CloudServerParam.DeleteInstance param);
 }

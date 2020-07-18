@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
+import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
 
     @Resource
     private OcCloudServerService ocCloudServerService;
+
+    @Resource
+    private ServerFacade serverFacade;
 
     @Override
     public DataTable<CloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
@@ -66,4 +70,15 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
         ocCloudServerService.updateOcCloudServer(ocCloudServer);
     }
 
+    @Override
+    public BusinessWrapper<Boolean> deleteCloudServer(CloudServerParam.DeleteInstance param) {
+        ICloudServer cloudServer = CloudServerFactory.getCloudServerByKey(param.getKey());
+        if (!cloudServer.delete(param.getInstanceId())) {
+            return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_DELETE_FAIL);
+        }
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByInstanceId(param.getInstanceId());
+        ocCloudServerService.deleteOcCloudServerById(ocCloudServer.getId());
+        serverFacade.deleteServerById(ocCloudServer.getServerId());
+        return BusinessWrapper.SUCCESS;
+    }
 }

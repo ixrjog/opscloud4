@@ -22,4 +22,6 @@ public interface AliyunECS {
     String getRenewAttribute(String regionId, String instanceId);
 
     BusinessWrapper<Boolean> power(String regionId, String instanceId, Boolean action);
+
+    Boolean delete(String regionId, String instanceId);
 }

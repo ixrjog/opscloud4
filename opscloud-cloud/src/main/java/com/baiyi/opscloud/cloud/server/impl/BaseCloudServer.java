@@ -270,6 +270,17 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         return BusinessWrapper.SUCCESS;
     }
 
+    /**
+     * 如果支持释放请重写
+     *
+     * @param ocCloudServer
+     * @return
+     */
+    protected Boolean delete(OcCloudServer ocCloudServer) {
+        return true;
+    }
+
+
     private Boolean checkAuth(OcCloudServer ocCloudServer) {
         if (!ocCloudServer.getPowerMgmt())
             return Boolean.FALSE;
@@ -305,4 +316,9 @@ public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServ
         CloudServerFactory.register(this);
     }
 
+    @Override
+    public Boolean delete(String instanceId) {
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByInstanceId(instanceId);
+        return delete(ocCloudServer);
+    }
 }

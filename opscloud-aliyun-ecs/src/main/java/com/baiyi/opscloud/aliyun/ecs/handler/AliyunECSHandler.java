@@ -89,7 +89,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
                 return BusinessWrapper.SUCCESS;
         } catch (Exception ignored) {
         }
-        return new BusinessWrapper(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
+        return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
     }
 
     public BusinessWrapper<Boolean> stop(String regionId, String instanceId) {
@@ -101,7 +101,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
                 return BusinessWrapper.SUCCESS;
         } catch (Exception ignored) {
         }
-        return new BusinessWrapper(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
+        return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
     }
 
     private StopInstanceResponse stopInstanceResponse(String regionId, StopInstanceRequest describe) {
@@ -118,6 +118,29 @@ public class AliyunECSHandler extends BaseAliyunECS {
         IAcsClient client = acqAcsClient(regionId);
         try {
             return client.getAcsResponse(describe);
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public Boolean delete(String regionId, String instanceId) {
+        try {
+            DeleteInstanceRequest request = new DeleteInstanceRequest();
+            request.setInstanceId(instanceId);
+            DeleteInstanceResponse response = deleteInstanceResponse(regionId, request);
+            if (response != null && !StringUtils.isEmpty(response.getRequestId()))
+                return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    private DeleteInstanceResponse deleteInstanceResponse(String regionId, DeleteInstanceRequest request) {
+        IAcsClient client = acqAcsClient(regionId);
+        try {
+            return client.getAcsResponse(request);
         } catch (ClientException e) {
             e.printStackTrace();
             return null;

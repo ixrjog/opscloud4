@@ -79,5 +79,8 @@ public class AliyunECSImpl implements AliyunECS {
         }
     }
 
-
+    @Override
+    public Boolean delete(String regionId, String instanceId) {
+        return aliyunECSHandler.delete(regionId, instanceId);
+    }
 }

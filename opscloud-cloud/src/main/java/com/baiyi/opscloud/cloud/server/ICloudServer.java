@@ -28,14 +28,16 @@ public interface ICloudServer {
 
     /**
      * 录入实例
+     *
      * @param regionId
      * @param instanceId
      * @return
      */
-    Boolean record(String regionId,String instanceId);
+    Boolean record(String regionId, String instanceId);
 
     /**
      * 设置云服务器离线
+     *
      * @param serverId
      * @return
      */
@@ -51,6 +53,7 @@ public interface ICloudServer {
 
     /**
      * 开机
+     *
      * @param id
      * @return
      */
@@ -58,6 +61,7 @@ public interface ICloudServer {
 
     /**
      * 关机
+     *
      * @param id
      * @return
      */
@@ -65,10 +69,17 @@ public interface ICloudServer {
 
     /**
      * 查询电源状态
+     *
      * @param id
      * @return
      */
     int queryPowerStatus(Integer id);
 
-
+    /**
+     * 释放云服务器
+     *
+     * @param instanceId
+     * @return
+     */
+    Boolean delete(String instanceId);
 }

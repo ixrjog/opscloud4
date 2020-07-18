@@ -68,6 +68,7 @@ public enum ErrorEnum {
     SERVER_PRIVATE_IP_IS_NAME(12002, "服务器私有Ip不能为空！"),
     SERVER_PRIVATE_IP_CONFLICT(12002, "服务器私有Ip冲突！"),
     SERVER_NOT_EXIST(12002, "服务器不存在"),
+    SERVER_DEL_FAIL(12003,"删除服务器失败"),
 
     // server task
     SERVER_TASK_TREE_NOT_EXIST(11007, "用户服务器资源树不存在或过期！"),
@@ -108,6 +109,7 @@ public enum ErrorEnum {
     // cloudServer
     CLOUD_SERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),
     CLOUD_SERVER_NOT_EXIST(30002, "云主机不存在！"),
+    CLOUD_SERVER_DELETE_FAIL(30003, "云主机释放失败"),
 
     // cloudDB
     CLOUD_DB_NOT_EXIST(30002, "云数据库实例不存在！"),

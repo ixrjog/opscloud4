@@ -3,10 +3,13 @@ package com.baiyi.opscloud.serverChange;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.base.ServerChangeType;
 import com.baiyi.opscloud.common.util.UUIDUtils;
+import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
+import com.baiyi.opscloud.facade.KeyboxFacade;
 import com.baiyi.opscloud.facade.ServerChangeFacade;
+import com.baiyi.opscloud.factory.change.consumer.TrySSHUtils;
 import com.baiyi.opscloud.factory.change.handler.ServerChangeHandler;
 import com.baiyi.opscloud.server.ServerCenter;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -36,6 +39,9 @@ public class ServerChangeTest extends BaseUnit {
 
     @Resource
     private ServerCenter serverCenter;
+
+    @Resource
+    private KeyboxFacade keyboxFacade;
 
     @Test
     void testExecuteServerChangeOffline() {
@@ -75,6 +81,14 @@ public class ServerChangeTest extends BaseUnit {
         OcServer ocServer = ocServerService.queryOcServerByIp("192.168.1.108");
         Boolean result = serverCenter.disable(ocServer);
         System.err.println(result);
+    }
+
+    //  10.200.1.34
+    @Test
+    void testServerTrySSH() {
+        OcServer ocServer = ocServerService.queryOcServerByIp("10.200.1.41");
+        SSHKeyCredential sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());
+        TrySSHUtils.trySSH(ocServer,sshKeyCredential);
     }
 
 }
