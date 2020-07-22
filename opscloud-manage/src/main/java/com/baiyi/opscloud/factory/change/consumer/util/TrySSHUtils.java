@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.bo.SSHKeyCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.jcraft.jsch.Channel;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,7 +39,7 @@ public class TrySSHUtils {
             Channel channel = session.openChannel("shell");
             channel.connect();
             session.disconnect();
-        } catch (Exception e) {
+        } catch (JSchException e) {
             log.info("Try server ip = {} ssh failed !", ocServer.getPrivateIp());
             log.info(e.getMessage());
             throw new RuntimeException();

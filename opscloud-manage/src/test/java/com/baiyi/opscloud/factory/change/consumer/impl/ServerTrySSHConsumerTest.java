@@ -12,7 +12,6 @@ import javax.annotation.Resource;
  * @Date 2020/7/22 11:39 上午
  * @Version 1.0
  */
-@EnableRetry
 class ServerTrySSHConsumerTest extends BaseUnit {
 
     @Resource
