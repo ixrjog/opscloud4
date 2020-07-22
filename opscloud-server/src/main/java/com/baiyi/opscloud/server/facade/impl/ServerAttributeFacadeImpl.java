@@ -130,6 +130,12 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
             preServerAttribute.setId(checkServerAttribute.getId());
             ocServerAttributeService.updateOcServerAttribute(preServerAttribute);
         }
+        if (serverAttribute.getBusinessType() == BusinessType.SERVER.getType()) {
+            redisUtil.del(getServerCacheKey(serverAttribute.getBusinessId()));
+        }
+        if (serverAttribute.getBusinessType() == BusinessType.SERVERGROUP.getType()) {
+            redisUtil.del(getServerGroupCacheKey(serverAttribute.getBusinessId()));
+        }
         return BusinessWrapper.SUCCESS;
     }
 

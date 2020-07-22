@@ -48,9 +48,9 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     public BusinessWrapper<String> executeServerChangeOffline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
         BusinessWrapper checkWrapper = checkServerChange(executeServerChangeParam, ocServer);
-        if (!checkWrapper .isSuccess()) return checkWrapper ;
+        if (!checkWrapper.isSuccess()) return checkWrapper;
 
-        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.OFFLINE.getType(),executeServerChangeParam.getTaskId());
+        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.OFFLINE.getType(), executeServerChangeParam.getTaskId());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.OFFLINE.getType());
@@ -63,9 +63,9 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     public BusinessWrapper<String> executeServerChangeOnline(ServerChangeParam.ExecuteServerChangeParam executeServerChangeParam) {
         OcServer ocServer = ocServerService.queryOcServerById(executeServerChangeParam.getServerId());
         BusinessWrapper checkWrapper = checkServerChange(executeServerChangeParam, ocServer);
-        if (!checkWrapper .isSuccess()) return checkWrapper ;
+        if (!checkWrapper.isSuccess()) return checkWrapper;
 
-        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.ONLINE.getType(),executeServerChangeParam.getTaskId());
+        OcServerChangeTask ocServerChangeTask = ServerChangeTaskBuilder.build(ocServer, ServerChangeType.ONLINE.getType(), executeServerChangeParam.getTaskId());
         ocServerChangeTaskService.addOcServerChangeTask(ocServerChangeTask);
 
         IServerChange iServerChange = ServerChangeFactory.getServerChangeByKey(ServerChangeType.ONLINE.getType());
@@ -82,7 +82,7 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
         if (checkTaskRunning != null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_RUNNING); // 任务运行中
 
-        OcServerChangeTask changeTaskId  = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(executeServerChangeParam.getTaskId());
+        OcServerChangeTask changeTaskId = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(executeServerChangeParam.getTaskId());
         if (changeTaskId != null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_CHANGE_TASK_RESUBMISSION); // 任务重复提交
 

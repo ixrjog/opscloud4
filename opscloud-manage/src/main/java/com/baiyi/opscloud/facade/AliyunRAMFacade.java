@@ -16,7 +16,7 @@ import java.util.List;
  */
 public interface AliyunRAMFacade {
 
-    DataTable<AliyunRAMVO.RAMUser> queryRAMUserPage(AliyunRAMUserParam.PageQuery pageQuery);
+    DataTable<AliyunRAMVO.RAMUser> queryRAMUserPage(AliyunRAMUserParam.RamUserPageQuery pageQuery);
 
     DataTable<AliyunRAMVO.RAMPolicy> queryRAMPolicyPage(AliyunRAMPolicyParam.PageQuery pageQuery);
 

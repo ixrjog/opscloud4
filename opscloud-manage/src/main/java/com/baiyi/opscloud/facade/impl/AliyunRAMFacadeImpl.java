@@ -54,7 +54,7 @@ public class AliyunRAMFacadeImpl implements AliyunRAMFacade {
     private AliyunRAMUserPolicyHandler aliyunRAMUserPolicyHandler;
 
     @Override
-    public DataTable<AliyunRAMVO.RAMUser> queryRAMUserPage(AliyunRAMUserParam.PageQuery pageQuery) {
+    public DataTable<AliyunRAMVO.RAMUser> queryRAMUserPage(AliyunRAMUserParam.RamUserPageQuery pageQuery) {
         DataTable<OcAliyunRamUser> table = ocAliyunRamUserService.queryOcAliyunRamUserByParam(pageQuery);
         List<AliyunRAMVO.RAMUser> page = BeanCopierUtils.copyListProperties(table.getData(), AliyunRAMVO.RAMUser.class)
                 .stream().map(e -> aliyunRAMDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList());

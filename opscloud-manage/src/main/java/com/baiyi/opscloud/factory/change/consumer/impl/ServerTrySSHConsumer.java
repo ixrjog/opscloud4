@@ -31,7 +31,7 @@ public class ServerTrySSHConsumer extends BaseServerChangeConsumer implements IS
 
     @Override
     public String getKey() {
-        return ServerChangeFlow.SERVER_POWER_ON.getName();
+        return ServerChangeFlow.SERVER_TRY_SSH.getName();
     }
 
     @Override
@@ -51,12 +51,12 @@ public class ServerTrySSHConsumer extends BaseServerChangeConsumer implements IS
     }
 
     /**
-     * 重试30次每次间隔5s
+     * 重试30次每次间隔10s
      *
      * @param ocServer
      * @throws RuntimeException
      */
-    @Retryable(value = RuntimeException.class, maxAttempts = 30, backoff = @Backoff(delay = 5000))
+    @Retryable(value = RuntimeException.class, maxAttempts = 30, backoff = @Backoff(delay = 10000))
     private void tryServerSSH(OcServer ocServer) throws RuntimeException {
         SSHKeyCredential sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());
         TrySSHUtils.trySSH(ocServer, sshKeyCredential);

@@ -29,7 +29,7 @@ public class AliyunRAMController {
 
     @ApiOperation(value = "查询访问控制用户信息")
     @PostMapping(value = "/user/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<AliyunRAMVO.RAMUser>> queryRAMUserPage(@RequestBody @Valid AliyunRAMUserParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<AliyunRAMVO.RAMUser>> queryRAMUserPage(@RequestBody @Valid AliyunRAMUserParam.RamUserPageQuery pageQuery) {
         return new HttpResult<>(aliyunRAMFacade.queryRAMUserPage(pageQuery));
     }
 

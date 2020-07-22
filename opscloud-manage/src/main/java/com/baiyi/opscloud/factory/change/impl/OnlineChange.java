@@ -34,7 +34,7 @@ public class OnlineChange extends BaseServerChange implements IServerChange {
 
         parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_TRY_SSH.getName(), parentId).getId();
 
-        addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.FINALIZED.getName(), parentId).getId();
+        addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.FINALIZED.getName(), parentId);
 
         return BusinessWrapper.SUCCESS;
     }

@@ -57,7 +57,7 @@ public class OcAliyunRamUserServiceImpl implements OcAliyunRamUserService {
     }
 
     @Override
-    public DataTable<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.PageQuery pageQuery) {
+    public DataTable<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.RamUserPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
         List<OcAliyunRamUser> list = ocAliyunRamUserMapper.queryOcAliyunRamUserByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());

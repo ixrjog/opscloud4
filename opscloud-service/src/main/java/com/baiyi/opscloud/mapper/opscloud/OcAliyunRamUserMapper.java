@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OcAliyunRamUserMapper extends Mapper<OcAliyunRamUser> {
 
-    List<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.PageQuery pageQuery);
+    List<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.RamUserPageQuery pageQuery);
 
     List<OcAliyunRamUser> queryUserPermissionRamUserByUserId(int userId);
 }

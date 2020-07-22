@@ -16,7 +16,7 @@ public class AliyunRAMUserParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class RamUserPageQuery extends PageParam {
 
         @ApiModelProperty(value = "主账户uid")
         private String accountUid;

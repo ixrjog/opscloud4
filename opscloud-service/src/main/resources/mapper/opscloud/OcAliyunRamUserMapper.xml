@@ -21,7 +21,7 @@
     </resultMap>
 
     <select id="queryOcAliyunRamUserByParam"
-            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunRAMUserParam$PageQuery"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunRAMUserParam$RamUserPageQuery"
             resultMap="BaseResultMap">
         select * from oc_aliyun_ram_user
         <where>

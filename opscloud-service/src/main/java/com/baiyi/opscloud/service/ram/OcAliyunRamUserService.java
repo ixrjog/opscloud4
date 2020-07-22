@@ -23,7 +23,7 @@ public interface OcAliyunRamUserService {
 
     void deleteOcAliyunRamUserById(int id);
 
-    DataTable<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.PageQuery pageQuery);
+    DataTable<OcAliyunRamUser> queryOcAliyunRamUserByParam(AliyunRAMUserParam.RamUserPageQuery pageQuery);
 
     List<OcAliyunRamUser> queryUserPermissionRamUserByUserId(int userId);
 

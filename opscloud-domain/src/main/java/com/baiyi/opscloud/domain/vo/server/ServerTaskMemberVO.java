@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -41,6 +42,7 @@ public class ServerTaskMemberVO {
         private Integer exitValue;
         private String taskStatus;
         private String taskResult;
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date createTime;
         private Date updateTime;
         private String outputMsg;

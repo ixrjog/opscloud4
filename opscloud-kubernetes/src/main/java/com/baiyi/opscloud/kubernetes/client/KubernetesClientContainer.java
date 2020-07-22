@@ -46,9 +46,9 @@ public class KubernetesClientContainer implements InitializingBean {
         if (clientContainer != null && !clientContainer.isEmpty())
             clientContainer.keySet().forEach(k -> {
                 KubernetesClient kubernetesClient = clientContainer.get(k);
-                clientContainer.remove(k);
                 kubernetesClient = null;
             });
+        clientContainer = null;
         initialClient();
     }
 
