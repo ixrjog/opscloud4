@@ -11,7 +11,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.param.cloud.CloudServerParam;
 import com.baiyi.opscloud.domain.vo.cloud.CloudServerVO;
 import com.baiyi.opscloud.facade.CloudServerFacade;
-import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
@@ -26,14 +25,11 @@ import static com.baiyi.opscloud.common.base.Global.ASYNC_POOL_TASK_EXECUTOR;
  * @Date 2020/2/17 9:40 上午
  * @Version 1.0
  */
-@Service
+@Service("CloudServerFacade")
 public class CloudServerFacadeImpl implements CloudServerFacade {
 
     @Resource
     private OcCloudServerService ocCloudServerService;
-
-    @Resource
-    private ServerFacade serverFacade;
 
     @Override
     public DataTable<CloudServerVO.CloudServer> queryCloudServerPage(CloudServerParam.PageQuery pageQuery) {
@@ -78,7 +74,6 @@ public class CloudServerFacadeImpl implements CloudServerFacade {
         }
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByInstanceId(param.getInstanceId());
         ocCloudServerService.deleteOcCloudServerById(ocCloudServer.getId());
-        serverFacade.deleteServerById(ocCloudServer.getServerId());
         return BusinessWrapper.SUCCESS;
     }
 }
