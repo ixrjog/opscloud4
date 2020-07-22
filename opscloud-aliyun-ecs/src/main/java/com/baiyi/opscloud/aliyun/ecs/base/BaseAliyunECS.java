@@ -11,7 +11,7 @@ import javax.annotation.Resource;
  * @Date 2020/6/16 11:35 上午
  * @Version 1.0
  */
-@Component
+@Component("BaseAliyunECS")
 public class BaseAliyunECS  {
 
     protected static final int QUERY_PAGE_SIZE = 50;

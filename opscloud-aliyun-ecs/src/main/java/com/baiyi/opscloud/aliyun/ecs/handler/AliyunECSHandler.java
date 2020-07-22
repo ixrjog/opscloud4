@@ -20,7 +20,7 @@ import java.util.List;
  * @Date 2020/1/14 10:09 上午
  * @Version 1.0
  */
-@Component
+@Component("AliyunECSHandler")
 public class AliyunECSHandler extends BaseAliyunECS {
 
     @Resource
@@ -87,7 +87,8 @@ public class AliyunECSHandler extends BaseAliyunECS {
             StartInstanceResponse response = startInstanceResponse(regionId, describe);
             if (response != null && !StringUtils.isEmpty(response.getRequestId()))
                 return BusinessWrapper.SUCCESS;
-        } catch (Exception ignored) {
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_POWER_MGMT_FAILED);
     }

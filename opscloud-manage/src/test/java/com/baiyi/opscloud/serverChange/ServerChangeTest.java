@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 import com.baiyi.opscloud.domain.param.server.ServerChangeParam;
 import com.baiyi.opscloud.facade.KeyboxFacade;
 import com.baiyi.opscloud.facade.ServerChangeFacade;
-import com.baiyi.opscloud.factory.change.consumer.TrySSHUtils;
+import com.baiyi.opscloud.factory.change.consumer.util.TrySSHUtils;
 import com.baiyi.opscloud.factory.change.handler.ServerChangeHandler;
 import com.baiyi.opscloud.server.ServerCenter;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -45,25 +45,25 @@ public class ServerChangeTest extends BaseUnit {
 
     @Test
     void testExecuteServerChangeOffline() {
-        OcServer ocServer = ocServerService.queryOcServerByIp("192.168.1.108");
+        OcServer ocServer = ocServerService.queryOcServerByIp("192.168.104.190");
         // 192.168.1.108
-
         ServerChangeParam.ExecuteServerChangeParam param = new ServerChangeParam.ExecuteServerChangeParam();
         param.setChangeType(ServerChangeType.OFFLINE.getType());
         param.setServerGroupId(ocServer.getServerGroupId());
         param.setServerId(ocServer.getId());
-
+        param.setTaskId("TEST-" + UUIDUtils.getUUID());
         serverChangeFacade.executeServerChangeOffline(param);
     }
 
     @Test
     void testExecuteServerChangeOnline() {
-        OcServer ocServer = ocServerService.queryOcServerById(4298);
+        // 192.168.104.190
+        OcServer ocServer = ocServerService.queryOcServerByIp("192.168.104.190");
         ServerChangeParam.ExecuteServerChangeParam param = new ServerChangeParam.ExecuteServerChangeParam();
         param.setChangeType(ServerChangeType.ONLINE.getType());
         param.setServerGroupId(ocServer.getServerGroupId());
         param.setServerId(ocServer.getId());
-        param.setTaskId(UUIDUtils.getUUID());
+        param.setTaskId("TEST-" + UUIDUtils.getUUID());
         serverChangeFacade.executeServerChangeOnline(param);
     }
 
@@ -72,7 +72,7 @@ public class ServerChangeTest extends BaseUnit {
     void testServerChangeHandler() {
         String taskId = "4040555cc0334b28a0b852b6d85a2781";
         OcServerChangeTask ocServerChangeTask = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(taskId);
-        serverChangeHandler.executeChangeTask(ocServerChangeTask );
+        serverChangeHandler.executeChangeTask(ocServerChangeTask);
     }
 
     //         Boolean result = serverCenter.disable(ocServer);
@@ -88,7 +88,7 @@ public class ServerChangeTest extends BaseUnit {
     void testServerTrySSH() {
         OcServer ocServer = ocServerService.queryOcServerByIp("10.200.1.41");
         SSHKeyCredential sshKeyCredential = keyboxFacade.getSSHKeyCredential(ocServer.getLoginUser());
-        TrySSHUtils.trySSH(ocServer,sshKeyCredential);
+        TrySSHUtils.trySSH(ocServer, sshKeyCredential);
     }
 
 }

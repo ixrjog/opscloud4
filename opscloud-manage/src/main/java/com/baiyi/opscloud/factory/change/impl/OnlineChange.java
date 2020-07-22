@@ -28,11 +28,11 @@ public class OnlineChange extends BaseServerChange implements IServerChange {
 
         parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_POWER_ON.getName(), parentId).getId();
 
+        parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_TRY_SSH.getName(), parentId).getId();
+
         parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_FACTORY_ACTIVE.getName(), parentId).getId();
 
         parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_ONLINE.getName(), parentId).getId();
-
-        parentId = addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.SERVER_TRY_SSH.getName(), parentId).getId();
 
         addOcServerChangeTaskFlow(ocServerChangeTask, ServerChangeFlow.FINALIZED.getName(), parentId);
 

@@ -17,6 +17,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Slf4j
+@Component
 public abstract class BaseCloudServer<T> implements InitializingBean, ICloudServer {
 
     @Resource

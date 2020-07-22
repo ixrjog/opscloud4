@@ -52,15 +52,16 @@ public class ServerPowerOnConsumer extends BaseServerChangeConsumer implements I
         ICloudServer iCloudServer = CloudServerFactory.getCloudServerByKey(cloudServerKey);
 
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(ocServer.getServerType(), ocServer.getId());
-        if (!BooleanUtils.isTrue(ocCloudServer.getPowerMgmt())) { // 允许电源管理
-            ocCloudServer.setPowerMgmt(true);
-            ocCloudServerService.updateOcCloudServer(ocCloudServer);
-        }
 
         if (ocCloudServer == null) {
             ChangeResult changeResult = ChangeResult.builder().build();
             saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
             return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_NOT_EXIST);
+        }
+
+        if (!BooleanUtils.isTrue(ocCloudServer.getPowerMgmt())) { // 允许电源管理
+            ocCloudServer.setPowerMgmt(true);
+            ocCloudServerService.updateOcCloudServer(ocCloudServer);
         }
 
         ocServerChangeTaskFlow.setExternalId(ocCloudServer.getId());
@@ -69,8 +70,7 @@ public class ServerPowerOnConsumer extends BaseServerChangeConsumer implements I
 
         long startTaskTime = new Date().getTime();
         iCloudServer.start(ocCloudServer.getId()); // 启动实例
-        boolean exit = false;
-        while (!exit) {
+        while (true) {
             try {
                 if (TimeUtils.checkTimeout(startTaskTime, TASK_TIMEOUT)) {
                     ChangeResult changeResult = ChangeResult.builder()
@@ -83,11 +83,10 @@ public class ServerPowerOnConsumer extends BaseServerChangeConsumer implements I
                 int powerStatus = iCloudServer.queryPowerStatus(ocCloudServer.getId());
                 if (powerStatus == CloudServerPowerStatus.RUNNING.getStatus()) {
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow);
-                    exit = true;
+                    break;
                 }
-
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
         }
 

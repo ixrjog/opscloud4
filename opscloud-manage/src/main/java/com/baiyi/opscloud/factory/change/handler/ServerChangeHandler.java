@@ -31,22 +31,19 @@ public class ServerChangeHandler {
     @Async(value = ASYNC_POOL_TASK_EXECUTOR)
     public void executeChangeTask(OcServerChangeTask ocServerChangeTask) {
 
-        boolean exit = false;
         OcServerChangeTask taskRunning = ocServerChangeTask;
-        while (!exit) {
+        while (true) {
             OcServerChangeTaskFlow ocServerChangeTaskFlow = ocServerChangeTaskFlowService.queryOcServerChangeTaskFlowById(taskRunning.getTaskFlowId());
             IServerChangeConsumer iServerChangeConsumer = ServerChangeConsumerFactory.getServerChangeConsumerByKey(taskRunning.getTaskFlowName());
             BusinessWrapper wrapper = iServerChangeConsumer.consuming(taskRunning, ocServerChangeTaskFlow);
             if (wrapper.isSuccess()) {
                 taskRunning = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(taskRunning.getTaskId());
                 if (taskRunning.getTaskStatus() != 1)
-                    exit = true;
+                    break;
             } else {
-                exit = true;
+                break;
             }
         }
-
-
     }
 
 

@@ -46,6 +46,7 @@ public class OcServerChangeTaskServiceImpl implements OcServerChangeTaskService 
         Example example = new Example(OcServerChangeTask.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("taskId", taskId);
+        PageHelper.startPage(1, 1);
         return ocServerChangeTaskMapper.selectOneByExample(example);
     }
 }
