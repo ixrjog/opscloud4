@@ -4,7 +4,7 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ram.model.v20150501.AttachPolicyToUserRequest;
 import com.aliyuncs.ram.model.v20150501.DetachPolicyFromUserRequest;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.base.BaseAliyunRAM;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class AliyunRAMUserPolicyHandler extends BaseAliyunRAM {
 
-    public BusinessWrapper<Boolean> attachPolicyToUser(AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
+    public BusinessWrapper<Boolean> attachPolicyToUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
         AttachPolicyToUserRequest request = new AttachPolicyToUserRequest();
         request.setUserName(ocAliyunRamUser.getRamUsername());
         request.setPolicyName(ramPolicy.getPolicyName());
@@ -35,7 +35,7 @@ public class AliyunRAMUserPolicyHandler extends BaseAliyunRAM {
         return BusinessWrapper.SUCCESS;
     }
 
-    public BusinessWrapper<Boolean> detachPolicyFromUser(AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
+    public BusinessWrapper<Boolean> detachPolicyFromUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
         DetachPolicyFromUserRequest request = new DetachPolicyFromUserRequest();
         request.setUserName(ocAliyunRamUser.getRamUsername());
         request.setPolicyName(ramPolicy.getPolicyName());

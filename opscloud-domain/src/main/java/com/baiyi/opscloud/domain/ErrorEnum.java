@@ -179,6 +179,7 @@ public enum ErrorEnum {
     KUBERNETES_DELETE_DEPLOYMENT_ERROR(70001, "Kubernetes删除Deployment错误！"),
     KUBERNETES_CREATE_SERVICE_ERROR(70001, "Kubernetes创建Service错误！"),
     KUBERNETES_DELETE_SERVICE_ERROR(70001, "Kubernetes删除Service错误！"),
+    KUBERNETES_DELETE_APPLICATION_ERROR(70001, "Kubernetes删除应用错误！"),
     ;
 
     private int code;

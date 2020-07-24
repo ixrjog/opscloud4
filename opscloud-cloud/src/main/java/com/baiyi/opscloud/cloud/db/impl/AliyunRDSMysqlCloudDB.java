@@ -4,7 +4,7 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstanceAttributeResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.rds.mysql.AliyunRDSMysql;
 import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.cloud.db.ICloudDB;
@@ -105,7 +105,7 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
 
     @Override
     protected CloudAccount getCloudAccountByUid(String uid) {
-        AliyunAccount account = aliyunCore.getAliyunAccountByUid(uid);
+        AliyunCoreConfig.AliyunAccount account = aliyunCore.getAliyunAccountByUid(uid);
         return BeanCopierUtils.copyProperties(account, CloudAccount.class);
     }
 
@@ -130,26 +130,26 @@ public class AliyunRDSMysqlCloudDB<T> extends BaseCloudDB<T> implements ICloudDB
 
     @Override
     public BusinessWrapper<Boolean> createAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount, String privilege) {
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
         return aliyunRDSMysql.createAccount(aliyunAccount, ocCloudDbAccount, privilege);
     }
 
     @Override
     public DataTable<CloudDatabaseSlowLogVO.SlowLog> querySlowLogPage(OcCloudDb ocCloudDb, CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
         return aliyunRDSMysql.querySlowLogPage(aliyunAccount, pageQuery);
     }
 
 
     @Override
     public BusinessWrapper<Boolean> deleteAccount(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
         return aliyunRDSMysql.deleteAccount(aliyunAccount, ocCloudDb, ocCloudDbAccount);
     }
 
     @Override
     public BusinessWrapper<Boolean> revokeAccountPrivilege(OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocCloudDb.getUid());
         return aliyunRDSMysql.revokeAccountPrivilege(aliyunAccount, ocCloudDbAccount);
     }
 

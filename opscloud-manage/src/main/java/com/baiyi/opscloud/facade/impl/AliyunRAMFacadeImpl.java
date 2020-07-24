@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.handler.AliyunRAMUserPolicyHandler;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMPolicyCenter;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMUserCenter;
@@ -95,7 +95,7 @@ public class AliyunRAMFacadeImpl implements AliyunRAMFacade {
 
     @Override
     public BusinessWrapper<Boolean> attachPolicyToUser(OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ramPolicy.getAccountUid());
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ramPolicy.getAccountUid());
         BusinessWrapper<Boolean> wrapper = aliyunRAMUserPolicyHandler.attachPolicyToUser(aliyunAccount, ocAliyunRamUser, ramPolicy);
         if (!wrapper.isSuccess())
             return wrapper;

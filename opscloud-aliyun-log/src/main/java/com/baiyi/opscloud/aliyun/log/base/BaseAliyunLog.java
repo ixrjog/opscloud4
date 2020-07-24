@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aliyun.log.base;
 
 import com.aliyun.openservices.log.Client;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ public abstract class BaseAliyunLog implements InitializingBean {
     @Resource
     private AliyunCore aliyunCore;
 
-    private void initClient(AliyunAccount aliyunAccount) {
+    private void initClient(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         // 构建一个客户端实例
         BaseAliyunLog.client = new Client(ALIYUN_LOG_ENDPOINT, aliyunAccount.getAccessKeyId(), aliyunAccount.getSecret());
     }

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aliyun.core;
 
 import com.aliyuncs.IAcsClient;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.domain.vo.cloud.AliyunAccountVO;
 
 import java.util.List;
@@ -21,19 +21,19 @@ public interface AliyunCore {
      */
     List<AliyunAccountVO.AliyunAccount> queryAliyunAccount();
 
-    List<AliyunAccount> getAccounts();
+    List<AliyunCoreConfig.AliyunAccount> getAccounts();
 
     /**
      * 返回主账户
      *
      * @return
      */
-    AliyunAccount getAccount();
+    AliyunCoreConfig.AliyunAccount getAccount();
 
     IAcsClient getAcsClient(String regionId);
 
-    IAcsClient getAcsClient(String regionId, AliyunAccount aliyunAccount);
+    IAcsClient getAcsClient(String regionId, AliyunCoreConfig.AliyunAccount aliyunAccount);
 
-    AliyunAccount getAliyunAccountByUid(String uid);
+    AliyunCoreConfig.AliyunAccount getAliyunAccountByUid(String uid);
 
 }

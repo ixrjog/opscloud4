@@ -40,6 +40,8 @@ public interface KubernetesApplicationFacade {
 
     BusinessWrapper<Boolean> deleteKubernetesApplicationById(int id);
 
+    BusinessWrapper<KubernetesApplicationVO.Application> queryKubernetesApplicationByName(String name);
+
     DataTable<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstancePage(KubernetesApplicationInstanceParam.PageQuery pageQuery);
 
     BusinessWrapper<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstanceById(int id);

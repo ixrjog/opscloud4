@@ -20,4 +20,6 @@ public interface OcKubernetesApplicationService {
     void deleteOcKubernetesApplicationById(int id);
 
    OcKubernetesApplication queryOcKubernetesApplicationById(int id);
+
+    OcKubernetesApplication queryOcKubernetesApplicationByName(String name);
 }

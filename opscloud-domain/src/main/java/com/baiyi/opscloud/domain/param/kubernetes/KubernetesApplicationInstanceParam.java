@@ -29,6 +29,9 @@ public class KubernetesApplicationInstanceParam {
         @ApiModelProperty(value = "环境类型", example = "1")
         private Integer envType;
 
+        @ApiModelProperty(value = "环境标签", example = "1")
+        private String envLabel;
+
         @ApiModelProperty(value = "扩展属性", example = "1")
         @NotNull
         private Integer extend;

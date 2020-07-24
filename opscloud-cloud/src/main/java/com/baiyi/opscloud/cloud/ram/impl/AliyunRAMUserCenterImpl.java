@@ -5,7 +5,7 @@ import com.aliyuncs.ram.model.v20150501.GetUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.handler.AliyunRAMUserHandler;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMUserCenter;
 import com.baiyi.opscloud.cloud.ram.builder.AliyunRamUserBuilder;
@@ -63,7 +63,7 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
                 ocAliyunRamUserService.queryUserPermissionRamUserByUserId(ocUser.getId()).stream().filter(e -> e.getAccountUid().equals(accountUid)).collect(Collectors.toList());
         if (!ramUserList.isEmpty())
             return new BusinessWrapper<>(ramUserList.get(0));
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(accountUid);
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(accountUid);
         BusinessWrapper<GetUserResponse.User> getUserWrapper = aliyunRAMUserHandler.getRamUser(aliyunAccount, ocUser);
         if (getUserWrapper.isSuccess())
             return new BusinessWrapper<>(addRamUser(aliyunAccount, getUserWrapper.getBody()));
@@ -84,13 +84,13 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
         return BusinessWrapper.SUCCESS;
     }
 
-    private OcAliyunRamUser addRamUser(AliyunAccount aliyunAccount, GetUserResponse.User user) {
+    private OcAliyunRamUser addRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, GetUserResponse.User user) {
         OcAliyunRamUser ocAliyunRamUser = AliyunRamUserBuilder.build(aliyunAccount, user);
         saveRamUser(aliyunAccount, ocAliyunRamUser);
         return ocAliyunRamUser;
     }
 
-    private OcAliyunRamUser addRamUser(AliyunAccount aliyunAccount, CreateUserResponse.User user) {
+    private OcAliyunRamUser addRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, CreateUserResponse.User user) {
         OcAliyunRamUser ocAliyunRamUser = AliyunRamUserBuilder.build(aliyunAccount, user);
         saveRamUser(aliyunAccount, ocAliyunRamUser);
         return ocAliyunRamUser;
@@ -98,7 +98,7 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
 
 
     @Override
-    public List<ListUsersResponse.User> getUsers(AliyunAccount aliyunAccount) {
+    public List<ListUsersResponse.User> getUsers(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         return aliyunRAMUserHandler.getUsers(aliyunAccount);
     }
 
@@ -115,12 +115,12 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
 
     @Override
     public BusinessWrapper<Boolean> syncUser(OcAliyunRamUser ocAliyunRamUser) {
-        AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocAliyunRamUser.getAccountUid());
+        AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(ocAliyunRamUser.getAccountUid());
         aliyunRAMUserPolicyPermissionHandler.syncUserPolicyPermission(aliyunAccount, ocAliyunRamUser);
         return BusinessWrapper.SUCCESS;
     }
 
-    private void syncUsers(AliyunAccount aliyunAccount, List<ListUsersResponse.User> users, Map<String, OcAliyunRamUser> ramUserMap) {
+    private void syncUsers(AliyunCoreConfig.AliyunAccount aliyunAccount, List<ListUsersResponse.User> users, Map<String, OcAliyunRamUser> ramUserMap) {
         if (users == null) return;
         users.forEach(e -> {
             OcAliyunRamUser pre = AliyunRamUserBuilder.build(aliyunAccount, e);
@@ -134,7 +134,7 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
         });
     }
 
-    private void saveRamUser(AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser) {
+    private void saveRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser) {
         List<ListAccessKeysResponse.AccessKey> keys = aliyunRAMUserHandler.getUserAccessKeys(aliyunAccount, ocAliyunRamUser.getRamUsername());
         ocAliyunRamUser.setAccessKeys(keys.isEmpty() ? 0 : keys.size());
         if (IDUtils.isEmpty(ocAliyunRamUser.getId())) {
@@ -188,7 +188,7 @@ public class AliyunRAMUserCenterImpl implements AliyunRAMUserCenter {
         list.forEach(e -> ocUserPermissionService.delOcUserPermissionById(e.getId()));
     }
 
-    private Map<String, OcAliyunRamUser> queryRamUserMap(AliyunAccount aliyunAccount) {
+    private Map<String, OcAliyunRamUser> queryRamUserMap(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         Map<String, OcAliyunRamUser> ramUserMap = Maps.newHashMap();
         List<OcAliyunRamUser> ramUsers = ocAliyunRamUserService.queryOcAliyunRamUserByAccountUid(aliyunAccount.getUid());
         ramUsers.forEach(e -> ramUserMap.put(e.getRamUsername(), e));

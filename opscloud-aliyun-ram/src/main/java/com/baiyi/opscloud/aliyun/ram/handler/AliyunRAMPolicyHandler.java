@@ -6,7 +6,7 @@ import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserRequest;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesRequest;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.base.BaseAliyunRAM;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -34,7 +34,7 @@ public class AliyunRAMPolicyHandler extends BaseAliyunRAM {
      * @param username
      * @return
      */
-    public List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(AliyunAccount aliyunAccount, String username) {
+    public List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(AliyunCoreConfig.AliyunAccount aliyunAccount, String username) {
         ListPoliciesForUserRequest request = new ListPoliciesForUserRequest();
         request.setUserName(username);
         IAcsClient client = acqAcsClient(aliyunAccount);
@@ -51,7 +51,7 @@ public class AliyunRAMPolicyHandler extends BaseAliyunRAM {
      * @param aliyunAccount
      * @return
      */
-    public List<ListPoliciesResponse.Policy> getPolicies(AliyunAccount aliyunAccount) {
+    public List<ListPoliciesResponse.Policy> getPolicies(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         List<ListPoliciesResponse.Policy> policies = Lists.newArrayList();
         String marker = "";
         while (true) {

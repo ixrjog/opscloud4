@@ -5,6 +5,7 @@ import com.baiyi.opscloud.decorator.kubernetes.KubernetesApplicationDecorator;
 import com.baiyi.opscloud.decorator.kubernetes.KubernetesApplicationInstanceDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesApplicationInstanceParam;
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesApplicationParam;
@@ -23,6 +24,7 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -84,6 +86,13 @@ public class KubernetesApplicationFacadeImpl implements KubernetesApplicationFac
         DataTable<OcKubernetesApplication> table = ocKubernetesApplicationService.queryOcKubernetesApplicationByParam(pageQuery);
         List<KubernetesApplicationVO.Application> page = BeanCopierUtils.copyListProperties(table.getData(), KubernetesApplicationVO.Application.class);
         return new DataTable<>(page.stream().map(e -> kubernetesApplicationDecorator.decorator(e, pageQuery.getExtend())).collect(Collectors.toList()), table.getTotalNum());
+    }
+
+    @Override
+    public BusinessWrapper<KubernetesApplicationVO.Application> queryKubernetesApplicationByName(String name) {
+        OcKubernetesApplication ocKubernetesApplication = ocKubernetesApplicationService.queryOcKubernetesApplicationByName(name);
+        KubernetesApplicationVO.Application application = BeanCopierUtils.copyProperties(ocKubernetesApplication, KubernetesApplicationVO.Application.class);
+        return new BusinessWrapper<>(kubernetesApplicationDecorator.decorator(application, 1));
     }
 
     @Override
@@ -190,6 +199,11 @@ public class KubernetesApplicationFacadeImpl implements KubernetesApplicationFac
 
     @Override
     public BusinessWrapper<Boolean> deleteKubernetesApplicationById(int id) {
-        return BusinessWrapper.SUCCESS;
+        List<OcKubernetesApplicationInstance> instanceList = ocKubernetesApplicationInstanceService.queryOcKubernetesApplicationInstanceByApplicationId(id);
+        if (CollectionUtils.isEmpty(instanceList)) {
+            ocKubernetesApplicationService.deleteOcKubernetesApplicationById(id);
+            return BusinessWrapper.SUCCESS;
+        }
+        return new BusinessWrapper<>(ErrorEnum.KUBERNETES_DELETE_APPLICATION_ERROR);
     }
 }

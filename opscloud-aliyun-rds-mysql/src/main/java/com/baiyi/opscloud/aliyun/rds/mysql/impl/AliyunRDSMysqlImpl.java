@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aliyun.rds.mysql.impl;
 
 import com.aliyuncs.rds.model.v20140815.*;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.rds.mysql.AliyunRDSMysql;
 import com.baiyi.opscloud.aliyun.rds.mysql.handler.AliyunRDSMysqlHandler;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
@@ -40,14 +40,14 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     public static final int DB_INSTANCE_ID_MAX = 30; // API限制最大查询30个id
 
     @Override
-    public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunAccount aliyunAccount, String dbInstanceId) {
+    public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunCoreConfig.AliyunAccount aliyunAccount, String dbInstanceId) {
         return aliyunRDSMysqlHandler.getDatabaseList(aliyunAccount, dbInstanceId)
                 .stream().filter(e -> e.getDBName().indexOf("__") != 0).collect(Collectors.toList());
     }
 
     @Override
     public Map<String, List<DescribeDBInstancesResponse.DBInstance>> getDBInstanceMap() {
-        List<AliyunAccount> accounts = aliyunCore.getAccounts();
+        List<AliyunCoreConfig.AliyunAccount> accounts = aliyunCore.getAccounts();
         Map<String, List<DescribeDBInstancesResponse.DBInstance>> instanceMap = Maps.newHashMap();
         accounts.forEach(e -> {
             // 遍历所有可用区
@@ -63,7 +63,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     public Map<String, List<DescribeDBInstanceAttributeResponse.DBInstanceAttribute>> getDBInstanceAttributeMap(Map<String, List<DescribeDBInstancesResponse.DBInstance>> dbInstanceMap) {
         Map<String, List<DescribeDBInstanceAttributeResponse.DBInstanceAttribute>> dbInstanceAttributeMap = Maps.newHashMap();
         for (String uid : dbInstanceMap.keySet()) {
-            AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(uid);
+            AliyunCoreConfig.AliyunAccount aliyunAccount = aliyunCore.getAliyunAccountByUid(uid);
             List<DescribeDBInstancesResponse.DBInstance> dbInstanceList = dbInstanceMap.get(uid);
             int listSize = dbInstanceList.size();
             int toIndex = DB_INSTANCE_ID_MAX;
@@ -83,7 +83,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     }
 
     @Override
-    public BusinessWrapper<Boolean> createAccount(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String privilege) {
+    public BusinessWrapper<Boolean> createAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String privilege) {
         BusinessWrapper<Boolean> wrapper = aliyunRDSMysqlHandler.createAccount(aliyunAccount, ocCloudDbAccount);
         // 查询账户详情
         DescribeAccountsResponse.DBInstanceAccount dbInstanceAccount = aliyunRDSMysqlHandler.getAccount(aliyunAccount, ocCloudDbAccount);
@@ -94,7 +94,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     }
 
     @Override
-    public BusinessWrapper<Boolean> grantAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String privilege) {
+    public BusinessWrapper<Boolean> grantAccountPrivilege(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String privilege) {
         List<DescribeDatabasesResponse.Database> databaseList = getDatabaseList(aliyunAccount, ocCloudDbAccount.getDbInstanceId());
         if (databaseList.isEmpty())
             return BusinessWrapper.SUCCESS;
@@ -112,7 +112,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     }
 
     @Override
-    public BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
+    public BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
         List<DescribeDatabasesResponse.Database> databaseList = getDatabaseList(aliyunAccount, ocCloudDbAccount.getDbInstanceId());
         if (databaseList.isEmpty())
             return BusinessWrapper.SUCCESS;
@@ -122,7 +122,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     }
 
     @Override
-    public BusinessWrapper<Boolean> deleteAccount(AliyunAccount aliyunAccount, OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
+    public BusinessWrapper<Boolean> deleteAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDb ocCloudDb, OcCloudDbAccount ocCloudDbAccount) {
         DescribeAccountsResponse.DBInstanceAccount dbInstanceAccount = aliyunRDSMysqlHandler.getAccount(aliyunAccount, ocCloudDbAccount);
         if (dbInstanceAccount != null)
             aliyunRDSMysqlHandler.deleteAccount(aliyunAccount, ocCloudDb.getDbInstanceId(), ocCloudDbAccount.getAccountName());
@@ -130,7 +130,7 @@ public class AliyunRDSMysqlImpl implements AliyunRDSMysql {
     }
 
     @Override
-    public DataTable<CloudDatabaseSlowLogVO.SlowLog> querySlowLogPage(AliyunAccount aliyunAccount, CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
+    public DataTable<CloudDatabaseSlowLogVO.SlowLog> querySlowLogPage(AliyunCoreConfig.AliyunAccount aliyunAccount, CloudDBDatabaseParam.SlowLogPageQuery pageQuery) {
         DescribeSlowLogsRequest request = new DescribeSlowLogsRequest();
         request.setDBInstanceId(pageQuery.getDbInstanceId());
         request.setDBName(pageQuery.getDbName());

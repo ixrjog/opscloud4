@@ -2,7 +2,7 @@ package com.baiyi.opscloud.cloud.ram.builder;
 
 import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.cloud.ram.bo.AliyunRamPolicyBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPolicy;
  */
 public class AliyunRamPolicyBuilder {
 
-    public static OcAliyunRamPolicy build(AliyunAccount aliyunAccount, ListPoliciesResponse.Policy policy) {
+    public static OcAliyunRamPolicy build(AliyunCoreConfig.AliyunAccount aliyunAccount, ListPoliciesResponse.Policy policy) {
         AliyunRamPolicyBO aliyunRamPolicyBO = AliyunRamPolicyBO.builder()
                 .accountUid(aliyunAccount.getUid())
                 .policyName(policy.getPolicyName())
@@ -29,7 +29,7 @@ public class AliyunRamPolicyBuilder {
         return convert(aliyunRamPolicyBO);
     }
 
-    public static OcAliyunRamPolicy build(AliyunAccount aliyunAccount, ListPoliciesForUserResponse.Policy policy) {
+    public static OcAliyunRamPolicy build(AliyunCoreConfig.AliyunAccount aliyunAccount, ListPoliciesForUserResponse.Policy policy) {
         AliyunRamPolicyBO aliyunRamPolicyBO = AliyunRamPolicyBO.builder()
                 .accountUid(aliyunAccount.getUid())
                 .policyName(policy.getPolicyName())

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.aliyun.ram.base;
 
 import com.aliyuncs.IAcsClient;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -22,7 +22,7 @@ public abstract class BaseAliyunRAM {
 
     public static final int MAX_ITEMS = 100;
 
-    protected IAcsClient acqAcsClient(AliyunAccount aliyunAccount) {
+    protected IAcsClient acqAcsClient(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         // 构建一个客户端实例
         return aliyunCore.getAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
     }

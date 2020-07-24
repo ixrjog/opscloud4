@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.tencent.cloud.cvm.base;
 
-import com.baiyi.opscloud.tencent.cloud.core.config.TencentCloudAccount;
 import com.baiyi.opscloud.tencent.cloud.core.config.TencentCloudCoreConfig;
 import com.tencentcloudapi.common.Credential;
 import com.tencentcloudapi.common.profile.ClientProfile;
@@ -32,7 +31,7 @@ public abstract class BaseTencentCloudCVM implements InitializingBean {
 
     protected static final long QUERY_PAGE_SIZE = 50;
 
-    private TencentCloudAccount getAccount() {
+    private TencentCloudCoreConfig.TencentCloudAccount getAccount() {
         return tencentCloudCoreConfig.getAccount();
     }
 
@@ -43,7 +42,7 @@ public abstract class BaseTencentCloudCVM implements InitializingBean {
     @Override
     public void afterPropertiesSet() throws Exception {
         try {
-            TencentCloudAccount account = getAccount();
+            TencentCloudCoreConfig.TencentCloudAccount account = getAccount();
             // 实例化一个认证对象，入参需要传入腾讯云账户secretId，secretKey
             Credential cred = new Credential(account.getSecretId(), account.getSecretKey());
 

@@ -2,12 +2,14 @@ package com.baiyi.opscloud.service.kubernetes.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesApplication;
+import com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesClusterNamespace;
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesApplicationParam;
 import com.baiyi.opscloud.mapper.opscloud.OcKubernetesApplicationMapper;
 import com.baiyi.opscloud.service.kubernetes.OcKubernetesApplicationService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -48,5 +50,13 @@ public class OcKubernetesApplicationServiceImpl implements OcKubernetesApplicati
     @Override
     public OcKubernetesApplication queryOcKubernetesApplicationById(int id) {
         return ocKubernetesApplicationMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public OcKubernetesApplication queryOcKubernetesApplicationByName(String name) {
+        Example example = new Example(OcKubernetesApplication.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", name);
+        return ocKubernetesApplicationMapper.selectOneByExample(example);
     }
 }

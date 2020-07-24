@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.aliyun.core.client;
 
 import com.aliyuncs.IAcsClient;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,5 +14,5 @@ import lombok.Data;
 @Data
 public class IAcsClientBO {
     private IAcsClient iAcsClient;
-    private AliyunAccount aliyunAccount;
+    private AliyunCoreConfig.AliyunAccount aliyunAccount;
 }

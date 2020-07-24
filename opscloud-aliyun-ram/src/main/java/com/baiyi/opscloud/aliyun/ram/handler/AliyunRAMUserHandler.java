@@ -3,7 +3,7 @@ package com.baiyi.opscloud.aliyun.ram.handler;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ram.model.v20150501.*;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.base.BaseAliyunRAM;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -37,7 +37,7 @@ public class AliyunRAMUserHandler extends BaseAliyunRAM {
      * @param createLoginProfile
      * @return
      */
-    public BusinessWrapper<CreateUserResponse.User> createRamUser(AliyunAccount aliyunAccount, OcUser ocUser, boolean createLoginProfile) {
+    public BusinessWrapper<CreateUserResponse.User> createRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcUser ocUser, boolean createLoginProfile) {
         IAcsClient client = acqAcsClient(aliyunAccount);
         BusinessWrapper<CreateUserResponse.User> wrapper = createUser(client, ocUser);
         if (!wrapper.isSuccess())
@@ -98,7 +98,7 @@ public class AliyunRAMUserHandler extends BaseAliyunRAM {
      * @param aliyunAccount
      * @return
      */
-    public List<ListUsersResponse.User> getUsers(AliyunAccount aliyunAccount) {
+    public List<ListUsersResponse.User> getUsers(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         IAcsClient client = acqAcsClient(aliyunAccount);
         List<ListUsersResponse.User> users = Lists.newArrayList();
         String marker = "";
@@ -135,7 +135,7 @@ public class AliyunRAMUserHandler extends BaseAliyunRAM {
      * @param username
      * @return
      */
-    public List<ListAccessKeysResponse.AccessKey> getUserAccessKeys(AliyunAccount aliyunAccount, String username) {
+    public List<ListAccessKeysResponse.AccessKey> getUserAccessKeys(AliyunCoreConfig.AliyunAccount aliyunAccount, String username) {
         log.error("查询RAM用户 {} AK", username);
         ListAccessKeysRequest request = new ListAccessKeysRequest();
         request.setUserName(username);
@@ -157,7 +157,7 @@ public class AliyunRAMUserHandler extends BaseAliyunRAM {
      * @param ocUser
      * @return
      */
-    public BusinessWrapper<UpdateUserResponse.User> updateRamUser(AliyunAccount aliyunAccount, OcUser ocUser) {
+    public BusinessWrapper<UpdateUserResponse.User> updateRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcUser ocUser) {
         UpdateUserRequest request = new UpdateUserRequest();
         request.setUserName(ocUser.getUsername());
         request.setNewUserName(ocUser.getUsername());
@@ -181,7 +181,7 @@ public class AliyunRAMUserHandler extends BaseAliyunRAM {
      * @param ocUser
      * @return
      */
-    public BusinessWrapper<GetUserResponse.User> getRamUser(AliyunAccount aliyunAccount, OcUser ocUser) {
+    public BusinessWrapper<GetUserResponse.User> getRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcUser ocUser) {
         GetUserRequest request = new GetUserRequest();
         request.setUserName(ocUser.getUsername());
         IAcsClient client = acqAcsClient(aliyunAccount);

@@ -63,8 +63,14 @@ public class KubernetesApplicationController {
         return new HttpResult<>(kubernetesApplicationFacade.deleteKubernetesApplicationById(id));
     }
 
+    @ApiOperation(value = "名称查询应用配置")
+    @GetMapping(value = "/name/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<KubernetesApplicationVO.Application> queryKubernetesApplicationByName(@RequestParam String name) {
+        return new HttpResult<>(kubernetesApplicationFacade.queryKubernetesApplicationByName(name));
+    }
+
     @ApiOperation(value = "查询应用实例配置")
-    @GetMapping(value = "/instance/id/query",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/instance/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<KubernetesApplicationVO.Instance> queryKubernetesApplicationInstanceById(@RequestParam @Valid int id) {
         return new HttpResult<>(kubernetesApplicationFacade.queryKubernetesApplicationInstanceById(id));
     }

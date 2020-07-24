@@ -15,5 +15,12 @@ import org.springframework.stereotype.Component;
 public class AuthConfig {
 
     private String externalAuthentication; // 外部认证
-    private OpscloudAdmin admin;
+    private Admin admin;
+
+    @Data
+    public static class Admin {
+        private String username;
+        private String password;
+    }
+
 }

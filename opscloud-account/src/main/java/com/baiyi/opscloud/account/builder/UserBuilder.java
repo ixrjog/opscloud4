@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.account.builder;
 
 import com.baiyi.opscloud.account.bo.UserBO;
-import com.baiyi.opscloud.account.config.OpscloudAdmin;
+import com.baiyi.opscloud.account.config.AuthConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.ldap.entry.Person;
@@ -35,7 +35,7 @@ public class UserBuilder {
         return convert(bo);
     }
 
-    public static OcUser build(OpscloudAdmin admin) {
+    public static OcUser build(AuthConfig.Admin admin) {
         UserBO bo = UserBO.builder()
                 .username(admin.getUsername())
                 .displayName(admin.getUsername())

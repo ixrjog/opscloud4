@@ -3,7 +3,7 @@ package com.baiyi.opscloud.cloud.ram.builder;
 import com.aliyuncs.ram.model.v20150501.CreateUserResponse;
 import com.aliyuncs.ram.model.v20150501.GetUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.cloud.ram.bo.AliyunRamUserBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
  */
 public class AliyunRamUserBuilder {
 
-    public static OcAliyunRamUser build(AliyunAccount aliyunAccount, ListUsersResponse.User user) {
+    public static OcAliyunRamUser build(AliyunCoreConfig.AliyunAccount aliyunAccount, ListUsersResponse.User user) {
         AliyunRamUserBO aliyunRamUserBO = AliyunRamUserBO.builder()
                 .accountUid(aliyunAccount.getUid())
                 .ramUserId(user.getUserId())
@@ -30,7 +30,7 @@ public class AliyunRamUserBuilder {
         return convert(aliyunRamUserBO);
     }
 
-    public static OcAliyunRamUser build(AliyunAccount aliyunAccount,GetUserResponse.User user) {
+    public static OcAliyunRamUser build(AliyunCoreConfig.AliyunAccount aliyunAccount, GetUserResponse.User user) {
         AliyunRamUserBO aliyunRamUserBO = AliyunRamUserBO.builder()
                 .accountUid(aliyunAccount.getUid())
                 .ramUserId(user.getUserId())
@@ -44,7 +44,7 @@ public class AliyunRamUserBuilder {
         return convert(aliyunRamUserBO);
     }
 
-    public static OcAliyunRamUser build(AliyunAccount aliyunAccount, CreateUserResponse.User user) {
+    public static OcAliyunRamUser build(AliyunCoreConfig.AliyunAccount aliyunAccount, CreateUserResponse.User user) {
         AliyunRamUserBO aliyunRamUserBO = AliyunRamUserBO.builder()
                 .accountUid(aliyunAccount.getUid())
                 .ramUserId(user.getUserId())

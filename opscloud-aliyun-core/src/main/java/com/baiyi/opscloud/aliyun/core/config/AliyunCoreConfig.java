@@ -20,4 +20,16 @@ public class AliyunCoreConfig {
 
     private List<AliyunAccount> accounts;
 
+    @Data
+    public static class AliyunAccount {
+
+        private String uid;
+        private Boolean master;
+        private String name;
+        private String accessKeyId;
+        private String secret;
+        private String regionId;
+        private List<String> regionIds;
+    }
+
 }

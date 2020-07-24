@@ -2,7 +2,7 @@ package com.baiyi.opscloud.cloud.image.impl;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunImageHandler;
 import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.cloud.image.ICloudImage;
@@ -60,7 +60,7 @@ public class AliyunCloudImage<T> extends BaseCloudImage<T> implements ICloudImag
 
     @Override
     protected CloudAccount getCloudAccount() {
-        AliyunAccount account = aliyunCore.getAccount();
+        AliyunCoreConfig.AliyunAccount account = aliyunCore.getAccount();
         if (account == null) return null;
         return BeanCopierUtils.copyProperties(account, CloudAccount.class);
     }

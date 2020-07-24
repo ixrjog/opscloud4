@@ -4,7 +4,7 @@ import com.aliyuncs.IAcsClient;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.rds.model.v20140815.*;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudDbAccount;
@@ -29,7 +29,7 @@ public class AliyunRDSMysqlHandler {
 
     public static final int QUERY_PAGE_SIZE = 50; // 默默值30 最大值100
 
-    public BusinessWrapper<Boolean> deleteAccount(AliyunAccount aliyunAccount, String dbInstanceId, String accountName) {
+    public BusinessWrapper<Boolean> deleteAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, String dbInstanceId, String accountName) {
         DeleteAccountRequest request = new DeleteAccountRequest();
         request.setDBInstanceId(dbInstanceId);
         request.setAccountName(accountName);
@@ -52,7 +52,7 @@ public class AliyunRDSMysqlHandler {
      * @param dbName
      * @return
      */
-    public BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
+    public BusinessWrapper<Boolean> revokeAccountPrivilege(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
         RevokeAccountPrivilegeRequest request = new RevokeAccountPrivilegeRequest();
         request.setAccountName(ocCloudDbAccount.getAccountName());
         request.setDBInstanceId(ocCloudDbAccount.getDbInstanceId());
@@ -76,7 +76,7 @@ public class AliyunRDSMysqlHandler {
      * @param dbName
      * @return
      */
-    public BusinessWrapper<Boolean> grantAccountPrivilege(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
+    public BusinessWrapper<Boolean> grantAccountPrivilege(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
         GrantAccountPrivilegeRequest request = new GrantAccountPrivilegeRequest();
         request.setAccountName(ocCloudDbAccount.getAccountName());
         request.setAccountPrivilege(ocCloudDbAccount.getAccountPrivilege());
@@ -100,7 +100,7 @@ public class AliyunRDSMysqlHandler {
      * @param ocCloudDbAccount
      * @return
      */
-    public BusinessWrapper<Boolean> createAccount(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
+    public BusinessWrapper<Boolean> createAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
         CreateAccountRequest request = new CreateAccountRequest();
         request.setAccountName(ocCloudDbAccount.getAccountName());
         request.setAccountPassword(ocCloudDbAccount.getAccountPassword());
@@ -124,7 +124,7 @@ public class AliyunRDSMysqlHandler {
      * @param aliyunAccount
      * @param ocCloudDbAccount
      */
-    public DescribeAccountsResponse.DBInstanceAccount getAccount(AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
+    public DescribeAccountsResponse.DBInstanceAccount getAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
         DescribeAccountsRequest request = new DescribeAccountsRequest();
         request.setDBInstanceId(ocCloudDbAccount.getDbInstanceId());
         request.setAccountName(ocCloudDbAccount.getAccountName());
@@ -140,7 +140,7 @@ public class AliyunRDSMysqlHandler {
         return null;
     }
 
-    public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunAccount aliyunAccount, String dbInstanceId) {
+    public List<DescribeDatabasesResponse.Database> getDatabaseList(AliyunCoreConfig.AliyunAccount aliyunAccount, String dbInstanceId) {
         DescribeDatabasesRequest describe = new DescribeDatabasesRequest();
         describe.setDBInstanceId(dbInstanceId);
         describe.setPageSize(QUERY_PAGE_SIZE);
@@ -168,13 +168,13 @@ public class AliyunRDSMysqlHandler {
         }
     }
 
-    public List<DescribeDBInstancesResponse.DBInstance> getDbInstanceList(String regionId, AliyunAccount aliyunAccount) {
+    public List<DescribeDBInstancesResponse.DBInstance> getDbInstanceList(String regionId, AliyunCoreConfig.AliyunAccount aliyunAccount) {
         IAcsClient iAcsClient = acqAcsClient(regionId, aliyunAccount);
         return getInstanceList(iAcsClient);
     }
 
     // DescribeDBInstanceAttribute
-    public List<DescribeDBInstanceAttributeResponse.DBInstanceAttribute> getDbInstanceAttribute(AliyunAccount aliyunAccount, String dbInstanceId) {
+    public List<DescribeDBInstanceAttributeResponse.DBInstanceAttribute> getDbInstanceAttribute(AliyunCoreConfig.AliyunAccount aliyunAccount, String dbInstanceId) {
         DescribeDBInstanceAttributeRequest describe = new DescribeDBInstanceAttributeRequest();
         describe.setDBInstanceId(dbInstanceId);
         describe.setExpired("False"); // 实例过期状态(未过期)
@@ -214,7 +214,7 @@ public class AliyunRDSMysqlHandler {
         }
     }
 
-    public DescribeSlowLogsResponse describeDBInstancesResponse(DescribeSlowLogsRequest describe, AliyunAccount aliyunAccount) {
+    public DescribeSlowLogsResponse describeDBInstancesResponse(DescribeSlowLogsRequest describe, AliyunCoreConfig.AliyunAccount aliyunAccount) {
         IAcsClient client = acqAcsClient(aliyunAccount.getRegionId(), aliyunAccount);
         try {
             return client.getAcsResponse(describe);
@@ -224,7 +224,7 @@ public class AliyunRDSMysqlHandler {
         }
     }
 
-    private IAcsClient acqAcsClient(String regionId, AliyunAccount aliyunAccount) {
+    private IAcsClient acqAcsClient(String regionId, AliyunCoreConfig.AliyunAccount aliyunAccount) {
         return aliyunCore.getAcsClient(regionId, aliyunAccount);
     }
 

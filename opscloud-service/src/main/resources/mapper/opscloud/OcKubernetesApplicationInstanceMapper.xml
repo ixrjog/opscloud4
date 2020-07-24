@@ -26,6 +26,9 @@
             <if test="envType != null">
                 and env_type = #{envType}
             </if>
+            <if test="envLabel != null">
+                and env_label = #{envLabel}
+            </if>
             <if test="applicationId != null">
                 and application_id = #{applicationId}
             </if>

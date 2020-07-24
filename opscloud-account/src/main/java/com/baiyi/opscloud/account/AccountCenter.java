@@ -2,7 +2,6 @@ package com.baiyi.opscloud.account;
 
 import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.account.config.AuthConfig;
-import com.baiyi.opscloud.account.config.OpscloudAdmin;
 import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -221,7 +220,7 @@ public class AccountCenter implements InitializingBean {
      */
     private void tryInitialAdmin() {
         if (authConfig.getAdmin() == null) return;
-        OpscloudAdmin admin = authConfig.getAdmin();
+        AuthConfig.Admin admin = authConfig.getAdmin();
         if (StringUtils.isEmpty(admin.getUsername())) return;
         if (StringUtils.isEmpty(admin.getPassword())) return;
         OcUser ocUser = ocUserService.queryOcUserByUsername(admin.getUsername());

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.cloud.ram.impl;
 
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.handler.AliyunRAMPolicyHandler;
 import com.baiyi.opscloud.cloud.ram.AliyunRAMPolicyCenter;
 import com.baiyi.opscloud.cloud.ram.builder.AliyunRamPolicyBuilder;
@@ -35,7 +35,7 @@ public class AliyunRAMPolicyCenterImpl implements AliyunRAMPolicyCenter {
     private OcAliyunRamPolicyService ocAliyunRamPolicyService;
 
     @Override
-    public List<ListPoliciesResponse.Policy> getPolicies(AliyunAccount aliyunAccount) {
+    public List<ListPoliciesResponse.Policy> getPolicies(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         return aliyunRAMPolicyHandler.getPolicies(aliyunAccount);
     }
 
@@ -50,7 +50,7 @@ public class AliyunRAMPolicyCenterImpl implements AliyunRAMPolicyCenter {
         return BusinessWrapper.SUCCESS;
     }
 
-    private void syncPolicies(AliyunAccount aliyunAccount, List<ListPoliciesResponse.Policy> policies, Map<String, OcAliyunRamPolicy> ramPolicyMap) {
+    private void syncPolicies(AliyunCoreConfig.AliyunAccount aliyunAccount, List<ListPoliciesResponse.Policy> policies, Map<String, OcAliyunRamPolicy> ramPolicyMap) {
         if (policies == null) return;
         policies.forEach(e -> {
             OcAliyunRamPolicy pre = AliyunRamPolicyBuilder.build(aliyunAccount, e);
@@ -64,7 +64,7 @@ public class AliyunRAMPolicyCenterImpl implements AliyunRAMPolicyCenter {
         });
     }
 
-    private Map<String, OcAliyunRamPolicy> queryRamPolicyMap(AliyunAccount aliyunAccount) {
+    private Map<String, OcAliyunRamPolicy> queryRamPolicyMap(AliyunCoreConfig.AliyunAccount aliyunAccount) {
         Map<String, OcAliyunRamPolicy> ramPolicyMap = Maps.newHashMap();
         List<OcAliyunRamPolicy> ramPolicies = ocAliyunRamPolicyService.queryOcAliyunRamPolicyByAccountUid(aliyunAccount.getUid());
         ramPolicies.forEach(e -> ramPolicyMap.put(e.getPolicyName(), e));

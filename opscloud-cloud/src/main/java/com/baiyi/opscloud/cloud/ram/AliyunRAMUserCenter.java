@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.ram;
 
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -20,7 +20,7 @@ public interface AliyunRAMUserCenter {
 
     BusinessWrapper<Boolean> deleteRamUser(OcAliyunRamUser ocAliyunRamUser);
 
-    List<ListUsersResponse.User> getUsers(AliyunAccount aliyunAccount);
+    List<ListUsersResponse.User> getUsers(AliyunCoreConfig.AliyunAccount aliyunAccount);
 
     BusinessWrapper<Boolean> syncUsers();
 

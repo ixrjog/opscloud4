@@ -4,7 +4,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeSecurityGroupsResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.baiyi.opscloud.aliyun.core.AliyunCore;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ecs.handler.AliyunVPCHandler;
 import com.baiyi.opscloud.cloud.account.CloudAccount;
 import com.baiyi.opscloud.cloud.vpc.ICloudVPC;
@@ -100,7 +100,7 @@ public class AliyunCloudVPC<T, VSW, SG> extends BaseCloudVPC<T, VSW, SG> impleme
 
     @Override
     protected CloudAccount getCloudAccount() {
-        AliyunAccount account = aliyunCore.getAccount();
+        AliyunCoreConfig.AliyunAccount account = aliyunCore.getAccount();
         if (account == null) return null;
         return BeanCopierUtils.copyProperties(account, CloudAccount.class);
     }

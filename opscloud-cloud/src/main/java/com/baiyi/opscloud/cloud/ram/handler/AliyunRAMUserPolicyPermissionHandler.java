@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.cloud.ram.handler;
 
 import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserResponse;
-import com.baiyi.opscloud.aliyun.core.config.AliyunAccount;
+import com.baiyi.opscloud.aliyun.core.config.AliyunCoreConfig;
 import com.baiyi.opscloud.aliyun.ram.handler.AliyunRAMPolicyHandler;
 import com.baiyi.opscloud.cloud.ram.builder.AliyunRamPolicyBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPermission;
@@ -39,7 +39,7 @@ public class AliyunRAMUserPolicyPermissionHandler {
      * @param aliyunAccount
      * @param ocAliyunRamUser
      */
-    public void syncUserPolicyPermission(AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser) {
+    public void syncUserPolicyPermission(AliyunCoreConfig.AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser) {
         List<ListPoliciesForUserResponse.Policy> policies = aliyunRAMPolicyHandler.listPoliciesForUser(aliyunAccount, ocAliyunRamUser.getRamUsername());
         Map<String, OcAliyunRamPolicy> userPolicyMap = getUserPolicyMap(ocAliyunRamUser);
         policies.forEach(e -> {
@@ -69,7 +69,7 @@ public class AliyunRAMUserPolicyPermissionHandler {
         });
     }
 
-    private OcAliyunRamPolicy getOcAliyunRamPolicy(AliyunAccount aliyunAccount, ListPoliciesForUserResponse.Policy policy) {
+    private OcAliyunRamPolicy getOcAliyunRamPolicy(AliyunCoreConfig.AliyunAccount aliyunAccount, ListPoliciesForUserResponse.Policy policy) {
         OcAliyunRamPolicy ocAliyunRamPolicy = ocAliyunRamPolicyService.queryOcAliyunRamPolicyByUniqueKey(aliyunAccount.getUid(), policy.getPolicyName());
         if (ocAliyunRamPolicy != null) return ocAliyunRamPolicy;
         ocAliyunRamPolicy = AliyunRamPolicyBuilder.build(aliyunAccount, policy);
