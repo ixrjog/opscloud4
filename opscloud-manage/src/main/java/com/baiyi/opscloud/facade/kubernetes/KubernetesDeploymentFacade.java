@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.kubernetes;
 
 import com.baiyi.opscloud.builder.kubernetes.KubernetesDeploymentBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.decorator.kubernetes.KubernetesDeploymentDecorator;
 import com.baiyi.opscloud.decorator.kubernetes.KubernetesTemplateDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
@@ -131,19 +132,24 @@ public class KubernetesDeploymentFacade extends BaseKubernetesFacade {
     private void saveKubernetesDeployment(Map<String, OcKubernetesDeployment> deploymentMap, OcKubernetesClusterNamespace ocKubernetesClusterNamespace, Deployment deployment) {
         OcKubernetesDeployment pre = KubernetesDeploymentBuilder.build(ocKubernetesClusterNamespace, deployment);
         OcKubernetesDeployment ocKubernetesDeployment = ocKubernetesDeploymentService.queryOcKubernetesDeploymentByUniqueKey(ocKubernetesClusterNamespace.getId(), pre.getName());
-        if (ocKubernetesDeployment == null) {
-            // 匹配应用实例
-            OcKubernetesApplicationInstance ocKubernetesApplicationInstance = getApplicationInstanceByDeployment(deployment);
-            if (ocKubernetesApplicationInstance != null) {
-                pre.setApplicationId(ocKubernetesApplicationInstance.getApplicationId());
-                pre.setInstanceId(ocKubernetesApplicationInstance.getId());
-            }
+        if (ocKubernetesDeployment != null)
+            pre = ocKubernetesDeployment;
+        invokeKubernetesDeployment(pre,deployment);
+        if (IDUtils.isEmpty(pre.getId())) {
             ocKubernetesDeploymentService.addOcKubernetesDeployment(pre);
         } else {
-            pre.setId(ocKubernetesDeployment.getId());
             ocKubernetesDeploymentService.updateOcKubernetesDeployment(pre);
         }
         deploymentMap.remove(pre.getName());
+    }
+
+    private void invokeKubernetesDeployment(OcKubernetesDeployment ocKubernetesDeployment,Deployment deployment) {
+        if (!IDUtils.isEmpty(ocKubernetesDeployment.getInstanceId())) return;
+        OcKubernetesApplicationInstance ocKubernetesApplicationInstance = getApplicationInstanceByDeployment(deployment);
+        if (ocKubernetesApplicationInstance != null) {
+            ocKubernetesDeployment.setApplicationId(ocKubernetesApplicationInstance.getApplicationId());
+            ocKubernetesDeployment.setInstanceId(ocKubernetesApplicationInstance.getId());
+        }
     }
 
     private OcKubernetesApplicationInstance getApplicationInstanceByDeployment(Deployment deployment) {
