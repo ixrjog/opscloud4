@@ -4,10 +4,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
-import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
-import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
+import com.baiyi.opscloud.domain.vo.org.*;
 
 /**
  * @Author baiyi
@@ -60,4 +57,7 @@ public interface OrgFacade {
 
     BusinessWrapper<Boolean> checkUserInTheDepartment();
 
+    BusinessWrapper<Boolean> checkUserInTheDepartment(String username);
+
+    BusinessWrapper<OrgApprovalVO.OrgApproval> queryOrgApprovalByName(String userName);
 }

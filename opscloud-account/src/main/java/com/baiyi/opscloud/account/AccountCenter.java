@@ -70,9 +70,9 @@ public class AccountCenter implements InitializingBean {
             loginVO.setToken(token);
             authBaseFacade.setOcUserPassword(ocUser, loginParam.getPassword());
             initialUser(ocUser);
-            return new BusinessWrapper(loginVO);
+            return new BusinessWrapper<>(loginVO);
         } else {
-            return new BusinessWrapper(ErrorEnum.USER_LOGIN_FAILUER);
+            return new BusinessWrapper<>(ErrorEnum.USER_LOGIN_FAILUER);
         }
     }
 
@@ -92,7 +92,7 @@ public class AccountCenter implements InitializingBean {
         if (ocUser == null)
             return new BusinessWrapper(ErrorEnum.USER_NOT_EXIST);
         if (!ocUser.getIsActive())
-            return new BusinessWrapper(ErrorEnum.ACCOUNT_IS_DISABLE);
+            return new BusinessWrapper(ErrorEnum.ACCOUNT_IS_LOCKED);
         return new BusinessWrapper<>(ocUser);
     }
 

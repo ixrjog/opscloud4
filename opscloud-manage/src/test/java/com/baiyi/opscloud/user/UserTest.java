@@ -89,4 +89,10 @@ public class UserTest extends BaseUnit {
 
     }
 
+    @Test
+    void test() {
+        OcUser ocUser = ocUserService.queryOcUserByUsername("jinshan");
+        userFacade.beReinstatedUser(ocUser.getId());
+    }
+
 }

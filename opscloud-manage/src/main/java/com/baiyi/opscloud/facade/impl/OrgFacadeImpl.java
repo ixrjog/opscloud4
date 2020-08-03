@@ -15,10 +15,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartmentMember;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
-import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
-import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
+import com.baiyi.opscloud.domain.vo.org.*;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import com.baiyi.opscloud.facade.SettingBaseFacade;
@@ -382,5 +379,21 @@ public class OrgFacadeImpl implements OrgFacade {
         return BusinessWrapper.SUCCESS;
     }
 
+    @Override
+    public BusinessWrapper<Boolean> checkUserInTheDepartment(String username) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(ocUser.getId());
+        if (CollectionUtils.isEmpty(members))
+            return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT);
+        return BusinessWrapper.SUCCESS;
+    }
 
+    @Override
+    public BusinessWrapper<OrgApprovalVO.OrgApproval> queryOrgApprovalByName(String username) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+        if (ocUser == null)
+            return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
+        OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocUser.getId());
+        return new BusinessWrapper<>(orgApproval);
+    }
 }

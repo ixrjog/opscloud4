@@ -4,10 +4,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
-import com.baiyi.opscloud.domain.vo.org.DepartmentTreeVO;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentVO;
-import com.baiyi.opscloud.domain.vo.org.OrgChartVO;
+import com.baiyi.opscloud.domain.vo.org.*;
 import com.baiyi.opscloud.facade.OrgFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -118,6 +115,18 @@ public class OrgController {
     @GetMapping(value = "/department/user/check", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> checkUserInTheDepartment() {
         return new HttpResult<>(orgFacade.checkUserInTheDepartment());
+    }
+
+    @ApiOperation(value = "校验用户是否加入部门")
+    @GetMapping(value = "/department/username/check", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> checkUserInTheDepartment(@RequestParam String username) {
+        return new HttpResult<>(orgFacade.checkUserInTheDepartment(username));
+    }
+
+    @ApiOperation(value = "查询用户审批")
+    @GetMapping(value = "/approval/user/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<OrgApprovalVO.OrgApproval> queryOrgApprovalByName(@RequestParam String username) {
+        return new HttpResult<>(orgFacade.queryOrgApprovalByName(username));
     }
 
 }

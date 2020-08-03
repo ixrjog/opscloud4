@@ -38,8 +38,8 @@ public enum ErrorEnum {
     USER_EMAIL_NON_COMPLIANCE_WITH_RULES(12002, "用户邮箱不合规！"),
     USER_NOT_EXIST(12002, "用户不存在！"),
     USER_IS_UNACTIVE(12002, "用户被禁用不能修改信息！"),
-    // Account is disabled
-    ACCOUNT_IS_DISABLE(12002, "账户被禁用！"),
+    // Account is locked
+    ACCOUNT_IS_LOCKED(12002, "账户被锁定！"),
     //applyUserApiToken
     USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003,"申请ApiToken描述不能为空"),
     USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003,"申请ApiToken过期时间为空或格式错误"),
