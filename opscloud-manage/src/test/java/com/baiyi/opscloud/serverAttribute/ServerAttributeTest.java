@@ -91,4 +91,12 @@ public class ServerAttributeTest extends BaseUnit {
         System.err.println(JSON.toJSONString(map));
     }
 
+
+    @Test
+    void testCache() {
+        // 90
+        OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupByName("group_test-springboot2");
+        Map<String, List<OcServer>> map = attributeAnsible.grouping(ocServerGroup, true);
+        System.err.println(JSON.toJSONString(map));
+    }
 }

@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -48,5 +49,13 @@ public class OcServerChangeTaskServiceImpl implements OcServerChangeTaskService 
         criteria.andEqualTo("taskId", taskId);
         PageHelper.startPage(1, 1);
         return ocServerChangeTaskMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public List<OcServerChangeTask> queryOcServerChangeTaskByTaskStatus(Integer taskStatus) {
+        Example example = new Example(OcServerChangeTask.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("taskStatus", taskStatus);
+        return ocServerChangeTaskMapper.selectByExample(example);
     }
 }

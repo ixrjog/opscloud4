@@ -15,6 +15,7 @@ import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -32,6 +33,7 @@ import java.util.Set;
  * @Date 2020/4/7 10:28 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class AttributeAnsible extends AttributeBase {
 
@@ -173,6 +175,7 @@ public class AttributeAnsible extends AttributeBase {
      */
     @CacheEvict(cacheNames = CachingConfig.CACHE_NAME_ANSIBLE_CACHE_REPO, key = "#ocServerGroup.id", beforeInvocation = true)
     public void evictGrouping(OcServerGroup ocServerGroup) {
+        log.info("清除缓存，serverGroupId = {}",ocServerGroup.getId());
     }
 
     /**

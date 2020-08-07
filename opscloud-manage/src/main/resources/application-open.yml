@@ -3,7 +3,7 @@ logging:
     # swagger 警告日志忽略
     io.swagger.models.parameters.AbstractSerializableParameter: error
   file:
-    path: /log
+    path: /logs
 
 # 白名单配置
 white:

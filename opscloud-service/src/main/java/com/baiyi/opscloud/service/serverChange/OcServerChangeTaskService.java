@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.serverChange;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerChangeTask;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/5/27 1:47 下午
@@ -16,4 +18,6 @@ public interface OcServerChangeTaskService {
     OcServerChangeTask checkOcServerChangeTask(OcServerChangeTask ocServerChangeTask);
 
     OcServerChangeTask queryOcServerChangeTaskByTaskId(String taskId);
+
+    List<OcServerChangeTask> queryOcServerChangeTaskByTaskStatus(Integer taskStatus);
 }

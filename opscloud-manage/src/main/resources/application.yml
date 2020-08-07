@@ -5,6 +5,8 @@ spring:
   profiles:
     active: @env@
     include: common
+  application:
+    name: opscloud
   http:
     encoding:
       force: true

@@ -37,5 +37,15 @@ public class ServerChangeParam {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class queryTaskParam {
+
+        @ApiModelProperty(value = "任务id")
+        @NotNull
+        private String taskId;
+
+    }
 
 }

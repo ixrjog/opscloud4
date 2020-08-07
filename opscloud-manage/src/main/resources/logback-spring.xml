@@ -1,50 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <configuration>
-    <springProperty scope="context" name="LOG_PATH" source="logging.path"/>
+    <include resource="org/springframework/boot/logging/logback/base.xml"/>
+    <jmxConfigurator/>
 
-    <property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%p] [%.30t] [%c{1}][%L] %m%n"/>
+    <property name="pattern"
+              value="[%d{yyyy-MM-dd HH:mm:ss}] [%p] [%10.10t] [%X{sentryTraceId}] [%c{1}.%M] Line:[%L] - %m%n"/>
 
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>utf-8</charset>
-        </encoder>
-    </appender>
-
-    <appender name="info" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/info.log</file>
-        <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>utf-8</charset>
-        </encoder>
+    <!-- 获取application.yml中的变量，使用方式${basedir}. 缺点，会额外生成一个bootstrap的日志文件目录。 取bootstrap中的文件，不会有问题 -->
+    <!--<springProperty scope="" name="baseDir" source="spring.application.name"/>-->
+    <springProperty scope="context" name="APP_HOME" source="spring.application.name"/>
+    <springProperty scope="context" name="LOG_FILE_PATH" source="logging.file.path"/>
+    <appender name="RollingInfoLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/${LOG_FILE_PATH}/${APP_HOME}/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/info.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>2</maxHistory>
+            <fileNamePattern>/logs/${APP_HOME}/info.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>15</maxHistory>
         </rollingPolicy>
-    </appender>
-
-    <appender name="BINLOG" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>${LOG_PATH}/binlog.log</file>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
         <encoder>
-            <pattern>${LOG_PATTERN}</pattern>
-            <charset>utf-8</charset>
+            <pattern>${pattern}</pattern>
         </encoder>
-        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            <fileNamePattern>${LOG_PATH}/binlog.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
-            <maxHistory>2</maxHistory>
-        </rollingPolicy>
     </appender>
 
-    <logger name="binlog" additivity="true" level="info">
-        <appender-ref ref="BINLOG"/>
-    </logger>
+    <appender name="RollingErrorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>/${LOG_FILE_PATH}/${APP_HOME}/error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>/logs/${APP_HOME}/error.log.%d{yyyy-MM-dd}</fileNamePattern>
+            <maxHistory>15</maxHistory>
+        </rollingPolicy>
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <onMatch>ACCEPT</onMatch>
+            <onMismatch>DENY</onMismatch>
+        </filter>
+        <encoder>
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
 
-    <logger name="com.baiyi.opscloud" additivity="false" level="info">
-        <appender-ref ref="info"/>
-    </logger>
+    <!-- 控制台输出，生产环境将请stdout去掉 -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <!--格式化输出：%d表示日期，%thread表示线程名，%-5level：级别从左显示5个字符宽度，%msg：日志消息，%n是换行符 -->
+            <pattern>${pattern}</pattern>
+        </encoder>
+    </appender>
 
     <root level="INFO">
-        <appender-ref ref="info"/>
-        <appender-ref ref="console"/>
+        <appender-ref ref="RollingInfoLogger"/>
+        <appender-ref ref="RollingErrorLogger"/>
     </root>
 </configuration>

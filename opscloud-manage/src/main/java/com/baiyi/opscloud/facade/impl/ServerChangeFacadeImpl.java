@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.impl;
 import com.baiyi.opscloud.builder.ServerChangeTaskBuilder;
 import com.baiyi.opscloud.common.base.ServerChangeType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.decorator.server.ServerChangeTaskDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -17,8 +18,11 @@ import com.baiyi.opscloud.factory.change.handler.ServerChangeHandler;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.baiyi.opscloud.service.serverChange.OcServerChangeTaskService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -27,6 +31,8 @@ import javax.annotation.Resource;
  */
 @Service
 public class ServerChangeFacadeImpl implements ServerChangeFacade {
+
+    private final static Integer CHANGE_SERVER_TASK_TIMEOUT = 5;
 
     @Resource
     private OcServerChangeTaskService ocServerChangeTaskService;
@@ -92,11 +98,26 @@ public class ServerChangeFacadeImpl implements ServerChangeFacade {
     }
 
     @Override
-    public BusinessWrapper<ServerChangeTaskVO.ServerChangeTask> queryServerChangeTask(String taskId) {
-        OcServerChangeTask task = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(taskId);
+    public BusinessWrapper<ServerChangeTaskVO.ServerChangeTask> queryServerChangeTask(ServerChangeParam.queryTaskParam queryTaskParam) {
+        OcServerChangeTask task = ocServerChangeTaskService.queryOcServerChangeTaskByTaskId(queryTaskParam.getTaskId());
         ServerChangeTaskVO.ServerChangeTask serverChangeTask = BeanCopierUtils.copyProperties(task, ServerChangeTaskVO.ServerChangeTask.class);
-        return new BusinessWrapper(serverChangeTaskDecorator.decorator(serverChangeTask));
+        return new BusinessWrapper<>(serverChangeTaskDecorator.decorator(serverChangeTask));
     }
 
+    @Override
+    public void checkServerChangeTask() {
+        List<OcServerChangeTask> ocRunningServerChangeTaskList = ocServerChangeTaskService.queryOcServerChangeTaskByTaskStatus(1);
+        List<OcServerChangeTask> timeoutTaskList = ocRunningServerChangeTaskList.stream().filter(
+                x -> (TimeUtils.isTimeOut(x.getStartTime(), CHANGE_SERVER_TASK_TIMEOUT))
+        ).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(timeoutTaskList)) {
+            timeoutTaskList.forEach(ocServerChangeTask -> {
+                ocServerChangeTask.setTaskStatus(0);
+                ocServerChangeTask.setResultCode(1);
+                ocServerChangeTask.setResultMsg("CLOSE_TIMEOUT_SERVER_CHANGE_TASK");
+                ocServerChangeTaskService.updateOcServerChangeTask(ocServerChangeTask);
+            });
+        }
+    }
 
 }

@@ -391,4 +391,8 @@ public class TimeUtils {
         SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return format.format(date);
     }
+
+    public static Boolean isTimeOut(Date startTime, Integer minute) {
+        return (startTime.getTime() + (minute * minuteTime)) < new Date().getTime();
+    }
 }

@@ -38,9 +38,9 @@ public class ServerChangeController {
     }
 
     @ApiOperation(value = "任务查询")
-    @GetMapping(value = "/task/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<ServerChangeTaskVO.ServerChangeTask> queryServerChangeTask(@RequestParam @Valid String taskId) {
-        return new HttpResult<>(serverChangeFacade.queryServerChangeTask(taskId));
+    @PostMapping(value = "/task/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ServerChangeTaskVO.ServerChangeTask> queryServerChangeTask(@RequestBody @Valid ServerChangeParam.queryTaskParam queryTaskParam) {
+        return new HttpResult<>(serverChangeFacade.queryServerChangeTask(queryTaskParam));
     }
 
 
