@@ -12,6 +12,7 @@ white:
 opscloud:
   version: 3.0
   openTask: true
+  dataPath: /data/opscloud-data
 
 spring:
   profiles:

@@ -13,5 +13,7 @@ import java.util.List;
  */
 public interface OcCloudServerMapper extends Mapper<OcCloudServer> {
 
-    List<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.PageQuery pageQuery);
+    List<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.CloudServerPageQuery pageQuery);
+
+    List<OcCloudServer> queryCloudServerChargeByParam(CloudServerParam.CloudServerChargePageQuery pageQuery);
 }

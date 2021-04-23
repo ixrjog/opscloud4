@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.server.impl;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.server.IServer;
 import com.google.common.collect.Sets;
@@ -29,12 +30,12 @@ public class AliyunLogMessage extends BaseServer implements IServer {
     }
 
     @Override
-    public Boolean disable(OcServer ocServer) {
+    public BusinessWrapper<Boolean> disable(OcServer ocServer) {
         return sendMessage(ocServer.getServerGroupId());
     }
 
     @Override
-    public Boolean enable(OcServer ocServer) {
+    public BusinessWrapper<Boolean> enable(OcServer ocServer) {
         return sendMessage(ocServer.getServerGroupId());
     }
 
@@ -45,7 +46,7 @@ public class AliyunLogMessage extends BaseServer implements IServer {
      * @return
      */
     @Override
-    public Boolean create(OcServer ocServer) {
+    public BusinessWrapper<Boolean> create(OcServer ocServer) {
         return sendMessage(ocServer.getServerGroupId());
     }
 
@@ -56,7 +57,7 @@ public class AliyunLogMessage extends BaseServer implements IServer {
      * @return
      */
     @Override
-    public Boolean remove(OcServer ocServer) {
+    public BusinessWrapper<Boolean> remove(OcServer ocServer) {
         return sendMessage(ocServer.getServerGroupId());
     }
 
@@ -67,15 +68,15 @@ public class AliyunLogMessage extends BaseServer implements IServer {
      * @return
      */
     @Override
-    public Boolean update(OcServer ocServer) {
+    public BusinessWrapper<Boolean> update(OcServer ocServer) {
         return sendMessage(ocServer.getServerGroupId());
     }
 
-    private Boolean sendMessage(Integer serverGroupId) {
+    private BusinessWrapper<Boolean> sendMessage(Integer serverGroupId) {
         Set<Integer> keySet = getTopicKeySet();
         keySet.add(serverGroupId);
         redisUtil.set(TASK_ALIYUN_LOG_TOPIC, keySet, 30 * 60 * 60);
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
     private Set<Integer> getTopicKeySet() {

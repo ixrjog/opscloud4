@@ -26,7 +26,7 @@ public class OcCloudVpcServiceImpl implements OcCloudVpcService {
 
     @Override
     public DataTable<OcCloudVpc> fuzzyQueryOcCloudVpcByParam(CloudVPCParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudVpc> ocCloudVpcList = ocCloudVpcMapper.fuzzyQueryOcCloudVpcByParam(pageQuery);
         return new DataTable<>(ocCloudVpcList, page.getTotal());
     }

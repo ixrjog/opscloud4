@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -117,6 +118,12 @@ public class UserController {
         return new HttpResult<>(userFacade.createUser(createUser));
     }
 
+    @ApiOperation(value = "用户名校验")
+    @GetMapping(value = "/name/check", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> checkUsername(@RequestParam String username) {
+        return new HttpResult<>(userFacade.checkUsername(username));
+    }
+
     @ApiOperation(value = "同步用户")
     @GetMapping(value = "/ldap/sync", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncUser() {
@@ -160,6 +167,12 @@ public class UserController {
         return new HttpResult<>(userFacade.addUserGroup(userGroup));
     }
 
+    @ApiOperation(value = "删除用户组")
+    @DeleteMapping(value = "/group/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> delUserGroup(@RequestParam @Valid int id) {
+        return new HttpResult<>(userFacade.delUserGroupById(id));
+    }
+
     @ApiOperation(value = "更新用户组")
     @PutMapping(value = "/group/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateUserGroup(@RequestBody @Validated UserGroupVO.UserGroup userGroup) {
@@ -190,5 +203,9 @@ public class UserController {
         return new HttpResult<>(userSettingFacade.saveUserSettingBySettingGroup(userSetting));
     }
 
-
+    @ApiOperation(value = "待离职用户查询")
+    @GetMapping(value = "/tobe/retired/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<UserVO.User>> queryUserToBeRetired() {
+        return new HttpResult<>(userFacade.queryUserToBeRetired());
+    }
 }

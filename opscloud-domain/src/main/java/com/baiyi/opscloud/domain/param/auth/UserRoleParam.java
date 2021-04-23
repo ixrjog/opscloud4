@@ -16,14 +16,23 @@ public class UserRoleParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class UserRolePageQuery extends PageParam {
 
         @ApiModelProperty(value = "用户名")
         private String username;
 
         @ApiModelProperty(value = "角色id")
         private Integer roleId;
-
     }
 
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserRolesQuery {
+
+        @ApiModelProperty(value = "用户名")
+        private String username;
+
+    }
 }

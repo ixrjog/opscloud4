@@ -19,6 +19,7 @@ import java.util.List;
 public class AliyunCoreConfig {
 
     private List<AliyunAccount> accounts;
+    private Ons ons;
 
     @Data
     public static class AliyunAccount {
@@ -32,4 +33,8 @@ public class AliyunCoreConfig {
         private List<String> regionIds;
     }
 
+    @Data
+    public static class Ons {
+        private String internetRegionId;
+    }
 }

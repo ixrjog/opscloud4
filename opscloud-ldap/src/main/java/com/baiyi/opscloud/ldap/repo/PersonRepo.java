@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.ldap.repo;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.ldap.entry.Person;
 
 import java.util.List;
@@ -17,11 +18,11 @@ public interface PersonRepo {
 
     Person findPersonWithDn(String dn);
 
-    Boolean create(Person person);
+    BusinessWrapper<Boolean> create(Person person);
 
-    Boolean update(Person person);
+    BusinessWrapper<Boolean> update(Person person);
 
-    Boolean delete(String username);
+    BusinessWrapper<Boolean> delete(String username);
 
     Boolean checkPersonInLdap(String username);
 

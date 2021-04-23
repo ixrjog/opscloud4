@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface OcAuthUserRoleMapper extends Mapper<OcAuthUserRole> {
 
-    List<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.PageQuery pageQuery);
+    List<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.UserRolePageQuery pageQuery);
 
     int authenticationByUsernameAndResourceName(@Param("username") String username, @Param("resourceName") String resourceName);
 

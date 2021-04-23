@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.workorder;
 
+import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunOnsInstance;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -32,6 +33,15 @@ public class WorkorderTicketEntryVO {
         private Date createTime;
         private Date updateTime;
         private String entryDetail;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class AliyunONSEntry<T> extends Entry<T> {
+
+        private OcAliyunOnsInstance instance;
     }
 
 }

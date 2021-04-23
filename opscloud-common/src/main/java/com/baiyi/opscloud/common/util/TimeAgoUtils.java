@@ -36,7 +36,7 @@ public class TimeAgoUtils {
 
     public static String format(Date date) {
         long delta = new Date().getTime() - date.getTime();
-        if (delta < 1L * ONE_MINUTE) {
+        if (delta < ONE_MINUTE) {
             long seconds = toSeconds(delta);
             return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
         }

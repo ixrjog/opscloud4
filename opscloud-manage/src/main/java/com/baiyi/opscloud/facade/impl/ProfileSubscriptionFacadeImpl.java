@@ -63,7 +63,7 @@ public class ProfileSubscriptionFacadeImpl implements ProfileSubscriptionFacade 
     }
 
     @Override
-    public BusinessWrapper<Boolean> publishProfile(int id) {
+    public void publishProfile(int id) {
         OcProfileSubscription ocProfileSubscription = ocProfileSubscriptionService.queryOcProfileSubscriptionById(id);
         ProfileSubscriptionVO.ProfileSubscription profileSubscription
                 = profileSubscriptionDecorator.decorator(BeanCopierUtils.copyProperties(ocProfileSubscription, ProfileSubscriptionVO.ProfileSubscription.class));
@@ -74,15 +74,13 @@ public class ProfileSubscriptionFacadeImpl implements ProfileSubscriptionFacade 
             ocProfileSubscription.setExecutionTime(new Date());
             ocProfileSubscriptionService.updateOcProfileSubscription(ocProfileSubscription);
         }
-        return BusinessWrapper.SUCCESS;
     }
 
     @Override
     @Async(value = ASYNC_POOL_TASK_COMMON)
-    public BusinessWrapper<Boolean> publishProfile(String subscriptionType) {
+    public void publishProfile(String subscriptionType) {
         List<OcProfileSubscription> list = ocProfileSubscriptionService.queryOcProfileSubscriptionBySubscriptionType(subscriptionType);
         list.forEach(e -> publishProfile(e.getId()));
-        return BusinessWrapper.SUCCESS;
     }
 
     private ServerTaskExecutorParam.ServerTaskPlaybookExecutor buildTaskExecutorParam(ProfileSubscriptionVO.ProfileSubscription profileSubscription) {

@@ -6,8 +6,9 @@ package com.baiyi.opscloud.zabbix.config;
  * @Version 1.0
  */
 
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.api.UserAPI;
+import com.baiyi.opscloud.zabbix.http.ZabbixBaseRequest;
+import com.baiyi.opscloud.zabbix.builder.ZabbixRequestBuilder;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Component;
@@ -30,12 +31,20 @@ public class ZabbixConfig {
     private String user;
     private String password;
     private String zone;
+    private Operation operation;
 
-    public ZabbixRequest buildLoginRequest() {
+    @Data
+    public static class Operation {
+        private String subject;
+        private String message;
+    }
+
+
+    public ZabbixBaseRequest buildLoginRequest() {
         return ZabbixRequestBuilder.newBuilder()
                 .paramEntry("user", user)
                 .paramEntry("password", password)
-                .method("user.login").build();
+                .method(UserAPI.LOGIN).build();
     }
 
     public URI buildURI() throws URISyntaxException {

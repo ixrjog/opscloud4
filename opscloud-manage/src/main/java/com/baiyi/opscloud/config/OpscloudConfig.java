@@ -16,5 +16,6 @@ public class OpscloudConfig {
 
     private String version;
     private Boolean openTask; // 启用任务
+    private String dataPath; // 数据目录
 
 }

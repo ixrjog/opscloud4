@@ -9,6 +9,8 @@ import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
 import com.baiyi.opscloud.domain.vo.auth.*;
 import com.baiyi.opscloud.domain.vo.auth.menu.MenuVO;
 import com.baiyi.opscloud.facade.AuthFacade;
+import com.baiyi.opscloud.facade.UserPermissionFacade;
+import com.baiyi.opscloud.facade.menu.MenuFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -27,8 +29,15 @@ import java.util.List;
 @RequestMapping("/auth")
 @Api(tags = "权限配置")
 public class AuthController {
+
     @Resource
     private AuthFacade authFacade;
+
+    @Resource
+    private UserPermissionFacade userPermissionFacade;
+
+    @Resource
+    private MenuFacade menuFacade;
 
     @ApiOperation(value = "分页查询role列表")
     @GetMapping(value = "/role/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -145,10 +154,16 @@ public class AuthController {
     }
 
     // user-role
-    @ApiOperation(value = "分页查询user role列表")
+    @ApiOperation(value = "分页查询用户角色列表")
     @GetMapping(value = "/user/role/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<UserRoleVO.UserRole>> queryUserRolePage(@Valid UserRoleParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<UserRoleVO.UserRole>> queryUserRolePage(@Valid UserRoleParam.UserRolePageQuery pageQuery) {
         return new HttpResult<>(authFacade.queryUserRolePage(pageQuery));
+    }
+
+    @ApiOperation(value = "查询用户角色详情")
+    @GetMapping(value = "/user/role/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<UserRoleVO.UserRole>> queryUserRoles(@Valid UserRoleParam.UserRolesQuery query) {
+        return new HttpResult<>(authFacade.queryUserRoles(query));
     }
 
     @ApiOperation(value = "新增user role")
@@ -167,7 +182,7 @@ public class AuthController {
     @ApiOperation(value = "用户查询菜单")
     @GetMapping(value = "/menu/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<List<MenuVO>> queryUserMenu() {
-        return new HttpResult<>(authFacade.queryUserMenu());
+        return new HttpResult<>(menuFacade.queryMyMenu());
     }
 
 
@@ -181,6 +196,12 @@ public class AuthController {
     @GetMapping(value = "/role/menu/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<AuthMenuVO.Menu> queryRoleMenuByRoleId(@RequestParam int roleId) {
         return new HttpResult<>(authFacade.queryRoleMenuByRoleId(roleId));
+    }
+
+    @ApiOperation(value = "用户角色等级是否高于dev")
+    @GetMapping(value = "/user/role/higher/dev", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> checkAccessLevelIsHigherDev(@RequestParam String username) {
+        return new HttpResult<>(userPermissionFacade.checkAccessLevelIsHigherDev(username));
     }
 
 }

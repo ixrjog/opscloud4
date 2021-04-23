@@ -25,7 +25,7 @@ public class OcCloudInstanceTemplateServiceImpl implements OcCloudInstanceTempla
 
     @Override
     public DataTable<OcCloudInstanceTemplate> fuzzyQueryOcCloudInstanceTemplateByParam(CloudInstanceTemplateParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudInstanceTemplate> list = ocCloudInstanceTemplateMapper.fuzzyQueryOcCloudInstanceTemplateByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

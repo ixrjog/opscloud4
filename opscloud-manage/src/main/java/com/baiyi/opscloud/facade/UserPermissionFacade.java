@@ -14,6 +14,14 @@ import java.util.List;
  */
 public interface UserPermissionFacade {
 
+    /**
+     * 查询所有的授权关系
+     * @param businessType
+     * @param businessId
+     * @return
+     */
+    List<OcUserPermission> queryPermissions(int businessType, int businessId);
+
     void syncUserBusinessPermission(List<UserVO.User> userList, int businessType, int businessId);
 
     void syncUserBusinessPermission(int userId, int businessType, List<Integer> businessIds);
@@ -32,4 +40,6 @@ public interface UserPermissionFacade {
     int getUserAccessLevel(OcUser ocUser);
 
     BusinessWrapper<Boolean> checkAccessLevel(OcUser ocUser,int accessLevel);
+
+    BusinessWrapper<Boolean> checkAccessLevelIsHigherDev(String username);
 }

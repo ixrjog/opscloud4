@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.zabbix.server;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostInterface;
+import com.baiyi.opscloud.zabbix.entry.ZabbixMacro;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.param.ZabbixDefaultParam;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,23 +17,31 @@ import java.util.Map;
  */
 public interface ZabbixHostServer {
 
-    // host
+    void evictHost(String mgmtIp);
+
     ZabbixHost getHost(String mgmtIp);
 
     List<ZabbixTemplate> getHostTemplates(String hostid);
+
+    List<ZabbixMacro> getHostMacros(String hostid);
 
     ZabbixHost getHostByHostid(String hostid);
 
     List<ZabbixHost> getHostList();
 
-    List<ZabbixHostInterface> getHostInterfaceList(String hostid);
+    List<ZabbixHostInterface> getHostInterfaces(String hostid);
 
-    boolean updateHostStatus(String hostid, int status);
+    BusinessWrapper<Boolean> updateHostStatus(String hostid, int status);
 
-    boolean updateHostTemplates(String hostid, Map<String, String> templateMap);
+    BusinessWrapper<Boolean> massUpdateHostStatus(List<String> hostids, int status);
+
+    BusinessWrapper<Boolean> updateHostTemplates(String hostid, Map<String, String> templateMap);
+
+    boolean updateHostTags(String hostid, List<ZabbixDefaultParam> tags);
 
     boolean clearHostTemplates(String hostid, Map<String, String> clearTemplateMap);
 
-    boolean updateHostMacros(String hostid, HashMap<String, String> macrosMap);
+    boolean updateHostMacros(String hostid, String macros);
+
 
 }

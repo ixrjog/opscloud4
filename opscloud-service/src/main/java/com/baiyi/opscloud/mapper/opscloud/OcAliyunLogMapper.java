@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface OcAliyunLogMapper extends Mapper<OcAliyunLog> {
 
-    List<OcAliyunLog> queryOcAliyunLogByParam(AliyunLogParam.PageQuery pageQuery);
+    List<OcAliyunLog> queryOcAliyunLogByParam(AliyunLogParam.AliyunLogPageQuery pageQuery);
 }

@@ -1,0 +1,11 @@
+zookeeper:
+  clusters:
+     -
+       env: dev
+       address: dev.zookeeper.xinc818.com:2181
+     -
+       env: daily
+       address: daily.zookeeper.xinc818.com:2181
+     -
+       env: gray
+       address: gray.zookeeper.xinc818.com:2181

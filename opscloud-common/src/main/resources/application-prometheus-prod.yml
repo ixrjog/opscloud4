@@ -1,0 +1,5 @@
+prometheus:
+  metricsPathSuffix: /actuator/prometheus
+  configPathPrefix: /usr/local/prometheus/config/springboot
+  dataPath: /data/opscloud-data/prometheus
+

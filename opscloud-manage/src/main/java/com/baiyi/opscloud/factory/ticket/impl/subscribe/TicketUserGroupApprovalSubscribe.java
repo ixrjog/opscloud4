@@ -8,6 +8,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
+import com.baiyi.opscloud.service.ticket.OcWorkorderTicketSubscribeService;
+import com.baiyi.opscloud.service.user.OcAccountService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderApprovalGroupService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,6 +28,12 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
 
     @Resource
     private OcWorkorderApprovalGroupService ocWorkorderApprovalGroupService;
+
+    @Resource
+    private OcWorkorderTicketSubscribeService ocWorkorderTicketSubscribeService;
+
+    @Resource
+    private OcAccountService ocAccountService;
 
     @Override
     public OcWorkorderTicketSubscribe queryTicketSubscribe(OcWorkorderTicket ocWorkorderTicket, OcUser ocUser) {
@@ -65,7 +73,14 @@ public class TicketUserGroupApprovalSubscribe extends BaseTicketSubscribe implem
 
     @Override
     public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket) {
-        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByApproval(ticket.getId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
     }
+
+    @Override
+    protected List<OcWorkorderTicketSubscribe> getTicketSubscribe(OcWorkorderTicket ocWorkorderTicket) {
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByApproval(ocWorkorderTicket.getId(), TicketSubscribeType.USERGROUP_APPROVAL.getType());
+
+    }
+
 
 }

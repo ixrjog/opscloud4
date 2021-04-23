@@ -164,9 +164,47 @@
        oc_kubernetes_application_instance
        oc_kubernetes_service
        oc_profile_subscription
+       oc_cloud_instance_delete_queue
+       oc_dubbo_mapping
+       oc_dubbo_mapping_server
+       oc_dubbo_tcp_mapping
+       oc_dubbo_tcp_mapping_member
+       oc_aliyun_ons_instance
+       oc_aliyun_ons_topic
+       oc_aliyun_ons_group
+       oc_aliyun_ons_group_alarm
+       oc_dingtalk
+       oc_helpdesk_report
+       oc_it_asset
+       oc_it_asset_name
+       oc_it_asset_type
+       oc_it_asset_apply
+       oc_it_asset_company
+       oc_instance
+       oc_it_asset_dispose
+       oc_aliyun_domain_record
+       oc_aliyun_domain
+       oc_aliyun_slb
+       oc_aliyun_slb_acl
+       oc_aliyun_slb_acl_entry
+       oc_aliyun_slb_acl_listener
+       oc_aliyun_slb_https_listener
+       oc_aliyun_slb_listener
+       oc_aliyun_slb_sc
+       oc_dingtalk_dept
+       oc_fault_info
+       oc_fault_responsible
+       oc_fault_action
+       oc_fault_root_cause_type
+       oc_announcement
+       oc_user_to_be_retired
+       oc_menu
+       oc_submenu
+       oc_role_menu
+       oc_export_task
+       oc_dingtalk_user_dept
        -->
-
-        <table tableName="oc_profile_subscription">
+        <table tableName="oc_aliyun_log_member">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
         </table>
 

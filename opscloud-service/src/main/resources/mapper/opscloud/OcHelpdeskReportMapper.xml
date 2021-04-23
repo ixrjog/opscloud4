@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcHelpdeskReportMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcHelpdeskReport">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="helpdesk_type" jdbcType="INTEGER" property="helpdeskType"/>
+        <result column="helpdesk_time" jdbcType="TIMESTAMP" property="helpdeskTime"/>
+        <result column="helpdesk_cnt" jdbcType="INTEGER" property="helpdeskCnt"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <resultMap id="WeeksReportResultMap" type="com.baiyi.opscloud.domain.vo.dashboard.HeplDeskGroupByWeek">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="weeks" jdbcType="VARCHAR" property="weeks"/>
+        <result column="type0" jdbcType="INTEGER" property="type0"/>
+        <result column="type1" jdbcType="INTEGER" property="type1"/>
+        <result column="type2" jdbcType="INTEGER" property="type2"/>
+        <result column="type3" jdbcType="INTEGER" property="type3"/>
+        <result column="type4" jdbcType="INTEGER" property="type4"/>
+        <result column="type5" jdbcType="INTEGER" property="type5"/>
+        <result column="type6" jdbcType="INTEGER" property="type6"/>
+        <result column="type7" jdbcType="INTEGER" property="type7"/>
+    </resultMap>
+
+    <resultMap id="PieReportResultMap" type="com.baiyi.opscloud.domain.vo.dashboard.HeplDeskGroupByType">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <result column="helpdesk_type" jdbcType="INTEGER" property="helpdeskType"/>
+        <result column="total" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <select id="queryHelpdeskGroupByType"
+            resultMap="PieReportResultMap">
+        select helpdesk_type, sum(helpdesk_cnt) as total
+        from oc_helpdesk_report
+        group by helpdesk_type
+        order by helpdesk_type
+    </select>
+
+    <select id="queryHelpdeskGroupByWeek"
+            resultMap="WeeksReportResultMap">
+        select DATE_FORMAT(helpdesk_time, '%Y%u') weeks,
+               sum(case when helpdesk_type = 0 then helpdesk_cnt else 0 end) as type0,
+               sum(case when helpdesk_type = 1 then helpdesk_cnt else 0 end) as type1,
+               sum(case when helpdesk_type = 2 then helpdesk_cnt else 0 end) as type2,
+               sum(case when helpdesk_type = 3 then helpdesk_cnt else 0 end) as type3,
+               sum(case when helpdesk_type = 4 then helpdesk_cnt else 0 end) as type4,
+               sum(case when helpdesk_type = 5 then helpdesk_cnt else 0 end) as type5,
+               sum(case when helpdesk_type = 6 then helpdesk_cnt else 0 end) as type6,
+               sum(case when helpdesk_type = 7 then helpdesk_cnt else 0 end) as type7
+        from oc_helpdesk_report
+        group by weeks;
+    </select>
+
+</mapper>

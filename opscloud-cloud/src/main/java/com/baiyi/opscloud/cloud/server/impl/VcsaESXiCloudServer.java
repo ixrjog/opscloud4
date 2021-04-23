@@ -3,6 +3,7 @@ package com.baiyi.opscloud.cloud.server.impl;
 import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.CloudServerBuilder;
 import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.vmware.vcsa.esxi.VcsaESXi;
 import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;
@@ -19,7 +20,7 @@ import java.util.List;
  */
 @Slf4j
 @Component("VcsaESXiCloudServer")
-public class VcsaESXiCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
+public class VcsaESXiCloudServer<T extends BaseCloudServerInstance> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private VcsaESXi vcsaESXi;

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.aliyun.ecs.handler;
 
+import com.alibaba.fastjson.JSON;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
@@ -125,7 +126,7 @@ public class AliyunECSHandler extends BaseAliyunECS {
         }
     }
 
-    public Boolean delete(String regionId, String instanceId) {
+    public boolean delete(String regionId, String instanceId) {
         try {
             DeleteInstanceRequest request = new DeleteInstanceRequest();
             request.setInstanceId(instanceId);
@@ -147,5 +148,65 @@ public class AliyunECSHandler extends BaseAliyunECS {
             return null;
         }
     }
+
+    public void modifyInstanceChargeType(String regionId, String instanceId, String chargeType) {
+        IAcsClient client = acqAcsClient(regionId);
+        try {
+            ModifyInstanceChargeTypeRequest request = new ModifyInstanceChargeTypeRequest();
+            List<String> s = Lists.newArrayList(instanceId);
+            request.setInstanceIds(JSON.toJSONString(s));
+            request.setInstanceChargeType(chargeType);
+            // 将按量付费实例转换为包年包月实例
+            if ("PrePaid".equals(chargeType)) {
+                request.setPeriodUnit("Month");
+                request.setPeriod(3);
+                request.setIncludeDataDisks(true);
+                request.setAutoPay(true);
+            }
+            // 将包年包月实例转换为按量付费实例
+//            if ("PostPaid".equals(chargeType)) {
+//            }
+            ModifyInstanceChargeTypeResponse response = client.getAcsResponse(request);
+            // return !Strings.isNullOrEmpty(response.getOrderId());
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public Boolean modifyInstanceName(String regionId, String instanceId, String instanceName) {
+        if (StringUtils.isEmpty(instanceId) || StringUtils.isEmpty(instanceName))
+            return false;
+        DescribeInstancesResponse.Instance instance = getInstance(regionId, instanceId);
+        if (instance == null) return false;
+        ModifyInstanceAttributeRequest describe = new ModifyInstanceAttributeRequest();
+        describe.setInstanceId(instanceId);
+        describe.setInstanceName(instanceName);
+        /**
+         * 修改 hostname
+         * 经测试，仅在ECS实例关机后方可生效
+         */
+        describe.setHostName(instanceName);
+        try {
+            ModifyInstanceAttributeResponse response = modifyInstanceAttributeResponse(regionId, describe);
+            return response != null && !response.getRequestId().isEmpty();
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * 修改Instance属性
+     *
+     * @param regionId
+     * @param describe
+     * @return
+     */
+    private ModifyInstanceAttributeResponse modifyInstanceAttributeResponse(String regionId, ModifyInstanceAttributeRequest describe) throws ClientException {
+        IAcsClient client = acqAcsClient(regionId);
+        return client.getAcsResponse(describe);
+    }
+
 
 }

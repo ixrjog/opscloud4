@@ -17,6 +17,7 @@ public class AliyunLogMemberBO {
     private Integer serverGroupId;
     private String serverGroupName;
     private String topic;
+    private Integer envType;
     private String comment;
 
 }

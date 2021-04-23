@@ -86,7 +86,6 @@ public class AccountCenter implements InitializingBean {
         }
     }
 
-
     private BusinessWrapper<OcUser> getLoginUser(PersonCredential credential) {
         OcUser ocUser = ocUserService.queryOcUserByUsername(credential.getUsername());
         if (ocUser == null)
@@ -108,33 +107,35 @@ public class AccountCenter implements InitializingBean {
         }
     }
 
-    public Boolean create(String key, OcUser user) {
+    public BusinessWrapper<Boolean> create(String key, OcUser user) {
         IAccount account = AccountFactory.getAccountByKey(key);
         return account.create(user);
     }
 
-    public Boolean create(OcUser user) {
-        Boolean result = create(LDAP_ACCOUNT_KEY, user);
-        if (result) {
+    public BusinessWrapper<Boolean> create(OcUser user) {
+        BusinessWrapper<Boolean> result = create(LDAP_ACCOUNT_KEY, user);
+        if (result.isSuccess()) {
             Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
             for (String key : accountContainer.keySet()) {
                 if (key.equals(LDAP_ACCOUNT_KEY)) continue;
                 IAccount account = accountContainer.get(key);
-                if (!account.create(user))
-                    return Boolean.FALSE;
+                BusinessWrapper<Boolean> wrapper = account.create(user);
+                if (!wrapper.isSuccess())
+                    return wrapper;
             }
         }
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
-    public Boolean active(OcUser user, boolean active) {
+    public BusinessWrapper<Boolean> active(OcUser user, boolean active) {
         Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
         for (String key : accountContainer.keySet()) {
             IAccount account = accountContainer.get(key);
-            if (!account.active(user, active))
-                return Boolean.FALSE;
+            BusinessWrapper<Boolean> wrapper = account.active(user,active);
+            if (!wrapper.isSuccess())
+                return wrapper;
         }
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
     /**
@@ -144,15 +145,16 @@ public class AccountCenter implements InitializingBean {
      * @param resource
      * @return
      */
-    public Boolean grant(OcUser user, String resource) {
+    public BusinessWrapper<Boolean> grant(OcUser user, String resource) {
         Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
         for (String key : accountContainer.keySet()) {
             if (key.equals(LDAP_ACCOUNT_KEY)) continue;
             IAccount account = accountContainer.get(key);
-            if (!account.grant(user, resource))
-                return Boolean.FALSE;
+            BusinessWrapper<Boolean> wrapper = account.grant(user, resource);
+            if (!wrapper.isSuccess())
+                return wrapper;
         }
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
     /**
@@ -162,19 +164,19 @@ public class AccountCenter implements InitializingBean {
      * @param resource
      * @return
      */
-    public Boolean revoke(OcUser user, String resource) {
+    public BusinessWrapper<Boolean> revoke(OcUser user, String resource) {
         Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
         for (String key : accountContainer.keySet()) {
             if (key.equals(LDAP_ACCOUNT_KEY)) continue;
             IAccount account = accountContainer.get(key);
-            if (!account.revoke(user, resource))
-                return Boolean.FALSE;
+            BusinessWrapper<Boolean> wrapper = account.revoke(user, resource);
+            if (!wrapper.isSuccess())
+                return wrapper;
         }
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
-
-    public Boolean update(String key, OcUser user) {
+    public BusinessWrapper<Boolean> update(String key, OcUser user) {
         IAccount account = AccountFactory.getAccountByKey(key);
         return account.update(user);
     }
@@ -185,9 +187,9 @@ public class AccountCenter implements InitializingBean {
      * @param user
      * @return
      */
-    public Boolean update(OcUser user) {
-        Boolean result = update(LDAP_ACCOUNT_KEY, user);
-        if (result) {
+    public BusinessWrapper<Boolean> update(OcUser user) {
+        BusinessWrapper result = update(LDAP_ACCOUNT_KEY, user);
+        if (result.isSuccess()) {
             Map<String, IAccount> accountContainer = AccountFactory.getAccountContainer();
             for (String key : accountContainer.keySet()) {
                 if (key.equals(LDAP_ACCOUNT_KEY)) continue;
@@ -195,7 +197,7 @@ public class AccountCenter implements InitializingBean {
                 account.update(user);
             }
         }
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
     public void pushSSHKey(OcUser user) {

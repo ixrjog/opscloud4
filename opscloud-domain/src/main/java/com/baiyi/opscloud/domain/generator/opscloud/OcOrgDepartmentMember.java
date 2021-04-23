@@ -22,7 +22,7 @@ public class OcOrgDepartmentMember {
     private Integer userId;
 
     /**
-     * 部门名称
+     * 用户名称
      */
     private String username;
 

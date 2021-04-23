@@ -17,7 +17,7 @@
 # oc数据目录 /data/opscloud-data oc集群服务器可用NAS存储
 # 例如 /data/opscloud-data/ansible
 ansible:
-  version: 2.9.6
+  version: 2.9.10
   bin: /bin/ansible
   dataPath: /data/opscloud-data/ansible
   playbookBin: /bin/ansible-playbook

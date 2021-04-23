@@ -39,7 +39,7 @@ public class OcAuthMenuServiceImpl implements OcAuthMenuService {
     }
 
     @Override
-    public void deletetOcAuthMenuById(OcAuthMenu ocAuthMenu) {
+    public void deleteOcAuthMenuById(OcAuthMenu ocAuthMenu) {
         ocAuthMenuMapper.deleteByPrimaryKey(ocAuthMenu);
     }
 }

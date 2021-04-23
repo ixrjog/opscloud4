@@ -52,15 +52,14 @@ public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements 
         ICloudServer iCloudServer = CloudServerFactory.getCloudServerByKey(cloudServerKey);
 
         OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(ocServer.getServerType(), ocServer.getId());
-        if (!BooleanUtils.isTrue(ocCloudServer.getPowerMgmt())) { // 允许电源管理
-            ocCloudServer.setPowerMgmt(true);
-            ocCloudServerService.updateOcCloudServer(ocCloudServer);
-        }
-
         if (ocCloudServer == null) {
             ChangeResult changeResult = ChangeResult.builder().build();
             saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow, changeResult); // 任务结束
             return new BusinessWrapper<>(ErrorEnum.CLOUD_SERVER_NOT_EXIST);
+        }
+        if (!BooleanUtils.isTrue(ocCloudServer.getPowerMgmt())) { // 允许电源管理
+            ocCloudServer.setPowerMgmt(true);
+            ocCloudServerService.updateOcCloudServer(ocCloudServer);
         }
 
         ocServerChangeTaskFlow.setExternalId(ocCloudServer.getId());
@@ -69,8 +68,8 @@ public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements 
 
         long startTaskTime = new Date().getTime();
         iCloudServer.stop(ocCloudServer.getId()); // 停止实例
-        boolean exit = false;
-        while (!exit) {
+
+        while (true) {
             try {
                 if (TimeUtils.checkTimeout(startTaskTime, TASK_TIMEOUT)) {
                     ChangeResult changeResult = ChangeResult.builder()
@@ -84,11 +83,9 @@ public class ServerPowerOffConsumer extends BaseServerChangeConsumer implements 
                 int powerStatus = iCloudServer.queryPowerStatus(ocCloudServer.getId());
                 if (powerStatus == CloudServerPowerStatus.STOPPED.getStatus() || powerStatus == CloudServerPowerStatus.STOPPING.getStatus()) { //  已关闭
                     saveChangeTaskFlowEnd(ocServerChangeTask, ocServerChangeTaskFlow);
-                    exit = true;
+                    break;
                 }
-
-            } catch (Exception e) {
-
+            } catch (InterruptedException ignored) {
             }
         }
 

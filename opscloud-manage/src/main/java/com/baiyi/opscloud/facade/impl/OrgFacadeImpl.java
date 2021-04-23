@@ -4,6 +4,7 @@ import com.baiyi.opscloud.bo.OrgDepartmentMemberBO;
 import com.baiyi.opscloud.common.base.SettingName;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.IDUtils;
+import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.decorator.department.DepartmentDecorator;
 import com.baiyi.opscloud.decorator.department.DepartmentMemberDecorator;
 import com.baiyi.opscloud.decorator.department.OrgDecorator;
@@ -19,15 +20,18 @@ import com.baiyi.opscloud.domain.vo.org.*;
 import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import com.baiyi.opscloud.facade.SettingBaseFacade;
-import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentMemberService;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
 import com.baiyi.opscloud.service.user.OcUserService;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -55,9 +59,6 @@ public class OrgFacadeImpl implements OrgFacade {
 
     @Resource
     private DepartmentMemberDecorator departmentMemberDecorator;
-
-    @Resource
-    private UserFacade userFacade;
 
     @Resource
     private SettingBaseFacade settingFacade;
@@ -179,6 +180,7 @@ public class OrgFacadeImpl implements OrgFacade {
         tryRootDept(ocOrgDepartment);
         ocOrgDepartment.setDeptHiding(0);
         ocOrgDepartmentService.addOcOrgDepartment(ocOrgDepartment);
+        evictCache();
         return BusinessWrapper.SUCCESS;
     }
 
@@ -189,6 +191,13 @@ public class OrgFacadeImpl implements OrgFacade {
             ocOrgDepartment.setParentId(0);
     }
 
+    private void evictCache() {
+        departmentDecorator.evictPreview();
+        List<OcOrgDepartment> departmentList = ocOrgDepartmentService.queryOcOrgDepartmentAll();
+        departmentList.forEach(ocOrgDepartment -> departmentDecorator.evictDeptListToTreeCache(ocOrgDepartment.getParentId()));
+
+    }
+
     @Override
     public BusinessWrapper<Boolean> updateDepartment(OrgDepartmentVO.Department department) {
         OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(department.getId());
@@ -196,6 +205,7 @@ public class OrgFacadeImpl implements OrgFacade {
         ocOrgDepartment.setDeptType(department.getDeptType());
         ocOrgDepartment.setComment(department.getComment());
         ocOrgDepartmentService.updateOcOrgDepartment(ocOrgDepartment);
+        evictCache();
         return BusinessWrapper.SUCCESS;
     }
 
@@ -220,6 +230,7 @@ public class OrgFacadeImpl implements OrgFacade {
         if (ocOrgDepartmentMemberService.countOcOrgDepartmentMemberByDepartmentId(id) > 0)
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_MEMBER_IS_NOT_EMPTY);
         ocOrgDepartmentService.deleteOcOrgDepartmentById(id);
+        evictCache();
         return BusinessWrapper.SUCCESS;
     }
 
@@ -232,8 +243,7 @@ public class OrgFacadeImpl implements OrgFacade {
 
     @Override
     public DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId) {
-        List<OcOrgDepartment> deptList = queryDepartmentByParentId(parentId);
-        List<TreeVO.DeptTree> tree = departmentDecorator.deptListToTree(deptList);
+        List<TreeVO.DeptTree> tree = departmentDecorator.deptListToTree(parentId);
         return DepartmentTreeVO.DepartmentTree.builder()
                 .parentId(ROOT_PARENT_ID)
                 .tree(tree)
@@ -306,6 +316,13 @@ public class OrgFacadeImpl implements OrgFacade {
         return BusinessWrapper.SUCCESS;
     }
 
+    private OcUser getOcUserBySession() {
+        String username = SessionUtils.getUsername();
+        if (StringUtils.isEmpty(username))
+            return null;
+        return ocUserService.queryOcUserByUsername(username);
+    }
+
     @Override
     public BusinessWrapper<Boolean> joinDepartmentMember(int departmentId) {
         OcOrgDepartment ocOrgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(departmentId);
@@ -313,7 +330,7 @@ public class OrgFacadeImpl implements OrgFacade {
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_NOT_EXIST);
         if (ocOrgDepartment.getParentId() == ROOT_PARENT_ID)
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_CANNOT_JOIN_ROOT);
-        OcUser ocUser = userFacade.getOcUserBySession();
+        OcUser ocUser = getOcUserBySession();
         if (ocUser == null)
             return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
         List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(ocUser.getId());
@@ -373,7 +390,7 @@ public class OrgFacadeImpl implements OrgFacade {
 
     @Override
     public BusinessWrapper<Boolean> checkUserInTheDepartment() {
-        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userFacade.getOcUserBySession().getId());
+        List<OcOrgDepartmentMember> members = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(getOcUserBySession().getId());
         if (CollectionUtils.isEmpty(members))
             return new BusinessWrapper<>(ErrorEnum.ORG_DEPARTMENT_USER_NOT_IN_THE_DEPT);
         return BusinessWrapper.SUCCESS;
@@ -395,5 +412,69 @@ public class OrgFacadeImpl implements OrgFacade {
             return new BusinessWrapper<>(ErrorEnum.USER_NOT_EXIST);
         OrgApprovalVO.OrgApproval orgApproval = departmentMemberDecorator.decorator(ocUser.getId());
         return new BusinessWrapper<>(orgApproval);
+    }
+
+    @Override
+    public BusinessWrapper<Map<String, List<OcOrgDepartment>>> queryOrgByUser(Integer userId) {
+        return new BusinessWrapper<>(queryOrgMapByUser(userId));
+    }
+
+    @Override
+    public BusinessWrapper<List<OrgDepartmentMemberVO.DepartmentMember>> queryOrgByUserV2(Integer userId) {
+        List<OcOrgDepartmentMember> memberList = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userId);
+        if (CollectionUtils.isEmpty(memberList))
+            return new BusinessWrapper<>(Collections.emptyList());
+        List<OrgDepartmentMemberVO.DepartmentMember> departmentMemberList =
+                BeanCopierUtils.copyListProperties(memberList, OrgDepartmentMemberVO.DepartmentMember.class);
+        Map<String, List<OcOrgDepartment>> orgMap = queryOrgMapByUser(userId);
+        List<OrgDepartmentMemberVO.DepartmentMember> list = Lists.newArrayListWithCapacity(departmentMemberList.size());
+        departmentMemberList.forEach(e -> {
+            OrgDepartmentMemberVO.DepartmentMember member = departmentMemberDecorator.decorator(e);
+            OcOrgDepartment orgDepartment = ocOrgDepartmentService.queryOcOrgDepartmentById(member.getDepartmentId());
+            member.setOrgList(orgMap.get(orgDepartment.getName()));
+            list.add(member);
+        });
+        return new BusinessWrapper<>(list);
+    }
+
+    private Map<String, List<OcOrgDepartment>> queryOrgMapByUser(Integer userId) {
+        List<OcOrgDepartmentMember> memberList = ocOrgDepartmentMemberService.queryOcOrgDepartmentMemberByUserId(userId);
+        if (CollectionUtils.isEmpty(memberList))
+            return Collections.emptyMap();
+        List<Integer> orgIdList = memberList.stream().map(OcOrgDepartmentMember::getDepartmentId).collect(Collectors.toList());
+        List<OcOrgDepartment> ordList = ocOrgDepartmentService.queryOcOrgDepartmentByIdList(orgIdList);
+        return departmentDecorator.getDeptMap(ordList);
+    }
+
+    @Override
+    public BusinessWrapper<Map<String, List<OcOrgDepartment>>> queryOrgByUsername(String username) {
+        OcUser ocUser = ocUserService.queryOcUserByUsername(username);
+        return queryOrgByUser(ocUser.getId());
+    }
+
+    @Override
+    public DataTable<OrgDepartmentVO.Department> queryFirstLevelDepartmentPage(DepartmentParam.PageQuery pageQuery) {
+        DataTable<OcOrgDepartment> table = ocOrgDepartmentService.queryFirstLevelDepartmentPage(pageQuery);
+        List<OrgDepartmentVO.Department> page = BeanCopierUtils.copyListProperties(table.getData(), OrgDepartmentVO.Department.class);
+        return new DataTable<>(page, table.getTotalNum());
+    }
+
+    @Override
+    public BusinessWrapper<List<TreeVO.Tree>> queryDepartmentTreeV2() {
+        List<TreeVO.Tree> tree = departmentDecorator.decoratorTreeVO();
+        return new BusinessWrapper<>(tree);
+    }
+
+    @Override
+    public BusinessWrapper<List<TreeVO.Tree>> refreshDepartmentTreeV2() {
+        evictCache();
+        List<TreeVO.Tree> tree = departmentDecorator.decoratorTreeVO();
+        return new BusinessWrapper<>(tree);
+    }
+
+    @Override
+    public BusinessWrapper<List<OcOrgDepartment>> queryDeptPath(Integer departmentId) {
+        List<OcOrgDepartment> list = departmentDecorator.getDeptPath(departmentId);
+        return new BusinessWrapper<>(list);
     }
 }

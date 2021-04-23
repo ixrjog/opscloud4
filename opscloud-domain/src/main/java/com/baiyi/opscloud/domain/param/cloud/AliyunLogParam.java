@@ -16,7 +16,7 @@ public class AliyunLogParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class AliyunLogPageQuery extends PageParam {
         @ApiModelProperty(value = "查询关键字")
         private String queryName;
     }

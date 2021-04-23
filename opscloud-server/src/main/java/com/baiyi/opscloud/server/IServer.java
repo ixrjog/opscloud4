@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.server;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 
 /**
@@ -13,9 +14,9 @@ public interface IServer {
 
     void sync();
 
-    Boolean disable(OcServer ocServer);
+    BusinessWrapper<Boolean> disable(OcServer ocServer);
 
-    Boolean enable(OcServer ocServer);
+    BusinessWrapper<Boolean> enable(OcServer ocServer);
 
     /**
      * 创建
@@ -23,7 +24,7 @@ public interface IServer {
      * @param ocServer
      * @return
      */
-    Boolean create(OcServer ocServer);
+    BusinessWrapper<Boolean> create(OcServer ocServer);
 
     /**
      * 移除
@@ -31,7 +32,7 @@ public interface IServer {
      * @param ocServer
      * @return
      */
-    Boolean remove(OcServer ocServer);
+    BusinessWrapper<Boolean> remove(OcServer ocServer);
 
     /**
      * 更新
@@ -39,5 +40,5 @@ public interface IServer {
      * @param ocServer
      * @return
      */
-    Boolean update(OcServer ocServer);
+    BusinessWrapper<Boolean> update(OcServer ocServer);
 }

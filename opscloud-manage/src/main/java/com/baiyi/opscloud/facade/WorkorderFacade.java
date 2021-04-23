@@ -8,9 +8,7 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
-import com.baiyi.opscloud.domain.vo.workorder.WorkorderGroupVO;
-import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
-import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
+import com.baiyi.opscloud.domain.vo.workorder.*;
 
 import java.util.List;
 
@@ -71,6 +69,10 @@ public interface WorkorderFacade {
 
     List<WorkorderTicketEntryVO.Entry> queryUserTicketRAMPolicyParam(AliyunRAMPolicyParam.UserTicketOcRamPolicyQuery queryParam);
 
+    BusinessWrapper<List<WorkorderTicketEntryVO.AliyunONSEntry>> queryAliyunONSTicketByParam(Integer workorderTicketId);
+
+    BusinessWrapper<List<WorkorderTicketEntryVO.Entry>> queryUserTicketByTicketId(Integer workorderTicketId);
+
     /**
      * 我的工单
      *
@@ -79,6 +81,12 @@ public interface WorkorderFacade {
      */
     DataTable<WorkorderTicketVO.Ticket> queryMyTicketPage(WorkorderTicketParam.QueryMyTicketPage pageQuery);
 
+    DataTable<WorkorderTicketVO.Ticket> queryMyFinalizedTicketPage(WorkorderTicketParam.QueryMyFinalizedTicketPage queryMyFinalizedTicketPage);
+
     DataTable<WorkorderTicketVO.Ticket> queryTicketPage(WorkorderTicketParam.QueryTicketPage pageQuery);
+
+    BusinessWrapper<WorkorderStatsVO.WorkorderMonthStats> queryWorkorderStatsByMonth();
+
+    BusinessWrapper<List<WorkorderStatsVO.BaseStatsData>> queryWorkorderStatsByName();
 
 }

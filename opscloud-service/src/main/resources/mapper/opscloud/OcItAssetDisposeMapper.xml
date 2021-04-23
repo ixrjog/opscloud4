@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcItAssetDisposeMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcItAssetDispose">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="asset_id" jdbcType="INTEGER" property="assetId" />
+    <result column="dispose_type" jdbcType="INTEGER" property="disposeType" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="dispose_time" jdbcType="TIMESTAMP" property="disposeTime" />
+    <result column="expand" jdbcType="VARCHAR" property="expand" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+    <select id="queryOcItAssetDisposePage" parameterType="com.baiyi.opscloud.domain.param.it.ItAssetParam$DisposePageQuery" resultMap="BaseResultMap">
+        select * from oc_it_asset_dispose
+        <where>
+            <if test="disposeType != -1">
+                and dispose_type = #{disposeType}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and asset_id in
+                (
+                select id from oc_it_asset
+                where asset_code like "%" #{queryName} "%"
+                )
+            </if>
+        </where>
+        order by dispose_time desc
+    </select>
+
+</mapper>

@@ -166,6 +166,7 @@ public class JumpserverAPI {
             e.printStackTrace();
         } finally {
             try {
+                assert response != null;
                 response.close();
             } catch (Exception e) {
                 e.printStackTrace();

@@ -47,7 +47,7 @@ public class OcServerGroupTypeServiceImpl implements OcServerGroupTypeService {
 
     @Override
     public DataTable<OcServerGroupType> queryOcServerGroupTypeByParam(ServerGroupTypeParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServerGroupType> ocServerGroupTypeList = ocServerGroupTypeMapper.queryOcServerGroupTypeByParam(pageQuery);
         return new DataTable<>(ocServerGroupTypeList, page.getTotal());
     }

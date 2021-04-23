@@ -38,6 +38,10 @@
         </dependency>
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-dingtalk</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-common</artifactId>
         </dependency>
     </dependencies>

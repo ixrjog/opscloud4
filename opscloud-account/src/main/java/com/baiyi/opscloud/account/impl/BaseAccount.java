@@ -4,6 +4,8 @@ package com.baiyi.opscloud.account.impl;
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.common.base.CredentialType;
+import com.baiyi.opscloud.common.util.IDUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
@@ -48,8 +50,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
     @Resource
     protected OcUserCredentialService ocUserCredentialService;
 
-    protected final static boolean GRANT =true;
-    protected final static boolean REVOKE =false;
+    protected final static boolean GRANT = true;
+    protected final static boolean REVOKE = false;
 
     protected OcAccount getAccount(OcUser ocUser) {
         return ocAccountService.queryOcAccountByUsername(getAccountType(), ocUser.getUsername());
@@ -59,7 +61,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
         ocUserList.forEach(this::saveOcUser);
     }
 
-    private void saveOcAccount(OcAccount preOcAccount, Map<String, OcAccount> map) {
+
+    protected void saveOcAccount(OcAccount preOcAccount, Map<String, OcAccount> map) {
         if (map.containsKey(preOcAccount.getAccountId())) {
             OcAccount account = map.get(preOcAccount.getAccountId());
             updateOcAccount(preOcAccount, account);
@@ -75,6 +78,7 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      */
     protected void updateOcAccount(OcAccount preOcAccount, OcAccount ocAccount) {
         preOcAccount.setId(ocAccount.getId());
+        preOcAccount.setUserId(ocAccount.getUserId());
         if (!StringUtils.isEmpty(ocAccount.getPassword())) // 插入用户密码
             preOcAccount.setPassword(ocAccount.getPassword());
         ocAccountService.updateOcAccount(preOcAccount);
@@ -96,19 +100,24 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      */
     private Boolean saveOcUser(OcUser ocUser) {
         try {
-            if (ocUser.getId() != null && ocUser.getId() != 0) {
+            if (!IDUtils.isEmpty(ocUser.getId())) {
                 if (!StringUtils.isEmpty(ocUser.getSource()) && ocUser.getSource().equals("ldap")) {
                     ocUserService.updateOcUser(ocUser);
                 } else {
                     return true;
                 }
             } else {
-                OcUser checkUser = ocUserService.queryOcUserByUsername(ocUser.getUsername());
-                if (checkUser == null) {
+                OcUser preUser = ocUserService.queryOcUserByUsername(ocUser.getUsername());
+                if (preUser == null) {
                     ocUserService.addOcUser(ocUser);
                 } else {
-                    ocUser.setId(checkUser.getId());
-                    return saveOcUser(ocUser);
+                    if (!StringUtils.isEmpty(ocUser.getDisplayName()))
+                        preUser.setDisplayName(ocUser.getDisplayName());
+                    if (!StringUtils.isEmpty(ocUser.getEmail()))
+                        preUser.setEmail(ocUser.getEmail());
+                    if (!StringUtils.isEmpty(ocUser.getPhone()))
+                        preUser.setPhone(ocUser.getPhone());
+                    return saveOcUser(preUser);
                 }
             }
             return true;
@@ -144,11 +153,10 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
     }
 
     @Override
-    public Boolean sync(OcUser user) {
-        return true;
+    public void sync(OcUser user) {
     }
 
-    private void delAccountByMap(Map<String, OcAccount> accountMap) {
+    protected void delAccountByMap(Map<String, OcAccount> accountMap) {
         if (accountMap.isEmpty()) return;
         accountMap.keySet().forEach(k -> {
             OcAccount ocAccount = accountMap.get(k);
@@ -178,15 +186,15 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      *
      * @return
      */
-    abstract public Boolean delete(OcUser user);
+    abstract public BusinessWrapper<Boolean> delete(OcUser user);
 
     /**
      * 更新
      *
      * @return
      */
-    public Boolean update(OcUser user) {
-        return true;
+    public BusinessWrapper<Boolean> update(OcUser user) {
+        return BusinessWrapper.SUCCESS;
     }
 
 
@@ -202,8 +210,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @return
      */
     @Override
-    public Boolean grant(OcUser user, String resource) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> grant(OcUser user, String resource) {
+        return BusinessWrapper.SUCCESS;
     }
 
     /**
@@ -214,8 +222,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @return
      */
     @Override
-    public Boolean revoke(OcUser user, String resource) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> revoke(OcUser user, String resource) {
+        return BusinessWrapper.SUCCESS;
     }
 
     /**
@@ -225,8 +233,8 @@ public abstract class BaseAccount implements InitializingBean, IAccount {
      * @return
      */
     @Override
-    public Boolean pushSSHKey(OcUser user) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> pushSSHKey(OcUser user) {
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override

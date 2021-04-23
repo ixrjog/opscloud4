@@ -1,12 +1,10 @@
 tencent:
-  cloud:
-     account:
-        uid: 100009984841
-        secretId: AKIDMVSffPagEWYKsBL6vVor00kEh6A3Qb3R
-        secretKey: ENC(frsUn8xjLTJbXMJymzk1SZowy9JZL8vaZl6fGNX0LybEREHVSaHxRPWKk5J41A3N)
-        regionId: ap-shanghai
-        zones:
-           - ap-shanghai-1
-           - ap-shanghai-2
-           - ap-shanghai-3
-           - ap-shanghai-4
+   cloud:
+      account:
+         uid: 100000000001
+         secretId: YOUR_SECRET_ID
+         secretKey: YOUR_SECRET_KEY
+         regionId: ap-shanghai
+         zones:
+            - ap-shanghai-1
+            - ap-shanghai-2

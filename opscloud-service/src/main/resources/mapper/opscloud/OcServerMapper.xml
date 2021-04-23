@@ -24,8 +24,38 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
+    <select id="queryOcServerByMonitorParam"
+            parameterType="com.baiyi.opscloud.domain.param.monitor.MonitorHostParam$MonitorHostPageQuery"
+            resultMap="BaseResultMap">
+        select a0.* from oc_server a0
+        <if test="tagId != null and tagId > 0">
+            join oc_business_tag a1 on a0.id = a1.business_id
+        </if>
+        <where>
+            <if test="tagId != null and tagId > 0">
+                a1.business_type = 1 and a1.tag_id = #{tagId}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and a0.name like "%" #{queryName} "%"
+            </if>
+            <if test="serverGroupId != null and serverGroupId > 0">
+                and a0.server_group_id = #{serverGroupId}
+            </if>
+            <if test="queryIp != null and queryIp != ''">
+                and a0.private_ip = #{queryIp} or a0.public_ip = #{queryIp}
+            </if>
+            <if test="envType != null and envType >= 0">
+                and a0.env_type = #{envType}
+            </if>
+            <if test="monitorStatus != null">
+                and a0.monitor_status = #{monitorStatus}
+            </if>
+        </where>
+        order by a0.name, a0.serial_number
+    </select>
+
     <select id="queryOcServerByParam"
-            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$PageQuery"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$ServerPageQuery"
             resultMap="BaseResultMap">
         select a0.* from oc_server a0
         <if test="tagId != null and tagId > 0">
@@ -54,10 +84,11 @@
                 and a0.server_status = #{serverStatus}
             </if>
         </where>
+        order by a0.name, a0.serial_number
     </select>
 
     <select id="fuzzyQueryOcServerByParam"
-            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$PageQuery"
+            parameterType="com.baiyi.opscloud.domain.param.server.ServerParam$ServerPageQuery"
             resultMap="BaseResultMap">
         select a0.* from oc_server a0
         <if test="tagId != null and tagId > 0">
@@ -86,15 +117,16 @@
                 and a0.server_status = #{serverStatus}
             </if>
         </where>
+        order by a0.name, a0.serial_number
     </select>
 
-    <select id="queryOcServerMaxSerialNumber"  resultMap="BaseResultMap">
+    <select id="queryOcServerMaxSerialNumber" resultMap="BaseResultMap">
         select * from oc_server
         where server_group_id = #{serverGroupId}
         order by serial_number desc limit 1
     </select>
 
-    <select id="queryOcServerMaxSerialNumberByEnvType"  resultMap="BaseResultMap">
+    <select id="queryOcServerMaxSerialNumberByEnvType" resultMap="BaseResultMap">
         select * from oc_server
         where server_group_id = #{serverGroupId} and env_type = #{envType}
         order by serial_number desc limit 1

@@ -30,7 +30,7 @@ public class OcAuthGroupServiceImpl implements OcAuthGroupService {
 
     @Override
     public DataTable<OcAuthGroup> queryOcAuthGroupByParam(GroupParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcAuthGroup> ocAuthGroupList = ocAuthGroupMapper.queryOcAuthGroupByParam(pageQuery);
         return new DataTable<>(ocAuthGroupList, page.getTotal());
     }

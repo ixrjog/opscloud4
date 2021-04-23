@@ -41,7 +41,7 @@ public class AliyunRDSMysqlHandler {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_DELETE_ACCOUNT_ERROR); // 授权错误
+        return new BusinessWrapper<>(ErrorEnum.ALIYUN_RDS_MYSQL_DELETE_ACCOUNT_ERROR); // 授权错误
     }
 
     /**
@@ -65,16 +65,11 @@ public class AliyunRDSMysqlHandler {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_REVOKE_ACCOUNT_PRIVILEGE_ERROR); // 授权错误
+        return new BusinessWrapper<>(ErrorEnum.ALIYUN_RDS_MYSQL_REVOKE_ACCOUNT_PRIVILEGE_ERROR); // 授权错误
     }
 
     /**
      * 授权账号访问数据库
-     *
-     * @param aliyunAccount
-     * @param ocCloudDbAccount
-     * @param dbName
-     * @return
      */
     public BusinessWrapper<Boolean> grantAccountPrivilege(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount, String dbName) {
         GrantAccountPrivilegeRequest request = new GrantAccountPrivilegeRequest();
@@ -90,15 +85,11 @@ public class AliyunRDSMysqlHandler {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_GRANT_ACCOUNT_PRIVILEGE_ERROR); // 授权错误
+        return new BusinessWrapper<>(ErrorEnum.ALIYUN_RDS_MYSQL_GRANT_ACCOUNT_PRIVILEGE_ERROR); // 授权错误
     }
 
     /**
      * 创建账户
-     *
-     * @param aliyunAccount
-     * @param ocCloudDbAccount
-     * @return
      */
     public BusinessWrapper<Boolean> createAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
         CreateAccountRequest request = new CreateAccountRequest();
@@ -115,14 +106,11 @@ public class AliyunRDSMysqlHandler {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        return new BusinessWrapper(ErrorEnum.ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR); // 创建账户错误
+        return new BusinessWrapper<>(ErrorEnum.ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR); // 创建账户错误
     }
 
     /**
      * 查询单个账户详情
-     *
-     * @param aliyunAccount
-     * @param ocCloudDbAccount
      */
     public DescribeAccountsResponse.DBInstanceAccount getAccount(AliyunCoreConfig.AliyunAccount aliyunAccount, OcCloudDbAccount ocCloudDbAccount) {
         DescribeAccountsRequest request = new DescribeAccountsRequest();

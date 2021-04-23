@@ -13,7 +13,7 @@ import java.util.List;
  */
 public interface AssetsAssetService {
 
-    DataTable<AssetsAsset> fuzzyQueryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery);
+    DataTable<AssetsAsset> queryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery);
 
     AssetsAsset queryAssetsAssetByIp(String ip);
 

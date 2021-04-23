@@ -10,5 +10,7 @@ public interface OcWorkorderTicketMapper extends Mapper<OcWorkorderTicket> {
 
     List<OcWorkorderTicket> queryMyTicketByParam(WorkorderTicketParam.QueryMyTicketPage pageQuery);
 
+    List<OcWorkorderTicket> queryMyFinalizedTicketByParam(WorkorderTicketParam.QueryMyFinalizedTicketPage pageQuery);
+
     List<OcWorkorderTicket> queryTicketByParam(WorkorderTicketParam.QueryTicketPage pageQuery);
 }

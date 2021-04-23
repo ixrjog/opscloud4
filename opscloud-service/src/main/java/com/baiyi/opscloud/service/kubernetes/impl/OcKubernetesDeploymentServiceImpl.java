@@ -26,7 +26,7 @@ public class OcKubernetesDeploymentServiceImpl implements OcKubernetesDeployment
 
     @Override
     public DataTable<OcKubernetesDeployment> queryOcKubernetesDeploymentByParam(KubernetesDeploymentParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesDeployment> list = ocKubernetesDeploymentMapper.queryOcKubernetesDeploymentByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

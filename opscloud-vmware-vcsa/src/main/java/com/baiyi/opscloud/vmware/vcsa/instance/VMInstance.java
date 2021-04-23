@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.vmware.vcsa.instance;
 
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import com.vmware.vim25.VirtualMachineConfigInfo;
 import com.vmware.vim25.VirtualMachineStorageInfo;
 import com.vmware.vim25.VirtualMachineSummary;
@@ -8,10 +9,11 @@ import lombok.Data;
 import java.io.Serializable;
 
 @Data
-public class VMInstance implements Serializable {
+public class VMInstance implements BaseCloudServerInstance, Serializable {
     private static final long serialVersionUID = -4582827294503230492L;
 
-    public VMInstance() {}
+    public VMInstance() {
+    }
 
     public VMInstance(VirtualMachineConfigInfo vmConfigInfo, VirtualMachineStorageInfo vmStorageInfo, VirtualMachineSummary vmSummary) {
         this.configInfoName = vmConfigInfo.getName();

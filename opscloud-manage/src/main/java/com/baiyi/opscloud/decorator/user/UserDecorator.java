@@ -4,15 +4,18 @@ import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.common.base.CredentialType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.decorator.it.ItAssetDecorator;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserApiTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
-import com.baiyi.opscloud.facade.AliyunRAMFacade;
+import com.baiyi.opscloud.facade.aliyun.AliyunRAMFacade;
 import com.baiyi.opscloud.jumpserver.center.JumpserverCenter;
 import com.baiyi.opscloud.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.service.it.OcItAssetApplyService;
+import com.baiyi.opscloud.service.it.OcItAssetService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.user.*;
 import com.google.common.collect.Lists;
@@ -59,6 +62,15 @@ public class UserDecorator {
     @Resource
     private AliyunRAMFacade aliyunRAMFacade;
 
+    @Resource
+    private OcItAssetService ocItAssetService;
+
+    @Resource
+    private OcItAssetApplyService ocItAssetApplyService;
+
+    @Resource
+    private ItAssetDecorator itAssetDecorator;
+
     // from mysql
     public UserVO.User decorator(UserVO.User user, Integer extend) {
         user.setPassword("");
@@ -91,6 +103,11 @@ public class UserDecorator {
             user.setAttributeMap(attributeMap);
             // AliyunRAM
             user.setRamUsers(aliyunRAMFacade.queryRamUsersByUsername(user.getId()));
+            // 装饰我的资产
+            List<OcItAssetApply> ocItAssetApplyList = ocItAssetApplyService.queryMyAsset(user.getId());
+            List<OcItAsset> assetList = Lists.newArrayListWithCapacity(ocItAssetApplyList.size());
+            ocItAssetApplyList.forEach(x -> assetList.add(ocItAssetService.queryOcItAssetById(x.getAssetId())));
+            user.setAssets(itAssetDecorator.decoratorVOList(assetList));
         }
         return user;
     }

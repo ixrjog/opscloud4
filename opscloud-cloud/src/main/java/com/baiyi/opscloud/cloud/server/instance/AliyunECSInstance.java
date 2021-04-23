@@ -2,6 +2,7 @@ package com.baiyi.opscloud.cloud.server.instance;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.aliyun.ecs.base.ECSDisk;
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import lombok.Builder;
 import lombok.Data;
 
@@ -14,7 +15,7 @@ import java.util.List;
  */
 @Builder
 @Data
-public class AliyunECSInstance {
+public class AliyunECSInstance implements BaseCloudServerInstance {
 
     private DescribeInstancesResponse.Instance instance;
 

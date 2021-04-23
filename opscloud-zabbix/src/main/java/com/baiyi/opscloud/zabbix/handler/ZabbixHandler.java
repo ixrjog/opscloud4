@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.handler;
 import com.baiyi.opscloud.common.util.JSONUtils;
 import com.baiyi.opscloud.zabbix.config.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserLogin;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.http.ZabbixBaseRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.http.HttpEntity;
@@ -46,30 +46,30 @@ public class ZabbixHandler implements InitializingBean {
 
     private URI uri;
 
-    public JsonNode api(ZabbixRequest request, String nodeName) throws Exception {
+    public JsonNode api(ZabbixBaseRequest request, String nodeName) throws Exception {
         JsonNode node = call(request);
         return node.findValue(nodeName);
     }
 
-    public JsonNode api(ZabbixRequest request) throws Exception {
+    public JsonNode api(ZabbixBaseRequest request) throws Exception {
         return call(request);
     }
 
-    private void assembleRequestAuth(ZabbixRequest request) throws Exception {
+    private void assembleRequestAuth(ZabbixBaseRequest request) throws Exception {
         if (StringUtils.isEmpty(request.getAuth()) && !request.getMethod().equalsIgnoreCase(ZABBIX_KEY_APIINFO) && !request.getMethod().equalsIgnoreCase("user.login")) {
             if (StringUtils.isEmpty(auth)) throw new Exception();
             request.setAuth(auth);
         }
     }
 
-    private JsonNode call(ZabbixRequest request) throws Exception {
+    private JsonNode call(ZabbixBaseRequest request) throws Exception {
         assembleRequestAuth(request);
         byte[] data = httpCall(request);
         JsonNode rootNode = JSONUtils.readTree(data);
         return rootNode;
     }
 
-    private byte[] httpCall(ZabbixRequest request) throws Exception {
+    private byte[] httpCall(ZabbixBaseRequest request) throws Exception {
         HttpUriRequest httpRequest = org.apache.http.client.methods.RequestBuilder.post()
                 .setUri(uri)
                 .addHeader("Content-Type", "application/json")
@@ -81,7 +81,7 @@ public class ZabbixHandler implements InitializingBean {
     }
 
     public void afterPropertiesSet() throws Exception {
-        log.info("ZabbixClinet初始化 : {}");
+        log.info("ZabbixClient初始化 : {}");
         RequestConfig requestConfig = RequestConfig.custom()
                 .setConnectTimeout(5 * 1000)
                 .setConnectionRequestTimeout(5 * 1000)
@@ -103,7 +103,7 @@ public class ZabbixHandler implements InitializingBean {
 
     public boolean login() {
         try {
-            ZabbixRequest request = zabbixConfig.buildLoginRequest();
+            ZabbixBaseRequest request = zabbixConfig.buildLoginRequest();
 
             byte[] data = httpCall(request);
             ZabbixUserLogin userLogin = JSONUtils.readValue(new String(data), ZabbixUserLogin.class);

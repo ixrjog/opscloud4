@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.auth.GroupParam;
 import com.baiyi.opscloud.domain.param.auth.ResourceParam;
 import com.baiyi.opscloud.domain.param.auth.RoleParam;
@@ -23,6 +24,8 @@ public interface AuthFacade {
     void addRole(RoleVO.Role role);
 
     void updateRole(RoleVO.Role role);
+
+    void grantUserRole(OcUser user, String roleName);
 
     BusinessWrapper<Boolean> deleteRoleById(int id);
 
@@ -60,7 +63,9 @@ public interface AuthFacade {
 
     BusinessWrapper<Boolean> deleteGroupById(int id);
 
-    DataTable<UserRoleVO.UserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery);
+    DataTable<UserRoleVO.UserRole> queryUserRolePage(UserRoleParam.UserRolePageQuery pageQuery);
+
+    List<UserRoleVO.UserRole> queryUserRoles(UserRoleParam.UserRolesQuery query);
 
     void addUserRole(UserRoleVO.UserRole userRole);
 

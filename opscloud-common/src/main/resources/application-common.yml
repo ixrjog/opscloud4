@@ -1,3 +1,8 @@
+caesar:
+  url: https://caesar.xinc818.com
+  tokenId: SvEkaM6DuBLjNMdwoPWB
+  apiToken: ENC(9K9C6+bLiqktLTyTAXQ7TvS2sL9XimzvVnN15pKLK5g=)
+
 oc-server-attributes:
   groups:
     -
@@ -38,7 +43,7 @@ oc-server-attributes:
           content: 'JSONArray格式:[{"macro": "{$USER_ID}","value": "1"} ]'
         -
           name: zabbix_templates
-          value: ''
+          value: 'Template OS Linux by Zabbix agent'
           content: '模版名称（多个用,分割）'
         -
           name: zabbix_sysdisk_volume_name
@@ -52,3 +57,20 @@ oc-server-attributes:
           name: zabbix_proxy
           value: ''
           content: '代理名称'
+    -
+      name: prometheus
+      comment: Prometheus配置项
+      attributes:
+        - name: enable
+          value: false
+          content: "启用Prometheus配置项"
+        -
+          name: job_name
+          value: ''
+          content: "任务名称，留空自动生成"
+        - name: metrics_path
+          value: ''
+          content: "metrics_path，留空自动生成"
+        - name: config_path
+          value: ''
+          content: "配置文件路径，留空自动生成"

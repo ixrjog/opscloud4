@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunOnsTopicMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunOnsTopic">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="instance_id" jdbcType="VARCHAR" property="instanceId"/>
+        <result column="topic" jdbcType="VARCHAR" property="topic"/>
+        <result column="independent_naming" jdbcType="BIT" property="independentNaming"/>
+        <result column="message_type" jdbcType="INTEGER" property="messageType"/>
+        <result column="relation" jdbcType="INTEGER" property="relation"/>
+        <result column="relation_name" jdbcType="VARCHAR" property="relationName"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAliyunOnsTopicByInstanceId"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunONSParam$TopicPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ons_topic
+        where instance_id = #{instanceId}
+        <if test="topic != null and topic != ''">
+            and topic like "%" #{topic} "%"
+        </if>
+        <if test="messageType != -1">
+            and message_type = #{messageType}
+        </if>
+        order by create_time desc
+    </select>
+
+
+</mapper>

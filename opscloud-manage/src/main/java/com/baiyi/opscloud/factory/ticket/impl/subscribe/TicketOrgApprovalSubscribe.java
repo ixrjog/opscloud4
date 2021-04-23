@@ -8,11 +8,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketSubscribe;
-import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.org.OrgApprovalVO;
+import com.baiyi.opscloud.domain.vo.org.OrgDepartmentMemberVO;
 import com.baiyi.opscloud.domain.vo.workorder.ApprovalStepsVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
+import com.baiyi.opscloud.service.user.OcAccountService;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -32,6 +33,9 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
 
     @Resource
     private DepartmentMemberDecorator departmentMemberDecorator;
+
+    @Resource
+    private OcAccountService ocAccountService;
 
     @Override
     public String getKey() {
@@ -89,7 +93,13 @@ public class TicketOrgApprovalSubscribe extends BaseTicketSubscribe implements I
 
     @Override
     public List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket) {
-        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByAppoval(ticket.getId(), TicketSubscribeType.ORG_APPROVAL.getType());
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByApproval(ticket.getId(), TicketSubscribeType.ORG_APPROVAL.getType());
     }
+
+    @Override
+    protected List<OcWorkorderTicketSubscribe> getTicketSubscribe(OcWorkorderTicket ocWorkorderTicket) {
+        return ocWorkorderTicketSubscribeService.queryOcWorkorderTicketSubscribeByApproval(ocWorkorderTicket.getId(), TicketSubscribeType.ORG_APPROVAL.getType());
+    }
+
 
 }

@@ -141,33 +141,23 @@ public class ServerAttributeFacadeImpl implements ServerAttributeFacade {
 
     @Override
     public Map<String, String> getServerGroupAttributeMap(OcServerGroup ocServerGroup) {
-        String key = getServerGroupCacheKey(ocServerGroup.getId());
-        Map<String, String> serverGroupAttributeMap = (Map<String, String>) redisUtil.get(key);
-        if (serverGroupAttributeMap != null && !serverGroupAttributeMap.isEmpty())
-            return serverGroupAttributeMap;
-        serverGroupAttributeMap = Maps.newHashMap();
-        List<ServerAttributeVO.ServerAttribute> list = queryServerGroupAttribute(ocServerGroup);
-        for (ServerAttributeVO.ServerAttribute sa : list) {
-            AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
+
+        Map<String, String> serverGroupAttributeMap = Maps.newHashMap();
+        queryServerGroupAttribute(ocServerGroup).forEach(e -> {
+            AttributeGroup attributeGroup = ServerAttributeUtils.convert(e.getAttributes());
             serverGroupAttributeMap.putAll(convertServerAttributeMap(attributeGroup.getAttributes()));
-        }
-        redisUtil.set(key, serverGroupAttributeMap, 60 * 60 * 24 * 7);
+        });
         return serverGroupAttributeMap;
     }
 
     @Override
     public Map<String, String> getServerAttributeMap(OcServer ocServer) {
-        String key = getServerCacheKey(ocServer.getId());
-        Map<String, String> serverAttributeMap = (Map<String, String>) redisUtil.get(key);
-        if (serverAttributeMap != null && !serverAttributeMap.isEmpty())
-            return serverAttributeMap;
-        serverAttributeMap = Maps.newHashMap();
-        List<ServerAttributeVO.ServerAttribute> list = queryServerAttribute(ocServer);
-        for (ServerAttributeVO.ServerAttribute sa : list) {
-            AttributeGroup attributeGroup = ServerAttributeUtils.convert(sa.getAttributes());
+        Map<String, String> serverAttributeMap = Maps.newHashMap();
+
+        queryServerAttribute(ocServer).forEach(e -> {
+            AttributeGroup attributeGroup = ServerAttributeUtils.convert(e.getAttributes());
             serverAttributeMap.putAll(convertServerAttributeMap(attributeGroup.getAttributes()));
-        }
-        redisUtil.set(key, serverAttributeMap, 60 * 60 * 24 * 7);
+        });
         return serverAttributeMap;
     }
 

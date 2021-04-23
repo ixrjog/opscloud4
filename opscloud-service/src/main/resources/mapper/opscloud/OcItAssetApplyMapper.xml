@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcItAssetApplyMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcItAssetApply">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="asset_id" jdbcType="INTEGER" property="assetId"/>
+        <result column="user_id" jdbcType="INTEGER" property="userId"/>
+        <result column="user_org_dept_id" jdbcType="INTEGER" property="userOrgDeptId"/>
+        <result column="apply_type" jdbcType="INTEGER" property="applyType"/>
+        <result column="apply_time" jdbcType="TIMESTAMP" property="applyTime"/>
+        <result column="expect_return_time" jdbcType="TIMESTAMP" property="expectReturnTime"/>
+        <result column="return_time" jdbcType="TIMESTAMP" property="returnTime"/>
+        <result column="is_return" jdbcType="BIT" property="isReturn"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+
+    <select id="queryOcItAssetApplyPage" parameterType="com.baiyi.opscloud.domain.param.it.ItAssetParam$ApplyPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_it_asset_apply
+        <where>
+            <if test="userId != -1">
+                and user_id = #{userId}
+            </if>
+            <if test="userOrgDeptId != -1">
+                and user_org_dept_id = #{userOrgDeptId}
+            </if>
+            <if test="applyType != -1">
+                and apply_type = #{applyType}
+            </if>
+            <if test="isReturn != -1">
+                and is_return = #{isReturn}
+            </if>
+            <if test="applyStartTime != null and applyEndTime != null">
+                and apply_time between #{applyStartTime,jdbcType=TIMESTAMP} and #{applyEndTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="returnStartTime != null and returnEndTime != null">
+                and return_time between #{returnStartTime,jdbcType=TIMESTAMP} and #{returnEndTime,jdbcType=TIMESTAMP}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and asset_id in
+                (
+                select id from oc_it_asset
+                where asset_code like "%" #{queryName} "%"
+                )
+            </if>
+        </where>
+        order by apply_time desc
+    </select>
+</mapper>

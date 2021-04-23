@@ -19,4 +19,5 @@ public interface OcUserMapper extends Mapper<OcUser> {
 
     List<OcUser> queryOcUserByUserGroupId(@Param("userGroupId")  int userGroupId);
 
+    List<OcUser> queryOcUserByIdList(@Param("userIdList") List<Integer> userIdList);
 }

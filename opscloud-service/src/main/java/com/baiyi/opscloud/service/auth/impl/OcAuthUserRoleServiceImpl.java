@@ -33,10 +33,18 @@ public class OcAuthUserRoleServiceImpl implements OcAuthUserRoleService {
     }
 
     @Override
-    public DataTable<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+    public DataTable<OcAuthUserRole> queryOcAuthUserRoleByParam(UserRoleParam.UserRolePageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcAuthUserRole> ocAuthUserRoleList = ocAuthUserRoleMapper.queryOcAuthUserRoleByParam(pageQuery);
         return new DataTable<>(ocAuthUserRoleList, page.getTotal());
+    }
+
+    @Override
+    public List<OcAuthUserRole> queryOcAuthUserRolesByUsername(String username) {
+        Example example = new Example(OcAuthUserRole.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("username", username);
+        return ocAuthUserRoleMapper.selectByExample(example);
     }
 
     @Override
@@ -52,6 +60,15 @@ public class OcAuthUserRoleServiceImpl implements OcAuthUserRoleService {
     @Override
     public OcAuthUserRole queryOcAuthUserRoleById(int id) {
         return ocAuthUserRoleMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public OcAuthUserRole queryOcAuthUserRoleByUniqueKey(OcAuthUserRole ocAuthUserRole) {
+        Example example = new Example(OcAuthUserRole.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("roleId", ocAuthUserRole.getRoleId());
+        criteria.andEqualTo("username", ocAuthUserRole.getUsername());
+        return ocAuthUserRoleMapper.selectOneByExample(example);
     }
 
     @Override

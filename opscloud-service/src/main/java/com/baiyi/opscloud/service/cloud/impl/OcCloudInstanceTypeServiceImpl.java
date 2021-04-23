@@ -27,7 +27,7 @@ public class OcCloudInstanceTypeServiceImpl implements OcCloudInstanceTypeServic
 
     @Override
     public DataTable<OcCloudInstanceType> fuzzyQueryOcCloudInstanceTypeByParam(CloudInstanceTypeParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudInstanceType> list = ocCloudInstanceTypeMapper.fuzzyQueryOcCloudInstanceTypeByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

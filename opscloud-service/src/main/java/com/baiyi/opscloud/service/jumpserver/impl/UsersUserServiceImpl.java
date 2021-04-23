@@ -28,14 +28,14 @@ public class UsersUserServiceImpl implements UsersUserService {
 
     @Override
     public DataTable<UsersUser> fuzzyQueryUsersUserPage(UsersUserPageParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<UsersUser> usersUserList = usersUserMapper.fuzzyQueryUsersUserPage(pageQuery);
         return new DataTable<>(usersUserList, page.getTotal());
     }
 
     @Override
     public DataTable<UsersUser> fuzzyQueryAdminUsersUserPage(UsersUserPageParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<UsersUser> usersUserList = usersUserMapper.fuzzyQueryAdminUsersUserPage(pageQuery);
         return new DataTable<>(usersUserList, page.getTotal());
     }

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.task;
 
 import com.baiyi.opscloud.facade.TerminalFacade;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -14,39 +15,21 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class TerminalSessionTask extends BaseTask {
+public class TerminalSessionTask {
 
     @Resource
     private TerminalFacade terminalFacade;
 
-    // Terminal
-    public static final String TASK_TERMINAL_SESSION_KEY = "TASK_TERMINAL_SESSION_KEY";
-
-    private static final int  LOCK_MINUTE = 2;
 
     /**
      * 关闭无效会话
      */
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
+    @SchedulerLock(name = "closeInvalidSessionTask", lockAtMostFor = "2m", lockAtLeastFor = "2m")
     public void closeInvalidSessionTask() {
-        if (tryLock()) return;
+        log.info("任务启动: 关闭无效的终端会话！");
         terminalFacade.closeInvalidSessionTask();
-        unlock();
     }
 
-    @Override
-    protected String getLock() {
-        return TASK_TERMINAL_SESSION_KEY;
-    }
-
-    @Override
-    protected String getTaskName() {
-        return "WebXTerm会话关闭任务";
-    }
-
-    @Override
-    protected int getLockMinute() {
-        return LOCK_MINUTE;
-    }
 
 }

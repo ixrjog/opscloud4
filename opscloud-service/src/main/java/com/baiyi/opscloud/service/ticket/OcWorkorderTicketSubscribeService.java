@@ -16,7 +16,7 @@ public interface OcWorkorderTicketSubscribeService {
      * @param ticketId
      * @return
      */
-    List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByAppoval(int ticketId, int subscribeType);
+    List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByApproval(int ticketId, int subscribeType);
 
     List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByTicketId(int ticketId);
 

@@ -9,16 +9,21 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JSONFormat {
 
+    public static String format(Object obj) {
+        return format(JSONUtils.writeValueAsString(obj));
+    }
+
     /**
      * 格式化json
+     *
      * @param jsonStr
      * @return
      */
     public static String format(String jsonStr) {
         try {
             ObjectMapper mapper = new ObjectMapper();
-            Object objAppServerList = mapper.readValue(jsonStr, Object.class);
-            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(objAppServerList);
+            Object obj = mapper.readValue(jsonStr, Object.class);
+            return mapper.writerWithDefaultPrettyPrinter().writeValueAsString(obj);
         } catch (Exception e) {
             return jsonStr;
         }

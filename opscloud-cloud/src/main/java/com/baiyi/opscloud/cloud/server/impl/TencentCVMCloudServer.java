@@ -3,9 +3,11 @@ package com.baiyi.opscloud.cloud.server.impl;
 import com.baiyi.opscloud.cloud.server.ICloudServer;
 import com.baiyi.opscloud.cloud.server.builder.CloudServerBuilder;
 import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.tencent.cloud.cvm.handler.TencentCloudCVMHandler;
+import com.baiyi.opscloud.tencent.cloud.cvm.instance.CVMInstance;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -19,7 +21,7 @@ import java.util.List;
  */
 @Slf4j
 @Component("TencentCVMCloudServer")
-public class TencentCVMCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
+public class TencentCVMCloudServer<T extends BaseCloudServerInstance> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private TencentCloudCVMHandler tencentCloudCVMHandler;
@@ -34,7 +36,7 @@ public class TencentCVMCloudServer<T> extends BaseCloudServer<T> implements IClo
         return (T) tencentCloudCVMHandler.getInstance(instanceId);
     }
 
-    private List<T> getInstanceList(List<com.tencentcloudapi.cvm.v20170312.models.Instance> instanceList) {
+    private List<T> getInstanceList(List<CVMInstance> instanceList) {
         return (List<T>) instanceList;
     }
 
@@ -60,8 +62,8 @@ public class TencentCVMCloudServer<T> extends BaseCloudServer<T> implements IClo
 
     @Override
     protected OcCloudServer getCloudServer(T instance) {
-        if (!(instance instanceof com.tencentcloudapi.cvm.v20170312.models.Instance)) return null;
-        com.tencentcloudapi.cvm.v20170312.models.Instance i = (com.tencentcloudapi.cvm.v20170312.models.Instance) instance;
+        if (!(instance instanceof CVMInstance)) return null;
+        CVMInstance i = (CVMInstance) instance;
         return CloudServerBuilder.build(i, getInstanceDetail(instance));
     }
 

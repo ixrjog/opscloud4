@@ -2,7 +2,6 @@ package com.baiyi.opscloud.service.kubernetes.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesApplication;
-import com.baiyi.opscloud.domain.generator.opscloud.OcKubernetesClusterNamespace;
 import com.baiyi.opscloud.domain.param.kubernetes.KubernetesApplicationParam;
 import com.baiyi.opscloud.mapper.opscloud.OcKubernetesApplicationMapper;
 import com.baiyi.opscloud.service.kubernetes.OcKubernetesApplicationService;
@@ -27,7 +26,7 @@ public class OcKubernetesApplicationServiceImpl implements OcKubernetesApplicati
 
     @Override
     public DataTable<OcKubernetesApplication> queryOcKubernetesApplicationByParam(KubernetesApplicationParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesApplication> list = ocKubernetesApplicationMapper.queryOcKubernetesApplicationByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

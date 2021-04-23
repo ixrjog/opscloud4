@@ -3,6 +3,7 @@ package com.baiyi.opscloud.account.builder;
 import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.account.bo.AccountBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.dingtalk.bo.DingtalkUserBO;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import org.gitlab.api.models.GitlabUser;
@@ -34,6 +35,21 @@ public class AccountBuilder {
                 .email(gitlabUser.getEmail())
                 .isActive("active".equals(gitlabUser.getState()))
                 .accountType(AccountType.GITLAB.getType())
+                .build();
+        return convert(bo);
+    }
+
+    public static OcAccount build(DingtalkUserBO dingtalkUser) {
+        AccountBO bo = AccountBO.builder()
+                .accountUid(dingtalkUser.getUid())
+                .accountId(dingtalkUser.getUnionid())
+                .username(dingtalkUser.getUserid())
+                .displayName(dingtalkUser.getName())
+                .email(dingtalkUser.getEmail())
+                .isActive(dingtalkUser.getActive())
+                .phone(dingtalkUser.getMobile())
+                .accountType(AccountType.DINGTALK.getType())
+                .comment(dingtalkUser.getExtension())
                 .build();
         return convert(bo);
     }

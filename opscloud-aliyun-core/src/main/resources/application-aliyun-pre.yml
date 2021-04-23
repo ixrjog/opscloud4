@@ -25,3 +25,5 @@ aliyun:
       regionId: cn-hangzhou
       regionIds:
         - cn-hangzhou
+  ons:
+    internetRegionId: mq-internet-access

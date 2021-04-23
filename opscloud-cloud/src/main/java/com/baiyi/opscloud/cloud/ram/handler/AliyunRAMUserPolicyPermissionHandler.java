@@ -7,8 +7,8 @@ import com.baiyi.opscloud.cloud.ram.builder.AliyunRamPolicyBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPermission;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPolicy;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
-import com.baiyi.opscloud.service.ram.OcAliyunRamPermissionService;
-import com.baiyi.opscloud.service.ram.OcAliyunRamPolicyService;
+import com.baiyi.opscloud.service.aliyun.ram.OcAliyunRamPermissionService;
+import com.baiyi.opscloud.service.aliyun.ram.OcAliyunRamPolicyService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

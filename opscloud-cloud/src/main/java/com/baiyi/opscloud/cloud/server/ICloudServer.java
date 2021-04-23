@@ -16,7 +16,7 @@ public interface ICloudServer {
      *
      * @return
      */
-    Boolean sync();
+    void sync();
 
     /**
      * 同步并推送主机名
@@ -24,7 +24,7 @@ public interface ICloudServer {
      * @param pushName
      * @return
      */
-    Boolean sync(boolean pushName);
+    void sync(boolean pushName);
 
     /**
      * 录入实例
@@ -33,7 +33,7 @@ public interface ICloudServer {
      * @param instanceId
      * @return
      */
-    Boolean record(String regionId, String instanceId);
+    void record(String regionId, String instanceId);
 
     /**
      * 设置云服务器离线
@@ -82,4 +82,13 @@ public interface ICloudServer {
      * @return
      */
     Boolean delete(String instanceId);
+
+
+    /**
+     * 变更计费方式
+     * @param instanceId
+     * @param chargeType
+     * @return
+     */
+    void modifyInstanceChargeType(String instanceId, String chargeType);
 }

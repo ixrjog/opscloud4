@@ -134,7 +134,7 @@ public class KubernetesDeploymentFacade extends BaseKubernetesFacade {
         OcKubernetesDeployment ocKubernetesDeployment = ocKubernetesDeploymentService.queryOcKubernetesDeploymentByUniqueKey(ocKubernetesClusterNamespace.getId(), pre.getName());
         if (ocKubernetesDeployment != null)
             pre = ocKubernetesDeployment;
-        invokeKubernetesDeployment(pre,deployment);
+        invokeKubernetesDeployment(pre, deployment);
         if (IDUtils.isEmpty(pre.getId())) {
             ocKubernetesDeploymentService.addOcKubernetesDeployment(pre);
         } else {
@@ -143,7 +143,7 @@ public class KubernetesDeploymentFacade extends BaseKubernetesFacade {
         deploymentMap.remove(pre.getName());
     }
 
-    private void invokeKubernetesDeployment(OcKubernetesDeployment ocKubernetesDeployment,Deployment deployment) {
+    private void invokeKubernetesDeployment(OcKubernetesDeployment ocKubernetesDeployment, Deployment deployment) {
         if (!IDUtils.isEmpty(ocKubernetesDeployment.getInstanceId())) return;
         OcKubernetesApplicationInstance ocKubernetesApplicationInstance = getApplicationInstanceByDeployment(deployment);
         if (ocKubernetesApplicationInstance != null) {

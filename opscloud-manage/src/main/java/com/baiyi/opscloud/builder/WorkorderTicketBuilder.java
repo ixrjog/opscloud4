@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.bo.WorkorderTicketBO;
+import com.baiyi.opscloud.bo.workorder.WorkorderTicketBO;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;

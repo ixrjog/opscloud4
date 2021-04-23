@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcCloudServerDashboardMapper">
+    <resultMap id="ServerMonthStatsMap" type="com.baiyi.opscloud.domain.vo.cloud.CloudServerStatsVO$ServerMonthStats">
+        <result column="date_cat" jdbcType="VARCHAR" property="dateCat"/>
+        <result column="vm" jdbcType="INTEGER" property="vm"/>
+        <result column="ecs" jdbcType="INTEGER" property="ecs"/>
+        <result column="ec2" jdbcType="INTEGER" property="ec2"/>
+        <result column="cvm" jdbcType="INTEGER" property="cvm"/>
+    </resultMap>
+
+    <resultMap id="ServerResStatsMap" type="com.baiyi.opscloud.domain.vo.cloud.CloudServerStatsVO$ServerResStats">
+        <result column="server_total" jdbcType="INTEGER" property="serverTotal"/>
+        <result column="cpu_total" jdbcType="INTEGER" property="cpuTotal"/>
+        <result column="memory_total" jdbcType="INTEGER" property="memoryTotal"/>
+        <result column="disk_total" jdbcType="INTEGER" property="diskTotal"/>
+    </resultMap>
+
+    <resultMap id="ServerMonthStatsByTypeMap"
+               type="com.baiyi.opscloud.domain.vo.cloud.CloudServerStatsVO$ServerMonthStatsByType">
+        <result column="date_cat" jdbcType="VARCHAR" property="dateCat"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <select id="queryServerMonthStatsReport" resultMap="ServerMonthStatsMap">
+        select date_format(created_time, '%Y-%m') as date_cat,
+            sum(if(cloud_server_type = 1, 1, 0)) as `vm`,
+            sum(if(cloud_server_type = 2, 1, 0)) as `ecs`,
+            sum(if(cloud_server_type = 3, 1, 0)) as `ec2`,
+            sum(if(cloud_server_type = 4, 1, 0)) as `cvm`
+        from oc_cloud_server
+        where year(created_time) = #{queryYear}
+        group by date_cat
+        order by date_cat;
+    </select>
+
+    <select id="queryServerResStatsReport" resultMap="ServerResStatsMap">
+        select count(*) as server_total,
+               sum(cpu) as cpu_total,
+               sum(memory) as memory_total,
+               sum(data_disk_size + system_disk_size) as disk_total
+        from oc_cloud_server
+        where cloud_server_type = #{cloudServerType}
+    </select>
+
+    <select id="queryServerMonthStatsReportByType" resultMap="ServerMonthStatsByTypeMap">
+        select date_format(created_time, '%Y-%m') as date_cat,
+            sum(if(cloud_server_type = #{cloudServerType}, 1, 0)) as `value`
+        from oc_cloud_server
+        where year(created_time) = #{queryYear}
+        group by date_cat
+        order by date_cat;
+    </select>
+
+</mapper>

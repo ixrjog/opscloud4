@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.vo.profile.ProfileSubscriptionVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.ServerBaseFacade;
-import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
+import com.baiyi.opscloud.factory.attribute.impl.AnsibleAttribute;
 import com.baiyi.opscloud.service.ansible.OcAnsiblePlaybookService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.google.common.collect.Lists;
@@ -29,7 +29,7 @@ import java.util.Map;
 public class ProfileSubscriptionDecorator {
 
     @Resource
-    private AttributeAnsible attributeAnsible;
+    private AnsibleAttribute ansibleAttribute;
 
     @Resource
     private OcServerGroupService ocServerGroupService;
@@ -43,7 +43,7 @@ public class ProfileSubscriptionDecorator {
     public ProfileSubscriptionVO.ProfileSubscription decorator(ProfileSubscriptionVO.ProfileSubscription profileSubscription) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(profileSubscription.getServerGroupId());
         profileSubscription.setServerGroup(BeanCopierUtils.copyProperties(ocServerGroup, ServerGroupVO.ServerGroup.class));
-        Map<String, List<OcServer>> serverMap = attributeAnsible.grouping(ocServerGroup, true);
+        Map<String, List<OcServer>> serverMap = ansibleAttribute.grouping(ocServerGroup, true);
         profileSubscription.setServers(getServersByHostPattern(serverMap, profileSubscription.getHostPattern()));
         if (!IDUtils.isEmpty(profileSubscription.getScriptId())) {
             OcAnsiblePlaybook ocAnsiblePlaybook = ocAnsiblePlaybookService.queryOcAnsiblePlaybookById(profileSubscription.getScriptId());

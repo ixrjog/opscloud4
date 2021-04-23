@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunSlbAclMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunSlbAcl">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="slb_acl_id" jdbcType="VARCHAR" property="slbAclId"/>
+        <result column="slb_acl_name" jdbcType="VARCHAR" property="slbAclName"/>
+        <result column="address_ip_version" jdbcType="VARCHAR" property="addressIpVersion"/>
+        <result column="resource_group_id" jdbcType="VARCHAR" property="resourceGroupId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAliyunSlbAclPage"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunSLBParam$ACLPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_slb_acl
+        <where>
+            <if test="queryName != null and queryName != ''">
+                (slb_acl_name like "%" #{queryName} "%" or slb_acl_id like "%" #{queryName} "%")
+            </if>
+        </where>
+        order by replace(slb_acl_name, #{queryName}, '')
+    </select>
+
+</mapper>

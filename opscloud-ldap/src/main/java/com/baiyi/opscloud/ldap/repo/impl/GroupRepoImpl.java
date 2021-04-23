@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.ldap.repo.impl;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.ldap.config.LdapConfig;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.handler.LdapHandler;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
@@ -21,6 +24,9 @@ public class GroupRepoImpl implements GroupRepo {
     @Resource
     private LdapHandler ldapHandler;
 
+    @Resource
+    private LdapConfig ldapConfig;
+
     @Override
     public List<Group> getGroupList() {
         return ldapHandler.queryGroupList();
@@ -39,5 +45,22 @@ public class GroupRepoImpl implements GroupRepo {
     @Override
     public Boolean addGroupMember(String groupName,String username){
         return ldapHandler.addGroupMember(groupName, username);
+    }
+
+    @Override
+    public  Boolean create(String groupName){
+        Group group = new Group();
+        group.setGroupName(groupName);
+        return ldapHandler.bindGroup(group);
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> delete(String groupName) {
+        try {
+            ldapHandler.unbind(ldapConfig.buildGroupDN(groupName));
+        } catch (Exception e) {
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_GROUP_UNBIND_ERROR);
+        }
+        return BusinessWrapper.SUCCESS;
     }
 }

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.base.BusinessType;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -27,6 +28,11 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
     @Resource
     private OcAuthRoleService ocAuthRoleService;
+
+    @Override
+    public List<OcUserPermission> queryPermissions(int businessType, int businessId) {
+      return   ocUserPermissionService.queryUserBusinessPermissionByBusinessId(businessType,  businessId);
+    }
 
     @Override
     public void syncUserBusinessPermission(List<UserVO.User> userList, int businessType, int businessId) {
@@ -105,6 +111,13 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
         ocUserPermission.setBusinessId(businessId);
         ocUserPermission.setUserId(userId);
         return ocUserPermissionService.queryOcUserPermissionByUniqueKey(ocUserPermission) != null;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> checkAccessLevelIsHigherDev(String username) {
+        OcUser ocUser = new OcUser();
+        ocUser.setUsername(username);
+        return checkAccessLevel(ocUser, AccessLevel.DEV.getLevel());
     }
 
 }

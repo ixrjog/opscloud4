@@ -33,9 +33,9 @@ public class OcWorkorderServiceImpl implements OcWorkorderService {
     public List<OcWorkorder> queryOcWorkorderByGroupId(int workorderGroupId, boolean isDevelopment) {
         Example example = new Example(OcWorkorder.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("workorderGroupId",workorderGroupId);
-        if(!isDevelopment)
-            criteria.andEqualTo("workorderStatus",0);
+        criteria.andEqualTo("workorderGroupId", workorderGroupId);
+        if (!isDevelopment)
+            criteria.andEqualTo("workorderStatus", 0);
         return ocWorkorderMapper.selectByExample(example);
     }
 
@@ -55,5 +55,9 @@ public class OcWorkorderServiceImpl implements OcWorkorderService {
         ocWorkorderMapper.updateByPrimaryKey(ocWorkorder);
     }
 
-
+    @Override
+    public List<OcWorkorder> queryOcWorkorderAll() {
+        return ocWorkorderMapper.selectAll();
+    }
 }
+

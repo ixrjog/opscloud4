@@ -25,6 +25,14 @@ public class WorkorderTicketParam {
     @Data
     @NoArgsConstructor
     @ApiModel
+    public static class QueryMyFinalizedTicketPage extends QueryMyTicketPage {
+
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
     public static class QueryTicketPage extends PageParam {
 
         @ApiModelProperty(value = "用户名")

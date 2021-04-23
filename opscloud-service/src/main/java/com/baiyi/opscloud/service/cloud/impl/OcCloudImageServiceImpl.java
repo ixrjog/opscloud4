@@ -44,7 +44,7 @@ public class OcCloudImageServiceImpl implements OcCloudImageService {
 
     @Override
     public DataTable<OcCloudImage> fuzzyQueryOcCloudImageByParam(CloudImageParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudImage> ocCloudImageList = ocCloudImageMapper.fuzzyQueryOcCloudImageByParam(pageQuery);
         return new DataTable<>(ocCloudImageList, page.getTotal());
     }

@@ -23,5 +23,10 @@ public interface AliyunECS {
 
     BusinessWrapper<Boolean> power(String regionId, String instanceId, Boolean action);
 
-    Boolean delete(String regionId, String instanceId);
+    boolean delete(String regionId, String instanceId);
+
+    void modifyInstanceChargeType(String regionId, String instanceId, String chargeType);
+
+    boolean modifyInstanceName(String regionId, String instanceId, String instanceName);
+
 }

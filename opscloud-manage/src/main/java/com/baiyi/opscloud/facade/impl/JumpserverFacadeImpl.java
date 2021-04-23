@@ -151,7 +151,7 @@ public class JumpserverFacadeImpl implements JumpserverFacade {
 
     @Override
     public DataTable<JumpserverAssetsAssetVO.AssetsAsset> fuzzyQueryAssetPage(AssetsAssetPageParam.PageQuery pageQuery) {
-        DataTable<AssetsAsset> table = assetsAssetService.fuzzyQueryAssetsAssetPage(pageQuery);
+        DataTable<AssetsAsset> table = assetsAssetService.queryAssetsAssetPage(pageQuery);
         List<JumpserverAssetsAssetVO.AssetsAsset> page = BeanCopierUtils.copyListProperties(table.getData(), JumpserverAssetsAssetVO.AssetsAsset.class);
         return new DataTable<>(page, table.getTotalNum());
     }

@@ -26,7 +26,7 @@ public class OcKubernetesApplicationInstanceServiceImpl implements OcKubernetesA
 
     @Override
     public DataTable<OcKubernetesApplicationInstance> queryOcKubernetesApplicationInstanceByParam(KubernetesApplicationInstanceParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesApplicationInstance> list = ocKubernetesApplicationInstanceMapper.queryOcKubernetesApplicationInstanceByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

@@ -30,4 +30,6 @@ public interface OcUserGroupService {
     List<OcUserGroup> queryOcUserGroupByUserId(int userId);
 
     List<OcUserGroup> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam);
+
+    void deleteOcUserGroupById(int id);
 }

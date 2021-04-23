@@ -24,4 +24,12 @@ public interface OcOrgDepartmentService {
     void updateOcOrgDepartment(OcOrgDepartment ocOrgDepartment);
 
     void deleteOcOrgDepartmentById(int id);
+
+    List<OcOrgDepartment> queryOcOrgDepartmentByIdList(List<Integer> idList);
+
+    DataTable<OcOrgDepartment> queryFirstLevelDepartmentPage(DepartmentParam.PageQuery pageQuery);
+
+    List<OcOrgDepartment> queryOcOrgDepartmentAll();
 }
+
+

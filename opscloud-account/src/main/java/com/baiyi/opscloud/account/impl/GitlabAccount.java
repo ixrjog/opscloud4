@@ -5,6 +5,8 @@ import com.baiyi.opscloud.account.builder.AccountBuilder;
 import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserCredential;
@@ -59,18 +61,19 @@ public class GitlabAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean pushSSHKey(OcUser ocUser) {
+    public BusinessWrapper<Boolean> pushSSHKey(OcUser ocUser) {
         OcUserCredential credential = getOcUserSSHPubKey(ocUser);
-        if (credential == null) return Boolean.FALSE;
+        if (credential == null) return new BusinessWrapper<>(ErrorEnum.USER_CREDENTIAL_NOT_EXIST);
         OcAccount ocAccount = getAccount(ocUser);
         if (ocAccount == null)
-            return false;
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_NOT_EXIST);
         boolean result = gitlabUserCenter.pushKey(ocUser, ocAccount, BeanCopierUtils.copyProperties(credential, UserCredentialVO.UserCredential.class));
         if (result) {
             ocAccount.setSshKey(1);
             ocAccountService.updateOcAccount(ocAccount);
+            return BusinessWrapper.SUCCESS;
         }
-        return result;
+        return new BusinessWrapper<>(ErrorEnum.SYSTEM_ERROR);
     }
 
 
@@ -80,8 +83,11 @@ public class GitlabAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean create(OcUser user) {
-        return gitlabUserCenter.createUser(user, ldapConfig.buildUserDN(user.getUsername())) != null;
+    public BusinessWrapper<Boolean> create(OcUser user) {
+        if (gitlabUserCenter.createUser(user, ldapConfig.buildUserDN(user.getUsername())) != null) {
+            return BusinessWrapper.SUCCESS;
+        }
+        return new BusinessWrapper<>(ErrorEnum.ACCOUNT_CREATE_ERROR);
     }
 
     /**
@@ -90,27 +96,27 @@ public class GitlabAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean delete(OcUser user) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> delete(OcUser user) {
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean update(OcUser user) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> update(OcUser user) {
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean grant(OcUser user, String resource) {
+    public BusinessWrapper<Boolean> grant(OcUser user, String resource) {
         return update(user);
     }
 
     @Override
-    public Boolean revoke(OcUser user, String resource) {
+    public BusinessWrapper<Boolean> revoke(OcUser user, String resource) {
         return update(user);
     }
 
     @Override
-    public Boolean active(OcUser user, boolean active) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> active(OcUser user, boolean active) {
+        return BusinessWrapper.SUCCESS;
     }
 }

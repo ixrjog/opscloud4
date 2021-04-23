@@ -9,7 +9,7 @@ import com.baiyi.opscloud.cloud.ram.builder.AliyunRamPolicyBuilder;
 import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamPolicy;
-import com.baiyi.opscloud.service.ram.OcAliyunRamPolicyService;
+import com.baiyi.opscloud.service.aliyun.ram.OcAliyunRamPolicyService;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;
 

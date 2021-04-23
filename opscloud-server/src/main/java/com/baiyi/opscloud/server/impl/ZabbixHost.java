@@ -1,16 +1,23 @@
 package com.baiyi.opscloud.server.impl;
 
 import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.server.IServer;
+import com.baiyi.opscloud.server.bo.ZabbixEventBO;
+import com.baiyi.opscloud.server.event.handler.ZabbixUpdateHostEventHandler;
 import com.baiyi.opscloud.server.utils.ZabbixUtils;
+import com.baiyi.opscloud.zabbix.api.HostAPI;
+import com.baiyi.opscloud.zabbix.builder.ZabbixDefaultParamBuilder;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostgroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixProxy;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHandler;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestParamsIds;
+import com.baiyi.opscloud.zabbix.http.ZabbixBaseRequest;
+import com.baiyi.opscloud.zabbix.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.param.ZabbixDefaultParam;
+import com.baiyi.opscloud.zabbix.param.ZabbixRequestParams;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixIdsMapper;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostServer;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostgroupServer;
@@ -52,54 +59,71 @@ public class ZabbixHost extends BaseServer implements IServer {
     @Resource
     private ZabbixHostgroupServer zabbixHostgroupServer;
 
+    @Resource
+    private ZabbixUpdateHostEventHandler zabbixUpdateHostEventHandler;
+
     @Override
     public void sync() {
     }
 
     @Override
-    public Boolean create(OcServer ocServer) {
+    public BusinessWrapper<Boolean> create(OcServer ocServer) {
+        String mgmtIp = getManageIp(ocServer);
+        com.baiyi.opscloud.zabbix.entry.ZabbixHost host = zabbixHostServer.getHost(mgmtIp);
+        if (!host.isEmpty())
+            return update(host, ocServer);
+        else
+            zabbixHostServer.evictHost(mgmtIp);
         ZabbixHostgroup zabbixHostgroup = zabbixHostgroupServer.createHostgroup(getServerGroupName(ocServer));
-        if (zabbixHostgroup == null) return Boolean.FALSE;
+        if (zabbixHostgroup == null) return new BusinessWrapper<>(ErrorEnum.ZABBIX_HOSTGROUP_NOT_EXIST);
         Map<String, String> serverAttributeMap = getServerAttributeMap(ocServer);
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("host.create")
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(HostAPI.CREATE)
                 .paramEntry("host", getHostname(ocServer))
                 .paramEntry("interfaces", ZabbixUtils.buildInterfacesParameter(getManageIp(ocServer)))
                 .paramEntry("groups", ZabbixUtils.buildGroupsParameter(zabbixHostgroup))
                 .paramEntry("templates", buildTemplatesParameter(serverAttributeMap))
+                .paramEntry("tags", buildTagsParameter(ocServer))
                 .paramEntrySkipEmpty("macros", ZabbixUtils.buildMacrosParameter(serverAttributeMap))
                 .paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
                 .build();
+        JsonNode jsonNode = null;
         try {
-            JsonNode jsonNode = zabbixHandler.api(request);
+            jsonNode = zabbixHandler.api(request);
             String hostid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("hostids")).get(0);
-            if (!StringUtils.isEmpty(hostid))
-                return Boolean.TRUE;
+            if (!StringUtils.isEmpty(hostid)) {
+                ocServer.setMonitorStatus(0);
+                updateOcServer(ocServer);
+                // 禁用主机监控
+                disable(ocServer);
+                return BusinessWrapper.SUCCESS;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Boolean.FALSE;
+        return zabbixServer.result(jsonNode);
     }
 
     @Override
-    public Boolean remove(OcServer ocServer) {
-        if (ocServer == null) return Boolean.FALSE;
+    public BusinessWrapper<Boolean> remove(OcServer ocServer) {
+        if (ocServer == null) return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
         com.baiyi.opscloud.zabbix.entry.ZabbixHost host = zabbixHostServer.getHost(getManageIp(ocServer));
-        if (host == null) return Boolean.TRUE;
-        String[] hostids = new String[]{host.getHostid()};
-        ZabbixRequestParamsIds request = new ZabbixRequestParamsIds();
-        request.setMethod("host.delete");
-        request.setId(1);
-        request.setParams(hostids);
+        if (host.isEmpty()) return BusinessWrapper.SUCCESS;
+        ZabbixRequestParams request = ZabbixRequestParams.builder()
+                .method(HostAPI.DELETE.getMethod())
+                .params(new String[]{host.getHostid()})
+                .build();
+
+        JsonNode jsonNode = null;
         try {
-            JsonNode jsonNode = zabbixHandler.api(request);
+            jsonNode = zabbixHandler.api(request);
             String hostid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("hostids")).get(0);
             if (!StringUtils.isEmpty(hostid))
-                return Boolean.TRUE;
+                return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("remove fail", e);
         }
-        return Boolean.FALSE;
+        return zabbixServer.result(jsonNode);
     }
 
     private String getProxyhostid(Map<String, String> serverAttributeMap) {
@@ -117,42 +141,47 @@ public class ZabbixHost extends BaseServer implements IServer {
     private List<Map<String, Object>> buildTemplatesParameter(Map<String, String> serverAttributeMap) {
         List<Map<String, Object>> templates = Lists.newArrayList();
         Map<String, String> templateMap = getTemplateMap(serverAttributeMap);
-        for (String templateName : templateMap.keySet()) {
+        templateMap.keySet().forEach(templateName -> {
             Map<String, Object> map = Maps.newHashMap();
             map.put("templateid", templateMap.get(templateName));
             templates.add(map);
-        }
+        });
         return templates;
+    }
+
+    public List<ZabbixDefaultParam> buildTagsParameter(OcServer ocServer) {
+        return Lists.newArrayList(ZabbixDefaultParamBuilder.newBuilder()
+                .putEntry("tag", "env")
+                .putEntry("value", acqEnvName(ocServer))
+                .build());
     }
 
     /**
      * @param serverAttributeMap
      * @return templateName, templateid
      */
-    private Map<String, String> getTemplateMap(Map<String, String> serverAttributeMap) {
-        Map<String, String> map = Maps.newHashMap();
+    public Map<String, String> getTemplateMap(Map<String, String> serverAttributeMap) {
+        Map<String, String> templateMap = Maps.newHashMap();
         if (!serverAttributeMap.containsKey(Global.SERVER_ATTRIBUTE_ZABBIX_TEMPLATES))
-            return map;
+            return templateMap;
         String templatesOpt = serverAttributeMap.get(Global.SERVER_ATTRIBUTE_ZABBIX_TEMPLATES);
         if (StringUtils.isEmpty(templatesOpt))
-            return map;
-        List<String> templateNameList = Splitter.on(",").splitToList(templatesOpt);
-        for (String templateName : templateNameList) {
-            ZabbixTemplate zabbixTemplate = zabbixServer.getTemplate(templateName);
+            return templateMap;
+        Splitter.on(",").splitToList(templatesOpt).forEach(t -> {
+            ZabbixTemplate zabbixTemplate = zabbixServer.getTemplate(t);
             if (zabbixTemplate != null)
-                map.put(templateName, zabbixTemplate.getTemplateid());
-        }
-        return map;
+                templateMap.put(t, zabbixTemplate.getTemplateid());
+        });
+        return templateMap;
     }
 
-
     @Override
-    public Boolean disable(OcServer ocServer) {
+    public BusinessWrapper<Boolean> disable(OcServer ocServer) {
         return updateHostStatus(ocServer, HOST_STATUS_DISABLE);
     }
 
     @Override
-    public Boolean enable(OcServer ocServer) {
+    public BusinessWrapper<Boolean> enable(OcServer ocServer) {
         return updateHostStatus(ocServer, HOST_STATUS_ENABLE);
     }
 
@@ -163,11 +192,17 @@ public class ZabbixHost extends BaseServer implements IServer {
      * @param status
      * @return
      */
-    private Boolean updateHostStatus(OcServer ocServer, int status) {
+    private BusinessWrapper<Boolean> updateHostStatus(OcServer ocServer, int status) {
         com.baiyi.opscloud.zabbix.entry.ZabbixHost host = zabbixHostServer.getHost(getManageIp(ocServer));
         // 主机不存在
-        if (host == null) return Boolean.TRUE;
-        return zabbixHostServer.updateHostStatus(host.getHostid(), status);
+        if (host.isEmpty()) return BusinessWrapper.SUCCESS;
+        BusinessWrapper<Boolean> wrapper = zabbixHostServer.updateHostStatus(host.getHostid(), status);
+        if (wrapper.isSuccess()) {
+            // 更新监控状态
+            ocServer.setMonitorStatus(status);
+            updateOcServer(ocServer);
+        }
+        return wrapper;
     }
 
     /**
@@ -177,80 +212,31 @@ public class ZabbixHost extends BaseServer implements IServer {
      * @param hostname
      * @return
      */
-    private Boolean updateHostName(com.baiyi.opscloud.zabbix.entry.ZabbixHost host, String hostname) {
+    private BusinessWrapper<Boolean> updateHostName(com.baiyi.opscloud.zabbix.entry.ZabbixHost host, String hostname) {
         // 主机不存在
-        if (host == null) return Boolean.FALSE;
+        if (StringUtils.isEmpty(host.getHostid()))
+            return new BusinessWrapper<>(ErrorEnum.ZABBIX_HOST_NOT_EXIST);
         if (host.getHost().equals(hostname))
-            return Boolean.TRUE;
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("host.update")
+            return BusinessWrapper.SUCCESS;
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(HostAPI.UPDATE)
                 .paramEntry("hostid", host.getHostid())
                 .paramEntry("host", hostname)
                 .build();
+        JsonNode jsonNode = null;
         try {
-            JsonNode jsonNode = zabbixHandler.api(request);
+            jsonNode = zabbixHandler.api(request);
             String hostid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("hostids")).get(0);
             if (!StringUtils.isEmpty(hostid))
-                return Boolean.TRUE;
+                return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
-            e.printStackTrace();
+            log.error("updateHostName fail", e);
         }
-        return Boolean.FALSE;
+        return zabbixServer.result(jsonNode);
     }
 
-    /**
-     * 更新host 模版
-     *
-     * @param host
-     * @param serverAttributeMap
-     */
-    public void updateHostTemplates(com.baiyi.opscloud.zabbix.entry.ZabbixHost host, Map<String, String> serverAttributeMap) {
-        // 当前host链接的模版
-        List<ZabbixTemplate> templates = zabbixHostServer.getHostTemplates(host.getHostid());
-        if (!serverAttributeMap.containsKey(Global.SERVER_ATTRIBUTE_ZABBIX_TEMPLATES))
-            return;
-        // 配置的模版
-        Map<String, String> templateMap = getTemplateMap(serverAttributeMap);
-        // 合并的模版(主机当前的模版+服务器配置的模版集合)
-        Map<String, String> mergeTemplateMap = getMergeTemplate(templates, templateMap);
-        // 更新模版（追加）
-        zabbixHostServer.updateHostTemplates(host.getHostid(), mergeTemplateMap);
-
-        if (!serverAttributeMap.containsKey(Global.SERVER_ATTRIBUTE_ZABBIX_BIDIRECTIONAL_SYNC))
-            return;
-        String isBidirectionalSync = serverAttributeMap.get(Global.SERVER_ATTRIBUTE_ZABBIX_BIDIRECTIONAL_SYNC);
-        // 不执行清理模版
-        if (!isBidirectionalSync.equalsIgnoreCase("true"))
-            return;
-        // 清理模版
-        zabbixHostServer.clearHostTemplates(host.getHostid(), getClearTemplate(templates, mergeTemplateMap));
-    }
-
-    private Map<String, String> getClearTemplate(List<ZabbixTemplate> templates, Map<String, String> mergeTemplateMap) {
-        Map<String, String> map = Maps.newHashMap(mergeTemplateMap);
-        for (ZabbixTemplate template : templates)
-            map.put(template.getName(), template.getTemplateid());
-        return map;
-    }
-
-    /**
-     * 合并模版
-     *
-     * @param templates
-     * @param templateMap
-     * @return
-     */
-    private Map<String, String> getMergeTemplate(List<ZabbixTemplate> templates, Map<String, String> templateMap) {
-        Map<String, String> map = Maps.newHashMap(templateMap);
-        for (ZabbixTemplate template : templates)
-            map.put(template.getName(), template.getTemplateid());
-        return map;
-    }
-
-    @Override
-    public Boolean update(OcServer ocServer) {
-        com.baiyi.opscloud.zabbix.entry.ZabbixHost host = zabbixHostServer.getHost(getManageIp(ocServer));
-        if (host == null) {
+    private BusinessWrapper<Boolean> update(com.baiyi.opscloud.zabbix.entry.ZabbixHost host, OcServer ocServer) {
+        if (StringUtils.isEmpty(host.getHostid())) {
             return create(ocServer);
         } else {
             // 更新主机名
@@ -258,9 +244,17 @@ public class ZabbixHost extends BaseServer implements IServer {
             if (!hostname.equals(host.getHost()))
                 updateHostName(host, hostname);
         }
-        // 更新模版
-        updateHostTemplates(host, getServerAttributeMap(ocServer));
-        return Boolean.TRUE;
+        ZabbixEventBO.HostUpdate hostUpdate = ZabbixEventBO.HostUpdate.builder()
+                .host(host)
+                .ocServer(ocServer)
+                .build();
+        zabbixUpdateHostEventHandler.eventPost(hostUpdate);
+        return BusinessWrapper.SUCCESS;
+    }
+
+    @Override
+    public BusinessWrapper<Boolean> update(OcServer ocServer) {
+        return update(zabbixHostServer.getHost(getManageIp(ocServer)), ocServer);
     }
 
 

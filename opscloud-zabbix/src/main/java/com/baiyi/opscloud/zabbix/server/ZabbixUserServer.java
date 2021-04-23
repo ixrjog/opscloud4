@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.zabbix.server;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostgroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserMedia;
@@ -18,13 +19,17 @@ public interface ZabbixUserServer {
 
     ZabbixUser getUser(String username);
 
+    BusinessWrapper getUserUsrgrps(String username);
+
+    BusinessWrapper getUserMedias(String username);
+
     List<ZabbixUser> getAllZabbixUser();
 
-    Boolean createUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps);
+    BusinessWrapper<Boolean> createUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps);
 
-    Boolean updateUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps);
+    BusinessWrapper<Boolean> updateUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps);
 
-    Boolean deleteUser(String username);
+    BusinessWrapper<Boolean> deleteUser(String username);
 
     ZabbixUsergroup getUsergroup(String usergroup);
 
@@ -36,4 +41,6 @@ public interface ZabbixUserServer {
      * @return
      */
     ZabbixUsergroup createUsergroup(String usergroupName, ZabbixHostgroup zabbixHostgroup);
+
+    ZabbixUsergroup updateUsergroup(String usergroupName, ZabbixHostgroup zabbixHostgroup);
 }

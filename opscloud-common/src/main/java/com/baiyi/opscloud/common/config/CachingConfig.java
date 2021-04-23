@@ -23,6 +23,7 @@ import java.util.Set;
 
 /**
  * redis配置类
+ *
  * @Author baiyi
  * @Date 2020/1/13 2:31 下午
  * @Version 1.0
@@ -32,10 +33,18 @@ import java.util.Set;
 public class CachingConfig extends CachingConfigurerSupport {
 
     public static final String CACHE_NAME_ANSIBLE_CACHE_REPO = "ansibleCacheRepo";
-
-    public static final String CACHE_NAME_ATTRIBUTE_CACHE_REPO =  "attributeCacheRepo";
-
+    public static final String CACHE_NAME_ATTRIBUTE_CACHE_REPO = "attributeCacheRepo";
     public static final String CACHE_NAME_SETTING_CACHE_REPO = "settingCacheRepo";
+    public static final String CACHE_NAME_DASHBOARD_CACHE_REPO = "dashboardCacheRepo";
+    public static final String CACHE_NAME_COMMON_BY_DAY = "commonByDays";
+    public static final String CACHE_NAME_DINGTALK_API_TOKEN = "dingtalkApiToken";
+    public static final String CACHE_NAME_API_TOKEN = "ApiToken";
+
+
+    public static final String CACHE_NAME_ZABBIX_REPO = "ZABBIX_CACHE_PEPO";
+
+    public static final String CACHE_NAME_ENV_PEPO = "ENV_PEPO";
+
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
@@ -47,6 +56,12 @@ public class CachingConfig extends CachingConfigurerSupport {
         cacheNames.add(CACHE_NAME_ANSIBLE_CACHE_REPO);
         cacheNames.add(CACHE_NAME_ATTRIBUTE_CACHE_REPO);
         cacheNames.add(CACHE_NAME_SETTING_CACHE_REPO);
+        cacheNames.add(CACHE_NAME_DASHBOARD_CACHE_REPO);
+        cacheNames.add(CACHE_NAME_COMMON_BY_DAY);
+        cacheNames.add(CACHE_NAME_ZABBIX_REPO);
+        cacheNames.add(CACHE_NAME_DINGTALK_API_TOKEN);
+        cacheNames.add(CACHE_NAME_API_TOKEN);
+        cacheNames.add(CACHE_NAME_ENV_PEPO);
         // 使用自定义的缓存配置初始化一个cacheManager
         RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -55,7 +70,7 @@ public class CachingConfig extends CachingConfigurerSupport {
         return cacheManager;
     }
 
-    private Map<String, RedisCacheConfiguration> getConfigMap(){
+    private Map<String, RedisCacheConfiguration> getConfigMap() {
         Map<String, RedisCacheConfiguration> configMap = new HashMap<>();
         RedisCacheConfiguration config = RedisCacheConfiguration.defaultCacheConfig();
         // 设置缓存的默认过期时间，也是使用Duration设置
@@ -68,12 +83,20 @@ public class CachingConfig extends CachingConfigurerSupport {
         configMap.put(CACHE_NAME_ANSIBLE_CACHE_REPO, config.entryTtl(Duration.ofDays(7)));
         configMap.put(CACHE_NAME_ATTRIBUTE_CACHE_REPO, config.entryTtl(Duration.ofDays(7)));
         configMap.put(CACHE_NAME_SETTING_CACHE_REPO, config.entryTtl(Duration.ofMinutes(10)));
+        configMap.put(CACHE_NAME_DASHBOARD_CACHE_REPO, config.entryTtl(Duration.ofMinutes(1)));
+        configMap.put(CACHE_NAME_COMMON_BY_DAY, config.entryTtl(Duration.ofDays(30)));
+        configMap.put(CACHE_NAME_ZABBIX_REPO, config.entryTtl(Duration.ofMinutes(120)));
+        configMap.put(CACHE_NAME_DINGTALK_API_TOKEN, config.entryTtl(Duration.ofHours(2)));
+        configMap.put(CACHE_NAME_API_TOKEN, config.entryTtl(Duration.ofHours(2)));
+        configMap.put(CACHE_NAME_ENV_PEPO, config.entryTtl(Duration.ofMinutes(10)));
         return configMap;
     }
 
     // ---------------自定义配置项---------------
+
     /**
      * retemplate相关配置
+     *
      * @param factory
      * @return
      */

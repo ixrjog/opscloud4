@@ -9,21 +9,36 @@ package com.baiyi.opscloud.common.base;
  */
 public enum CloudServerType {
 
-    PS(0),
-    VM(1),
-    ECS(2),
-    EC2(3),
-    CVM(4),
-    ESXI(5),
-    ZH(6);
+    PS(0, "PS"),
+    VM(1, "VM"),
+    ECS(2, "ECS"),
+    EC2(3, "EC2"),
+    CVM(4, "CVM"),
+    ESXI(5, "ESXI"),
+    ZH(6, "ZH");
 
     private int type;
+    private String name;
 
-    CloudServerType(int type) {
+    CloudServerType(int type, String name) {
         this.type = type;
+        this.name = name;
     }
 
     public int getType() {
         return this.type;
     }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public static String getName(int type) {
+        for (CloudServerType cloudServerType : CloudServerType.values())
+            if (cloudServerType.getType() == type)
+                return cloudServerType.getName();
+        return "Null";
+    }
 }
+
+

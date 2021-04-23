@@ -39,6 +39,7 @@ public interface ITicketSubscribe {
 
     /**
      * 当前步骤用户是否可审批
+     *
      * @param ocUser
      * @param ticket
      * @return
@@ -47,4 +48,5 @@ public interface ITicketSubscribe {
 
     List<OcWorkorderTicketSubscribe> queryTicketSubscribes(WorkorderTicketVO.Ticket ticket);
 
+    void sendTicketFlowMsg(OcWorkorderTicket ocWorkorderTicket);
 }

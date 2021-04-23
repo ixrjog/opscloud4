@@ -35,7 +35,7 @@ public class OcKeyboxServiceImpl implements OcKeyboxService {
 
     @Override
     public DataTable<OcKeybox> queryOcKeyboxByParam(KeyboxParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKeybox> list = ocKeyboxMapper.queryOcKeyboxByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

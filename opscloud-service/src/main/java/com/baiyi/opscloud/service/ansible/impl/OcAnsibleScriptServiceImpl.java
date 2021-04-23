@@ -25,7 +25,7 @@ public class OcAnsibleScriptServiceImpl implements OcAnsibleScriptService {
 
     @Override
     public DataTable<OcAnsibleScript> queryOcAnsibleScriptByParam(AnsibleScriptParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcAnsibleScript> ocAnsibleScriptList = ocAnsibleScriptMapper.queryOcAnsibleScriptByParam(pageQuery);
         return new DataTable<>(ocAnsibleScriptList, page.getTotal());
     }

@@ -16,7 +16,7 @@
     </resultMap>
 
     <select id="queryOcAliyunLogByParam"
-            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunLogParam$PageQuery"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunLogParam$AliyunLogPageQuery"
             resultMap="BaseResultMap">
         select * from oc_aliyun_log
         <where>

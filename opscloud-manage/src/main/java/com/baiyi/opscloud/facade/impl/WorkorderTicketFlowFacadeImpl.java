@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
-import com.baiyi.opscloud.bo.WorkorderTicketFlowBO;
+import com.baiyi.opscloud.bo.workorder.WorkorderTicketFlowBO;
 import com.baiyi.opscloud.common.base.TicketPhase;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
@@ -46,7 +46,7 @@ public class WorkorderTicketFlowFacadeImpl implements WorkorderTicketFlowFacade 
                 .comment("提交申请")
                 .build();
         int flowParentId = saveWorkorderTicketFlow(workorderTicketFlowBO).getId();
-        ocWorkorderTicket.setFlowId(flowParentId );
+        ocWorkorderTicket.setFlowId(flowParentId);
         ocWorkorderTicket.setStartTime(new Date());
         ocWorkorderTicketService.updateOcWorkorderTicket(ocWorkorderTicket);
         // 订阅用户发布消息
@@ -55,14 +55,14 @@ public class WorkorderTicketFlowFacadeImpl implements WorkorderTicketFlowFacade 
         // 判断是否需要上级审批
         OcWorkorder ocWorkorder = getOcWorkorderById(ocWorkorderTicket.getWorkorderId());
         if (ocWorkorder.getOrgApproval()) {
-            WorkorderTicketFlowBO workorderTicketFlowByOrgAppoval = WorkorderTicketFlowBO.builder()
+            WorkorderTicketFlowBO workorderTicketFlowByOrgApproval = WorkorderTicketFlowBO.builder()
                     .ticketId(ocWorkorderTicket.getId())
                     .flowName(TicketPhase.ORG_APPROVAL.getPhase())
                     .comment("上级审批")
                     .approvalType(0) // org审批
                     .flowParentId(flowParentId)
                     .build();
-            OcWorkorderTicketFlow ocWorkorderTicketFlow = saveWorkorderTicketFlow(workorderTicketFlowByOrgAppoval);
+            OcWorkorderTicketFlow ocWorkorderTicketFlow = saveWorkorderTicketFlow(workorderTicketFlowByOrgApproval);
 
             flowParentId = ocWorkorderTicketFlow.getId();
             // 订阅用户发布消息
@@ -80,7 +80,7 @@ public class WorkorderTicketFlowFacadeImpl implements WorkorderTicketFlowFacade 
                     .flowParentId(flowParentId)
                     .build();
             OcWorkorderTicketFlow ocWorkorderTicketFlow = saveWorkorderTicketFlow(workorderTicketFlowByApprovalGroup);
-            flowParentId =ocWorkorderTicketFlow.getId();
+            flowParentId = ocWorkorderTicketFlow.getId();
             // 订阅用户发布消息
             WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(TicketPhase.USERGROUP_APPROVAL.getPhase()).subscribe(ocWorkorderTicket);
         }
@@ -102,5 +102,12 @@ public class WorkorderTicketFlowFacadeImpl implements WorkorderTicketFlowFacade 
         return ocWorkorderTicketFlow;
     }
 
+    @Override
+    public void sendTicketFlowMsg(OcWorkorderTicket ocWorkorderTicket, String ticketPhase) {
+        try {
+            WorkorderTicketSubscribeFactory.getTicketSubscribeByKey(ticketPhase).sendTicketFlowMsg(ocWorkorderTicket);
+        } catch (Exception ignored) {
+        }
 
+    }
 }

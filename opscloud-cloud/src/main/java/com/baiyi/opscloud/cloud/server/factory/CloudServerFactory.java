@@ -26,5 +26,4 @@ public class CloudServerFactory {
         return context;
     }
 
-
 }

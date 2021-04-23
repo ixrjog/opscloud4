@@ -8,7 +8,9 @@ public enum AccountType {
     JUMPSEVER(2),
     RAM(3),
     IAM(4),
-    GITLAB(5);
+    GITLAB(5),
+    DINGTALK(6),
+    ;
 
     private int type;
 

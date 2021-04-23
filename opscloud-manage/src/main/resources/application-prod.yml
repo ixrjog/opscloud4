@@ -12,14 +12,34 @@ white:
 opscloud:
   version: 3.0
   openTask: true
+  dataPath: /data/opscloud-data
 
 spring:
   profiles:
-    include: common,account-prod,zabbix-prod,ldap-prod,jumpserver-prod,aliyun-prod,aws-prod,gitlab-prod,vcsa-prod,cloud,ansible-prod,xterm-prod,tencent-cloud-prod,kubernetes-prod
+    include:
+      - common
+      - account-prod
+      - zabbix-prod
+      - ldap-prod
+      - jumpserver-prod
+      - aliyun-prod
+      - aws-prod
+      - gitlab-prod
+      - vcsa-prod
+      - cloud
+      - ansible-prod
+      - xterm-prod
+      - tencent-cloud-prod
+      - kubernetes-prod
+      - zookeeper-prod
+      - dingtalk
+      - tencent-exmail
+      - kafka
+      - prometheus-prod
   redis:
-    host: ENC(sBuaHDKOePEPRK1vHNSljfdIJ/74yA0UdxZSwHcV1v4JO72BD25l7McR88uLE6RcZPiZFhjh4Qg=)
+    host: r-bp1ijbborejdw6dabu.redis.rds.aliyuncs.com
     port: 6379
-    password: ENC(9UKYRdhJ4j1RUBbuiJJRwefDjwWmgjvrMI1h+xYZvvA=)
+    password: ENC(+zzFh8CDFStHNzjXwnFIYzpxC/fYXmPdR/sCbNf6MYNQI9aS+mbhvw==)
     jedis:
       pool:
         max-wait: 5000
@@ -32,18 +52,18 @@ spring:
 app:
   datasource:
     opscloud:
-      url: ENC(iamzmQ8yCfJWaY7BcNdHzxGNHPXtIgFkJeglE5yellgs6hfQoqRJMo57zf6+LlBzrgLlPSC0Oidt6HNRHeE/MTMcOaT+uDq8T+7pUk+Tx6CMEAkQHiWozs9kkC2rlm1idCxVADnRNmPlLp4a3eh/puZXu1YwORPVNETO5QQUpPfR1Qjn4t1ycVs3GM7K3sQC3dmwdZwbnbCOV4/OCQ4/FGHNlpu8MLsQSuoDGJ3H1EN8+U713PgFZ6OiXLGTzvi/sh6EWszLx9j87oMmzM9g6MkZ9tAmkdsE8iJNnZO3nAfFfuv9YZoG+iilAKFuvmVPQ9/aJNSAQ2fQU285JIyBH411oHZ8bdVNL268W+2Y+LcN0m0V9fTuoIHlcXU0OzQh)
+      url: jdbc:mysql://rm-bp14453fwr49f19cu90130.mysql.rds.aliyuncs.com:3306/opscloud?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=CTT&allowMultiQueries=true
       username: opscloud
-      password: ENC(8CG4i1d2w9NYgzXh2hMXTEzm4fBU72ghDnh5yqivkek=)
-      driver-class-name: com.mysql.jdbc.Driver
+      password: ENC(iIV1/um6roLAuWSGQ1XCabwNgmFJw/m/BOXiie0Isw0=)
+      driver-class-name: com.mysql.cj.jdbc.Driver
       minimum-idle: 3
       maximum-pool-size: 15
       max-lifetime: 30000
       connection-test-query: SELECT 1
     jumpserver:
-      url: ENC(wNNUE2AqQuc+h2dUbo/iBOs/m2Ceg+ZeILvXaCsOHbGhyykkkXpDFZK5i48qTWbGM5UFJnyG8lUpeYIX5Gs3FvbXst8WuufL+cOVKdwWuL5aLXO16Wo4oQjn7QUNdB6rfsuAmQbuYFxiHAzVlpdrCmVgv7GYaW8EZA0MIUADmbR3zL4XsioHVfdLmEP8yEZB)
-      username: jumpserver201
-      password: ENC(B9F0hFLitEYDB3gUxgDf2I1/XzAb1ZynjiIo5cvoso0=)
+      url: jdbc:mysql://online-dba-metadata.mysql.rds.aliyuncs.com:3331/jumpserver_v231?useUnicode=true&characterEncoding=utf8&autoReconnect=true
+      username: jumpserver
+      password: ENC(LKNGtht2Vm0b5cyVP6+BYHl1RzzOdsJ8wTQFT29Ow0U=)
       driver-class-name: com.mysql.cj.jdbc.Driver
       minimum-idle: 3
       maximum-pool-size: 15

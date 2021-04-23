@@ -3,11 +3,14 @@ package com.baiyi.opscloud.server;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.facade.ServerBaseFacade;
 import com.baiyi.opscloud.facade.ServerFacade;
 import com.baiyi.opscloud.server.factory.ServerFactory;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import org.junit.jupiter.api.Test;
 
@@ -24,15 +27,56 @@ public class ServerTest extends BaseUnit {
     @Resource
     private OcServerService ocServerService;
 
+
+    @Resource
+    private OcCloudServerService ocCloudServerService;
+
     @Resource
     private ServerFacade serverFacade;
 
+
     @Test
-    void testJumpserverAssetSync() {
-      IServer iServer = ServerFactory.getIServerByKey("JumpserverAsset");
-      iServer.sync();
+    void updateCloudServerNameTest() {
+        for (OcServer s : ocServerService.queryAllOcServer()) {
+            OcCloudServer cloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(s.getServerType(), s.getId());
+            if (cloudServer == null) continue;
+            String serverName = ServerBaseFacade.acqServerName(s);
+            if (!serverName.equals(cloudServer.getServerName())) {
+                System.out.println("原名称 = " + cloudServer.getServerName() + " ; 新名称 = " + serverName);
+                cloudServer.setServerName(serverName);
+                ocCloudServerService.updateOcCloudServer(cloudServer);
+            }
+        }
     }
 
+    @Test
+    void updateCloudServerNameTest2() {
+        OcServer ocServer = ocServerService.queryOcServerByPrivateIp("172.16.202.153");
+        OcCloudServer cloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(ocServer.getServerType(), ocServer.getId());
+        if (cloudServer == null) return;
+        String serverName = ServerBaseFacade.acqServerName(ocServer);
+        if (!serverName.equals(cloudServer.getServerName())) {
+            System.err.println("原名称 = " + cloudServer.getServerName() + " ; 新名称 = " + serverName);
+            cloudServer.setServerName(serverName);
+            ocCloudServerService.updateOcCloudServer(cloudServer);
+        }
+    }
+    
+    @Test
+    void testJumpserverAssetSync() {
+        IServer iServer = ServerFactory.getIServerByKey("JumpserverAsset");
+        iServer.sync();
+    }
+
+
+    @Test
+    void testZabbixUpdate() {
+        IServer iServer = ServerFactory.getIServerByKey("ZabbixHost");
+        List<OcServer> ocServerList = ocServerService.queryAllOcServer();
+        ocServerList.forEach(ocServer -> iServer.update(ocServer));
+//        OcServer ocServer = ocServerService.queryOcServerByIp("172.16.2.222");
+//        iServer.update(ocServer);
+    }
 
     @Test
     void test() {

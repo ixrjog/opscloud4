@@ -3,6 +3,7 @@ package com.baiyi.opscloud.cloud.server;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.cloud.server.factory.CloudServerFactory;
 import com.baiyi.opscloud.tencent.cloud.cvm.handler.TencentCloudCVMHandler;
+import com.baiyi.opscloud.tencent.cloud.cvm.instance.CVMInstance;
 import com.tencentcloudapi.cvm.v20170312.models.Instance;
 import org.junit.jupiter.api.Test;
 
@@ -27,7 +28,7 @@ public class TencentCVMCloudServerTest extends BaseUnit {
 
     @Test
     void testGetInstanceList() {
-        List<Instance> list= tencentCloudCVMHandler.getInstanceList();
+        List<CVMInstance> list= tencentCloudCVMHandler.getInstanceList();
         System.err.println(list);
     }
     @Test

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcInstanceMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcInstance">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="hostname" jdbcType="VARCHAR" property="hostname"/>
+        <result column="host_ip" jdbcType="VARCHAR" property="hostIp"/>
+        <result column="instance_status" jdbcType="INTEGER" property="instanceStatus"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="comment" jdbcType="VARCHAR" property="comment"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcInstanceByParam"
+            parameterType="com.baiyi.opscloud.domain.param.opscloud.OpscloudInstanceParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_instance
+    </select>
+</mapper>

@@ -8,6 +8,6 @@ import java.util.List;
 
 public interface AssetsAssetMapper extends Mapper<AssetsAsset> {
 
-    List<AssetsAsset> fuzzyQueryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery);
+    List<AssetsAsset> queryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery);
 
 }

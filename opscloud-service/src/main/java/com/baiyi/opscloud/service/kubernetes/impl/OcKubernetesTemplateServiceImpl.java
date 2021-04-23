@@ -26,7 +26,7 @@ public class OcKubernetesTemplateServiceImpl implements OcKubernetesTemplateServ
 
     @Override
     public DataTable<OcKubernetesTemplate> queryOcKubernetesTemplateByParam(KubernetesTemplateParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesTemplate> list = ocKubernetesTemplateMapper.queryKubernetesTemplateByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

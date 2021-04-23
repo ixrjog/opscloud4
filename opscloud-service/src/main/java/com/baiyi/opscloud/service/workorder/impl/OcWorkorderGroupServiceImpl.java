@@ -25,7 +25,7 @@ public class OcWorkorderGroupServiceImpl implements OcWorkorderGroupService {
 
     @Override
     public DataTable<OcWorkorderGroup> queryOcWorkorderGroupByParam(WorkorderGroupParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcWorkorderGroup> list = ocWorkorderGroupMapper.queryOcWorkorderGroupByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

@@ -25,5 +25,7 @@ public interface OcWorkorderTicketService {
 
     DataTable<OcWorkorderTicket> queryMyOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicketPage pageQuery);
 
+    DataTable<OcWorkorderTicket>  queryMyFinalizedOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyFinalizedTicketPage queryPage);
+
     DataTable<OcWorkorderTicket> queryOcWorkorderTicketByParam(WorkorderTicketParam.QueryTicketPage pageQuery);
 }

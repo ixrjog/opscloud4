@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
@@ -60,5 +61,9 @@ public interface ServerGroupFacade {
     ServerTreeVO.MyServerTree queryUserServerTree(UserServerTreeParam.UserServerTreeQuery userServerTreeQuery, OcUser ocUser);
 
     BusinessWrapper<Map<String, String>> getServerTreeHostPatternMap(String uuid, OcUser ocUser);
+
+    BusinessWrapper<Map<String, List<OcServer>>> queryServerGroupHostPattern(ServerGroupParam.ServerGroupHostPatternQuery query);
+
+    BusinessWrapper<Map<String, List<OcServer>>> queryServerGroupEnvHostPattern(ServerGroupParam.ServerGroupEnvHostPatternQuery query);
 
 }

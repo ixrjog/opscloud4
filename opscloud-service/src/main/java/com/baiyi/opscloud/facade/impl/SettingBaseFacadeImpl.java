@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcSetting;
 import com.baiyi.opscloud.domain.param.setting.SettingParam;
 import com.baiyi.opscloud.facade.SettingBaseFacade;
-import com.baiyi.opscloud.service.oc.OcSettingService;
+import com.baiyi.opscloud.service.opscloud.OcSettingService;
 import com.google.common.collect.Maps;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;

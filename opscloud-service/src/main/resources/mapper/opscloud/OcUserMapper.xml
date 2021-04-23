@@ -45,7 +45,7 @@
         select * from oc_user
         <where>
             <if test="queryName != null and queryName != ''">
-               ( username like "%" #{queryName} "%"
+                ( username like "%" #{queryName} "%"
                 or name like "%" #{queryName} "%"
                 or display_name like "%" #{queryName} "%"
                 or email like "%" #{queryName} "%"
@@ -90,6 +90,14 @@
     <select id="queryOcUserByUserGroupId" resultMap="BaseResultMap">
         select * from oc_user
            where id in ( select user_id from oc_user_permission where business_type = 4 and business_id = #{userGroupId} )
+    </select>
+
+    <select id="queryOcUserByIdList" resultMap="BaseResultMap">
+        select * from oc_user
+        where id in
+        <foreach close=")" collection="userIdList" item="id" open="(" separator=",">
+            #{id}
+        </foreach>
     </select>
 
 

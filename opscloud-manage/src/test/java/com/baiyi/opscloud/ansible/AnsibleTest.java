@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.impl.AttributeFacadeImpl;
-import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
+import com.baiyi.opscloud.factory.attribute.impl.AnsibleAttribute;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Sets;
@@ -30,7 +30,7 @@ public class AnsibleTest extends BaseUnit {
     private AnsibleExecutorHandler ansibleExecutor;
 
     @Resource
-    private AttributeAnsible attributeAnsible;
+    private AnsibleAttribute ansibleAttribute;
 
     @Resource
     private OcServerGroupService ocServerGroupService;
@@ -81,12 +81,12 @@ public class AnsibleTest extends BaseUnit {
     void testAnsiblePreviewAttribute() {
         // 1423
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(46);
-        List<PreviewAttributeVO.PreviewAttribute> list = attributeAnsible.preview(ocServerGroup.getId());
+        List<PreviewAttributeVO.PreviewAttribute> list = ansibleAttribute.preview(ocServerGroup.getId());
         for (PreviewAttributeVO.PreviewAttribute preview : list)
             System.err.println(preview.getContent());
 
 
-        PreviewAttributeVO.PreviewAttribute pre = attributeAnsible.build(ocServerGroup);
+        PreviewAttributeVO.PreviewAttribute pre = ansibleAttribute.build(ocServerGroup);
         System.err.println(pre.getContent());
 
 
@@ -96,11 +96,11 @@ public class AnsibleTest extends BaseUnit {
     void testAnsibleGrouping() {
         // 1423
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(46);
-        attributeAnsible.evictGrouping(ocServerGroup);
+        ansibleAttribute.evictGrouping(ocServerGroup);
 
         for (int i = 1; i <= 11; i++) {
             long startTime = new Date().getTime();
-            Map<String, List<OcServer>> map = attributeAnsible.grouping(ocServerGroup);
+            Map<String, List<OcServer>> map = ansibleAttribute.grouping(ocServerGroup);
             long endTime = new Date().getTime();
             System.err.println("第" + i + "次, 消耗时间:" + (endTime - startTime));
         }

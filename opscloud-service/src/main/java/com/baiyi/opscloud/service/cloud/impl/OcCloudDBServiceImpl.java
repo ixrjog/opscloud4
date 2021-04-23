@@ -26,7 +26,7 @@ public class OcCloudDBServiceImpl implements OcCloudDBService {
 
     @Override
     public DataTable<OcCloudDb> fuzzyQueryOcCloudDBByParam(CloudDBParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudDb> ocCloudDbList = ocCloudDbMapper.fuzzyQueryOcCloudDbByParam(pageQuery);
         return new DataTable<>(ocCloudDbList, page.getTotal());
     }

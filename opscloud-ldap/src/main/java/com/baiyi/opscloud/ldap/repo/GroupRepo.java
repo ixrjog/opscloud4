@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.ldap.repo;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.ldap.entry.Group;
 
 import java.util.List;
@@ -30,4 +31,8 @@ public interface GroupRepo {
     Boolean removeGroupMember(String groupName,String username);
 
     Boolean addGroupMember(String groupName,String username);
+
+    Boolean create(String groupName);
+
+    BusinessWrapper<Boolean> delete(String groupName);
 }

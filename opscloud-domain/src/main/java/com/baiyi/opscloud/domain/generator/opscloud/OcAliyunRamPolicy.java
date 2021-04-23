@@ -61,13 +61,13 @@ public class OcAliyunRamPolicy {
     /**
      * 策略更新时间
      */
-    @Column(name = "update_date", insertable = false, updatable = false)
+    @Column(name = "update_date")
     private Date updateDate;
 
     @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     /**

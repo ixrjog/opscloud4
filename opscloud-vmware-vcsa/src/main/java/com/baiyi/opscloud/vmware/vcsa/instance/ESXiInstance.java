@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.vmware.vcsa.instance;
 
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import com.vmware.vim25.DatastoreSummary;
 import com.vmware.vim25.HostConfigInfo;
 import com.vmware.vim25.HostHardwareInfo;
@@ -16,7 +17,7 @@ import java.util.List;
  */
 @Data
 @Builder
-public class ESXiInstance {
+public class ESXiInstance implements BaseCloudServerInstance {
     private HostHardwareInfo hostHardwareInfo;
     private HostListSummary hostSummary;
     private List<DatastoreSummary> datastoreSummaryList;

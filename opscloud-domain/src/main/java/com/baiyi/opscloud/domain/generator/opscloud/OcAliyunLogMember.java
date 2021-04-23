@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
 @Table(name = "oc_aliyun_log_member")
 public class OcAliyunLogMember {
@@ -23,15 +23,21 @@ public class OcAliyunLogMember {
 
     private String topic;
 
+    /**
+     * 环境类型
+     */
+    @Column(name = "env_type")
+    private Integer envType;
+
     private String comment;
 
     @Column(name = "last_push_time")
     private Date lastPushTime;
 
-    @Column(name = "create_time", insertable = false, updatable = false)
+    @Column(name = "create_time")
     private Date createTime;
 
-    @Column(name = "update_time", insertable = false, updatable = false)
+    @Column(name = "update_time")
     private Date updateTime;
 
     /**
@@ -109,6 +115,24 @@ public class OcAliyunLogMember {
     }
 
     /**
+     * 获取环境类型
+     *
+     * @return env_type - 环境类型
+     */
+    public Integer getEnvType() {
+        return envType;
+    }
+
+    /**
+     * 设置环境类型
+     *
+     * @param envType 环境类型
+     */
+    public void setEnvType(Integer envType) {
+        this.envType = envType;
+    }
+
+    /**
      * @return comment
      */
     public String getComment() {
@@ -122,10 +146,16 @@ public class OcAliyunLogMember {
         this.comment = comment;
     }
 
+    /**
+     * @return last_push_time
+     */
     public Date getLastPushTime() {
         return lastPushTime;
     }
 
+    /**
+     * @param lastPushTime
+     */
     public void setLastPushTime(Date lastPushTime) {
         this.lastPushTime = lastPushTime;
     }

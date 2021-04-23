@@ -29,6 +29,13 @@
         <module>opscloud-tencent-cloud-core</module>
         <module>opscloud-tencent-cloud-cvm</module>
         <module>opscloud-kubernetes</module>
+        <module>opscloud-tencent-exmail</module>
+        <module>opscloud-zookeeper</module>
+        <module>opscloud-aliyun-ons</module>
+        <module>opscloud-dingtalk</module>
+        <module>opscloud-aliyun-dns</module>
+        <module>opscloud-aliyun-slb</module>
+        <module>opscloud-kafka</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -48,10 +55,10 @@
     </properties>
 
     <dependencies>
-<!--        <dependency>-->
-<!--            <groupId>org.springframework.boot</groupId>-->
-<!--            <artifactId>spring-boot-starter-data-ldap</artifactId>-->
-<!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.springframework.boot</groupId>-->
+        <!--            <artifactId>spring-boot-starter-data-ldap</artifactId>-->
+        <!--        </dependency>-->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
@@ -170,6 +177,13 @@
             <version>0.1.55</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.apache.commons</groupId>-->
+<!--            <artifactId>commons-csv</artifactId>-->
+<!--            <version>1.8</version>-->
+<!--        </dependency>-->
+
+
     </dependencies>
 
     <dependencyManagement>
@@ -229,6 +243,22 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-aliyun-ecs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-ons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-slb</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-aliyun-dns</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -293,6 +323,11 @@
                 <artifactId>opscloud-tencent-cloud-cvm</artifactId>
                 <version>${project.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-tencent-exmail</artifactId>
+                <version>${project.version}</version>
+            </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
@@ -300,29 +335,45 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-zookeeper</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-dingtalk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-kafka</artifactId>
+                <version>${project.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <repositories><!-- 代码库 -->
-        <repository>
-            <id>maven repo</id>
-            <url>http://mvnrepository.com/artifact/</url>
-        </repository>
+<!--    <repositories>-->
+<!--        <repository>-->
+<!--            <id>maven repo</id>-->
+<!--            <url>http://mvnrepository.com/artifact/</url>-->
+<!--        </repository>-->
 
-        <!--        <repository>-->
-        <!--            <id>maven-ali</id>-->
-        <!--            <url>https://maven.aliyun.com/repository/public/</url>-->
-        <!--            <releases>-->
-        <!--                <enabled>true</enabled>-->
-        <!--            </releases>-->
-        <!--            <snapshots>-->
-        <!--                <enabled>true</enabled>-->
-        <!--                <updatePolicy>always</updatePolicy>-->
-        <!--                <checksumPolicy>fail</checksumPolicy>-->
-        <!--            </snapshots>-->
-        <!--        </repository>-->
-
-    </repositories>
+<!--        <repository>-->
+<!--            <id>maven-ali</id>-->
+<!--            <url>https://maven.aliyun.com/repository/public/</url>-->
+<!--            <releases>-->
+<!--                <enabled>true</enabled>-->
+<!--            </releases>-->
+<!--            <snapshots>-->
+<!--                <enabled>true</enabled>-->
+<!--                <updatePolicy>always</updatePolicy>-->
+<!--                <checksumPolicy>fail</checksumPolicy>-->
+<!--            </snapshots>-->
+<!--        </repository>-->
+<!--    </repositories>-->
 
     <build>
         <plugins>
@@ -340,17 +391,55 @@
     </build>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>nexus-snapshots</id>
-            <name>Internal Snapshot</name>
-            <url>http://nexus.ops.yangege.cn/repository/maven-snapshots/</url>
-        </snapshotRepository>
         <repository>
-            <id>nexus-releases</id>
-            <name>Releases</name>
-            <url>http://nexus.ops.yangege.cn/repository/maven-releases/</url>
+            <id>xinc818-releases</id>
+            <name>Team Nexus Repository</name>
+            <url>http://maven.xinc818.com/repository/maven-releases/</url>
         </repository>
+
+        <snapshotRepository>
+            <id>xinc818-snapshots</id>
+            <name>Team Nexus Repository</name>
+            <url>http://maven.xinc818.com/repository/maven-snapshots/</url>
+        </snapshotRepository>
     </distributionManagement>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>maven-default</id>
+            <url>https://mvnrepository.com/</url>
+        </pluginRepository>
+
+        <pluginRepository>
+            <id>maven-ali</id>
+            <url>https://maven.aliyun.com/repository/public/</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>always</updatePolicy>
+                <checksumPolicy>fail</checksumPolicy>
+            </snapshots>
+        </pluginRepository>
+
+
+    </pluginRepositories>
+
+
+
+<!--    <distributionManagement>-->
+<!--        <snapshotRepository>-->
+<!--            <id>nexus-snapshots</id>-->
+<!--            <name>Internal Snapshot</name>-->
+<!--            <url>http://maven.xinc818.com/repository/maven-snapshots/</url>-->
+<!--        </snapshotRepository>-->
+<!--        <repository>-->
+<!--            <id>nexus-releases</id>-->
+<!--            <name>Releases</name>-->
+<!--            <url>http://maven.xinc818.com/repository/maven-releases/</url>-->
+<!--        </repository>-->
+<!--    </distributionManagement>-->
     <!--    <build>-->
     <!--        <plugins>-->
     <!--            <plugin>-->

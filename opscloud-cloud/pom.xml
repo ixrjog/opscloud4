@@ -59,6 +59,11 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aliyun-ons</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-service</artifactId>
         </dependency>
         <dependency>
@@ -72,6 +77,14 @@
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-aliyun-log</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aliyun-dns</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-aliyun-slb</artifactId>
         </dependency>
     </dependencies>
 

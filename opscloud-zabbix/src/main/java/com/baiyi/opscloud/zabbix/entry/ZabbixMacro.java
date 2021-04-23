@@ -1,13 +1,17 @@
 package com.baiyi.opscloud.zabbix.entry;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixMacro {
 
-    // {"result":[{"macros":[{"macro":"{$TEST_KEY}","value":"Abc"}],"hostid":"10456"}],"id":2,"jsonrpc":"2.0"}
-
+    /**
+     * {"hostmacroid":"1434","hostid":"11410","macro":"{$PORT}","value":"8080","description":"","type":"0"}
+     *
+     */
     private String macro;
     private String value;
 

@@ -1,18 +1,21 @@
 package com.baiyi.opscloud.zabbix.server.impl;
 
 import com.baiyi.opscloud.common.util.ZabbixUtils;
-import com.baiyi.opscloud.zabbix.builder.ZabbixConditionBO;
-import com.baiyi.opscloud.zabbix.builder.ZabbixOperationBO;
-import com.baiyi.opscloud.zabbix.entry.ZabbixAction;
-import com.baiyi.opscloud.zabbix.entry.ZabbixProxy;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.zabbix.api.ActionAPI;
+import com.baiyi.opscloud.zabbix.api.ProxyAPI;
+import com.baiyi.opscloud.zabbix.api.TemplateAPI;
+import com.baiyi.opscloud.zabbix.builder.ConditionsBuilder;
+import com.baiyi.opscloud.zabbix.builder.ZabbixFilterBuilder;
+import com.baiyi.opscloud.zabbix.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.entry.*;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHandler;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
-import com.baiyi.opscloud.zabbix.mapper.ZabbixActionMapper;
-import com.baiyi.opscloud.zabbix.mapper.ZabbixIdsMapper;
-import com.baiyi.opscloud.zabbix.mapper.ZabbixProxyMapper;
-import com.baiyi.opscloud.zabbix.mapper.ZabbixTemplateMapper;
+import com.baiyi.opscloud.zabbix.http.ZabbixBaseRequest;
+import com.baiyi.opscloud.zabbix.mapper.*;
+import com.baiyi.opscloud.zabbix.param.ZabbixActionParam;
+import com.baiyi.opscloud.zabbix.param.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.param.ZabbixRequestParams;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostgroupServer;
 import com.baiyi.opscloud.zabbix.server.ZabbixUserServer;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -37,7 +40,12 @@ import java.util.Map;
 public class ZabbixServerImpl implements com.baiyi.opscloud.zabbix.server.ZabbixServer {
 
     public static final String ZABBIX_RESULT = "result";
+
+    public static final String ZABBIX_ERROR = "error";
+
     public static final String ZABBIX_PARENT_TEMPLATES = "parentTemplates";
+
+    public static final String ACTION_NAME_PREFIX = "Report problems to";
 
     @Resource
     private ZabbixHandler zabbixHandler;
@@ -50,34 +58,56 @@ public class ZabbixServerImpl implements com.baiyi.opscloud.zabbix.server.Zabbix
 
     @Override
     public ZabbixTemplate getTemplate(String name) {
-        Map<String, String> filter = Maps.newHashMap();
-        filter.put("name", name);
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("template.get")
-                .paramEntry("filter", filter)
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("name", name)
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(TemplateAPI.GET)
+                .paramEntryByFilter(filter)
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixTemplateMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
         } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }
 
     @Override
     public ZabbixProxy getProxy(String hostname) {
-        Map<String, String> filter = Maps.newHashMap();
-        filter.put("host", hostname);
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("proxy.get")
-                .paramEntry("filter", filter)
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("host", hostname)
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(ProxyAPI.GET)
+                .paramEntryByFilter(filter)
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixProxyMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return null;
+    }
+
+    @Override
+    public void deleteAction(String usergrpName) {
+        ZabbixAction action = getAction(usergrpName);
+        if (action == null) return;
+        ZabbixRequestParams request = ZabbixRequestParams.builder()
+                .method(ActionAPI.DELETE.getMethod())
+                .params(new String[]{action.getActionid()})
+                .build();
+        try {
+            JsonNode jsonNode = zabbixHandler.api(request);
+            String actionid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("actionids")).get(0);
+            log.info("Delete Action ! usergrpName = {}, id = {}", usergrpName, actionid);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -86,97 +116,48 @@ public class ZabbixServerImpl implements com.baiyi.opscloud.zabbix.server.Zabbix
      */
     @Override
     public ZabbixAction getAction(String usergrpName) {
-        Map<String, String> filter = Maps.newHashMap();
-        filter.put("name", Joiner.on(" ").join("Report problems to", usergrpName));
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("name", buildActionName(usergrpName))
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
                 .paramEntry("output", "extend")
                 .paramEntry("selectOperations", "extend")
-                .paramEntry("filter", filter)
-                .method("action.get").build();
+                .paramEntryByFilter(filter)
+                .method(ActionAPI.GET).build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixActionMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return null;
     }
 
-//    /**
-//     * 转换用户组名称
-//     *
-//     * @param serverGroupName
-//     * @return
-//     */
-//    private String convertUsergrpName(String serverGroupName) {
-//        return serverGroupName.replace("group_", "users_");
-//    }
-
     private List<Map<String, String>> getOpmessageGrp(String usrgrpid) {
-        List<Map<String, String>> opmessageGrp = Lists.newArrayList();
         Map<String, String> usrgrpidMap = Maps.newHashMap();
         usrgrpidMap.put("usrgrpid", usrgrpid);
-        opmessageGrp.add(usrgrpidMap);
-        return opmessageGrp;
-    }
-
-    private List<ZabbixConditionBO> getConditions(String groupid) {
-        List<ZabbixConditionBO> conditions = Lists.newArrayList();
-
-        /**
-         * https://www.zabbix.com/documentation/4.0/manual/api/reference/action/object?s[]=conditions
-         * 	触发器示警度
-         */
-        ZabbixConditionBO conditionA = ZabbixConditionBO.builder()
-                .conditiontype(4)
-                .operator(5)
-                .value("4")
-                .formulaid("A")
-                .build();
-        conditions.add(conditionA);
-        // 服务器组
-        ZabbixConditionBO conditionB = ZabbixConditionBO.builder()
-                .conditiontype(0)
-                .operator(0)
-                .value(groupid)
-                .formulaid("B")
-                .build();
-        conditions.add(conditionB);
-        return conditions;
+        return Lists.newArrayList(usrgrpidMap);
     }
 
     @Override
     public boolean createAction(String usergrpName) {
         ZabbixAction action = getAction(usergrpName);
         if (action != null) return true;
-        // operations 操作
-        ZabbixOperationBO operation = ZabbixOperationBO.builder()
-                .opmessage_grp(getOpmessageGrp(zabbixUserServer.getUsergroup(usergrpName).getUsrgrpid()))
+
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("evaltype", 1)
+                .putEntry("conditions", ConditionsBuilder.build(getHostgroup(ZabbixUtils.convertHostgroupName(usergrpName)).getGroupid()))
                 .build();
-        List<ZabbixOperationBO> operations = Lists.newArrayList();
-        operations.add(operation);
 
-        List<ZabbixConditionBO> conditions = getConditions(zabbixHostgroupServer.getHostgroup(ZabbixUtils.convertHostgroupName(usergrpName)).getGroupid());
-
-        Map<String, Object> filter = Maps.newHashMap();
-        filter.put("evaltype", 1);
-        filter.put("conditions", conditions);
-
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .paramEntry("name", "Report problems to " + usergrpName)
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .paramEntry("name", buildActionName(usergrpName))
                 .paramEntry("eventsource", 0)
                 .paramEntry("status", 0)
                 .paramEntry("esc_period", "10m")
-                .paramEntry("def_shortdata", "{TRIGGER.NAME}: {TRIGGER.STATUS}")
-                .paramEntry("def_longdata", "ServerName:{HOST.NAME} IP:{HOST.IP}\r\n"
-                        + "Trigger: {TRIGGER.NAME}\r\n"
-                        + "Trigger severity: {TRIGGER.SEVERITY}\r\n"
-                        + "Item values: {ITEM.NAME1} ({HOST.NAME1}:{ITEM.KEY1}): {ITEM.VALUE1}\r\n"
-                        + "Original event ID: {EVENT.ID}\r\n"
-                        + "Trigger time:{EVENT.DATE} {EVENT.TIME}")
-                .paramEntry("operations", operations)
-                .paramEntry("filter", filter)
-                .method("action.create").build();
-
+                .paramEntry("operations", buildOperations(usergrpName)) // 操作
+                .paramEntryByFilter(filter)
+                .method(ActionAPI.CREATE)
+                .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
             String actionid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("actionids")).get(0);
@@ -186,7 +167,41 @@ public class ZabbixServerImpl implements com.baiyi.opscloud.zabbix.server.Zabbix
             e.printStackTrace();
         }
         return false;
+    }
 
+    private List<ZabbixActionParam.Operation> buildOperations(String usergrpName) {
+        // operations 操作
+        ZabbixActionParam.Operation operation = ZabbixActionParam.Operation.builder()
+                .opmessage_grp(getOpmessageGrp(zabbixUserServer.getUsergroup(usergrpName).getUsrgrpid()))
+                .build();
+        return Lists.newArrayList(operation);
+    }
+
+    private String buildActionName(String usergrpName) {
+        return Joiner.on(" ").join(ACTION_NAME_PREFIX, usergrpName);
+    }
+
+    private ZabbixHostgroup getHostgroup(String hostgroup) {
+        ZabbixHostgroup zabbixHostgroup = zabbixHostgroupServer.getHostgroup(hostgroup);
+        if (zabbixHostgroup != null) return zabbixHostgroup;
+        return zabbixHostgroupServer.createHostgroup(hostgroup);
+    }
+
+    /**
+     * @param jsonNode
+     * @return
+     */
+    @Override
+    public BusinessWrapper<Boolean> result(JsonNode jsonNode) {
+        if (jsonNode != null) {
+            try {
+                ZabbixError zabbixError = new ZabbixErrorMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_ERROR));
+                return new BusinessWrapper<>(70001, zabbixError.toString());
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        return new BusinessWrapper<>(ErrorEnum.ZABBIX_SERVER_ERROR);
     }
 
 

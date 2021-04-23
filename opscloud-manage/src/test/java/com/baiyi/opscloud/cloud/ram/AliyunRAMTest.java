@@ -8,7 +8,7 @@ import com.baiyi.opscloud.aliyun.core.AliyunCore;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
-import com.baiyi.opscloud.service.ram.OcAliyunRamUserService;
+import com.baiyi.opscloud.service.aliyun.ram.OcAliyunRamUserService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;

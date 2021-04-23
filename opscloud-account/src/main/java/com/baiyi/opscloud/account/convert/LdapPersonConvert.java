@@ -17,6 +17,7 @@ public class LdapPersonConvert {
         person.setEmail(ocUser.getEmail());
         person.setMobile(ocUser.getPhone());
         person.setUserPassword(password);
+        person.setIsActive(ocUser.getIsActive()); // 有效账户
         return person;
     }
 

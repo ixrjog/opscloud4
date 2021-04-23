@@ -7,6 +7,7 @@ import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.account.convert.ZabbixUserConvert;
 import com.baiyi.opscloud.common.util.RegexUtils;
 import com.baiyi.opscloud.common.util.ZabbixUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
@@ -57,9 +58,9 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean create(OcUser user) {
+    public BusinessWrapper<Boolean> create(OcUser user) {
         ZabbixUser zabbixUser = zabbixUserServer.getUser(user.getUsername());
-        if (zabbixUser != null) return true;
+        if (zabbixUser != null) return BusinessWrapper.SUCCESS;
         return zabbixUserServer.createUser(ZabbixUserConvert.convertOcUser(user), getMediaList(user), getUsrgrps(user));
     }
 
@@ -87,7 +88,7 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
     private List<ZabbixUserMedia> getMediaList(OcUser user) {
         List<ZabbixUserMedia> mediaList = Lists.newArrayList();
         try {
-            if(RegexUtils.isEmail(user.getEmail())){
+            if (RegexUtils.isEmail(user.getEmail())) {
                 ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
                         .mediatypeid(ZabbixUserMedia.MEDIATYPE_MAIL)
                         .sendto(user.getEmail())
@@ -97,13 +98,13 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
         } catch (Exception ignored) {
         }
         try {
-           if(RegexUtils.isPhone(user.getPhone())) {
-               ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
-                       .mediatypeid(ZabbixUserMedia.MEDIATYPE_PHONE)
-                       .sendto(user.getPhone())
-                       .build();
-               mediaList.add(mailMedia);
-           }
+            if (RegexUtils.isPhone(user.getPhone())) {
+                ZabbixUserMedia mailMedia = ZabbixUserMedia.builder()
+                        .mediatypeid(ZabbixUserMedia.MEDIATYPE_PHONE)
+                        .sendto(user.getPhone())
+                        .build();
+                mediaList.add(mailMedia);
+            }
         } catch (Exception ignored) {
         }
         return mediaList;
@@ -115,12 +116,12 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean delete(OcUser user) {
+    public BusinessWrapper<Boolean> delete(OcUser user) {
         return zabbixUserServer.deleteUser(user.getUsername());
     }
 
     @Override
-    public Boolean update(OcUser user) {
+    public BusinessWrapper<Boolean> update(OcUser user) {
         ZabbixUser checkZabbixUser = zabbixUserServer.getUser(user.getUsername());
         if (checkZabbixUser == null)
             return create(user);
@@ -130,18 +131,18 @@ public class ZabbixAccount extends BaseAccount implements IAccount {
     }
 
     @Override
-    public Boolean grant(OcUser user, String resource) {
+    public BusinessWrapper<Boolean> grant(OcUser user, String resource) {
         return update(user);
     }
 
     @Override
-    public Boolean revoke(OcUser user, String resource) {
+    public BusinessWrapper<Boolean> revoke(OcUser user, String resource) {
         return update(user);
     }
 
     @Override
-    public Boolean active(OcUser user, boolean active) {
-        return Boolean.TRUE;
+    public BusinessWrapper<Boolean> active(OcUser user, boolean active) {
+        return active ? create(user) : delete(user);
     }
 
 }

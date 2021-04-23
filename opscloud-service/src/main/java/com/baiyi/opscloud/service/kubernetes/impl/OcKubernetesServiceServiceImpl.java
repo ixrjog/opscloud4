@@ -26,7 +26,7 @@ public class OcKubernetesServiceServiceImpl implements OcKubernetesServiceServic
 
     @Override
     public DataTable<OcKubernetesService> queryOcKubernetesServiceByParam(KubernetesServiceParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesService> list = ocKubernetesServiceMapper.queryOcKubernetesServiceByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

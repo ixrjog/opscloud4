@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunSlbHttpsListenerMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunSlbHttpsListener">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="load_balancer_id" jdbcType="VARCHAR" property="loadBalancerId"/>
+        <result column="load_balancer_name" jdbcType="VARCHAR" property="loadBalancerName"/>
+        <result column="https_listener_port" jdbcType="INTEGER" property="httpsListenerPort"/>
+        <result column="server_certificate_id" jdbcType="VARCHAR" property="serverCertificateId"/>
+        <result column="server_certificate_domain" jdbcType="VARCHAR" property="serverCertificateDomain"/>
+        <result column="server_certificate_type" jdbcType="INTEGER" property="serverCertificateType"/>
+        <result column="domain_extension_id" jdbcType="VARCHAR" property="domainExtensionId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+</mapper>

@@ -21,7 +21,7 @@ public class OcWorkorderTicketSubscribeServiceImpl implements OcWorkorderTicketS
     private OcWorkorderTicketSubscribeMapper ocWorkorderTicketSubscribeMapper;
 
     @Override
-    public List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByAppoval(int ticketId, int subscribeType) {
+    public List<OcWorkorderTicketSubscribe> queryOcWorkorderTicketSubscribeByApproval(int ticketId, int subscribeType) {
         Example example = new Example(OcWorkorderTicketSubscribe.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("ticketId", ticketId);

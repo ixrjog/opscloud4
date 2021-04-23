@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunSlbScMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunSlbSc">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="server_certificate_id" jdbcType="VARCHAR" property="serverCertificateId"/>
+        <result column="server_certificate_name" jdbcType="VARCHAR" property="serverCertificateName"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="fingerprint" jdbcType="VARCHAR" property="fingerprint"/>
+        <result column="ali_cloud_certificate_id" jdbcType="VARCHAR" property="aliCloudCertificateId"/>
+        <result column="ali_cloud_certificate_name" jdbcType="VARCHAR" property="aliCloudCertificateName"/>
+        <result column="common_name" jdbcType="VARCHAR" property="commonName"/>
+        <result column="expire_time" jdbcType="VARCHAR" property="expireTime"/>
+        <result column="expire_time_stamp" jdbcType="BIGINT" property="expireTimeStamp"/>
+        <result column="update_server_certificate_id" jdbcType="VARCHAR" property="updateServerCertificateId"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+
+    <select id="queryOcAliyunSlbScPage"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunSLBParam$SCPageQuery" resultMap="BaseResultMap">
+        select * from oc_aliyun_slb_sc
+        <where>
+            <if test="queryName != null and queryName != ''">
+                (common_name like "%" #{queryName} "%" or server_certificate_id like "%" #{queryName} "%")
+            </if>
+        </where>
+        order by expire_time_stamp
+    </select>
+
+</mapper>

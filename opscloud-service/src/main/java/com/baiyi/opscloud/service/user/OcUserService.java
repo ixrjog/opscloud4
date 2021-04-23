@@ -23,6 +23,8 @@ public interface OcUserService {
 
     OcUser queryOcUserByUsername(String username);
 
+    List<OcUser> queryOcUserByDisplayName(String displayName);
+
     void delOcUserByUsername(String username);
 
     DataTable<OcUser> queryOcUserByParam(UserParam.UserPageQuery pageQuery);
@@ -33,8 +35,17 @@ public interface OcUserService {
 
     /**
      * 查询所有激活的账户
+     *
      * @return
      */
     List<OcUser> queryOcUserActive();
+
+    List<OcUser> queryOcUserInActive();
+
+    List<OcUser> queryOcUserAll();
+
+    List<OcUser> queryOcUserByIdList(List<Integer> userIdList);
+
+    List<OcUser> queryOcUserByPhone(String phone);
 
 }

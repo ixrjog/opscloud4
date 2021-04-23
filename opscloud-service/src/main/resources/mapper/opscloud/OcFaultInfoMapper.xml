@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcFaultInfoMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcFaultInfo">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="finalized" jdbcType="BIT" property="finalized"/>
+        <result column="fault_title" jdbcType="VARCHAR" property="faultTitle"/>
+        <result column="fault_level" jdbcType="VARCHAR" property="faultLevel"/>
+        <result column="content" jdbcType="VARCHAR" property="content"/>
+        <result column="root_cause_type_id" jdbcType="INTEGER" property="rootCauseTypeId"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="root_cause" jdbcType="LONGVARCHAR" property="rootCause"/>
+        <result column="fault_detail" jdbcType="LONGVARCHAR" property="faultDetail"/>
+        <result column="fault_judge" jdbcType="LONGVARCHAR" property="faultJudge"/>
+        <result column="responsible_team" jdbcType="LONGVARCHAR" property="responsibleTeam"/>
+        <result column="effect" jdbcType="LONGVARCHAR" property="effect"/>
+        <result column="fault_performance" jdbcType="LONGVARCHAR" property="faultPerformance"/>
+    </resultMap>
+    <select id="queryOcFaultInfoPage" parameterType="com.baiyi.opscloud.domain.param.fault.FaultParam$InfoPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_fault_info
+        <where>
+            <if test="queryName != null and queryName != ''">
+                and fault_title LIKE "%" #{queryName} "%"
+            </if>
+            <if test="faultLevel != null and faultLevel != ''">
+                and fault_level = #{faultLevel}
+            </if>
+            <if test="rootCauseTypeId != -1">
+                and root_cause_type_id = #{rootCauseTypeId}
+            </if>
+            <if test="queryMonth != -1">
+                and month(start_time) = #{queryMonth}
+            </if>
+            <if test="queryYear != -1">
+                and year(start_time) = #{queryYear}
+            </if>
+        </where>
+        ORDER BY start_time DESC
+    </select>
+
+</mapper>

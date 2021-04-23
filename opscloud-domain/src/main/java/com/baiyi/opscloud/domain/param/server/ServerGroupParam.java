@@ -6,12 +6,36 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+
 /**
  * @Author baiyi
  * @Date 2020/2/21 10:56 上午
  * @Version 1.0
  */
 public class ServerGroupParam {
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class ServerGroupHostPatternQuery {
+
+        @ApiModelProperty(value = "服务器组名称")
+        @NotBlank
+        private String serverGroupName;
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class ServerGroupEnvHostPatternQuery extends ServerGroupHostPatternQuery {
+
+        @ApiModelProperty(value = "环境类型")
+        private Integer envType;
+
+    }
 
 
     @Data

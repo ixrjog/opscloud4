@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.common.util.JSONMapper;
+import com.baiyi.opscloud.service.helpdesk.OcHelpdeskReportService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Joiner;
 import lombok.Data;
@@ -20,6 +21,7 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.junit.jupiter.api.Test;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 
 /**
@@ -37,6 +39,10 @@ public class Oc3Test extends BaseUnit {
     private static final String OC3_URL = "https://oc3.ops.yangege.cn";
 
     private static final String queryServer = "/oc3/server/page/fuzzy/query";
+
+
+    @Resource
+    private OcHelpdeskReportService ocHelpdeskReportService;
 
     private HttpPost getHttpPostClient(String url) {
         RequestConfig requestConfig = RequestConfig.custom()

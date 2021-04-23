@@ -3,6 +3,8 @@ package com.baiyi.opscloud.account.impl;
 import com.baiyi.opscloud.account.IAccount;
 import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUser;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUserGroups;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUsergroup;
@@ -71,9 +73,8 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
     }
 
     @Override
-    public Boolean sync(OcUser user) {
+    public void sync(OcUser user) {
         syncUsersUser(user);
-        return true;
     }
 
     private void syncUsersUser(OcUser ocUser) {
@@ -105,7 +106,7 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean create(OcUser user) {
+    public BusinessWrapper<Boolean> create(OcUser user) {
         return update(user);
     }
 
@@ -115,33 +116,37 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean delete(OcUser user) {
+    public BusinessWrapper<Boolean> delete(OcUser user) {
         return jumpserverCenter.delUsersUser(user.getUsername());
     }
 
     @Override
-    public Boolean update(OcUser user) {
-        return jumpserverCenter.saveUsersUser(user) != null;
+    public BusinessWrapper<Boolean> update(OcUser user) {
+        if (jumpserverCenter.saveUsersUser(user) != null){
+            return BusinessWrapper.SUCCESS;
+        }else{
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_UPDATE_ERROR);
+        }
     }
 
     @Override
-    public Boolean grant(OcUser ocUser, String resource) {
+    public BusinessWrapper<Boolean> grant(OcUser ocUser, String resource) {
         UsersUser usersUser = createUsersUser(ocUser);
-        if (usersUser == null) return Boolean.FALSE;
+        if (usersUser == null) new BusinessWrapper<>(ErrorEnum.USER_CREDENTIAL_NOT_EXIST);
         return authorize(usersUser, resource, GRANT);
     }
 
     @Override
-    public Boolean revoke(OcUser ocUser, String resource) {
+    public BusinessWrapper<Boolean> revoke(OcUser ocUser, String resource) {
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(ocUser.getUsername());
-        if (usersUser == null) return Boolean.TRUE;
+        if (usersUser == null) new BusinessWrapper<>(ErrorEnum.USER_CREDENTIAL_NOT_EXIST);
         return authorize(usersUser, resource, REVOKE);
     }
 
-    private Boolean authorize(UsersUser usersUser, String resource, boolean action) {
+    private BusinessWrapper<Boolean> authorize(UsersUser usersUser, String resource, boolean action) {
         String name = JumpserverUtils.toUsergroupName(resource);
         UsersUsergroup usersUsergroup = usersUsergroupService.queryUsersUsergroupByName(name);
-        if (usersUsergroup == null) return Boolean.FALSE;
+        if (usersUsergroup == null) return new BusinessWrapper<>(ErrorEnum.ACCOUNT_AUTHORIZE_ERROR);
         UsersUserGroups pre = new UsersUserGroups();
         pre.setUsergroupId(usersUsergroup.getId());
         pre.setUserId(usersUser.getId());
@@ -151,12 +156,16 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
         if (usersUserGroups != null && !action)
             usersUserGroupsService.delUsersUserGroupsById(usersUserGroups.getId());
 
-        return Boolean.TRUE;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean active(OcUser user, boolean active) {
-        return jumpserverCenter.activeUsersUser(user.getUsername(), active);
+    public BusinessWrapper<Boolean> active(OcUser user, boolean active) {
+        if (jumpserverCenter.activeUsersUser(user.getUsername(), active)) {
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.SYSTEM_ERROR);
+        }
     }
 
     /**
@@ -166,13 +175,15 @@ public class JumpserverAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean pushSSHKey(OcUser ocUser) {
+    public BusinessWrapper<Boolean> pushSSHKey(OcUser ocUser) {
         OcUserCredential credential = getOcUserSSHPubKey(ocUser);
-        if (credential == null) return Boolean.FALSE;
+        if (credential == null) new BusinessWrapper<>(ErrorEnum.USER_CREDENTIAL_NOT_EXIST);
         UsersUser usersUser = saveUsersUser(ocUser);
         if (usersUser == null)
-            return false;
-        return jumpserverAPI.pushKey(ocUser, usersUser, BeanCopierUtils.copyProperties(credential, UserCredentialVO.UserCredential.class));
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_NOT_EXIST);
+        if (jumpserverAPI.pushKey(ocUser, usersUser, BeanCopierUtils.copyProperties(credential, UserCredentialVO.UserCredential.class)))
+            return BusinessWrapper.SUCCESS;
+        return new BusinessWrapper<>(ErrorEnum.SYSTEM_ERROR);
     }
 
     private UsersUser createUsersUser(OcUser ocUser) {

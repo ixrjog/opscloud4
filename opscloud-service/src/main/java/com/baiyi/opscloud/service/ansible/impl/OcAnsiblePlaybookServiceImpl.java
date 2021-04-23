@@ -25,7 +25,7 @@ public class OcAnsiblePlaybookServiceImpl implements OcAnsiblePlaybookService {
 
     @Override
     public DataTable<OcAnsiblePlaybook> queryOcAnsiblePlaybookByParam(AnsiblePlaybookParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcAnsiblePlaybook> ocAnsiblePlaybookList = ocAnsiblePlaybookMapper.queryOcAnsiblePlaybookByParam(pageQuery);
         return new DataTable<>(ocAnsiblePlaybookList, page.getTotal());
     }

@@ -9,8 +9,7 @@ import com.baiyi.opscloud.domain.generator.jumpserver.*;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.facade.SettingBaseFacade;
-import com.baiyi.opscloud.jumpserver.api.JumpserverAPI;
-import com.baiyi.opscloud.jumpserver.api.JumpserverAssetAPI;
+import com.baiyi.opscloud.jumpserver.bo.AssetsSystemuserAssetsBO;
 import com.baiyi.opscloud.jumpserver.bo.UsersUsergroupBO;
 import com.baiyi.opscloud.jumpserver.builder.AssetsNodeBuilder;
 import com.baiyi.opscloud.jumpserver.builder.PermsAssetpermissionBuilder;
@@ -76,11 +75,13 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     @Resource
     private SettingBaseFacade settingBaseFacade;
 
-    @Resource
-    private JumpserverAPI jumpserverAPI;
+//    @Resource
+//    private JumpserverAPI jumpserverAPI;
+//
+//    @Resource
+//    private JumpserverAssetAPI jumpserverAssetAPI;
 
-    @Resource
-    private JumpserverAssetAPI jumpserverAssetAPI;
+    public static final String DATE_START = "2020-10-01 00:00:00";
 
     public static final String DATE_EXPIRED = "2089-01-01 00:00:00";
     // 管理员用户组 绑定 根节点
@@ -187,17 +188,22 @@ public class JumpserverCenterImpl implements JumpserverCenter {
      */
     private String getAssetsNodeKey() {
         AssetsNode lastNode = assetsNodeService.queryAssetsNodeLastOne();
-        String[] keys = lastNode.getKey().split(":");
-        if (keys.length == 1)
+        try {
+            String[] keys = lastNode.getKey().split(":");
+            if (keys.length == 1)
+                return "1:1";
+            int k = Integer.parseInt(keys[1]);
+            String keyName;
+            while (true) {
+                k++;
+                keyName = Joiner.on(":").join("1", k);
+                AssetsNode checkAN = assetsNodeService.queryAssetsNodeByKey(keyName);
+                if (checkAN == null) return keyName;
+            }
+        } catch (Exception e) {
             return "1:1";
-        int k = Integer.parseInt(keys[1]);
-        String keyName;
-        while (true) {
-            k++;
-            keyName = Joiner.on(":").join("1", k);
-            AssetsNode checkAN = assetsNodeService.queryAssetsNodeByKey(keyName);
-            if (checkAN == null) return keyName;
         }
+
     }
 
     @Override
@@ -280,7 +286,6 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         PermsAssetpermissionUserGroups pre = new PermsAssetpermissionUserGroups();
         pre.setAssetpermissionId(permsAssetpermission.getId());
         pre.setUsergroupId(usersUsergroup.getId());
-        //new PermsAssetpermissionUserGroupsDO(permsAssetpermissionDO.getId(), usersUsergroupDO.getId());
         PermsAssetpermissionUserGroups permsAssetpermissionUserGroups = permsAssetpermissionUserGroupsServcie.queryPermsAssetpermissionUserGroupsByUniqueKey(pre);
         if (permsAssetpermissionUserGroups == null)
             permsAssetpermissionUserGroupsServcie.addPermsAssetpermissionUserGroups(pre);
@@ -321,9 +326,9 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     @Override
     public void addAssetsAsset(AssetsAsset assetsAsset, String nodeId) {
         // 新增资产 写库
-        // assetsAssetService.addAssetsAsset(assetsAsset);
+        assetsAssetService.addAssetsAsset(assetsAsset);
         // API
-        jumpserverAssetAPI.createAsset(assetsAsset, nodeId);
+        // jumpserverAssetAPI.createAsset(assetsAsset, nodeId);
     }
 
 
@@ -362,9 +367,10 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         String systemuserId = getSystemuserId();
         if (StringUtils.isEmpty(systemuserId)) return;
 
-        AssetsSystemuserAssets pre = new AssetsSystemuserAssets();
-        pre.setSystemuserId(systemuserId);
-        pre.setAssetId(assetId);
+        AssetsSystemuserAssets pre = BeanCopierUtils.copyProperties(AssetsSystemuserAssetsBO.builder()
+                .systemuserId(systemuserId)
+                .assetId(assetId)
+                .build(), AssetsSystemuserAssets.class);
 
         AssetsSystemuserAssets assetsSystemuserAssets = assetsSystemuserAssetsService.queryAssetsSystemuserAssetsByUniqueKey(pre);
         if (assetsSystemuserAssets == null)
@@ -376,7 +382,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
     }
 
     @Override
-    public boolean delAssetsAsset(String assetId) {
+    public BusinessWrapper<Boolean> delAssetsAsset(String assetId) {
         log.info("Jumpserver删除资产，assetId={}", assetId);
         try {
             // 删除资产节点绑定关系
@@ -405,10 +411,10 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         try {
             // 删除资产账户绑定
             assetsAssetService.deleteAssetsAssetById(assetId);
-            return true;
+            return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
             log.error("删除资产账户绑定错误，{}", e.getMessage());
-            return false;
+            return new BusinessWrapper<>(70001, "删除资产账户绑定错误!");
         }
     }
 
@@ -417,7 +423,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         log.info("JUMPSERVER设置用Active,username = {}, active = {}", username, active);
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);
         if (usersUser == null)
-            return !active; // 账户不存在无需禁用
+            return true; // 账户不存在无需禁用
         usersUser.setIsActive(active);
         usersUserService.updateUsersUser(usersUser);
         return true;
@@ -425,14 +431,14 @@ public class JumpserverCenterImpl implements JumpserverCenter {
 
     @Transactional
     @Override
-    public boolean delUsersUser(String username) {
+    public BusinessWrapper<Boolean> delUsersUser(String username) {
         log.info("JUMPSERVER删除用户,username = {}", username);
         UsersUser usersUser = usersUserService.queryUsersUserByUsername(username);
-        if (usersUser == null) return true;
+        if (usersUser == null) return BusinessWrapper.SUCCESS;
         // 删除用户/用户组关联
         usersUserGroupsService.delUsersUserGroupsByUserId(usersUser.getId());
         usersUserService.delUsersUserById(usersUser.getId());
-        return true;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
@@ -473,6 +479,7 @@ public class JumpserverCenterImpl implements JumpserverCenter {
         if (usersUsergroup == null)
             usersUsergroup = createUsersUsergroup(USERGROUP_ADMINISTRATORS, "Administrators");
         // 授权用户到管理员组
+        assert usersUsergroup != null;
         bindUserGroups(usersUser, usersUsergroup);
 
         // 建立根节点绑定关系

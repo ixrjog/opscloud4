@@ -65,6 +65,13 @@ public class Person {
     @Attribute(name = "userPassword")
     private String userPassword;
 
+    /**
+     * 有效
+     */
+    @Attribute(name = "accountStatus")
+    private Boolean isActive;
+
+
     @Attribute
     protected Date createTime;
 

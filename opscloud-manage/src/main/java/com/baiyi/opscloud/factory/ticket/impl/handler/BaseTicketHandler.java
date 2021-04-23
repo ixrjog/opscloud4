@@ -45,12 +45,14 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
 
     @Resource
     private OcUserService ocUserService;
-    
+
     @Resource
     private WorkorderTicketDecorator workorderTicketDecorator;
 
     public static final int ENTRY_STATUS_SUCCESS = 1;
     public static final int ENTRY_STATUS_ERROR = 2;
+
+    public static final String ENTRY_EXECUTOR_SUCCESS = "执行成功";
 
     @Override
     public void executorTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry) {
@@ -69,11 +71,9 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
         OcWorkorder ocWorkorder = acqOcWorkorder();
         ocUser.setPassword("");
         OcWorkorderTicket ocWorkorderTicket = WorkorderTicketBuilder.build(ocUser, ocWorkorder);
-
         OcWorkorderTicket pre = queryOcWorkorderTicketByParam(ocWorkorderTicket);
         if (pre != null)
             return getTicket(pre);
-
         ocWorkorderTicketService.addOcWorkorderTicket(ocWorkorderTicket);
         createTicketEntry(ocWorkorderTicket, ocUser);
         return getTicket(ocWorkorderTicket);
@@ -121,7 +121,6 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
 
     protected abstract ITicketEntry acqITicketEntry(Object ticketEntry);
 
-
     /**
      * 创建票据条目(初始化数据，可重写)
      *
@@ -130,7 +129,6 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
      */
     protected void createTicketEntry(OcWorkorderTicket ocWorkorderTicket, OcUser ocUser) {
     }
-
 
     protected abstract String acqWorkorderKey();
 
@@ -150,7 +148,7 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
 
     protected OcUser getUser(int ticketId) {
         OcWorkorderTicket ocWorkorderTicket = getOcWorkorderTicket(ticketId);
-        return  ocUserService.queryOcUserById(ocWorkorderTicket.getUserId());
+        return ocUserService.queryOcUserById(ocWorkorderTicket.getUserId());
     }
 
     private OcWorkorderTicket getOcWorkorderTicket(int ticketId) {
@@ -160,6 +158,7 @@ public abstract class BaseTicketHandler<T> implements ITicketHandler, Initializi
     protected void saveTicketEntry(OcWorkorderTicketEntry ocWorkorderTicketEntry, BusinessWrapper<Boolean> executorWrapper) {
         if (executorWrapper.isSuccess()) {
             ocWorkorderTicketEntry.setEntryStatus(ENTRY_STATUS_SUCCESS);
+            ocWorkorderTicketEntry.setEntryResult(ENTRY_EXECUTOR_SUCCESS);
         } else {
             ocWorkorderTicketEntry.setEntryStatus(ENTRY_STATUS_ERROR);
             ocWorkorderTicketEntry.setEntryResult(executorWrapper.getDesc());

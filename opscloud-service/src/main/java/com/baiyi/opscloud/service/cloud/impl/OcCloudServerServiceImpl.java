@@ -25,10 +25,17 @@ public class OcCloudServerServiceImpl implements OcCloudServerService {
     private OcCloudServerMapper ocCloudServerMapper;
 
     @Override
-    public DataTable<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
-        List<OcCloudServer> ocCloudServerList = ocCloudServerMapper.queryOcCloudServerByParam(pageQuery);
-        return new DataTable<>(ocCloudServerList, page.getTotal());
+    public DataTable<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.CloudServerPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<OcCloudServer> cloudServers = ocCloudServerMapper.queryOcCloudServerByParam(pageQuery);
+        return new DataTable<>(cloudServers, page.getTotal());
+    }
+
+    @Override
+    public DataTable<OcCloudServer> queryOcCloudServerChargeByParam(CloudServerParam.CloudServerChargePageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<OcCloudServer> cloudServers = ocCloudServerMapper.queryCloudServerChargeByParam(pageQuery);
+        return new DataTable<>(cloudServers, page.getTotal());
     }
 
     @Override

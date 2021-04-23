@@ -37,7 +37,7 @@
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
 
-  <select id="fuzzyQueryAssetsAssetPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam$PageQuery"
+  <select id="queryAssetsAssetPage" parameterType="com.baiyi.opscloud.domain.param.jumpserver.asset.AssetsAssetPageParam$PageQuery"
           resultMap="BaseResultMap">
     select a0.* from assets_asset a0
     <if test="assetsNodeId != null and assetsNodeId != ''">

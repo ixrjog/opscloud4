@@ -56,14 +56,21 @@ public class OcWorkorderTicketServiceImpl implements OcWorkorderTicketService {
 
     @Override
     public DataTable<OcWorkorderTicket> queryMyOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyTicketPage pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcWorkorderTicket> list = ocWorkorderTicketMapper.queryMyTicketByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }
 
     @Override
+    public DataTable<OcWorkorderTicket>  queryMyFinalizedOcWorkorderTicketByParam(WorkorderTicketParam.QueryMyFinalizedTicketPage pageQuery){
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<OcWorkorderTicket> list = ocWorkorderTicketMapper.queryMyFinalizedTicketByParam(pageQuery);
+        return new DataTable<>(list, page.getTotal());
+    }
+
+    @Override
     public DataTable<OcWorkorderTicket> queryOcWorkorderTicketByParam(WorkorderTicketParam.QueryTicketPage pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcWorkorderTicket> list = ocWorkorderTicketMapper.queryTicketByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

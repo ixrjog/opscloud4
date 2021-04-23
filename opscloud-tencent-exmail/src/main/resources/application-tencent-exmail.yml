@@ -1,0 +1,8 @@
+tencent:
+  exmail:
+    apiUrl: https://api.exmail.qq.com
+    accounts:
+      - corpId: ww7702b0def0335827
+        master: true
+        name: '杭州辛橙信息科技有限公司'
+        corpSecret: ENC(mmiBw5rJbaXM+Fn/G+PIxXNEnYtAK7Gte2q+CB1ODdD+//PJXj+5Oj0V4LpGH1WPuGVwO0nk98rVShzY3YtmEQDAdv/Vi/QefLrdOtatcmU=)

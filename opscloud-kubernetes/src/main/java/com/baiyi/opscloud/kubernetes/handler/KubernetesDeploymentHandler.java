@@ -29,6 +29,10 @@ public class KubernetesDeploymentHandler {
 
     public Deployment createOrReplaceDeployment(String clusterName, String namespace, String deploymentYAML) {
         Deployment deployment = getDeploymentByYAML(clusterName, deploymentYAML);
+        return createOrReplaceDeployment(clusterName, namespace, deployment);
+    }
+
+    public Deployment createOrReplaceDeployment(String clusterName, String namespace, Deployment deployment) {
         return kubernetesClientContainer.getClient(clusterName).apps().deployments().inNamespace(namespace).createOrReplace(deployment);
     }
 

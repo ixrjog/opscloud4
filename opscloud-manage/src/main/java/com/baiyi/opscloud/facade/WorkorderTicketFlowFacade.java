@@ -10,4 +10,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicket;
 public interface WorkorderTicketFlowFacade {
 
     void createTicketFlow(OcWorkorderTicket ocWorkorderTicket);
+
+    void sendTicketFlowMsg(OcWorkorderTicket ocWorkorderTicket, String ticketPhase);
 }

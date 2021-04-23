@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.account;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.account.factory.AccountFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.vo.auth.UserRoleVO;
 import com.baiyi.opscloud.facade.AuthFacade;
@@ -21,7 +22,6 @@ public class AccountTest extends BaseUnit {
     @Resource
     private OcUserService ocUserService;
 
-
     @Resource
     private AuthFacade authFacade;
 
@@ -34,10 +34,16 @@ public class AccountTest extends BaseUnit {
             userRole.setRoleId(5);
 
             authFacade.addUserRole(userRole);
-            System.err.println("username="+ocUser.getUsername());
+            System.err.println("username=" + ocUser.getUsername());
         }
 
 
+    }
+
+    @Test
+    void syncTest() {
+        IAccount account = AccountFactory.getAccountByKey("DingtalkAccount");
+        account.async();
     }
 
 

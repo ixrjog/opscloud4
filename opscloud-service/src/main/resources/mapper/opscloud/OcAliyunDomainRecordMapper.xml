@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunDomainRecordMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunDomainRecord">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="domain_name" jdbcType="VARCHAR" property="domainName"/>
+        <result column="record_id" jdbcType="VARCHAR" property="recordId"/>
+        <result column="record_rr" jdbcType="VARCHAR" property="recordRr"/>
+        <result column="record_type" jdbcType="VARCHAR" property="recordType"/>
+        <result column="record_value" jdbcType="VARCHAR" property="recordValue"/>
+        <result column="record_ttl" jdbcType="BIGINT" property="recordTtl"/>
+        <result column="record_priority" jdbcType="BIGINT" property="recordPriority"/>
+        <result column="record_line" jdbcType="VARCHAR" property="recordLine"/>
+        <result column="record_status" jdbcType="VARCHAR" property="recordStatus"/>
+        <result column="record_locked" jdbcType="VARCHAR" property="recordLocked"/>
+        <result column="record_weight" jdbcType="INTEGER" property="recordWeight"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcAliyunDomainRecordPage"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunDomainRecordParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_domain_record
+        <where>
+            <if test="domainName != null and domainName != ''">
+                and domain_name = #{domainName}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and (record_rr like "%" #{queryName} "%"
+                or record_value like "%" #{queryName} "%" )
+            </if>
+            <if test="recordType != null and recordType != ''">
+                and record_type = #{recordType}
+            </if>
+            <if test="recordStatus != null and recordStatus != ''">
+                and record_status = #{recordStatus}
+            </if>
+        </where>
+    </select>
+
+</mapper>

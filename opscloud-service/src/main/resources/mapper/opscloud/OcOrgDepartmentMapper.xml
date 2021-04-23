@@ -29,4 +29,26 @@
         order by id, dept_order
     </select>
 
+    <select id="queryFirstLevelDepartmentPage"
+            parameterType="com.baiyi.opscloud.domain.param.org.DepartmentParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_org_department
+        where parent_id = 1
+        <if test="queryName != null and queryName != ''">
+            and (name like "%" #{queryName} "%"
+            or comment like "%" #{queryName} "%")
+        </if>
+        order by id, dept_order
+    </select>
+
+
+    <select id="queryOcOrgDepartmentByIdList"
+            resultMap="BaseResultMap">
+        select * from oc_org_department
+        where id in
+        <foreach close=")" collection="idList" item="id" open="(" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
 </mapper>

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.term;
 
+import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -32,6 +33,7 @@ public class TerminalSessionVO {
         private Date closeTime;
         private String termHostname;
         private String termAddr;
+        private OcUser ocUser;
 
     }
 }

@@ -26,7 +26,7 @@ public class OcKubernetesClusterNamespaceServiceImpl implements OcKubernetesClus
 
     @Override
     public DataTable<OcKubernetesClusterNamespace> queryOcKubernetesClusterNamespaceByParam(KubernetesClusterNamespaceParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesClusterNamespace> list = ocKubernetesClusterNamespaceMapper.queryOcKubernetesClusterNamespaceByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

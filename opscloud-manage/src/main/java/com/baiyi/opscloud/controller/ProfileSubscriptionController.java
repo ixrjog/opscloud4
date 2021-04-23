@@ -47,7 +47,8 @@ public class ProfileSubscriptionController {
     @ApiOperation(value = "发布")
     @GetMapping(value = "/publish", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> publishProfile(@RequestParam @Valid int id) {
-        return new HttpResult<>(profileSubscriptionFacade.publishProfile(id));
+        profileSubscriptionFacade.publishProfile(id);
+        return HttpResult.SUCCESS;
     }
 
 }

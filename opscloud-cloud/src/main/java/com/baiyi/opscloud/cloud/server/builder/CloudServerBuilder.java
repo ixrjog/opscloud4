@@ -10,6 +10,7 @@ import com.baiyi.opscloud.common.base.CloudServerType;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
+import com.baiyi.opscloud.tencent.cloud.cvm.instance.CVMInstance;
 import com.baiyi.opscloud.vmware.vcsa.instance.ESXiInstance;
 import com.baiyi.opscloud.vmware.vcsa.instance.VMInstance;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostInterface;
@@ -33,7 +34,6 @@ public class CloudServerBuilder {
 
     public static final String ECS_SYSTEM_DISK_TYPE = "system";
     public static final String ECS_DATA_DISK_TYPE = "data";
-
 
     public static OcCloudServer build(VMInstance instance, String zone) {
         CloudServerBO bo = CloudServerBO.builder()
@@ -111,7 +111,6 @@ public class CloudServerBuilder {
         return covert(bo);
     }
 
-
     /**
      * EC2
      *
@@ -168,7 +167,8 @@ public class CloudServerBuilder {
                 .instanceType(instance.getInstanceType())
                 .instanceName(instance.getInstanceName())
                 .instanceId(instance.getInstanceId())
-                .serverName(instance.getHostName())
+                // 此处要修改
+                .serverName(instance.getInstanceName())
                 .instanceDetail(instanceDetail)
                 .cloudServerType(CloudServerType.ECS.getType())
                 .publicIp(publicIp)
@@ -209,7 +209,7 @@ public class CloudServerBuilder {
      *
      * @param instance
      */
-    public static OcCloudServer build(com.tencentcloudapi.cvm.v20170312.models.Instance instance, String instanceDetail) {
+    public static OcCloudServer build(CVMInstance instance, String instanceDetail) {
         CloudServerBO bo = CloudServerBO.builder()
                 .zone(instance.getPlacement().getZone())
                 .instanceName(instance.getInstanceName())

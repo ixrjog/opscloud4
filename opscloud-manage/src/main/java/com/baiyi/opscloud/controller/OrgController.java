@@ -2,9 +2,11 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartment;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.*;
+import com.baiyi.opscloud.domain.vo.tree.TreeVO;
 import com.baiyi.opscloud.facade.OrgFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -37,6 +41,18 @@ public class OrgController {
     @GetMapping(value = "/department/tree/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DepartmentTreeVO.DepartmentTree> queryDepartmentTree(@Valid int parentId) {
         return new HttpResult<>(orgFacade.queryDepartmentTree(parentId));
+    }
+
+    @ApiOperation(value = "查询部门树v2")
+    @GetMapping(value = "/department/treeV2/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<TreeVO.Tree>> queryDepartmentTreeV2() {
+        return new HttpResult<>(orgFacade.queryDepartmentTreeV2());
+    }
+
+    @ApiOperation(value = "刷新部门树v2")
+    @GetMapping(value = "/department/treeV2/refresh", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<TreeVO.Tree>> refreshDepartmentTreeV2() {
+        return new HttpResult<>(orgFacade.refreshDepartmentTreeV2());
     }
 
     @ApiOperation(value = "查询组织架构图")
@@ -128,5 +144,36 @@ public class OrgController {
     public HttpResult<OrgApprovalVO.OrgApproval> queryOrgApprovalByName(@RequestParam String username) {
         return new HttpResult<>(orgFacade.queryOrgApprovalByName(username));
     }
+
+    @ApiOperation(value = "查询用户所在部门")
+    @GetMapping(value = "/department/user/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, List<OcOrgDepartment>>> queryOrgByUser(@RequestParam Integer userId) {
+        return new HttpResult<>(orgFacade.queryOrgByUser(userId));
+    }
+
+    @ApiOperation(value = "查询用户所在部门V2")
+    @GetMapping(value = "/department/userV2/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OrgDepartmentMemberVO.DepartmentMember>> queryOrgByUserV2(@RequestParam Integer userId) {
+        return new HttpResult<>(orgFacade.queryOrgByUserV2(userId));
+    }
+
+    @ApiOperation(value = "查询用户所在部门")
+    @GetMapping(value = "/department/username/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, List<OcOrgDepartment>>> queryOrgByUsername(@RequestParam String username) {
+        return new HttpResult<>(orgFacade.queryOrgByUsername(username));
+    }
+
+    @ApiOperation(value = "分页查询一级部门列表")
+    @PostMapping(value = "/department/fl/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<OrgDepartmentVO.Department>> queryFirstLevelDepartmentPage(@RequestBody @Valid DepartmentParam.PageQuery pageQuery) {
+        return new HttpResult<>(orgFacade.queryFirstLevelDepartmentPage(pageQuery));
+    }
+
+    @ApiOperation(value = "查询部门路径")
+    @GetMapping(value = "/department/path/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<OcOrgDepartment>> queryDeptPath(@RequestParam Integer departmentId) {
+        return new HttpResult<>(orgFacade.queryDeptPath(departmentId));
+    }
+
 
 }

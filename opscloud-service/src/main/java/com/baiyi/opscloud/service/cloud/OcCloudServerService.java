@@ -13,7 +13,9 @@ import java.util.List;
  */
 public interface OcCloudServerService {
 
-    DataTable<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.PageQuery pageQuery);
+    DataTable<OcCloudServer> queryOcCloudServerByParam(CloudServerParam.CloudServerPageQuery pageQuery);
+
+    DataTable<OcCloudServer> queryOcCloudServerChargeByParam(CloudServerParam.CloudServerChargePageQuery pageQuery);
 
     List<OcCloudServer> queryOcCloudServerByType(int cloudserverType);
 

@@ -6,6 +6,8 @@ import com.baiyi.opscloud.account.builder.UserBuilder;
 import com.baiyi.opscloud.account.convert.LdapPersonConvert;
 import com.baiyi.opscloud.common.base.AccountType;
 import com.baiyi.opscloud.common.util.PasswordUtils;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAuthUserRole;
@@ -49,12 +51,10 @@ public class LdapAccount extends BaseAccount implements IAccount {
     @Resource
     private OcAuthRoleService ocAuthRoleService;
 
-
     @Override
     protected List<OcUser> getUserList() {
         return personRepo.getPersonList().stream().map(UserBuilder::build).collect(Collectors.toList());
     }
-
 
     @Override
     protected int getAccountType() {
@@ -73,13 +73,14 @@ public class LdapAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean create(OcUser user) {
+    public BusinessWrapper<Boolean> create(OcUser user) {
         user.setIsActive(true);
         user.setSource("ldap");
         // 若密码为空生成初始密码
         String password = (StringUtils.isEmpty(user.getPassword()) ? PasswordUtils.getPW(PASSWORD_LENGTH) : user.getPassword());
         user.setPassword(stringEncryptor.encrypt(password)); // 加密
-        ocUserService.addOcUser(user);
+        if (ocUserService.queryOcUserByUsername(user.getUsername()) == null)
+            ocUserService.addOcUser(user);
         initialUserBaseRole(user); // 初始化角色
         // 初始化默认角色
         return personRepo.create(LdapPersonConvert.convertOcUser(user, password));
@@ -102,34 +103,35 @@ public class LdapAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean delete(OcUser user) {
+    public BusinessWrapper<Boolean> delete(OcUser user) {
         try {
-            if (personRepo.delete(user.getUsername())) {
+            BusinessWrapper<Boolean> wrapper = personRepo.delete(user.getUsername());
+            if (wrapper.isSuccess()) {
                 ocUserService.delOcUserByUsername(user.getUsername());
-            } else {
-                return false;
             }
+            return wrapper;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return false;
+        return new BusinessWrapper<>(ErrorEnum.ACCOUNT_DELETE_ERROR);
     }
 
     @Override
-    public Boolean active(OcUser user, boolean active) {
+    public BusinessWrapper<Boolean> active(OcUser user, boolean active) {
         if (!active) {
             if (!personRepo.checkPersonInLdap(user.getUsername()))
-                return true; // 用户不存在
+                return BusinessWrapper.SUCCESS; // 用户不存在
             Person person = new Person();
             person.setUsername(user.getUsername());
             person.setUserPassword(PasswordUtils.getPW(20));
+            person.setIsActive(Boolean.FALSE);
             personRepo.update(person);
         }
-        return true;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean update(OcUser user) {
+    public BusinessWrapper<Boolean> update(OcUser user) {
         // 校验用户
         OcUser ocUser;
         if (!StringUtils.isEmpty(user.getUsername())) {
@@ -137,33 +139,30 @@ public class LdapAccount extends BaseAccount implements IAccount {
         } else {
             ocUser = ocUserService.queryOcUserById(user.getId());
         }
-        if (ocUser == null) return Boolean.FALSE;
+        if (ocUser == null) return new BusinessWrapper<>(ErrorEnum.ACCOUNT_NOT_EXIST);
         Person person = new Person();
         person.setUsername(ocUser.getUsername());
-        if (!StringUtils.isEmpty(user.getDisplayName())) {
-            //ocUser.setDisplayName(user.getDisplayName());
+        if (!StringUtils.isEmpty(user.getDisplayName()))
             person.setDisplayName(user.getDisplayName());
-        }
-        if (!StringUtils.isEmpty(user.getEmail())) {
-            //ocUser.setEmail(user.getEmail());
-            person.setEmail(user.getEmail());
-        }
-        if (!StringUtils.isEmpty(user.getPhone())) {
-            //ocUser.setPhone(user.getPhone());
-            person.setMobile(user.getPhone());
-        }
 
-        if (!StringUtils.isEmpty(user.getPassword())) {
-            //ocUser.setPassword(stringEncryptor.encrypt(user.getPassword())); // 加密
+        if (!StringUtils.isEmpty(user.getEmail()))
+            person.setEmail(user.getEmail());
+
+        if (!StringUtils.isEmpty(user.getPhone()))
+            person.setMobile(user.getPhone());
+
+        if (!StringUtils.isEmpty(user.getPassword()))
             person.setUserPassword(user.getPassword());
-        }
+
+        if (user.getIsActive() != null)
+            person.setIsActive(user.getIsActive());
+
         try {
-            //ocUserService.updateOcUser(ocUser);
             personRepo.update(person);
-            return Boolean.TRUE;
+            return BusinessWrapper.SUCCESS;
         } catch (Exception ignored) {
         }
-        return Boolean.FALSE;
+        return new BusinessWrapper<>(ErrorEnum.ACCOUNT_UPDATE_ERROR);
     }
 
     /**
@@ -174,8 +173,12 @@ public class LdapAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean grant(OcUser user, String resource) {
-        return groupRepo.addGroupMember(resource, user.getUsername());
+    public BusinessWrapper<Boolean> grant(OcUser user, String resource) {
+        if (groupRepo.addGroupMember(resource, user.getUsername())) {
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_AUTHORIZE_ERROR);
+        }
     }
 
     /**
@@ -186,8 +189,13 @@ public class LdapAccount extends BaseAccount implements IAccount {
      * @return
      */
     @Override
-    public Boolean revoke(OcUser user, String resource) {
-        return groupRepo.removeGroupMember(resource, user.getUsername());
+    public BusinessWrapper<Boolean> revoke(OcUser user, String resource) {
+        if (groupRepo.removeGroupMember(resource, user.getUsername())) {
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_AUTHORIZE_ERROR);
+        }
+
     }
 
 

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.server;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.param.monitor.MonitorHostParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 
 import java.util.List;
@@ -19,6 +20,8 @@ public interface OcServerService {
 
     List<OcServer> queryOcServerByServerGroupId(int serverGroupId);
 
+    List<OcServer> queryOcServerByServerGroupIdAndEnvType(int serverGroupId,int envType);
+
     List<OcServer> queryAllOcServer();
 
     OcServer queryOcServerById(int id);
@@ -32,9 +35,11 @@ public interface OcServerService {
 
     int countByEnvType(int envType);
 
-    DataTable<OcServer> queryOcServerByParam(ServerParam.PageQuery pageQuery);
+    DataTable<OcServer> queryOcServerByMonitorParam(MonitorHostParam.MonitorHostPageQuery pageQuery);
 
-    DataTable<OcServer> fuzzyQueryOcServerByParam(ServerParam.PageQuery pageQuery);
+    DataTable<OcServer> queryOcServerByParam(ServerParam.ServerPageQuery pageQuery);
+
+    DataTable<OcServer> fuzzyQueryOcServerByParam(ServerParam.ServerPageQuery pageQuery);
 
     int countOcServerByServerGroupId(int serverGroupId);
 

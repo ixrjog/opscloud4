@@ -1,8 +1,11 @@
 package com.baiyi.opscloud.ldap;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.domain.generator.opscloud.OcAuthRole;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.repo.GroupRepo;
+import com.baiyi.opscloud.service.auth.OcAuthRoleService;
+import com.baiyi.opscloud.service.user.OcUserService;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -19,6 +22,12 @@ public class GroupRepoTest extends BaseUnit {
     @Resource
     private GroupRepo groupRepo;
 
+    @Resource
+    private OcAuthRoleService ocAuthRoleService;
+
+    @Resource
+    private OcUserService ocUserService;
+
     @Test
     void testQueryPersonList() {
         List<Group> list = groupRepo.getGroupList();
@@ -29,7 +38,7 @@ public class GroupRepoTest extends BaseUnit {
 
     @Test
     void testQueryGroupMember() {
-        List<String> list = groupRepo.queryGroupMember("jenkins-admin");
+        List<String> list = groupRepo.queryGroupMember("jenkins-administrators");
         for (String username : list) {
             System.err.println(username);
         }
@@ -47,7 +56,22 @@ public class GroupRepoTest extends BaseUnit {
 
     @Test
     void testAddGroupMember() {
-        Boolean result = groupRepo.addGroupMember("bigdata-group-platform", "baiyi");
+        Boolean result = groupRepo.addGroupMember("vpn-users", "baiyi");
         System.err.println(result);
+    }
+
+    @Test
+    void test() {
+        ocUserService.queryOcUserActive().forEach(u -> {
+            try {
+                OcAuthRole ocAuthRole = ocAuthRoleService.queryTopOcAuthRoleByUsername(u.getUsername());
+                if (ocAuthRole.getRoleName().equals("dev")){
+                    Boolean result = groupRepo.addGroupMember("vpn-users", u.getUsername());
+                    System.err.println(result);
+                }
+            } catch (Exception e) {
+
+            }
+        });
     }
 }

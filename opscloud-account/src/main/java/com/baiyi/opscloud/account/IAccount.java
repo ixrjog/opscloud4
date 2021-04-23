@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.account;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 
 /**
@@ -18,7 +19,7 @@ public interface IAccount {
      */
     void sync();
 
-    Boolean sync(OcUser user);
+    void sync(OcUser user);
 
     /**
      * 创建账户
@@ -26,7 +27,7 @@ public interface IAccount {
      * @param user
      * @return
      */
-    Boolean create(OcUser user);
+    BusinessWrapper<Boolean> create(OcUser user);
 
     void async();
 
@@ -37,11 +38,11 @@ public interface IAccount {
      * @param active
      * @return
      */
-    Boolean active(OcUser user, boolean active);
+    BusinessWrapper<Boolean> active(OcUser user, boolean active);
 
-    Boolean delete(OcUser user);
+    BusinessWrapper<Boolean> delete(OcUser user);
 
-    Boolean update(OcUser user);
+    BusinessWrapper<Boolean> update(OcUser user);
 
     String getKey();
 
@@ -52,7 +53,7 @@ public interface IAccount {
      * @param resource
      * @return
      */
-    Boolean grant(OcUser user, String resource);
+    BusinessWrapper<Boolean> grant(OcUser user, String resource);
 
     /**
      * 撤销授权
@@ -61,7 +62,7 @@ public interface IAccount {
      * @param resource
      * @return
      */
-    Boolean revoke(OcUser user, String resource);
+    BusinessWrapper<Boolean> revoke(OcUser user, String resource);
 
     /**
      * 推送用户公钥 PubKey
@@ -69,6 +70,6 @@ public interface IAccount {
      * @param user
      * @return
      */
-    Boolean pushSSHKey(OcUser user);
+    BusinessWrapper<Boolean> pushSSHKey(OcUser user);
 
 }

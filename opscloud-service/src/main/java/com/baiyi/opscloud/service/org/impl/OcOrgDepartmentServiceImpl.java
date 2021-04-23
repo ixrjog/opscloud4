@@ -7,6 +7,7 @@ import com.baiyi.opscloud.mapper.opscloud.OcOrgDepartmentMapper;
 import com.baiyi.opscloud.service.org.OcOrgDepartmentService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.var;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -26,7 +27,7 @@ public class OcOrgDepartmentServiceImpl implements OcOrgDepartmentService {
 
     @Override
     public DataTable<OcOrgDepartment> queryOcOrgDepartmentParam(DepartmentParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        var page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcOrgDepartment> list = ocOrgDepartmentMapper.queryOcOrgDepartmentParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }
@@ -60,4 +61,20 @@ public class OcOrgDepartmentServiceImpl implements OcOrgDepartmentService {
         ocOrgDepartmentMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public List<OcOrgDepartment> queryOcOrgDepartmentByIdList(List<Integer> idList) {
+        return ocOrgDepartmentMapper.queryOcOrgDepartmentByIdList(idList);
+    }
+
+    @Override
+    public DataTable<OcOrgDepartment> queryFirstLevelDepartmentPage(DepartmentParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<OcOrgDepartment> list = ocOrgDepartmentMapper.queryFirstLevelDepartmentPage(pageQuery);
+        return new DataTable<>(list, page.getTotal());
+    }
+
+    @Override
+    public List<OcOrgDepartment> queryOcOrgDepartmentAll() {
+        return ocOrgDepartmentMapper.selectAll();
+    }
 }

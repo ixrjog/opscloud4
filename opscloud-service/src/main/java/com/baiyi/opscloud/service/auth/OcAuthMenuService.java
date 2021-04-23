@@ -15,5 +15,5 @@ public interface OcAuthMenuService {
 
     void updateOcAuthMenu(OcAuthMenu ocAuthMenu);
 
-    void deletetOcAuthMenuById(OcAuthMenu ocAuthMenu);
+    void deleteOcAuthMenuById(OcAuthMenu ocAuthMenu);
 }

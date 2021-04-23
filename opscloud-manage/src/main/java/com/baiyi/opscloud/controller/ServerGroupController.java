@@ -2,6 +2,7 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.HttpResult;
+import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.server.SeverGroupPropertyParam;
@@ -150,5 +151,16 @@ public class ServerGroupController {
         return new HttpResult<>(serverGroupFacade.delServerGroupPropertyById(id));
     }
 
+    @ApiOperation(value = "查询服务器组分组信息")
+    @PostMapping(value = "/pattern/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, List<OcServer>>> queryServerGroupHostPattern(@RequestBody @Valid ServerGroupParam.ServerGroupHostPatternQuery query)  {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupHostPattern(query));
+    }
+
+    @ApiOperation(value = "查询服务器组环境分组信息")
+    @PostMapping(value = "/env/pattern/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, List<OcServer>>> queryServerGroupEnvHostPattern(@RequestBody @Valid ServerGroupParam.ServerGroupEnvHostPatternQuery query)  {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupEnvHostPattern(query));
+    }
 
 }

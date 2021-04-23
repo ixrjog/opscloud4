@@ -30,7 +30,7 @@ public class ServerController {
 
     @ApiOperation(value = "分页查询server列表")
     @GetMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ServerVO.Server>> queryServerPage(@Valid ServerParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<ServerVO.Server>> queryServerPage(@Valid ServerParam.ServerPageQuery pageQuery) {
         return new HttpResult<>(serverFacade.queryServerPage(pageQuery));
     }
 
@@ -38,6 +38,12 @@ public class ServerController {
     @GetMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ServerVO.Server> queryServerById(int id) {
         return new HttpResult<>(serverFacade.queryServerById(id));
+    }
+
+    @ApiOperation(value = "查询server详情by内网ip")
+    @GetMapping(value = "/privateIp/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ServerVO.Server> queryServerByPrivateIp(String privateIp) {
+        return new HttpResult<>(serverFacade.queryServerByPrivateIp(privateIp));
     }
 
     @ApiOperation(value = "批量查询server列表")
@@ -54,7 +60,7 @@ public class ServerController {
 
     @ApiOperation(value = "分页模糊查询server列表")
     @PostMapping(value = "/page/fuzzy/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ServerVO.Server>> fuzzyQueryServerPage(@RequestBody @Valid ServerParam.PageQuery pageQuery) {
+    public HttpResult<DataTable<ServerVO.Server>> fuzzyQueryServerPage(@RequestBody @Valid ServerParam.ServerPageQuery pageQuery) {
         return new HttpResult<>(serverFacade.fuzzyQueryServerPage(pageQuery));
     }
 

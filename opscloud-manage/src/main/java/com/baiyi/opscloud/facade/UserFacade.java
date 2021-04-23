@@ -12,6 +12,8 @@ import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2020/2/20 11:12 上午
@@ -37,6 +39,8 @@ public interface UserFacade {
 
     BusinessWrapper<Boolean> updateBaseUser(UserParam.UpdateUser updateUser);
 
+    BusinessWrapper<Boolean> checkUsername(String username);
+
     BusinessWrapper<Boolean> createUser(UserParam.CreateUser createUser);
 
     DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserBusinessGroupParam.PageQuery pageQuery);
@@ -50,6 +54,8 @@ public interface UserFacade {
     DataTable<UserGroupVO.UserGroup> queryUserExcludeUserGroupPage(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery);
 
     BusinessWrapper<Boolean> addUserGroup(UserGroupVO.UserGroup userGroup);
+
+    BusinessWrapper<Boolean> delUserGroupById(int id);
 
     BusinessWrapper<Boolean> updateUserGroup(UserGroupVO.UserGroup userGroup);
 
@@ -75,6 +81,8 @@ public interface UserFacade {
     BusinessWrapper<Boolean> retireUser(int userId);
 
     BusinessWrapper<Boolean> beReinstatedUser(int userId);
+
+    BusinessWrapper<List<UserVO.User>> queryUserToBeRetired();
 
 
 }

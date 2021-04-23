@@ -2,26 +2,20 @@
 # uid 企业别名（主账户id）
 # regionIds 数组可以写多个
 
+# 地域和可用区.文档地址  https://help.aliyun.com/document_detail/40654.html?spm=5176.10695662.1996646101.1.7e8f1013WQwRvq
+
 aliyun:
   accounts:
-    -
-      uid: ENC(3VvI4lEDCLqiuMqHiDlIjrPInYndTlZybFMBoMOZFTo=)
+    - uid: 1820460406678463
       master: true
       name: '主账户'
-      accessKeyId: ENC(fp/faa6maHVzbrG9y0JkDVfyhvSZKR8AVaWO3hE1/UsSIj07oTvMLA==)
-      secret: ENC(fSKtDCmkLBtszyTVR2sxAJvOSsVeP+5qrxRJiCdT3LaVOLg0gJxbiA==)
-      regionId: cn-hangzhou
-      regionIds:
-        - cn-shanghai
-        - cn-hongkong
-        - us-west-1
-        - cn-hangzhou
-    -
-      uid: ENC(wAO3HMMqTOmcM9COe34HZ+U7aaoq7ivs7wJBP/wt3ic=)
-      master: false
-      name: 'MS账户'
-      accessKeyId: ENC(Z2cxs+YhhG5hdCE+dChc/Xcg/ZC8UFcXspHLYKJRqbvQokZD4/zzLQ==)
-      secret: ENC(hd1oN863sBJbYIQKwqMNVLFWBrHgY+9BlLv/3K6JTb38z0ZHTp5VWg==)
+      accessKeyId: LTAI4G9LMmkjrHZbhs43aKNh
+      secret: ENC(+b3GIgf1S+HA8PkoSL1XkGBjApnIuwytNBtpGbJR4fShUs8hCmgenQ==)
       regionId: cn-hangzhou
       regionIds:
         - cn-hangzhou
+  #       - cn-shanghai
+  #       - cn-hongkong
+  #       - us-west-1
+  ons:
+    internetRegionId: mq-internet-access

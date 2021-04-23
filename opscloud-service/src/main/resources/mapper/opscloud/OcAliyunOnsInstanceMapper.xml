@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunOnsInstanceMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunOnsInstance">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="instance_id" jdbcType="VARCHAR" property="instanceId"/>
+        <result column="instance_name" jdbcType="VARCHAR" property="instanceName"/>
+        <result column="env_name" jdbcType="VARCHAR" property="envName"/>
+        <result column="independent_naming" jdbcType="BIT" property="independentNaming"/>
+        <result column="instance_status" jdbcType="INTEGER" property="instanceStatus"/>
+        <result column="instance_type" jdbcType="INTEGER" property="instanceType"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="max_tps" jdbcType="BIGINT" property="maxTps"/>
+        <result column="topic_capacity" jdbcType="INTEGER" property="topicCapacity"/>
+        <result column="release_time" jdbcType="BIGINT" property="releaseTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="tcp_endpoint" jdbcType="LONGVARCHAR" property="tcpEndpoint"/>
+        <result column="http_Internet_endpoint" jdbcType="LONGVARCHAR" property="httpInternetEndpoint"/>
+        <result column="http_internet_secure_endpoint" jdbcType="LONGVARCHAR" property="httpInternetSecureEndpoint"/>
+        <result column="http_internal_endpoint" jdbcType="LONGVARCHAR" property="httpInternalEndpoint"/>
+    </resultMap>
+
+    <select id="queryOcAliyunOnsInstanceByInstanceIdList"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ons_instance
+        where instance_id in
+        <foreach close=")" collection="instanceIdList" item="instanceId" open="(" separator=",">
+            #{instanceId}
+        </foreach>
+    </select>
+</mapper>

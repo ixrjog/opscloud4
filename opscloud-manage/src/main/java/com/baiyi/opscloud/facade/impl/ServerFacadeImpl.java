@@ -13,19 +13,14 @@ import com.baiyi.opscloud.decorator.server.ServerDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.generator.opscloud.OcBusinessTag;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerAttribute;
-import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerAttributeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.facade.CloudServerFacade;
-import com.baiyi.opscloud.facade.ServerCacheFacade;
-import com.baiyi.opscloud.facade.ServerFacade;
-import com.baiyi.opscloud.facade.TagFacade;
+import com.baiyi.opscloud.facade.*;
 import com.baiyi.opscloud.server.ServerCenter;
 import com.baiyi.opscloud.server.facade.ServerAttributeFacade;
+import com.baiyi.opscloud.service.cloud.OcCloudServerService;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import com.baiyi.opscloud.service.server.OcServerService;
 import com.google.common.collect.Lists;
@@ -68,10 +63,14 @@ public class ServerFacadeImpl implements ServerFacade {
     @Resource
     private ServerCacheFacade serverCacheFacade;
 
+    @Resource
+    private OcCloudServerService ocCloudServerService;
+
+
     @Override
-    public DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery) {
+    public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.queryOcServerByParam(pageQuery);
-        return toServerDataTable(table);
+        return convertServerDataTable(table);
     }
 
     @Override
@@ -79,7 +78,15 @@ public class ServerFacadeImpl implements ServerFacade {
         OcServer ocServer = ocServerService.queryOcServerById(id);
         if (ocServer == null)
             return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
-        return new BusinessWrapper(getServerVO(ocServer));
+        return new BusinessWrapper<>(getServerVO(ocServer));
+    }
+
+    @Override
+    public BusinessWrapper<ServerVO.Server> queryServerByPrivateIp(String privateIp) {
+        OcServer ocServer = ocServerService.queryOcServerByPrivateIp(privateIp);
+        if (ocServer == null)
+            return new BusinessWrapper<>(ErrorEnum.SERVER_NOT_EXIST);
+        return new BusinessWrapper<>(getServerVO(ocServer));
     }
 
     private ServerVO.Server getServerVO(OcServer ocServer) {
@@ -94,13 +101,13 @@ public class ServerFacadeImpl implements ServerFacade {
             if (ocServer != null)
                 result.add(serverDecorator.decorator(BeanCopierUtils.copyProperties(ocServer, ServerVO.Server.class)));
         });
-        return new BusinessWrapper(result);
+        return new BusinessWrapper<>(result);
     }
 
     @Override
-    public DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery) {
+    public DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<OcServer> table = ocServerService.fuzzyQueryOcServerByParam(pageQuery);
-        return toServerDataTable(table);
+        return convertServerDataTable(table);
     }
 
     @Override
@@ -117,21 +124,30 @@ public class ServerFacadeImpl implements ServerFacade {
         List<ServerVO.Server> servers = ocServerService.queryOcServerByServerGroupId(serverGroupId).stream().map(e ->
                 serverDecorator.decorator(BeanCopierUtils.copyProperties(e, ServerVO.Server.class))
         ).collect(Collectors.toList());
-        return new BusinessWrapper(servers);
+        return new BusinessWrapper<>(servers);
     }
 
     @Override
     public BusinessWrapper<List<ServerAttributeVO.ServerAttribute>> queryServerAttribute(int id) {
         OcServer ocServer = ocServerService.queryOcServerById(id);
-        return new BusinessWrapper(serverAttributeFacade.queryServerAttribute(ocServer));
+        return new BusinessWrapper<>(serverAttributeFacade.queryServerAttribute(ocServer));
     }
 
     @Override
     public BusinessWrapper<Boolean> saveServerAttribute(ServerAttributeVO.ServerAttribute serverAttribute) {
-        return serverAttributeFacade.saveServerAttribute(serverAttribute);
+        BusinessWrapper<Boolean> wrapper = serverAttributeFacade.saveServerAttribute(serverAttribute);
+        if (serverAttribute.getBusinessType() == BusinessType.SERVER.getType()) {
+            OcServer ocServer = ocServerService.queryOcServerById(serverAttribute.getBusinessId());
+            serverCacheFacade.evictServerCache(ocServer);
+        }
+        if (serverAttribute.getBusinessType() == BusinessType.SERVERGROUP.getType()) {
+            OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(serverAttribute.getBusinessId());
+            serverCacheFacade.evictServerGroupCache(ocServerGroup);
+        }
+        return wrapper;
     }
 
-    private DataTable<ServerVO.Server> toServerDataTable(DataTable<OcServer> table) {
+    private DataTable<ServerVO.Server> convertServerDataTable(DataTable<OcServer> table) {
         List<ServerVO.Server> page = BeanCopierUtils.copyListProperties(table.getData(), ServerVO.Server.class);
         return new DataTable<>(page.stream().map(e -> serverDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
@@ -183,7 +199,19 @@ public class ServerFacadeImpl implements ServerFacade {
         serverCacheFacade.evictServerCache(ocServer);
         // 服务器工厂
         serverCenter.update(ocServer);
+        // 更新云服务器名称
+        updateCloudServer(ocServer);
         return BusinessWrapper.SUCCESS;
+    }
+
+    private void updateCloudServer(OcServer ocServer) {
+        OcCloudServer ocCloudServer = ocCloudServerService.queryOcCloudServerByUnqueKey(ocServer.getServerType(), ocServer.getId());
+        if (ocCloudServer == null) return;
+        String serverName = ServerBaseFacade.acqServerName(ocServer);
+        if(!serverName.equals(ocCloudServer.getServerName())){
+            ocCloudServer.setServerName(serverName);
+            ocCloudServerService.updateOcCloudServer(ocCloudServer);
+        }
     }
 
     @Override

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcItAssetMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcItAsset">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="asset_company" jdbcType="INTEGER" property="assetCompany"/>
+        <result column="asset_code" jdbcType="VARCHAR" property="assetCode"/>
+        <result column="asset_name_id" jdbcType="INTEGER" property="assetNameId"/>
+        <result column="asset_status" jdbcType="INTEGER" property="assetStatus"/>
+        <result column="asset_configuration" jdbcType="VARCHAR" property="assetConfiguration"/>
+        <result column="asset_price" jdbcType="VARCHAR" property="assetPrice"/>
+        <result column="use_time" jdbcType="TIMESTAMP" property="useTime"/>
+        <result column="asset_add_time" jdbcType="TIMESTAMP" property="assetAddTime"/>
+        <result column="asset_place" jdbcType="VARCHAR" property="assetPlace"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcItAssetPage" parameterType="com.baiyi.opscloud.domain.param.it.ItAssetParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_it_asset
+        where asset_status != 4
+        <if test="queryName != null and queryName != ''">
+            and asset_code like "%" #{queryName} "%"
+        </if>
+        <if test="assetCompany != -1">
+            and asset_company = #{assetCompany}
+        </if>
+        <if test="assetStatus != -1">
+            and asset_status = #{assetStatus}
+        </if>
+        <if test="useStartTime != null and useEndTime != null">
+            and use_time between #{useStartTime,jdbcType=TIMESTAMP} and #{useEndTime,jdbcType=TIMESTAMP}
+        </if>
+        <if test="assetNameIdList != null and assetNameIdList.size() &gt; 0">
+            and asset_name_id in
+            <foreach close=")" collection="assetNameIdList" item="id" open="(" separator=",">
+                #{id}
+            </foreach>
+        </if>
+        order by asset_add_time desc ,create_time desc
+    </select>
+
+</mapper>

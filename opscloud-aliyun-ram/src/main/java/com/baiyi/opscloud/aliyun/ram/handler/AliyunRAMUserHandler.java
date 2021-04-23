@@ -12,6 +12,7 @@ import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
@@ -65,6 +66,85 @@ public class AliyunRAMUserHandler extends BaseAliyunRAM {
             return new BusinessWrapper(client.getAcsResponse(request).getUser());
         } catch (ClientException e) {
             return new BusinessWrapper(10000, e.getMessage());
+        }
+    }
+
+    /**
+     * 删除账户
+     *
+     * @param aliyunAccount
+     * @param username
+     * @return
+     */
+    public boolean deleteRamUser(AliyunCoreConfig.AliyunAccount aliyunAccount, String username) {
+        IAcsClient client = acqAcsClient(aliyunAccount);
+        List<ListPoliciesForUserResponse.Policy> policyList = listPoliciesForUser(client, username);
+        if (!CollectionUtils.isEmpty(policyList)) {
+            policyList.forEach(policy -> detachPolicyFromUser(client, username, policy));
+        }
+        List<ListGroupsForUserResponse.Group> groupList = listGroupsForUser(client, username);
+        if (!CollectionUtils.isEmpty(groupList)) {
+            groupList.forEach(group -> removeUserFromGroup(client, username, group));
+        }
+        DeleteUserResponse response = deleteUser(client, username);
+        return response != null && !StringUtils.isEmpty(response.getRequestId());
+    }
+
+    private DeleteUserResponse deleteUser(IAcsClient client, String username) {
+        DeleteUserRequest request = new DeleteUserRequest();
+        request.setUserName(username);
+        try {
+            return client.getAcsResponse(request);
+        } catch (ClientException e) {
+            log.error("删除RAM用户失败，用户名：{}", username, e);
+            return null;
+        }
+    }
+
+    private List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(IAcsClient client, String username) {
+        ListPoliciesForUserRequest request = new ListPoliciesForUserRequest();
+        request.setUserName(username);
+        try {
+            ListPoliciesForUserResponse response = client.getAcsResponse(request);
+            return response == null ? Collections.emptyList() : response.getPolicies();
+        } catch (ClientException e) {
+            log.error("获取RAM用户权限列表失败，用户名为：{}", username, e);
+            return Collections.emptyList();
+        }
+    }
+
+    private void detachPolicyFromUser(IAcsClient client, String username, ListPoliciesForUserResponse.Policy policy) {
+        DetachPolicyFromUserRequest request = new DetachPolicyFromUserRequest();
+        request.setUserName(username);
+        request.setPolicyName(policy.getPolicyName());
+        request.setPolicyType(policy.getPolicyType());
+        try {
+            client.getAcsResponse(request);
+        } catch (ClientException e) {
+            log.error("移除RAM用户权限失败，用户名为：{}", username, e);
+        }
+    }
+
+    private List<ListGroupsForUserResponse.Group> listGroupsForUser(IAcsClient client, String username) {
+        ListGroupsForUserRequest request = new ListGroupsForUserRequest();
+        request.setUserName(username);
+        try {
+            ListGroupsForUserResponse response = client.getAcsResponse(request);
+            return response == null ? Collections.emptyList() : response.getGroups();
+        } catch (ClientException e) {
+            log.error("获取RAM用户用户组失败，用户名为：{}", username, e);
+            return Collections.emptyList();
+        }
+    }
+
+    private void removeUserFromGroup(IAcsClient client, String username, ListGroupsForUserResponse.Group group) {
+        RemoveUserFromGroupRequest request = new RemoveUserFromGroupRequest();
+        request.setUserName(username);
+        request.setGroupName(group.getGroupName());
+        try {
+            client.getAcsResponse(request);
+        } catch (ClientException e) {
+            log.error("移除RAM用户用户组失败，用户名为：{}", username, e);
         }
     }
 

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcWorkorderDashboardMapper">
+    <resultMap id="BaseResultMap"
+               type="com.baiyi.opscloud.domain.vo.workorder.WorkorderStatsVO$BaseStatsData">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <resultMap id="MonthResultMap"
+               type="com.baiyi.opscloud.domain.vo.workorder.WorkorderStatsVO$WorkorderMonthStatsData">
+        <result column="date_cat" jdbcType="VARCHAR" property="dateCat"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <select id="queryWorkorderStatisticsByMonth" resultMap="MonthResultMap">
+        select date_format(a0.end_time, '%Y-%m') as date_cat
+        <if test="workorderId != -1">
+            , sum(if(a0.workorder_id = #{workorderId}, 1, 0)) as `value`
+        </if>
+        from oc_workorder_ticket a0
+        join oc_workorder a1 on a1.id = a0.workorder_id
+        where a0.ticket_phase = 'FINALIZED' and a0.end_time is not null
+        group by date_cat
+        order by date_cat;
+    </select>
+
+    <select id="queryWorkorderStatisticsByName" resultMap="BaseResultMap">
+        select a1.name as `name`, count(*) as `value`
+        from oc_workorder_ticket a0
+            join oc_workorder a1 on a1.id = a0.workorder_id
+        where a0.ticket_phase = 'FINALIZED' and a0.end_time is not null
+        group by a0.workorder_id
+        order by a0.workorder_id;
+    </select>
+
+</mapper>

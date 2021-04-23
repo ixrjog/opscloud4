@@ -29,10 +29,17 @@ public class Global {
 
     public static final String BASE_ROLE_NAME = "base";
 
+    public static final String DEV_ROLE_NAME = "dev";
+
     // 高权限账户
     // public static final String HIGH_AUTHORITY_ACCOUNT = "admin";
 
     public static final String ENV_PROD = "prod";
+
+    public interface envNames{
+        String PROD = "prod";
+        String DEFAULT = "default";
+    }
 
     public static final String JUMPSERVER_ADMIN_TOKEN = "jumpserverAdminToken";
 

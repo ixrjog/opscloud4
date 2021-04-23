@@ -60,14 +60,13 @@ public interface JumpserverCenter {
 
     void bindAvssetsSystemuserAssets(String assetId);
 
-    boolean delAssetsAsset(String assetId);
+    BusinessWrapper<Boolean> delAssetsAsset(String assetId);
 
     boolean activeUsersUser(String username, boolean active);
 
-    boolean delUsersUser(String username);
+    BusinessWrapper<Boolean> delUsersUser(String username);
 
     boolean updateUsersUser(OcUser ocUser);
-
 
     BusinessWrapper<Boolean> setUserActive(String id);
 

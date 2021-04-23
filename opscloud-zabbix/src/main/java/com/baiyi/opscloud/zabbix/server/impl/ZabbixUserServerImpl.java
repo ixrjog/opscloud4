@@ -1,14 +1,17 @@
 package com.baiyi.opscloud.zabbix.server.impl;
 
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostgroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserMedia;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUsergroup;
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.zabbix.api.UserAPI;
+import com.baiyi.opscloud.zabbix.api.UsergroupAPI;
+import com.baiyi.opscloud.zabbix.builder.ZabbixFilterBuilder;
+import com.baiyi.opscloud.zabbix.entry.*;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHandler;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestParamsIds;
+import com.baiyi.opscloud.zabbix.http.ZabbixBaseRequest;
+import com.baiyi.opscloud.zabbix.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.param.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.param.ZabbixRequestParams;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixIdsMapper;
+import com.baiyi.opscloud.zabbix.mapper.ZabbixMediaMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixUserMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixUsergroupMapper;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostgroupServer;
@@ -33,6 +36,10 @@ import java.util.UUID;
 @Component("ZabbixUserServer")
 public class ZabbixUserServerImpl implements ZabbixUserServer {
 
+    public static final String ZABBIX_USRGRPS = "usrgrps";
+
+    public static final String ZABBIX_MEDIAS = "medias";
+
     @Resource
     private ZabbixHandler zabbixHandler;
 
@@ -45,24 +52,69 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
     @Override
     public ZabbixUser getUser(String username) {
         try {
-            Map<String, String> filter = Maps.newHashMap();
-            filter.put("alias", username);
-            ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                    .method("user.get")
-                    .paramEntry("filter", filter)
+            ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                    .putEntry("alias", username)
+                    .build();
+
+            ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                    .method(UserAPI.GET)
+                    .paramEntryByFilter(filter)
                     .build();
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixUserMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
         return null;
     }
 
     @Override
+    public BusinessWrapper getUserUsrgrps(String username) {
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("alias", username)
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UserAPI.GET)
+                .paramEntryByFilter(filter)
+                .paramEntry("selectUsrgrps", "extend")
+                .build();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = zabbixHandler.api(request);
+            List<ZabbixUsergroup> usergroups = new ZabbixUsergroupMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get(0).get(ZABBIX_USRGRPS));
+            return new BusinessWrapper<>(usergroups);
+        } catch (Exception ignored) {
+        }
+        return zabbixServer.result(jsonNode);
+    }
+
+    @Override
+    public BusinessWrapper getUserMedias(String username) {
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("alias", username)
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UserAPI.GET)
+                .paramEntryByFilter(filter)
+                .paramEntry("selectMedias", "extend")
+                .build();
+        JsonNode jsonNode = null;
+        try {
+            jsonNode = zabbixHandler.api(request);
+            List<ZabbixMedia> medias = new ZabbixMediaMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get(0).get(ZABBIX_MEDIAS));
+            return new BusinessWrapper<>(medias);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return zabbixServer.result(jsonNode);
+    }
+
+    @Override
     public List<ZabbixUser> getAllZabbixUser() {
         try {
-            ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                    .method("user.get")
+            ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                    .method(UserAPI.GET)
                     .build();
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixUserMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT));
@@ -72,76 +124,79 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
     }
 
     @Override
-    public Boolean createUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps) {
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("user.create")
+    public BusinessWrapper<Boolean> createUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps) {
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UserAPI.CREATE)
                 .paramEntry("alias", user.getAlias())
                 .paramEntry("name", user.getName())
                 .paramEntry("passwd", UUID.randomUUID())
                 .paramEntry("usrgrps", usrgrps)
                 .paramEntrySkipEmpty("user_medias", mediaList)
                 .build();
+        JsonNode jsonNode = null;
         try {
-            JsonNode jsonNode = zabbixHandler.api(request);
+            jsonNode = zabbixHandler.api(request);
             String userid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("userids")).get(0);
             if (!StringUtils.isEmpty(userid))
-                return Boolean.TRUE;
+                return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Boolean.FALSE;
+        return zabbixServer.result(jsonNode);
     }
 
     @Override
-    public Boolean updateUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps) {
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("user.update")
+    public BusinessWrapper<Boolean> updateUser(ZabbixUser user, List<ZabbixUserMedia> mediaList, List<Map<String, String>> usrgrps) {
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UserAPI.UPDATE)
                 .paramEntry("userid", user.getUserid())
                 .paramEntry("name", user.getName())
                 .paramEntry("usrgrps", usrgrps)
                 .paramEntrySkipEmpty("user_medias", mediaList)
                 .build();
+        JsonNode jsonNode = null;
         try {
-            JsonNode jsonNode = zabbixHandler.api(request);
+            jsonNode = zabbixHandler.api(request);
             String userid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("userids")).get(0);
             if (!StringUtils.isEmpty(userid))
-                return Boolean.TRUE;
+                return BusinessWrapper.SUCCESS;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return Boolean.FALSE;
+        return zabbixServer.result(jsonNode);
     }
 
     @Override
-    public Boolean deleteUser(String username) {
+    public BusinessWrapper<Boolean> deleteUser(String username) {
         ZabbixUser user = getUser(username);
-        if (user == null) return Boolean.TRUE;
+        if (user == null) return BusinessWrapper.SUCCESS;
         // 数组形参数 https://www.zabbix.com/documentation/2.2/manual/api/reference/user/delete
-        String[] userids = new String[]{user.getUserid()};
-        ZabbixRequestParamsIds request = new ZabbixRequestParamsIds();
-        request.setMethod("user.delete");
-        request.setId(1);
-        request.setParams(userids);
+        ZabbixRequestParams request = ZabbixRequestParams.builder()
+                .method(UserAPI.DELETE.getMethod())
+                .params(new String[]{user.getUserid()})
+                .build();
 
+        JsonNode jsonNode = null;
         try {
-            //System.err.println(JSON.toJSONString(request));
-            JsonNode jsonNode = zabbixHandler.api(request);
+            jsonNode = zabbixHandler.api(request);
             String userid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("userids")).get(0);
             if (!StringUtils.isEmpty(userid))
-                return Boolean.TRUE;
-        } catch (Exception e) {
+                return BusinessWrapper.SUCCESS;
+        } catch (Exception ignored) {
         }
-        return Boolean.FALSE;
+        return zabbixServer.result(jsonNode);
     }
 
     @Override
     public ZabbixUsergroup getUsergroup(String usergroup) {
-        Map<String, String> filter = Maps.newHashMap();
-        filter.put("name", usergroup);
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("usergroup.get")
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("name", usergroup)
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UsergroupAPI.GET)
                 .paramEntry("status", 0)
-                .paramEntry("filter", filter)
+                .paramEntryByFilter(filter)
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
@@ -165,8 +220,8 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
          */
         rights.put("permission", "2");
         rights.put("id", zabbixHostgroup.getGroupid());
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("usergroup.create")
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UsergroupAPI.CREATE)
                 .paramEntry("name", usergroupName)
                 .paramEntry("rights", rights)
                 .build();
@@ -174,7 +229,7 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
             JsonNode jsonNode = zabbixHandler.api(request);
             String usrgrpid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("usrgrpids")).get(0);
             if (!StringUtils.isEmpty(usrgrpid)) {
-                ZabbixUsergroup   zabbixUsergroup = new ZabbixUsergroup();
+                ZabbixUsergroup zabbixUsergroup = new ZabbixUsergroup();
                 zabbixUsergroup.setUsrgrpid(usrgrpid);
                 zabbixUsergroup.setName(usergroupName);
                 zabbixServer.createAction(usergroupName);
@@ -186,5 +241,39 @@ public class ZabbixUserServerImpl implements ZabbixUserServer {
         return null;
     }
 
+
+    @Override
+    public ZabbixUsergroup updateUsergroup(String usergroupName, ZabbixHostgroup zabbixHostgroup) {
+        ZabbixUsergroup usergroup = getUsergroup(usergroupName);
+        if (usergroup == null) return createUsergroup(usergroupName, zabbixHostgroup);
+        Map<String, String> rights = Maps.newHashMap();
+        /**
+         * Possible values:
+         0 - access denied;
+         2 - read-only access;
+         3 - read-write access.
+         */
+        rights.put("permission", "2");
+        rights.put("id", zabbixHostgroup.getGroupid());
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(UsergroupAPI.UPDATE)
+                .paramEntry("usrgrpid", usergroup.getUsrgrpid())
+                .paramEntry("rights", rights)
+                .build();
+        try {
+            JsonNode jsonNode = zabbixHandler.api(request);
+            String usrgrpid = new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("usrgrpids")).get(0);
+            if (!StringUtils.isEmpty(usrgrpid)) {
+                ZabbixUsergroup zabbixUsergroup = new ZabbixUsergroup();
+                zabbixUsergroup.setUsrgrpid(usrgrpid);
+                zabbixUsergroup.setName(usergroupName);
+                zabbixServer.createAction(usergroupName);
+                return zabbixUsergroup;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
 
 }

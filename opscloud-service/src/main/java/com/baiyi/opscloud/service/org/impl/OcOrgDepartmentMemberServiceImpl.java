@@ -26,7 +26,7 @@ public class OcOrgDepartmentMemberServiceImpl implements OcOrgDepartmentMemberSe
 
     @Override
     public DataTable<OcOrgDepartmentMember> queryOcOrgDepartmentMemberParam(DepartmentMemberParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcOrgDepartmentMember> list = ocOrgDepartmentMemberMapper.queryOcOrgDepartmentMemberParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

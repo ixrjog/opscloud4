@@ -12,7 +12,8 @@
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>
 
-    <select id="queryOcAuthUserRoleByParam" parameterType="com.baiyi.opscloud.domain.param.auth.UserRoleParam$PageQuery"
+    <select id="queryOcAuthUserRoleByParam"
+            parameterType="com.baiyi.opscloud.domain.param.auth.UserRoleParam$UserRolePageQuery"
             resultMap="BaseResultMap">
         select * from oc_auth_user_role
         <where>
@@ -26,10 +27,11 @@
     </select>
 
     <select id="authenticationByUsernameAndResourceName" resultType="java.lang.Integer">
-        select count(*) from oc_auth_role
+        select count(*)
+        from oc_auth_role
         where resource_name = #{resourceName}
-        and id in (select role_id from oc_auth_user_role where username = #{username} )
-  </select>
+          and id in (select role_id from oc_auth_user_role where username = #{username})
+    </select>
 
 
 </mapper>

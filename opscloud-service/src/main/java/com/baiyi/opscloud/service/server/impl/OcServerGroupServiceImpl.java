@@ -47,7 +47,7 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
 
     @Override
     public DataTable<OcServerGroup> queryOcServerGroupByParam(ServerGroupParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryOcServerGroupByParam(pageQuery);
         return new DataTable<>(ocServerGroupList, page.getTotal());
     }
@@ -79,14 +79,14 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
 
     @Override
     public DataTable<OcServerGroup> queryUserIncludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserOcServerGroupByParam(pageQuery);
         return new DataTable<>(ocServerGroupList, page.getTotal());
     }
 
     @Override
     public DataTable<OcServerGroup> queryUserExcludeOcServerGroupByParam(ServerGroupParam.UserServerGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServerGroup> ocServerGroupList = ocServerGroupMapper.queryUserExcludeOcServerGroupByParam(pageQuery);
         return new DataTable<>(ocServerGroupList, page.getTotal());
     }
@@ -98,13 +98,13 @@ public class OcServerGroupServiceImpl implements OcServerGroupService {
 
     @Override
     public List<OcServerGroup> queryUserTicketOcServerGroupByParam(ServerGroupParam.UserTicketOcServerGroupQuery pageQuery) {
-        PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         return ocServerGroupMapper.queryUserTicketOcServerGroupByParam(pageQuery);
     }
 
     @Override
     public List<OcServerGroup> queryLogMemberOcServerGroupByParam(ServerGroupParam.LogMemberServerGroupQuery pageQuery) {
-        PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         return ocServerGroupMapper.queryLogMemberOcServerGroupByParam(pageQuery);
     }
 

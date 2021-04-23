@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcDingtalkDeptMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcDingtalkDept">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="dingtalk_uid" jdbcType="VARCHAR" property="dingtalkUid" />
+    <result column="dept_id" jdbcType="BIGINT" property="deptId" />
+    <result column="dept_name" jdbcType="VARCHAR" property="deptName" />
+    <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+    <result column="create_dept_group" jdbcType="BIT" property="createDeptGroup" />
+    <result column="auto_add_user" jdbcType="BIT" property="autoAddUser" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="ext" jdbcType="LONGVARCHAR" property="ext" />
+  </resultMap>
+</mapper>

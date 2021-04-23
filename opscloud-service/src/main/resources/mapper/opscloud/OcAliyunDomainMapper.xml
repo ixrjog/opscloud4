@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunDomainMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunDomain">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="domain_name" jdbcType="VARCHAR" property="domainName" />
+    <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
+    <result column="domain_audit_status" jdbcType="VARCHAR" property="domainAuditStatus" />
+    <result column="domain_group_id" jdbcType="VARCHAR" property="domainGroupId" />
+    <result column="domain_group_name" jdbcType="VARCHAR" property="domainGroupName" />
+    <result column="domain_status" jdbcType="VARCHAR" property="domainStatus" />
+    <result column="domain_type" jdbcType="VARCHAR" property="domainType" />
+    <result column="expiration_date" jdbcType="VARCHAR" property="expirationDate" />
+    <result column="product_id" jdbcType="VARCHAR" property="productId" />
+    <result column="registrant_type" jdbcType="VARCHAR" property="registrantType" />
+    <result column="registration_date" jdbcType="VARCHAR" property="registrationDate" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+    <result column="is_active" jdbcType="INTEGER" property="isActive" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+  </resultMap>
+
+    <select id="queryOcAliyunDomainPage" parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunDomainParam$PageQuery" resultMap="BaseResultMap">
+        select * from oc_aliyun_domain
+        <where>
+            <if test="isActive != -1">
+                and is_active = #{isActive}
+            </if>
+            <if test="domainName != null and domainName != ''">
+                and domain_name like "%" #{domainName} "%"
+            </if>
+        </where>
+        order by replace(domain_name, #{domainName}, '')
+    </select>
+
+</mapper>

@@ -20,6 +20,7 @@ public class AliyunLogMemberBuilder {
                 .serverGroupName(ocServerGroup.getName())
                 .comment(addLogMember.getComment())
                 .topic(addLogMember.getTopic())
+                .envType(addLogMember.getEnvType())
                 .build();
         return covert(bo);
     }

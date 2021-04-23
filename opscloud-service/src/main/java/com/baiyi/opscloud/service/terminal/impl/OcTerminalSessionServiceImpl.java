@@ -26,7 +26,7 @@ public class OcTerminalSessionServiceImpl implements OcTerminalSessionService {
 
     @Override
     public DataTable<OcTerminalSession> queryTerminalSessionByParam(TermSessionParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcTerminalSession> list = ocTerminalSessionMapper.queryTerminalSessionByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

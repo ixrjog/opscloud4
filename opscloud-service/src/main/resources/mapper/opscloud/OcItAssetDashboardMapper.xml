@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcItAssetDashboardMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.vo.it.ItAssetVO$StatsData">
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <resultMap id="MonthResultMap" type="com.baiyi.opscloud.domain.vo.it.ItAssetVO$AssetMonthStatsData">
+        <result column="date_cat" jdbcType="VARCHAR" property="dateCat"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <resultMap id="CompanyResultMap" type="com.baiyi.opscloud.domain.vo.it.ItAssetVO$AssetCompanyStats">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="value" jdbcType="INTEGER" property="value"/>
+    </resultMap>
+
+    <select id="queryItAssetNameStatistics" resultMap="BaseResultMap">
+        select a1.asset_type_id, a1.asset_name as `name`, count(*) as `value`
+        from oc_it_asset a0
+            join oc_it_asset_name a1 on a0.asset_name_id = a1.id
+            join oc_it_asset_type a2 on a1.asset_type_id = a2.id
+        where a0.asset_status != 4
+        group by a1.id,a1.asset_type_id order by a1.asset_type_id;
+    </select>
+
+    <select id="queryItAssetTypeStatistics" resultMap="BaseResultMap">
+        select a1.asset_type_id, a2.asset_type as `name`, count(*) as `value`
+        from oc_it_asset a0
+            join oc_it_asset_name a1 on a0.asset_name_id = a1.id
+            join oc_it_asset_type a2 on a1.asset_type_id = a2.id
+        where a0.asset_status != 4
+        group by a2.id,a1.asset_type_id order by a1.asset_type_id;
+    </select>
+
+    <select id="queryItAssetNameStatisticsByMonth" resultMap="MonthResultMap">
+        select date_format(a0.asset_add_time, '%Y-%m') as date_cat,
+            sum(if(a1.asset_name = #{name}, 1, 0)) as `value`
+        from oc_it_asset a0
+            join oc_it_asset_name a1 on a0.asset_name_id = a1.id
+        group by date_cat
+        order by date_cat;
+    </select>
+
+    <select id="queryItAssetTypeStatisticsByMonth" resultMap="MonthResultMap">
+        select date_format(a0.asset_add_time, '%Y-%m') as date_cat,
+            sum(if(a2.asset_type = #{name}, 1, 0)) as `value`
+        from oc_it_asset a0
+            join oc_it_asset_name a1 on a0.asset_name_id = a1.id
+            join oc_it_asset_type a2 on a1.asset_type_id = a2.id
+        group by date_cat
+        order by date_cat;
+    </select>
+
+    <select id="queryItAssetStatisticsByMonth" resultMap="MonthResultMap">
+        select date_format(a0.asset_add_time, '%Y-%m') as date_cat, count(*) as `value`
+        from oc_it_asset a0
+        group by date_cat
+        order by date_cat;
+    </select>
+
+    <select id="queryAssetCompanyStats" resultMap="CompanyResultMap">
+        select a0.id, a0.asset_company_name as `name`, a0.asset_company_type as `type`, count(*) as `value`
+        from oc_it_asset_company a0
+            join oc_it_asset a1 on a0.id = a1.asset_company
+        where a1.asset_status != 4
+        group by a0.id
+        order by a0.id
+    </select>
+
+
+</mapper>

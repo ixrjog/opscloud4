@@ -1,0 +1,12 @@
+# https://oapi.dingtalk.com/robot/send?access_token=${DINGTALK_TOKEN}
+
+dingtalk:
+  url: https://oapi.dingtalk.com/robot/send
+  apiUrl: https://oapi.dingtalk.com
+  accounts:
+    - uid: xincheng
+      master: true
+      name: '杭州辛橙信息科技有限公司'
+      agentId: 1036250150
+      appKey: ding0mkwh9pbisz7trao
+      appSecret: ENC(1DSYGeM8puCiUUjXU4C/HbSFAkQKaOsz+yoGw1tQ7BxmPOy9Xx9JTb03Pl1d70xDIv3HIkUUvwsZ8YoXeEVWrBLRcfJZkdp+Crq4TAb93c0=)

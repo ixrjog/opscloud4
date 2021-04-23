@@ -5,7 +5,7 @@ import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.param.cloud.AliyunLogMemberParam;
-import com.baiyi.opscloud.facade.AliyunLogFacade;
+import com.baiyi.opscloud.facade.aliyun.AliyunLogFacade;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
 import org.junit.jupiter.api.Test;
 

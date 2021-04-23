@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.ldap.repo.impl;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.ldap.config.LdapConfig;
 import com.baiyi.opscloud.ldap.entry.Person;
 import com.baiyi.opscloud.ldap.handler.LdapHandler;
@@ -58,33 +60,41 @@ public class PersonRepoImpl implements PersonRepo {
     }
 
     @Override
-    public Boolean create(Person person) {
-        return ldapHandler.bindPerson(person);
+    public BusinessWrapper<Boolean> create(Person person) {
+        if (ldapHandler.bindPerson(person)) {
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_CREATE_ERROR);
+        }
     }
 
     @Override
-    public Boolean update(Person person) {
-        return ldapHandler.updatePerson(person);
+    public BusinessWrapper<Boolean> update(Person person) {
+        if (ldapHandler.updatePerson(person)) {
+            return BusinessWrapper.SUCCESS;
+        } else {
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_UPDATE_ERROR);
+        }
     }
 
     @Override
-    public Boolean delete(String username) {
+    public BusinessWrapper<Boolean> delete(String username) {
         try {
             ldapHandler.unbind(ldapConfig.buildUserDN(username));
         } catch (Exception e) {
-            return false;
+            return new BusinessWrapper<>(ErrorEnum.ACCOUNT_UNBIND_ERROR);
         }
-        return true;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public  Boolean checkPersonInLdap(String username){
-       return ldapHandler.checkPersonInLdap(username);
+    public Boolean checkPersonInLdap(String username) {
+        return ldapHandler.checkPersonInLdap(username);
     }
 
     @Override
-    public List<String> searchUserGroupByUsername(String username){
-       return   ldapHandler.searchLdapGroup(username);
+    public List<String> searchUserGroupByUsername(String username) {
+        return ldapHandler.searchLdapGroup(username);
     }
 
 

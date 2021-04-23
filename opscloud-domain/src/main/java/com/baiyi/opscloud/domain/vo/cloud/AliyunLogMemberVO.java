@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.cloud;
 
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +21,8 @@ public class AliyunLogMemberVO {
     @ApiModel
     public static class LogMember {
 
+        private EnvVO.Env env;
+
         private AliyunLogVO.Log log;
         private OcServerGroup serverGroup;
 
@@ -32,6 +35,7 @@ public class AliyunLogMemberVO {
         private Integer serverGroupId;
         private String serverGroupName;
         private String topic;
+        private Integer envType;
         private String comment;
         private Date lastPushTime;
         private Date createTime;

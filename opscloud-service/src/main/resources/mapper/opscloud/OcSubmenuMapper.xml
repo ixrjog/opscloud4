@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcSubmenuMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcSubmenu">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="menu_id" jdbcType="INTEGER" property="menuId"/>
+        <result column="submenu_title" jdbcType="VARCHAR" property="submenuTitle"/>
+        <result column="is_svg" jdbcType="BIT" property="isSvg"/>
+        <result column="submenu_icon" jdbcType="VARCHAR" property="submenuIcon"/>
+        <result column="submenu_path" jdbcType="VARCHAR" property="submenuPath"/>
+        <result column="submenu_order" jdbcType="INTEGER" property="submenuOrder"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryOcSubmenuByIdList"
+            resultMap="BaseResultMap">
+        select * from oc_submenu
+        where id in
+        <foreach close=")" collection="idList" item="id" open="(" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+</mapper>

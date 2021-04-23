@@ -36,4 +36,5 @@ public interface AliyunCore {
 
     AliyunCoreConfig.AliyunAccount getAliyunAccountByUid(String uid);
 
+    IAcsClient getMasterClient();
 }

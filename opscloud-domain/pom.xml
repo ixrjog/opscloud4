@@ -17,5 +17,10 @@
             <artifactId>persistence-api</artifactId>
             <version>1.0.2</version>
         </dependency>
+        <dependency>
+            <groupId>cn.afterturn</groupId>
+            <artifactId>easypoi-base</artifactId>
+            <version>4.0.0</version>
+        </dependency>
     </dependencies>
 </project>

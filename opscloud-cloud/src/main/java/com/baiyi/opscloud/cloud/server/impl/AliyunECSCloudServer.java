@@ -8,6 +8,7 @@ import com.baiyi.opscloud.cloud.server.decorator.AliyunECSInstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AliyunECSInstance;
 import com.baiyi.opscloud.common.base.CloudServerPowerStatus;
 import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import lombok.extern.slf4j.Slf4j;
@@ -24,13 +25,20 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component("AliyunECSCloudServer")
-public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
+public class AliyunECSCloudServer<T extends BaseCloudServerInstance> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private AliyunECS aliyunECS;
 
     @Resource
     private AliyunECSInstanceDecorator aliyunECSInstanceDecorator;
+
+    @Override
+    protected boolean pushInstanceName(T instance, String instanceName) {
+        if (!(instance instanceof AliyunECSInstance)) return false;
+        AliyunECSInstance i = (AliyunECSInstance) instance;
+        return aliyunECS.modifyInstanceName(i.getInstance().getRegionId(), i.getInstance().getInstanceId(), instanceName);
+    }
 
     @Override
     protected List<T> getInstanceList() {
@@ -101,5 +109,10 @@ public class AliyunECSCloudServer<T> extends BaseCloudServer<T> implements IClou
     @Override
     protected Boolean delete(OcCloudServer ocCloudServer) {
         return aliyunECS.delete(ocCloudServer.getRegionId(), ocCloudServer.getInstanceId());
+    }
+
+    @Override
+    protected void modifyInstanceChargeType(OcCloudServer ocCloudServer, String chargeType) {
+        aliyunECS.modifyInstanceChargeType(ocCloudServer.getRegionId(), ocCloudServer.getInstanceId(), chargeType);
     }
 }

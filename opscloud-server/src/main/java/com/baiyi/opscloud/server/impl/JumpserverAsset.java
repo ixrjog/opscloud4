@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.server.impl;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
+import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsAsset;
 import com.baiyi.opscloud.domain.generator.jumpserver.AssetsNode;
 import com.baiyi.opscloud.domain.generator.jumpserver.UsersUsergroup;
@@ -57,19 +59,24 @@ public class JumpserverAsset extends BaseServer implements IServer {
             AssetsNode assetsNode = saveAssetsNode(e);
             if (assetsNode == null) {
                 log.error("Jumpserver 同步节点（服务器组）{} Error !", e.getName());
-            } else {
-                // 同步资产并绑定 节点
-                getGroupServerList(e.getId()).forEach(s -> {
-                    try {
-                        AssetsAsset assetsAsset = saveAssets(s, assetsNode);
-                        assetMap.remove(assetsAsset.getId());
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-                });
+                return;
             }
+            // 同步资产并绑定节点
+            sync(assetsNode, e, assetMap);
         });
         deleteAssetByMap(assetMap);
+    }
+
+    private void sync(AssetsNode assetsNode, OcServerGroup ocServerGroup, Map<String, AssetsAsset> assetMap) {
+        // 同步资产并绑定节点
+        getGroupServerList(ocServerGroup.getId()).forEach(s -> {
+            try {
+                AssetsAsset assetsAsset = saveAssets(s, assetsNode);
+                assetMap.remove(assetsAsset.getId());
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        });
     }
 
     private void deleteAssetByMap(Map<String, AssetsAsset> assetMap) {
@@ -83,53 +90,55 @@ public class JumpserverAsset extends BaseServer implements IServer {
     }
 
     @Override
-    public Boolean create(OcServer ocServer) {
+    public BusinessWrapper<Boolean> create(OcServer ocServer) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
         AssetsNode assetsNode = saveAssetsNode(ocServerGroup);
         if (assetsNode == null) {
             log.error("Jumpserver 同步节点（服务器组）{} Error !", ocServerGroup.getName());
-            return false;
+            return new BusinessWrapper<>(ErrorEnum.JUMPSERVER_ASSETS_NODE_ERROR);
         }
         saveAssets(ocServer, assetsNode);
-        return true;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean disable(OcServer ocServer) {
+    public BusinessWrapper<Boolean> disable(OcServer ocServer) {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
-        if (assetsAsset == null) return true;
+        if (assetsAsset == null) return BusinessWrapper.SUCCESS;
         assetsAsset.setIsActive(false);
         jumpserverCenter.updateAssetsAsset(assetsAsset);
-        return true;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean enable(OcServer ocServer) {
+    public BusinessWrapper<Boolean> enable(OcServer ocServer) {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
-        if (assetsAsset == null) return false;
+        if (assetsAsset == null) return new BusinessWrapper<>(ErrorEnum.JUMPSERVER_ASSETS_ASSET_NOT_EXIST);
         assetsAsset.setIsActive(true);
         jumpserverCenter.updateAssetsAsset(assetsAsset);
-        return true;
+        return BusinessWrapper.SUCCESS;
     }
 
     @Override
-    public Boolean remove(OcServer ocServer) {
+    public BusinessWrapper<Boolean> remove(OcServer ocServer) {
         AssetsAsset assetsAsset = getAssetsAsset(ocServer);
-        if (assetsAsset == null) return true;
+        if (assetsAsset == null) return BusinessWrapper.SUCCESS;
         // 删除资产的节点绑定关系
         return deleteAssetsAsset(assetsAsset);
 
     }
 
-    private boolean deleteAssetsAsset(AssetsAsset assetsAsset) {
+    private BusinessWrapper<Boolean> deleteAssetsAsset(AssetsAsset assetsAsset) {
         // 删除资产的节点绑定关系
         return jumpserverCenter.delAssetsAsset(assetsAsset.getId());
     }
 
     @Override
-    public Boolean update(OcServer ocServer) {
+    public BusinessWrapper<Boolean> update(OcServer ocServer) {
         AssetsAsset assetsAsset = createAssetsAsset(ocServer, null);
-        return assetsAsset != null;
+        if (assetsAsset != null)
+            return BusinessWrapper.SUCCESS;
+        return new BusinessWrapper<>(70001, "更新资产错误！");
     }
 
     private AssetsNode saveAssetsNode(OcServerGroup ocServerGroup) {
@@ -157,6 +166,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
         // 绑定资产到节点（节点就是oc服务器组）
         jumpserverCenter.bindAssetsAssetNodes(assetsAsset, assetsNode);
         // 资产绑定系统账户
+        assert assetsAsset != null;
         jumpserverCenter.bindAvssetsSystemuserAssets(assetsAsset.getId());
         return assetsAsset;
     }
@@ -183,10 +193,10 @@ public class JumpserverAsset extends BaseServer implements IServer {
         } else {
             String manageIp = getManageIp(ocServer);
             Integer port = getSSHPort(ocServer);
-            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer),port, assetComment);
+            assetsAsset = AssetsAssetBuilder.build(ocServer, manageIp, adminUserId, getHostname(ocServer), port, assetComment);
             if (!StringUtils.isEmpty(comment))
                 assetsAsset.setComment(comment);
-            jumpserverCenter.addAssetsAsset( assetsAsset,acqNodeId(ocServer));
+            jumpserverCenter.addAssetsAsset(assetsAsset, acqNodeId(ocServer));
         }
         return assetsAsset;
     }
@@ -194,7 +204,7 @@ public class JumpserverAsset extends BaseServer implements IServer {
     private String acqNodeId(OcServer ocServer) {
         OcServerGroup ocServerGroup = ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
         AssetsNode assetsNode = assetsNodeService.queryAssetsNodeByValue(ocServerGroup.getName());
-        if(assetsNode != null)
+        if (assetsNode != null)
             return assetsNode.getId();
         return null;
     }

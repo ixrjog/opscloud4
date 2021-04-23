@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.domain.vo.org;
 
+import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartment;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -31,5 +33,6 @@ public class OrgDepartmentMemberVO {
         private Date createTime;
         private Date updateTime;
         private String comment;
+        private List<OcOrgDepartment> orgList;
     }
 }

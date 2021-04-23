@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.domain.vo.user;
 
+import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartment;
 import com.baiyi.opscloud.domain.vo.cloud.AliyunRAMVO;
+import com.baiyi.opscloud.domain.vo.it.ItAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -36,6 +38,10 @@ public class UserVO {
         private Map<String, Object> attributeMap;
 
         private List<AliyunRAMVO.RAMUser> ramUsers;
+
+        private Map<String, List<OcOrgDepartment>> orgDeptMap; // 所在部门
+
+        private List<ItAssetVO.Asset> assets; // 我的资产
 
         @ApiModelProperty(value = "主键")
         private Integer id;

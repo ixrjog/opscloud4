@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunOnsGroupAlarmMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunOnsGroupAlarm">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="region_id" jdbcType="VARCHAR" property="regionId" />
+    <result column="ons_group_id" jdbcType="INTEGER" property="onsGroupId" />
+    <result column="alarm_status" jdbcType="INTEGER" property="alarmStatus" />
+    <result column="online" jdbcType="BIT" property="online" />
+    <result column="subscription_same" jdbcType="BIT" property="subscriptionSame" />
+    <result column="rebalance_ok" jdbcType="BIT" property="rebalanceOk" />
+    <result column="total_diff" jdbcType="BIGINT" property="totalDiff" />
+    <result column="delay_time" jdbcType="BIGINT" property="delayTime" />
+    <result column="alarm_silent_time" jdbcType="INTEGER" property="alarmSilentTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="alarm_user_list" jdbcType="LONGVARCHAR" property="alarmUserList" />
+  </resultMap>
+</mapper>

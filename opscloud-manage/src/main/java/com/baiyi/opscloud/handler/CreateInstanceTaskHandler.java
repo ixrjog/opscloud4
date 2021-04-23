@@ -70,6 +70,7 @@ public class CreateInstanceTaskHandler {
                     DescribeInstancesResponse.Instance instance = aliyunInstance.getStoppedInstance(regionId, hostname);
                     instanceId = instance.getInstanceId();
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             }
         }
@@ -101,6 +102,7 @@ public class CreateInstanceTaskHandler {
                         ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
                     }
                 } catch (Exception e) {
+                    e.printStackTrace();
                 }
             } else {
                 member.setTaskPhase(CloudInstanceTaskPhase.ALLOCATE_PUBLIC_IP_ADDRESS.getPhase());
@@ -117,6 +119,7 @@ public class CreateInstanceTaskHandler {
                     ocCloudInstanceTaskMemberService.updateOcCloudInstanceTaskMember(member);
                 }
             } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }
@@ -128,7 +131,7 @@ public class CreateInstanceTaskHandler {
      */
     public void describeInstanceStatusHandler(String regionId, List<OcCloudInstanceTaskMember> memberList) {
         if (memberList.isEmpty()) return;
-        List<String> instanceIds = memberList.stream().map(e -> e.getInstanceId()).collect(Collectors.toList());
+        List<String> instanceIds = memberList.stream().map(OcCloudInstanceTaskMember::getInstanceId).collect(Collectors.toList());
         Map<String, OcCloudInstanceTaskMember> memberMap = getOcCloudInstanceTaskMemberMap(memberList);
         List<DescribeInstancesResponse.Instance> instanceList = aliyunInstance.getInstanceList(regionId, instanceIds);
         for (DescribeInstancesResponse.Instance instance : instanceList) {

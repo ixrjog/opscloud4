@@ -26,7 +26,7 @@ public class OcAuthRoleServiceImpl implements OcAuthRoleService {
 
     @Override
     public DataTable<OcAuthRole> queryOcAuthRoleByParam(RoleParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcAuthRole> ocAuthRoleList = ocAuthRoleMapper.queryOcAuthRoleByParam(pageQuery);
         return new DataTable<>(ocAuthRoleList, page.getTotal());
     }

@@ -56,4 +56,12 @@ public class OcWorkorderTicketEntryServiceImpl implements OcWorkorderTicketEntry
         ocWorkorderTicketEntryMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public OcWorkorderTicketEntry queryOcWorkorderTicketEntryByTicketIdAndBusinessId(int workorderTicketId, Integer businessId) {
+        Example example = new Example(OcWorkorderTicketEntry.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("workorderTicketId", workorderTicketId);
+        criteria.andEqualTo("businessId", businessId);
+        return ocWorkorderTicketEntryMapper.selectOneByExample(example);
+    }
 }

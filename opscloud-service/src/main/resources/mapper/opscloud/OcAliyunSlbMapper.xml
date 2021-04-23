@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunSlbMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunSlb">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="load_balancer_id" jdbcType="VARCHAR" property="loadBalancerId"/>
+        <result column="load_balancer_name" jdbcType="VARCHAR" property="loadBalancerName"/>
+        <result column="load_balancer_status" jdbcType="VARCHAR" property="loadBalancerStatus"/>
+        <result column="address" jdbcType="VARCHAR" property="address"/>
+        <result column="address_type" jdbcType="VARCHAR" property="addressType"/>
+        <result column="region_id" jdbcType="VARCHAR" property="regionId"/>
+        <result column="region_id_alias" jdbcType="VARCHAR" property="regionIdAlias"/>
+        <result column="v_switch_id" jdbcType="VARCHAR" property="vSwitchId"/>
+        <result column="vpc_id" jdbcType="VARCHAR" property="vpcId"/>
+        <result column="network_type" jdbcType="VARCHAR" property="networkType"/>
+        <result column="master_zone_id" jdbcType="VARCHAR" property="masterZoneId"/>
+        <result column="slave_zone_id" jdbcType="VARCHAR" property="slaveZoneId"/>
+        <result column="internet_charge_type" jdbcType="VARCHAR" property="internetChargeType"/>
+        <result column="create_time" jdbcType="VARCHAR" property="createTime"/>
+        <result column="pay_type" jdbcType="VARCHAR" property="payType"/>
+        <result column="resource_group_id" jdbcType="VARCHAR" property="resourceGroupId"/>
+        <result column="address_ip_version" jdbcType="VARCHAR" property="addressIpVersion"/>
+        <result column="is_link_nginx" jdbcType="INTEGER" property="isLinkNginx"/>
+    </resultMap>
+
+    <select id="queryOcAliyunSlbPage" parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunSLBParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_slb
+        <where>
+            <if test="queryName != null and queryName != ''">
+                (load_balancer_name like "%" #{queryName} "%"
+                or load_balancer_id like "%" #{queryName} "%"
+                or address like "%" #{queryName} "%")
+            </if>
+            <if test="loadBalancerStatus != '-1'">
+                and load_balancer_status = #{loadBalancerStatus}
+            </if>
+            <if test="addressType != '-1'">
+                and address_type = #{addressType}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="queryOcAliyunSlbByLoadBalancerIdList" resultMap="BaseResultMap">
+        select * from oc_aliyun_slb
+        where load_balancer_id in
+        <foreach close=")" collection="loadBalancerIdList" item="loadBalancerId" open="(" separator=",">
+            #{loadBalancerId}
+        </foreach>
+    </select>
+</mapper>

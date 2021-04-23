@@ -14,7 +14,6 @@ public interface DocumentFacade {
 
     DocumentVO.Doc queryDocById(int id);
 
-
     DocumentVO.UserDoc queryUserDocByType(int docType);
 
     BusinessWrapper<Boolean> saveUserDoc(DocumentVO.UserDoc userDoc);

@@ -13,6 +13,8 @@ public interface OcWorkorderTicketEntryService {
 
     List<OcWorkorderTicketEntry> queryOcWorkorderTicketEntryByTicketId(int workorderTicketId);
 
+    OcWorkorderTicketEntry queryOcWorkorderTicketEntryByTicketIdAndBusinessId(int workorderTicketId,Integer businessId);
+
     int countOcWorkorderTicketEntryByTicketId(int workorderTicketId);
 
     OcWorkorderTicketEntry queryOcWorkorderTicketEntryById(int id);

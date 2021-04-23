@@ -1,7 +1,8 @@
 package com.baiyi.opscloud.task;
 
-import com.baiyi.opscloud.facade.AliyunLogFacade;
+import com.baiyi.opscloud.facade.aliyun.AliyunLogFacade;
 import lombok.extern.slf4j.Slf4j;
+import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -28,26 +29,17 @@ public class AliyunLogTask extends BaseTask {
      * 执行阿里云日志服务推送任务
      */
     @Scheduled(initialDelay = 10000, fixedRate = 60 * 1000)
+    @SchedulerLock(name = "aliyunLogPushTask", lockAtMostFor = "2m", lockAtLeastFor = "2m")
     public void aliyunLogPushTask() {
-        if (!redisUtil.hasKey(TASK_ALIYUN_LOG_TOPIC)) return;
-        if (tryLock()) return;
+        if (redisUtil.hasKey(TASK_ALIYUN_LOG_TOPIC)) return;
+        log.info("任务启动: 阿里云日志服务推送任务！");
         Set<Integer> keySet = (Set<Integer>) redisUtil.get(TASK_ALIYUN_LOG_TOPIC);
         clearTopic();
         aliyunLogFacade.pushTask(keySet);
-        unlock();
     }
 
     private void clearTopic(){
         redisUtil.del(TASK_ALIYUN_LOG_TOPIC);
     }
 
-    @Override
-    protected String getLock() {
-        return TASK_ALIYUN_LOG_KEY;
-    }
-
-    @Override
-    protected String getTaskName() {
-        return "阿里云日志服务推送任务";
-    }
 }

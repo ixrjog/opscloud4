@@ -1,7 +1,14 @@
-# version : API版本目前支持4.0
+# version : API版本目前支持5.0
 zabbix:
-  version: 4.0
+  version: 5.0
   url: http://zabbix.opscloud.top/api_jsonrpc.php
   user: zabbix
   password: zabbix
   zone: office
+  operation:
+    subject: '{TRIGGER.STATUS}: {TRIGGER.NAME}'
+    message: '<font color=#FF0000 face="黑体" size=5>事故等级: {TRIGGER.SEVERITY} </font>\
+      **发生时间**: {EVENT.DATE} {EVENT.TIME}\
+      **机器名称**: {HOST.NAME}\
+      **服务器IP**: {HOST.IP}\
+      **发生问题**: <font color=#FF0000 face="黑体">{TRIGGER.NAME}</font>'

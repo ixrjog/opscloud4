@@ -33,9 +33,9 @@ public class AssetsAssetServiceImpl implements AssetsAssetService {
     }
 
     @Override
-    public DataTable<AssetsAsset> fuzzyQueryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
-        List<AssetsAsset> assetsAssetList = assetsAssetMapper.fuzzyQueryAssetsAssetPage(pageQuery);
+    public DataTable<AssetsAsset> queryAssetsAssetPage(AssetsAssetPageParam.PageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<AssetsAsset> assetsAssetList = assetsAssetMapper.queryAssetsAssetPage(pageQuery);
         return new DataTable<>(assetsAssetList, page.getTotal());
     }
 

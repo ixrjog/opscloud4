@@ -8,6 +8,7 @@ import com.baiyi.opscloud.cloud.server.decorator.EC2InstanceDecorator;
 import com.baiyi.opscloud.cloud.server.instance.AwsEC2Instance;
 import com.baiyi.opscloud.cloud.server.util.AwsUtils;
 import com.baiyi.opscloud.common.base.CloudServerType;
+import com.baiyi.opscloud.common.cloud.BaseCloudServerInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.OcCloudServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -23,7 +24,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component("AwsEC2CloudServer")
-public class AwsEC2CloudServer<T> extends BaseCloudServer<T> implements ICloudServer {
+public class AwsEC2CloudServer<T extends BaseCloudServerInstance> extends BaseCloudServer<T> implements ICloudServer {
 
     @Resource
     private AwsEC2 awsEC2;

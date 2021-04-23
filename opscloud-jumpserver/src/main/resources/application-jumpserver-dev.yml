@@ -1,9 +1,9 @@
 # version : API版本目前支持 2.0.1
 # url填写jumpserver站点地址
 jumpserver:
-  version: 2.0.1
-  url: https://jump.ops.yangege.cn
-  coco: oc3.ops.yangege.cn
+  version: 2.3.1
+  url: https://jms.xinc818.com
+  coco: oc.xinc818.com
   admin:
     username: admin
-    password: ENC(1aLKecChe6w/f1z1LZDfnWUASUu6bLb2WBCiiVTlzW5xnfDQXmzHm+3lwRLkDH0L87yhIG14tDV7954TEKCehA==)
+    password: ENC(GFxwzA9HMAGUGQIyHtkBpXfXqtWP3RPzD/xdka9p0bU=)

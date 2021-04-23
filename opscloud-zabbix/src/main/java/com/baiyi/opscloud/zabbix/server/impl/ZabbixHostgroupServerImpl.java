@@ -1,20 +1,21 @@
 package com.baiyi.opscloud.zabbix.server.impl;
 
-import com.baiyi.opscloud.zabbix.builder.ZabbixHostgroupBO;
-import com.baiyi.opscloud.zabbix.builder.ZabbixHostgroupBuilder;
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
+import com.baiyi.opscloud.zabbix.api.HostgroupAPI;
+import com.baiyi.opscloud.zabbix.builder.ZabbixFilterBuilder;
+import com.baiyi.opscloud.zabbix.builder.ZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostgroup;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHandler;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.http.ZabbixBaseRequest;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixHostgroupMapper;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixIdsMapper;
+import com.baiyi.opscloud.zabbix.param.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.param.ZabbixHostgroupParam;
 import com.baiyi.opscloud.zabbix.server.ZabbixHostgroupServer;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.Map;
 
 /**
  * @Author baiyi
@@ -31,16 +32,17 @@ public class ZabbixHostgroupServerImpl implements ZabbixHostgroupServer {
     public ZabbixHostgroup createHostgroup(String hostgroup) {
         ZabbixHostgroup zabbixHostgroup = getHostgroup(hostgroup);
         if (zabbixHostgroup != null) return zabbixHostgroup;
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("hostgroup.create")
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(HostgroupAPI.CREATE)
                 .paramEntry("name", hostgroup)
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
-            return ZabbixHostgroupBuilder.buildOcCloudserver(ZabbixHostgroupBO.builder()
+            ZabbixHostgroupParam.Hostgroup hg =  ZabbixHostgroupParam.Hostgroup.builder()
                     .groupid(new ZabbixIdsMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT).get("groupids")).get(0))
                     .name(hostgroup)
-                    .build());
+                    .build();
+            return BeanCopierUtils.copyProperties(hg, ZabbixHostgroup.class);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,21 +50,22 @@ public class ZabbixHostgroupServerImpl implements ZabbixHostgroupServer {
     }
 
     @Override
-    public ZabbixHostgroup getHostgroup(String name) {
-        Map<String, String> filter = Maps.newHashMap();
-        filter.put("name", name);
-        ZabbixRequest request = ZabbixRequestBuilder.newBuilder()
-                .method("hostgroup.get")
-                .paramEntry("filter", filter)
+    public ZabbixHostgroup getHostgroup(String hostgroup) {
+        ZabbixFilter filter = ZabbixFilterBuilder.newBuilder()
+                .putEntry("name", hostgroup)
+                .build();
+
+        ZabbixBaseRequest request = ZabbixRequestBuilder.newBuilder()
+                .method(HostgroupAPI.GET)
+                .paramEntryByFilter(filter)
                 .paramEntry("output", "extend")
                 .build();
         try {
             JsonNode jsonNode = zabbixHandler.api(request);
             return new ZabbixHostgroupMapper().mapFromJson(jsonNode.get(ZabbixServerImpl.ZABBIX_RESULT)).get(0);
         } catch (Exception e) {
-            // e.printStackTrace();
+           return null;
         }
-        return null;
     }
 
 

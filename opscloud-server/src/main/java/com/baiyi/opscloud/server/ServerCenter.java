@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.server;
 
+import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
 import com.baiyi.opscloud.server.factory.ServerFactory;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * @Author baiyi
@@ -14,6 +16,45 @@ import java.util.Map;
 @Component
 public class ServerCenter {
 
+    private final static String ACTION_CREATE = "CREATE";
+
+    private final static String ACTION_UPDATE = "UPDATE";
+
+    private final static String ACTION_REMOVE = "REMOVE";
+
+    private final static String ACTION_DISABLE = "DISABLE";
+
+    private final static String ACTION_ENABLE = "ENABLE";
+
+    private Boolean action(OcServer ocServer, String action) {
+        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
+        AtomicBoolean atomicBoolean = new AtomicBoolean(true);
+        serverContainer.keySet().forEach(k -> {
+            IServer iServer = serverContainer.get(k);
+            BusinessWrapper<Boolean> wrapper = BusinessWrapper.SUCCESS;
+            switch (action) {
+                case ACTION_CREATE:
+                    wrapper = iServer.create(ocServer);
+                    break;
+                case ACTION_UPDATE:
+                    wrapper = iServer.update(ocServer);
+                    break;
+                case ACTION_REMOVE:
+                    wrapper = iServer.remove(ocServer);
+                    break;
+                case ACTION_DISABLE:
+                    wrapper = iServer.disable(ocServer);
+                    break;
+                case ACTION_ENABLE:
+                    wrapper = iServer.enable(ocServer);
+                    break;
+            }
+            if (!wrapper.isSuccess())
+                atomicBoolean.set(Boolean.FALSE);
+        });
+        return atomicBoolean.get();
+    }
+
     /**
      * 服务器工厂 创建服务器信息
      *
@@ -21,14 +62,7 @@ public class ServerCenter {
      * @return
      */
     public Boolean create(OcServer ocServer) {
-        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
-        Boolean result = Boolean.TRUE;
-        for (String key : serverContainer.keySet()) {
-            IServer iServer = serverContainer.get(key);
-            if (!iServer.create(ocServer))
-                result = Boolean.FALSE;
-        }
-        return result;
+        return action(ocServer, ACTION_CREATE);
     }
 
     /**
@@ -38,13 +72,7 @@ public class ServerCenter {
      * @return
      */
     public Boolean update(OcServer ocServer) {
-        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
-        for (String key : serverContainer.keySet()) {
-            IServer iServer = serverContainer.get(key);
-            if (!iServer.update(ocServer))
-                return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
+        return action(ocServer, ACTION_UPDATE);
     }
 
     /**
@@ -54,34 +82,16 @@ public class ServerCenter {
      * @return
      */
     public Boolean remove(OcServer ocServer) {
-        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
-        for (String key : serverContainer.keySet()) {
-            IServer iServer = serverContainer.get(key);
-            if (!iServer.remove(ocServer))
-                return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
+        return action(ocServer, ACTION_REMOVE);
     }
 
 
     public Boolean disable(OcServer ocServer) {
-        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
-        for (String key : serverContainer.keySet()) {
-            IServer iServer = serverContainer.get(key);
-            if (!iServer.disable(ocServer))
-                return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
+        return action(ocServer, ACTION_DISABLE);
     }
 
 
     public Boolean enable(OcServer ocServer) {
-        Map<String, IServer> serverContainer = ServerFactory.getIServerContainer();
-        for (String key : serverContainer.keySet()) {
-            IServer iServer = serverContainer.get(key);
-            if (!iServer.enable(ocServer))
-                return Boolean.FALSE;
-        }
-        return Boolean.TRUE;
+        return action(ocServer, ACTION_ENABLE);
     }
 }

@@ -31,7 +31,7 @@ public class OcCloudVpcVswitchServiceImpl implements OcCloudVpcVswitchService {
 
     @Override
     public  DataTable<OcCloudVpcVswitch> queryOcCloudVPCVswitchByParam(CloudVPCVSwitchParam.PageQuery pageQuery){
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudVpcVswitch> list = ocCloudVpcVswitchMapper.queryOcCloudVPCSecurityGroupByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

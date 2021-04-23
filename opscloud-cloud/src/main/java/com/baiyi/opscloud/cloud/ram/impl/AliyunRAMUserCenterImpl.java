@@ -17,7 +17,7 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcAliyunRamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUserPermission;
-import com.baiyi.opscloud.service.ram.OcAliyunRamUserService;
+import com.baiyi.opscloud.service.aliyun.ram.OcAliyunRamUserService;
 import com.baiyi.opscloud.service.user.OcUserPermissionService;
 import com.baiyi.opscloud.service.user.OcUserService;
 import com.google.common.collect.Maps;

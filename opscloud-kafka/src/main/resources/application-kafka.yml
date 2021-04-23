@@ -1,0 +1,22 @@
+kafka:
+  instances:
+    - instanceName: kafka-dev
+      instanceId: dev.kafka.xinc818.com:9092
+      instanceType: 1
+      regionId: local
+    - instanceName: kafka-daily
+      instanceId: daily.kafka.xinc818.com:9092
+      instanceType: 1
+      regionId: local
+    - instanceName: kafka-gray
+      instanceId: gray.kafka.xinc818.com:9092
+      instanceType: 1
+      regionId: local
+    - instanceName: kafka-bigdata-prod
+      instanceId: alikafka_pre-cn-nif1rprk4008
+      instanceType: 2
+      regionId: cn-hangzhou
+    - instanceName: kafka-canal-prod
+      instanceId: alikafka_pre-cn-09k1vu32q003
+      instanceType: 2
+      regionId: cn-hangzhou

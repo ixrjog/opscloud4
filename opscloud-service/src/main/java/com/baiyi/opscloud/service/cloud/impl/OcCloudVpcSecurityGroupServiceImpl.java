@@ -26,7 +26,7 @@ public class OcCloudVpcSecurityGroupServiceImpl implements OcCloudVpcSecurityGro
 
     @Override
     public DataTable<OcCloudVpcSecurityGroup> queryOcCloudVPCSecurityGroupByParam(CloudVPCSecurityGroupParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcCloudVpcSecurityGroup> ocCloudVpcSecurityGroupList = ocCloudVpcSecurityGroupMapper.queryOcCloudVPCSecurityGroupByParam(pageQuery);
         return new DataTable<>(ocCloudVpcSecurityGroupList, page.getTotal());
     }

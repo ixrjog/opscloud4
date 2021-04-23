@@ -24,24 +24,33 @@ public class PersonAttributesMapper implements AttributesMapper<Person> {
     @Override
     public Person mapFromAttributes(Attributes attrs) throws NamingException {
         Person person = new Person();
-        person.setUsername((String)attrs.get("cn").get());
-        try{
-            person.setDisplayName((String)attrs.get("displayName").get());
-        }catch (NullPointerException e){
+        person.setUsername((String) attrs.get("cn").get());
+        try {
+            person.setDisplayName((String) attrs.get("displayName").get());
+        } catch (NullPointerException ignored) {
             person.setDisplayName(person.getUsername());
         }
-        try{
-            person.setMobile((String)attrs.get("mobile").get());
-        }catch (NullPointerException e){
+        try {
+            person.setMobile((String) attrs.get("mobile").get());
+        } catch (NullPointerException v) {
         }
-        try{
-            person.setEmail((String)attrs.get("mail").get());
-        }catch (NullPointerException e){
+        try {
+            person.setEmail((String) attrs.get("mail").get());
+        } catch (NullPointerException ignored) {
         }
-        try{
-            person.setJobNo((String)attrs.get("jobNo").get());
-        }catch (NullPointerException e){
+        try {
+            person.setJobNo((String) attrs.get("jobNo").get());
+        } catch (NullPointerException ignored) {
         }
+        // 账户是否有效
+//        try {
+//            String status = (String) attrs.get("accountStatus").get();
+//            if (!StringUtils.isEmpty(status) && "active".equals(status)) {
+//                person.setIsActive(true);
+//            }
+//        } catch (NullPointerException ignored) {
+//        }
+
         return person;
     }
 }

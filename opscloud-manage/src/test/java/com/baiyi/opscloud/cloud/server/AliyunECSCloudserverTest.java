@@ -20,7 +20,7 @@ public class AliyunECSCloudserverTest extends BaseUnit {
     @Resource
     private AliyunECS aliyunECS;
 
-    private static final String key = "AliyunECSCloudserver";
+    private static final String key = "AliyunECSCloudServer";
 
     private ICloudServer getICloudServer() {
         return CloudServerFactory.getCloudServerByKey(key);
@@ -42,5 +42,10 @@ public class AliyunECSCloudserverTest extends BaseUnit {
         for (ECSDisk disk : diskList) {
             System.err.println(JSONUtils.writeValueAsString(disk));
         }
+    }
+
+    @Test
+    void aTest() {
+        aliyunECS.modifyInstanceChargeType("cn-hangzhou", "i-bp1fjdhecwn46fbz4k1x", "PostPaid");
     }
 }

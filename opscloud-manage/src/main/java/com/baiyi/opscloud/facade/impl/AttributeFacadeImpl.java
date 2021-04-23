@@ -5,9 +5,9 @@ import com.baiyi.opscloud.common.util.IOUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServerGroup;
 import com.baiyi.opscloud.domain.vo.server.PreviewAttributeVO;
 import com.baiyi.opscloud.facade.AttributeFacade;
-import com.baiyi.opscloud.factory.attribute.impl.AttributeAnsible;
+import com.baiyi.opscloud.factory.attribute.impl.AnsibleAttribute;
 import com.baiyi.opscloud.service.server.OcServerGroupService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
@@ -20,11 +20,11 @@ import static com.baiyi.opscloud.ansible.config.AnsibleConfig.ANSIBLE_HOSTS;
  * @Date 2020/4/10 11:28 上午
  * @Version 1.0
  */
-@Component
+@Service
 public class AttributeFacadeImpl implements AttributeFacade {
 
     @Resource
-    private AttributeAnsible attributeAnsible;
+    private AnsibleAttribute ansibleAttribute;
 
     @Resource
     private OcServerGroupService ocServerGroupService;
@@ -35,10 +35,10 @@ public class AttributeFacadeImpl implements AttributeFacade {
     @Override
     public void createAnsibleHostsTask() {
         try {
-            String context = attributeAnsible.getHeadInfo();
+            String context = ansibleAttribute.getHeadInfo();
             List<OcServerGroup> serverGroupList = ocServerGroupService.queryAll();
             for (OcServerGroup serverGroup : serverGroupList) {
-                PreviewAttributeVO.PreviewAttribute previewAttribute = attributeAnsible.build(serverGroup);
+                PreviewAttributeVO.PreviewAttribute previewAttribute = ansibleAttribute.build(serverGroup);
                 if (!StringUtils.isEmpty(previewAttribute.getContent()))
                     context += "\n" + previewAttribute.getContent();
             }

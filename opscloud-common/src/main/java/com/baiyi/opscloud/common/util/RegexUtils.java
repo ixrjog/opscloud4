@@ -21,7 +21,8 @@ public class RegexUtils {
     public static boolean isPhone(String phone) {
         if (StringUtils.isEmpty(phone))
             return false;
-        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0-9]))\\d{8}$";
+        // String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013456789])|(18[0-9]))\\d{8}$";
+        String regex = "^((13[0-9])|(14[0-9])|(15[0-9])|(17[0-9])|(18[0-9])|(19[0-9]))\\d{8}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(phone);
         return matcher.matches();
@@ -34,7 +35,7 @@ public class RegexUtils {
      * @return
      */
     public static boolean isUsernameRule(String username) {
-        return username.matches("[a-zA-Z][\\w]{3,15}");
+        return username.matches("[a-z][\\d0-9a-z-]{3,35}");
     }
 
     public static boolean isApplicationNameRule(String appName) {
@@ -60,7 +61,7 @@ public class RegexUtils {
     }
 
     public static boolean isEmail(String email) {
-        String repx = "\\w+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
+        String repx = "[A-z0-9-_\\.]+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
         return email.matches(repx);
     }
 
@@ -127,6 +128,39 @@ public class RegexUtils {
         String repx = "(.*)-" + label + "$";
         return serviceName.matches(repx);
     }
+
+    public static boolean isAliyunONSTopicRule(String topic) {
+        if (topic.startsWith("ding_talk_queue_dingdea"))
+            return true;
+        if (!topic.startsWith("TOPIC_"))
+            return false;
+        return topic.matches("[0-9A-Z_]{3,64}");
+    }
+
+    public static boolean isAliyunONSGroupRule(String groupId) {
+        if (groupId.startsWith("GID_dingtalkcenter_dingdea"))
+            return true;
+        if (!groupId.startsWith("GID_"))
+            return false;
+        return groupId.matches("[0-9A-Z_]{7,64}");
+    }
+
+    public static boolean isAssetCodeRule(String assetCode) {
+        return assetCode.matches("^[0-9a-zA-Z-]+$");
+    }
+
+    public static boolean isKafkaTopic(String topic) {
+        if (!topic.startsWith("TOPIC_"))
+            return false;
+        return topic.matches("[A-Z_]{3,64}");
+    }
+
+    public static boolean isKafkaGroup(String consumerGroup) {
+        if (!consumerGroup.startsWith("GID_"))
+            return false;
+        return consumerGroup.matches("[A-Z_]{3,64}");
+    }
+
 
 
 }

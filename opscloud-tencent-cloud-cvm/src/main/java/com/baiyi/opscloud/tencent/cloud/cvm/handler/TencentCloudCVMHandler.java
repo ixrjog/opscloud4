@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.tencent.cloud.cvm.handler;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.tencent.cloud.cvm.base.BaseTencentCloudCVM;
+import com.baiyi.opscloud.tencent.cloud.cvm.instance.CVMInstance;
 import com.google.common.collect.Lists;
 import com.tencentcloudapi.common.exception.TencentCloudSDKException;
 import com.tencentcloudapi.cvm.v20170312.models.DescribeInstancesRequest;
@@ -28,7 +30,7 @@ public class TencentCloudCVMHandler extends BaseTencentCloudCVM {
      *
      * @return
      */
-    public List<Instance> getInstanceList() {
+    public List<CVMInstance> getInstanceList() {
         try {
             // 实例化一个cvm实例信息查询请求对象,每个接口都会对应一个request对象。
             DescribeInstancesRequest req = new DescribeInstancesRequest();
@@ -51,7 +53,8 @@ public class TencentCloudCVMHandler extends BaseTencentCloudCVM {
                 req.setOffset(req.getOffset() + QUERY_PAGE_SIZE); //  0 - 50
                 req.setLimit(req.getLimit() + QUERY_PAGE_SIZE);  // 49 - 99
             }
-            return instanceList;
+           // return instanceList;
+            return BeanCopierUtils.copyListProperties(instanceList, CVMInstance.class);
         } catch (TencentCloudSDKException e) {
             e.printStackTrace();
             return Collections.EMPTY_LIST;
@@ -63,7 +66,7 @@ public class TencentCloudCVMHandler extends BaseTencentCloudCVM {
      *
      * @return
      */
-    public Instance getInstance(String instanceId) {
+    public CVMInstance getInstance(String instanceId) {
         try {
             // 实例化一个cvm实例信息查询请求对象,每个接口都会对应一个request对象。
             DescribeInstancesRequest req = new DescribeInstancesRequest();
@@ -75,7 +78,7 @@ public class TencentCloudCVMHandler extends BaseTencentCloudCVM {
             req.setOffset(0L);
             req.setLimit(1L);
             DescribeInstancesResponse resp = cvmClient.DescribeInstances(req);
-            return resp.getInstanceSet()[0];
+            return BeanCopierUtils.copyProperties(resp.getInstanceSet()[0], CVMInstance.class);
         } catch (TencentCloudSDKException e) {
             return null;
         }

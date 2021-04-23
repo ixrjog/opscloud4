@@ -58,9 +58,19 @@ public class KubernetesTest extends BaseUnit {
 
     @Test
     void getDeploymentListTest() {
-        DeploymentList dl = kubernetesDeploymentHandler.getDeploymentList("k8s-test", "test");
+        String clusterName = "k8s-test";
+        String namespace = "test";
+        DeploymentList dl = kubernetesDeploymentHandler.getDeploymentList(clusterName, namespace);
         List<Deployment> items = dl.getItems();
-        items.forEach(e -> System.err.println(e));
+//        items.forEach(e -> {
+//            try {
+//                e.getSpec().getTemplate().getSpec().setNodeSelector(Collections.emptyMap());
+//                kubernetesDeploymentHandler.createOrReplaceDeployment(clusterName, namespace, e);
+//            } catch (Exception ex) {
+//                System.err.println(JSON.toJSONString(e.getMetadata().getLabels()));
+//            }
+//        });
+        items.forEach(System.err::println);
         System.err.println(dl.getItems());
     }
 

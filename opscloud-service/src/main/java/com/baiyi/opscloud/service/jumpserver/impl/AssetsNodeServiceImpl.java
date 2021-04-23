@@ -26,7 +26,7 @@ public class AssetsNodeServiceImpl implements AssetsNodeService {
 
     @Override
     public DataTable<AssetsNode> queryAssetsNodePage(AssetsNodePageParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<AssetsNode> assetsNodeList = assetsNodeMapper.queryAssetsAssetPage(pageQuery);
         return new DataTable<>(assetsNodeList, page.getTotal());
     }

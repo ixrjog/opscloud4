@@ -26,4 +26,6 @@ public interface OcWorkorderService {
     void addOcWorkorder(OcWorkorder ocWorkorder);
 
     void updateOcWorkorder(OcWorkorder ocWorkorder);
+
+    List<OcWorkorder> queryOcWorkorderAll();
 }

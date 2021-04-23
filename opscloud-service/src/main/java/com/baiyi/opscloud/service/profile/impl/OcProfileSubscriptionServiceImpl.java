@@ -26,7 +26,7 @@ public class OcProfileSubscriptionServiceImpl implements OcProfileSubscriptionSe
 
     @Override
     public DataTable<OcProfileSubscription> queryOcProfileSubscriptionParam(ProfileSubscriptionParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcProfileSubscription> list = ocProfileSubscriptionMapper.queryOcProfileSubscriptionParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

@@ -23,12 +23,12 @@ public interface ProfileSubscriptionFacade {
      * @param id
      * @return
      */
-    BusinessWrapper<Boolean> publishProfile(int id);
+    void publishProfile(int id);
 
     /**
      * 按订阅类型发布配置文件
      * @param subscriptionType
      * @return
      */
-    BusinessWrapper<Boolean> publishProfile(String subscriptionType);
+    void publishProfile(String subscriptionType);
 }

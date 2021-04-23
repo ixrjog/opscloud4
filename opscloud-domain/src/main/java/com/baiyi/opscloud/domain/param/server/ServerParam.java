@@ -18,7 +18,7 @@ public class ServerParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class ServerPageQuery extends PageParam {
 
         @ApiModelProperty(value = "模糊查询专用")
         private String queryName;

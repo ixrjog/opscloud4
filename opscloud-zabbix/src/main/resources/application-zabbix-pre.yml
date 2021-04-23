@@ -1,7 +1,14 @@
-# version : API版本目前支持4.0
+# version : API版本目前支持5.0
 zabbix:
   version: 4.0
   url: ENC(4aaI4N38SJOkqJGM23j+XTEwKGio9mIXWZ9UrdyxloYxcp7Xg5sPLQ+22ks42719zMyVCdce7HI=)
   user: zabbix
   password: ENC(TuF9JGK3j4+ZEHmaUB3OiiOn9Vb0yRRLq92XrQQ3CwLBU2W3TrJnXX5hw8voL+ZB)
   zone: office
+  operation:
+    subject: '{TRIGGER.STATUS}: {TRIGGER.NAME}'
+    message: '<font color=#FF0000 face="黑体" size=5>事故等级: {TRIGGER.SEVERITY} </font>\
+      **发生时间**: {EVENT.DATE} {EVENT.TIME}\
+      **机器名称**: {HOST.NAME}\
+      **服务器IP**: {HOST.IP}\
+      **发生问题**: <font color=#FF0000 face="黑体">{TRIGGER.NAME}</font>'

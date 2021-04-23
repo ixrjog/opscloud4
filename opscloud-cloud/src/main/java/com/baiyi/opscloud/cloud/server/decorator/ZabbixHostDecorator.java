@@ -21,7 +21,7 @@ public class ZabbixHostDecorator {
     public ZabbixHostInstance decorator(ZabbixHost host){
         return ZabbixHostInstance.builder()
                 .host(host)
-                .interfaceList(zabbixHostServer.getHostInterfaceList(host.getHostid()))
+                .interfaceList(zabbixHostServer.getHostInterfaces(host.getHostid()))
                 .build();
     }
 

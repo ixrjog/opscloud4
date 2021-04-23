@@ -50,6 +50,14 @@ public class OcUserServiceImpl implements OcUserService {
     }
 
     @Override
+    public List<OcUser> queryOcUserByDisplayName(String displayName) {
+        Example example = new Example(OcUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("displayName", displayName);
+        return ocUserMapper.selectByExample(example);
+    }
+
+    @Override
     public void delOcUserByUsername(String username) {
         OcUser ocUser = queryOcUserByUsername(username);
         if (ocUser != null)
@@ -58,14 +66,14 @@ public class OcUserServiceImpl implements OcUserService {
 
     @Override
     public DataTable<OcUser> queryOcUserByParam(UserParam.UserPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcUser> ocUserList = ocUserMapper.queryOcUserByParam(pageQuery);
         return new DataTable<>(ocUserList, page.getTotal());
     }
 
     @Override
     public DataTable<OcUser> fuzzyQueryUserByParam(UserParam.UserPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcUser> ocUserList = ocUserMapper.fuzzyQueryUserByParam(pageQuery);
         return new DataTable<>(ocUserList, page.getTotal());
     }
@@ -83,4 +91,29 @@ public class OcUserServiceImpl implements OcUserService {
         return ocUserMapper.selectByExample(example);
     }
 
+    @Override
+    public List<OcUser> queryOcUserInActive() {
+        Example example = new Example(OcUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", false);
+        return ocUserMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<OcUser> queryOcUserAll() {
+        return ocUserMapper.selectAll();
+    }
+
+    @Override
+    public List<OcUser> queryOcUserByIdList(List<Integer> userIdList) {
+        return ocUserMapper.queryOcUserByIdList(userIdList);
+    }
+
+    @Override
+    public List<OcUser> queryOcUserByPhone(String phone) {
+        Example example = new Example(OcUser.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("phone", phone);
+        return ocUserMapper.selectByExample(example);
+    }
 }

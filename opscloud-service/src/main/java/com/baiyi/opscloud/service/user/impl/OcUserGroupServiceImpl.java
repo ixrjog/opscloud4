@@ -26,21 +26,21 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
 
     @Override
     public DataTable<OcUserGroup> queryOcUserGroupByParam(UserBusinessGroupParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
 
     @Override
     public DataTable<OcUserGroup> queryUserIncludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryUserOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
 
     @Override
     public DataTable<OcUserGroup> queryUserExcludeOcUserGroupByParam(UserBusinessGroupParam.UserUserGroupPageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcUserGroup> ocUserGroupList = ocUserGroupMapper.queryUserExcludeOcUserGroupByParam(pageQuery);
         return new DataTable<>(ocUserGroupList, page.getTotal());
     }
@@ -76,5 +76,10 @@ public class OcUserGroupServiceImpl implements OcUserGroupService {
     @Override
     public List<OcUserGroup> queryUserTicketOcUserGroupByParam(UserBusinessGroupParam.UserTicketOcUserGroupQuery queryParam) {
         return ocUserGroupMapper.queryUserTicketOcUserGroupByParam(queryParam);
+    }
+
+    @Override
+    public void deleteOcUserGroupById(int id){
+        ocUserGroupMapper.deleteByPrimaryKey(id);
     }
 }

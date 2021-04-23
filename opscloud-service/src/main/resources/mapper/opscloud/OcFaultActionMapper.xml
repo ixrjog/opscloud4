@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcFaultActionMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcFaultAction">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="fault_id" jdbcType="INTEGER" property="faultId"/>
+        <result column="fault_action" jdbcType="VARCHAR" property="faultAction"/>
+        <result column="follow_user_id" jdbcType="INTEGER" property="followUserId"/>
+        <result column="action_status" jdbcType="INTEGER" property="actionStatus"/>
+        <result column="deadline" jdbcType="TIMESTAMP" property="deadline"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <select id="queryFaultActionPage" parameterType="com.baiyi.opscloud.domain.param.fault.FaultParam$ActionPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_fault_action
+        <where>
+            <if test="actionStatus != -1">
+                and action_status = #{actionStatus}
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and fault_id in
+                (
+                select id from oc_fault_info
+                where fault_title like "%" #{queryName} "%"
+                )
+            </if>
+        </where>
+        order by fault_id, deadline
+    </select>
+</mapper>

@@ -2,13 +2,19 @@ package com.baiyi.opscloud.zabbix.entry;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
+import org.springframework.util.StringUtils;
+
+import java.io.Serializable;
 
 
 @Data
-public class ResultMapper {
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class ResultMapper implements Serializable {
 
+    private static final long serialVersionUID = -1580501996512626570L;
     @JsonProperty("ipmi_privilege")
     private String ipmiPrivilege; // "2",
     @JsonProperty("maintenance_status")
@@ -19,11 +25,25 @@ public class ResultMapper {
     private String errorsFrom; //0",
     @JsonProperty("tls_psk_identity")
     private String tlsPskIdentity; //
+
+    /**
+     * (readonly) Availability of Zabbix agent.
+     *
+     * Possible values are:
+     * 0 - (default) unknown;
+     * 1 - available;
+     * 2 - unavailable.
+     */
     private String available; //"1",
     @JsonIgnore
     private String snmp_errors_from; //"0",
     private String flags; //"0",
     private String hostid; //"10084",
+
+    @JsonIgnore
+    private String discover; //"",
+
+    @JsonIgnore
     private String description; //"",
     @JsonIgnore
     private String tls_issuer; //"",
@@ -80,6 +100,10 @@ public class ResultMapper {
     @JsonIgnore
     private String tls_subject; //"",
     private String status; //"0"
+
+    public boolean isEmpty(){
+        return StringUtils.isEmpty(this.hostid);
+    }
 
 
 }

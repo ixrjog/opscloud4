@@ -2,9 +2,14 @@ package com.baiyi.opscloud.facade;
 
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.OcOrgDepartment;
 import com.baiyi.opscloud.domain.param.org.DepartmentMemberParam;
 import com.baiyi.opscloud.domain.param.org.DepartmentParam;
 import com.baiyi.opscloud.domain.vo.org.*;
+import com.baiyi.opscloud.domain.vo.tree.TreeVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -17,8 +22,13 @@ public interface OrgFacade {
 
     DepartmentTreeVO.DepartmentTree queryDepartmentTree(int parentId);
 
+    BusinessWrapper<List<TreeVO.Tree>> queryDepartmentTreeV2();
+
+    BusinessWrapper<List<TreeVO.Tree>> refreshDepartmentTreeV2();
+
     /**
      * 查询组织架构拓扑
+     *
      * @param parentId 当值为 -1 则按setting配置查询
      * @return
      */
@@ -50,6 +60,7 @@ public interface OrgFacade {
 
     /**
      * 删除用户的所有组织架构信息
+     *
      * @param userId
      * @return
      */
@@ -60,4 +71,14 @@ public interface OrgFacade {
     BusinessWrapper<Boolean> checkUserInTheDepartment(String username);
 
     BusinessWrapper<OrgApprovalVO.OrgApproval> queryOrgApprovalByName(String userName);
+
+    BusinessWrapper<Map<String, List<OcOrgDepartment>>> queryOrgByUser(Integer userId);
+
+    BusinessWrapper<List<OrgDepartmentMemberVO.DepartmentMember>> queryOrgByUserV2(Integer userId);
+
+    BusinessWrapper<Map<String, List<OcOrgDepartment>>> queryOrgByUsername(String username);
+
+    DataTable<OrgDepartmentVO.Department> queryFirstLevelDepartmentPage(DepartmentParam.PageQuery pageQuery);
+
+    BusinessWrapper<List<OcOrgDepartment>> queryDeptPath(Integer departmentId);
 }

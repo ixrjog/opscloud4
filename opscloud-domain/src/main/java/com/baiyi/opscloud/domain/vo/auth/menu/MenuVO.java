@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -14,8 +15,9 @@ import java.util.List;
 @Builder
 @Data
 @JsonIgnoreProperties
-public class MenuVO {
+public class MenuVO implements Serializable {
 
+    private static final long serialVersionUID = 3106433599365367715L;
     private String title;
     private String icon;
     private List<MenuChildrenVO> children;

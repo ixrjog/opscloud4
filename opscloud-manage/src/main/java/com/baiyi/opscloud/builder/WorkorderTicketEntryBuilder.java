@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.bo.WorkorderTicketEntryBO;
+import com.baiyi.opscloud.bo.workorder.WorkorderTicketEntryBO;
 import com.baiyi.opscloud.common.base.WorkorderKey;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -117,4 +117,6 @@ public class WorkorderTicketEntryBuilder {
     private static OcWorkorderTicketEntry covert(WorkorderTicketEntryBO workorderTicketEntryBO) {
         return BeanCopierUtils.copyProperties(workorderTicketEntryBO, OcWorkorderTicketEntry.class);
     }
+
+
 }

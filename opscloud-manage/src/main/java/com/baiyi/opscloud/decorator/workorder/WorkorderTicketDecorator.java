@@ -8,20 +8,25 @@ import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.generator.opscloud.OcUser;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorder;
 import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketEntry;
+import com.baiyi.opscloud.domain.generator.opscloud.OcWorkorderTicketFlow;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderVO;
 import com.baiyi.opscloud.facade.UserFacade;
 import com.baiyi.opscloud.facade.UserPermissionFacade;
+import com.baiyi.opscloud.facade.impl.WorkorderFacadeImpl;
 import com.baiyi.opscloud.factory.ticket.ITicketHandler;
 import com.baiyi.opscloud.factory.ticket.ITicketSubscribe;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketFactory;
 import com.baiyi.opscloud.factory.ticket.WorkorderTicketSubscribeFactory;
+import com.baiyi.opscloud.factory.ticket.impl.handler.BaseTicketHandler;
 import com.baiyi.opscloud.service.ticket.OcWorkorderTicketEntryService;
+import com.baiyi.opscloud.service.ticket.OcWorkorderTicketFlowService;
 import com.baiyi.opscloud.service.workorder.OcWorkorderService;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,6 +55,9 @@ public class WorkorderTicketDecorator {
     @Resource
     private UserPermissionFacade userPermissionFacade;
 
+    @Resource
+    private OcWorkorderTicketFlowService ocWorkorderTicketFlowService;
+
     public WorkorderTicketVO.Ticket decorator(WorkorderTicketVO.Ticket ticket) {
         // 工单
         OcWorkorder ocWorkorder = ocWorkorderService.queryOcWorkorderById(ticket.getWorkorderId());
@@ -70,6 +78,23 @@ public class WorkorderTicketDecorator {
         List<OcWorkorderTicketEntry> ticketEntryList = ocWorkorderTicketEntryService.queryOcWorkorderTicketEntryByTicketId(ticket.getId());
         ticket.setTicketEntries(convertTicketEntries(ticketEntryList));
         ticketApprovalDecorator.decorator(ticket);
+        if (ticket.getTicketPhase().equals(TicketPhase.FINALIZED.getPhase())) {
+            // 执行结果
+            List<OcWorkorderTicketEntry> errTicketEntryList =
+                    ticketEntryList.stream().filter(x -> x.getEntryStatus().equals(BaseTicketHandler.ENTRY_STATUS_ERROR)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(errTicketEntryList))
+                ticket.setExecutorResult(true);
+            else
+                ticket.setExecutorResult(false);
+            // 审批状态
+            List<OcWorkorderTicketFlow> flowList = ocWorkorderTicketFlowService.queryOcWorkorderTicketByTicketId(ticket.getId());
+            List<OcWorkorderTicketFlow> disagreeFlowList =
+                    flowList.stream().filter(x -> x.getApprovalStatus().equals(WorkorderFacadeImpl.DISAGREE_TYPE)).collect(Collectors.toList());
+            if (CollectionUtils.isEmpty(disagreeFlowList))
+                ticket.setApprovalStatus(true);
+            else
+                ticket.setApprovalStatus(false);
+        }
         return ticket;
     }
 

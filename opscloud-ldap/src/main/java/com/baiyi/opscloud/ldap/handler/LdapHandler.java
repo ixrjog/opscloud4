@@ -23,6 +23,7 @@ import javax.naming.directory.*;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.ldap.config.LdapConfig.*;
 import static org.springframework.ldap.query.LdapQueryBuilder.query;
 
 /**
@@ -44,7 +45,7 @@ public class LdapHandler {
      * @return
      */
     public List<Person> queryPersonList() {
-        return ldapTemplate.search(query().where("objectclass").is(ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS)), new PersonAttributesMapper());
+        return ldapTemplate.search(query().where("objectClass").is(ldapConfig.getCustomByKey(USER_OBJECT_CLASS)), new PersonAttributesMapper());
     }
 
     /**
@@ -54,7 +55,7 @@ public class LdapHandler {
      */
     public List<String> queryPersonNameList() {
         return ldapTemplate.search(
-                query().where("objectclass").is(ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS)), (AttributesMapper<String>) attrs -> (String) attrs.get(ldapConfig.getCustomByKey(LdapConfig.USER_ID)).get());
+                query().where("objectClass").is(ldapConfig.getCustomByKey(USER_OBJECT_CLASS)), (AttributesMapper<String>) attrs -> (String) attrs.get(ldapConfig.getCustomByKey(LdapConfig.USER_ID)).get());
     }
 
     /**
@@ -79,7 +80,8 @@ public class LdapHandler {
         String password = credential.getPassword();
         log.info("login check content username {}", username);
         AndFilter filter = new AndFilter();
-        filter.and(new EqualsFilter("objectclass", "person")).and(new EqualsFilter(ldapConfig.getCustomByKey(LdapConfig.USER_ID), username));
+        // ldapConfig.getCustomByKey(USER_OBJECT_CLASS)
+        filter.and(new EqualsFilter("objectClass", ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS))).and(new EqualsFilter(ldapConfig.getCustomByKey(LdapConfig.USER_ID), username));
         try {
             boolean authResult = ldapTemplate.authenticate(ldapConfig.getCustomByKey(LdapConfig.USER_BASE_DN), filter.toString(), password);
             return authResult;
@@ -117,27 +119,58 @@ public class LdapHandler {
     public boolean bindPerson(Person person) {
         String userId = ldapConfig.getCustomByKey(LdapConfig.USER_ID);
         String userBaseDN = ldapConfig.getCustomByKey(LdapConfig.USER_BASE_DN);
-        String userObjectClass = ldapConfig.getCustomByKey(LdapConfig.USER_OBJECT_CLASS);
+        String userObjectClass = ldapConfig.getCustomByKey(USER_OBJECT_CLASS);
 
+        String rdn = Joiner.on("=").join(userId, person.getUsername());
+        String dn = Joiner.on(",").skipNulls().join(rdn, userBaseDN);
+        // 基类设置
+        BasicAttribute ocattr = new BasicAttribute("objectClass");
+        ocattr.add("top");
+        ocattr.add("person");
+        ocattr.add("organizationalPerson");
+        if (!userObjectClass.equalsIgnoreCase("person") && !userObjectClass.equalsIgnoreCase("organizationalPerson"))
+            ocattr.add(userObjectClass);
+        // 用户属性
+        Attributes attrs = new BasicAttributes();
+        attrs.put(ocattr);
+        attrs.put(userId, person.getUsername()); // cn={username}
+        attrs.put("sn", person.getUsername());
+        attrs.put("displayName", person.getDisplayName());
+        attrs.put("mail", person.getEmail());
+        attrs.put("userPassword", person.getUserPassword());
+        attrs.put("mobile", (StringUtils.isEmpty(person.getMobile()) ? "0" : person.getMobile()));
         try {
-            String rdn = Joiner.on("=").join(userId, person.getUsername());
-            String dn = Joiner.on(",").skipNulls().join(rdn, userBaseDN);
-            // 基类设置
-            BasicAttribute ocattr = new BasicAttribute("objectClass");
-            ocattr.add("top");
-            ocattr.add("person");
-            ocattr.add("organizationalPerson");
-            if (!userObjectClass.equalsIgnoreCase("person") && !userObjectClass.equalsIgnoreCase("organizationalPerson"))
-                ocattr.add(userObjectClass);
-            // 用户属性
-            Attributes attrs = new BasicAttributes();
-            attrs.put(ocattr);
-            attrs.put(userId, person.getUsername()); // cn={username}
-            attrs.put("sn", person.getUsername());
-            attrs.put("displayName", person.getDisplayName());
-            attrs.put("mail", person.getEmail());
-            attrs.put("userPassword", person.getUserPassword());
-            attrs.put("mobile", (StringUtils.isEmpty(person.getMobile()) ? "0" : person.getMobile()));
+            if (bind(dn, null, attrs))
+                return true;
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * 绑定用户组
+     *
+     * @param group
+     * @return
+     */
+    public boolean bindGroup(Group group) {
+        String groupId = ldapConfig.getCustomByKey(LdapConfig.GROUP_ID);
+        String groupBaseDN = ldapConfig.getCustomByKey(LdapConfig.GROUP_BASE_DN);
+        String groupObjectClass = ldapConfig.getCustomByKey(GROUP_OBJECT_CLASS);
+        String rdn = Joiner.on("=").join(groupId, group.getGroupName());
+        String dn = Joiner.on(",").skipNulls().join(rdn, groupBaseDN);
+        // 基类设置
+        BasicAttribute ocattr = new BasicAttribute("objectClass");
+        // ocattr.add("top");
+        ocattr.add(groupObjectClass);
+        // 用户属性
+        Attributes attrs = new BasicAttributes();
+        attrs.put(ocattr);
+        attrs.put(groupId, group.getGroupName()); // cn={groupName}
+        // 添加一个空成员
+        attrs.put(ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER), "");
+        try {
             if (bind(dn, null, attrs))
                 return true;
         } catch (Exception ex) {
@@ -160,6 +193,12 @@ public class LdapHandler {
                 modifyAttributes(dn, "mobile", person.getMobile());
             if (!StringUtils.isEmpty(person.getUserPassword()))
                 modifyAttributes(dn, "userpassword", person.getUserPassword());
+            // 有效
+//            if (checkPerson.getIsActive() == null) {
+//               addAttributes(dn, "accountStatus", "active");
+//            } else {
+//                modifyAttributes(dn, "accountStatus", "inactive");
+//            }
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -173,7 +212,7 @@ public class LdapHandler {
      * @return
      */
     public List<Group> queryGroupList() {
-        return ldapTemplate.search(query().where("objectclass").is(ldapConfig.getCustomByKey(LdapConfig.GROUP_OBJECT_CLASS)), new GroupAttributesMapper());
+        return ldapTemplate.search(query().where("objectclass").is(ldapConfig.getCustomByKey(GROUP_OBJECT_CLASS)), new GroupAttributesMapper());
     }
 
     public List<String> queryGroupMember(String groupName) {
@@ -182,7 +221,7 @@ public class LdapHandler {
             DirContextAdapter adapter = (DirContextAdapter) ldapTemplate.lookup(ldapConfig.buildGroupDN(groupName));
             //"uniqueMember"
             // LdapConfig.GROUP_MEMBER
-            String[] members = adapter.getStringAttributes(ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER));
+            String[] members = adapter.getStringAttributes(ldapConfig.getCustomByKey(GROUP_MEMBER));
             List<String> usernameList = Lists.newArrayList();
             for (String member : members) {
                 String[] m = member.split("=|,");
@@ -197,16 +236,16 @@ public class LdapHandler {
     }
 
     public boolean removeGroupMember(String groupName, String username) {
-        return modificationGroupMember(groupName,username,DirContext.REMOVE_ATTRIBUTE);
+        return modificationGroupMember(groupName, username, DirContext.REMOVE_ATTRIBUTE);
     }
 
     public boolean addGroupMember(String groupName, String username) {
-        return modificationGroupMember(groupName,username,DirContext.ADD_ATTRIBUTE);
+        return modificationGroupMember(groupName, username, DirContext.ADD_ATTRIBUTE);
     }
 
     private boolean modificationGroupMember(String groupName, String username, int modificationType) {
         String groupDN = ldapConfig.buildGroupDN(groupName);
-        String groupMember = ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER);
+        String groupMember = ldapConfig.getCustomByKey(GROUP_MEMBER);
         String userDN = ldapConfig.buildUserFullDN(username);
         try {
             ldapTemplate.modifyAttributes(groupDN, new ModificationItem[]{
@@ -219,6 +258,11 @@ public class LdapHandler {
         }
     }
 
+    private void addAttributes(String dn, String attrId, String value) {
+        ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
+                new ModificationItem(DirContext.ADD_ATTRIBUTE, new BasicAttribute(attrId, value))
+        });
+    }
 
     private void modifyAttributes(String dn, String attrId, String value) {
         ldapTemplate.modifyAttributes(dn, new ModificationItem[]{
@@ -240,7 +284,7 @@ public class LdapHandler {
         List<String> groupList = Lists.newArrayList();
         try {
             String groupBaseDN = ldapConfig.getCustomByKey(LdapConfig.GROUP_BASE_DN);
-            String groupMember = ldapConfig.getCustomByKey(LdapConfig.GROUP_MEMBER);
+            String groupMember = ldapConfig.getCustomByKey(GROUP_MEMBER);
             String userId = ldapConfig.getCustomByKey(LdapConfig.USER_ID);
             String userDN = ldapConfig.buildUserFullDN(username);
             groupList = ldapTemplate.search(LdapQueryBuilder.query().base(groupBaseDN)

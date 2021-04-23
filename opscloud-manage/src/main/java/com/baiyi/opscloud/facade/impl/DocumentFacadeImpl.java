@@ -42,6 +42,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
 
     public static final String DOC_KEY_WORDPAD = "WORDPAD";
 
+
     @Override
     public DocumentVO.Doc queryDocByKey(String docKey) {
         OcDocument ocDocument = ocDocumentService.queryOcDocumentByKey(docKey);

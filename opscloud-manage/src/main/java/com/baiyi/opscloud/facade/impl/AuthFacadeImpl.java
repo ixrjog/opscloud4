@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.IDUtils;
 import com.baiyi.opscloud.common.util.MenuUtils;
 import com.baiyi.opscloud.common.util.SessionUtils;
 import com.baiyi.opscloud.decorator.auth.ResourceDecorator;
+import com.baiyi.opscloud.decorator.auth.UserRoleDecorator;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
@@ -17,10 +18,11 @@ import com.baiyi.opscloud.domain.param.auth.UserRoleParam;
 import com.baiyi.opscloud.domain.vo.auth.*;
 import com.baiyi.opscloud.domain.vo.auth.menu.MenuVO;
 import com.baiyi.opscloud.facade.AuthFacade;
+import com.baiyi.opscloud.facade.menu.MenuFacade;
 import com.baiyi.opscloud.service.auth.*;
-import com.baiyi.opscloud.service.user.OcUserService;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -50,13 +52,16 @@ public class AuthFacadeImpl implements AuthFacade {
     private OcAuthUserRoleService ocAuthUserRoleService;
 
     @Resource
-    private OcUserService ocUserService;
-
-    @Resource
     private ResourceDecorator resourceDecorator;
 
     @Resource
     private OcAuthMenuService ocAuthMenuService;
+
+    @Resource
+    private UserRoleDecorator userRoleDecorator;
+
+    @Resource
+    private MenuFacade menuFacade;
 
     @Override
     public DataTable<RoleVO.Role> queryRolePage(RoleParam.PageQuery pageQuery) {
@@ -76,6 +81,18 @@ public class AuthFacadeImpl implements AuthFacade {
     public void updateRole(RoleVO.Role role) {
         OcAuthRole ocAuthRole = BeanCopierUtils.copyProperties(role, OcAuthRole.class);
         ocAuthRoleService.updateOcAuthRole(ocAuthRole);
+    }
+
+    @Override
+    public void grantUserRole(OcUser user, String roleName) {
+        try {
+            OcAuthUserRole ocAuthUserRole = new OcAuthUserRole();
+            ocAuthUserRole.setUsername(user.getUsername());
+            OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleByName(roleName);
+            ocAuthUserRole.setRoleId(ocAuthRole.getId());
+            ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
+        } catch (Exception ignored) {
+        }
     }
 
     @Override
@@ -195,33 +212,32 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
-    public DataTable<UserRoleVO.UserRole> queryUserRolePage(UserRoleParam.PageQuery pageQuery) {
+    public DataTable<UserRoleVO.UserRole> queryUserRolePage(UserRoleParam.UserRolePageQuery pageQuery) {
         DataTable<OcAuthUserRole> table = ocAuthUserRoleService.queryOcAuthUserRoleByParam(pageQuery);
         List<UserRoleVO.UserRole> page = BeanCopierUtils.copyListProperties(table.getData(), UserRoleVO.UserRole.class);
-        return new DataTable<>(page.stream().map(e -> invokeOcUser(e)).collect(Collectors.toList()), table.getTotalNum());
+        return new DataTable<>(page.stream().map(e -> userRoleDecorator.decorator(e)).collect(Collectors.toList()), table.getTotalNum());
     }
 
-    /**
-     * 插入用户信息
-     *
-     * @param userRole
-     * @return
-     */
-    private UserRoleVO.UserRole invokeOcUser(UserRoleVO.UserRole userRole) {
-        OcUser ocUser = ocUserService.queryOcUserByUsername(userRole.getUsername());
-        userRole.setDisplayName(ocUser.getDisplayName());
-        OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleById(userRole.getRoleId());
-        userRole.setRoleName(ocAuthRole.getRoleName());
-        userRole.setRoleComment(ocAuthRole.getComment());
-        return userRole;
+    @Override
+    public List<UserRoleVO.UserRole> queryUserRoles(UserRoleParam.UserRolesQuery query) {
+        List<OcAuthUserRole> list = ocAuthUserRoleService.queryOcAuthUserRolesByUsername(query.getUsername());
+        return BeanCopierUtils.copyListProperties(list, UserRoleVO.UserRole.class).stream().map(e -> userRoleDecorator.decorator(e)).collect(Collectors.toList());
     }
 
     @Override
     public void addUserRole(UserRoleVO.UserRole userRole) {
         try {
             OcAuthUserRole ocAuthUserRole = BeanCopierUtils.copyProperties(userRole, OcAuthUserRole.class);
-            ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
-        } catch (Exception e) {
+            // 按角色名插入id
+            if (ocAuthUserRole.getRoleId() == null && !StringUtils.isEmpty(userRole.getRoleName())) {
+                OcAuthRole ocAuthRole = ocAuthRoleService.queryOcAuthRoleByName(userRole.getRoleName());
+                if (ocAuthRole == null) return;
+                ocAuthUserRole.setRoleId(ocAuthRole.getId());
+            }
+            if (ocAuthUserRoleService.queryOcAuthUserRoleByUniqueKey(ocAuthUserRole) == null)
+                ocAuthUserRoleService.addOcAuthUserRole(ocAuthUserRole);
+            menuFacade.removeUserMenuMap(userRole.getUsername());
+        } catch (Exception ignored) {
         }
     }
 
@@ -231,6 +247,7 @@ public class AuthFacadeImpl implements AuthFacade {
         if (ocAuthUserRole == null)
             return new BusinessWrapper<>(ErrorEnum.AUTH_USER_ROLE_NOT_EXIST);
         ocAuthUserRoleService.deleteOcAuthUserRoleById(id);
+        menuFacade.removeUserMenuMap(ocAuthUserRole.getUsername());
         return BusinessWrapper.SUCCESS;
     }
 

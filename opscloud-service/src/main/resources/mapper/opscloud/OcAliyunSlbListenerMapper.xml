@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunSlbListenerMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunSlbListener">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="load_balancer_id" jdbcType="VARCHAR" property="loadBalancerId"/>
+        <result column="listener_port" jdbcType="INTEGER" property="listenerPort"/>
+        <result column="listener_protocol" jdbcType="VARCHAR" property="listenerProtocol"/>
+        <result column="listener_forward" jdbcType="VARCHAR" property="listenerForward"/>
+        <result column="forward_port" jdbcType="INTEGER" property="forwardPort"/>
+        <result column="listen_description" jdbcType="VARCHAR" property="listenDescription"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+</mapper>

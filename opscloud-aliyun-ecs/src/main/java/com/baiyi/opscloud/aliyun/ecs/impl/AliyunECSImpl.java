@@ -80,7 +80,19 @@ public class AliyunECSImpl implements AliyunECS {
     }
 
     @Override
-    public Boolean delete(String regionId, String instanceId) {
+    public boolean delete(String regionId, String instanceId) {
         return aliyunECSHandler.delete(regionId, instanceId);
     }
+
+    @Override
+    public void modifyInstanceChargeType(String regionId, String instanceId, String chargeType) {
+        aliyunECSHandler.modifyInstanceChargeType(regionId, instanceId, chargeType);
+    }
+
+    @Override
+    public boolean modifyInstanceName(String regionId, String instanceId, String instanceName) {
+       return aliyunECSHandler.modifyInstanceName(regionId, instanceId, instanceName);
+    }
+
+
 }

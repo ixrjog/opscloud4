@@ -20,6 +20,9 @@ public class CloudServerVO {
     @ApiModel
     public static class CloudServer {
 
+        @ApiModelProperty(value = "前端用，同步中")
+        private Boolean syncing = false;
+
         @ApiModelProperty(value = "主键")
         private Integer id;
 
@@ -98,5 +101,10 @@ public class CloudServerVO {
         @ApiModelProperty(value = "更新时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date updateTime;
+
+        @ApiModelProperty(value = "倒计时天数")
+        private Integer expiresDays;
     }
+
+
 }

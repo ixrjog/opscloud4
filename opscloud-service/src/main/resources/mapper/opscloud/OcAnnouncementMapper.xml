@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAnnouncementMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAnnouncement">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="type" jdbcType="INTEGER" property="type"/>
+        <result column="content" jdbcType="LONGVARCHAR" property="content"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="start_time" jdbcType="TIMESTAMP" property="startTime"/>
+        <result column="end_time" jdbcType="TIMESTAMP" property="endTime"/>
+        <result column="valid" jdbcType="BIT" property="valid"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+
+    <select id="queryOcAnnouncementPage"
+            parameterType="com.baiyi.opscloud.domain.param.announcement.AnnouncementParam$PageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_announcement
+        <where>
+            <if test="queryName != null and queryName != ''">
+                and ( title LIKE "%" #{queryName} "%"
+                or content LIKE "%" #{queryName} "%")
+            </if>
+        </where>
+        ORDER BY create_time DESC
+    </select>
+</mapper>

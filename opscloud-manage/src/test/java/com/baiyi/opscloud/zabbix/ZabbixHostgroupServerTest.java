@@ -21,7 +21,7 @@ public class ZabbixHostgroupServerTest extends BaseUnit {
 
     @Test
     void testCreateHostgroup() {
-        ZabbixHostgroup group = zabbixHostgroupServer.createHostgroup("group_opscloud-9998");
+        ZabbixHostgroup group = zabbixHostgroupServer.createHostgroup(ZabbixAccount.ZABBIX_DEFAULT_HOSTGROUP);
         System.err.println(JSON.toJSONString(group));
     }
 

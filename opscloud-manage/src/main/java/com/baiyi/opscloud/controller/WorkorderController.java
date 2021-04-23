@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderGroupParam;
 import com.baiyi.opscloud.domain.param.workorder.WorkorderTicketParam;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderGroupVO;
+import com.baiyi.opscloud.domain.vo.workorder.WorkorderStatsVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketEntryVO;
 import com.baiyi.opscloud.domain.vo.workorder.WorkorderTicketVO;
 import com.baiyi.opscloud.facade.WorkorderFacade;
@@ -48,9 +49,16 @@ public class WorkorderController {
 
     @ApiOperation(value = "查询我的工单")
     @PostMapping(value = "/ticket/my/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<WorkorderTicketVO.Ticket>> queryMyWorkorderTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicketPage queryMyTicketPage) {
+    public HttpResult<DataTable<WorkorderTicketVO.Ticket>> queryMyTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyTicketPage queryMyTicketPage) {
         return new HttpResult<>(workorderFacade.queryMyTicketPage(queryMyTicketPage));
     }
+
+    @ApiOperation(value = "查询我已结束的工单")
+    @PostMapping(value = "/ticket/my/finalized/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<WorkorderTicketVO.Ticket>> queryMyFinalizedTicketPage(@RequestBody @Valid WorkorderTicketParam.QueryMyFinalizedTicketPage queryMyFinalizedTicketPage) {
+        return new HttpResult<>(workorderFacade.queryMyFinalizedTicketPage(queryMyFinalizedTicketPage));
+    }
+
 
     @ApiOperation(value = "查询工单")
     @PostMapping(value = "/ticket/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -166,4 +174,27 @@ public class WorkorderController {
         return new HttpResult<>(workorderFacade.queryUserTicketRAMPolicyParam(queryParam));
     }
 
+    @ApiOperation(value = "工单配置-阿里云ons查询")
+    @GetMapping(value = "/ticket/aliyun/ons/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkorderTicketEntryVO.AliyunONSEntry>> queryAliyunONSTicketByParam(@RequestParam Integer id) {
+        return new HttpResult<>(workorderFacade.queryAliyunONSTicketByParam(id));
+    }
+
+    @ApiOperation(value = "工单配置查询")
+    @GetMapping(value = "/ticket/id/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkorderTicketEntryVO.Entry>> queryUserTicketByTicketId(@RequestParam Integer id) {
+        return new HttpResult<>(workorderFacade.queryUserTicketByTicketId(id));
+    }
+
+    @ApiOperation(value = "工单月度新增报表")
+    @GetMapping(value = "/month/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<WorkorderStatsVO.WorkorderMonthStats> queryWorkorderStatsByMonth() {
+        return new HttpResult<>(workorderFacade.queryWorkorderStatsByMonth());
+    }
+
+    @ApiOperation(value = "工单名称报表")
+    @GetMapping(value = "/name/stats", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<WorkorderStatsVO.BaseStatsData>> queryWorkorderStatsByName() {
+        return new HttpResult<>(workorderFacade.queryWorkorderStatsByName());
+    }
 }

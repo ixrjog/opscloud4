@@ -42,6 +42,9 @@ public class WorkorderTicketVO {
         private Date createTime;
         private Date updateTime;
         private String userDetail;
+
+        private Boolean executorResult; // 执行结果
+        private Boolean approvalStatus; // 审批结果
     }
 
     @Data

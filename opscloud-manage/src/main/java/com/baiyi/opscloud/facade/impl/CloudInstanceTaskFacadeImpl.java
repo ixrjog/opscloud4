@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.impl;
 
 import com.baiyi.opscloud.bo.CreateCloudInstanceBO;
 import com.baiyi.opscloud.bo.ServerBO;
+import com.baiyi.opscloud.builder.CloudInstanceDeleteQueueBuilder;
 import com.baiyi.opscloud.common.base.CloudInstanceTaskPhase;
 import com.baiyi.opscloud.common.base.CloudInstanceTaskStatus;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
@@ -12,6 +13,7 @@ import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTaskVO;
 import com.baiyi.opscloud.domain.vo.cloud.CloudInstanceTemplateVO;
 import com.baiyi.opscloud.facade.CloudInstanceTaskFacade;
 import com.baiyi.opscloud.handler.CreateInstanceTaskHandler;
+import com.baiyi.opscloud.service.cloud.OcCloudInstanceDeleteQueueService;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskMemberService;
 import com.baiyi.opscloud.service.cloud.OcCloudInstanceTaskService;
 import com.baiyi.opscloud.service.cloud.OcCloudVpcVswitchService;
@@ -63,6 +65,9 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
 
     @Resource
     private OcEnvService ocEnvService;
+
+    @Resource
+    private OcCloudInstanceDeleteQueueService ocCloudInstanceDeleteQueueService;
 
     public static final int TASK_TIMEOUT_MINUTE = 5;
 
@@ -130,8 +135,26 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
             // 校验任务是否超时
             if (!isTaskFinalized)
                 isTaskFinalized = checkTaskTimeout(ocCloudInstanceTask, taskStartDate);
+            recycleCreateFailInstance(ocCloudInstanceTask);
         }
     }
+
+    private void recycleCreateFailInstance(OcCloudInstanceTask ocCloudInstanceTask) {
+        if (ocCloudInstanceTask.getTaskStatus().equals(CloudInstanceTaskStatus.COMPLETED.getStatus()))
+            return;
+        List<OcCloudInstanceTaskMember> taskMemberList = ocCloudInstanceTaskMemberService.queryOcCloudInstanceTaskMemberByTaskId(ocCloudInstanceTask.getId());
+        List<OcCloudInstanceTaskMember> failList = taskMemberList.stream().filter(x ->
+                !CloudInstanceTaskStatus.COMPLETED.getStatus().equals(x.getTaskStatus())).collect(Collectors.toList());
+        if (!CollectionUtils.isEmpty(failList)) {
+            List<OcCloudInstanceDeleteQueue> deleteQueueList = CloudInstanceDeleteQueueBuilder.buildList(failList);
+            try {
+                ocCloudInstanceDeleteQueueService.addOcCloudInstanceDeleteQueueList(deleteQueueList);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     // COMPLETED
     private boolean checkTaskCompleted(OcCloudInstanceTask ocCloudInstanceTask, CreateCloudInstanceBO createCloudInstanceBO) {
@@ -145,6 +168,7 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
         }
         return false;
     }
+
 
     private boolean checkTaskTimeout(OcCloudInstanceTask ocCloudInstanceTask, Date taskStartDate) {
         if (TimeUtils.calculateDateAgoMinute(taskStartDate) >= TASK_TIMEOUT_MINUTE) {
@@ -185,7 +209,7 @@ public class CloudInstanceTaskFacadeImpl implements CloudInstanceTaskFacade {
             vswitchList = queryVswitchByVpcIdAndVswitchIds(createCloudInstanceBO.getCloudInstanceTemplate().getVpcId(), createCloudInstanceBO.getCreateCloudInstance().getVswitchIds());
         }
 
-        if(CollectionUtils.isEmpty(vswitchList)) return vswitchIds;
+        if (CollectionUtils.isEmpty(vswitchList)) return vswitchIds;
 
         while (vswitchIds.size() < size) {
             for (OcCloudVpcVswitch ocCloudVpcVswitch : vswitchList) {

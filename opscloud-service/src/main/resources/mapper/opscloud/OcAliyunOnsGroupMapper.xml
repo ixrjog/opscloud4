@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcAliyunOnsGroupMapper">
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.OcAliyunOnsGroup">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="instance_id" jdbcType="VARCHAR" property="instanceId"/>
+        <result column="group_id" jdbcType="VARCHAR" property="groupId"/>
+        <result column="independent_naming" jdbcType="BIT" property="independentNaming"/>
+        <result column="group_type" jdbcType="VARCHAR" property="groupType"/>
+        <result column="create_time" jdbcType="BIGINT" property="createTime"/>
+        <result column="remark" jdbcType="VARCHAR" property="remark"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+
+    <select id="queryONSGroupPage"
+            parameterType="com.baiyi.opscloud.domain.param.cloud.AliyunONSParam$GroupPageQuery"
+            resultMap="BaseResultMap">
+        select * from oc_aliyun_ons_group
+        where instance_id = #{instanceId}
+        <if test="groupId != null and groupId != ''">
+            and group_id like "%" #{groupId} "%"
+        </if>
+        <if test="groupType != ''">
+            and group_type = #{groupType}
+        </if>
+        order by create_time desc
+    </select>
+
+</mapper>

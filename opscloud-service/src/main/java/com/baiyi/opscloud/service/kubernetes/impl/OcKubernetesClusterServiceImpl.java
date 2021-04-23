@@ -44,7 +44,7 @@ public class OcKubernetesClusterServiceImpl implements OcKubernetesClusterServic
 
     @Override
     public DataTable<OcKubernetesCluster> queryOcKubernetesClusterByParam(KubernetesClusterParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcKubernetesCluster> list = ocKubernetesClusterMapper.queryOcKubernetesClusterByParam(pageQuery);
         return new DataTable<>(list, page.getTotal());
     }

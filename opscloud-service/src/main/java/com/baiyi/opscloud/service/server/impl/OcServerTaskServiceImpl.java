@@ -25,7 +25,7 @@ public class OcServerTaskServiceImpl implements OcServerTaskService {
 
     @Override
     public DataTable<OcServerTask> queryOcServerTaskByParam(ServerTaskHistoryParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServerTask> taskList = ocServerTaskMapper.queryOcServerTaskByParam(pageQuery);
         return new DataTable<>(taskList, page.getTotal());
     }

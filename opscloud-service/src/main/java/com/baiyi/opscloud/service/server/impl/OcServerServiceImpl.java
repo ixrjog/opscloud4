@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.OcServer;
+import com.baiyi.opscloud.domain.param.monitor.MonitorHostParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.mapper.opscloud.OcServerMapper;
 import com.baiyi.opscloud.service.server.OcServerService;
@@ -66,16 +67,25 @@ public class OcServerServiceImpl implements OcServerService {
         return ocServerMapper.selectCountByExample(example);
     }
 
+
     @Override
-    public DataTable<OcServer> queryOcServerByParam(ServerParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+    public DataTable<OcServer> queryOcServerByMonitorParam(MonitorHostParam.MonitorHostPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<OcServer> ocServerList = ocServerMapper.queryOcServerByMonitorParam(pageQuery);
+        return new DataTable<>(ocServerList, page.getTotal());
+    }
+
+
+    @Override
+    public DataTable<OcServer> queryOcServerByParam(ServerParam.ServerPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServer> ocServerList = ocServerMapper.queryOcServerByParam(pageQuery);
         return new DataTable<>(ocServerList, page.getTotal());
     }
 
     @Override
-    public DataTable<OcServer> fuzzyQueryOcServerByParam(ServerParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+    public DataTable<OcServer> fuzzyQueryOcServerByParam(ServerParam.ServerPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcServer> ocServerList = ocServerMapper.fuzzyQueryOcServerByParam(pageQuery);
         return new DataTable<>(ocServerList, page.getTotal());
     }
@@ -94,6 +104,16 @@ public class OcServerServiceImpl implements OcServerService {
         example.setOrderByClause("serial_number");
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("serverGroupId", serverGroupId);
+        return ocServerMapper.selectByExample(example);
+    }
+
+    @Override
+    public  List<OcServer> queryOcServerByServerGroupIdAndEnvType(int serverGroupId,int envType){
+        Example example = new Example(OcServer.class);
+        example.setOrderByClause("serial_number");
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverGroupId", serverGroupId);
+        criteria.andEqualTo("envType", envType);
         return ocServerMapper.selectByExample(example);
     }
 

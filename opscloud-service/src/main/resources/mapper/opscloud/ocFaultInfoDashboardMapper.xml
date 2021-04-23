@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.OcFaultInfoDashboardMapper">
+    <resultMap id="InfoMonthStatsResultMap" type="com.baiyi.opscloud.domain.vo.fault.FaultVO$InfoMonthStatsData">
+        <result column="date_cat" jdbcType="VARCHAR" property="dateCat"/>
+        <result column="p0" jdbcType="INTEGER" property="p0"/>
+        <result column="p1" jdbcType="INTEGER" property="p1"/>
+        <result column="p2" jdbcType="INTEGER" property="p2"/>
+        <result column="p3" jdbcType="INTEGER" property="p3"/>
+        <result column="p4" jdbcType="INTEGER" property="p4"/>
+        <result column="no_fault" jdbcType="INTEGER" property="noFault"/>
+        <result column="unrated" jdbcType="INTEGER" property="unrated"/>
+    </resultMap>
+
+    <select id="queryFaultStatsMonth" resultMap="InfoMonthStatsResultMap">
+        select date_format(start_time,'%Y-%m') as date_cat,
+            sum(if(fault_level='P0', 1, 0)) as p0,
+            sum(if(fault_level='P1', 1, 0)) as p1,
+            sum(if(fault_level='P2', 1, 0)) as p2,
+            sum(if(fault_level='P3', 1, 0)) as p3,
+            sum(if(fault_level='P4', 1, 0)) as P4,
+            sum(if(fault_level='NoFault', 1, 0)) as no_fault,
+            sum(if(fault_level='Unrated', 1, 0)) as unrated
+        from oc_fault_info
+        where year(start_time) = #{queryYear}
+        group by date_cat
+        order by date_cat
+    </select>
+
+</mapper>

@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface ZabbixMapper <T> {
 
+
+
     List<T> mapFromJson(JsonNode jsonNode)
             throws JsonProcessingException;
 

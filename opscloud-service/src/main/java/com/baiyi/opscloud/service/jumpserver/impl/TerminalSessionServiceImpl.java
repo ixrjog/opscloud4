@@ -35,7 +35,7 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
 
     @Override
     public DataTable<TerminalSession> queryTerminalSessionPage(PageParam pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<TerminalSession> terminalSessionList= terminalSessionMapper.queryTerminalSessionPage(pageQuery);
         return new DataTable<>(terminalSessionList, page.getTotal());
     }

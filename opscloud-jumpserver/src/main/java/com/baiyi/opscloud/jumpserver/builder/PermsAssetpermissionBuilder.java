@@ -1,11 +1,9 @@
 package com.baiyi.opscloud.jumpserver.builder;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
-import com.baiyi.opscloud.common.util.TimeUtils;
 import com.baiyi.opscloud.common.util.UUIDUtils;
 import com.baiyi.opscloud.domain.generator.jumpserver.PermsAssetpermission;
 import com.baiyi.opscloud.jumpserver.bo.PermsAssetpermissionBO;
-import com.baiyi.opscloud.jumpserver.center.impl.JumpserverCenterImpl;
 
 /**
  * @Author baiyi
@@ -18,7 +16,7 @@ public class PermsAssetpermissionBuilder {
         PermsAssetpermissionBO permsAssetpermissionBO =  PermsAssetpermissionBO.builder()
                 .id(UUIDUtils.getUUID())
                 .name(name)
-                .dateExpired(TimeUtils.gmtToDate(JumpserverCenterImpl.DATE_EXPIRED))
+               // .dateExpired(TimeUtils.gmtToDate(JumpserverCenterImpl.DATE_EXPIRED))
                 .build();
         return covert(permsAssetpermissionBO);
     }

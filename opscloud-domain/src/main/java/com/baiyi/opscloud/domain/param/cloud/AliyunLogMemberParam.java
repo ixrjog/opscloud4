@@ -18,23 +18,32 @@ public class AliyunLogMemberParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PageQuery extends PageParam {
+    public static class LogMemberPageQuery extends PageParam {
+
         @NotNull
         private Integer logId;
 
         @ApiModelProperty(value = "查询关键字")
         private String queryName;
+
     }
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class AddLogMember {
+
         @NotNull
         private Integer logId;
+
         @NotNull
         private Integer serverGroupId;
+
         private String topic;
+
+        @NotNull
+        private Integer envType;
+
         private String comment;
     }
 }

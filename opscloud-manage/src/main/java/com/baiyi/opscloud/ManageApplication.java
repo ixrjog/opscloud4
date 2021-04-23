@@ -1,6 +1,7 @@
 package com.baiyi.opscloud;
 
 
+import net.javacrumbs.shedlock.spring.annotation.EnableSchedulerLock;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
@@ -22,6 +23,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @SpringBootApplication
 @EnableAspectJAutoProxy(exposeProxy = true)
 @EnableScheduling
+@EnableSchedulerLock(defaultLockAtMostFor = "10m")
 @EnableCaching
 @EnableAsync
 @EnableRetry

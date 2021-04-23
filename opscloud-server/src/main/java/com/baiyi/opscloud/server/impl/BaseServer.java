@@ -50,10 +50,6 @@ public abstract class BaseServer implements InitializingBean, IServer {
         return ocServerGroup.getName();
     }
 
-    protected OcServerGroup getOcServerGroup(OcServer ocServer) {
-        return ocServerGroupService.queryOcServerGroupById(ocServer.getServerGroupId());
-    }
-
     protected List<OcServerGroup> getServerGroupList() {
         ServerGroupParam.PageQuery pageQuery = new ServerGroupParam.PageQuery();
         pageQuery.setPage(0);
@@ -79,17 +75,22 @@ public abstract class BaseServer implements InitializingBean, IServer {
     }
 
     /**
-     * 取主机名称 序号填充对齐
+     * 取主机名称 序号对齐（此方法废弃）
      * 例如 当前主机数量为80台, 第一台序号为 01
      *
      * @param ocServer
      * @return
      */
-    protected String getHostname(OcServer ocServer) {
+    @Deprecated
+    protected String getAlignHostname(OcServer ocServer) {
         int serverCount = ocServerService.countByServerGroupId(ocServer.getServerGroupId());
         String format = Joiner.on("").join("%0", String.valueOf(serverCount).length(), "d");
         String sn = String.format(format, ocServer.getSerialNumber());
         return Joiner.on("-").join(acqHostname(ocServer), sn);
+    }
+
+    protected String getHostname(OcServer ocServer) {
+        return Joiner.on("-").join(acqHostname(ocServer), ocServer.getSerialNumber());
     }
 
     protected String acqHostname(OcServer ocServer) {
@@ -101,13 +102,22 @@ public abstract class BaseServer implements InitializingBean, IServer {
         }
     }
 
+    protected String acqEnvName(OcServer ocServer) {
+        OcEnv ocEnv = ocEnvService.queryOcEnvByType(ocServer.getEnvType());
+        return ocEnv != null ? ocEnv.getEnvName() : "default";
+    }
+
+    protected void updateOcServer(OcServer ocServer){
+        ocServerService.updateOcServer(ocServer);
+    }
+
     /**
      * 注册
      *
      * @throws Exception
      */
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         ServerFactory.register(this);
     }
 }

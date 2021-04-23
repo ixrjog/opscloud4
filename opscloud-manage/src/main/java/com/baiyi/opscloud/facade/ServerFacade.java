@@ -15,13 +15,15 @@ import java.util.List;
  */
 public interface ServerFacade {
 
-    DataTable<ServerVO.Server> queryServerPage(ServerParam.PageQuery pageQuery);
+    DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery);
 
     BusinessWrapper<ServerVO.Server> queryServerById(int id);
 
+    BusinessWrapper<ServerVO.Server> queryServerByPrivateIp(String privateIp);
+
     BusinessWrapper<List<ServerVO.Server>> queryServerByIds(ServerParam.QueryByServerIds queryByServerByIds);
 
-    DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.PageQuery pageQuery);
+    DataTable<ServerVO.Server> fuzzyQueryServerPage(ServerParam.ServerPageQuery pageQuery);
 
     BusinessWrapper<List<ServerVO.Server>> queryServerByServerGroup(ServerParam.QueryByServerGroup queryByServerGroup);
 
@@ -34,6 +36,5 @@ public interface ServerFacade {
     BusinessWrapper<Boolean> updateServer(ServerVO.Server server);
 
     BusinessWrapper<Boolean> deleteServerById(int id);
-
 
 }

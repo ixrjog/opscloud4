@@ -47,7 +47,7 @@ public class OcEnvServiceImpl implements OcEnvService {
 
     @Override
     public DataTable<OcEnv> queryOcEnvByParam(EnvParam.PageQuery pageQuery) {
-        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength().intValue());
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<OcEnv> ocEnvList = ocEnvMapper.queryOcEnvByParam(pageQuery);
         return new DataTable<>(ocEnvList, page.getTotal());
     }

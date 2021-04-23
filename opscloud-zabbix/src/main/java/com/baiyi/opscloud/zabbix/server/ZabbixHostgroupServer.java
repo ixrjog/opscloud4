@@ -12,5 +12,5 @@ public interface ZabbixHostgroupServer {
     // hostgroup
     ZabbixHostgroup createHostgroup(String hostgroup);
 
-    ZabbixHostgroup getHostgroup(String name);
+    ZabbixHostgroup getHostgroup(String hostgroup);
 }

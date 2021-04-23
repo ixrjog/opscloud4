@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.impl;
 
+import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtils;
 import com.baiyi.opscloud.domain.BusinessWrapper;
 import com.baiyi.opscloud.domain.DataTable;
@@ -10,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.facade.EnvFacade;
 import com.baiyi.opscloud.service.env.OcEnvService;
 import com.baiyi.opscloud.service.server.OcServerService;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -79,5 +81,12 @@ public class EnvFacadeImpl implements EnvFacade {
         } else {
             return new BusinessWrapper<>(ErrorEnum.ENV_HAS_USED);
         }
+    }
+
+    @Override
+    @Cacheable(cacheNames = CachingConfig.CACHE_NAME_ENV_PEPO)
+    public int convertEnvName(String envName) {
+        OcEnv ocEnv = ocEnvService.queryOcEnvByName(envName);
+        return ocEnv == null ? 0 : ocEnv.getEnvType();
     }
 }

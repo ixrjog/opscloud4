@@ -28,7 +28,7 @@ public class AliyunCoreImpl implements AliyunCore {
 
     @Override
     public List<AliyunAccountVO.AliyunAccount> queryAliyunAccount() {
-       return BeanCopierUtils.copyListProperties(getAccounts(),AliyunAccountVO.AliyunAccount.class);
+        return BeanCopierUtils.copyListProperties(getAccounts(), AliyunAccountVO.AliyunAccount.class);
     }
 
     @Override
@@ -80,5 +80,9 @@ public class AliyunCoreImpl implements AliyunCore {
         return null;
     }
 
-
+    @Override
+    public IAcsClient getMasterClient() {
+        AliyunCoreConfig.AliyunAccount master = getAccount();
+        return getAcsClient(master.getRegionId());
+    }
 }
