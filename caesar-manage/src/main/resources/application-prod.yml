@@ -1,0 +1,48 @@
+logging:
+  level:
+    # swagger 警告日志忽略
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+  file:
+    path: /logs
+
+# 白名单配置
+white:
+  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
+
+
+spring:
+  profiles:
+    include:
+      - common
+  redis:
+    host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com
+    port: 6379
+    password: ENC(4R1OwE95Fqmj5TlYcEYeraEDnKzQLZTL52EAGOn675QoaSTE1DQjMg==)
+    jedis:
+      pool:
+        max-wait: 5000
+        max-idle: 20
+        max-active: 100
+        min-idle: 0
+  jackson:
+    time-zone: GMT+8
+
+app:
+  datasource:
+    caesar:
+      url: jdbc:mysql://rm-bp14453fwr49f19cu90130.mysql.rds.aliyuncs.com:3306/caesar?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=CTT&allowMultiQueries=true
+      username: caesar
+      password: ENC(YSUGOIVnK0sShxj8Lux/D6W6nX75uXGvdDxD/KbJb4o=)
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      minimum-idle: 3
+      maximum-pool-size: 15
+      max-lifetime: 30000
+      connection-test-query: SELECT 1
+
+
+
+# java -jar -Djasypt.encryptor.password=${password}
+#jasypt:
+#  encryptor:
+#    password: ${password}
+
