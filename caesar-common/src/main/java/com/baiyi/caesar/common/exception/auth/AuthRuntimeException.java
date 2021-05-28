@@ -3,12 +3,14 @@ package com.baiyi.caesar.common.exception.auth;
 import com.baiyi.caesar.common.exception.BaseException;
 import com.baiyi.caesar.domain.ErrorEnum;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 
 /**
  * @Author baiyi
  * @Date 2021/5/13 4:05 下午
  * @Version 1.0
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class AuthRuntimeException extends BaseException {
 

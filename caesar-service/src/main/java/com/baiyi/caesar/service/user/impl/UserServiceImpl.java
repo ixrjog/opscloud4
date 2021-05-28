@@ -33,16 +33,26 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User getByUsername(String username){
+    public User getByUsername(String username) {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("username", username);
-        return  userMapper.selectOneByExample(example);
+        return userMapper.selectOneByExample(example);
     }
 
     @Override
-    public void update(User user){
+    public void add(User user) {
+        userMapper.insert(user);
+    }
+
+    @Override
+    public void update(User user) {
         userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    public void updateBySelective(User user) {
+        userMapper.updateByPrimaryKeySelective(user);
     }
 
 }

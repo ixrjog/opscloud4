@@ -1,14 +1,16 @@
 package com.baiyi.caesar.vo.user;
 
+import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.vo.auth.AuthRoleVO;
+import com.baiyi.caesar.vo.base.BaseVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
-import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -37,21 +39,17 @@ public class UserVO {
         Integer getUserId();
     }
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class User implements Serializable {
+    public static class User extends BaseVO {
 
-        private static final long serialVersionUID = -4936990694008673929L;
-
-//        private int businessType;
-//        private int businessId;
-
+        private final int businessType = BusinessTypeEnum.USER.getType();
 
         private List<AuthRoleVO.Role> roles;
 
         private List<UserGroupVO.UserGroup> userGroups;
-
 
         @ApiModelProperty(value = "主键")
         private Integer id;

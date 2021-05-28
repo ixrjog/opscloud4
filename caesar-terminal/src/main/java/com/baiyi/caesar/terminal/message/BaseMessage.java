@@ -18,7 +18,7 @@ public class BaseMessage {
     // 0 普通账户 1 管理员账户
     private Integer loginType;
 
-
+    private boolean isAdmin;
     private Terminal terminal;
 
     @Data

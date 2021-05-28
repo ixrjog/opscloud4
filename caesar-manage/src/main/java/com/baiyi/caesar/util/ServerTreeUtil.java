@@ -1,9 +1,8 @@
-package com.baiyi.caesar.packer.server.util;
+package com.baiyi.caesar.util;
 
-import com.baiyi.caesar.domain.generator.caesar.OcServer;
-import com.baiyi.caesar.domain.generator.caesar.OcServerGroup;
-import com.baiyi.caesar.domain.vo.tree.TreeVO;
-import com.baiyi.caesar.facade.ServerBaseFacade;
+import com.baiyi.caesar.domain.generator.caesar.Server;
+import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
+import com.baiyi.caesar.vo.server.ServerTreeVO;
 import com.google.common.base.Joiner;
 
 import java.util.List;
@@ -17,30 +16,47 @@ import java.util.stream.Collectors;
  */
 public class ServerTreeUtil {
 
-    public static TreeVO.Tree decorator(OcServerGroup ocServerGroup, Map<String, List<OcServer>> serverGroupMap) {
-        List<TreeVO.Tree> childrens = serverGroupMap.keySet().stream().map(subName -> TreeVO.Tree.builder()
+    public static ServerTreeVO.Tree wrap(ServerGroup serverGroup, Map<String, List<Server>> serverGroupMap) {
+        List<ServerTreeVO.Tree> childrens = serverGroupMap.keySet().stream().map(subName -> ServerTreeVO.Tree.builder()
                 .id(subName)
                 .label(subName)
                 .children(buildServerChildrens(serverGroupMap.get(subName)))
                 .build()).collect(Collectors.toList());
 
-        return TreeVO.Tree.builder()
-                .id(ocServerGroup.getName())
-                .label(ocServerGroup.getName())
+        return ServerTreeVO.Tree.builder()
+                .id(serverGroup.getName())
+                .label(serverGroup.getName())
                 .children(childrens)
                 .build();
     }
 
-    private static List<TreeVO.Tree> buildServerChildrens(List<OcServer> serverList) {
-        return serverList.stream().map(ServerTreeUtil::apply).collect(Collectors.toList());
+    private static List<ServerTreeVO.Tree> buildServerChildrens(List<Server> servers) {
+        return servers.stream().map(ServerTreeUtil::apply).collect(Collectors.toList());
     }
 
-    private static TreeVO.Tree apply(OcServer server) {
-        String serverName = ServerBaseFacade.acqServerName(server);
-        return TreeVO.Tree.builder()
+    private static ServerTreeVO.Tree apply(Server server) {
+        String serverName = ServerUtil.toServerName(server);
+        return ServerTreeVO.Tree.builder()
                 .id(serverName)
                 .disabled(!server.getIsActive())
+                .server(server)
                 .label(Joiner.on(":").join(serverName, server.getPrivateIp()))
                 .build();
+    }
+
+
+    public static void wrap(Map<String, String> serverTreeHostPatternMap, Map<String, List<Server>> serverGroupMap) {
+        serverGroupMap.keySet().forEach(k ->
+                serverGroupMap.get(k).forEach(s -> serverTreeHostPatternMap.put(ServerUtil.toServerName(s), s.getPrivateIp()))
+        );
+    }
+
+    public static int getServerGroupMapSize(Map<String, List<Server>> serverGroupMap) {
+        int size = 0;
+        if (serverGroupMap.isEmpty())
+            return size;
+        for (String key : serverGroupMap.keySet())
+            size += serverGroupMap.get(key).size();
+        return size;
     }
 }

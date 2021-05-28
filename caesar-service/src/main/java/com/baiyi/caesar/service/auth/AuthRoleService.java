@@ -23,4 +23,6 @@ public interface AuthRoleService {
     void update(AuthRole authRole);
 
     void deleteById(int id);
+
+    int getRoleAccessLevelByUsername(String username);
 }

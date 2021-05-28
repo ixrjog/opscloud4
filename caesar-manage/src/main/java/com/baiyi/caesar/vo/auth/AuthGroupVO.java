@@ -14,7 +14,6 @@ import lombok.NoArgsConstructor;
  */
 public class AuthGroupVO {
 
-
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor

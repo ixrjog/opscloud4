@@ -1,12 +1,12 @@
-package com.baiyi.caesar.xterm.handler;
+package com.baiyi.caesar.terminal.handler;
 
 import com.baiyi.caesar.domain.bo.SSHKeyCredential;
-import com.baiyi.caesar.xterm.message.BaseMessage;
-import com.baiyi.caesar.xterm.model.HostSystem;
-import com.baiyi.caesar.xterm.model.JSchSession;
-import com.baiyi.caesar.xterm.model.JSchSessionMap;
-import com.baiyi.caesar.xterm.model.SessionOutput;
-import com.baiyi.caesar.xterm.task.SecureShellTask;
+import com.baiyi.caesar.terminal.message.BaseMessage;
+import com.baiyi.caesar.terminal.model.HostSystem;
+import com.baiyi.caesar.terminal.model.JSchSession;
+import com.baiyi.caesar.terminal.model.JSchSessionMap;
+import com.baiyi.caesar.terminal.model.SessionOutput;
+import com.baiyi.caesar.terminal.task.SecureShellTask;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
@@ -31,7 +31,7 @@ public class RemoteInvokeHandler {
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
-    public static void openSSHTermOnSystem( String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void openSSHTermOnSystem(String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -54,7 +54,7 @@ public class RemoteInvokeHandler {
             // SSH 代理转发
             channel.setAgentForwarding(false);
             channel.setPtyType("xterm");
-            invokeChannelPtySize(channel, hostSystem.getInitialMessage());
+            invokeChannelPtySize(channel, hostSystem.getLoginMessage());
             InputStream outFromChannel = channel.getInputStream();
             //new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
@@ -93,8 +93,8 @@ public class RemoteInvokeHandler {
     }
 
     public static void invokeChannelPtySize(ChannelShell channel, BaseMessage baseMessage) {
-        int width = baseMessage.getXtermWidth();
-        int height = baseMessage.getXtermHeight();
+        int width = baseMessage.getTerminal().getWidth();
+        int height = baseMessage.getTerminal().getHeight();
         // int cols = (int) Math.floor(width / 7.2981);
         int cols = (int) Math.floor(width / 7);
         int rows = (int) Math.floor(height / 14.4166);

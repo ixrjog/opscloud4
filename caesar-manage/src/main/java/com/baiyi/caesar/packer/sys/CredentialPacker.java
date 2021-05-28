@@ -3,6 +3,7 @@ package com.baiyi.caesar.packer.sys;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.common.util.SSHUtil;
+import com.baiyi.caesar.domain.generator.caesar.Credential;
 import com.baiyi.caesar.packer.base.SecretParcker;
 import com.baiyi.caesar.service.sys.CredentialService;
 import com.baiyi.caesar.types.CredentialKindEnum;
@@ -50,14 +51,14 @@ public class CredentialPacker extends SecretParcker {
         return vo;
     }
 
-    public com.baiyi.caesar.domain.generator.caesar.Credential toDO(CredentialVO.Credential vo) {
+    public Credential toDO(CredentialVO.Credential vo) {
         com.baiyi.caesar.domain.generator.caesar.Credential credential = BeanCopierUtil.copyProperties(vo, com.baiyi.caesar.domain.generator.caesar.Credential.class);
         if (!StringUtils.isEmpty(vo.getCredential()))
-            credential.setCredential(stringEncryptor.encrypt(vo.getCredential()));
+            credential.setCredential(encrypt(vo.getCredential()));
         if (!StringUtils.isEmpty(vo.getCredential2()))
-            credential.setCredential2(stringEncryptor.encrypt(vo.getCredential2()));
+            credential.setCredential2(encrypt(vo.getCredential2()));
         if (!StringUtils.isEmpty(vo.getPassphrase()))
-            credential.setPassphrase(stringEncryptor.encrypt(vo.getPassphrase()));
+            credential.setPassphrase(encrypt(vo.getPassphrase()));
         if (vo.getKind().equals(CredentialKindEnum.SSH_USERNAME_WITH_KEY_PAIR.getKind()) || vo.getKind().equals(CredentialKindEnum.SSH_USERNAME_WITH_PRIVATE_KEY.getKind())) {
             if (!StringUtils.isEmpty(vo.getCredential2()))
                 credential.setFingerprint(SSHUtil.getFingerprint(vo.getCredential2()));

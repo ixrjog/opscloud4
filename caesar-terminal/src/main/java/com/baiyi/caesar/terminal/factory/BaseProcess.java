@@ -1,4 +1,4 @@
-package com.baiyi.caesar.factory.terminal;
+package com.baiyi.caesar.terminal.factory;
 
 import com.baiyi.caesar.common.redis.RedisUtil;
 import com.baiyi.caesar.common.redis.TerminalKeyUtil;

@@ -1,4 +1,4 @@
-package com.baiyi.caesar.builder;
+package com.baiyi.caesar.terminal.builder;
 
 import com.baiyi.caesar.common.model.HostInfo;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
@@ -10,13 +10,12 @@ import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
  */
 public class TerminalSessionBuilder {
 
-    public static TerminalSession build(String sessionId, HostInfo serverInfo){
-      return   TerminalSession.builder()
+    public static TerminalSession build(String sessionId, HostInfo serverInfo) {
+        return TerminalSession.builder()
                 .sessionId(sessionId)
                 .serverHostname(serverInfo.getHostname())
                 .serverAddr(serverInfo.getHostAddress())
                 .build();
-
     }
 
 }

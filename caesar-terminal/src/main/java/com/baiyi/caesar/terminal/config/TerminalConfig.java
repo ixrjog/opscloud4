@@ -1,4 +1,4 @@
-package com.baiyi.caesar.xterm.config;
+package com.baiyi.caesar.terminal.config;
 
 import com.google.common.base.Joiner;
 import lombok.Data;
@@ -12,8 +12,8 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "xterm", ignoreInvalidFields = true)
-public class XTermConfig {
+@ConfigurationProperties(prefix = "terminal", ignoreInvalidFields = true)
+public class TerminalConfig {
 
     private String auditPath;
     private Boolean openAudit;

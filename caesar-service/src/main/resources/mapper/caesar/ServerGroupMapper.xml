@@ -29,4 +29,41 @@
         order by replace( name, #{name}, '' ), create_time
     </select>
 
+    <select id="queryUserPermissionServerGroupByParam"
+            parameterType="com.baiyi.caesar.domain.param.server.ServerGroupParam$UserPermissionServerGroupPageQuery"
+            resultMap="BaseResultMap">
+        select * from server_group
+        where
+        <choose>
+            <when test="authorized">
+                id in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId})
+            </when>
+            <otherwise>
+                id not in ( select business_id from user_permission where business_type =  #{businessType} and user_id = #{userId})
+            </otherwise>
+        </choose>
+        <if test="queryName != null and queryName != ''">
+            and name like "%" #{queryName} "%"
+        </if>
+        order by create_time
+    </select>
+
+    <select id="queryUserServerGroupTreeByParam"
+            parameterType="com.baiyi.caesar.domain.param.server.ServerGroupParam$UserServerTreeQuery"
+            resultMap="BaseResultMap">
+        select * from server_group
+        <where>
+            <if test="!isAdmin">
+                id in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId} )
+            </if>
+            <if test="queryName != null and queryName != ''">
+                and name like "%" #{queryName} "%"
+            </if>
+            <if test="serverGroupTypeId != null and serverGroupTypeId > 0">
+                and server_group_type_id = #{serverGroupTypeId}
+            </if>
+        </where>
+        order by replace( name, #{queryName}, '' )
+    </select>
+
 </mapper>

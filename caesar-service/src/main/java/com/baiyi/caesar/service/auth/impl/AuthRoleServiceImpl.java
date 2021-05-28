@@ -66,4 +66,9 @@ public class AuthRoleServiceImpl implements AuthRoleService {
     public void deleteById(int id) {
         authRoleMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public int getRoleAccessLevelByUsername(String username) {
+        return authRoleMapper.getRoleAccessLevelByUsername(username);
+    }
 }

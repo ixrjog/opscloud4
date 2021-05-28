@@ -28,7 +28,7 @@
 package com.baiyi.caesar.terminal.task;
 
 import com.baiyi.caesar.terminal.model.SessionOutput;
-import com.baiyi.caesar.terminal.SessionOutputUtil;
+import com.baiyi.caesar.terminal.util.SessionOutputUtil;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.BufferedReader;

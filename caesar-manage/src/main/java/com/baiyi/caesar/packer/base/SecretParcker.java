@@ -17,6 +17,14 @@ public class SecretParcker {
     @Resource
     protected StringEncryptor stringEncryptor;
 
+    protected String encrypt(String str){
+        return stringEncryptor.encrypt(str);
+    }
+
+    private String decrypt(String str){
+        return stringEncryptor.decrypt(str);
+    }
+
     public void wrap(ISecret iSecret) {
         iSecret.setPlaintext(stringEncryptor.decrypt(iSecret.getSecret()));
     }

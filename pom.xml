@@ -10,6 +10,7 @@
         <module>caesar-common</module>
         <module>caesar-ldap</module>
         <module>caesar-guacamole</module>
+        <module>caesar-terminal</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -176,6 +177,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>caesar-guacamole</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-terminal</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

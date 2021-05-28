@@ -1,5 +1,6 @@
 package com.baiyi.caesar.facade.impl;
 
+import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.user.UserParam;
@@ -7,6 +8,7 @@ import com.baiyi.caesar.facade.UserFacade;
 import com.baiyi.caesar.packer.user.UserPacker;
 import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.vo.user.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -30,5 +32,20 @@ public class UserFacadeImpl implements UserFacade {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
         return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
     }
+
+    @Override
+    public void addUser(UserVO.User user) {
+        User pre = userPacker.toDO(user);
+        if (StringUtils.isEmpty(pre.getPassword()))
+            throw new CommonRuntimeException("密码不能为空");
+        userService.add(pre);
+    }
+
+    @Override
+    public void updateUser(UserVO.User user) {
+        User pre = userPacker.toDO(user);
+        userService.updateBySelective(pre);
+    }
+
 
 }

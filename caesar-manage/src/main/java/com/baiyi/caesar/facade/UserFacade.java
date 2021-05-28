@@ -12,4 +12,8 @@ import com.baiyi.caesar.vo.user.UserVO;
 public interface UserFacade {
 
     DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery);
+
+    void addUser(UserVO.User user);
+
+    void updateUser(UserVO.User user);
 }

@@ -82,4 +82,12 @@ public class ServerGroupController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "分页查询用户许可的服务器组列表")
+    @PostMapping(value = "/user/permission/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ServerGroupVO.ServerGroup>> queryUserPermissionServerGroupPage(@RequestBody @Valid ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery) {
+        return new HttpResult<>(serverGroupFacade.queryUserPermissionServerGroupPage(pageQuery));
+    }
+
+
+
 }

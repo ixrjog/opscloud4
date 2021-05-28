@@ -1,10 +1,12 @@
 package com.baiyi.caesar.facade.server;
 
 import com.baiyi.caesar.domain.DataTable;
+import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.caesar.vo.server.ServerGroupTypeVO;
 import com.baiyi.caesar.vo.server.ServerGroupVO;
+import com.baiyi.caesar.vo.server.ServerTreeVO;
 
 /**
  * @Author baiyi
@@ -14,6 +16,8 @@ import com.baiyi.caesar.vo.server.ServerGroupVO;
 public interface ServerGroupFacade {
 
     DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery);
+
+    DataTable<ServerGroupVO.ServerGroup> queryUserPermissionServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery);
 
     void addServerGroup(ServerGroupVO.ServerGroup serverGroup);
 
@@ -28,4 +32,6 @@ public interface ServerGroupFacade {
     void updateServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType);
 
     void deleteServerGroupTypeById(int id);
+
+    ServerTreeVO.ServerTree queryServerTree(ServerGroupParam.UserServerTreeQuery queryParam, User user);
 }

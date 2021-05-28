@@ -13,9 +13,19 @@ public class SessionUtil {
 
     private static ThreadLocal<String> token = new ThreadLocal<>();
 
+    private static ThreadLocal<Integer> userId = new ThreadLocal<>();
+
     public static void setUserToken(UserToken userToken){
         username.set(userToken.getUsername());
         token.set(userToken.getToken());
+    }
+
+    public static Integer getUserId() {
+        return userId.get();
+    }
+
+    public static void setUserId(Integer param) {
+        userId.set(param);
     }
 
     public static String getUsername() {

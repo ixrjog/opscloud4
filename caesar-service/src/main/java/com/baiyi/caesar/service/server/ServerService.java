@@ -4,6 +4,8 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.param.server.ServerParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/24 9:39 上午
@@ -20,4 +22,6 @@ public interface ServerService {
     Server getMaxSerialNumberServer(Integer serverGroupId, Integer envType);
 
     int countByServerGroupId(Integer serverGroupId);
+
+    List<Server> queryByServerGroupId(Integer serverGroupId);
 }

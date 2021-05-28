@@ -6,6 +6,7 @@ import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.util.ExtendUtil;
 import com.baiyi.caesar.vo.server.ServerGroupVO;
+import com.baiyi.caesar.vo.user.UserVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,6 +24,7 @@ public final class ServerGroupPacker {
     @Resource
     private ServerGroupTypePacker serverGroupTypePacker;
 
+
     @Resource
     private ServerService serverService;
 
@@ -34,6 +36,11 @@ public final class ServerGroupPacker {
         List<ServerGroupVO.ServerGroup> voList = wrapVOList(data);
         if (!ExtendUtil.isExtend(iExtend))
             return voList;
+        return voList.stream().peek(this::wrap).collect(Collectors.toList());
+    }
+
+    public List<ServerGroupVO.ServerGroup> wrapVOList(List<ServerGroup> data, UserVO.IUserPermission iUserPermission) {
+        List<ServerGroupVO.ServerGroup> voList = wrapVOList(data);
         return voList.stream().peek(this::wrap).collect(Collectors.toList());
     }
 

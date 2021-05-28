@@ -1,6 +1,8 @@
-package com.baiyi.caesar.terminal;
+package com.baiyi.caesar.terminal.util;
 
 import com.baiyi.caesar.common.redis.RedisUtil;
+import com.baiyi.caesar.common.redis.TerminalKeyUtil;
+import com.baiyi.caesar.terminal.handler.AuditRecordHandler;
 import com.baiyi.caesar.terminal.model.SessionOutput;
 import com.baiyi.caesar.terminal.model.UserSessionsOutput;
 import lombok.extern.slf4j.Slf4j;
@@ -142,7 +144,7 @@ public class SessionOutputUtil {
             auditLog = sessionOutput.getOutput().toString();
         }
 
-        String cacheKey = CacheKeyUtils.getTermAuditLogKey(sessionId, instanceId);
+        String cacheKey = TerminalKeyUtil.buildAuditLogKey(sessionId, instanceId);
         String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
             logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
@@ -152,7 +154,7 @@ public class SessionOutputUtil {
         redisUtil.set(cacheKey, logRepo, 6000 );
 
         if (logRepo.length() > 10240)
-            AuditLogHandler.writeAuditLog(sessionId, instanceId);
+            AuditRecordHandler.recordAuditLog(sessionId, instanceId);
 
     }
 

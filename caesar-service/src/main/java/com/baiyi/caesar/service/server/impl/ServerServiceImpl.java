@@ -52,10 +52,18 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public int countByServerGroupId(Integer serverGroupId){
+    public int countByServerGroupId(Integer serverGroupId) {
         Example example = new Example(Server.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("serverGroupId", serverGroupId);
         return serverMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public List<Server> queryByServerGroupId(Integer serverGroupId) {
+        Example example = new Example(Server.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverGroupId", serverGroupId);
+        return serverMapper.selectByExample(example);
     }
 }

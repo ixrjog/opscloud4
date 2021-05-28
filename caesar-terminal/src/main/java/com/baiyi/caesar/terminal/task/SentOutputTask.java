@@ -28,8 +28,8 @@
 package com.baiyi.caesar.terminal.task;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.caesar.xterm.model.SessionOutput;
-import com.baiyi.caesar.xterm.util.SessionOutputUtil;
+import com.baiyi.caesar.terminal.model.SessionOutput;
+import com.baiyi.caesar.terminal.util.SessionOutputUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.CollectionUtils;
 

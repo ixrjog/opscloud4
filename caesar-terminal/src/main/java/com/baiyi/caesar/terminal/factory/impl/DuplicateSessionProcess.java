@@ -1,10 +1,10 @@
-package com.baiyi.caesar.factory.terminal.impl;
+package com.baiyi.caesar.terminal.factory.impl;
 
-import com.baiyi.caesar.builder.TerminalSessionInstanceBuilder;
+import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
-import com.baiyi.caesar.factory.terminal.BaseProcess;
-import com.baiyi.caesar.factory.terminal.ITerminalProcess;
 import com.baiyi.caesar.terminal.enums.MessageState;
+import com.baiyi.caesar.terminal.factory.BaseProcess;
+import com.baiyi.caesar.terminal.factory.ITerminalProcess;
 import com.baiyi.caesar.terminal.handler.RemoteInvokeHandler;
 import com.baiyi.caesar.terminal.message.BaseMessage;
 import com.baiyi.caesar.terminal.message.DuplicateSessionMessage;

@@ -9,4 +9,8 @@ import java.util.List;
 public interface ServerGroupMapper extends Mapper<ServerGroup> {
 
     List<ServerGroup> queryServerGroupByParam(ServerGroupParam.ServerGroupPageQuery pageQuery);
+
+    List<ServerGroup> queryUserPermissionServerGroupByParam(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery);
+
+    List<ServerGroup> queryUserServerGroupTreeByParam(ServerGroupParam.UserServerTreeQuery queryParam);
 }

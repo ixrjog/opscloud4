@@ -4,6 +4,8 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/24 1:01 下午
@@ -20,4 +22,8 @@ public interface ServerGroupService {
     Integer countByServerGroupTypeId(Integer serverGroupTypeId);
 
     DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery);
+
+    DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery);
+
+    List<ServerGroup> queryUserServerGroupTreeByParam(ServerGroupParam.UserServerTreeQuery queryParam);
 }

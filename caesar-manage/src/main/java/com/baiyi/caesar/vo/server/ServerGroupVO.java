@@ -3,6 +3,8 @@ package com.baiyi.caesar.vo.server;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.vo.base.BaseVO;
 import com.baiyi.caesar.vo.tag.TagVO;
+import com.baiyi.caesar.vo.user.UserPermissionVO;
+import com.baiyi.caesar.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -31,7 +33,7 @@ public class ServerGroupVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags {
+    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission {
 
         private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
@@ -44,6 +46,10 @@ public class ServerGroupVO {
         public int getBusinessId() {
             return id;
         }
+
+        // UserVO.IUserPermission
+        private UserPermissionVO.UserPermission userPermission;
+        private Integer userId;
 
         @ApiModelProperty(value = "服务器数量", example = "1")
         private Integer serverSize;

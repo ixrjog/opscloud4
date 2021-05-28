@@ -1,4 +1,4 @@
-package com.baiyi.caesar.common.util.bae64;
+package com.baiyi.caesar.common.redis;
 
 import com.google.common.base.Joiner;
 
@@ -7,18 +7,18 @@ import com.google.common.base.Joiner;
  * @Date 2020/5/30 1:03 下午
  * @Version 1.0
  */
-public class CacheKeyUtils {
+public class TerminalKeyUtil {
 
-    public static String getTermAuditLogKey(String sessionId, String instanceId) {
+    public static String buildAuditLogKey(String sessionId, String instanceId) {
         return Joiner.on("#").join(sessionId, instanceId, "auditLog");
     }
 
-    public static String getTermCommanderLogKey(String sessionId, String instanceId) {
+    public static String buildCommanderLogKey(String sessionId, String instanceId) {
         return Joiner.on("#").join(sessionId, instanceId, "commander");
     }
 
 
-    public static String getTermSessionHeartbeatKey(String sessionId) {
+    public static String buildSessionHeartbeatKey(String sessionId) {
         return Joiner.on("#").join(sessionId, "heartbeat");
     }
 

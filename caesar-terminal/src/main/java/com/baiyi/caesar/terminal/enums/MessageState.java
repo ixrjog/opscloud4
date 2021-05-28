@@ -1,14 +1,13 @@
-package com.baiyi.caesar.common.base;
+package com.baiyi.caesar.terminal.enums;
 
 /**
  * @Author baiyi
  * @Date 2020/5/11 10:54 上午
  * @Version 1.0
  */
-public enum  XTermRequestStatus {
+public enum MessageState {
 
-    INITIAL("INITIAL", "会话初始建立"),
-    INITIAL_IP("INITIAL_IP", "会话初始建立(单ip)"),
+    LOGIN("LOGIN", "会话初始建立"),
     HEARTBEAT("HEARTBEAT","心跳，保持会话"),
     COMMAND("COMMAND", "交互命令"),
     DUPLICATE_SESSION("DUPLICATE_SESSION","复制会话"),
@@ -17,25 +16,25 @@ public enum  XTermRequestStatus {
     CLOSE("CLOSE", "关闭所有Term会话"),
     LOGOUT("LOGOUT", "关闭Term会话"),
     BATCH_COMMAND("BATCH_COMMAND","批量命令");
-    private String code;
+    private String state;
     private String desc;
 
-    XTermRequestStatus(String code, String desc) {
-        this.code = code;
+    MessageState(String code, String desc) {
+        this.state = code;
         this.desc = desc;
     }
 
-    public String getCode() {
-        return code;
+    public String getState() {
+        return state;
     }
 
     public String getDesc() {
         return desc;
     }
 
-    public String getDescByCode(String code) {
-        for(XTermRequestStatus typeEnum : XTermRequestStatus.values()) {
-            if (typeEnum.getCode().equals(code)) {
+    public String getDescByState(String state) {
+        for(MessageState typeEnum : MessageState.values()) {
+            if (typeEnum.getState().equals(state)) {
                 return typeEnum.getDesc();
             }
         }

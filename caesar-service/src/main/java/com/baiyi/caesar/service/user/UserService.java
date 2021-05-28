@@ -15,6 +15,10 @@ public interface UserService {
 
     User getByUsername(String username);
 
+    void add(User user);
+
     void update(User user);
+
+    void updateBySelective(User user);
 
 }

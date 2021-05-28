@@ -67,26 +67,16 @@ public class RegexUtil {
         return email.matches(repx);
     }
 
-//    /**
-//     * 校验密码强度 包含大写,小写,特殊字符,长度至少8:
-//     *
-//     * @param password
-//     * @return
-//     */
-//    public static boolean checkPasswordRule(String password) {
-//        String repx = "(?=^.{8,}$)((?=.*\\d)|(?=.*\\W+))(?![.\\n])(?=.*[A-Z])(?=.*[a-z]).*$";
-//        return password.matches(repx);
-//    }
-
     private static final String SPECIAL_SIGNS = "@!#$%^&*()_=+-[]|:;,.<>?";
+
 
     public static void checkPasswordRule(String password) {
         if (StringUtils.isEmpty(password)) {
-            throw new RuntimeException("密码不能为空");
+            throw new CommonRuntimeException("密码不能为空");
         }
 
         if (password.length() < 8 || password.length() > 30) {
-            throw new RuntimeException("密码长度需在8-30个字符之间");
+            throw new CommonRuntimeException("密码长度需在8-30个字符之间");
         }
 
         String errCommon = "数字、大小写字母及特殊字符 " + SPECIAL_SIGNS;
@@ -107,7 +97,7 @@ public class RegexUtil {
             }
         }
         if (!hasNum || !hasBigChar || !hasSmallChar || !hasSign) {
-            throw new RuntimeException("密码需要同时包含" + errCommon);
+            throw new CommonRuntimeException("密码需要同时包含" + errCommon);
         }
     }
 

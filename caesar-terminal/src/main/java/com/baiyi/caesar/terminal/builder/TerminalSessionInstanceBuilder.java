@@ -1,4 +1,4 @@
-package com.baiyi.caesar.builder;
+package com.baiyi.caesar.terminal.builder;
 
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSessionInstance;

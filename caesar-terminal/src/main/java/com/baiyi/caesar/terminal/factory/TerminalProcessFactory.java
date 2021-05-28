@@ -1,4 +1,4 @@
-package com.baiyi.caesar.factory.terminal;
+package com.baiyi.caesar.terminal.factory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;

@@ -32,7 +32,6 @@ import java.util.Set;
 @EnableCaching
 public class CachingConfig extends CachingConfigurerSupport {
 
-
     public interface CacheRepositories {
         String COMMON = "Caesar:Common";
         String ANSIBLE = "Caesar:AnsibleRepo";
@@ -43,18 +42,19 @@ public class CachingConfig extends CachingConfigurerSupport {
         String JOB_RUN_NODES = "Caesar:JobRunNodes";
     }
 
+    public interface Repositories {
+
+        String COMMON = "caesar:v2:common";
+        String SERVER = "caesar:v2:server";
+
+    }
+
 
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         // 设置一个初始化的缓存空间set集合
         Set<String> cacheNames = new HashSet<>();
-        cacheNames.add(CacheRepositories.COMMON);
-        cacheNames.add(CacheRepositories.ANSIBLE);
-        cacheNames.add(CacheRepositories.ATTRIBUTE);
-        cacheNames.add(CacheRepositories.DASHBOARD);
-        cacheNames.add(CacheRepositories.SETTING);
-        cacheNames.add(CacheRepositories.ENGINE_CHART);
-        cacheNames.add(CacheRepositories.JOB_RUN_NODES);
+        cacheNames.add(Repositories.COMMON);
         // 使用自定义的缓存配置初始化一个cacheManager
         RedisCacheManager cacheManager = RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -70,13 +70,13 @@ public class CachingConfig extends CachingConfigurerSupport {
         config = config.entryTtl(Duration.ofMinutes(1))
                 // 不缓存空值
                 .disableCachingNullValues();
-        configMap.put(CacheRepositories.COMMON, config.entryTtl(Duration.ofMinutes(10)));
-        configMap.put(CacheRepositories.ANSIBLE, config.entryTtl(Duration.ofDays(7)));
-        configMap.put(CacheRepositories.ATTRIBUTE, config.entryTtl(Duration.ofDays(7)));
-        configMap.put(CacheRepositories.SETTING, config.entryTtl(Duration.ofMinutes(10)));
-        configMap.put(CacheRepositories.ENGINE_CHART, config.entryTtl(Duration.ofSeconds(5)));
-        configMap.put(CacheRepositories.DASHBOARD, config.entryTtl(Duration.ofMinutes(1)));
-        configMap.put(CacheRepositories.JOB_RUN_NODES,config.entryTtl(Duration.ofMinutes(10)));
+        configMap.put(Repositories.COMMON, config.entryTtl(Duration.ofMinutes(30)));
+//        configMap.put(CacheRepositories.ANSIBLE, config.entryTtl(Duration.ofDays(7)));
+//        configMap.put(CacheRepositories.ATTRIBUTE, config.entryTtl(Duration.ofDays(7)));
+//        configMap.put(CacheRepositories.SETTING, config.entryTtl(Duration.ofMinutes(10)));
+//        configMap.put(CacheRepositories.ENGINE_CHART, config.entryTtl(Duration.ofSeconds(5)));
+//        configMap.put(CacheRepositories.DASHBOARD, config.entryTtl(Duration.ofMinutes(1)));
+//        configMap.put(CacheRepositories.JOB_RUN_NODES,config.entryTtl(Duration.ofMinutes(10)));
         return configMap;
     }
 

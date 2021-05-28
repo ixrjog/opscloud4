@@ -19,7 +19,28 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     private UserPermissionMapper permissionMapper;
 
     @Override
+    public UserPermission getById(Integer id) {
+        return permissionMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void update(UserPermission userPermission) {
+        permissionMapper.updateByPrimaryKey(userPermission);
+    }
+
+    @Override
     public void add(UserPermission userPermission) {
         permissionMapper.insert(userPermission);
     }
+
+    @Override
+    public void deleteByUserPermission(UserPermission userPermission) {
+        permissionMapper.delete(userPermission);
+    }
+
+    @Override
+    public UserPermission getByUserPermission(UserPermission userPermission) {
+        return permissionMapper.selectOne(userPermission);
+    }
+
 }

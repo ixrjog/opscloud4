@@ -9,5 +9,13 @@ import com.baiyi.caesar.domain.generator.caesar.UserPermission;
  */
 public interface UserPermissionService {
 
+    UserPermission getById(Integer id);
+
+    UserPermission getByUserPermission(UserPermission userPermission);
+
+    void update(UserPermission userPermission);
+
     void add(UserPermission userPermission);
+
+    void deleteByUserPermission(UserPermission userPermission);
 }

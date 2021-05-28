@@ -53,4 +53,16 @@ public class ServerGroupServiceImpl implements ServerGroupService {
         List<ServerGroup> data = serverGroupMapper.queryServerGroupByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
+
+    @Override
+    public DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<ServerGroup> data = serverGroupMapper.queryUserPermissionServerGroupByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public List<ServerGroup> queryUserServerGroupTreeByParam(ServerGroupParam.UserServerTreeQuery queryParam) {
+        return serverGroupMapper.queryUserServerGroupTreeByParam(queryParam);
+    }
 }

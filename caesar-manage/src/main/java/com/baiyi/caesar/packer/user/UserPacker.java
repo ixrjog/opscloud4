@@ -1,11 +1,14 @@
 package com.baiyi.caesar.packer.user;
 
 import com.baiyi.caesar.common.util.BeanCopierUtil;
+import com.baiyi.caesar.common.util.RegexUtil;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.auth.AuthRolePacker;
+import com.baiyi.caesar.packer.base.SecretParcker;
 import com.baiyi.caesar.util.ExtendUtil;
 import com.baiyi.caesar.vo.user.UserVO;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -18,7 +21,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class UserPacker {
+public class UserPacker extends SecretParcker {
 
     @Resource
     private AuthRolePacker authRolePacker;
@@ -29,9 +32,21 @@ public class UserPacker {
 
     public List<UserVO.User> wrapVOList(List<User> data, IExtend iExtend) {
         List<UserVO.User> voList = wrapVOList(data);
-        if (!ExtendUtil.isExtend(iExtend))
-            return voList;
-        return voList.stream().peek(e -> authRolePacker.wrap(e)).collect(Collectors.toList());
+        return voList.stream().peek(e -> {
+            e.setPassword("");
+            if (ExtendUtil.isExtend(iExtend)) {
+                authRolePacker.wrap(e);
+            }
+        }).collect(Collectors.toList());
+    }
+
+    public User toDO(UserVO.User user) {
+        User pre = BeanCopierUtil.copyProperties(user, User.class);
+        if (!StringUtils.isEmpty(pre.getPassword())) {
+            RegexUtil.checkPasswordRule(pre.getPassword());
+            pre.setPassword(encrypt(pre.getPassword()));
+        }
+        return pre;
     }
 
 
