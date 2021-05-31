@@ -27,33 +27,43 @@
  */
 package com.baiyi.caesar.terminal.model;
 
-import com.baiyi.caesar.domain.bo.SSHKeyCredential;
+import com.baiyi.caesar.domain.bo.SshCredential;
 import com.baiyi.caesar.terminal.message.BaseMessage;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * Value object that contains host system information
  */
 @Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class HostSystem {
 
-    Long id;
-    String displayNm;
+    public  Long id;
+    public  String displayNm;
     // String user;
-    String host;
-    Integer port = 22;
-    String displayLabel;
-    String authorizedKeys = "~/.ssh/authorized_keys";
-    Boolean checked = false;
-    String statusCd = INITIAL_STATUS;
-    String errorMsg;
+    public String host;
+    @Builder.Default
+    public Integer port = 22;
+    public String displayLabel;
+    @Builder.Default
+    public  String authorizedKeys = "~/.ssh/authorized_keys";
+    @Builder.Default
+    public Boolean checked = false;
+    public   String statusCd = INITIAL_STATUS;
+    public  String errorMsg;
     // List<String> publicKeyList;
-    String instanceId;
+    public  String instanceId;
 
     /**
      * 登录凭据
      */
-    private SSHKeyCredential sshKeyCredential;
+    private SshCredential sshCredential;
+
     private BaseMessage loginMessage;
 
     public static final String INITIAL_STATUS = "INITIAL";

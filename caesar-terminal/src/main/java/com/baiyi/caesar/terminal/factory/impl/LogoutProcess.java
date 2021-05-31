@@ -36,10 +36,11 @@ public class LogoutProcess extends BaseProcess implements ITerminalProcess {
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
         LogoutMessage baseMessage = (LogoutMessage) getMessage(message);
-        writeAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
+        recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         closeSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
 
         JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), baseMessage.getInstanceId());
+        assert jSchSession != null;
         jSchSession.getChannel().disconnect();
         jSchSession.setCommander(null);
         jSchSession.setChannel(null);

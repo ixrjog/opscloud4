@@ -15,6 +15,7 @@ public class TerminalSessionBuilder {
                 .sessionId(sessionId)
                 .serverHostname(serverInfo.getHostname())
                 .serverAddr(serverInfo.getHostAddress())
+                .sessionClosed(false)
                 .build();
     }
 

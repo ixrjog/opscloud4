@@ -1,5 +1,7 @@
 package com.baiyi.caesar.terminal.message;
 
+import com.baiyi.caesar.terminal.model.ServerNode;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -12,12 +14,12 @@ import java.util.Set;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonIgnoreProperties
 public class LoginMessage extends BaseMessage {
 
-    // {"uuid":"43621c089207449799c6ef6bb1de0061","loginUserType":0,"instanceIds":["vm-springboot-3","vm-springboot-1","vm-springboot-2"],"status":"INITIAL"}
-    private Set<String> instanceIds;
+    private Set<ServerNode> serverNodes;
 
-    // 服务器树鉴权uuid
-    private String uuid;
+    private String token;
+
 
 }

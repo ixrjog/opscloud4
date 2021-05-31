@@ -1,5 +1,7 @@
 package com.baiyi.caesar.terminal.message;
 
+import com.baiyi.caesar.terminal.model.ServerNode;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,9 +12,15 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonIgnoreProperties
 public class DuplicateSessionMessage extends BaseMessage {
 
-    private String instanceId;
-    private String duplicateInstanceId;
+    // 源会话
+    private ServerNode duplicateServerNode;
+    // 目标会话
+    private ServerNode serverNode;
+
+    private String token;
+
 
 }

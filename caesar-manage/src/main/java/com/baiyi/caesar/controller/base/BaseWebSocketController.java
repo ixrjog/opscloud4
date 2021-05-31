@@ -5,9 +5,8 @@ import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.generator.caesar.UserToken;
 import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.service.user.UserTokenService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -17,11 +16,19 @@ import javax.annotation.Resource;
 @Component
 public class BaseWebSocketController {
 
-    @Resource
-    private UserTokenService userTokenService;
+    private static UserTokenService userTokenService;
 
-    @Resource
-    private UserService userService;
+    private static UserService userService;
+
+    @Autowired
+    public void setUserTokenService(UserTokenService userTokenService) {
+        BaseWebSocketController.userTokenService = userTokenService;
+    }
+
+    @Autowired
+    public void setUserService(UserService userService) {
+        BaseWebSocketController.userService = userService;
+    }
 
     protected String authentication(String token) {
         UserToken userToken = userTokenService.getByVaildToken(token);

@@ -25,6 +25,11 @@ public class ServerServiceImpl implements ServerService {
     private ServerMapper serverMapper;
 
     @Override
+    public Server getById(Integer id) {
+        return serverMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public DataTable<Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Server> data = serverMapper.queryServerByParam(pageQuery);

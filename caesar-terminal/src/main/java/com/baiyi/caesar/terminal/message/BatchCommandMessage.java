@@ -1,5 +1,6 @@
 package com.baiyi.caesar.terminal.message;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -10,6 +11,7 @@ import lombok.EqualsAndHashCode;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
+@JsonIgnoreProperties
 public class BatchCommandMessage extends BaseMessage {
 
     private Boolean isBatch; // 会话批量指令

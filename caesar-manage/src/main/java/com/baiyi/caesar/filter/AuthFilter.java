@@ -34,10 +34,7 @@ public class AuthFilter extends OncePerRequestFilter {
             "/v2/api-docs",
             "/webjars",
             "/ws/guacamole/tunnel", // RDP,VNC协议转换通道
-            "/ws/xterm",
-            "/ws/engine",
-            "/ws/job/output",
-            "/ws/pipeline"
+            "/ws/terminal" // WebTerminal
     };
 
     @Override

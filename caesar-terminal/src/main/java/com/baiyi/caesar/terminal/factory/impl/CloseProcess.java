@@ -41,7 +41,7 @@ public class CloseProcess extends BaseProcess implements ITerminalProcess {
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
-                writeAuditLog(terminalSession, instanceId); // 写审计日志
+                recordAuditLog(terminalSession, instanceId); // 写审计日志
                 //  writeCommanderLog(jSchSession.getCommanderLog(),ocTerminalSession, instanceId); // 写命令日志
                 closeSessionInstance(terminalSession, instanceId); // 设置关闭会话
             } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.baiyi.caesar.terminal.handler;
 
-import com.baiyi.caesar.domain.bo.SSHKeyCredential;
+import com.baiyi.caesar.domain.generator.caesar.Credential;
 import com.baiyi.caesar.terminal.message.BaseMessage;
 import com.baiyi.caesar.terminal.model.HostSystem;
 import com.baiyi.caesar.terminal.model.JSchSession;
@@ -38,11 +38,21 @@ public class RemoteInvokeHandler {
         hostSystem.setInstanceId(instanceId);
 
         try {
-            SSHKeyCredential sshKeyCredential = hostSystem.getSshKeyCredential();
-            jsch.addIdentity(appId, sshKeyCredential.getPrivateKey().trim().getBytes(), sshKeyCredential.getPublicKey().getBytes(), sshKeyCredential.getPassphrase().getBytes());
-            //create session
-            Session session = jsch.getSession(sshKeyCredential.getSystemUser(), hostSystem.getHost(),
+            Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? 22 : hostSystem.getPort());
+            Credential credential = hostSystem.getSshCredential().getCredential();
+            // 按凭证类型
+            switch (hostSystem.getSshCredential().getCredential().getKind()) {
+                case 1: // password
+                    session.setPassword(credential.getCredential());
+                    break;
+                case 2:   // prvKey
+                    jsch.addIdentity(credential.getCredential(), credential.getPassphrase().getBytes());
+                    break;
+                case 3:  // prvKey + pubKey
+                    jsch.addIdentity(appId, credential.getCredential().trim().getBytes(), credential.getCredential2().getBytes(), credential.getPassphrase().getBytes());
+                    break;
+            }
             session.setConfig("StrictHostKeyChecking", "no");
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
             session.setServerAliveInterval(SERVER_ALIVE_INTERVAL);
@@ -96,7 +106,7 @@ public class RemoteInvokeHandler {
         int width = baseMessage.getTerminal().getWidth();
         int height = baseMessage.getTerminal().getHeight();
         // int cols = (int) Math.floor(width / 7.2981);
-        int cols = (int) Math.floor(width / 7);
+        int cols = (int) Math.floor(width / 7.0);
         int rows = (int) Math.floor(height / 14.4166);
         channel.setPtySize(cols, rows, width, height);
     }

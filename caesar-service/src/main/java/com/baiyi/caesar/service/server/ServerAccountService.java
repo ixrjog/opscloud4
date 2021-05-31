@@ -4,6 +4,8 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
 import com.baiyi.caesar.domain.param.server.ServerAccountParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/25 11:15 上午
@@ -18,4 +20,6 @@ public interface ServerAccountService {
     void update(ServerAccount serverAccount);
 
     DataTable<ServerAccount> queryPageByParam(ServerAccountParam.ServerAccountPageQuery pageQuery);
+
+    List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(Integer serverId, Integer accountType, String protocol);
 }

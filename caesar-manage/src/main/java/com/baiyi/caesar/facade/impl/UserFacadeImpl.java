@@ -1,12 +1,16 @@
 package com.baiyi.caesar.facade.impl;
 
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
+import com.baiyi.caesar.common.util.SessionUtil;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.User;
+import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
 import com.baiyi.caesar.facade.UserFacade;
+import com.baiyi.caesar.facade.server.ServerGroupFacade;
 import com.baiyi.caesar.packer.user.UserPacker;
 import com.baiyi.caesar.service.user.UserService;
+import com.baiyi.caesar.vo.server.ServerTreeVO;
 import com.baiyi.caesar.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -27,6 +31,9 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private UserPacker userPacker;
 
+    @Resource
+    private ServerGroupFacade serverGroupFacade;
+
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
@@ -45,6 +52,13 @@ public class UserFacadeImpl implements UserFacade {
     public void updateUser(UserVO.User user) {
         User pre = userPacker.toDO(user);
         userService.updateBySelective(pre);
+    }
+
+    @Override
+    public ServerTreeVO.ServerTree queryUserServerTree(ServerGroupParam.UserServerTreeQuery queryParam) {
+        User user = userService.getByUsername(SessionUtil.getUsername());
+        queryParam.setUserId(user.getId());
+        return serverGroupFacade.queryServerTree(queryParam, user);
     }
 
 

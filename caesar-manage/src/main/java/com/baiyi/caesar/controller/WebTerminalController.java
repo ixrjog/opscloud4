@@ -52,6 +52,8 @@ public class WebTerminalController extends BaseWebSocketController {
 
     private TerminalSession terminalSession;
 
+    private static final String MESSAGE_STATE = "state";
+
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
         WebTerminalController.terminalSessionService = terminalSessionService;
@@ -99,19 +101,19 @@ public class WebTerminalController extends BaseWebSocketController {
     @OnMessage
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
-        // log.info("来自客户端的消息：{}", message);
         SessionUtil.setUsername(terminalSession.getUsername());
         JSONObject jsonObject = JSON.parseObject(message);
-        String status = jsonObject.getString("status");
+        String state = jsonObject.getString(MESSAGE_STATE);
         // 鉴权并更新会话信息
-        if (MessageState.LOGIN.getState().equals(status)) {
+        if (MessageState.LOGIN.getState().equals(state)) {
             LoginMessage terminalMessage = new GsonBuilder().create().fromJson(message, LoginMessage.class);
             setUser(authentication(terminalMessage.getToken()));
         }
-        TerminalProcessFactory.getProcessByKey(status).process(message, session, terminalSession);
+        // System.err.println("State:" + state);
+        TerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
     }
 
-    private void setUser(String username){
+    private void setUser(String username) {
         if (StringUtils.isEmpty(terminalSession.getUsername())) {
             terminalSession.setUsername(username);
             terminalSessionService.update(terminalSession);

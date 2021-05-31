@@ -1,7 +1,7 @@
 package com.baiyi.caesar.terminal.factory.impl;
 
-import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
+import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
@@ -13,7 +13,6 @@ import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
-import java.util.Map;
 
 /**
  * @Author baiyi
@@ -23,14 +22,11 @@ import java.util.Map;
 @Component
 public class LoginProcess extends BaseProcess implements ITerminalProcess {
 
-
     /**
      * 登录
      *
      * @return
      */
-
-
     @Override
     public String getState() {
         return MessageState.LOGIN.getState();
@@ -39,18 +35,11 @@ public class LoginProcess extends BaseProcess implements ITerminalProcess {
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
         LoginMessage loginMessage = (LoginMessage) getMessage(message);
-
-        Map<String, String> serverTreeHostPatternMap = null;
-
         heartbeat(terminalSession.getSessionId());
-
-        loginMessage.getInstanceIds().parallelStream().forEach(k -> {
-            if (serverTreeHostPatternMap.containsKey(k)) {
-                String host = serverTreeHostPatternMap.get(k);
-                HostSystem hostSystem = buildHostSystem(host, loginMessage);
-                RemoteInvokeHandler.openSSHTermOnSystem(terminalSession.getSessionId(), k, hostSystem);
-                terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem));
-            }
+        loginMessage.getServerNodes().forEach(serverNode -> {
+            HostSystem hostSystem = buildHostSystem(serverNode, loginMessage);
+            RemoteInvokeHandler.openSSHTermOnSystem(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
+            terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem));
         });
     }
 

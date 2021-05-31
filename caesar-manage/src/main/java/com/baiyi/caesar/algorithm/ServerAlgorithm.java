@@ -1,12 +1,10 @@
 package com.baiyi.caesar.algorithm;
 
-import com.baiyi.caesar.common.config.CachingConfig;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -31,7 +29,7 @@ public class ServerAlgorithm extends BaseAlgorithm{
      * @param serverGroup
      * @return
      */
-    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "#serverGroup.id")
+   // @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "#serverGroup.id",unless = "#result == null")
     public Map<String, List<Server>> grouping(ServerGroup serverGroup) {
         Map<String, List<Server>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) return serverMap;

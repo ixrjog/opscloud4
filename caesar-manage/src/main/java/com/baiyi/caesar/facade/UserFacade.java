@@ -1,7 +1,9 @@
 package com.baiyi.caesar.facade;
 
 import com.baiyi.caesar.domain.DataTable;
+import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
+import com.baiyi.caesar.vo.server.ServerTreeVO;
 import com.baiyi.caesar.vo.user.UserVO;
 
 /**
@@ -16,4 +18,6 @@ public interface UserFacade {
     void addUser(UserVO.User user);
 
     void updateUser(UserVO.User user);
+
+    ServerTreeVO.ServerTree queryUserServerTree(ServerGroupParam.UserServerTreeQuery queryParam);
 }

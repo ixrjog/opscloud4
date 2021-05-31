@@ -1,18 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baiyi.caesar.mapper.caesar.ServerAccountMapper">
-  <resultMap id="BaseResultMap" type="com.baiyi.caesar.domain.generator.caesar.ServerAccount">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="credential_id" jdbcType="INTEGER" property="credentialId" />
-    <result column="account_type" jdbcType="INTEGER" property="accountType" />
-    <result column="protocol" jdbcType="VARCHAR" property="protocol" />
-    <result column="is_active" jdbcType="BIT" property="isActive" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.baiyi.caesar.domain.generator.caesar.ServerAccount">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="credential_id" jdbcType="INTEGER" property="credentialId"/>
+        <result column="account_type" jdbcType="INTEGER" property="accountType"/>
+        <result column="protocol" jdbcType="VARCHAR" property="protocol"/>
+        <result column="is_active" jdbcType="BIT" property="isActive"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+
+    <!--  查询服务器授权的账户-->
+    <select id="getPermissionServerAccountByTypeAndProtocol"
+            resultMap="BaseResultMap">
+    select * from  server_account_permission a0
+       join server_account a1 on a0.server_account_id = a1.id
+       where  a0.server_id = 1 and a1.account_type = #{accountType} and a1.protocol = #{protocol}
+  </select>
+
 </mapper>

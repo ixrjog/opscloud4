@@ -28,7 +28,7 @@ public class ServerAccountServiceImpl implements ServerAccountService {
     private ServerAccountMapper accountMapper;
 
     @Override
-    public ServerAccount getById(Integer id){
+    public ServerAccount getById(Integer id) {
         return accountMapper.selectByPrimaryKey(id);
     }
 
@@ -56,6 +56,11 @@ public class ServerAccountServiceImpl implements ServerAccountService {
         }
         List<ServerAccount> data = accountMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(Integer serverId, Integer accountType, String protocol) {
+        return accountMapper.getPermissionServerAccountByTypeAndProtocol(serverId, accountType, protocol);
     }
 
 

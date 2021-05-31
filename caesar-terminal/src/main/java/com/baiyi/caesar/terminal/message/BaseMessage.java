@@ -1,5 +1,6 @@
 package com.baiyi.caesar.terminal.message;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -9,11 +10,12 @@ import lombok.NoArgsConstructor;
  * @Version 1.0
  */
 @Data
+@JsonIgnoreProperties
 public class BaseMessage {
 
     private String id;
-    private String token;
-    private String status;
+
+    private String state;
 
     // 0 普通账户 1 管理员账户
     private Integer loginType;

@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface ServerService {
 
+    Server getById(Integer id);
+
     void add(Server server);
 
     void update(Server server);

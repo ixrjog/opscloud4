@@ -1,7 +1,7 @@
 package com.baiyi.caesar.terminal.factory.impl;
 
-import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
+import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
@@ -38,12 +38,11 @@ public class DuplicateSessionProcess extends BaseProcess implements ITerminalPro
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
         DuplicateSessionMessage baseMessage = (DuplicateSessionMessage) getMessage(message);
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateInstanceId());
+        JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
         assert jSchSession != null;
-        String host = jSchSession.getHostSystem().getHost();
-        HostSystem hostSystem = buildHostSystem( host, baseMessage);
-        RemoteInvokeHandler.openSSHTermOnSystem(terminalSession.getSessionId(), baseMessage.getInstanceId(), hostSystem);
-        terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem,baseMessage.getDuplicateInstanceId()));
+        HostSystem hostSystem = buildHostSystem(baseMessage.getServerNode(), baseMessage);
+        RemoteInvokeHandler.openSSHTermOnSystem(terminalSession.getSessionId(), baseMessage.getServerNode().getInstanceId(), hostSystem);
+        terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem));
     }
 
 

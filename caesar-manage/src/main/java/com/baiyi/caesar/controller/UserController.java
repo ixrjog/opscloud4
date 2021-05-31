@@ -2,9 +2,11 @@ package com.baiyi.caesar.controller;
 
 import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
+import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
 import com.baiyi.caesar.facade.UserFacade;
 import com.baiyi.caesar.facade.user.UserPermissionFacade;
+import com.baiyi.caesar.vo.server.ServerTreeVO;
 import com.baiyi.caesar.vo.user.UserPermissionVO;
 import com.baiyi.caesar.vo.user.UserVO;
 import io.swagger.annotations.Api;
@@ -70,6 +72,12 @@ public class UserController {
     public HttpResult<Boolean> setUserBusinessPermission(@RequestParam @Valid int id) {
         permissionFacade.settUserBusinessPermission(id);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "查询用户的服务器树")
+    @PostMapping(value = "/server/tree/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ServerTreeVO.ServerTree> queryUserServerTree(@RequestBody @Valid ServerGroupParam.UserServerTreeQuery queryParam) {
+        return new HttpResult<>(userFacade.queryUserServerTree(queryParam));
     }
 
 }
