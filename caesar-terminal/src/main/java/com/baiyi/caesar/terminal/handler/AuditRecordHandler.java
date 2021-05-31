@@ -37,7 +37,7 @@ public class AuditRecordHandler {
             if (redisUtil.hasKey(cacheKey)) {
                 // 追加内容
                 String log = (String) redisUtil.get(cacheKey);
-                IOUtil.appendFile(log, terminalConfig.getAuditLogPath(sessionId, instanceId));
+                IOUtil.appendFile(log, terminalConfig.buildAuditLogPath(sessionId, instanceId));
                 redisUtil.del(cacheKey); // 清空缓存
             }
         } catch (Exception e) {
@@ -52,7 +52,7 @@ public class AuditRecordHandler {
             while (log.contains("\b")) {
                 log = log.replaceFirst(".\b", ""); // 退格处理
             }
-            IOUtil.appendFile(log, terminalConfig.getCommanderLogPath(sessionId, instanceId));
+            IOUtil.appendFile(log, terminalConfig.buildCommanderLogPath(sessionId, instanceId));
         } catch (Exception e) {
             log.error("Web终端命令日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
         }

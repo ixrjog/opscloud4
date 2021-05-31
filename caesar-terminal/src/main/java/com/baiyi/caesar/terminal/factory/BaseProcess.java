@@ -168,7 +168,7 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
         TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
         terminalSessionInstance.setCloseTime((new Date()));
         terminalSessionInstance.setInstanceClosed(true);
-        terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.getAuditLogPath(terminalSession.getSessionId(), instanceId)));
+        terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.buildAuditLogPath(terminalSession.getSessionId(), instanceId)));
         terminalSessionInstanceService.update(terminalSessionInstance);
     }
 

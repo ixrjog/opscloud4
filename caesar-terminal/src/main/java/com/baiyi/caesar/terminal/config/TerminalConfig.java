@@ -18,11 +18,16 @@ public class TerminalConfig {
     private String auditPath;
     private Boolean openAudit;
 
-    public String getAuditLogPath(String sessionId,String instanceId){
-        return Joiner.on("/").join(auditPath,sessionId,instanceId + ".log");
+    public interface Suffix {
+        String AUDIT_LOG = ".log";
+        String COMMAND_LOG = "_commander.log";
     }
 
-    public String getCommanderLogPath(String sessionId,String instanceId){
-        return Joiner.on("/").join(auditPath,sessionId,instanceId + "_commander.log");
+    public String buildAuditLogPath(String sessionId, String instanceId) {
+        return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.AUDIT_LOG);
+    }
+
+    public String buildCommanderLogPath(String sessionId, String instanceId) {
+        return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.COMMAND_LOG);
     }
 }
