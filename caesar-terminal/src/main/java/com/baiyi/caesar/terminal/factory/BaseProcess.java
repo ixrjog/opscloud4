@@ -81,6 +81,7 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
 
     /**
      * OPS角色以上即认定为系统管理员
+     *
      * @return
      */
     private boolean isAdmin() {
@@ -164,14 +165,11 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
     }
 
     protected void closeSessionInstance(TerminalSession terminalSession, String instanceId) {
-        try {
-            TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
-            terminalSessionInstance.setCloseTime((new Date()));
-            terminalSessionInstance.setInstanceClosed(true);
-            terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.getAuditLogPath(terminalSession.getSessionId(), instanceId)));
-            terminalSessionInstanceService.update(terminalSessionInstance);
-        } catch (Exception ignored) {
-        }
+        TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
+        terminalSessionInstance.setCloseTime((new Date()));
+        terminalSessionInstance.setInstanceClosed(true);
+        terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.getAuditLogPath(terminalSession.getSessionId(), instanceId)));
+        terminalSessionInstanceService.update(terminalSessionInstance);
     }
 
     protected void recordAuditLog(TerminalSession terminalSession, String instanceId) {
