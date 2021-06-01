@@ -7,7 +7,8 @@ logging:
 
 # 白名单配置
 white:
-  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
+  urls: /*.js,/*.css,/*.jpg;/swagger-resources,/swagger-ui.html,/v2/api-docs,/ws/guacamole/tunnel,/ws/terminal
+  #urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
 
 
 spring:
@@ -15,6 +16,7 @@ spring:
     include:
       - common
       - terminal-prod
+      - ssh-server
   redis:
     host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com
     port: 6379

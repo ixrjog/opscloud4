@@ -161,7 +161,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         groups.forEach(e -> {
             Map<String, List<Server>> serverGroupMap = serverAlgorithm.grouping(e);
             treeSize.addAndGet(ServerTreeUtil.getServerGroupMapSize(serverGroupMap));
-            // 组装缓存
             ServerTreeUtil.wrap(serverTreeHostPatternMap, serverGroupMap);
             treeList.add(ServerTreeUtil.wrap(e, serverGroupMap));
         });

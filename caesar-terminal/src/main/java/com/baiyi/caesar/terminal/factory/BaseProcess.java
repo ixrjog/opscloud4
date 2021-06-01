@@ -136,12 +136,14 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
 
     // 管理员
     private SshCredential getSshCredentialByAdmin(Integer serverId, Integer loginType) {
-        List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(serverId, loginType, ProtocolEnum.SSH.getType());
+        List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(serverId, null, ProtocolEnum.SSH.getType());
         if (CollectionUtils.isEmpty(accounts)) return null;
         Map<Integer, List<ServerAccount>> accountCatMap = ServerAccoutUtil.catByType(accounts);
         if (accountCatMap.containsKey(loginType)) {
             return buildSshCredential(accountCatMap.get(loginType).get(0));
         }
+
+
         if (loginType == LoginType.LOW_AUTHORITY) {
             if (accountCatMap.containsKey(LoginType.HIGH_AUTHORITY)) {
                 return buildSshCredential(accountCatMap.get(LoginType.HIGH_AUTHORITY).get(0));

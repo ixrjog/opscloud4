@@ -8,5 +8,7 @@ import java.util.List;
 
 public interface ServerAccountMapper extends Mapper<ServerAccount> {
 
-    List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(@Param("serverId") Integer serverId, @Param("accountType") Integer accountType, @Param("protocol") String protocol);
+    List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(@Param("serverId") Integer serverId,
+                                                                    @Param("accountType") Integer accountType,
+                                                                    @Param("protocol") String protocol);
 }

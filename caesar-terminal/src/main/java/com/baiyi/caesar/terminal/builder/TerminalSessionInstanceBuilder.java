@@ -17,13 +17,14 @@ public class TerminalSessionInstanceBuilder {
         return TerminalSessionInstance.builder()
                 .sessionId(terminalSession.getSessionId())
                 .instanceId(hostSystem.getInstanceId())
-                .loginUser(hostSystem.getSshCredential().getServerAccount().getUsername())
+                .loginUser(hostSystem.getSshCredential() != null ? hostSystem.getSshCredential().getServerAccount().getUsername() : null)
                 .hostIp(hostSystem.getHost())
                 .outputSize(0L)
                 .openTime(new Date())
                 .instanceClosed(false)
                 .build();
     }
+
     public static TerminalSessionInstance build(TerminalSession terminalSession, HostSystem hostSystem, String duplicateInstanceId) {
         TerminalSessionInstance terminalSessionInstance = build(terminalSession, hostSystem);
         terminalSessionInstance.setDuplicateInstanceId(duplicateInstanceId);

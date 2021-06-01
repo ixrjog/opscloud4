@@ -85,6 +85,9 @@ public class ServerVO {
         @ApiModelProperty(value = "地区")
         private String area;
 
+        @ApiModelProperty(value = "系统类型")
+        private String osType;
+
         @ApiModelProperty(value = "序号", example = "1")
         private Integer serialNumber;
 

@@ -38,18 +38,19 @@ public class LogoutProcess extends BaseProcess implements ITerminalProcess {
         LogoutMessage baseMessage = (LogoutMessage) getMessage(message);
         recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         closeSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
-
         JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), baseMessage.getInstanceId());
-        assert jSchSession != null;
-        jSchSession.getChannel().disconnect();
-        jSchSession.setCommander(null);
-        jSchSession.setChannel(null);
-        jSchSession.setInputToChannel(null);
-        jSchSession.setTermSessionId(null);
-        jSchSession.setSessionOutput(null);
-        jSchSession.setInstanceId(null);
-        jSchSession.setHostSystem(null);
-        jSchSession = null;
+        if(jSchSession != null){
+            if( jSchSession.getChannel() != null)
+                jSchSession.getChannel().disconnect();
+            jSchSession.setCommander(null);
+            jSchSession.setChannel(null);
+            jSchSession.setInputToChannel(null);
+            jSchSession.setTermSessionId(null);
+            jSchSession.setSessionOutput(null);
+            jSchSession.setInstanceId(null);
+            jSchSession.setHostSystem(null);
+            jSchSession = null;
+        }
         JSchSessionMap.removeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 

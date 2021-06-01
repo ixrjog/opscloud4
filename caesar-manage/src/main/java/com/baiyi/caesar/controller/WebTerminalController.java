@@ -1,15 +1,13 @@
 package com.baiyi.caesar.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
-import com.baiyi.caesar.terminal.builder.TerminalSessionBuilder;
 import com.baiyi.caesar.common.model.HostInfo;
 import com.baiyi.caesar.common.util.SessionUtil;
 import com.baiyi.caesar.controller.base.BaseWebSocketController;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
-import com.baiyi.caesar.terminal.factory.TerminalProcessFactory;
 import com.baiyi.caesar.service.terminal.TerminalSessionService;
+import com.baiyi.caesar.terminal.builder.TerminalSessionBuilder;
 import com.baiyi.caesar.terminal.enums.MessageState;
+import com.baiyi.caesar.terminal.factory.TerminalProcessFactory;
 import com.baiyi.caesar.terminal.message.LoginMessage;
 import com.baiyi.caesar.terminal.task.SentOutputTask;
 import com.google.gson.GsonBuilder;
@@ -39,10 +37,9 @@ public class WebTerminalController extends BaseWebSocketController {
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
     private static CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
     // 当前会话 uuid
-    private String sessionId = null;
+    private final String sessionId = UUID.randomUUID().toString();
 
     private Session session = null;
-
     // 超时时间1H
     public static final Long WEBSOCKET_TIMEOUT = 60 * 60 * 1000L;
 
@@ -51,8 +48,6 @@ public class WebTerminalController extends BaseWebSocketController {
     private static TerminalSessionService terminalSessionService;
 
     private TerminalSession terminalSession;
-
-    private static final String MESSAGE_STATE = "state";
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
@@ -64,9 +59,7 @@ public class WebTerminalController extends BaseWebSocketController {
      */
     @OnOpen
     public void onOpen(Session session) {
-        // this.sessionId = UUID.randomUUID().toString();
         log.info("终端会话尝试链接，sessionId = {}", sessionId);
-        this.sessionId = UUID.randomUUID().toString();
         TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo);
         terminalSessionService.add(terminalSession);
         this.terminalSession = terminalSession;
@@ -102,14 +95,9 @@ public class WebTerminalController extends BaseWebSocketController {
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
         SessionUtil.setUsername(terminalSession.getUsername());
-        JSONObject jsonObject = JSON.parseObject(message);
-        String state = jsonObject.getString(MESSAGE_STATE);
-        // 鉴权并更新会话信息
-        if (MessageState.LOGIN.getState().equals(state)) {
-            LoginMessage terminalMessage = new GsonBuilder().create().fromJson(message, LoginMessage.class);
-            setUser(authentication(terminalMessage.getToken()));
-        }
-        // System.err.println("State:" + state);
+        String state = getSatae(message);
+        if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
+            setUser(authentication(new GsonBuilder().create().fromJson(message, LoginMessage.class)));
         TerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
     }
 

@@ -38,12 +38,16 @@ public class ServerTreeUtil {
         String serverName = ServerUtil.toServerName(server);
         return ServerTreeVO.Tree.builder()
                 .id(serverName)
-                .disabled(!server.getIsActive())
+                .disabled(isDisabled(server))
                 .server(server)
                 .label(Joiner.on(":").join(serverName, server.getPrivateIp()))
                 .build();
     }
 
+    private static boolean isDisabled(Server server) {
+        if (!server.getIsActive()) return true;
+        return "Windows".equalsIgnoreCase(server.getOsType());
+    }
 
     public static void wrap(Map<String, String> serverTreeHostPatternMap, Map<String, List<Server>> serverGroupMap) {
         serverGroupMap.keySet().forEach(k ->

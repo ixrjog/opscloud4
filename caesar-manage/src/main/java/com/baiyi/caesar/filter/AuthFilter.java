@@ -2,6 +2,7 @@ package com.baiyi.caesar.filter;
 
 import com.baiyi.caesar.common.exception.auth.AuthRuntimeException;
 import com.baiyi.caesar.common.HttpResult;
+import com.baiyi.caesar.config.WhiteConfig;
 import com.baiyi.caesar.facade.auth.UserAuthFacade;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -20,6 +21,9 @@ public class AuthFilter extends OncePerRequestFilter {
     @Resource
     private UserAuthFacade userAuthFacade;
 
+    @Resource
+    private WhiteConfig whiteConfig;
+
     /**
      * 前端框架 token 名称
      */
@@ -27,6 +31,7 @@ public class AuthFilter extends OncePerRequestFilter {
 
     // public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
+    // 改成配置文件
     private static final String[] AUTH_WHITELIST = {
             // -- swagger ui
             "/swagger-resources",
@@ -85,7 +90,7 @@ public class AuthFilter extends OncePerRequestFilter {
     }
 
     private boolean checkWhitelist(String resourceName) {
-        for (String resource : AUTH_WHITELIST)
+        for (String resource : whiteConfig.getUrls())
             if (resourceName.indexOf(resource) == 0)
                 return true;
         return false;

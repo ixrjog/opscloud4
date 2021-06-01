@@ -1,5 +1,6 @@
 package com.baiyi.caesar.terminal.message;
 
+import com.baiyi.caesar.domain.model.message.ILoginMessage;
 import com.baiyi.caesar.terminal.model.ServerNode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
@@ -15,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class LoginMessage extends BaseMessage {
+public class LoginMessage extends BaseMessage implements ILoginMessage {
 
     private Set<ServerNode> serverNodes;
 

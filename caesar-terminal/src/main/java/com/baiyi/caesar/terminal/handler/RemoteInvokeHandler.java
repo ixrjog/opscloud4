@@ -9,6 +9,7 @@ import com.baiyi.caesar.terminal.model.SessionOutput;
 import com.baiyi.caesar.terminal.task.SecureShellTask;
 import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
+import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 
@@ -31,6 +32,22 @@ public class RemoteInvokeHandler {
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
+    private static void invokeSshCredential(HostSystem hostSystem, JSch jsch, Session session) throws JSchException {
+        Credential credential = hostSystem.getSshCredential().getCredential();
+        // 按凭证类型
+        switch (hostSystem.getSshCredential().getCredential().getKind()) {
+            case 1: // password
+                session.setPassword(credential.getCredential());
+                break;
+            case 2:   // prvKey
+                jsch.addIdentity(credential.getCredential(), credential.getPassphrase().getBytes());
+                break;
+            case 3:  // prvKey + pubKey
+                jsch.addIdentity(appId, credential.getCredential().trim().getBytes(), credential.getCredential2().getBytes(), credential.getPassphrase().getBytes());
+                break;
+        }
+    }
+
     public static void openSSHTermOnSystem(String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
@@ -38,21 +55,10 @@ public class RemoteInvokeHandler {
         hostSystem.setInstanceId(instanceId);
 
         try {
+            if (hostSystem.getSshCredential() == null) return;
             Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),
                     hostSystem.getPort() == null ? 22 : hostSystem.getPort());
-            Credential credential = hostSystem.getSshCredential().getCredential();
-            // 按凭证类型
-            switch (hostSystem.getSshCredential().getCredential().getKind()) {
-                case 1: // password
-                    session.setPassword(credential.getCredential());
-                    break;
-                case 2:   // prvKey
-                    jsch.addIdentity(credential.getCredential(), credential.getPassphrase().getBytes());
-                    break;
-                case 3:  // prvKey + pubKey
-                    jsch.addIdentity(appId, credential.getCredential().trim().getBytes(), credential.getCredential2().getBytes(), credential.getPassphrase().getBytes());
-                    break;
-            }
+            invokeSshCredential(hostSystem, jsch, session);
             session.setConfig("StrictHostKeyChecking", "no");
             session.setConfig("PreferredAuthentications", "publickey,keyboard-interactive,password");
             session.setServerAliveInterval(SERVER_ALIVE_INTERVAL);

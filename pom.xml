@@ -11,6 +11,7 @@
         <module>caesar-ldap</module>
         <module>caesar-guacamole</module>
         <module>caesar-terminal</module>
+        <module>caesar-ssh-server</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -183,6 +184,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>caesar-terminal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-ssh-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

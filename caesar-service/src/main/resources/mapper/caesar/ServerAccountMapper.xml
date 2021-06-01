@@ -20,9 +20,15 @@
     <!--  查询服务器授权的账户-->
     <select id="getPermissionServerAccountByTypeAndProtocol"
             resultMap="BaseResultMap">
-    select * from  server_account_permission a0
-       join server_account a1 on a0.server_account_id = a1.id
-       where  a0.server_id = 1 and a1.account_type = #{accountType} and a1.protocol = #{protocol}
-  </select>
+        select * from server_account_permission a0
+        join server_account a1 on a0.server_account_id = a1.id
+        where a0.server_id = #{serverId}
+        <if test="accountType != null">
+            and a1.account_type = #{accountType}
+        </if>
+        <if test="protocol != null and protocol != ''">
+            and a1.protocol = #{protocol}
+        </if>
+    </select>
 
 </mapper>
