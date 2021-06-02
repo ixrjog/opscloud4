@@ -2,7 +2,7 @@ package com.baiyi.caesar.facade.sys;
 
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.sys.EnvParam;
-import com.baiyi.caesar.vo.env.EnvVO;
+import com.baiyi.caesar.domain.vo.env.EnvVO;
 
 /**
  * @Author baiyi

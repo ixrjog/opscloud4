@@ -3,8 +3,8 @@ package com.baiyi.caesar.facade;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.datasource.DatasourceConfigParam;
 import com.baiyi.caesar.domain.param.datasource.DatasourceInstanceParam;
-import com.baiyi.caesar.vo.datasource.DatasourceConfigVO;
-import com.baiyi.caesar.vo.datasource.DatasourceInstanceVO;
+import com.baiyi.caesar.domain.vo.datasource.DatasourceConfigVO;
+import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
 
 import java.util.List;
 

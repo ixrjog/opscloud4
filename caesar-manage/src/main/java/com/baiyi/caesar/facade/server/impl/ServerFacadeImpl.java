@@ -10,7 +10,7 @@ import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.facade.server.ServerFacade;
 import com.baiyi.caesar.packer.server.ServerPacker;
 import com.baiyi.caesar.service.server.ServerService;
-import com.baiyi.caesar.vo.server.ServerVO;
+import com.baiyi.caesar.domain.vo.server.ServerVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

@@ -10,8 +10,8 @@ import com.baiyi.caesar.facade.UserFacade;
 import com.baiyi.caesar.facade.server.ServerGroupFacade;
 import com.baiyi.caesar.packer.user.UserPacker;
 import com.baiyi.caesar.service.user.UserService;
-import com.baiyi.caesar.vo.server.ServerTreeVO;
-import com.baiyi.caesar.vo.user.UserVO;
+import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
+import com.baiyi.caesar.domain.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

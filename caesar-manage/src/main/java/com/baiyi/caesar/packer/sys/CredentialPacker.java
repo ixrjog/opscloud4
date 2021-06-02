@@ -7,7 +7,7 @@ import com.baiyi.caesar.domain.generator.caesar.Credential;
 import com.baiyi.caesar.packer.base.SecretParcker;
 import com.baiyi.caesar.service.sys.CredentialService;
 import com.baiyi.caesar.types.CredentialKindEnum;
-import com.baiyi.caesar.vo.sys.CredentialVO;
+import com.baiyi.caesar.domain.vo.sys.CredentialVO;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

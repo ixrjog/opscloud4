@@ -2,7 +2,7 @@ package com.baiyi.caesar.util;
 
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
-import com.baiyi.caesar.vo.server.ServerTreeVO;
+import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
 import com.google.common.base.Joiner;
 
 import java.util.List;

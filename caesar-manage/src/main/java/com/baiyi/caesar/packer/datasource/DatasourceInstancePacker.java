@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.tag.TagPacker;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.datasource.DatasourceInstanceVO;
+import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

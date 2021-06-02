@@ -4,9 +4,9 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.server.ServerGroupTypeParam;
-import com.baiyi.caesar.vo.server.ServerGroupTypeVO;
-import com.baiyi.caesar.vo.server.ServerGroupVO;
-import com.baiyi.caesar.vo.server.ServerTreeVO;
+import com.baiyi.caesar.domain.vo.server.ServerGroupTypeVO;
+import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
+import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
 
 /**
  * @Author baiyi

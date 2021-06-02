@@ -3,7 +3,7 @@ package com.baiyi.caesar.packer.sys;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.domain.generator.caesar.Env;
 import com.baiyi.caesar.service.sys.EnvService;
-import com.baiyi.caesar.vo.env.EnvVO;
+import com.baiyi.caesar.domain.vo.env.EnvVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

@@ -12,7 +12,7 @@ import com.baiyi.caesar.facade.TagFacade;
 import com.baiyi.caesar.packer.tag.TagPacker;
 import com.baiyi.caesar.service.tag.BusinessTagService;
 import com.baiyi.caesar.service.tag.TagService;
-import com.baiyi.caesar.vo.tag.TagVO;
+import com.baiyi.caesar.domain.vo.tag.TagVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

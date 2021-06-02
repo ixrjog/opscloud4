@@ -5,8 +5,8 @@ import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.server.ServerGroupVO;
-import com.baiyi.caesar.vo.user.UserVO;
+import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
+import com.baiyi.caesar.domain.vo.user.UserVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

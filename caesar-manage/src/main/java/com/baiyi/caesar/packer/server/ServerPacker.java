@@ -6,7 +6,7 @@ import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.sys.EnvPacker;
 import com.baiyi.caesar.packer.tag.TagPacker;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.server.ServerVO;
+import com.baiyi.caesar.domain.vo.server.ServerVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

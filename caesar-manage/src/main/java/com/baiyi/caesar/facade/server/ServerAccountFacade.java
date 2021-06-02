@@ -2,7 +2,7 @@ package com.baiyi.caesar.facade.server;
 
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.server.ServerAccountParam;
-import com.baiyi.caesar.vo.server.ServerAccountVO;
+import com.baiyi.caesar.domain.vo.server.ServerAccountVO;
 
 /**
  * @Author baiyi

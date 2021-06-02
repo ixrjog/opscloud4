@@ -4,7 +4,7 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Tag;
 import com.baiyi.caesar.domain.param.tag.BusinessTagParam;
 import com.baiyi.caesar.domain.param.tag.TagParam;
-import com.baiyi.caesar.vo.tag.TagVO;
+import com.baiyi.caesar.domain.vo.tag.TagVO;
 
 import java.util.List;
 

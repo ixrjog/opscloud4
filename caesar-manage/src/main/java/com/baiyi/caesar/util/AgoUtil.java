@@ -1,6 +1,6 @@
 package com.baiyi.caesar.util;
 
-import com.baiyi.caesar.vo.base.IAgo;
+import com.baiyi.caesar.domain.vo.base.IAgo;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

@@ -10,19 +10,18 @@ import lombok.EqualsAndHashCode;
  * @Date 2021/5/19 2:59 下午
  * @Version 1.0
  */
-@EqualsAndHashCode(callSuper = true)
 @Data
+@EqualsAndHashCode(callSuper = true)
 public class CommonRuntimeException extends BaseException {
 
-    private Integer code;
+    private final Integer code = 999;
 
     public CommonRuntimeException(String message) {
         super(message);
-        this.code = 999;
+        setCode(code);
     }
 
     public CommonRuntimeException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
-
 }

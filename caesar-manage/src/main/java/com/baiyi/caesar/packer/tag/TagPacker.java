@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.generator.caesar.Tag;
 import com.baiyi.caesar.domain.param.tag.TagParam;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.facade.TagFacade;
-import com.baiyi.caesar.vo.tag.TagVO;
+import com.baiyi.caesar.domain.vo.tag.TagVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

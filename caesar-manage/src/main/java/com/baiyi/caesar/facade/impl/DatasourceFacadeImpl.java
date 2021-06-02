@@ -12,8 +12,8 @@ import com.baiyi.caesar.packer.datasource.DatasourceConfigPacker;
 import com.baiyi.caesar.packer.datasource.DatasourceInstancePacker;
 import com.baiyi.caesar.service.datasource.DsConfigService;
 import com.baiyi.caesar.service.datasource.DsInstanceService;
-import com.baiyi.caesar.vo.datasource.DatasourceConfigVO;
-import com.baiyi.caesar.vo.datasource.DatasourceInstanceVO;
+import com.baiyi.caesar.domain.vo.datasource.DatasourceConfigVO;
+import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

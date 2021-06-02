@@ -1,6 +1,6 @@
 package com.baiyi.caesar.packer.base;
 
-import com.baiyi.caesar.vo.base.ISecret;
+import com.baiyi.caesar.domain.vo.base.ISecret;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 

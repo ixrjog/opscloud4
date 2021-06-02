@@ -3,8 +3,8 @@ package com.baiyi.caesar.packer.user;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.domain.generator.caesar.UserPermission;
 import com.baiyi.caesar.service.user.UserPermissionService;
-import com.baiyi.caesar.vo.user.UserPermissionVO;
-import com.baiyi.caesar.vo.user.UserVO;
+import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
+import com.baiyi.caesar.domain.vo.user.UserVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

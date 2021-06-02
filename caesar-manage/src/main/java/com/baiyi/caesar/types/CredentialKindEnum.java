@@ -1,6 +1,6 @@
 package com.baiyi.caesar.types;
 
-import com.baiyi.caesar.vo.common.OptionsVO;
+import com.baiyi.caesar.domain.vo.common.OptionsVO;
 import com.google.common.collect.Lists;
 
 import java.util.List;
