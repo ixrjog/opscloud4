@@ -3,13 +3,9 @@ package com.baiyi.caesar.util;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
-<<<<<<< HEAD
-import com.baiyi.caesar.packer.server.ServerPacker;
-import com.baiyi.caesar.vo.server.ServerTreeVO;
-import com.baiyi.caesar.vo.server.ServerVO;
-=======
 import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
->>>>>>> master
+import com.baiyi.caesar.domain.vo.server.ServerVO;
+import com.baiyi.caesar.packer.server.ServerPacker;
 import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
