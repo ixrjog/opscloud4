@@ -19,5 +19,7 @@ public interface MenuService {
 
     Menu getById(Integer id);
 
+    List<Menu> queryAllBySeq();
+
     List<Menu> listAll();
 }

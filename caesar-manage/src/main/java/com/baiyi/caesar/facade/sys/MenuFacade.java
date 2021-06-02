@@ -1,6 +1,5 @@
 package com.baiyi.caesar.facade.sys;
 
-import com.baiyi.caesar.domain.BusinessWrapper;
 import com.baiyi.caesar.domain.param.sys.MenuParam;
 import com.baiyi.caesar.domain.vo.sys.MenuVO;
 
@@ -17,11 +16,11 @@ public interface MenuFacade {
 
     void saveMenuChild(MenuParam.MenuChildSave param) ;
 
-    BusinessWrapper<List<MenuVO.Menu>> queryMenu();
+    List<MenuVO.Menu> queryMenu();
 
-    BusinessWrapper<List<MenuVO.MenuChild>> queryMenuChild(Integer id);
+    List<MenuVO.MenuChild> queryMenuChild(Integer id);
 
-    void delMenu(Integer id);
+    void delMenuById(Integer id);
 
-    void delMenuChild(Integer id);
+    void delMenuChildById(Integer id);
 }

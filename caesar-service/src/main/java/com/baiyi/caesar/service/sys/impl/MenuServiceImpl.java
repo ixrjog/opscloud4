@@ -4,6 +4,7 @@ import com.baiyi.caesar.domain.generator.caesar.Menu;
 import com.baiyi.caesar.mapper.caesar.MenuMapper;
 import com.baiyi.caesar.service.sys.MenuService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -37,6 +38,13 @@ public class MenuServiceImpl implements MenuService {
     @Override
     public Menu getById(Integer id) {
         return menuMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public List<Menu> queryAllBySeq() {
+        Example example = new Example(Menu.class);
+        example.setOrderByClause("seq");
+        return menuMapper.selectByExample(example);
     }
 
     @Override

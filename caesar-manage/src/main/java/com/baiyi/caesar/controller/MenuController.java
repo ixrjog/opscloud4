@@ -44,14 +44,14 @@ public class MenuController {
     @ApiOperation(value = "删除菜单")
     @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> delMenu(@RequestParam int id) {
-        menuFacade.delMenu(id);
+        menuFacade.delMenuById(id);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "删除子菜单")
     @DeleteMapping(value = "/child/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> delMenuChild(@RequestParam int id) {
-        menuFacade.delMenuChild(id);
+        menuFacade.delMenuChildById(id);
         return HttpResult.SUCCESS;
     }
 

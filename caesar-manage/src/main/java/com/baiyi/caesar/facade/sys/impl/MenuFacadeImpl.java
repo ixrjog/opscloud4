@@ -1,16 +1,15 @@
 package com.baiyi.caesar.facade.sys.impl;
 
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
-import com.baiyi.caesar.domain.BusinessWrapper;
 import com.baiyi.caesar.domain.ErrorEnum;
 import com.baiyi.caesar.domain.generator.caesar.Menu;
 import com.baiyi.caesar.domain.generator.caesar.MenuChild;
 import com.baiyi.caesar.domain.param.sys.MenuParam;
+import com.baiyi.caesar.domain.vo.sys.MenuVO;
 import com.baiyi.caesar.facade.sys.MenuFacade;
 import com.baiyi.caesar.packer.sys.MenuPacker;
 import com.baiyi.caesar.service.sys.MenuChildService;
 import com.baiyi.caesar.service.sys.MenuService;
-import com.baiyi.caesar.domain.vo.sys.MenuVO;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -82,21 +81,19 @@ public class MenuFacadeImpl implements MenuFacade {
     }
 
     @Override
-    public BusinessWrapper<List<MenuVO.Menu>> queryMenu() {
-        List<Menu> menuList = menuService.listAll();
-        List<MenuVO.Menu> menuVOList = menuPacker.toVOList(menuList);
-        return new BusinessWrapper<>(menuVOList);
+    public List<MenuVO.Menu> queryMenu() {
+        List<Menu> menuList = menuService.queryAllBySeq();
+        return menuPacker.toVOList(menuList);
     }
 
     @Override
-    public BusinessWrapper<List<MenuVO.MenuChild>> queryMenuChild(Integer id) {
+    public List<MenuVO.MenuChild> queryMenuChild(Integer id) {
         List<MenuChild> menuChildList = menuChildService.listByMenuId(id);
-        List<MenuVO.MenuChild> menuChildVOList = menuPacker.toChildVOList(menuChildList);
-        return new BusinessWrapper<>(menuChildVOList);
+        return menuPacker.toChildVOList(menuChildList);
     }
 
     @Override
-    public void delMenu(Integer id) {
+    public void delMenuById(Integer id) {
         List<MenuChild> menuChildList = menuChildService.listByMenuId(id);
         if (!CollectionUtils.isEmpty(menuChildList))
             throw new CommonRuntimeException(ErrorEnum.MENU_CHILD_IS_NOT_EMPTY);
@@ -105,7 +102,7 @@ public class MenuFacadeImpl implements MenuFacade {
     }
 
     @Override
-    public void delMenuChild(Integer id) {
+    public void delMenuChildById(Integer id) {
         menuChildService.del(id);
         // todo清除缓存
     }
