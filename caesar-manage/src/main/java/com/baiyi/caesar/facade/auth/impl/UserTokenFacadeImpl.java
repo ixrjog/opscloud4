@@ -3,7 +3,7 @@ package com.baiyi.caesar.facade.auth.impl;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.generator.caesar.UserToken;
-import com.baiyi.caesar.vo.auth.LogVO;
+import com.baiyi.caesar.domain.vo.auth.LogVO;
 import com.baiyi.caesar.facade.auth.UserTokenFacade;
 import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.service.user.UserTokenService;

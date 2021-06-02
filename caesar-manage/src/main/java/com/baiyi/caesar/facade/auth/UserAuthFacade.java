@@ -1,7 +1,7 @@
 package com.baiyi.caesar.facade.auth;
 
 import com.baiyi.caesar.domain.param.auth.LoginParam;
-import com.baiyi.caesar.vo.auth.LogVO;
+import com.baiyi.caesar.domain.vo.auth.LogVO;
 
 /**
  * @Author baiyi

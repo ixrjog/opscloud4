@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.param.sys.CredentialParam;
 import com.baiyi.caesar.facade.sys.CredentialFacade;
 import com.baiyi.caesar.packer.sys.CredentialPacker;
 import com.baiyi.caesar.service.sys.CredentialService;
-import com.baiyi.caesar.vo.sys.CredentialVO;
+import com.baiyi.caesar.domain.vo.sys.CredentialVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 

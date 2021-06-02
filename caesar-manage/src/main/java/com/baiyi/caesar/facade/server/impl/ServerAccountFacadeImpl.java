@@ -11,7 +11,7 @@ import com.baiyi.caesar.packer.server.ServerAccountPacker;
 import com.baiyi.caesar.service.server.ServerAccountPermissionService;
 import com.baiyi.caesar.service.server.ServerAccountService;
 import com.baiyi.caesar.service.sys.CredentialService;
-import com.baiyi.caesar.vo.server.ServerAccountVO;
+import com.baiyi.caesar.domain.vo.server.ServerAccountVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

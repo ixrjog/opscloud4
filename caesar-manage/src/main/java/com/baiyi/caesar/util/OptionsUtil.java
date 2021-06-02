@@ -2,7 +2,7 @@ package com.baiyi.caesar.util;
 
 import com.baiyi.caesar.common.type.ProtocolEnum;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
-import com.baiyi.caesar.vo.common.OptionsVO;
+import com.baiyi.caesar.domain.vo.common.OptionsVO;
 import com.google.common.collect.Lists;
 
 import java.util.List;

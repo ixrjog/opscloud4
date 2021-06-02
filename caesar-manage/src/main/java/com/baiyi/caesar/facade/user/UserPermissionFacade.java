@@ -1,6 +1,6 @@
 package com.baiyi.caesar.facade.user;
 
-import com.baiyi.caesar.vo.user.UserPermissionVO;
+import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
 
 /**
  * @Author baiyi

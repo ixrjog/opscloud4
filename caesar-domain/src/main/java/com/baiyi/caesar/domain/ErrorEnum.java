@@ -226,7 +226,14 @@ public enum ErrorEnum {
     BLOCK_RULE_P1(13001,"封网中，非管理员禁用发布平台！"),
     BLOCK_RULE_P3(13001,"封网中，禁用发布平台！"),
     BLOCK_RULE_PROHIBIT_PROD_BUILD(13001,"封网中，生产环境禁止构建/发布！"),
-    BLOCK_RULE_PROHIBIT_GRAY_BUILD(13001,"封网中，灰度环境禁止构建/发布！")
+    BLOCK_RULE_PROHIBIT_GRAY_BUILD(13001,"封网中，灰度环境禁止构建/发布！"),
+
+    MENU_LIST_EMPTY(999, "菜单列表为空"),
+    MENU_CHILD_IS_NOT_EMPTY(999, "子菜单列表不为空"),
+    MENU_CHILD_LIST_EMPTY(999, "子菜单列表为空"),
+    MENU_CONTENT_EMPTY(999, "菜单内容为空"),
+    MENU_CHILD_CONTENT_EMPTY(999, "子菜单内容为空"),
+    ROLE_MENU_SAVE_FAIL(999, "保存角色菜单失败"),
     ;
 
     private int code;

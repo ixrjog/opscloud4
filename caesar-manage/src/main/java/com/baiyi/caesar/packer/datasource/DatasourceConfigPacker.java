@@ -6,7 +6,7 @@ import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.sys.CredentialPacker;
 import com.baiyi.caesar.service.datasource.DsInstanceService;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.datasource.DatasourceConfigVO;
+import com.baiyi.caesar.domain.vo.datasource.DatasourceConfigVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

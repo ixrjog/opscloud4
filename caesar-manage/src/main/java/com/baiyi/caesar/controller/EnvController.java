@@ -4,7 +4,7 @@ import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.sys.EnvParam;
 import com.baiyi.caesar.facade.sys.EnvFacade;
-import com.baiyi.caesar.vo.env.EnvVO;
+import com.baiyi.caesar.domain.vo.env.EnvVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;

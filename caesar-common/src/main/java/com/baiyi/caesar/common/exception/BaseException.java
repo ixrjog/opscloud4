@@ -2,6 +2,7 @@ package com.baiyi.caesar.common.exception;
 
 import com.baiyi.caesar.domain.ErrorEnum;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -9,6 +10,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
+@NoArgsConstructor
 public abstract class BaseException extends RuntimeException {
 
     private Integer code;

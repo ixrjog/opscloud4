@@ -1,7 +1,7 @@
 package com.baiyi.caesar.handler;
 
-import com.baiyi.caesar.common.exception.BaseException;
 import com.baiyi.caesar.common.HttpResult;
+import com.baiyi.caesar.common.exception.BaseException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;

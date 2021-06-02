@@ -7,7 +7,7 @@ import com.baiyi.caesar.packer.sys.CredentialPacker;
 import com.baiyi.caesar.service.server.ServerAccountPermissionService;
 import com.baiyi.caesar.service.server.ServerAccountService;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.server.ServerAccountVO;
+import com.baiyi.caesar.domain.vo.server.ServerAccountVO;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 

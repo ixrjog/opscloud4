@@ -3,7 +3,7 @@ package com.baiyi.caesar.controller;
 import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.param.auth.LoginParam;
 import com.baiyi.caesar.facade.auth.UserAuthFacade;
-import com.baiyi.caesar.vo.auth.LogVO;
+import com.baiyi.caesar.domain.vo.auth.LogVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;

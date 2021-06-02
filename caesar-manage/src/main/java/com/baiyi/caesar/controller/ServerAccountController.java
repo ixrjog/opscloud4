@@ -4,7 +4,7 @@ import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.server.ServerAccountParam;
 import com.baiyi.caesar.facade.server.ServerAccountFacade;
-import com.baiyi.caesar.vo.server.ServerAccountVO;
+import com.baiyi.caesar.domain.vo.server.ServerAccountVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;

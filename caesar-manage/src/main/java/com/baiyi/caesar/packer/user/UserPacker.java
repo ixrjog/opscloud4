@@ -7,7 +7,7 @@ import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.auth.AuthRolePacker;
 import com.baiyi.caesar.packer.base.SecretParcker;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.user.UserVO;
+import com.baiyi.caesar.domain.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 

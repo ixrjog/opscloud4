@@ -5,10 +5,10 @@ import com.baiyi.caesar.domain.param.auth.AuthGroupParam;
 import com.baiyi.caesar.domain.param.auth.AuthResourceParam;
 import com.baiyi.caesar.domain.param.auth.AuthRoleParam;
 import com.baiyi.caesar.domain.param.auth.AuthUserRoleParam;
-import com.baiyi.caesar.vo.auth.AuthGroupVO;
-import com.baiyi.caesar.vo.auth.AuthResourceVO;
-import com.baiyi.caesar.vo.auth.AuthRoleResourceVO;
-import com.baiyi.caesar.vo.auth.AuthRoleVO;
+import com.baiyi.caesar.domain.vo.auth.AuthGroupVO;
+import com.baiyi.caesar.domain.vo.auth.AuthResourceVO;
+import com.baiyi.caesar.domain.vo.auth.AuthRoleResourceVO;
+import com.baiyi.caesar.domain.vo.auth.AuthRoleVO;
 
 
 /**

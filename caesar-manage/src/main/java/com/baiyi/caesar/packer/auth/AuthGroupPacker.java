@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.generator.caesar.AuthGroup;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.service.auth.AuthResourceService;
 import com.baiyi.caesar.util.ExtendUtil;
-import com.baiyi.caesar.vo.auth.AuthGroupVO;
+import com.baiyi.caesar.domain.vo.auth.AuthGroupVO;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;

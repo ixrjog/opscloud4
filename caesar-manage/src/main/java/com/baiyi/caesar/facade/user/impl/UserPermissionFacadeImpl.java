@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.generator.caesar.UserPermission;
 import com.baiyi.caesar.facade.user.UserPermissionFacade;
 import com.baiyi.caesar.service.auth.AuthRoleService;
 import com.baiyi.caesar.service.user.UserPermissionService;
-import com.baiyi.caesar.vo.user.UserPermissionVO;
+import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 

@@ -7,7 +7,7 @@ import com.baiyi.caesar.domain.param.sys.EnvParam;
 import com.baiyi.caesar.facade.sys.EnvFacade;
 import com.baiyi.caesar.packer.sys.EnvPacker;
 import com.baiyi.caesar.service.sys.EnvService;
-import com.baiyi.caesar.vo.env.EnvVO;
+import com.baiyi.caesar.domain.vo.env.EnvVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
