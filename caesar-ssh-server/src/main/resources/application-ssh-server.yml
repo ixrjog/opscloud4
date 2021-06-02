@@ -20,9 +20,9 @@ ssh:
     # since 1.4.0, set enable to false to disable following default commands
     commands:
       actuator:
-        create: on
-        enable: on
-        restricted: on
+        create: off
+        enable: off
+        restricted: off
         # empty by default
         excludes:
           - ...
@@ -65,7 +65,7 @@ ssh:
       tasks:
         create: true
         enable: false
-        restricted: true
+        restricted: false
         authorized-roles:
           - ADMIN
     display-banner: true

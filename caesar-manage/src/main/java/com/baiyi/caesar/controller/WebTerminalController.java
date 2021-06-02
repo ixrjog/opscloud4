@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/ws/terminal")
 @Component
-public class WebTerminalController extends BaseWebSocketController {
+public final class WebTerminalController extends BaseWebSocketController {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
@@ -43,7 +43,7 @@ public class WebTerminalController extends BaseWebSocketController {
     // 超时时间1H
     public static final Long WEBSOCKET_TIMEOUT = 60 * 60 * 1000L;
 
-    private static HostInfo serverInfo = HostInfo.build();
+    private final static HostInfo serverInfo = HostInfo.build();
 
     private static TerminalSessionService terminalSessionService;
 
@@ -94,18 +94,19 @@ public class WebTerminalController extends BaseWebSocketController {
     @OnMessage
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
-        SessionUtil.setUsername(terminalSession.getUsername());
         String state = getSatae(message);
-        if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
-            setUser(authentication(new GsonBuilder().create().fromJson(message, LoginMessage.class)));
+        if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
+            if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
+                setUser(authentication(new GsonBuilder().create().fromJson(message, LoginMessage.class)));
+        } else {
+            SessionUtil.setUsername(this.terminalSession.getUsername());
+        }
         TerminalProcessFactory.getProcessByKey(state).process(message, session, terminalSession);
     }
 
     private void setUser(String username) {
-        if (StringUtils.isEmpty(terminalSession.getUsername())) {
-            terminalSession.setUsername(username);
-            terminalSessionService.update(terminalSession);
-        }
+        terminalSession.setUsername(username);
+        terminalSessionService.update(terminalSession);
     }
 
     /**

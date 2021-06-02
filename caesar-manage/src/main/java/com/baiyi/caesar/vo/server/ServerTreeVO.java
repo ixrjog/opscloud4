@@ -1,6 +1,5 @@
 package com.baiyi.caesar.vo.server;
 
-import com.baiyi.caesar.domain.generator.caesar.Server;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
@@ -30,7 +29,7 @@ public class ServerTreeVO {
     public static class Tree {
         private String id;
         private String label;
-        private Server server;
+        private ServerVO.Server server;
         private Boolean disabled;
         private List<Tree> children;
     }
