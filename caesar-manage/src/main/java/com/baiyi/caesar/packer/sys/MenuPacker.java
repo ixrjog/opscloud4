@@ -95,6 +95,7 @@ public class MenuPacker {
                     .collect(Collectors.toList()));
             Menu menu = menuService.getById(k);
             MenuVO.Menu menuVO = MenuVO.Menu.builder()
+                    .id(menu.getId())
                     .title(menu.getTitle())
                     .icon(menu.getIcon())
                     .seq(menu.getSeq())
