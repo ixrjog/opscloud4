@@ -4,6 +4,7 @@ import com.baiyi.caesar.domain.vo.sys.MenuVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotEmpty;
 import java.util.List;
@@ -28,6 +29,20 @@ public class MenuParam {
     public static class MenuChildSave {
         @ApiModelProperty(value = "子菜单列表")
         private List<MenuVO.MenuChild> menuChildList;
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class AuthRoleMenuSave {
+
+        @ApiModelProperty(value = "角色id")
+        private Integer roleId;
+
+        @NotEmpty(message = "菜单列表不能为空")
+        @ApiModelProperty(value = "菜单id列表")
+        private List<Integer> menuChildIdList;
     }
 }
 
