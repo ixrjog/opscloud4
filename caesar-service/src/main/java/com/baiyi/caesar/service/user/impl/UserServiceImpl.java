@@ -55,4 +55,11 @@ public class UserServiceImpl implements UserService {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
+    @Override
+    public List<User> listActive() {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", true);
+        return userMapper.selectByExample(example);
+    }
 }

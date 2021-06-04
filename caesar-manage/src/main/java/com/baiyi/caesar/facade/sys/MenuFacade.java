@@ -33,4 +33,6 @@ public interface MenuFacade {
     List<AuthRoleMenu> queryAuthRoleMenu(Integer roleId);
 
     List<MenuVO.Menu> queryAuthRoleMenuDetail(Integer roleId);
+
+    List<MenuVO.Menu> queryMyMenu();
 }

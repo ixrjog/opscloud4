@@ -93,4 +93,10 @@ public class MenuController {
     public HttpResult<List<MenuVO.Menu>> queryAuthRoleMenuDetail(Integer roleId) {
         return new HttpResult<>(menuFacade.queryAuthRoleMenuDetail(roleId));
     }
+
+    @ApiOperation(value = "查询我的菜单")
+    @GetMapping(value = "/my/query", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<MenuVO.Menu>> queryMyMenu() {
+        return new HttpResult<>(menuFacade.queryMyMenu());
+    }
 }
