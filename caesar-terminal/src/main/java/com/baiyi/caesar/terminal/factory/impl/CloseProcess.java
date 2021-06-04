@@ -4,9 +4,9 @@ import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
-import com.baiyi.caesar.terminal.message.BaseMessage;
-import com.baiyi.caesar.terminal.model.JSchSession;
-import com.baiyi.caesar.terminal.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.message.BaseMessage;
+import com.baiyi.caesar.sshcore.model.JSchSession;
+import com.baiyi.caesar.sshcore.model.JSchSessionMap;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;

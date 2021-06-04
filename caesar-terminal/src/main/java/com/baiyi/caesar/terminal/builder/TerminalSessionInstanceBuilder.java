@@ -2,7 +2,7 @@ package com.baiyi.caesar.terminal.builder;
 
 import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
 import com.baiyi.caesar.domain.generator.caesar.TerminalSessionInstance;
-import com.baiyi.caesar.terminal.model.HostSystem;
+import com.baiyi.caesar.sshcore.model.HostSystem;
 
 import java.util.Date;
 

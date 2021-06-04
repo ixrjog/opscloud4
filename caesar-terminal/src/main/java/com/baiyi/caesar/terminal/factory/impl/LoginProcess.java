@@ -5,10 +5,10 @@ import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
-import com.baiyi.caesar.terminal.handler.RemoteInvokeHandler;
-import com.baiyi.caesar.terminal.message.BaseMessage;
-import com.baiyi.caesar.terminal.message.LoginMessage;
-import com.baiyi.caesar.terminal.model.HostSystem;
+import com.baiyi.caesar.sshcore.handler.RemoteInvokeHandler;
+import com.baiyi.caesar.sshcore.message.BaseMessage;
+import com.baiyi.caesar.sshcore.message.LoginMessage;
+import com.baiyi.caesar.sshcore.model.HostSystem;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -37,8 +37,8 @@ public class LoginProcess extends BaseProcess implements ITerminalProcess {
         LoginMessage loginMessage = (LoginMessage) getMessage(message);
         heartbeat(terminalSession.getSessionId());
         loginMessage.getServerNodes().forEach(serverNode -> {
-            HostSystem hostSystem = buildHostSystem(serverNode, loginMessage);
-            RemoteInvokeHandler.openSSHTermOnSystem(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
+            HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
+            RemoteInvokeHandler.openSSHTermOnSystemForWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
             terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem));
         });
     }

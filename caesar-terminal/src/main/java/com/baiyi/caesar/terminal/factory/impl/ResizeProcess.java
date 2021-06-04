@@ -4,11 +4,11 @@ import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
-import com.baiyi.caesar.terminal.handler.RemoteInvokeHandler;
-import com.baiyi.caesar.terminal.message.BaseMessage;
-import com.baiyi.caesar.terminal.message.ResizeMessage;
-import com.baiyi.caesar.terminal.model.JSchSession;
-import com.baiyi.caesar.terminal.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.handler.RemoteInvokeHandler;
+import com.baiyi.caesar.sshcore.message.BaseMessage;
+import com.baiyi.caesar.sshcore.message.ResizeMessage;
+import com.baiyi.caesar.sshcore.model.JSchSession;
+import com.baiyi.caesar.sshcore.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
 import org.springframework.stereotype.Component;
@@ -38,7 +38,7 @@ public class ResizeProcess extends BaseProcess implements ITerminalProcess {
         ResizeMessage xtermMessage= (ResizeMessage) getMessage(message);
         try {
             JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), xtermMessage.getInstanceId());
-            RemoteInvokeHandler.invokeChannelPtySize((ChannelShell)jSchSession.getChannel(),xtermMessage);
+            RemoteInvokeHandler.setChannelPtySize((ChannelShell)jSchSession.getChannel(),xtermMessage);
         } catch (Exception ignored) {
         }
     }

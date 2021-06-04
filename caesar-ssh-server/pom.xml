@@ -12,10 +12,11 @@
     <artifactId>caesar-ssh-server</artifactId>
 
     <dependencies>
+
         <dependency>
-            <groupId>com.github.fonimus</groupId>
-            <artifactId>ssh-shell-spring-boot-starter</artifactId>
-            <version>1.5.7</version>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-ssh-core</artifactId>
         </dependency>
+
     </dependencies>
 </project>

@@ -15,7 +15,7 @@ spring:
   profiles:
     include:
       - common
-      - terminal-prod
+      - ssh-core-prod
       - ssh-server
   redis:
     host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com

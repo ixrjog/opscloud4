@@ -5,12 +5,12 @@ import com.baiyi.caesar.terminal.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
-import com.baiyi.caesar.terminal.handler.RemoteInvokeHandler;
-import com.baiyi.caesar.terminal.message.BaseMessage;
-import com.baiyi.caesar.terminal.message.DuplicateSessionMessage;
-import com.baiyi.caesar.terminal.model.HostSystem;
-import com.baiyi.caesar.terminal.model.JSchSession;
-import com.baiyi.caesar.terminal.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.handler.RemoteInvokeHandler;
+import com.baiyi.caesar.sshcore.message.BaseMessage;
+import com.baiyi.caesar.sshcore.message.DuplicateSessionMessage;
+import com.baiyi.caesar.sshcore.model.HostSystem;
+import com.baiyi.caesar.sshcore.model.JSchSession;
+import com.baiyi.caesar.sshcore.model.JSchSessionMap;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -40,8 +40,8 @@ public class DuplicateSessionProcess extends BaseProcess implements ITerminalPro
         DuplicateSessionMessage baseMessage = (DuplicateSessionMessage) getMessage(message);
         JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
         assert jSchSession != null;
-        HostSystem hostSystem = buildHostSystem(baseMessage.getServerNode(), baseMessage);
-        RemoteInvokeHandler.openSSHTermOnSystem(terminalSession.getSessionId(), baseMessage.getServerNode().getInstanceId(), hostSystem);
+        HostSystem hostSystem = hostSystemHandler.buildHostSystem(baseMessage.getServerNode(), baseMessage);
+        RemoteInvokeHandler.openSSHTermOnSystemForWebTerminal(terminalSession.getSessionId(), baseMessage.getServerNode().getInstanceId(), hostSystem);
         terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem));
     }
 

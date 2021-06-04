@@ -90,3 +90,5 @@ ssh:
       local:
         # since 1.2.1, to let default local spring shell prompt when application starts
         enable: false
+project:
+  version: 1.0.0

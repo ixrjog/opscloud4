@@ -4,7 +4,7 @@ import com.baiyi.caesar.domain.generator.caesar.TerminalSession;
 import com.baiyi.caesar.terminal.enums.MessageState;
 import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
-import com.baiyi.caesar.terminal.message.BaseMessage;
+import com.baiyi.caesar.sshcore.message.BaseMessage;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
