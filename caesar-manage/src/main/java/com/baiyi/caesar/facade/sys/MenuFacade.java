@@ -1,6 +1,8 @@
 package com.baiyi.caesar.facade.sys;
 
+import com.baiyi.caesar.domain.generator.caesar.AuthRoleMenu;
 import com.baiyi.caesar.domain.param.sys.MenuParam;
+import com.baiyi.caesar.domain.vo.common.TreeVO;
 import com.baiyi.caesar.domain.vo.sys.MenuVO;
 
 import java.util.List;
@@ -23,4 +25,14 @@ public interface MenuFacade {
     void delMenuById(Integer id);
 
     void delMenuChildById(Integer id);
+
+    List<TreeVO.Tree> queryMenuTree();
+
+    void saveAuthRoleMenu(MenuParam.AuthRoleMenuSave param);
+
+    List<AuthRoleMenu> queryAuthRoleMenu(Integer roleId);
+
+    List<MenuVO.Menu> queryAuthRoleMenuDetail(Integer roleId);
+
+    List<MenuVO.Menu> queryMyMenu();
 }

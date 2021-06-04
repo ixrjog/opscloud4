@@ -20,4 +20,7 @@ public interface MenuChildService {
     MenuChild getById(Integer id);
 
     List<MenuChild> listByMenuId(Integer menuId);
+
+    List<MenuChild> listByIdList(List<Integer> idList);
+
 }

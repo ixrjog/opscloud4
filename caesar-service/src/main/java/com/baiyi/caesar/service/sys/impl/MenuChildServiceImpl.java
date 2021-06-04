@@ -48,4 +48,12 @@ public class MenuChildServiceImpl implements MenuChildService {
         example.setOrderByClause("seq");
         return menuChildMapper.selectByExample(example);
     }
+
+    @Override
+    public List<MenuChild> listByIdList(List<Integer> idList) {
+        Example example = new Example(MenuChild.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andIn("id", idList);
+        return menuChildMapper.selectByExample(example);
+    }
 }

@@ -1,8 +1,10 @@
 package com.baiyi.caesar.domain.vo.sys;
 
-import com.baiyi.caesar.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
 import java.util.List;
@@ -15,13 +17,12 @@ import java.util.List;
 
 public class MenuVO {
 
-    @EqualsAndHashCode(callSuper = true)
     @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Menu extends BaseVO implements Serializable {
+    public static class Menu  implements Serializable {
         private static final long serialVersionUID = -2841897420522344967L;
         private Integer id;
         private String title;
@@ -30,13 +31,12 @@ public class MenuVO {
         private List<MenuChild> menuChildren;
     }
 
-    @EqualsAndHashCode(callSuper = true)
     @Data
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class MenuChild extends BaseVO implements Serializable {
+    public static class MenuChild  implements Serializable {
         private static final long serialVersionUID = -548378621998577092L;
         private Integer id;
         private Integer menuId;

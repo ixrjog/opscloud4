@@ -4,6 +4,8 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.user.UserParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/14 10:26 上午
@@ -20,5 +22,7 @@ public interface UserService {
     void update(User user);
 
     void updateBySelective(User user);
+
+    List<User> listActive();
 
 }
