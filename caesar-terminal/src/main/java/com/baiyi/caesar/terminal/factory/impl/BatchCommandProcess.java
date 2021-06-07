@@ -6,7 +6,7 @@ import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.message.BatchCommandMessage;
-import com.baiyi.caesar.sshcore.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -35,7 +35,7 @@ public class BatchCommandProcess extends BaseProcess implements ITerminalProcess
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
         BatchCommandMessage batchMessage = (BatchCommandMessage) getMessage(message);
-        JSchSessionMap.setBatch(terminalSession.getSessionId(), batchMessage.getIsBatch());
+        JSchSessionContainer.setBatch(terminalSession.getSessionId(), batchMessage.getIsBatch());
     }
 
     @Override

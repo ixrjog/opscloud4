@@ -37,6 +37,13 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public DataTable<Server> queryUserPermissionServerPage(ServerParam.UserPermissionServerPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<Server> data = serverMapper.queryUserPermissionServerByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
     public void add(Server server) {
         serverMapper.insert(server);
     }

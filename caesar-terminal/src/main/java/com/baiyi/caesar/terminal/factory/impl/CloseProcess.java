@@ -6,7 +6,7 @@ import com.baiyi.caesar.terminal.factory.BaseProcess;
 import com.baiyi.caesar.terminal.factory.ITerminalProcess;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.model.JSchSession;
-import com.baiyi.caesar.sshcore.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
@@ -35,7 +35,7 @@ public class CloseProcess extends BaseProcess implements ITerminalProcess {
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(terminalSession.getSessionId());
+        Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
         if (sessionMap == null) return;
         for (String instanceId : sessionMap.keySet())
             try {

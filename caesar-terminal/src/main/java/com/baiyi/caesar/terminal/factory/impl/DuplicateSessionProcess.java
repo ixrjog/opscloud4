@@ -10,7 +10,7 @@ import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.message.DuplicateSessionMessage;
 import com.baiyi.caesar.sshcore.model.HostSystem;
 import com.baiyi.caesar.sshcore.model.JSchSession;
-import com.baiyi.caesar.sshcore.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -38,7 +38,7 @@ public class DuplicateSessionProcess extends BaseProcess implements ITerminalPro
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
         DuplicateSessionMessage baseMessage = (DuplicateSessionMessage) getMessage(message);
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
+        JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
         assert jSchSession != null;
         HostSystem hostSystem = hostSystemHandler.buildHostSystem(baseMessage.getServerNode(), baseMessage);
         RemoteInvokeHandler.openSSHTermOnSystemForWebTerminal(terminalSession.getSessionId(), baseMessage.getServerNode().getInstanceId(), hostSystem);

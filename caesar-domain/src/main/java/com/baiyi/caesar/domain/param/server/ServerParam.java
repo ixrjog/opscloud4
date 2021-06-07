@@ -5,9 +5,9 @@ import com.baiyi.caesar.domain.param.PageParam;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -17,8 +17,10 @@ import lombok.NoArgsConstructor;
 public class ServerParam {
 
     @Data
+    @Builder
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
+    @AllArgsConstructor
     @ApiModel
     public static class ServerPageQuery extends PageParam implements IExtend {
 
@@ -42,6 +44,30 @@ public class ServerParam {
 
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
+
+        private final int businessType = BusinessTypeEnum.SERVER.getType();
+
+        private Boolean extend;
+
+    }
+
+    @Data
+    @Builder
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class UserPermissionServerPageQuery extends PageParam implements IExtend {
+
+        @ApiModelProperty(value = "用户id")
+        @NotNull
+        private Integer userId;
+
+        @ApiModelProperty(value = "服务器名")
+        private String name;
+
+        @ApiModelProperty(value = "查询ip")
+        private String queryIp;
 
         private final int businessType = BusinessTypeEnum.SERVER.getType();
 

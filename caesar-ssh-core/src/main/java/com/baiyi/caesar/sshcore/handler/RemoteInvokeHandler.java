@@ -91,7 +91,7 @@ public class RemoteInvokeHandler {
                     .hostSystem(hostSystem)
                     .build();
             jSchSession.setSessionOutput(sessionOutput);
-            JSchSessionMap.addSession(jSchSession);
+            JSchSessionContainer.addSession(jSchSession);
 
             channel.connect();
         } catch (Exception e) {
@@ -150,7 +150,7 @@ public class RemoteInvokeHandler {
                     .hostSystem(hostSystem)
                     .build();
             jSchSession.setSessionOutput(sessionOutput);
-            JSchSessionMap.addSession(jSchSession);
+            JSchSessionContainer.addSession(jSchSession);
 
             channel.connect();
         } catch (Exception e) {

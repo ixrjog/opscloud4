@@ -8,7 +8,7 @@ import com.baiyi.caesar.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.message.ResizeMessage;
 import com.baiyi.caesar.sshcore.model.JSchSession;
-import com.baiyi.caesar.sshcore.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
 import org.springframework.stereotype.Component;
@@ -35,10 +35,10 @@ public class ResizeProcess extends BaseProcess implements ITerminalProcess {
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ResizeMessage xtermMessage= (ResizeMessage) getMessage(message);
+        ResizeMessage resizeMessage= (ResizeMessage) getMessage(message);
         try {
-            JSchSession jSchSession = JSchSessionMap.getBySessionId(terminalSession.getSessionId(), xtermMessage.getInstanceId());
-            RemoteInvokeHandler.setChannelPtySize((ChannelShell)jSchSession.getChannel(),xtermMessage);
+            JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
+            RemoteInvokeHandler.setChannelPtySize((ChannelShell)jSchSession.getChannel(),resizeMessage);
         } catch (Exception ignored) {
         }
     }

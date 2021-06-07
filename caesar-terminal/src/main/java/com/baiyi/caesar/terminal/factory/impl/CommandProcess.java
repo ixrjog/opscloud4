@@ -7,7 +7,7 @@ import com.baiyi.caesar.terminal.factory.ITerminalProcess;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.message.CommandMessage;
 import com.baiyi.caesar.sshcore.model.JSchSession;
-import com.baiyi.caesar.sshcore.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -45,13 +45,13 @@ public class CommandProcess extends BaseProcess implements ITerminalProcess {
         if (!isBatch(terminalSession)) {
             printCommand(terminalSession.getSessionId(),commandMessage.getInstanceId(), commandMessage.getData());
         } else {
-            Map<String, JSchSession> sessionMap = JSchSessionMap.getBySessionId(terminalSession.getSessionId());
+            Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());
             sessionMap.keySet().parallelStream().forEach(e -> printCommand(terminalSession.getSessionId(), e, commandMessage.getData()));
         }
     }
 
     private void printCommand(String sessionId, String instanceId, String cmd) {
-        JSchSession jSchSession = JSchSessionMap.getBySessionId(sessionId, instanceId);
+        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) return;
         jSchSession.getCommander().print(cmd);
 

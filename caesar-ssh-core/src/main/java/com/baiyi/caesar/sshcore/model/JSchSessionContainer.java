@@ -6,7 +6,7 @@ import org.apache.commons.collections4.map.HashedMap;
 import java.util.Map;
 
 @Data
-public class JSchSessionMap {
+public class JSchSessionContainer {
 
     private static Map<String, Map<String, JSchSession>> jSchSessionMap = new HashedMap<>();
 
@@ -47,5 +47,27 @@ public class JSchSessionMap {
         Map<String, JSchSession> sessionMap = jSchSessionMap.get(sessionId);
         if (sessionMap != null)
             sessionMap.remove(instanceId);
+    }
+
+    /**
+     * 关闭并移除会话
+     * @param sessionId
+     * @param instanceId
+     */
+    public static void closeSession(String sessionId, String instanceId) {
+        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        if (jSchSession != null) {
+            if (jSchSession.getChannel() != null)
+                jSchSession.getChannel().disconnect();
+            jSchSession.setCommander(null);
+            jSchSession.setChannel(null);
+            jSchSession.setInputToChannel(null);
+            jSchSession.setTermSessionId(null);
+            jSchSession.setSessionOutput(null);
+            jSchSession.setInstanceId(null);
+            jSchSession.setHostSystem(null);
+            jSchSession = null;
+        }
+        removeSession(sessionId, instanceId);
     }
 }

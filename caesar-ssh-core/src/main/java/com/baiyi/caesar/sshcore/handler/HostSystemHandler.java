@@ -16,6 +16,7 @@ import com.baiyi.caesar.service.server.ServerAccountService;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.service.sys.CredentialService;
 import com.baiyi.caesar.service.user.UserPermissionService;
+import com.baiyi.caesar.sshcore.account.SshAccount;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.model.HostSystem;
 import com.baiyi.caesar.sshcore.model.ServerNode;
@@ -51,6 +52,8 @@ public class HostSystemHandler {
 
     @Resource
     private AuthRoleService authRoleService;
+    @Resource
+    private SshAccount sshAccount;
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;
@@ -129,14 +132,11 @@ public class HostSystemHandler {
 
     // 管理员
     private SshCredential getSshCredentialByAdmin(Integer serverId, Integer loginType) {
-        List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(serverId, null, ProtocolEnum.SSH.getType());
-        if (CollectionUtils.isEmpty(accounts)) return null;
-        Map<Integer, List<ServerAccount>> accountCatMap = ServerAccoutUtil.catByType(accounts);
+        Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(serverId);
+        if (accountCatMap == null) return null;
         if (accountCatMap.containsKey(loginType)) {
             return buildSshCredential(accountCatMap.get(loginType).get(0));
         }
-
-
         if (loginType == LoginType.LOW_AUTHORITY) {
             if (accountCatMap.containsKey(LoginType.HIGH_AUTHORITY)) {
                 return buildSshCredential(accountCatMap.get(LoginType.HIGH_AUTHORITY).get(0));

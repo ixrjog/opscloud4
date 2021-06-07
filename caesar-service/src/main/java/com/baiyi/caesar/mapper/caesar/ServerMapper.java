@@ -9,4 +9,6 @@ import java.util.List;
 public interface ServerMapper extends Mapper<Server> {
 
     List<Server> queryServerByParam(ServerParam.ServerPageQuery pageQuery);
+
+    List<Server> queryUserPermissionServerByParam(ServerParam.UserPermissionServerPageQuery pageQuery);
 }

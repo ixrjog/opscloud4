@@ -11,7 +11,7 @@ import com.baiyi.caesar.sshcore.config.TerminalConfig;
 import com.baiyi.caesar.sshcore.handler.AuditRecordHandler;
 import com.baiyi.caesar.sshcore.handler.HostSystemHandler;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
-import com.baiyi.caesar.sshcore.model.JSchSessionMap;
+import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -47,7 +47,7 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
 
 
     protected Boolean isBatch(TerminalSession terminalSession) {
-        Boolean isBatch = JSchSessionMap.getBatchBySessionId(terminalSession.getSessionId());
+        Boolean isBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
         return isBatch == null ? false : isBatch;
     }
 
