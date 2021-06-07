@@ -50,7 +50,7 @@ public class MenuPacker {
         return BeanCopierUtil.copyListProperties(menuList, Menu.class);
     }
 
-    public List<MenuChild> toChildDOList(List<MenuVO.MenuChild> menuChildren) {
+    public List<MenuChild> toChildDOList(List<MenuVO.Child> menuChildren) {
         return BeanCopierUtil.copyListProperties(menuChildren, MenuChild.class);
     }
 
@@ -58,8 +58,8 @@ public class MenuPacker {
         return BeanCopierUtil.copyListProperties(menuList, MenuVO.Menu.class);
     }
 
-    public List<MenuVO.MenuChild> toChildVOList(List<MenuChild> menuChildList) {
-        return BeanCopierUtil.copyListProperties(menuChildList, MenuVO.MenuChild.class);
+    public List<MenuVO.Child> toChildVOList(List<MenuChild> menuChildList) {
+        return BeanCopierUtil.copyListProperties(menuChildList, MenuVO.Child.class);
     }
 
     public List<TreeVO.Tree> wrapTree() {
@@ -87,7 +87,6 @@ public class MenuPacker {
                 .build();
     }
 
-
     public List<MenuVO.Menu> toVOList(Integer roleId) {
         List<AuthRoleMenu> authRoleMenuList = authRoleMenuService.listByRoleId(roleId);
         if (CollectionUtils.isEmpty(authRoleMenuList))
@@ -101,7 +100,7 @@ public class MenuPacker {
                 .collect(Collectors.groupingBy(MenuChild::getMenuId));
         List<MenuVO.Menu> menuList = Lists.newArrayListWithCapacity(map.size());
         map.forEach((k, y) -> {
-            List<MenuVO.MenuChild> sort = toChildVOList(y.stream()
+            List<MenuVO.Child> sort = toChildVOList(y.stream()
                     .sorted(Comparator.comparing(MenuChild::getSeq))
                     .collect(Collectors.toList()));
             Menu menu = menuService.getById(k);
@@ -110,7 +109,7 @@ public class MenuPacker {
                     .title(menu.getTitle())
                     .icon(menu.getIcon())
                     .seq(menu.getSeq())
-                    .menuChildren(sort)
+                    .children(sort)
                     .build();
             menuList.add(menuVO);
         });

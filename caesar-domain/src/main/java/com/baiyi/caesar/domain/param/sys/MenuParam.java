@@ -28,7 +28,7 @@ public class MenuParam {
     @ApiModel
     public static class MenuChildSave {
         @ApiModelProperty(value = "子菜单列表")
-        private List<MenuVO.MenuChild> menuChildList;
+        private List<MenuVO.Child> menuChildList;
     }
 
 

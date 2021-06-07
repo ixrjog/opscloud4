@@ -4,11 +4,13 @@ import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
-import com.baiyi.caesar.facade.UserFacade;
-import com.baiyi.caesar.facade.user.UserPermissionFacade;
 import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
 import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
+import com.baiyi.caesar.domain.vo.user.UserUIVO;
 import com.baiyi.caesar.domain.vo.user.UserVO;
+import com.baiyi.caesar.facade.UserFacade;
+import com.baiyi.caesar.facade.user.UserPermissionFacade;
+import com.baiyi.caesar.facade.user.UserUIFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -31,7 +33,16 @@ public class UserController {
     private UserFacade userFacade;
 
     @Resource
+    private UserUIFacade uiFacade;
+
+    @Resource
     private UserPermissionFacade permissionFacade;
+
+    @ApiOperation(value = "查询用户前端界面信息(菜单&UI鉴权)")
+    @GetMapping(value = "/ui/info/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserUIVO.UIInfo> getUserUIInfo() {
+        return new HttpResult<>(uiFacade.buildUIInfo());
+    }
 
     @ApiOperation(value = "分页查询用户列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

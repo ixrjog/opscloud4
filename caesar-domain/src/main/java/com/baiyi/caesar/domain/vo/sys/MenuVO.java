@@ -28,7 +28,7 @@ public class MenuVO {
         private String title;
         private String icon;
         private Integer seq;
-        private List<MenuChild> menuChildren;
+        private List<Child> children;
     }
 
     @Data
@@ -36,7 +36,7 @@ public class MenuVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class MenuChild  implements Serializable {
+    public static class Child implements Serializable {
         private static final long serialVersionUID = -548378621998577092L;
         private Integer id;
         private Integer menuId;

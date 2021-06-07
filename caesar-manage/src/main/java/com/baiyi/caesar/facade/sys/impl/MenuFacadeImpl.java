@@ -105,7 +105,7 @@ public class MenuFacadeImpl implements MenuFacade {
     }
 
     @Override
-    public List<MenuVO.MenuChild> queryMenuChild(Integer id) {
+    public List<MenuVO.Child> queryMenuChild(Integer id) {
         List<MenuChild> menuChildList = menuChildService.listByMenuId(id);
         return menuPacker.toChildVOList(menuChildList);
     }

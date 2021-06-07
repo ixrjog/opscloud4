@@ -65,7 +65,7 @@ public class MenuController {
 
     @ApiOperation(value = "查询子菜单")
     @GetMapping(value = "/child/query", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<MenuVO.MenuChild>> queryMenuChild(@RequestParam Integer id) {
+    public HttpResult<List<MenuVO.Child>> queryMenuChild(@RequestParam Integer id) {
         return new HttpResult<>(menuFacade.queryMenuChild(id));
     }
 

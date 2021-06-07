@@ -35,7 +35,6 @@ public class AuthResourceServiceImpl implements AuthResourceService {
         return new DataTable<>(data, page.getTotal());
     }
 
-
     @Override
     public DataTable<AuthResource> queryPageByParam(AuthResourceParam.AuthResourcePageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());

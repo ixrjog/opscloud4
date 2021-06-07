@@ -20,7 +20,7 @@ public interface MenuFacade {
 
     List<MenuVO.Menu> queryMenu();
 
-    List<MenuVO.MenuChild> queryMenuChild(Integer id);
+    List<MenuVO.Child> queryMenuChild(Integer id);
 
     void delMenuById(Integer id);
 
