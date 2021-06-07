@@ -1,5 +1,6 @@
 package com.baiyi.caesar.domain.vo.sys;
 
+
 import io.swagger.annotations.ApiModel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,7 +23,7 @@ public class MenuVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Menu  implements Serializable {
+    public static class Menu implements Serializable {
         private static final long serialVersionUID = -2841897420522344967L;
         private Integer id;
         private String title;
