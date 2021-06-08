@@ -9,6 +9,7 @@ import com.baiyi.caesar.sshcore.model.HostSystem;
 import com.baiyi.caesar.sshcore.model.JSchSession;
 import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import com.baiyi.caesar.sshcore.task.server.ServerSentOutputTask;
+import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.TerminalUtil;
 import com.github.fonimus.ssh.shell.PromptColor;
 import com.github.fonimus.ssh.shell.SshContext;
@@ -48,9 +49,8 @@ public final class SshLoginCommand {
 
     @ShellMethod(value = "Login server", key = "login")
     public void login(@ShellOption(help = "Server id") int id, @ShellOption(help = "Account name", defaultValue = "") String account) {
-
         ServerSession serverSession = helper.getSshSession();
-        String sessionId = String.valueOf(serverSession.getSessionId());
+        String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
         // 线程启动
         Terminal terminal = getTerminal();
         Runnable run = new ServerSentOutputTask(sessionId, serverSession, terminal);
@@ -78,21 +78,21 @@ public final class SshLoginCommand {
                     printCommand(sessionId, instanceId, (char) ch);
                 }
                 if (isClosed(sessionId, instanceId)) {
-                    sshClosed("用户正常退出登录! 耗时:%s/s", inst1);
+                    sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
                     Thread.sleep(30L);
                     break;
                 }
                 Thread.sleep(25L);
             } catch (Exception e) {
                 e.printStackTrace();
-                sshClosed("服务端连接已断开! 耗时:%s/s", inst1);
+                sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
                 break;
             }
         }
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
-    private void sshClosed(String logout, Instant inst1) {
+    private void sessionClosed(String logout, Instant inst1) {
         helper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
     }
 

@@ -9,6 +9,7 @@
     <result column="env_name" jdbcType="VARCHAR" property="envName" />
     <result column="env_type" jdbcType="INTEGER" property="envType" />
     <result column="color" jdbcType="VARCHAR" property="color" />
+    <result column="prompt_color" jdbcType="INTEGER" property="promptColor" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />

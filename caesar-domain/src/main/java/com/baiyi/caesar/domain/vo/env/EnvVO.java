@@ -29,6 +29,9 @@ public class EnvVO {
         @ApiModelProperty(value = "颜色值")
         private String color;
 
+        @ApiModelProperty(value = "终端提示色")
+        private Integer promptColor;
+
         @ApiModelProperty(value = "环境值", example = "1")
         private Integer envType;
 

@@ -1,8 +1,9 @@
 package com.baiyi.caesar.domain.generator.caesar;
 
-import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table(name = "sys_env")
@@ -18,6 +19,9 @@ public class Env {
     private Integer envType;
 
     private String color;
+
+    @Column(name = "prompt_color")
+    private Integer promptColor;
 
     private String comment;
 
