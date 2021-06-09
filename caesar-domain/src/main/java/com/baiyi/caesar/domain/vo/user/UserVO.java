@@ -51,6 +51,9 @@ public class UserVO {
 
         private List<UserGroupVO.UserGroup> userGroups;
 
+        @ApiModelProperty(value = "用户凭证")
+        private UserCredentialVO.CredentialDetails credentialDetails;
+
         @ApiModelProperty(value = "主键")
         private Integer id;
 

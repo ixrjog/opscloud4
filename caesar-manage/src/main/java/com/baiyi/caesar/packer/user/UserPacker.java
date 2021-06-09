@@ -5,7 +5,7 @@ import com.baiyi.caesar.common.util.RegexUtil;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.auth.AuthRolePacker;
-import com.baiyi.caesar.packer.base.SecretParcker;
+import com.baiyi.caesar.packer.base.SecretPacker;
 import com.baiyi.caesar.util.ExtendUtil;
 import com.baiyi.caesar.domain.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
@@ -21,10 +21,13 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class UserPacker extends SecretParcker {
+public class UserPacker extends SecretPacker {
 
     @Resource
     private AuthRolePacker authRolePacker;
+
+    @Resource
+    private UserCredentialPacker userCredentialPacker;
 
     public List<UserVO.User> wrapVOList(List<User> data) {
         return BeanCopierUtil.copyListProperties(data, UserVO.User.class);
@@ -35,7 +38,7 @@ public class UserPacker extends SecretParcker {
         return voList.stream().peek(e -> {
             e.setPassword("");
             if (ExtendUtil.isExtend(iExtend)) {
-                authRolePacker.wrap(e);
+                wrap(e);
             }
         }).collect(Collectors.toList());
     }
@@ -49,5 +52,14 @@ public class UserPacker extends SecretParcker {
         return pre;
     }
 
+    public UserVO.User wrap(User user) {
+        user.setPassword("");
+        return wrap(BeanCopierUtil.copyProperties(user, UserVO.User.class));
+    }
 
+    public UserVO.User wrap(UserVO.User user) {
+        authRolePacker.wrap(user);
+        userCredentialPacker.wrap(user);
+        return user;
+    }
 }

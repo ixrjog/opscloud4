@@ -1,12 +1,15 @@
 package com.baiyi.caesar.domain.vo.user;
 
+import com.baiyi.caesar.domain.vo.base.BaseVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -16,17 +19,24 @@ import java.util.Date;
 public class UserCredentialVO {
 
     @Data
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class UserCredential {
+    public static class CredentialDetails {
+        private Map<String, List<Credential>> credentialMap;
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Credential extends BaseVO {
         @ApiModelProperty(value = "主键")
         private Integer id;
 
         @ApiModelProperty(value = "用户id")
         private Integer userId;
-
-        @ApiModelProperty(value = "用户名")
-        private String username;
 
         @ApiModelProperty(value = "标题")
         private String title;
@@ -35,18 +45,20 @@ public class UserCredentialVO {
         private Integer credentialType;
 
         @ApiModelProperty(value = "凭据内容")
+        @NotNull(message = "凭据不能为空")
         private String credential;
 
         @ApiModelProperty(value = "凭据指纹")
         private String fingerprint;
 
-        @ApiModelProperty(value = "创建时间")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date createTime;
+        @ApiModelProperty(value = "有效")
+        private Boolean valid;
 
-        @ApiModelProperty(value = "更新时间")
+        @ApiModelProperty(value = "有效期")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date updateTime;
+        private Date expiredTime;
+
+        private String comment;
     }
 
 }

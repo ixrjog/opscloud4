@@ -41,6 +41,12 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    public UserVO.User getUserDetails() {
+        User user = userService.getByUsername(SessionUtil.getUsername());
+        return userPacker.wrap(user);
+    }
+
+    @Override
     public void addUser(UserVO.User user) {
         User pre = userPacker.toDO(user);
         if (StringUtils.isEmpty(pre.getPassword()))

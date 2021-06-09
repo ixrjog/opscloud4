@@ -12,7 +12,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class SecretParcker {
+public class SecretPacker {
 
     @Resource
     protected StringEncryptor stringEncryptor;

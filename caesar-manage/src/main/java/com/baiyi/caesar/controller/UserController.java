@@ -5,10 +5,12 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
 import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
+import com.baiyi.caesar.domain.vo.user.UserCredentialVO;
 import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
 import com.baiyi.caesar.domain.vo.user.UserUIVO;
 import com.baiyi.caesar.domain.vo.user.UserVO;
 import com.baiyi.caesar.facade.UserFacade;
+import com.baiyi.caesar.facade.user.UserCredentialFacade;
 import com.baiyi.caesar.facade.user.UserPermissionFacade;
 import com.baiyi.caesar.facade.user.UserUIFacade;
 import io.swagger.annotations.Api;
@@ -33,6 +35,9 @@ public class UserController {
     private UserFacade userFacade;
 
     @Resource
+    private UserCredentialFacade userCredentialFacade;
+
+    @Resource
     private UserUIFacade uiFacade;
 
     @Resource
@@ -42,6 +47,19 @@ public class UserController {
     @GetMapping(value = "/ui/info/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<UserUIVO.UIInfo> getUserUIInfo() {
         return new HttpResult<>(uiFacade.buildUIInfo());
+    }
+
+    @ApiOperation(value = "查询用户详情")
+    @GetMapping(value = "/details/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserVO.User> getUserDetails() {
+        return new HttpResult<>(userFacade.getUserDetails());
+    }
+
+    @ApiOperation(value = "保存用户凭证")
+    @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.Credential credential) {
+        userCredentialFacade.saveUserCredential(credential);
+        return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "分页查询用户列表")

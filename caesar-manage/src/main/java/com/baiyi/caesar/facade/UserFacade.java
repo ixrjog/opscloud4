@@ -15,6 +15,8 @@ public interface UserFacade {
 
     DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery);
 
+    UserVO.User getUserDetails();
+
     void addUser(UserVO.User user);
 
     void updateUser(UserVO.User user);
