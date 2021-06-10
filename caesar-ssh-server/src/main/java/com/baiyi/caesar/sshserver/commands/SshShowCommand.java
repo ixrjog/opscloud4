@@ -1,4 +1,4 @@
-package com.baiyi.caesar.sshserver.shell;
+package com.baiyi.caesar.sshserver.commands;
 
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Env;
@@ -8,11 +8,9 @@ import com.baiyi.caesar.domain.param.server.ServerParam;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.service.sys.EnvService;
 import com.baiyi.caesar.sshcore.account.SshAccount;
+import com.baiyi.caesar.sshserver.*;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.TableUtil;
-import com.github.fonimus.ssh.shell.*;
-import com.github.fonimus.ssh.shell.commands.ColorAligner;
-import com.github.fonimus.ssh.shell.commands.SshShellComponent;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;

@@ -18,5 +18,10 @@
             <artifactId>caesar-ssh-core</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-service</artifactId>
+        </dependency>
+
     </dependencies>
 </project>
