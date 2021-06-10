@@ -22,6 +22,12 @@ public class DsInstanceServiceImpl implements DsInstanceService {
     @Resource
     private DatasourceInstanceMapper dsInstanceMapper;
 
+    @Override
+    public DatasourceInstance getById(Integer id){
+        return dsInstanceMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public List<DatasourceInstance> queryByParam(DatasourceInstanceParam.DsInstanceQuery query) {
         Example example = new Example(DatasourceInstance.class);
         Example.Criteria criteria = example.createCriteria();

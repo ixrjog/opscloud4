@@ -6,7 +6,7 @@ import com.baiyi.caesar.common.datasource.BaseDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.model.Authorization;
-import com.baiyi.caesar.factory.DsFactory;
+import com.baiyi.caesar.datasource.factory.DsFactory;
 import com.baiyi.caesar.ldap.entry.Group;
 import com.baiyi.caesar.ldap.handler.LdapHandler;
 import com.baiyi.caesar.service.datasource.DsConfigService;

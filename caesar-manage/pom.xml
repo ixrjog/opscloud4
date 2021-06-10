@@ -24,11 +24,6 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-ldap</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
             <artifactId>caesar-guacamole</artifactId>
         </dependency>
 
@@ -43,23 +38,15 @@
         </dependency>
 
         <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-account</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
 
-        <!--   Shedlock 分布式任务锁 -->
-        <dependency>
-            <groupId>net.javacrumbs.shedlock</groupId>
-            <artifactId>shedlock-spring</artifactId>
-            <version>4.21.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>net.javacrumbs.shedlock</groupId>
-            <artifactId>shedlock-provider-jdbc-template</artifactId>
-            <version>4.21.0</version>
-        </dependency>
-        <!--   Shedlock 分布式任务锁 -->
     </dependencies>
     <profiles>
         <profile>

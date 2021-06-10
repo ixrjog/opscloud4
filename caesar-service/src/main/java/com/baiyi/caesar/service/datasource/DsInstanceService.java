@@ -12,6 +12,8 @@ import java.util.List;
  */
 public interface DsInstanceService {
 
+    DatasourceInstance getById(Integer id);
+
     List<DatasourceInstance> queryByParam(DatasourceInstanceParam.DsInstanceQuery query);
 
     void add(DatasourceInstance datasourceInstance);

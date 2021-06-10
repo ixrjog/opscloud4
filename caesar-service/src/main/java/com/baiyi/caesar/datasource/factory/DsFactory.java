@@ -1,4 +1,4 @@
-package com.baiyi.caesar.factory;
+package com.baiyi.caesar.datasource.factory;
 
 import com.baiyi.caesar.common.datasource.BaseDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;

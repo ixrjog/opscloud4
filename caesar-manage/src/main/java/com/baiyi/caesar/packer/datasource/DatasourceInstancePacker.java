@@ -23,6 +23,14 @@ public class DatasourceInstancePacker {
     @Resource
     private TagPacker tagPacker;
 
+    public static DatasourceInstanceVO.Instance toVO(DatasourceInstance datasourceInstance){
+        return BeanCopierUtil.copyProperties(datasourceInstance, DatasourceInstanceVO.Instance.class);
+    }
+
+    public void wrap(DatasourceInstanceVO.Instance instance){
+        tagPacker.wrap(instance);
+    }
+
     public List<DatasourceInstanceVO.Instance> wrapVOList(List<DatasourceInstance> data) {
         return BeanCopierUtil.copyListProperties(data, DatasourceInstanceVO.Instance.class);
     }
@@ -32,8 +40,8 @@ public class DatasourceInstancePacker {
         if (!ExtendUtil.isExtend(iExtend))
             return voList;
 
-        return voList.stream().peek(e -> {
-            tagPacker.wrap(e);
-        }).collect(Collectors.toList());
+        return voList.stream().peek(e ->
+            wrap(e)
+        ).collect(Collectors.toList());
     }
 }

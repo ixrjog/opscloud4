@@ -48,6 +48,20 @@
             <version>3.1.7.RELEASE</version>
         </dependency>
 
+        <!--   Shedlock 分布式任务锁 -->
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-spring</artifactId>
+            <version>4.21.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>net.javacrumbs.shedlock</groupId>
+            <artifactId>shedlock-provider-jdbc-template</artifactId>
+            <version>4.21.0</version>
+        </dependency>
+        <!--   Shedlock 分布式任务锁 -->
+
 
     </dependencies>
 
