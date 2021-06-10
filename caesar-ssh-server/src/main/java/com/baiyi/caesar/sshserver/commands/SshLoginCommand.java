@@ -1,4 +1,4 @@
-package com.baiyi.caesar.sshserver.shell;
+package com.baiyi.caesar.sshserver.commands;
 
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.generator.caesar.Server;
@@ -9,13 +9,12 @@ import com.baiyi.caesar.sshcore.model.HostSystem;
 import com.baiyi.caesar.sshcore.model.JSchSession;
 import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
 import com.baiyi.caesar.sshcore.task.server.ServerSentOutputTask;
+import com.baiyi.caesar.sshserver.PromptColor;
+import com.baiyi.caesar.sshserver.SshContext;
+import com.baiyi.caesar.sshserver.SshShellCommandFactory;
+import com.baiyi.caesar.sshserver.SshShellHelper;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.TerminalUtil;
-import com.github.fonimus.ssh.shell.PromptColor;
-import com.github.fonimus.ssh.shell.SshContext;
-import com.github.fonimus.ssh.shell.SshShellCommandFactory;
-import com.github.fonimus.ssh.shell.SshShellHelper;
-import com.github.fonimus.ssh.shell.commands.SshShellComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
@@ -115,13 +114,5 @@ public final class SshLoginCommand {
         if (jSchSession == null) throw new Exception();
         jSchSession.getCommander().print(cmd);
     }
-
-
-//    PublickeyAuthenticator
-//    @Bean
-//    public SshShellAuthenticationProvider sshShellAuthenticationProvider() {
-//        return (user, pass, serverSession) -> user.equals(pass);
-//    }
-
 
 }
