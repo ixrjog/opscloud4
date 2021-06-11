@@ -1,6 +1,6 @@
 package com.baiyi.caesar.facade.server.impl;
 
-import com.baiyi.caesar.common.annotation.TagClear;
+import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.DataTable;

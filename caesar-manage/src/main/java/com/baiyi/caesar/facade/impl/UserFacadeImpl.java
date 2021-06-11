@@ -3,15 +3,16 @@ package com.baiyi.caesar.facade.impl;
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.common.util.SessionUtil;
 import com.baiyi.caesar.domain.DataTable;
+import com.baiyi.caesar.domain.annotation.Encrypt;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
+import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
+import com.baiyi.caesar.domain.vo.user.UserVO;
 import com.baiyi.caesar.facade.UserFacade;
 import com.baiyi.caesar.facade.server.ServerGroupFacade;
 import com.baiyi.caesar.packer.user.UserPacker;
 import com.baiyi.caesar.service.user.UserService;
-import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
-import com.baiyi.caesar.domain.vo.user.UserVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
@@ -55,6 +56,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    @Encrypt
     public void updateUser(UserVO.User user) {
         User pre = userPacker.toDO(user);
         userService.updateBySelective(pre);
@@ -66,6 +68,4 @@ public class UserFacadeImpl implements UserFacade {
         queryParam.setUserId(user.getId());
         return serverGroupFacade.queryServerTree(queryParam, user);
     }
-
-
 }

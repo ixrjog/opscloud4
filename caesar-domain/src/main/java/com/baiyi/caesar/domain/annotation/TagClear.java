@@ -1,4 +1,4 @@
-package com.baiyi.caesar.common.annotation;
+package com.baiyi.caesar.domain.annotation;
 
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 

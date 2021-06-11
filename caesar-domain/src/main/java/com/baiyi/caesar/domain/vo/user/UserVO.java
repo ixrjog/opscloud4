@@ -1,6 +1,9 @@
 package com.baiyi.caesar.domain.vo.user;
 
+import com.baiyi.caesar.domain.annotation.DesensitizedField;
+import com.baiyi.caesar.domain.annotation.Encrypt;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
+import com.baiyi.caesar.domain.types.SensitiveTypeEnum;
 import com.baiyi.caesar.domain.vo.auth.AuthRoleVO;
 import com.baiyi.caesar.domain.vo.base.BaseVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -63,6 +66,8 @@ public class UserVO {
         @ApiModelProperty(value = "前端框架专用")
         private String uuid;
 
+        @DesensitizedField(type = SensitiveTypeEnum.PASSWORD)
+        @Encrypt
         @ApiModelProperty(value = "密码")
         private String password;
 
@@ -86,6 +91,7 @@ public class UserVO {
         @ApiModelProperty(value = "微信")
         private String wechat;
 
+        @DesensitizedField(type = SensitiveTypeEnum.MOBILE_PHONE)
         @ApiModelProperty(value = "手机")
         private String phone;
 

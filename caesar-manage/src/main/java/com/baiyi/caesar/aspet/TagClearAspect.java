@@ -1,6 +1,6 @@
 package com.baiyi.caesar.aspet;
 
-import com.baiyi.caesar.common.annotation.TagClear;
+import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.service.tag.BusinessTagService;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -27,7 +27,7 @@ public class TagClearAspect {
     @Resource
     private BusinessTagService businessTagService;
 
-    @Pointcut(value = "@annotation(com.baiyi.caesar.common.annotation.TagClear)")
+    @Pointcut(value = "@annotation(com.baiyi.caesar.domain.annotation.TagClear)")
     public void annotationPoint() {
     }
 
