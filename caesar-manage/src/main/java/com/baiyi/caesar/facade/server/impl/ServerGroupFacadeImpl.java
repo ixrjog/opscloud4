@@ -1,7 +1,7 @@
 package com.baiyi.caesar.facade.server.impl;
 
 import com.baiyi.caesar.algorithm.ServerAlgorithm;
-import com.baiyi.caesar.common.annotation.TagClear;
+import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.common.base.AccessLevel;
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
