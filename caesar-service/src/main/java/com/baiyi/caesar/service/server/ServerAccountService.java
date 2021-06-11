@@ -22,4 +22,8 @@ public interface ServerAccountService {
     DataTable<ServerAccount> queryPageByParam(ServerAccountParam.ServerAccountPageQuery pageQuery);
 
     List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(Integer serverId, Integer accountType, String protocol);
+
+    ServerAccount getPermissionServerAccountByUsernameAndProtocol(Integer serverId,
+                                                                  String username,
+                                                                  String protocol);
 }

@@ -11,4 +11,8 @@ public interface ServerAccountMapper extends Mapper<ServerAccount> {
     List<ServerAccount> getPermissionServerAccountByTypeAndProtocol(@Param("serverId") Integer serverId,
                                                                     @Param("accountType") Integer accountType,
                                                                     @Param("protocol") String protocol);
+
+    ServerAccount getPermissionServerAccountByUsernameAndProtocol(@Param("serverId") Integer serverId,
+                                             @Param("username") String username,
+                                             @Param("protocol") String protocol);
 }

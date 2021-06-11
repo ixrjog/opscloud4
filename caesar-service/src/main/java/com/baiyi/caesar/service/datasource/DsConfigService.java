@@ -2,7 +2,7 @@ package com.baiyi.caesar.service.datasource;
 
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
-import com.baiyi.caesar.domain.param.datasource.DatasourceConfigParam;
+import com.baiyi.caesar.domain.param.datasource.DsConfigParam;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public interface DsConfigService {
 
     DatasourceConfig getById(Integer id);
 
-    DataTable<DatasourceConfig> queryPageByParam(DatasourceConfigParam.DatasourceConfigPageQuery pageQuery);
+    DataTable<DatasourceConfig> queryPageByParam(DsConfigParam.DsConfigPageQuery pageQuery);
 
     void add(DatasourceConfig datasourceConfig);
 

@@ -20,23 +20,29 @@ public class ServerSentOutputTask implements Runnable {
     ServerSession serverSession;
     String sessionId;
     Terminal terminal;
+    Boolean stop;
 
     public ServerSentOutputTask(String sessionId, ServerSession serverSession, Terminal terminal) {
         this.sessionId = sessionId;
         this.serverSession = serverSession;
         this.terminal = terminal;
+        this.stop = false;
+    }
+
+    public void stop() {
+        this.stop = true;
     }
 
     @Override
     public void run() {
-        while (serverSession.isOpen()) {
+        while (serverSession.isOpen() && !stop) {
             List<SessionOutput> outputList = SessionOutputUtil.getOutput(sessionId);
             try {
                 if (CollectionUtils.isNotEmpty(outputList)) {
                     try {
                         if (CollectionUtils.isNotEmpty(outputList)) {
                             outputList.forEach(e ->
-                                        terminal.writer().append(e.getOutput())
+                                    terminal.writer().append(e.getOutput())
                             );
                             terminal.flush();
                         }

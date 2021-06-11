@@ -20,6 +20,7 @@ import com.baiyi.caesar.sshserver.SshShellCommandFactory;
 import com.baiyi.caesar.sshserver.SshShellHelper;
 import com.baiyi.caesar.sshserver.SshShellProperties;
 import com.baiyi.caesar.sshserver.auth.SshAuthentication;
+import com.baiyi.caesar.sshserver.commands.properties.CommandProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.Availability;
 

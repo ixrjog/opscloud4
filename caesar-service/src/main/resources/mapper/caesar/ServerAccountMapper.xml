@@ -31,4 +31,13 @@
         </if>
     </select>
 
+    <select id="getPermissionServerAccountByUsernameAndProtocol"
+            resultMap="BaseResultMap">
+      select * from server_account
+         where id in ( select server_account_id from server_account_permission where server_id = #{serverId} )
+         and protocol = #{protocol}
+         and username = #{username}
+         limit 1
+    </select>
+
 </mapper>

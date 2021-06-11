@@ -9,14 +9,14 @@ import com.google.common.base.Joiner;
  */
 public class TableUtil {
 
-    public static final String DIVIDING_LINE = "------+---------------------------------+-------+------------+--------------------------------+----------------------------------";
+    public static final String DIVIDING_LINE = "------+---------------------------------+---------------------------------+------------+--------------------------------+-------------------------------------";
 
     public static final String TABLE_HEADERS = buildTableHeaders();
 
     public static String buildTableHeaders() {
         return Joiner.on("").join(String.format(" %-5s|", "ID"),
                 String.format(" %-27s|", "服务器名称"),
-                String.format(" %-4s|", "序号"),
+                String.format(" %-28s|", "服务器组"),
                 String.format(" %-9s|", "环境"),
                 String.format(" %-31s|", "IP"),
                 String.format(" %-4s", "账户"));

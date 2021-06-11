@@ -13,6 +13,7 @@
         <module>caesar-terminal</module>
         <module>caesar-ssh-server</module>
         <module>caesar-ssh-core</module>
+        <module>caesar-account</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -202,6 +203,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>caesar-ssh-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-account</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

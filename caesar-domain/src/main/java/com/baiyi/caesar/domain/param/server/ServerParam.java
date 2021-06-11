@@ -69,7 +69,7 @@ public class ServerParam {
         @ApiModelProperty(value = "查询ip")
         private String queryIp;
 
-        private final int businessType = BusinessTypeEnum.SERVER.getType();
+        private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
         private Boolean extend;
 

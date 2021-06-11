@@ -63,6 +63,9 @@ public class ServerVO {
         @NotNull(message = "服务器名称不能为空")
         private String name;
 
+        @ApiModelProperty(value = "显示名称")
+        private String displayName;
+
         @ApiModelProperty(value = "服务器组id", example = "1")
         @NotNull(message = "服务器组不能为空")
         private Integer serverGroupId;

@@ -1,7 +1,7 @@
 package com.baiyi.caesar.service.datasource;
 
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
-import com.baiyi.caesar.domain.param.datasource.DatasourceInstanceParam;
+import com.baiyi.caesar.domain.param.datasource.DsInstanceParam;
 
 import java.util.List;
 
@@ -12,7 +12,9 @@ import java.util.List;
  */
 public interface DsInstanceService {
 
-    List<DatasourceInstance> queryByParam(DatasourceInstanceParam.DsInstanceQuery query);
+    DatasourceInstance getById(Integer id);
+
+    List<DatasourceInstance> queryByParam(DsInstanceParam.DsInstanceQuery query);
 
     void add(DatasourceInstance datasourceInstance);
 

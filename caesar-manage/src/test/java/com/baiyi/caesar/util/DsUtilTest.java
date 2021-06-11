@@ -6,7 +6,7 @@ import com.baiyi.caesar.common.datasource.BaseDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.caesar.common.util.DsUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
-import com.baiyi.caesar.factory.DsFactory;
+import com.baiyi.caesar.datasource.factory.DsFactory;
 import com.baiyi.caesar.service.datasource.DsConfigService;
 import org.junit.jupiter.api.Test;
 

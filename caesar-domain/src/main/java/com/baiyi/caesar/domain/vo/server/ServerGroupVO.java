@@ -7,9 +7,7 @@ import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
 import com.baiyi.caesar.domain.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -29,6 +27,8 @@ public class ServerGroupVO {
 
     }
 
+    @Builder
+    @AllArgsConstructor
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
