@@ -3,8 +3,8 @@ package com.baiyi.caesar.datasource.account;
 import com.baiyi.caesar.BaseUnit;
 import com.baiyi.caesar.account.factory.AccountHandlerFactory;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
-import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
-import com.baiyi.caesar.packer.datasource.DatasourceInstancePacker;
+import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.caesar.packer.datasource.DsInstancePacker;
 import com.baiyi.caesar.service.datasource.DsInstanceService;
 import org.junit.jupiter.api.Test;
 
@@ -21,19 +21,14 @@ public class AccountTest extends BaseUnit {
     private DsInstanceService dsInstancService;
 
     @Resource
-    private DatasourceInstancePacker dsInstancePacker;
-
-//    @Resource
-//    private LdapAccountHandler ldapAccountHandler;
+    private DsInstancePacker dsInstancePacker;
 
     @Test
     void pullAccount() {
         DatasourceInstance dsInstance = dsInstancService.getById(1);
-        DatasourceInstanceVO.Instance instance = DatasourceInstancePacker.toVO(dsInstance);
+        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
         dsInstancePacker.wrap(instance);
         AccountHandlerFactory.getAccountByKey("LDAP").pullAccount(instance);
-
-       //  ldapAccountHandler.pullAccount(instance);
     }
 
 }

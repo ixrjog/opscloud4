@@ -1,7 +1,6 @@
 package com.baiyi.caesar.account;
 
-import com.baiyi.caesar.common.annotation.SingleTask;
-import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
+import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
 
 /**
  * @Author baiyi
@@ -10,8 +9,7 @@ import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
  */
 public interface IAccount {
 
-    @SingleTask(name = "PullLdapAccount", lockSecond = 5 * 60)
-    void pullAccount(DatasourceInstanceVO.Instance dsInstance);
+    void pullAccount(DsInstanceVO.Instance dsInstance);
 
     String getKey();
 }

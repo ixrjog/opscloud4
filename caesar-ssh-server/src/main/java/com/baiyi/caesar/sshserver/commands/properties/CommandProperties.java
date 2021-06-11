@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.caesar.sshserver.commands;
+package com.baiyi.caesar.sshserver.commands.properties;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

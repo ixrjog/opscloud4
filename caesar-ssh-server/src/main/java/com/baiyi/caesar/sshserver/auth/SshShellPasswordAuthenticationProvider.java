@@ -15,7 +15,6 @@ import java.util.UUID;
 @Slf4j
 public class SshShellPasswordAuthenticationProvider implements SshShellAuthenticationProvider {
 
-
     private final String user;
 
     private final String password;

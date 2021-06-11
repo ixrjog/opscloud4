@@ -1,6 +1,5 @@
 package com.baiyi.caesar.service.auth.impl;
 
-import com.baiyi.caesar.domain.generator.caesar.AuthResource;
 import com.baiyi.caesar.domain.generator.caesar.AuthUserRole;
 import com.baiyi.caesar.mapper.caesar.AuthUserRoleMapper;
 import com.baiyi.caesar.service.auth.AuthUserRoleService;
@@ -22,12 +21,12 @@ public class AuthUserRoleServiceImpl implements AuthUserRoleService {
     private AuthUserRoleMapper authUserRoleMapper;
 
     @Override
-    public void add(AuthUserRole authUserRole){
+    public void add(AuthUserRole authUserRole) {
         authUserRoleMapper.insert(authUserRole);
     }
 
     @Override
-    public void deleteById(Integer id){
+    public void deleteById(Integer id) {
         authUserRoleMapper.deleteByPrimaryKey(id);
     }
 
@@ -43,8 +42,8 @@ public class AuthUserRoleServiceImpl implements AuthUserRoleService {
     public AuthUserRole queryByUniqueKey(AuthUserRole authUserRole) {
         Example example = new Example(AuthUserRole.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("username", authUserRole.getUsername());
-        criteria.andEqualTo("roleId", authUserRole.getRoleId());
+        criteria.andEqualTo("username", authUserRole.getUsername())
+                .andEqualTo("roleId", authUserRole.getRoleId());
         return authUserRoleMapper.selectOneByExample(example);
     }
 

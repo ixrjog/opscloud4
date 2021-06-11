@@ -1,11 +1,10 @@
 package com.baiyi.caesar.account.impl;
 
 import com.baiyi.caesar.account.IAccount;
-import com.baiyi.caesar.account.factory.AccountHandlerFactory;
 import com.baiyi.caesar.common.datasource.BaseDsInstanceConfig;
 import com.baiyi.caesar.datasource.factory.DsFactory;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceAccount;
-import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
+import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.caesar.service.datasource.DsAccountService;
 import com.baiyi.caesar.service.datasource.DsConfigService;
 import org.springframework.beans.factory.InitializingBean;
@@ -35,14 +34,13 @@ public abstract class BaseAccountHandler implements InitializingBean, IAccount {
 
     protected abstract List<DatasourceAccount> listAccount(BaseDsInstanceConfig baseDsInstanceConfig);
 
-
-    protected void doPullAccount(DatasourceInstanceVO.Instance dsInstance) {
+    protected void doPullAccount(DsInstanceVO.Instance dsInstance) {
         BaseDsInstanceConfig baseDsInstanceConfig = getConfig(dsInstance.getConfigId());
         List<DatasourceAccount> accounts = listAccount(baseDsInstanceConfig);
         accounts.forEach(a -> saveAccount(dsInstance, a));
     }
 
-    private void saveAccount(DatasourceInstanceVO.Instance dsInstance, DatasourceAccount pre) {
+    private void saveAccount(DsInstanceVO.Instance dsInstance, DatasourceAccount pre) {
         wrap(dsInstance, pre);
         DatasourceAccount account = dsAccountService.getByUniqueKey(pre.getAccountUid(), pre.getAccountId());
         if (account == null) {
@@ -54,20 +52,11 @@ public abstract class BaseAccountHandler implements InitializingBean, IAccount {
         }
     }
 
-    protected abstract void wrap(DatasourceInstanceVO.Instance dsInstance, DatasourceAccount account);
+    protected abstract void wrap(DsInstanceVO.Instance dsInstance, DatasourceAccount account);
 
     @Override
     public String getKey() {
         return this.getClass().getSimpleName().replace(HANDLER_CLASS_NAME_SUFFIX, "").toUpperCase();
     }
 
-    /**
-     * 注册
-     *
-     * @throws Exception
-     */
-    @Override
-    public void afterPropertiesSet() throws Exception {
-        AccountHandlerFactory.register(this);
-    }
 }

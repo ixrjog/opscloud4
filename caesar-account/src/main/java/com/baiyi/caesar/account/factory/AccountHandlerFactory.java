@@ -1,6 +1,6 @@
 package com.baiyi.caesar.account.factory;
 
-import com.baiyi.caesar.account.impl.BaseAccountHandler;
+import com.baiyi.caesar.account.IAccount;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -8,17 +8,20 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AccountHandlerFactory {
 
-    static Map<String, BaseAccountHandler> context = new ConcurrentHashMap<>();
+    private AccountHandlerFactory() {
+    }
 
-    public static BaseAccountHandler getAccountByKey(String key) {
+    static Map<String, IAccount> context = new ConcurrentHashMap<>();
+
+    public static IAccount getAccountByKey(String key) {
         return context.get(key);
     }
 
-    public static void register(BaseAccountHandler bean) {
+    public static void register(IAccount bean) {
         context.put(bean.getKey(), bean);
     }
 
-    public static Map<String, BaseAccountHandler> getAccountContainer() {
+    public static Map<String, IAccount> getAccountContainer() {
         return context;
     }
 

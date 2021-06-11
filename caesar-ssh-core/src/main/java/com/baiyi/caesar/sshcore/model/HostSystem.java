@@ -43,21 +43,21 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class HostSystem {
 
-    public  Long id;
-    public  String displayNm;
+    private Long id;
+    private String displayNm;
     // String user;
-    public String host;
+    private String host;
     @Builder.Default
-    public Integer port = 22;
-    public String displayLabel;
+    private Integer port = 22;
+    private String displayLabel;
     @Builder.Default
-    public  String authorizedKeys = "~/.ssh/authorized_keys";
+    private String authorizedKeys = "~/.ssh/authorized_keys";
     @Builder.Default
-    public Boolean checked = false;
-    public   String statusCd = INITIAL_STATUS;
-    public  String errorMsg;
+    private Boolean checked = false;
+    private String statusCd = INITIAL_STATUS;
+    private String errorMsg;
     // List<String> publicKeyList;
-    public  String instanceId;
+    private String instanceId;
 
     private org.jline.terminal.Size terminalSize;
 

@@ -63,5 +63,12 @@ public class ServerAccountServiceImpl implements ServerAccountService {
         return accountMapper.getPermissionServerAccountByTypeAndProtocol(serverId, accountType, protocol);
     }
 
+    @Override
+    public ServerAccount getPermissionServerAccountByUsernameAndProtocol(Integer serverId,
+                                                               String username,
+                                                               String protocol) {
+        return accountMapper.getPermissionServerAccountByUsernameAndProtocol(serverId, username, protocol);
+    }
+
 
 }

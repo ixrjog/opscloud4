@@ -1,6 +1,8 @@
 package com.baiyi.caesar.service.datasource;
 
+import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceAccount;
+import com.baiyi.caesar.domain.param.datasource.DsAccountParam;
 
 /**
  * @Author baiyi
@@ -14,5 +16,7 @@ public interface DsAccountService {
     void update(DatasourceAccount datasourceAccount);
 
     DatasourceAccount getByUniqueKey(String accountUid, String accountId);
+
+    DataTable<DatasourceAccount> queryPageByParam(DsAccountParam.AccountPageQuery pageQuery);
 
 }

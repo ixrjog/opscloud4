@@ -1,10 +1,13 @@
-package com.baiyi.caesar.sshserver.auth;
+package com.baiyi.caesar.sshserver.config;
 
 import com.baiyi.caesar.common.type.UserCredentialTypeEnum;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.generator.caesar.UserCredential;
 import com.baiyi.caesar.service.user.UserCredentialService;
 import com.baiyi.caesar.service.user.UserService;
+import com.baiyi.caesar.sshserver.auth.PublickeyAuthenticatorProvider;
+import com.baiyi.caesar.sshserver.auth.SshShellAuthenticationProvider;
+import com.baiyi.caesar.sshserver.auth.SshShellPublicKeyAuthenticationProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -60,8 +63,7 @@ public class SshAuthenticationConfig {
                 boolean result = new SshShellPublicKeyAuthenticationProvider(tmp).authenticate(username, publicKey, serverSession);
                 tmp.delete();
                 return result;
-            } catch (Exception e) {
-
+            } catch (Exception ignored) {
             }
             return false;
         };

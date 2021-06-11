@@ -61,14 +61,13 @@
         select * from server
         <where>
             <if test="userId != null">
-                id in ( select business_id from user_permission where user_id = #{userId} and business_type =
-                #{businessType} )
+                server_group_id in ( select business_id from user_permission where user_id = #{userId} and business_type = #{businessType} )
             </if>
             <if test="name != null and name != ''">
                 and name like "%" #{name} "%"
             </if>
             <if test="queryIp != null and queryIp != ''">
-                and private_ip = #{queryIp} or public_ip = #{queryIp}
+                and ( private_ip like "%" #{queryIp} "%" or public_ip like "%" #{queryIp} "%" )
             </if>
             and is_active = true
             and os_type != 'Windows'

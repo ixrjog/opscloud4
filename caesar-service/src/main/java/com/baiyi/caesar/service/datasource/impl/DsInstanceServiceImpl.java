@@ -2,7 +2,7 @@ package com.baiyi.caesar.service.datasource.impl;
 
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
-import com.baiyi.caesar.domain.param.datasource.DatasourceInstanceParam;
+import com.baiyi.caesar.domain.param.datasource.DsInstanceParam;
 import com.baiyi.caesar.mapper.caesar.DatasourceInstanceMapper;
 import com.baiyi.caesar.service.datasource.DsInstanceService;
 import org.springframework.stereotype.Service;
@@ -28,7 +28,7 @@ public class DsInstanceServiceImpl implements DsInstanceService {
     }
 
     @Override
-    public List<DatasourceInstance> queryByParam(DatasourceInstanceParam.DsInstanceQuery query) {
+    public List<DatasourceInstance> queryByParam(DsInstanceParam.DsInstanceQuery query) {
         Example example = new Example(DatasourceInstance.class);
         Example.Criteria criteria = example.createCriteria();
         if (IdUtil.isNotEmpty(query.getInstanceType())) {

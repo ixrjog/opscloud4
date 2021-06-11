@@ -24,7 +24,6 @@ public final class ServerGroupPacker {
     @Resource
     private ServerGroupTypePacker serverGroupTypePacker;
 
-
     @Resource
     private ServerService serverService;
 

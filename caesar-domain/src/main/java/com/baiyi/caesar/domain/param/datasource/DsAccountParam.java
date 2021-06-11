@@ -8,27 +8,32 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author baiyi
- * @Date 2021/5/15 1:32 下午
+ * @Date 2021/6/11 10:51 上午
  * @Version 1.0
  */
-public class DatasourceConfigParam {
+public class DsAccountParam {
 
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @ApiModel
-    public static class DatasourceConfigPageQuery extends PageParam implements IExtend {
+    public static class AccountPageQuery extends PageParam implements IExtend {
+
+        @ApiModelProperty(value = "实例id")
+        @NotNull
+        private Integer instanceId;
+
+        private String accountUid;
 
         @ApiModelProperty(value = "模糊查询")
         private String queryName;
 
         @ApiModelProperty(value = "展开")
         private Boolean extend;
-
-        @ApiModelProperty(value = "数据源类型", example = "1")
-        private Integer dsType;
 
         @ApiModelProperty(value = "是否激活")
         private Boolean isActive;

@@ -2,6 +2,7 @@ package com.baiyi.caesar.util;
 
 import com.baiyi.caesar.domain.generator.caesar.Env;
 import com.baiyi.caesar.domain.generator.caesar.Server;
+import com.baiyi.caesar.domain.vo.server.ServerVO;
 import com.baiyi.caesar.service.sys.EnvService;
 import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class ServerUtil {
         ServerUtil.envService = envService;
     }
 
+    public static void wrapDisplayName(ServerVO.Server server){
+        server.setDisplayName(toServerName(server));
+    }
 
     /**
      * 带列号
@@ -38,6 +42,14 @@ public class ServerUtil {
             return Joiner.on("-").join(server.getName(), server.getSerialNumber());
         } else {
             return Joiner.on("-").join(server.getName(), env.getEnvName(), server.getSerialNumber());
+        }
+    }
+
+    private static String toServerName(ServerVO.Server server) {
+        if (server.getEnv() == null || server.getEnv().getEnvName().equals("prod")) {
+            return Joiner.on("-").join(server.getName(), server.getSerialNumber());
+        } else {
+            return Joiner.on("-").join(server.getName(), server.getEnv().getEnvName(), server.getSerialNumber());
         }
     }
 }

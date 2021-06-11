@@ -13,7 +13,7 @@ import javax.validation.Valid;
  * @Date 2021/5/18 4:56 下午
  * @Version 1.0
  */
-public class DatasourceInstanceParam {
+public class DsInstanceParam {
 
     @Data
     @NoArgsConstructor

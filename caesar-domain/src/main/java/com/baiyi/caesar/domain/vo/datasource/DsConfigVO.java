@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  * @Date 2021/5/15 1:36 下午
  * @Version 1.0
  */
-public class DatasourceConfigVO {
+public class DsConfigVO {
 
     @EqualsAndHashCode(callSuper = true)
     @Data

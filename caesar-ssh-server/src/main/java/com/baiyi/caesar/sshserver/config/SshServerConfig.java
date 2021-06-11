@@ -1,8 +1,8 @@
 package com.baiyi.caesar.sshserver.config;
 
-import com.github.fonimus.ssh.shell.PromptColor;
-import com.github.fonimus.ssh.shell.SshShellHelper;
-import com.github.fonimus.ssh.shell.listeners.SshShellListener;
+import com.baiyi.caesar.sshserver.PromptColor;
+import com.baiyi.caesar.sshserver.SshShellHelper;
+import com.baiyi.caesar.sshserver.listeners.SshShellListener;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 

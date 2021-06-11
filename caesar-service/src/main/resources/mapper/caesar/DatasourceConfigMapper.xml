@@ -20,7 +20,7 @@
     <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
   </resultMap>
 
-    <select id="queryPageByParam" parameterType="com.baiyi.caesar.domain.param.datasource.DatasourceConfigParam$DatasourceConfigPageQuery" resultMap="BaseResultMap">
+    <select id="queryPageByParam" parameterType="com.baiyi.caesar.domain.param.datasource.DsConfigParam$DsConfigPageQuery" resultMap="BaseResultMap">
         select * from datasource_config
         <where>
             <if test="queryName != null and queryName != ''">

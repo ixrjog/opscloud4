@@ -1,19 +1,19 @@
-package com.baiyi.caesar.facade.impl;
+package com.baiyi.caesar.facade.datasource.impl;
 
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
-import com.baiyi.caesar.domain.param.datasource.DatasourceConfigParam;
-import com.baiyi.caesar.domain.param.datasource.DatasourceInstanceParam;
-import com.baiyi.caesar.facade.DatasourceFacade;
-import com.baiyi.caesar.packer.datasource.DatasourceConfigPacker;
-import com.baiyi.caesar.packer.datasource.DatasourceInstancePacker;
+import com.baiyi.caesar.domain.param.datasource.DsConfigParam;
+import com.baiyi.caesar.domain.param.datasource.DsInstanceParam;
+import com.baiyi.caesar.domain.vo.datasource.DsConfigVO;
+import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.caesar.facade.datasource.DsFacade;
+import com.baiyi.caesar.packer.datasource.DsConfigPacker;
+import com.baiyi.caesar.packer.datasource.DsInstancePacker;
 import com.baiyi.caesar.service.datasource.DsConfigService;
 import com.baiyi.caesar.service.datasource.DsInstanceService;
-import com.baiyi.caesar.domain.vo.datasource.DatasourceConfigVO;
-import com.baiyi.caesar.domain.vo.datasource.DatasourceInstanceVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -25,7 +25,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
-public class DatasourceFacadeImpl implements DatasourceFacade {
+public class DsFacadeImpl implements DsFacade {
 
     @Resource
     private DsConfigService dsConfigService;
@@ -34,37 +34,37 @@ public class DatasourceFacadeImpl implements DatasourceFacade {
     private DsInstanceService dsInstancService;
 
     @Resource
-    private DatasourceConfigPacker dsConfigPacker;
+    private DsConfigPacker dsConfigPacker;
 
     @Resource
-    private DatasourceInstancePacker dsInstancePacker;
+    private DsInstancePacker dsInstancePacker;
 
     @Override
-    public DataTable<DatasourceConfigVO.DsConfig> queryDsConfigPage(DatasourceConfigParam.DatasourceConfigPageQuery pageQuery) {
+    public DataTable<DsConfigVO.DsConfig> queryDsConfigPage(DsConfigParam.DsConfigPageQuery pageQuery) {
         DataTable<DatasourceConfig> table = dsConfigService.queryPageByParam(pageQuery);
         return new DataTable<>(dsConfigPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
     }
 
     @Override
-    public void addDsConfig(DatasourceConfigVO.DsConfig dsConfig) {
+    public void addDsConfig(DsConfigVO.DsConfig dsConfig) {
         DatasourceConfig datasourceConfig = BeanCopierUtil.copyProperties(dsConfig, DatasourceConfig.class);
         datasourceConfig.setUuid(IdUtil.buildUUID());
         dsConfigService.add(datasourceConfig);
     }
 
     @Override
-    public void updateDsConfig(DatasourceConfigVO.DsConfig dsConfig) {
+    public void updateDsConfig(DsConfigVO.DsConfig dsConfig) {
         dsConfigService.update(BeanCopierUtil.copyProperties(dsConfig, DatasourceConfig.class));
     }
 
     @Override
-    public List<DatasourceInstanceVO.Instance> queryDsInstance(DatasourceInstanceParam.DsInstanceQuery query) {
+    public List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query) {
         List<DatasourceInstance> instanceList = dsInstancService.queryByParam(query);
         return dsInstancePacker.wrapVOList(instanceList, query);
     }
 
     @Override
-    public void registerDsInstance(DatasourceInstanceParam.RegisterDsInstance registerDsInstance) {
+    public void registerDsInstance(DsInstanceParam.RegisterDsInstance registerDsInstance) {
         DatasourceInstance datasourceInstance = BeanCopierUtil.copyProperties(registerDsInstance, DatasourceInstance.class);
         datasourceInstance.setUuid(IdUtil.buildUUID());
         dsInstancService.add(datasourceInstance);

@@ -2,7 +2,7 @@ package com.baiyi.caesar.service.datasource.impl;
 
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
-import com.baiyi.caesar.domain.param.datasource.DatasourceConfigParam;
+import com.baiyi.caesar.domain.param.datasource.DsConfigParam;
 import com.baiyi.caesar.mapper.caesar.DatasourceConfigMapper;
 import com.baiyi.caesar.service.datasource.DsConfigService;
 import com.github.pagehelper.Page;
@@ -40,7 +40,7 @@ public class DsConfigServiceImpl implements DsConfigService {
     }
 
     @Override
-    public DataTable<DatasourceConfig> queryPageByParam(DatasourceConfigParam.DatasourceConfigPageQuery pageQuery) {
+    public DataTable<DatasourceConfig> queryPageByParam(DsConfigParam.DsConfigPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<DatasourceConfig> data = dsConfigMapper.queryPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());

@@ -1,6 +1,9 @@
 package com.baiyi.caesar.common.aspect;
 
+import com.baiyi.caesar.common.annotation.SingleTask;
+import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.common.redis.RedisUtil;
+import com.baiyi.caesar.domain.ErrorEnum;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -27,36 +30,33 @@ public class SingleTaskAspect {
     private RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
-        return Joiner.on(":").join("caesar", "singleTask", taskName);
+        return Joiner.on(":").join("caesar", "singleTask", taskName, "running");
     }
-
 
     @Pointcut(value = "@annotation(com.baiyi.caesar.common.annotation.SingleTask)")
     public void annotationPoint() {
-        System.err.print("SingleTask开始工作！");
     }
 
     @Before("annotationPoint()")
     public void doBefore(JoinPoint joinPoint) throws Throwable {
-        System.err.print("SingleTask开始工作！");
     }
 
-    @Around(value = "annotationPoint()")
-    public Object around(ProceedingJoinPoint joinPoint) throws Throwable {
-        System.err.print("SingleTask开始工作！");
-//        MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
-//        String key = buildKey(singleTask.name());
-//
-//        if (redisUtil.get(key) == null) {
-//            System.err.print("SingleTask 任务锁不存在！");
-//            redisUtil.set(key, 1, singleTask.lockSecond());
-//            joinPoint.proceed();
-//            redisUtil.del(key);
-//        } else {
-//            return new Throwable();
-//        }
-
-
+    @Around("@annotation(singleTask)")
+    public Object around(ProceedingJoinPoint joinPoint, SingleTask singleTask) throws Throwable {
+        String key = buildKey(singleTask.name());
+        try {
+            if (redisUtil.get(key) == null) {
+                redisUtil.set(key, 1, singleTask.lockSecond());
+                joinPoint.proceed();
+                redisUtil.del(key);
+            } else {
+                log.info("任务重复执行: taskKey = {} !",key);
+                return new CommonRuntimeException(ErrorEnum. SINGLE_TASK_RUNNING);
+            }
+        } catch (Exception e) {
+            redisUtil.del(key);
+            return new Throwable();
+        }
         return joinPoint;
     }
 }

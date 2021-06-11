@@ -10,7 +10,9 @@ import org.springframework.test.context.ActiveProfiles;
  * @Date 2020/1/6 8:05 下午
  * @Version 1.0
  */
-@SpringBootTest(classes = ManageApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(classes = ManageApplication.class,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = {"ssh.shell.port=2223"})
 @AutoConfigureMockMvc
 // 单元测试读取dev配置文件
 @ActiveProfiles(profiles = "dev")

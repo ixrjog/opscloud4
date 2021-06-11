@@ -35,7 +35,7 @@ import java.time.Instant;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Login")
-public final class SshLoginCommand {
+public final class LoginCommand {
 
     @Resource
     private SshShellHelper helper;
@@ -46,19 +46,18 @@ public final class SshLoginCommand {
     @Resource
     private HostSystemHandler hostSystemHandler;
 
-    @ShellMethod(value = "Login server", key = "login")
+    @ShellMethod(value = "Login server", key = {"open", "login"})
     public void login(@ShellOption(help = "Server id") int id, @ShellOption(help = "Account name", defaultValue = "") String account) {
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
-        // 线程启动
+
         Terminal terminal = getTerminal();
         Runnable run = new ServerSentOutputTask(sessionId, serverSession, terminal);
         Thread thread = new Thread(run);
         thread.start();
 
         Server server = serverService.getById(id);
-
-        HostSystem hostSystem = hostSystemHandler.buildHostSystem(server);
+        HostSystem hostSystem = hostSystemHandler.buildHostSystem(server,serverSession.getUsername(),account);
         String instanceId = IdUtil.buildUUID();
         hostSystem.setInstanceId(instanceId);
         hostSystem.setTerminalSize(helper.terminalSize());
@@ -77,8 +76,8 @@ public final class SshLoginCommand {
                     printCommand(sessionId, instanceId, (char) ch);
                 }
                 if (isClosed(sessionId, instanceId)) {
+                    Thread.sleep(150L);
                     sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
-                    Thread.sleep(30L);
                     break;
                 }
                 Thread.sleep(25L);
@@ -96,7 +95,7 @@ public final class SshLoginCommand {
     }
 
     private Terminal getTerminal() {
-        SshContext sshContext = (SshContext) SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
+        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
         if (sshContext == null) {
             throw new IllegalStateException("Unable to find ssh context");
         } else {
@@ -106,6 +105,7 @@ public final class SshLoginCommand {
 
     private boolean isClosed(String sessionId, String instanceId) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        assert jSchSession != null;
         return jSchSession.getChannel().isClosed();
     }
 

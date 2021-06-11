@@ -16,6 +16,8 @@ public enum ErrorEnum {
     DATASOURCE_PROPS_EMPTY(20001,"数据源属性配置为空！"),
     DATASOURCE_PROPS_CONVERT_ERROR(20001,"数据源属性配置装换错误！"),
 
+    DATASOURCE_INSTANCE_TYPE_NOT_SUPPORT_ERROR(20001,"数据源实例类型错误或不支持当前操作！"),
+
     // ----------------------- TAG -----------------------
     TAG_KEY_ALREADY_EXIST(12001, "标签key已存在！"),
     TAG_NOT_EXIST(12003, "标签不存在！"),
@@ -23,6 +25,13 @@ public enum ErrorEnum {
     TAG_ADD_ERROR(12004, "新增标签错误，请确认Key是否唯一！"),
     TAG_UPDATE_ERROR(12004, "新增标签错误，请确认Key是否唯一！"),
 
+
+    SINGLE_TASK_RUNNING(13000,"后台任务执行中！"),
+
+    SSH_SERVER_AUTHENTICATION_FAILUER(20001,"SSH服务器鉴权失败！"),
+    SSH_SERVER_ACCOUNT_NOT_EXIST(20001,"登录账户不存在，请重新输入！"),
+    // No accounts available
+    SSH_SERVER_NO_ACCOUNTS_AVAILABLE(20001,"SSH服务器没有可用的账户！"),
     // ----------------------- 系统级错误 -----------------------
     SYSTEM_ERROR(10001, "系统错误！"),
     // 权限

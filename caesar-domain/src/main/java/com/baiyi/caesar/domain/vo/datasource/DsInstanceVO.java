@@ -16,7 +16,7 @@ import java.util.List;
  * @Date 2021/5/18 4:54 下午
  * @Version 1.0
  */
-public class DatasourceInstanceVO {
+public class DsInstanceVO {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
