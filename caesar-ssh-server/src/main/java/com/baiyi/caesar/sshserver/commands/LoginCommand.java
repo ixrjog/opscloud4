@@ -1,5 +1,6 @@
 package com.baiyi.caesar.sshserver.commands;
 
+import com.baiyi.caesar.common.exception.ssh.SshRuntimeException;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.service.server.ServerService;
@@ -50,43 +51,48 @@ public final class LoginCommand {
     public void login(@ShellOption(help = "Server id") int id, @ShellOption(help = "Account name", defaultValue = "") String account) {
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
-
+        String instanceId = IdUtil.buildUUID();
         Terminal terminal = getTerminal();
         Runnable run = new ServerSentOutputTask(sessionId, serverSession, terminal);
         Thread thread = new Thread(run);
         thread.start();
-
-        Server server = serverService.getById(id);
-        HostSystem hostSystem = hostSystemHandler.buildHostSystem(server,serverSession.getUsername(),account);
-        String instanceId = IdUtil.buildUUID();
-        hostSystem.setInstanceId(instanceId);
-        hostSystem.setTerminalSize(helper.terminalSize());
-        RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem);
-        TerminalUtil.enterRawMode(terminal);
-        Instant inst1 = Instant.now();
-        Size size = terminal.getSize();
-        while (true) {
-            try {
-                if (!terminal.getSize().equals(size)) {
-                    size = terminal.getSize();
-                    TerminalUtil.resize(sessionId, instanceId, size);
-                }
-                int ch = terminal.reader().read(25L);
-                if (ch >= 0) {
-                    printCommand(sessionId, instanceId, (char) ch);
-                }
-                if (isClosed(sessionId, instanceId)) {
-                    Thread.sleep(150L);
-                    sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
+        try {
+            HostSystem hostSystem;
+            Server server = serverService.getById(id);
+            hostSystem = hostSystemHandler.buildHostSystem(server, serverSession.getUsername(), account);
+            hostSystem.setInstanceId(instanceId);
+            hostSystem.setTerminalSize(helper.terminalSize());
+            RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem);
+            TerminalUtil.enterRawMode(terminal);
+            Instant inst1 = Instant.now();
+            Size size = terminal.getSize();
+            while (true) {
+                try {
+                    if (!terminal.getSize().equals(size)) {
+                        size = terminal.getSize();
+                        TerminalUtil.resize(sessionId, instanceId, size);
+                    }
+                    int ch = terminal.reader().read(25L);
+                    if (ch >= 0) {
+                        printCommand(sessionId, instanceId, (char) ch);
+                    }
+                    if (isClosed(sessionId, instanceId)) {
+                        Thread.sleep(150L);
+                        sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
+                        break;
+                    }
+                    Thread.sleep(25L);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
                     break;
                 }
-                Thread.sleep(25L);
-            } catch (Exception e) {
-                e.printStackTrace();
-                sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
-                break;
             }
+        } catch (SshRuntimeException e) {
+            ((ServerSentOutputTask) run).stop();
+            throw e;
         }
+        ((ServerSentOutputTask) run).stop();
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
