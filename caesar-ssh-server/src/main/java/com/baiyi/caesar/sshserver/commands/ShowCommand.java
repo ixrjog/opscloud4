@@ -83,6 +83,10 @@ public class ShowCommand {
                 .headerAligner(new ColorAligner(PromptColor.GREEN))
                 .useFullBorder(false);
         User user = userService.getByUsername(commandContext.getUsername());
+
+        com.baiyi.caesar.common.util.SessionUtil.setUserId(user.getId());
+        com.baiyi.caesar.common.util.SessionUtil.setUsername(user.getUsername());
+
         if (user == null || !user.getIsActive()) {
             helper.print("未经授权的访问！", PromptColor.RED);
             return;
@@ -97,6 +101,7 @@ public class ShowCommand {
         helper.print(DIVIDING_LINE, PromptColor.GREEN);
 
         sshServerPacker.wrapToVO(table.getData()).forEach(s -> {
+
             String envName = buildDisplayEnv(s.getEnv());
             builder.line(Arrays.asList(
                     String.format(" %-6s|", s.getId()),
@@ -188,14 +193,6 @@ public class ShowCommand {
         }
     }
 
-    private static String buildDisplayIp(Server server) {
-        if (!StringUtils.isEmpty(server.getPublicIp())) {
-            return Joiner.on("/").join(server.getPublicIp(), server.getPrivateIp());
-        } else {
-            return server.getPrivateIp();
-        }
-    }
-
     private String buildDisplayAccount(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
@@ -212,25 +209,6 @@ public class ShowCommand {
             }
         return displayAccount;
     }
-
-
-    private String buildDisplayAccount(Server server, boolean isAdmin) {
-        String displayAccount = "";
-        Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
-        if (accountCatMap.containsKey(LoginType.LOW_AUTHORITY)) {
-            displayAccount = Joiner.on(" ").skipNulls().join(accountCatMap.get(LoginType.LOW_AUTHORITY).stream().map(a ->
-                    "[" + SshShellHelper.getColoredMessage(a.getUsername(), PromptColor.GREEN) + "]"
-            ).collect(Collectors.toList()));
-        }
-
-        if (accountCatMap.containsKey(LoginType.HIGH_AUTHORITY)) {
-            displayAccount = Joiner.on(" ").skipNulls().join(displayAccount, accountCatMap.get(LoginType.HIGH_AUTHORITY).stream().map(a ->
-                    SshShellHelper.getColoredMessage(a.getUsername(), PromptColor.RED)
-            ).collect(Collectors.toList()));
-        }
-        return displayAccount;
-    }
-
 
     private Terminal getTerminal() {
         SshContext sshContext = (SshContext) SshShellCommandFactory.SSH_THREAD_CONTEXT.get();

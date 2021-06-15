@@ -1,6 +1,7 @@
 package com.baiyi.caesar.sshserver.packer;
 
 import com.baiyi.caesar.common.util.BeanCopierUtil;
+import com.baiyi.caesar.common.util.SessionUtil;
 import com.baiyi.caesar.domain.generator.caesar.Env;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
@@ -54,6 +55,7 @@ public class SshServerPacker {
             ServerVO.Server server = BeanCopierUtil.copyProperties(s, ServerVO.Server.class);
             ServerGroup group = serverGroupService.getById(server.getServerGroupId());
             ServerGroupVO.ServerGroup serverGroup = BeanCopierUtil.copyProperties(group, ServerGroupVO.ServerGroup.class);
+            serverGroup.setUserId(SessionUtil.getUserId());
             wrap(serverGroup);
             server.setServerGroup(serverGroup);
             Env env = envService.getByEnvType(server.getEnvType());
@@ -61,7 +63,5 @@ public class SshServerPacker {
             ServerUtil.wrapDisplayName(server);
             return server;
         }).collect(Collectors.toList());
-
-
     }
 }

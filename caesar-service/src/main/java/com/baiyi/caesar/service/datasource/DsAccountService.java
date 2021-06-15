@@ -11,6 +11,8 @@ import com.baiyi.caesar.domain.param.datasource.DsAccountParam;
  */
 public interface DsAccountService {
 
+    DatasourceAccount getById(Integer id);
+
     void add(DatasourceAccount datasourceAccount);
 
     void update(DatasourceAccount datasourceAccount);

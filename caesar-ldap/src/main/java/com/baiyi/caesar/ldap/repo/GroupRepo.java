@@ -1,5 +1,6 @@
 package com.baiyi.caesar.ldap.repo;
 
+import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
 import com.baiyi.caesar.ldap.entry.Group;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  */
 public interface GroupRepo {
 
-    List<Group> getGroupList();
+    List<Group> getGroupList(LdapDsConfig.Ldap ldapConfig);
 
     /**
      * 查询用户组成员名列表
@@ -19,7 +20,7 @@ public interface GroupRepo {
      * @param groupName
      * @return
      */
-    List<String> queryGroupMember(String groupName);
+    List<String> queryGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName);
 
 
     /**
@@ -29,11 +30,11 @@ public interface GroupRepo {
      * @param username
      * @return
      */
-    void removeGroupMember(String groupName, String username);
+    void removeGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName, String username);
 
-    void addGroupMember(String groupName, String username);
+    void addGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName, String username);
 
-    void create(String groupName);
+    void create(LdapDsConfig.Ldap ldapConfig, String groupName);
 
-    void delete(String groupName);
+    void delete(LdapDsConfig.Ldap ldapConfig, String groupName);
 }

@@ -27,6 +27,11 @@ public class DsAccountServiceImpl implements DsAccountService {
     private DatasourceAccountMapper dsAccountMapper;
 
     @Override
+    public DatasourceAccount getById(Integer id) {
+        return dsAccountMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public DataTable<DatasourceAccount> queryPageByParam(DsAccountParam.AccountPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(DatasourceAccount.class);
@@ -38,7 +43,7 @@ public class DsAccountServiceImpl implements DsAccountService {
                     .orLike("displayName", likeName)
                     .orLike("email", likeName);
         }
-        if (pageQuery.getIsActive() != null){
+        if (pageQuery.getIsActive() != null) {
             criteria.andEqualTo("isActive", pageQuery.getIsActive());
         }
         example.setOrderByClause("create_time");

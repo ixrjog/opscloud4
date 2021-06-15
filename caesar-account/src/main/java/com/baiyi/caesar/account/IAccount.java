@@ -11,5 +11,7 @@ public interface IAccount {
 
     void pullAccount(DsInstanceVO.Instance dsInstance);
 
+    void pullAccountGroup(DsInstanceVO.Instance dsInstance);
+
     String getKey();
 }
