@@ -13,12 +13,13 @@ import java.util.Set;
 
 /**
  * 服务器算法
+ *
  * @Author baiyi
  * @Date 2021/5/28 1:28 下午
  * @Version 1.0
  */
 @Component
-public class ServerAlgorithm extends BaseAlgorithm{
+public class ServerAlgorithm extends BaseAlgorithm {
 
     /**
      * 取服务器分组map，不含重复的主机分组模式
@@ -29,7 +30,7 @@ public class ServerAlgorithm extends BaseAlgorithm{
      * @param serverGroup
      * @return
      */
-   // @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "#serverGroup.id",unless = "#result == null")
+    //  @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "#serverGroup.id",unless = "#result == null")
     public Map<String, List<Server>> grouping(ServerGroup serverGroup) {
         Map<String, List<Server>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) return serverMap;
@@ -57,7 +58,7 @@ public class ServerAlgorithm extends BaseAlgorithm{
         int i = 1;
         while (!preServerList.isEmpty()) {
             List<Server> subServerList = acqSubgroup(preServerList, compensate >= 1 ? size + 1 : size);
-            serverMap.put(Joiner.on("-").join(groupingName,i), subServerList);
+            serverMap.put(Joiner.on("-").join(groupingName, i), subServerList);
             compensate--;
             i++;
         }

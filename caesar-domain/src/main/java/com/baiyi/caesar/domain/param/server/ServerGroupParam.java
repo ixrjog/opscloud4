@@ -64,7 +64,7 @@ public class ServerGroupParam {
         private Integer userId;
 
         @ApiModelProperty(value = "查询名称")
-        private String queryName;
+        private String name;
 
         @ApiModelProperty(value = "服务器组类型", example = "1")
         private Integer serverGroupTypeId;

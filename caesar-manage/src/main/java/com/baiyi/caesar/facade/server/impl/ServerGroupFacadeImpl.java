@@ -1,14 +1,13 @@
 package com.baiyi.caesar.facade.server.impl;
 
 import com.baiyi.caesar.algorithm.ServerAlgorithm;
-import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.common.base.AccessLevel;
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
-import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.common.util.RegexUtil;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.ErrorEnum;
+import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroupType;
@@ -16,6 +15,9 @@ import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
+import com.baiyi.caesar.domain.vo.server.ServerGroupTypeVO;
+import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
+import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
 import com.baiyi.caesar.facade.server.ServerGroupFacade;
 import com.baiyi.caesar.facade.user.UserPermissionFacade;
 import com.baiyi.caesar.packer.server.ServerGroupPacker;
@@ -25,11 +27,7 @@ import com.baiyi.caesar.service.server.ServerGroupService;
 import com.baiyi.caesar.service.server.ServerGroupTypeService;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.util.ServerTreeUtil;
-import com.baiyi.caesar.domain.vo.server.ServerGroupTypeVO;
-import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
-import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -153,20 +151,18 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
         List<ServerGroup> groups
                 = serverGroupService.queryUserServerGroupTreeByParam(queryParam).stream()
                 .filter(g -> serverService.countByServerGroupId(g.getId()) != 0).collect(Collectors.toList());
-        // 缓存
-        Map<String, String> serverTreeHostPatternMap = Maps.newHashMap();
+
         List<ServerTreeVO.Tree> treeList = Lists.newArrayList();
         AtomicInteger treeSize = new AtomicInteger();
 
-        groups.forEach(e -> {
-            Map<String, List<Server>> serverGroupMap = serverAlgorithm.grouping(e);
-            treeSize.addAndGet(ServerTreeUtil.getServerGroupMapSize(serverGroupMap));
-            ServerTreeUtil.wrap(serverTreeHostPatternMap, serverGroupMap);
-            treeList.add(ServerTreeUtil.wrap(e, serverGroupMap));
-        });
+
+        for (ServerGroup group : groups) {
+            Map<String, List<Server>> serverGroupMap = serverAlgorithm.grouping(group);
+            treeList.add(ServerTreeUtil.wrap(group, serverGroupMap));
+        }
+
         return ServerTreeVO.ServerTree.builder()
                 .userId(user.getId())
-                .uuid(IdUtil.buildUUID())
                 .tree(treeList)
                 .size(treeSize.get())
                 .build();

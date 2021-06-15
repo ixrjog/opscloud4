@@ -56,14 +56,14 @@
             <if test="!isAdmin">
                 id in ( select business_id from user_permission where business_type = #{businessType} and user_id = #{userId} )
             </if>
-            <if test="queryName != null and queryName != ''">
-                and name like "%" #{queryName} "%"
+            <if test="name != null and name != ''">
+                and name like "%" #{name} "%"
             </if>
             <if test="serverGroupTypeId != null and serverGroupTypeId > 0">
                 and server_group_type_id = #{serverGroupTypeId}
             </if>
         </where>
-        order by replace( name, #{queryName}, '' )
+        order by replace( name, #{name}, '' )
     </select>
 
 </mapper>
