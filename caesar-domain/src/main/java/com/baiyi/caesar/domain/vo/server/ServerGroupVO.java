@@ -10,6 +10,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -33,8 +34,9 @@ public class ServerGroupVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission {
+    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission, Serializable {
 
+        private static final long serialVersionUID = 5059407999240740609L;
         private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
         @ApiModelProperty(value = "组类型")

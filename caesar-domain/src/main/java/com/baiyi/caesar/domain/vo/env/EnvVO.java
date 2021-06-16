@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 /**
  * @Author baiyi
  * @Date 2020/2/21 5:33 下午
@@ -18,8 +20,9 @@ public class EnvVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Env extends BaseVO {
+    public static class Env extends BaseVO implements Serializable {
 
+        private static final long serialVersionUID = 5444243347465574812L;
         @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 

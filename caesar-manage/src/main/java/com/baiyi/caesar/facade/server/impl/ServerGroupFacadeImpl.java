@@ -18,6 +18,8 @@ import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
 import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
+import com.baiyi.caesar.event.handler.ServerGroupEventHandler;
+import com.baiyi.caesar.event.param.ServerGroupEventParam;
 import com.baiyi.caesar.facade.server.ServerGroupFacade;
 import com.baiyi.caesar.facade.user.UserPermissionFacade;
 import com.baiyi.caesar.packer.server.ServerGroupPacker;
@@ -69,6 +71,12 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     @Resource
     private ServerAlgorithm serverAlgorithm;
 
+    @Resource
+    private ServerTreeUtil serverTreeUtil;
+
+    @Resource
+    private ServerGroupEventHandler serverGroupEventHandler;
+
     @Override
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {
         DataTable<ServerGroup> table = serverGroupService.queryServerGroupPage(pageQuery);
@@ -101,6 +109,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     @Override
     public void updateServerGroup(ServerGroupVO.ServerGroup serverGroup) {
         try {
+            ServerGroupCacheEvict(serverGroup.getId());
             serverGroupService.update(toDO(serverGroup));
         } catch (Exception ex) {
             throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_ALREADY_EXIST);
@@ -110,7 +119,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     @TagClear(type = BusinessTypeEnum.SERVERGROUP)
     @Override
     public void deleteServerGroupById(int id) {
-
+        ServerGroupEventParam.delete delete = ServerGroupEventParam.delete.builder()
+                .id(id).build();
+        serverGroupEventHandler.deleteHandle(delete);
     }
 
     private ServerGroup toDO(ServerGroupVO.ServerGroup serverGroup) {
@@ -150,15 +161,16 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
 
         List<ServerGroup> groups
                 = serverGroupService.queryUserServerGroupTreeByParam(queryParam).stream()
-                .filter(g -> serverService.countByServerGroupId(g.getId()) != 0).collect(Collectors.toList());
+                .filter(g -> serverService.countByServerGroupId(g.getId()) != 0)
+                .collect(Collectors.toList());
 
         List<ServerTreeVO.Tree> treeList = Lists.newArrayList();
         AtomicInteger treeSize = new AtomicInteger();
 
-
         for (ServerGroup group : groups) {
             Map<String, List<Server>> serverGroupMap = serverAlgorithm.grouping(group);
-            treeList.add(ServerTreeUtil.wrap(group, serverGroupMap));
+            treeList.add(serverTreeUtil.wrap(group, serverGroupMap));
+            treeSize.addAndGet(serverTreeUtil.getServerGroupMapSize(serverGroupMap));
         }
 
         return ServerTreeVO.ServerTree.builder()
@@ -168,5 +180,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
                 .build();
     }
 
-
+    @Override
+    public void ServerGroupCacheEvict(Integer serverGroupId) {
+        serverTreeUtil.evictWrap(serverGroupId);
+        serverAlgorithm.evictGrouping(serverGroupId);
+    }
 }

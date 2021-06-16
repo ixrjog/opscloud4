@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @Author baiyi
@@ -27,8 +28,9 @@ public class ServerGroupTypeVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ServerGroupType extends BaseVO {
+    public static class ServerGroupType extends BaseVO implements Serializable {
 
+        private static final long serialVersionUID = -6926530768540517199L;
         private Integer id;
 
         @NotNull(message = "组类型名称不能为空")

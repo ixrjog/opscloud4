@@ -3,11 +3,9 @@ package com.baiyi.caesar.aspect;
 import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.service.tag.BusinessTagService;
 import lombok.extern.slf4j.Slf4j;
-import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.aspectj.lang.reflect.MethodSignature;
 import org.springframework.stereotype.Component;
@@ -29,11 +27,6 @@ public class TagClearAspect {
 
     @Pointcut(value = "@annotation(com.baiyi.caesar.domain.annotation.TagClear)")
     public void annotationPoint() {
-    }
-
-    @Before("annotationPoint()")
-    public void doBefore(JoinPoint joinPoint) throws Throwable {
-
     }
 
     @Around("@annotation(tagClear)")

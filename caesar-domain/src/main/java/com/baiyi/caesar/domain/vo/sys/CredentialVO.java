@@ -5,6 +5,8 @@ import com.baiyi.caesar.domain.vo.base.ISecret;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
 
+import java.io.Serializable;
+
 /**
  * @Author baiyi
  * @Date 2021/5/17 3:40 下午
@@ -23,8 +25,9 @@ public class CredentialVO {
     @AllArgsConstructor
     @ApiModel
     @Builder
-    public static class Credential extends BaseVO implements ISecret {
+    public static class Credential extends BaseVO implements ISecret , Serializable {
 
+        private static final long serialVersionUID = -8663845116665600709L;
         private Integer id;
         private String title;
         private Integer kind;

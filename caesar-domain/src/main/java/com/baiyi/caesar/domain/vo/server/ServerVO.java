@@ -12,6 +12,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
 
@@ -34,8 +35,9 @@ public class ServerVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Server extends BaseVO implements EnvVO.IEnv, TagVO.ITags, ServerGroupVO.IServerGroup, ServerAccountVO.IAccount {
+    public static class Server extends BaseVO implements EnvVO.IEnv, TagVO.ITags, ServerGroupVO.IServerGroup, ServerAccountVO.IAccount , Serializable {
 
+        private static final long serialVersionUID = -1011261913967456450L;
         private List<TagVO.Tag> tags;
 
         private EnvVO.Env env;

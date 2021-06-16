@@ -34,4 +34,6 @@ public interface ServerGroupFacade {
     void deleteServerGroupTypeById(int id);
 
     ServerTreeVO.ServerTree queryServerTree(ServerGroupParam.UserServerTreeQuery queryParam, User user);
+
+    void ServerGroupCacheEvict(Integer serverGroupId);
 }
