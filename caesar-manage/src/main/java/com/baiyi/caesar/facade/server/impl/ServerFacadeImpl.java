@@ -1,16 +1,18 @@
 package com.baiyi.caesar.facade.server.impl;
 
-import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.domain.DataTable;
+import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
+import com.baiyi.caesar.domain.vo.server.ServerVO;
+import com.baiyi.caesar.event.handler.ServerEventHandler;
+import com.baiyi.caesar.event.param.ServerEventParam;
 import com.baiyi.caesar.facade.server.ServerFacade;
 import com.baiyi.caesar.packer.server.ServerPacker;
 import com.baiyi.caesar.service.server.ServerService;
-import com.baiyi.caesar.domain.vo.server.ServerVO;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -29,6 +31,9 @@ public class ServerFacadeImpl implements ServerFacade {
     @Resource
     private ServerPacker serverPacker;
 
+    @Resource
+    private ServerEventHandler serverEventHandler;
+
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
@@ -38,12 +43,18 @@ public class ServerFacadeImpl implements ServerFacade {
     @Override
     public void addServer(ServerVO.Server server) {
         Server pre = toDO(server);
+        ServerEventParam.update update = ServerEventParam.update.builder()
+                .server(pre).build();
+        serverEventHandler.updateHandle(update);
         serverService.add(pre);
     }
 
     @Override
     public void updateServer(ServerVO.Server server) {
         Server pre = toDO(server);
+        ServerEventParam.update update = ServerEventParam.update.builder()
+                .server(pre).build();
+        serverEventHandler.updateHandle(update);
         serverService.update(pre);
     }
 
@@ -59,7 +70,9 @@ public class ServerFacadeImpl implements ServerFacade {
     @TagClear(type = BusinessTypeEnum.SERVER)
     @Override
     public void deleteServerById(Integer id) {
-
+        ServerEventParam.delete delete = ServerEventParam.delete.builder()
+                .id(id).build();
+        serverEventHandler.deleteHandle(delete);
     }
 
 }

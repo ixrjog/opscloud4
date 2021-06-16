@@ -4,6 +4,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -16,7 +17,8 @@ public class ServerTreeVO {
     @Data
     @Builder
     @ApiModel
-    public static class ServerTree {
+    public static class ServerTree implements Serializable {
+        private static final long serialVersionUID = 5811239982201037450L;
         private Integer size;
         private Integer userId;
         private String uuid;
@@ -26,7 +28,8 @@ public class ServerTreeVO {
     @Data
     @Builder
     @ApiModel
-    public static class Tree {
+    public static class Tree implements Serializable {
+        private static final long serialVersionUID = -3916923942990638381L;
         private String id;
         private String label;
         private ServerVO.Server server;

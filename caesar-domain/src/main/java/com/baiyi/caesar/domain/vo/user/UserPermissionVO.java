@@ -7,6 +7,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
 /**
  * @Author baiyi
@@ -19,8 +20,9 @@ public class UserPermissionVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class UserPermission extends BaseVO {
+    public static class UserPermission extends BaseVO implements Serializable {
 
+        private static final long serialVersionUID = 8880598889712701828L;
         private Integer id;
         private Integer userId;
         private Integer businessId;

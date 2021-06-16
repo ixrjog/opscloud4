@@ -54,6 +54,11 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public void del(Integer id) {
+        serverMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public Server getMaxSerialNumberServer(Integer serverGroupId, Integer envType) {
         Example example = new Example(Server.class);
         Example.Criteria criteria = example.createCriteria();

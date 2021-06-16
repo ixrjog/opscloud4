@@ -1,11 +1,17 @@
 package com.baiyi.caesar.domain.generator.caesar;
 
-import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.io.Serializable;
+import java.util.Date;
+
 @Data
-public class Server {
+public class Server implements Serializable {
+    private static final long serialVersionUID = -912214650070659359L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

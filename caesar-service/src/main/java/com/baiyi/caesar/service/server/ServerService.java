@@ -19,6 +19,8 @@ public interface ServerService {
 
     void update(Server server);
 
+    void del(Integer id);
+
     DataTable<Server> queryServerPage(ServerParam.ServerPageQuery pageQuery);
 
     DataTable<Server> queryUserPermissionServerPage(ServerParam.UserPermissionServerPageQuery pageQuery);

@@ -1,8 +1,9 @@
 package com.baiyi.caesar.domain.generator.caesar;
 
-import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table(name = "server_group")

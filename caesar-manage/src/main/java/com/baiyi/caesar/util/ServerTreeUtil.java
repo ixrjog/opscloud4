@@ -1,5 +1,6 @@
 package com.baiyi.caesar.util;
 
+import com.baiyi.caesar.common.config.CachingConfig;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
@@ -7,9 +8,11 @@ import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
 import com.baiyi.caesar.domain.vo.server.ServerVO;
 import com.baiyi.caesar.packer.server.ServerPacker;
 import com.google.common.base.Joiner;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -22,19 +25,18 @@ import java.util.stream.Collectors;
 @Component
 public class ServerTreeUtil {
 
-    private static ServerPacker serverPacker;
+    @Resource
+    private ServerPacker serverPacker;
 
-    @Autowired
-    public void setServerPacker(ServerPacker serverPacker) {
-        ServerTreeUtil.serverPacker = serverPacker;
-    }
-
-    public static ServerTreeVO.Tree wrap(ServerGroup serverGroup, Map<String, List<Server>> serverGroupMap) {
-        List<ServerTreeVO.Tree> children = serverGroupMap.keySet().stream().map(subName -> ServerTreeVO.Tree.builder()
-                .id(subName)
-                .label(subName)
-                .children(buildServerChildren(serverGroupMap.get(subName)))
-                .build()).collect(Collectors.toList());
+    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'serverTreeUtil_wrap_' + #serverGroup.id", unless = "#result == null")
+    public ServerTreeVO.Tree wrap(ServerGroup serverGroup, Map<String, List<Server>> serverGroupMap) {
+        List<ServerTreeVO.Tree> children = serverGroupMap.keySet().stream()
+                .map(subName -> ServerTreeVO.Tree.builder()
+                        .id(subName)
+                        .label(subName)
+                        .children(buildServerChildren(serverGroupMap.get(subName)))
+                        .build())
+                .collect(Collectors.toList());
 
         return ServerTreeVO.Tree.builder()
                 .id(serverGroup.getName())
@@ -43,11 +45,15 @@ public class ServerTreeUtil {
                 .build();
     }
 
-    private static List<ServerTreeVO.Tree> buildServerChildren(List<Server> servers) {
-        return servers.stream().map(ServerTreeUtil::apply).collect(Collectors.toList());
+    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'serverTreeUtil_wrap_' + #serverGroupId")
+    public void evictWrap(Integer serverGroupId) {
     }
 
-    private static ServerTreeVO.Tree apply(Server server) {
+    private List<ServerTreeVO.Tree> buildServerChildren(List<Server> servers) {
+        return servers.stream().map(this::apply).collect(Collectors.toList());
+    }
+
+    private ServerTreeVO.Tree apply(Server server) {
         String serverName = ServerUtil.toServerName(server);
         ServerVO.Server vo = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
         serverPacker.wrap(vo);
@@ -59,18 +65,18 @@ public class ServerTreeUtil {
                 .build();
     }
 
-    private static boolean isDisabled(Server server) {
+    private boolean isDisabled(Server server) {
         if (!server.getIsActive()) return true;
         return "Windows".equalsIgnoreCase(server.getOsType());
     }
 
-    public static void wrap(Map<String, String> serverTreeHostPatternMap, Map<String, List<Server>> serverGroupMap) {
-        serverGroupMap.keySet().forEach(k ->
-                serverGroupMap.get(k).forEach(s -> serverTreeHostPatternMap.put(ServerUtil.toServerName(s), s.getPrivateIp()))
+    public void wrap(Map<String, String> serverTreeHostPatternMap, Map<String, List<Server>> serverGroupMap) {
+        serverGroupMap.forEach((k, v) ->
+                v.forEach(s -> serverTreeHostPatternMap.put(ServerUtil.toServerName(s), s.getPrivateIp()))
         );
     }
 
-    public static int getServerGroupMapSize(Map<String, List<Server>> serverGroupMap) {
+    public int getServerGroupMapSize(Map<String, List<Server>> serverGroupMap) {
         if (serverGroupMap.isEmpty())
             return 0;
         int size = 0;
