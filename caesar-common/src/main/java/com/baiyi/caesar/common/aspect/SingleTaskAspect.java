@@ -4,7 +4,6 @@ import com.baiyi.caesar.common.annotation.SingleTask;
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.common.redis.RedisUtil;
 import com.baiyi.caesar.domain.ErrorEnum;
-import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -26,11 +25,13 @@ import javax.annotation.Resource;
 @Slf4j
 public class SingleTaskAspect {
 
+    private static final int RUNNING = 1;
+
     @Resource
     private RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
-        return Joiner.on(":").join("caesar", "singleTask", taskName, "running");
+        return String.format("Caesar2.SingleTask.%s.Running", taskName);
     }
 
     @Pointcut(value = "@annotation(com.baiyi.caesar.common.annotation.SingleTask)")
@@ -45,18 +46,31 @@ public class SingleTaskAspect {
     public Object around(ProceedingJoinPoint joinPoint, SingleTask singleTask) throws Throwable {
         String key = buildKey(singleTask.name());
         try {
-            if (redisUtil.get(key) == null) {
-                redisUtil.set(key, 1, singleTask.lockSecond());
+            if (isLocked(key)) {
+                lock(key, singleTask.lockTime());
                 joinPoint.proceed();
-                redisUtil.del(key);
+                unlocking(key);
             } else {
-                log.info("任务重复执行: taskKey = {} !",key);
-                return new CommonRuntimeException(ErrorEnum. SINGLE_TASK_RUNNING);
+                log.info("任务重复执行: taskKey = {} !", key);
+                return new CommonRuntimeException(ErrorEnum.SINGLE_TASK_RUNNING);
             }
         } catch (Exception e) {
-            redisUtil.del(key);
+            unlocking(key);
             return new Throwable();
         }
         return joinPoint;
     }
+
+    private void lock(String lockKey, long time) {
+        redisUtil.set(lockKey, RUNNING, time);
+    }
+
+    private void unlocking(String lockKey) {
+        redisUtil.del(lockKey);
+    }
+
+    private boolean isLocked(String lockKey) {
+        return redisUtil.get(lockKey) != null;
+    }
+
 }

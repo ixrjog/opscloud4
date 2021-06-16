@@ -14,5 +14,9 @@ public @interface SingleTask {
 
     String name() default "";
 
-    int lockSecond() default 60;
+    /**
+     * second
+     * @return
+     */
+    int lockTime() default 60;
 }

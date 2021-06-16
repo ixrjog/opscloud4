@@ -27,6 +27,8 @@ import java.util.List;
 @Slf4j
 public abstract class BaseAccountHandler implements InitializingBean, IAccount {
 
+    public static final int PASSWORD_LENGTH = 16; // 初始密码长度
+
     private static final String HANDLER_CLASS_NAME_SUFFIX = "AccountHandler";
 
     @Resource
@@ -105,6 +107,7 @@ public abstract class BaseAccountHandler implements InitializingBean, IAccount {
     protected abstract void wrap(DsInstanceVO.Instance dsInstance, DatasourceAccount account);
 
     protected abstract void wrap(DsInstanceVO.Instance dsInstance, DatasourceAccountGroup group);
+
 
     @Override
     public String getKey() {

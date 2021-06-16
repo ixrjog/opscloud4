@@ -11,6 +11,8 @@ import com.baiyi.caesar.ldap.entry.Person;
  */
 public class AccountBuilder {
 
+    private AccountBuilder(){}
+
     public static DatasourceAccount build(Person person) {
         return DatasourceAccount.builder()
                 .username(person.getUsername())

@@ -1,6 +1,6 @@
 package com.baiyi.caesar.aspect;
 
-import com.baiyi.caesar.domain.annotation.Encrypt;
+import com.baiyi.caesar.domain.annotation.Decrypt;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -13,43 +13,42 @@ import java.lang.reflect.Field;
 import java.util.Objects;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/5/18 3:20 下午
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2021/6/16 10:38 上午
+ * @Version 1.0
  */
-
 @Aspect
 @Component
-public class EncryptorAspect {
+public class DecryptAspect {
 
     @Resource
     private StringEncryptor stringEncryptor;
 
-    @Pointcut("@annotation(com.baiyi.caesar.domain.annotation.Encrypt)")
+    @Pointcut("@annotation(com.baiyi.caesar.domain.annotation.Decrypt)")
     public void action() {
     }
 
     @Around(value = "action()")
     public Object doAround(ProceedingJoinPoint pjp) throws Throwable {
-        Object requestObj = pjp.getArgs()[0];
-        handleEncrypt(requestObj);
+        for (Object requestObj : pjp.getArgs()) {
+            // 判断对象是否有 @Decrypt 注解
+            if (requestObj.getClass().isAnnotationPresent(Decrypt.class))
+                handleDecrypt(requestObj);
+        }
         return pjp.proceed();
     }
 
-    private void handleEncrypt(Object requestObj) throws IllegalAccessException {
-        if (Objects.isNull(requestObj)) {
+    private void handleDecrypt(Object requestObj) throws IllegalAccessException {
+        if (Objects.isNull(requestObj))
             return;
-        }
         Field[] fields = requestObj.getClass().getDeclaredFields();
         for (Field field : fields) {
-            boolean hasSecureField = field.isAnnotationPresent(Encrypt.class);
-            if (hasSecureField) {
+            // 判断对象属性是否有 @Decrypt 注解
+            if (field.isAnnotationPresent(Decrypt.class)) {
                 field.setAccessible(true);
                 String plaintextValue = (String) field.get(requestObj);
-                String encryptValue = stringEncryptor.encrypt(plaintextValue);
-                field.set(requestObj, encryptValue);
+                field.set(requestObj, stringEncryptor.decrypt(plaintextValue));
             }
         }
     }
-
 }

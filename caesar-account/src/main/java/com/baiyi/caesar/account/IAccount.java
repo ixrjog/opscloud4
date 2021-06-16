@@ -1,5 +1,7 @@
 package com.baiyi.caesar.account;
 
+import com.baiyi.caesar.domain.generator.caesar.User;
+import com.baiyi.caesar.domain.model.Authorization;
 import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
 
 /**
@@ -14,4 +16,12 @@ public interface IAccount {
     void pullAccountGroup(DsInstanceVO.Instance dsInstance);
 
     String getKey();
+
+    boolean authentication(DsInstanceVO.Instance dsInstance, Authorization.Credential credential);
+
+    void update(DsInstanceVO.Instance dsInstance, User user);
+
+    void create(DsInstanceVO.Instance dsInstance, User user);
+
+    void delete(DsInstanceVO.Instance dsInstance, User user);
 }

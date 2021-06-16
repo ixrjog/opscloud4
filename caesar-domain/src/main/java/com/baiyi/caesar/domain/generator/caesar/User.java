@@ -1,10 +1,16 @@
 package com.baiyi.caesar.domain.generator.caesar;
 
-import java.util.Date;
-import javax.persistence.*;
+import com.baiyi.caesar.domain.annotation.Decrypt;
 import lombok.Data;
 
+import javax.persistence.Column;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import java.util.Date;
+
 @Data
+@Decrypt
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -65,13 +71,13 @@ public class User {
     /**
      * 创建时间
      */
-    @Column(name = "create_time" ,insertable = false, updatable = false)
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
     /**
      * 更新时间
      */
-    @Column(name = "update_time" ,insertable = false, updatable = false)
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 
     private String comment;
