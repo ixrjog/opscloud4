@@ -6,7 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringBootVersion;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.ComponentScan;
@@ -20,6 +19,10 @@ import java.time.Duration;
 import java.time.Instant;
 
 /**
+ *
+ * 欢迎进入白衣的运维世界，从这里开始你将踏入成神之路
+ *
+ *
  * @Author baiyi
  * @Date 2019/12/25 4:00 下午
  * @Version 1.0
@@ -43,7 +46,7 @@ public class ManageApplication {
     public static void main(String[] args) {
         Instant inst1 = Instant.now();
         SpringApplication.run(ManageApplication.class, args);
-        log.info("Caesar发布平台 <Spring Boot {}>", SpringBootVersion.getVersion());
+        log.info("Caesar2 IaC 基础架构即代码 <Spring Boot {}>", SpringBootVersion.getVersion());
         log.info("启动成功! 耗时:{}/s", Duration.between(inst1, Instant.now()).getSeconds());
     }
 }

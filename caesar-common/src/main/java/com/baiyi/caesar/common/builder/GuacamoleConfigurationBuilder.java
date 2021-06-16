@@ -7,7 +7,7 @@ package com.baiyi.caesar.common.builder;
  */
 public class GuacamoleConfigurationBuilder {
 
-    private CommonDict guacamoleConfigurationDict = new CommonDict();
+    private SimpleDict guacamoleConfigurationDict = new SimpleDict();
 
     private GuacamoleConfigurationBuilder() {
     }
@@ -21,7 +21,7 @@ public class GuacamoleConfigurationBuilder {
         return this;
     }
 
-    public CommonDict build() {
+    public SimpleDict build() {
         return guacamoleConfigurationDict;
     }
 }

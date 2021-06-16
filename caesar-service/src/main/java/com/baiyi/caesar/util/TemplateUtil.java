@@ -1,6 +1,6 @@
 package com.baiyi.caesar.util;
 
-import com.baiyi.caesar.common.builder.CommonDict;
+import com.baiyi.caesar.common.builder.SimpleDict;
 import com.baiyi.caesar.common.builder.CredentialTemplateDictBuilder;
 import com.baiyi.caesar.domain.generator.caesar.Credential;
 import org.apache.commons.text.StringSubstitutor;
@@ -30,7 +30,7 @@ public class TemplateUtil {
 
     public String renderTemplate(String propsYml, Credential credential) {
         String password = decrypt(credential.getCredential());
-        CommonDict dict = CredentialTemplateDictBuilder.newBuilder()
+        SimpleDict dict = CredentialTemplateDictBuilder.newBuilder()
                 .paramEntry(NAMES.USERNAME, credential.getUsername())
                 .paramEntry(NAMES.PASSWORD, password)
                 .paramEntry(NAMES.TOKEN, password)

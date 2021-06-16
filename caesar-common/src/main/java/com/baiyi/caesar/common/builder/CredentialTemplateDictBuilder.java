@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
  */
 public class CredentialTemplateDictBuilder {
 
-    private CommonDict credentialTemplateDict = new CommonDict();
+    private SimpleDict credentialTemplateDict = new SimpleDict();
 
     private CredentialTemplateDictBuilder() {
     }
@@ -24,7 +24,7 @@ public class CredentialTemplateDictBuilder {
         return this;
     }
 
-    public CommonDict build() {
+    public SimpleDict build() {
         return credentialTemplateDict;
     }
 }

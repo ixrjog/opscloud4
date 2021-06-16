@@ -48,6 +48,14 @@ public class LdapAccountHandler extends BaseAccountHandler implements IAccount {
     @Resource
     private LdapAccountHandler ldapAccountHandler;
 
+    /**
+     * 注册
+     */
+    @Override
+    public void afterPropertiesSet() {
+        AccountHandlerFactory.register(ldapAccountHandler);
+    }
+
     @Override
     @SingleTask(name = "PullLdapAccount", lockTime = 5 * 60)
     public void pullAccount(DsInstanceVO.Instance dsInstance) {
@@ -117,14 +125,6 @@ public class LdapAccountHandler extends BaseAccountHandler implements IAccount {
     public void delete(DsInstanceVO.Instance dsInstance, User user) {
         BaseDsInstanceConfig baseDsInstanceConfig = getConfig(dsInstance.getConfigId());
         personRepo.delete(toLdapConfig(baseDsInstanceConfig), user.getUsername());
-    }
-
-    /**
-     * 注册
-     */
-    @Override
-    public void afterPropertiesSet() {
-        AccountHandlerFactory.register(ldapAccountHandler);
     }
 
 }

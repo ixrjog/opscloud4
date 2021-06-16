@@ -12,7 +12,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Data
-public class CommonDict {
+public class SimpleDict {
 
     private Map<String, String> dict = Maps.newHashMap();
 
