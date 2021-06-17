@@ -14,6 +14,12 @@
         <module>caesar-ssh-server</module>
         <module>caesar-ssh-core</module>
         <module>caesar-account</module>
+        <module>caesar-datasource-core</module>
+        <module>caesar-datasource</module>
+        <module>caesar-datasource-core</module>
+        <module>caesar-datasource-aliyun</module>
+        <module>caesar-datasource-aliyun-core</module>
+        <module>caesar-datasource-aliyun-ecs</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -209,6 +215,36 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>caesar-account</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource-aliyun</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource-aliyun-ecs</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource-aliyun-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

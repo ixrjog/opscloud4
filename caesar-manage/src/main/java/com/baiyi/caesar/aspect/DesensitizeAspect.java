@@ -62,9 +62,8 @@ public class DesensitizeAspect {
                 }
                 return value;
             case PASSWORD:
-                return "******";
-            default:
                 return Strings.EMPTY;
         }
+        return Strings.EMPTY;
     }
 }

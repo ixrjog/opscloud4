@@ -33,6 +33,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getById(Integer id) {
+        return userMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public User getByUsername(String username) {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();

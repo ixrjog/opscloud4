@@ -4,7 +4,7 @@ import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.tag.BusinessTagParam;
 import com.baiyi.caesar.domain.param.tag.TagParam;
-import com.baiyi.caesar.facade.TagFacade;
+import com.baiyi.caesar.facade.sys.TagFacade;
 import com.baiyi.caesar.util.OptionsUtil;
 import com.baiyi.caesar.domain.vo.common.OptionsVO;
 import com.baiyi.caesar.domain.vo.tag.TagVO;

@@ -1,12 +1,12 @@
 package com.baiyi.caesar.controller;
 
 import com.baiyi.caesar.common.HttpResult;
+import com.baiyi.caesar.common.type.CredentialKindEnum;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.sys.CredentialParam;
-import com.baiyi.caesar.facade.sys.CredentialFacade;
-import com.baiyi.caesar.types.CredentialKindEnum;
 import com.baiyi.caesar.domain.vo.common.OptionsVO;
 import com.baiyi.caesar.domain.vo.sys.CredentialVO;
+import com.baiyi.caesar.facade.sys.CredentialFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;

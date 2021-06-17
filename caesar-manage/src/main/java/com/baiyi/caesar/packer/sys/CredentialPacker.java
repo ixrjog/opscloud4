@@ -1,13 +1,13 @@
 package com.baiyi.caesar.packer.sys;
 
+import com.baiyi.caesar.common.type.CredentialKindEnum;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.common.util.IdUtil;
 import com.baiyi.caesar.common.util.SSHUtil;
 import com.baiyi.caesar.domain.generator.caesar.Credential;
+import com.baiyi.caesar.domain.vo.sys.CredentialVO;
 import com.baiyi.caesar.packer.base.SecretPacker;
 import com.baiyi.caesar.service.sys.CredentialService;
-import com.baiyi.caesar.types.CredentialKindEnum;
-import com.baiyi.caesar.domain.vo.sys.CredentialVO;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 

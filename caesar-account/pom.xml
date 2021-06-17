@@ -20,7 +20,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-service</artifactId>
+            <artifactId>caesar-datasource</artifactId>
         </dependency>
 
     </dependencies>

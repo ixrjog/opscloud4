@@ -3,6 +3,7 @@ package com.baiyi.caesar.service.server;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
+import com.baiyi.caesar.domain.param.user.UserBusinessPermissionParam;
 
 import java.util.List;
 
@@ -21,9 +22,9 @@ public interface ServerGroupService {
 
     Integer countByServerGroupTypeId(Integer serverGroupTypeId);
 
-    DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery);
+    DataTable<ServerGroup> queryPageByParam(ServerGroupParam.ServerGroupPageQuery pageQuery);
 
-    DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery);
+    DataTable<ServerGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
     List<ServerGroup> queryUserServerGroupTreeByParam(ServerGroupParam.UserServerTreeQuery queryParam);
 }

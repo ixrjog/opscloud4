@@ -17,8 +17,6 @@ public interface ServerGroupFacade {
 
     DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery);
 
-    DataTable<ServerGroupVO.ServerGroup> queryUserPermissionServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery);
-
     void addServerGroup(ServerGroupVO.ServerGroup serverGroup);
 
     void updateServerGroup(ServerGroupVO.ServerGroup serverGroup);

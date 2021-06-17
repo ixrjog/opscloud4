@@ -2,6 +2,7 @@ package com.baiyi.caesar.domain.vo.server;
 
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.domain.vo.base.BaseVO;
+import com.baiyi.caesar.domain.vo.base.IWorkorder;
 import com.baiyi.caesar.domain.vo.tag.TagVO;
 import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
 import com.baiyi.caesar.domain.vo.user.UserVO;
@@ -34,7 +35,7 @@ public class ServerGroupVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission, Serializable {
+    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission, IWorkorder, Serializable {
 
         private static final long serialVersionUID = 5059407999240740609L;
         private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
@@ -51,6 +52,7 @@ public class ServerGroupVO {
 
         // UserVO.IUserPermission
         private UserPermissionVO.UserPermission userPermission;
+
         private Integer userId;
 
         @ApiModelProperty(value = "服务器数量", example = "1")

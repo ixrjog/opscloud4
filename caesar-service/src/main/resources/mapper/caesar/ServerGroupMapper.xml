@@ -30,7 +30,7 @@
     </select>
 
     <select id="queryUserPermissionServerGroupByParam"
-            parameterType="com.baiyi.caesar.domain.param.server.ServerGroupParam$UserPermissionServerGroupPageQuery"
+            parameterType="com.baiyi.caesar.domain.param.user.UserBusinessPermissionParam$UserBusinessPermissionPageQuery"
             resultMap="BaseResultMap">
         select * from server_group
         where

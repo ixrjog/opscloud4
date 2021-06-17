@@ -3,6 +3,7 @@ package com.baiyi.caesar.service.server.impl;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
+import com.baiyi.caesar.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.caesar.mapper.caesar.ServerGroupMapper;
 import com.baiyi.caesar.service.server.ServerGroupService;
 import com.github.pagehelper.Page;
@@ -48,14 +49,14 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     }
 
     @Override
-    public DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {
+    public DataTable<ServerGroup> queryPageByParam(ServerGroupParam.ServerGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<ServerGroup> data = serverGroupMapper.queryServerGroupByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
-    public DataTable<ServerGroup> queryServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery) {
+    public DataTable<ServerGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<ServerGroup> data = serverGroupMapper.queryUserPermissionServerGroupByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());

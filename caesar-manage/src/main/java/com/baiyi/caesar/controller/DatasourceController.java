@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.datasource.DsConfigParam;
 import com.baiyi.caesar.domain.param.datasource.DsInstanceParam;
 import com.baiyi.caesar.facade.datasource.DsFacade;
-import com.baiyi.caesar.types.DatasourceTypeEnum;
+import com.baiyi.caesar.common.type.DatasourceTypeEnum;
 import com.baiyi.caesar.domain.vo.common.OptionsVO;
 import com.baiyi.caesar.domain.vo.datasource.DsConfigVO;
 import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;

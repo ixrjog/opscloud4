@@ -6,7 +6,6 @@ import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.domain.vo.user.UserVO;
 import com.baiyi.caesar.packer.auth.AuthRolePacker;
-import com.baiyi.caesar.packer.base.SecretPacker;
 import com.baiyi.caesar.packer.desensitized.DesensitizedPacker;
 import com.baiyi.caesar.util.ExtendUtil;
 import org.apache.commons.lang3.StringUtils;
@@ -22,7 +21,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class UserPacker extends SecretPacker {
+public class UserPacker<T extends UserVO.User> extends DesensitizedPacker<T> {
 
     @Resource
     private AuthRolePacker authRolePacker;
@@ -30,13 +29,10 @@ public class UserPacker extends SecretPacker {
     @Resource
     private UserCredentialPacker userCredentialPacker;
 
-    @Resource
-    private DesensitizedPacker<UserVO.User> desensitizedPacker;
-
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
         return userList.stream()
-                .map(e -> desensitizedPacker.desensitized(e))
+                .map(this::desensitized)
                 .collect(Collectors.toList());
     }
 
@@ -53,7 +49,6 @@ public class UserPacker extends SecretPacker {
         User pre = BeanCopierUtil.copyProperties(user, User.class);
         if (!StringUtils.isEmpty(pre.getPassword())) {
             RegexUtil.checkPasswordRule(pre.getPassword());
-            pre.setPassword(encrypt(pre.getPassword()));
         }
         return pre;
     }
@@ -65,6 +60,6 @@ public class UserPacker extends SecretPacker {
     public UserVO.User wrap(UserVO.User user) {
         authRolePacker.wrap(user);
         userCredentialPacker.wrap(user);
-        return desensitizedPacker.desensitized(user);
+        return desensitized(user);
     }
 }

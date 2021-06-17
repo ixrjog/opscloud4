@@ -37,7 +37,6 @@ public class LdapHandler {
         String OBJECTCLASS = "objectclass";
     }
 
-
     private LdapTemplate buildLdapTemplate(LdapDsConfig.Ldap config) {
         return LdapFactory.buildLdapTemplate(config);
     }

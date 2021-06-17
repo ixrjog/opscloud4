@@ -1,7 +1,7 @@
 package com.baiyi.caesar.facade.datasource.impl;
 
-import com.baiyi.caesar.account.IAccount;
-import com.baiyi.caesar.account.factory.AccountHandlerFactory;
+import com.baiyi.caesar.account.IAccountProvider;
+import com.baiyi.caesar.account.factory.AccountProviderFactory;
 import com.baiyi.caesar.common.base.Global;
 import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.domain.DataTable;
@@ -55,18 +55,18 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
         DatasourceInstance dsInstance = dsInstancService.getById(id);
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
         dsInstancePacker.wrap(instance);
-        IAccount iAccount = AccountHandlerFactory.getAccountByKey(instance.getInstanceType());
+        IAccountProvider iAccount = AccountProviderFactory.getAccountByKey(instance.getInstanceType());
         if (iAccount == null) throw new CommonRuntimeException(ErrorEnum.DATASOURCE_INSTANCE_TYPE_NOT_SUPPORT_ERROR);
         iAccount.pullAccount(instance);
     }
 
     @Override
-    // @Async(value = Global.TaskPools.EXECUTOR)
+    @Async(value = Global.TaskPools.EXECUTOR)
     public void pullAccountGroup(int id) {
         DatasourceInstance dsInstance = dsInstancService.getById(id);
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
         dsInstancePacker.wrap(instance);
-        IAccount iAccount = AccountHandlerFactory.getAccountByKey(instance.getInstanceType());
+        IAccountProvider iAccount = AccountProviderFactory.getAccountByKey(instance.getInstanceType());
         if (iAccount == null) throw new CommonRuntimeException(ErrorEnum.DATASOURCE_INSTANCE_TYPE_NOT_SUPPORT_ERROR);
         iAccount.pullAccountGroup(instance);
     }
