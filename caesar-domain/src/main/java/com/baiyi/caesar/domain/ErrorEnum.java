@@ -34,6 +34,12 @@ public enum ErrorEnum {
     SSH_SERVER_NO_ACCOUNTS_AVAILABLE(20001,"SSH服务器没有可用的账户！"),
     // ----------------------- 系统级错误 -----------------------
     SYSTEM_ERROR(10001, "系统错误！"),
+
+    USER_BUSINESS_TYPE_ERROR(21000,"用户业务类型错误错误！"),
+
+
+
+
     // 权限
     AUTHENTICATION_FAILUER(20001,"鉴权失败！"),
     AUTHENTICATION_API_FAILUER(401,"Api鉴权失败！"),

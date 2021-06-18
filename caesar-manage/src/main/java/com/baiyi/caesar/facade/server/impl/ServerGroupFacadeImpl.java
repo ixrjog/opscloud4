@@ -14,14 +14,18 @@ import com.baiyi.caesar.domain.generator.caesar.ServerGroupType;
 import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
 import com.baiyi.caesar.domain.param.server.ServerGroupTypeParam;
+import com.baiyi.caesar.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
 import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
+import com.baiyi.caesar.domain.vo.user.UserVO;
 import com.baiyi.caesar.event.handler.ServerGroupEventHandler;
 import com.baiyi.caesar.event.param.ServerGroupEventParam;
 import com.baiyi.caesar.facade.server.ServerGroupFacade;
 import com.baiyi.caesar.facade.user.UserPermissionFacade;
+import com.baiyi.caesar.facade.user.base.IUserBusinessPermissionPageQuery;
+import com.baiyi.caesar.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.caesar.packer.server.ServerGroupPacker;
 import com.baiyi.caesar.packer.server.ServerGroupTypePacker;
 import com.baiyi.caesar.packer.user.UserPermissionPacker;
@@ -30,6 +34,7 @@ import com.baiyi.caesar.service.server.ServerGroupTypeService;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.util.ServerTreeUtil;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -45,7 +50,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Service
-public class ServerGroupFacadeImpl implements ServerGroupFacade {
+public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
     @Resource
     private ServerGroupService serverGroupService;
@@ -78,23 +83,26 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     private ServerGroupEventHandler serverGroupEventHandler;
 
     @Override
+    public int getBusinessType() {
+        return BusinessTypeEnum.SERVERGROUP.getType();
+    }
+
+    @Override
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {
-        DataTable<ServerGroup> table = serverGroupService.queryServerGroupPage(pageQuery);
+        DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
         return new DataTable<>(serverGroupPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
     }
 
     @Override
-    public DataTable<ServerGroupVO.ServerGroup> queryUserPermissionServerGroupPage(ServerGroupParam.UserPermissionServerGroupPageQuery pageQuery) {
-        DataTable<ServerGroup> table = serverGroupService.queryServerGroupPage(pageQuery);
-
+    public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
         List<ServerGroupVO.ServerGroup> data = serverGroupPacker.wrapVOList(table.getData(), pageQuery);
-        if (pageQuery.getAuthorized()) {
-            data.stream().peek(e -> {
+        if (pageQuery.getAuthorized())
+            data.forEach(e -> {
                 e.setUserId(pageQuery.getUserId());
                 userPermissionPacker.wrap(e);
-            }).collect(Collectors.toList());
-        }
-        return new DataTable<>(data, table.getTotalNum());
+            });
+        return new DataTable<>(Lists.newArrayList(data), table.getTotalNum());
     }
 
     @Override
@@ -184,5 +192,14 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade {
     public void ServerGroupCacheEvict(Integer serverGroupId) {
         serverTreeUtil.evictWrap(serverGroupId);
         serverAlgorithm.evictGrouping(serverGroupId);
+    }
+
+
+    /**
+     * 注册
+     */
+    @Override
+    public void afterPropertiesSet() {
+        UserBusinessPermissionFactory.register(this);
     }
 }

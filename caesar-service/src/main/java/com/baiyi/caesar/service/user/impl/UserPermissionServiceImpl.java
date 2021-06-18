@@ -4,8 +4,10 @@ import com.baiyi.caesar.domain.generator.caesar.UserPermission;
 import com.baiyi.caesar.mapper.caesar.UserPermissionMapper;
 import com.baiyi.caesar.service.user.UserPermissionService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -41,6 +43,26 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     @Override
     public UserPermission getByUserPermission(UserPermission userPermission) {
         return permissionMapper.selectOne(userPermission);
+    }
+
+    @Override
+    public int countByBusiness(UserPermission userPermission) {
+        Example example = new Example(UserPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", userPermission.getBusinessType())
+                .andEqualTo("businessId", userPermission.getBusinessId());
+
+        return permissionMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public List<UserPermission> queryByBusiness(UserPermission userPermission) {
+        Example example = new Example(UserPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", userPermission.getBusinessType())
+                .andEqualTo("businessId", userPermission.getBusinessId());
+
+        return permissionMapper.selectByExample(example);
     }
 
 }

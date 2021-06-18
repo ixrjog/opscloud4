@@ -3,16 +3,12 @@ package com.baiyi.caesar.controller;
 import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.server.ServerGroupParam;
+import com.baiyi.caesar.domain.param.user.UserBusinessPermissionParam;
+import com.baiyi.caesar.domain.param.user.UserGroupParam;
 import com.baiyi.caesar.domain.param.user.UserParam;
 import com.baiyi.caesar.domain.vo.server.ServerTreeVO;
-import com.baiyi.caesar.domain.vo.user.UserCredentialVO;
-import com.baiyi.caesar.domain.vo.user.UserPermissionVO;
-import com.baiyi.caesar.domain.vo.user.UserUIVO;
-import com.baiyi.caesar.domain.vo.user.UserVO;
-import com.baiyi.caesar.facade.UserFacade;
-import com.baiyi.caesar.facade.user.UserCredentialFacade;
-import com.baiyi.caesar.facade.user.UserPermissionFacade;
-import com.baiyi.caesar.facade.user.UserUIFacade;
+import com.baiyi.caesar.domain.vo.user.*;
+import com.baiyi.caesar.facade.user.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -33,6 +29,9 @@ public class UserController {
 
     @Resource
     private UserFacade userFacade;
+
+    @Resource
+    private UserGroupFacade userGroupFacade;
 
     @Resource
     private UserCredentialFacade userCredentialFacade;
@@ -107,6 +106,19 @@ public class UserController {
     @PostMapping(value = "/server/tree/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ServerTreeVO.ServerTree> queryUserServerTree(@RequestBody @Valid ServerGroupParam.UserServerTreeQuery queryParam) {
         return new HttpResult<>(userFacade.queryUserServerTree(queryParam));
+    }
+
+    @ApiOperation(value = "分页查询用户组列表")
+    @PostMapping(value = "/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<UserGroupVO.UserGroup>> queryUserPage(@RequestBody @Valid UserGroupParam.UserGroupPageQuery pageQuery) {
+        return new HttpResult<>(userGroupFacade.queryUserGroupPage(pageQuery));
+    }
+
+
+    @ApiOperation(value = "分页查询用户授权业务对象列表")
+    @PostMapping(value = "/business/permission/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<UserVO.IUserPermission>> queryUserBusinessPermissionPage(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryUserBusinessPermissionPage(pageQuery));
     }
 
 }

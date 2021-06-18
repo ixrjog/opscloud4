@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface UserService {
 
+    User getById(Integer id);
+
     DataTable<User> queryPageByParam(UserParam.UserPageQuery pageQuery);
 
     User getByUsername(String username);

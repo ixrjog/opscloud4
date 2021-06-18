@@ -2,7 +2,7 @@ package com.baiyi.caesar.util;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.caesar.BaseUnit;
-import com.baiyi.caesar.common.datasource.BaseDsInstanceConfig;
+import com.baiyi.caesar.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.caesar.common.util.DsUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;

@@ -46,7 +46,7 @@ public class SingleTaskAspect {
     public Object around(ProceedingJoinPoint joinPoint, SingleTask singleTask) throws Throwable {
         String key = buildKey(singleTask.name());
         try {
-            if (isLocked(key)) {
+            if (!isLocked(key)) {
                 lock(key, singleTask.lockTime());
                 joinPoint.proceed();
                 unlocking(key);

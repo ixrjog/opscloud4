@@ -89,7 +89,7 @@
             domainObjectName 给表对应的 model 起名字
             注意：大小写敏感问题。
          -->
-        <table tableName="sys_document">
+        <table tableName="datasource_instance_asset">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
 <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         </table>

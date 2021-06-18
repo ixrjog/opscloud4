@@ -2,7 +2,7 @@ package com.baiyi.caesar.util;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.caesar.BaseUnit;
-import com.baiyi.caesar.types.CredentialKindEnum;
+import com.baiyi.caesar.common.type.CredentialKindEnum;
 import org.junit.jupiter.api.Test;
 
 /**
