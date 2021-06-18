@@ -34,7 +34,7 @@ public class UserFacadeImpl implements UserFacade {
     private UserService userService;
 
     @Resource
-    private UserPacker<UserVO.User> userPacker;
+    private UserPacker userPacker;
 
     @Resource
     private ServerGroupFacade serverGroupFacade;

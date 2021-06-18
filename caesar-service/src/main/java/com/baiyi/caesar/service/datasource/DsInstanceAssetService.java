@@ -1,6 +1,8 @@
 package com.baiyi.caesar.service.datasource;
 
+import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
+import com.baiyi.caesar.domain.param.datasource.DsAssetParam;
 
 /**
  * @Author baiyi
@@ -12,4 +14,9 @@ public interface DsInstanceAssetService {
     void add(DatasourceInstanceAsset asset);
 
     void update(DatasourceInstanceAsset asset);
+
+    DatasourceInstanceAsset getByUniqueKey(DatasourceInstanceAsset asset);
+
+    DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.AssetPageQuery pageQuery);
+
 }

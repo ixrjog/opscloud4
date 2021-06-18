@@ -3,6 +3,7 @@ package com.baiyi.caesar.account.impl;
 import com.baiyi.caesar.account.IAccountProvider;
 import com.baiyi.caesar.account.builder.AccountBuilder;
 import com.baiyi.caesar.account.builder.AccountGroupBuilder;
+import com.baiyi.caesar.account.common.AbstractAccountProvider;
 import com.baiyi.caesar.account.factory.AccountProviderFactory;
 import com.baiyi.caesar.account.packer.UserPacker;
 import com.baiyi.caesar.common.annotation.SingleTask;
@@ -31,7 +32,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class LdapAccountProvider extends BaseAccountProvider implements IAccountProvider {
+public class LdapAccountProvider extends AbstractAccountProvider implements IAccountProvider {
 
     @Resource
     private PersonRepo personRepo;

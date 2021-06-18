@@ -12,8 +12,7 @@ public class AccountProviderFactory {
     }
 
     static Map<String, IAccountProvider> context = new ConcurrentHashMap<>();
-
-    public static IAccountProvider getAccountByKey(String key) {
+    public static IAccountProvider getProviderByKey(String key) {
         return context.get(key);
     }
 

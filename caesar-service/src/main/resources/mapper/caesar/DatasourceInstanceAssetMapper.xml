@@ -19,6 +19,8 @@
     <result column="zone" jdbcType="VARCHAR" property="zone" />
     <result column="region_id" jdbcType="VARCHAR" property="regionId" />
     <result column="asset_status" jdbcType="VARCHAR" property="assetStatus" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="description" jdbcType="LONGVARCHAR" property="description" />

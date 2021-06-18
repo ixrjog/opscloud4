@@ -17,7 +17,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class DsFactory {
+public class DsConfigFactory {
 
     @Resource
     private TemplateUtil templateUtil;
