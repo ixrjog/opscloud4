@@ -42,13 +42,11 @@ public class DesensitizeAspect {
         }
         Field[] fields = resultObj.getClass().getDeclaredFields();
         for (Field field : fields) {
-            boolean hasSecureField = field.isAnnotationPresent(DesensitizedField.class);
-            if (hasSecureField) {
+            if (field.isAnnotationPresent(DesensitizedField.class)) {
                 SensitiveTypeEnum type = field.getAnnotation(DesensitizedField.class).type();
                 field.setAccessible(true);
                 String value = (String) field.get(resultObj);
-                String newValue = setNewValueForField(value, type);
-                field.set(resultObj, newValue);
+                field.set(resultObj, setNewValueForField(value, type));
             }
         }
     }
