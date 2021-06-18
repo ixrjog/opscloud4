@@ -14,7 +14,6 @@
         <module>caesar-ssh-server</module>
         <module>caesar-ssh-core</module>
         <module>caesar-account</module>
-        <module>caesar-datasource-core</module>
         <module>caesar-datasource</module>
         <module>caesar-datasource-core</module>
         <module>caesar-datasource-aliyun</module>

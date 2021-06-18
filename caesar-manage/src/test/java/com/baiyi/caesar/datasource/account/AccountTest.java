@@ -18,17 +18,17 @@ import javax.annotation.Resource;
 public class AccountTest extends BaseUnit {
 
     @Resource
-    private DsInstanceService dsInstancService;
+    private DsInstanceService dsInstanceService;
 
     @Resource
     private DsInstancePacker dsInstancePacker;
 
     @Test
     void pullAccount() {
-        DatasourceInstance dsInstance = dsInstancService.getById(1);
+        DatasourceInstance dsInstance = dsInstanceService.getById(1);
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
         dsInstancePacker.wrap(instance);
-        AccountProviderFactory.getAccountByKey("LDAP").pullAccount(instance);
+        AccountProviderFactory.getProviderByKey("LDAP").pullAccount(instance);
     }
 
 }

@@ -4,8 +4,10 @@ import com.baiyi.caesar.common.HttpResult;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.datasource.DsAccountGroupParam;
 import com.baiyi.caesar.domain.param.datasource.DsAccountParam;
+import com.baiyi.caesar.domain.param.datasource.DsAssetParam;
 import com.baiyi.caesar.domain.vo.datasource.DsAccountGroupVO;
 import com.baiyi.caesar.domain.vo.datasource.DsAccountVO;
+import com.baiyi.caesar.domain.vo.datasource.DsAssetVO;
 import com.baiyi.caesar.facade.datasource.DsInstanceFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -53,4 +55,11 @@ public class DatasourceInstanceController {
     public HttpResult<DataTable<DsAccountGroupVO.Group>> queryAccountGroupPage(@RequestBody @Valid DsAccountGroupParam.GroupPageQuery pageQuery) {
         return new HttpResult<>(dsInstanceFacade.queryAccountGroupPage(pageQuery));
     }
+
+    @ApiOperation(value = "分页查询数据源资产列表")
+    @PostMapping(value = "/asset/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<DsAssetVO.Asset>> queryAssetPage(@RequestBody @Valid DsAssetParam.AssetPageQuery pageQuery) {
+        return new HttpResult<>(dsInstanceFacade.queryAssetPage(pageQuery));
+    }
+
 }

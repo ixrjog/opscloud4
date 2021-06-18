@@ -6,7 +6,7 @@ import com.baiyi.caesar.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.caesar.common.util.DsUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
-import com.baiyi.caesar.datasource.factory.DsFactory;
+import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.service.datasource.DsConfigService;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ public class DsUtilTest extends BaseUnit {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsFactory dsFactory;
+    private DsConfigFactory dsFactory;
 
     @Test
     void toConfig() {

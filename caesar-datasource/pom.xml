@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-datasource-core</artifactId>
+            <artifactId>caesar-datasource-aliyun</artifactId>
         </dependency>
 
     </dependencies>

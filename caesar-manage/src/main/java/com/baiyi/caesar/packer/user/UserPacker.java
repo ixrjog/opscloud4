@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class UserPacker<T extends UserVO.User> extends DesensitizedPacker<T> {
+public class UserPacker extends DesensitizedPacker<UserVO.User> {
 
     @Resource
     private AuthRolePacker authRolePacker;

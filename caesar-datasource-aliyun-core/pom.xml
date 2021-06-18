@@ -15,12 +15,6 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-service</artifactId>
-        </dependency>
-
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
             <artifactId>caesar-datasource-core</artifactId>
         </dependency>
         <!--        ALIYUN SDK-->

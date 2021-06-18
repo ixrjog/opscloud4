@@ -1,10 +1,10 @@
-package com.baiyi.caesar.account.impl;
+package com.baiyi.caesar.account.common;
 
 import com.baiyi.caesar.account.IAccountProvider;
 import com.baiyi.caesar.account.relation.AccountRelationFacade;
 import com.baiyi.caesar.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.caesar.common.type.AccountRelationTypeEnum;
-import com.baiyi.caesar.datasource.factory.DsFactory;
+import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceAccount;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceAccountGroup;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceAccountRelation;
@@ -25,17 +25,17 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseAccountProvider implements InitializingBean, IAccountProvider {
+public abstract class AbstractAccountProvider implements InitializingBean, IAccountProvider {
 
     public static final int PASSWORD_LENGTH = 16; // 初始密码长度
 
-    private static final String HANDLER_CLASS_NAME_SUFFIX = "AccountHandler";
+    private static final String HANDLER_CLASS_NAME_SUFFIX = "AccountProvider";
 
     @Resource
     protected DsConfigService dsConfigService;
 
     @Resource
-    protected DsFactory dsFactory;
+    protected DsConfigFactory dsFactory;
 
     @Resource
     private DsAccountService dsAccountService;

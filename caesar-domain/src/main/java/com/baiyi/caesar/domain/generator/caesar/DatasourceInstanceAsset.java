@@ -1,10 +1,17 @@
 package com.baiyi.caesar.domain.generator.caesar;
 
-import java.util.Date;
-import javax.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "datasource_instance_asset")
 public class DatasourceInstanceAsset {
     @Id
@@ -14,8 +21,9 @@ public class DatasourceInstanceAsset {
     /**
      * 资产父关系
      */
+    @Builder.Default
     @Column(name = "parent_id")
-    private Integer parentId;
+    private Integer parentId = 0;
 
     /**
      * 数据源实例uuid
@@ -53,8 +61,9 @@ public class DatasourceInstanceAsset {
     /**
      * 有效
      */
+    @Builder.Default
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     /**
      * 资产关键字1
@@ -84,6 +93,18 @@ public class DatasourceInstanceAsset {
      */
     @Column(name = "asset_status")
     private String assetStatus;
+
+    /**
+     * 资产创建时间
+     */
+    @Column(name = "created_time")
+    private Date createdTime;
+
+    /**
+     * 资产过期时间
+     */
+    @Column(name = "expired_time")
+    private Date expiredTime;
 
     /**
      * 创建时间

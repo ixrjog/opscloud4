@@ -11,5 +11,17 @@
 
     <artifactId>caesar-datasource-aliyun</artifactId>
 
+    <dependencies>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-datasource-aliyun-ecs</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-datasource-core</artifactId>
+        </dependency>
+
+    </dependencies>
 </project>

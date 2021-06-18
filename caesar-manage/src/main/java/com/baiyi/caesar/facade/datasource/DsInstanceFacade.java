@@ -3,8 +3,10 @@ package com.baiyi.caesar.facade.datasource;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.datasource.DsAccountGroupParam;
 import com.baiyi.caesar.domain.param.datasource.DsAccountParam;
+import com.baiyi.caesar.domain.param.datasource.DsAssetParam;
 import com.baiyi.caesar.domain.vo.datasource.DsAccountGroupVO;
 import com.baiyi.caesar.domain.vo.datasource.DsAccountVO;
+import com.baiyi.caesar.domain.vo.datasource.DsAssetVO;
 
 /**
  * @Author baiyi
@@ -20,4 +22,6 @@ public interface DsInstanceFacade {
     DataTable<DsAccountVO.Account> queryAccountPage(DsAccountParam.AccountPageQuery pageQuery);
 
     DataTable<DsAccountGroupVO.Group> queryAccountGroupPage(DsAccountGroupParam.GroupPageQuery pageQuery);
+
+    DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery);
 }
