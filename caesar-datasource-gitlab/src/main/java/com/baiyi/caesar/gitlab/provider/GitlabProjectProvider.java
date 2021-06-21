@@ -1,8 +1,8 @@
-package com.baiyi.caesar.ldap.provider;
+package com.baiyi.caesar.gitlab.provider;
 
 import com.baiyi.caesar.common.annotation.SingleTask;
-import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.GitlabDsInstanceConfig;
+import com.baiyi.caesar.common.datasource.config.GitlabDsConfig;
 import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
@@ -12,10 +12,10 @@ import com.baiyi.caesar.datasource.util.AssetUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
-import com.baiyi.caesar.ldap.convert.LdapAssetConvert;
-import com.baiyi.caesar.ldap.entry.Group;
-import com.baiyi.caesar.ldap.entry.Person;
-import com.baiyi.caesar.ldap.repo.PersonRepo;
+import com.baiyi.caesar.gitlab.convert.GitlabAssetConvert;
+import com.baiyi.caesar.gitlab.handler.GitlabProjectHandler;
+import org.gitlab.api.models.GitlabGroup;
+import org.gitlab.api.models.GitlabProject;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,52 +23,48 @@ import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2021/6/19 3:58 下午
+ * @Date 2021/6/21 6:40 下午
  * @Version 1.0
  */
 @Component
-public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, Group> {
+public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabProject, GitlabGroup> {
 
     @Resource
-    private PersonRepo personRepo;
-
-    @Resource
-    private LdapAccountProvider ldapAccountProvider;
+    private GitlabProjectProvider gitlabProjectProvider;
 
     @Override
     public String getInstanceType() {
-        return DsTypeEnum.LDAP.name();
+        return DsTypeEnum.GITLAB.name();
     }
 
-    private LdapDsConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
-    }
-
-    @Override
-    protected List<Person> listEntries(DatasourceConfig dsConfig, Group target) {
-        LdapDsConfig.Ldap ldap = buildConfig(dsConfig);
-        return personRepo.queryGroupMember(ldap, target.getGroupName());
+    private GitlabDsConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+        return dsFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 
     @Override
-    protected List<Person> listEntries(DatasourceConfig dsConfig) {
-        return personRepo.getPersonList(buildConfig(dsConfig));
+    protected List<GitlabProject> listEntries(DatasourceConfig dsConfig, GitlabGroup target) {
+        return GitlabProjectHandler.queryGroupProjects(buildConfig(dsConfig), target.getId());
     }
 
     @Override
-    @SingleTask(name = "PullLdapUser", lockTime = 300)
+    protected List<GitlabProject> listEntries(DatasourceConfig dsConfig) {
+        return GitlabProjectHandler.queryProjects(buildConfig(dsConfig));
+    }
+
+    @Override
+    @SingleTask(name = "PullGitlabProject", lockTime = 300)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.USER.getType();
+        return DsAssetTypeEnum.GITLAB_PROJECT.getType();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.GROUP.getType();
+        return DsAssetTypeEnum.GITLAB_GROUP.getType();
     }
 
     @Override
@@ -81,12 +77,12 @@ public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, G
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Person entry) {
-        return LdapAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabProject entry) {
+        return GitlabAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(ldapAccountProvider);
+        AssetProviderFactory.register(gitlabProjectProvider);
     }
 }

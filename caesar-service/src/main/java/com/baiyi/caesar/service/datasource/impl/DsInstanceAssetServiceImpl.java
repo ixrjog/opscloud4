@@ -59,17 +59,19 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid())
                 .andEqualTo("assetType", pageQuery.getAssetType());
+        if (pageQuery.getIsActive() != null) {
+            criteria.andEqualTo("isActive", pageQuery.getIsActive());
+        }
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
+            Example.Criteria criteria2 = example.createCriteria();
             String likeName = SQLUtil.toLike(pageQuery.getQueryName());
-            criteria.andLike("assetId", likeName)
+            criteria2.orLike("assetId", likeName)
                     .orLike("name", likeName)
                     .orLike("kind", likeName)
                     .orLike("assetKey", likeName)
                     .orLike("assetKey2", likeName)
                     .orLike("description", likeName);
-        }
-        if (pageQuery.getIsActive() != null) {
-            criteria.andEqualTo("isActive", pageQuery.getIsActive());
+            example.and(criteria2);
         }
         example.setOrderByClause("create_time");
         List<DatasourceInstanceAsset> data = dsInstanceAssetMapper.selectByExample(example);

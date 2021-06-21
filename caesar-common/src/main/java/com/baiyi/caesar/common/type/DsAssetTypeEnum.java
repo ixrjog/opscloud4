@@ -9,7 +9,11 @@ public enum DsAssetTypeEnum {
 
     GROUP("GROUP"),
     USER("USER"),
-    ECS("ECS");
+    ECS("ECS"),
+    GITLAB_GROUP("GITLAB_GROUP"),
+    GITLAB_PROJECT("GITLAB_PROJECT"),
+
+    ;
 
     private String type;
 

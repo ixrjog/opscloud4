@@ -12,7 +12,7 @@ import com.baiyi.caesar.ldap.entry.Person;
  * @Date 2021/6/18 3:31 下午
  * @Version 1.0
  */
-public class AccountAssetConvert {
+public class LdapAssetConvert {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Person person) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()

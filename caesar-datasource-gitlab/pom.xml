@@ -9,26 +9,25 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>caesar-datasource</artifactId>
+    <artifactId>caesar-datasource-gitlab</artifactId>
 
     <dependencies>
-
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-datasource-aliyun</artifactId>
+            <artifactId>caesar-datasource-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>caesar-datasource-ldap</artifactId>
+            <groupId>org.gitlab</groupId>
+            <artifactId>java-gitlab-api</artifactId>
+            <version>4.1.0</version>
+            <exclusions>
+                <exclusion>
+                    <artifactId>org.slf4j</artifactId>
+                    <groupId>slf4j-api</groupId>
+                </exclusion>
+            </exclusions>
         </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>caesar-datasource-gitlab</artifactId>
-        </dependency>
-
     </dependencies>
-
 
 </project>

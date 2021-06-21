@@ -8,6 +8,7 @@ import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAssetRelation;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetRelationService;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -32,7 +33,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
 
     protected List<T> listTarget(DatasourceConfig dsConfig, S source) {
         AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
-        assert targetAssetProvider != null;
+        if (targetAssetProvider == null) return Lists.newArrayList();
         return targetAssetProvider.listEntries(dsConfig, source);
     }
 
@@ -56,7 +57,6 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
     }
 
     private void enterRelation(DatasourceInstanceAssetRelation relation) {
-        //log.info(JSON.toJSONString(relation));
         dsInstanceAssetRelationService.save(relation);
     }
 

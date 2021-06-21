@@ -11,7 +11,7 @@ import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
-import com.baiyi.caesar.ldap.convert.AccountAssetConvert;
+import com.baiyi.caesar.ldap.convert.LdapAssetConvert;
 import com.baiyi.caesar.ldap.entry.Group;
 import com.baiyi.caesar.ldap.entry.Person;
 import com.baiyi.caesar.ldap.repo.GroupRepo;
@@ -79,7 +79,7 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entry) {
-        return AccountAssetConvert.toAssetContainer(dsInstance, entry);
+        return LdapAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
