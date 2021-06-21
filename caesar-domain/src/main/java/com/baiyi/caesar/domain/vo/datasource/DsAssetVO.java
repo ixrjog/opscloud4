@@ -1,12 +1,14 @@
 package com.baiyi.caesar.domain.vo.datasource;
 
 import com.baiyi.caesar.domain.vo.base.BaseVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -21,39 +23,28 @@ public class DsAssetVO {
     @ApiModel
     public static class Asset extends BaseVO {
 
+        private Map<String, String> properties;
+
         private Integer id;
-
         private Integer parentId;
-
         private String instanceUuid;
-
         private String name;
-
         private String assetId;
-
         private String assetType;
-
         private String kind;
-
         private String version;
-
         private Boolean isActive;
-
         private String assetKey;
-
         private String assetKey2;
-
         private String zone;
-
         private String regionId;
-
         private String assetStatus;
-
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date createdTime;
-
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date expiredTime;
-
         private String description;
 
     }
+
 }

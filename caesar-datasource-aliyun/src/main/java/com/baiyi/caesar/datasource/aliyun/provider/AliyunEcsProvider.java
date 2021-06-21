@@ -1,14 +1,15 @@
 package com.baiyi.caesar.datasource.aliyun.provider;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import com.baiyi.caesar.common.annotation.SingleTask;
 import com.baiyi.caesar.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.config.AliyunDsConfig;
-import com.baiyi.caesar.common.type.DatasourceTypeEnum;
+import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.aliyun.convert.ComputeAssetConvert;
 import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunEcsHandler;
-import com.baiyi.caesar.datasource.compute.AbstractComputeProvider;
-import com.baiyi.caesar.datasource.factory.DsConfigFactory;
-import com.baiyi.caesar.datasource.factory.ElasticComputeProviderFactory;
+import com.baiyi.caesar.datasource.builder.AssetContainer;
+import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
+import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.util.AssetUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
@@ -26,10 +27,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AliyunEcsProvider extends AbstractComputeProvider<DescribeInstancesResponse.Instance> {
-
-    @Resource
-    private DsConfigFactory dsFactory;
+public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesResponse.Instance> {
 
     @Resource
     private AliyunEcsHandler aliyunEcsHandler;
@@ -37,18 +35,23 @@ public class AliyunEcsProvider extends AbstractComputeProvider<DescribeInstances
     @Resource
     private AliyunEcsProvider aliyunEcsProvider;
 
-    private AliyunDsConfig.aliyun buildConfig(DatasourceConfig dsConfig) {
+    @Override
+    @SingleTask(name = "PullAliyunEcs", lockTime = 300)
+    public void pullAsset(int dsInstanceId) {
+        doPull(dsInstanceId);
+    }
+
+    private AliyunDsConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
     @Override
-    protected DatasourceInstanceAsset toAsset(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance compute) {
-        return ComputeAssetConvert.toAsset(dsInstance, compute);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entry) {
+        return ComputeAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        preAsset.setIsActive(asset.getIsActive());
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
         if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
@@ -59,8 +62,8 @@ public class AliyunEcsProvider extends AbstractComputeProvider<DescribeInstances
     }
 
     @Override
-    protected List<DescribeInstancesResponse.Instance> listInstance(DatasourceConfig dsConfig) {
-        AliyunDsConfig.aliyun aliyun = buildConfig(dsConfig);
+    protected List<DescribeInstancesResponse.Instance> listEntries(DatasourceConfig dsConfig) {
+        AliyunDsConfig.Aliyun aliyun = buildConfig(dsConfig);
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return instanceList;
@@ -70,17 +73,17 @@ public class AliyunEcsProvider extends AbstractComputeProvider<DescribeInstances
 
     @Override
     public String getInstanceType() {
-        return DatasourceTypeEnum.ALIYUN.name();
+        return DsTypeEnum.ALIYUN.name();
     }
 
     @Override
-    public String getKey() {
+    public String getAssetType() {
         return "ECS";
     }
 
     @Override
     public void afterPropertiesSet() {
-        ElasticComputeProviderFactory.register(aliyunEcsProvider);
+        AssetProviderFactory.register(aliyunEcsProvider);
     }
 
 }

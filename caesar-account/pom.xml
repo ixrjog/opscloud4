@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-ldap</artifactId>
+            <artifactId>caesar-datasource-ldap</artifactId>
         </dependency>
 
         <dependency>

@@ -15,9 +15,9 @@ import com.baiyi.caesar.domain.vo.datasource.DsAssetVO;
  */
 public interface DsInstanceFacade {
 
-    void pullAccount(int id);
-
-    void pullAccountGroup(int id);
+//    void pullAccount(int id);
+//
+//    void pullAccountGroup(int id);
 
     DataTable<DsAccountVO.Account> queryAccountPage(DsAccountParam.AccountPageQuery pageQuery);
 

@@ -54,10 +54,10 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid())
                 .andEqualTo("assetType", pageQuery.getAssetType());
-
         if (StringUtils.isNotBlank(pageQuery.getQueryName())) {
             String likeName = SQLUtil.toLike(pageQuery.getQueryName());
             criteria.andLike("assetId", likeName)
+                    .orLike("name", likeName)
                     .orLike("kind", likeName)
                     .orLike("assetKey", likeName)
                     .orLike("assetKey2", likeName)

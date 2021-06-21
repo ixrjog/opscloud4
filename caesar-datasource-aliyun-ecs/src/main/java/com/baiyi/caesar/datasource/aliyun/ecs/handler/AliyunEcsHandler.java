@@ -22,7 +22,7 @@ public class AliyunEcsHandler {
     @Resource
     private AliyunInstanceHandler aliyunInstanceHandler;
 
-    public List<DescribeInstancesResponse.Instance> listInstance(String regionId, AliyunDsConfig.aliyun aliyun) {
+    public List<DescribeInstancesResponse.Instance> listInstance(String regionId, AliyunDsConfig.Aliyun aliyun) {
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         try {
             DescribeInstancesRequest describe = new DescribeInstancesRequest();

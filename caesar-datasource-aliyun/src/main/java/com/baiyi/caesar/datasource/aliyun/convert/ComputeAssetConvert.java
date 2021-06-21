@@ -1,6 +1,8 @@
 package com.baiyi.caesar.datasource.aliyun.convert;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import com.baiyi.caesar.datasource.builder.AssetContainer;
+import com.baiyi.caesar.datasource.builder.AssetContainerBuilder;
 import com.baiyi.caesar.datasource.util.TimeUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
@@ -23,8 +25,8 @@ public class ComputeAssetConvert {
         return TimeUtil.toGmtDate(time, TimeUtil.Format.UTC);
     }
 
-    public static DatasourceInstanceAsset toAsset(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance instance) {
-        return DatasourceInstanceAsset.builder()
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance instance) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(instance.getInstanceId()) // 资产id = 实例id
                 .name(instance.getInstanceName())
@@ -41,6 +43,17 @@ public class ComputeAssetConvert {
                 .expiredTime(
                         instance.getInstanceChargeType().equalsIgnoreCase(PRE_PAID) && !StringUtils.isEmpty(instance.getExpiredTime())
                                 ? toGmtDate(instance.getExpiredTime()) : null)
+                .build();
+
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .paramProperty("cpu", instance.getCpu())
+                .paramProperty("vpcId", instance.getVpcAttributes() != null ? instance.getVpcAttributes().getVpcId() : "")
+                .paramProperty("memory", instance.getMemory())
+                .paramProperty("chargeType", instance.getInstanceChargeType())
+                .paramProperty("imageId", instance.getImageId())
+                .paramProperty("osName",instance.getOSName())
+                .paramProperty("osType",instance.getOSType())
                 .build();
     }
 }

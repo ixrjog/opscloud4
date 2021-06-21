@@ -39,11 +39,6 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>caesar-account</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
             <artifactId>caesar-datasource</artifactId>
         </dependency>
 

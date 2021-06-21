@@ -14,5 +14,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class AliyunDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private AliyunDsConfig.aliyun aliyun;
+    private AliyunDsConfig.Aliyun aliyun;
 }
