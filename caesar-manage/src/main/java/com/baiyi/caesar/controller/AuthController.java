@@ -133,7 +133,6 @@ public class AuthController {
         return HttpResult.SUCCESS;
     }
 
-
     @ApiOperation(value = "更新用户角色")
     @PutMapping(value = "/user/role/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateUserRole(@RequestBody @Valid AuthUserRoleParam.UpdateUserRole updateUserRole) {

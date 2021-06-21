@@ -1,9 +1,6 @@
 package com.baiyi.caesar.service.auth.impl;
 
-import com.baiyi.caesar.domain.generator.caesar.AuthResource;
-import com.baiyi.caesar.domain.generator.caesar.AuthRole;
 import com.baiyi.caesar.domain.generator.caesar.AuthRoleResource;
-import com.baiyi.caesar.mapper.caesar.AuthRoleMapper;
 import com.baiyi.caesar.mapper.caesar.AuthRoleResourceMapper;
 import com.baiyi.caesar.service.auth.AuthRoleResourceService;
 import org.springframework.stereotype.Service;
@@ -23,7 +20,7 @@ public class AuthRoleResourceServiceImpl implements AuthRoleResourceService {
     private AuthRoleResourceMapper authRoleResourceMapper;
 
     @Override
-    public Integer countByRoleId(Integer roleId){
+    public Integer countByRoleId(Integer roleId) {
         Example example = new Example(AuthRoleResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("roleId", roleId);
@@ -31,7 +28,7 @@ public class AuthRoleResourceServiceImpl implements AuthRoleResourceService {
     }
 
     @Override
-    public Integer countByResourceId(Integer resourceId){
+    public Integer countByResourceId(Integer resourceId) {
         Example example = new Example(AuthRoleResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("resourceId", resourceId);
@@ -46,5 +43,13 @@ public class AuthRoleResourceServiceImpl implements AuthRoleResourceService {
     @Override
     public void deleteById(int id) {
         authRoleResourceMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public void deleteByResourceId(Integer resourceId) {
+        Example example = new Example(AuthRoleResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("resourceId", resourceId);
+        authRoleResourceMapper.deleteByExample(example);
     }
 }
