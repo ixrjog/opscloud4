@@ -1,14 +1,13 @@
 package com.baiyi.caesar.datasource.account;
 
 import com.baiyi.caesar.BaseUnit;
-import com.baiyi.caesar.account.factory.AccountProviderFactory;
-import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
-import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
-import com.baiyi.caesar.packer.datasource.DsInstancePacker;
-import com.baiyi.caesar.service.datasource.DsInstanceService;
+import com.baiyi.caesar.common.type.DsAssetTypeEnum;
+import com.baiyi.caesar.common.type.DsTypeEnum;
+import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
+import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
+import com.baiyi.caesar.ldap.entry.Group;
+import com.baiyi.caesar.ldap.entry.Person;
 import org.junit.jupiter.api.Test;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -17,18 +16,18 @@ import javax.annotation.Resource;
  */
 public class AccountTest extends BaseUnit {
 
-    @Resource
-    private DsInstanceService dsInstanceService;
-
-    @Resource
-    private DsInstancePacker dsInstancePacker;
-
     @Test
     void pullAccount() {
-        DatasourceInstance dsInstance = dsInstanceService.getById(1);
-        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
-        dsInstancePacker.wrap(instance);
-        AccountProviderFactory.getProviderByKey("LDAP").pullAccount(instance);
+        AbstractAssetRelationProvider<Person, Group> assetProvider = AssetProviderFactory.getAssetRelationProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.USER.getType());
+        assert assetProvider != null;
+        assetProvider.pullAsset(1);
+    }
+
+    @Test
+    void pullGroup() {
+        AbstractAssetRelationProvider<Group, Person> assetProvider = AssetProviderFactory.getAssetRelationProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.GROUP.getType());
+        assert assetProvider != null;
+        assetProvider.pullAsset(1);
     }
 
 }

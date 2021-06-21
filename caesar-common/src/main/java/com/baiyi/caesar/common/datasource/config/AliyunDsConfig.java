@@ -16,7 +16,7 @@ public class AliyunDsConfig {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class aliyun {
+    public static class Aliyun {
 
         private Account account;
         private String regionId;

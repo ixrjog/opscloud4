@@ -18,6 +18,11 @@
             <artifactId>caesar-datasource-aliyun</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-datasource-ldap</artifactId>
+        </dependency>
+
     </dependencies>
 
 

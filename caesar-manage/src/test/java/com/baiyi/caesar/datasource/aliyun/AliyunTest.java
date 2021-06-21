@@ -1,8 +1,8 @@
 package com.baiyi.caesar.datasource.aliyun;
 
 import com.baiyi.caesar.BaseUnit;
-import com.baiyi.caesar.datasource.common.IElasticComputeProvider;
-import com.baiyi.caesar.datasource.factory.ElasticComputeProviderFactory;
+import com.baiyi.caesar.datasource.common.SimpleAssetProvider;
+import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -16,9 +16,9 @@ public class AliyunTest extends BaseUnit {
 
     @Test
     void pullAssetTest() {
-        IElasticComputeProvider iComputeProvider = ElasticComputeProviderFactory.getProvider("ALIYUN", "ECS");
-        assert iComputeProvider != null;
-        iComputeProvider.pullAsset(3);
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider("ALIYUN", "ECS");
+        assert assetProvider != null;
+        assetProvider.pullAsset(3);
     }
     
 }

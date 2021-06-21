@@ -5,7 +5,7 @@ import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.param.datasource.DsConfigParam;
 import com.baiyi.caesar.domain.param.datasource.DsInstanceParam;
 import com.baiyi.caesar.facade.datasource.DsFacade;
-import com.baiyi.caesar.common.type.DatasourceTypeEnum;
+import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.domain.vo.common.OptionsVO;
 import com.baiyi.caesar.domain.vo.datasource.DsConfigVO;
 import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
@@ -34,7 +34,7 @@ public class DatasourceController {
     @ApiOperation(value = "查询数据源配置类型选项")
     @GetMapping(value = "/config/type/options/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<OptionsVO.Options> getDsConfigTypeOptions() {
-        return new HttpResult<>(DatasourceTypeEnum.toOptions());
+        return new HttpResult<>(DsTypeEnum.toOptions());
     }
 
     @ApiOperation(value = "分页查询数据源配置")

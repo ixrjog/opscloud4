@@ -1,5 +1,6 @@
 package com.baiyi.caesar.common.datasource.config;
 
+import com.google.common.base.Joiner;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -16,11 +17,23 @@ public class LdapDsConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Ldap {
+
+        private static final String RDN = "%s=%s";
+
         private String url;
         private String base;
         private LdapManage manager; // 管理员账户
         private LdapUser user;
         private LdapGroup group;
+
+        public String buildUserDn(String username) {
+            return Joiner.on(",").skipNulls().join(String.format(RDN, user.getId(), username), user.getDn());
+        }
+
+        public String buildGroupDn(String groupName) {
+            return Joiner.on(",").skipNulls().join(String.format(RDN, group.getId(), groupName), group.getDn());
+        }
+
     }
 
     @Data

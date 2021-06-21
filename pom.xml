@@ -8,13 +8,13 @@
         <module>caesar-service</module>
         <module>caesar-domain</module>
         <module>caesar-common</module>
-        <module>caesar-ldap</module>
         <module>caesar-guacamole</module>
         <module>caesar-terminal</module>
         <module>caesar-ssh-server</module>
         <module>caesar-ssh-core</module>
-        <module>caesar-account</module>
+<!--        <module>caesar-account</module>-->
         <module>caesar-datasource</module>
+        <module>caesar-datasource-ldap</module>
         <module>caesar-datasource-core</module>
         <module>caesar-datasource-aliyun</module>
         <module>caesar-datasource-aliyun-core</module>
@@ -183,12 +183,6 @@
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-ldap</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.baiyi</groupId>
                 <artifactId>caesar-guacamole</artifactId>
                 <version>${project.version}</version>
             </dependency>
@@ -211,11 +205,11 @@
                 <version>${project.version}</version>
             </dependency>
 
-            <dependency>
-                <groupId>com.baiyi</groupId>
-                <artifactId>caesar-account</artifactId>
-                <version>${project.version}</version>
-            </dependency>
+<!--            <dependency>-->
+<!--                <groupId>com.baiyi</groupId>-->
+<!--                <artifactId>caesar-account</artifactId>-->
+<!--                <version>${project.version}</version>-->
+<!--            </dependency>-->
 
             <dependency>
                 <groupId>com.baiyi</groupId>
@@ -228,6 +222,13 @@
                 <artifactId>caesar-datasource</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource-ldap</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
 
             <dependency>
                 <groupId>com.baiyi</groupId>

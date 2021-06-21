@@ -30,12 +30,12 @@ public class DatasourceInstanceController {
     @Resource
     private DsInstanceFacade dsInstanceFacade;
 
-    @ApiOperation(value = "拉取数据源账户")
-    @GetMapping(value = "/account/pull", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pullAccount(@RequestParam @Valid int id) {
-        dsInstanceFacade.pullAccount(id);
-        return HttpResult.SUCCESS;
-    }
+//    @ApiOperation(value = "拉取数据源账户")
+//    @GetMapping(value = "/account/pull", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public HttpResult<Boolean> pullAccount(@RequestParam @Valid int id) {
+//        dsInstanceFacade.pullAccount(id);
+//        return HttpResult.SUCCESS;
+//    }
 
     @ApiOperation(value = "分页查询数据源账户列表")
     @PostMapping(value = "/account/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -43,12 +43,12 @@ public class DatasourceInstanceController {
         return new HttpResult<>(dsInstanceFacade.queryAccountPage(pageQuery));
     }
 
-    @ApiOperation(value = "拉取数据源账户组")
-    @GetMapping(value = "/account/group/pull", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> pullAccountGroup(@RequestParam @Valid int id) {
-        dsInstanceFacade.pullAccountGroup(id);
-        return HttpResult.SUCCESS;
-    }
+//    @ApiOperation(value = "拉取数据源账户组")
+//    @GetMapping(value = "/account/group/pull", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public HttpResult<Boolean> pullAccountGroup(@RequestParam @Valid int id) {
+//        dsInstanceFacade.pullAccountGroup(id);
+//        return HttpResult.SUCCESS;
+//    }
 
     @ApiOperation(value = "分页查询数据源账户组列表")
     @PostMapping(value = "/account/group/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
