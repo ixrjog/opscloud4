@@ -1,6 +1,8 @@
 package com.baiyi.caesar.datasource.account;
 
 import com.baiyi.caesar.BaseUnit;
+import com.baiyi.caesar.common.type.DsAssetTypeEnum;
+import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.ldap.entry.Group;
@@ -16,14 +18,14 @@ public class AccountTest extends BaseUnit {
 
     @Test
     void pullAccount() {
-        AbstractAssetRelationProvider<Person, Group> assetProvider = AssetProviderFactory.getAssetRelationProvider("LDAP", "USER");
+        AbstractAssetRelationProvider<Person, Group> assetProvider = AssetProviderFactory.getAssetRelationProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.USER.getType());
         assert assetProvider != null;
         assetProvider.pullAsset(1);
     }
 
     @Test
     void pullGroup() {
-        AbstractAssetRelationProvider<Group,Person> assetProvider = AssetProviderFactory.getAssetRelationProvider("LDAP", "GROUP");
+        AbstractAssetRelationProvider<Group, Person> assetProvider = AssetProviderFactory.getAssetRelationProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.GROUP.getType());
         assert assetProvider != null;
         assetProvider.pullAsset(1);
     }
