@@ -10,18 +10,19 @@ import com.baiyi.caesar.domain.param.auth.AuthGroupParam;
 import com.baiyi.caesar.domain.param.auth.AuthResourceParam;
 import com.baiyi.caesar.domain.param.auth.AuthRoleParam;
 import com.baiyi.caesar.domain.param.auth.AuthUserRoleParam;
+import com.baiyi.caesar.domain.vo.auth.AuthGroupVO;
+import com.baiyi.caesar.domain.vo.auth.AuthResourceVO;
+import com.baiyi.caesar.domain.vo.auth.AuthRoleResourceVO;
+import com.baiyi.caesar.domain.vo.auth.AuthRoleVO;
 import com.baiyi.caesar.facade.auth.AuthFacade;
 import com.baiyi.caesar.packer.auth.AuthGroupPacker;
 import com.baiyi.caesar.packer.auth.AuthResourcePacker;
 import com.baiyi.caesar.packer.auth.AuthRolePacker;
 import com.baiyi.caesar.service.auth.*;
-import com.baiyi.caesar.domain.vo.auth.AuthGroupVO;
-import com.baiyi.caesar.domain.vo.auth.AuthResourceVO;
-import com.baiyi.caesar.domain.vo.auth.AuthRoleResourceVO;
-import com.baiyi.caesar.domain.vo.auth.AuthRoleVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Iterator;
@@ -81,7 +82,7 @@ public class AuthFacadeImpl implements AuthFacade {
     public void deleteRoleById(int id) {
         if (authRoleResourceService.countByRoleId(id) != 0)
             throw new AuthRuntimeException(ErrorEnum.AUTH_ROLE_HAS_USED);
-        // TODO 暂时不删除 authRoleService.deleteById(id);
+        authRoleService.deleteById(id);
     }
 
     @Override
@@ -104,7 +105,7 @@ public class AuthFacadeImpl implements AuthFacade {
     public void deleteGroupById(int id) {
         if (authResourceService.countByGroupId(id) != 0)
             throw new AuthRuntimeException(ErrorEnum.AUTH_GROUP_HAS_USED);
-        // TODO 暂时不删除 authGroupService.deleteById(id);
+        authGroupService.deleteById(id);
     }
 
     @Override
@@ -143,10 +144,10 @@ public class AuthFacadeImpl implements AuthFacade {
     }
 
     @Override
+    @Transactional(rollbackFor = {AuthRuntimeException.class, Exception.class})
     public void deleteResourceById(int id) {
-        if (authRoleResourceService.countByResourceId(id) != 0)
-            throw new AuthRuntimeException(ErrorEnum.AUTH_RESOURCE_HAS_USED);
-        // TODO 暂时不删除 authResourceService.deleteById(id);
+        authRoleResourceService.deleteByResourceId(id);
+        authResourceService.deleteById(id);
     }
 
     @Override

@@ -35,19 +35,17 @@ public class EncryptorAspect {
         handleEncrypt(requestObj);
         return pjp.proceed();
     }
-
+     
     private void handleEncrypt(Object requestObj) throws IllegalAccessException {
         if (Objects.isNull(requestObj)) {
             return;
         }
         Field[] fields = requestObj.getClass().getDeclaredFields();
         for (Field field : fields) {
-            boolean hasSecureField = field.isAnnotationPresent(Encrypt.class);
-            if (hasSecureField) {
+            if (field.isAnnotationPresent(Encrypt.class)) {
                 field.setAccessible(true);
                 String plaintextValue = (String) field.get(requestObj);
-                String encryptValue = stringEncryptor.encrypt(plaintextValue);
-                field.set(requestObj, encryptValue);
+                field.set(requestObj, stringEncryptor.encrypt(plaintextValue));
             }
         }
     }

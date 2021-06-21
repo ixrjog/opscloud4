@@ -16,4 +16,6 @@ public interface AuthRoleResourceService {
     Integer countByRoleId(Integer roleId);
 
     Integer countByResourceId(Integer resourceId);
+
+    void deleteByResourceId(Integer resourceId);
 }

@@ -1,8 +1,8 @@
 package com.baiyi.caesar.datasource.aliyun.ecs.handler;
 
+import com.aliyuncs.AcsRequest;
+import com.aliyuncs.AcsResponse;
 import com.aliyuncs.IAcsClient;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesRequest;
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.caesar.common.datasource.config.AliyunDsConfig;
 import com.baiyi.caesar.datasource.aliyun.ecs.common.BaseAliyunHandler;
@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 public class AliyunInstanceHandler extends BaseAliyunHandler {
 
     @Retryable(value = ClientException.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
-    public DescribeInstancesResponse getInstancesResponse(String regionId, AliyunDsConfig.Aliyun aliyun, DescribeInstancesRequest describe) throws ClientException {
+    public <T extends AcsResponse> T getAcsResponse(String regionId, AliyunDsConfig.Aliyun aliyun, AcsRequest<T> describe) throws ClientException {
         IAcsClient client = buildAcsClient(regionId, aliyun);
         return client.getAcsResponse(describe);
     }
