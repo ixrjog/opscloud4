@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -30,9 +31,18 @@ public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelati
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", relation.getInstanceUuid())
                 .andEqualTo("relationType", relation.getRelationType())
-                .andEqualTo("sourceAssetId",relation.getSourceAssetId())
-                .andEqualTo("targetAssetId",relation.getTargetAssetId());
-        if(dsInstanceAssetRelationMapper.selectOneByExample(example) == null)
+                .andEqualTo("sourceAssetId", relation.getSourceAssetId())
+                .andEqualTo("targetAssetId", relation.getTargetAssetId());
+        if (dsInstanceAssetRelationMapper.selectOneByExample(example) == null)
             add(relation);
+    }
+
+    @Override
+    public List<DatasourceInstanceAssetRelation> queryTargetAsset(String instanceUuid, Integer sourceAssetId) {
+        Example example = new Example(DatasourceInstanceAssetRelation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid)
+                .andEqualTo("sourceAssetId", sourceAssetId);
+        return dsInstanceAssetRelationMapper.selectByExample(example);
     }
 }

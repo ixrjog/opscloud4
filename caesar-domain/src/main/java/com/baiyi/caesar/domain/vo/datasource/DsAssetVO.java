@@ -8,6 +8,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -24,6 +25,8 @@ public class DsAssetVO {
     public static class Asset extends BaseVO {
 
         private Map<String, String> properties;
+
+        private Map<String,List<DsAssetVO.Asset>> children;
 
         private Integer id;
         private Integer parentId;

@@ -7,6 +7,7 @@ import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.ldap.entry.Group;
 import com.baiyi.caesar.ldap.entry.Person;
+import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -14,20 +15,23 @@ import org.junit.jupiter.api.Test;
  * @Date 2021/6/10 1:50 下午
  * @Version 1.0
  */
+@Slf4j
 public class AccountTest extends BaseUnit {
 
     @Test
     void pullAccount() {
-        AbstractAssetRelationProvider<Person, Group> assetProvider = AssetProviderFactory.getAssetRelationProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.USER.getType());
+        AbstractAssetRelationProvider<Person, Group> assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.USER.getType());
         assert assetProvider != null;
         assetProvider.pullAsset(1);
     }
 
     @Test
     void pullGroup() {
-        AbstractAssetRelationProvider<Group, Person> assetProvider = AssetProviderFactory.getAssetRelationProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.GROUP.getType());
+        AbstractAssetRelationProvider<Group, Person> assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.LDAP.getName(), DsAssetTypeEnum.GROUP.getType());
         assert assetProvider != null;
         assetProvider.pullAsset(1);
     }
+
+
 
 }

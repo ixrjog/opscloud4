@@ -1,7 +1,6 @@
 package com.baiyi.caesar.datasource.factory;
 
 
-import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
 import com.baiyi.caesar.datasource.common.SimpleAssetProvider;
 import com.google.common.collect.Maps;
 import org.springframework.data.util.CastUtils;
@@ -17,25 +16,14 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class AssetProviderFactory {
 
-    private AssetProviderFactory() {
-    }
+    private AssetProviderFactory() {}
 
     //         instanceType & key
     static private Map<String, Map<String, SimpleAssetProvider>> context = new ConcurrentHashMap<>();
 
-
-    public static <T extends SimpleAssetProvider> T getProvider(String instanceType, String key) {
+    public static <T extends SimpleAssetProvider> T getProvider(String instanceType, String assetType) {
         if (context.containsKey(instanceType))
-            return CastUtils.cast(context.get(instanceType).get(key));
-        return null;
-    }
-
-    public static <T extends AbstractAssetRelationProvider<?, ?>> T getAssetRelationProvider(String instanceType, String key) {
-        if (context.containsKey(instanceType)) {
-            //  SimpleAssetProvider simpleAssetProvider = context.get(instanceType).get(key);
-            //  if (simpleAssetProvider instanceof AbstractAssetRelationProvider)
-            return CastUtils.cast(context.get(instanceType).get(key));
-        }
+            return CastUtils.cast(context.get(instanceType).get(assetType));
         return null;
     }
 

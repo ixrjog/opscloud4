@@ -27,7 +27,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
     protected abstract List<S> listEntries(DatasourceConfig dsConfig, T target);
 
     private AbstractAssetRelationProvider<T, S> getTargetProvider() {
-        return AssetProviderFactory.getAssetRelationProvider(getInstanceType(), getTargetAssetKey());
+        return AssetProviderFactory.getProvider(getInstanceType(), getTargetAssetKey());
     }
 
     protected List<T> listTarget(DatasourceConfig dsConfig, S source) {

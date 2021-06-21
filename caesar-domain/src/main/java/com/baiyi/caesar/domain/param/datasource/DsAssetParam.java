@@ -1,6 +1,7 @@
 package com.baiyi.caesar.domain.param.datasource;
 
 import com.baiyi.caesar.domain.param.IExtend;
+import com.baiyi.caesar.domain.param.IRelation;
 import com.baiyi.caesar.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -21,7 +22,7 @@ public class DsAssetParam {
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
     @ApiModel
-    public static class AssetPageQuery extends PageParam implements IExtend {
+    public static class AssetPageQuery extends PageParam implements IExtend, IRelation {
 
         @ApiModelProperty(value = "实例id")
         @NotNull
@@ -40,7 +41,26 @@ public class DsAssetParam {
         @ApiModelProperty(value = "展开")
         private Boolean extend;
 
+        @ApiModelProperty(value = "展示资产关系")
+        private Boolean relation;
+
         @ApiModelProperty(value = "是否有效")
         private Boolean isActive;
     }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class  PullAsset {
+
+        @ApiModelProperty(value = "实例id")
+        @NotNull
+        private Integer instanceId;
+
+        @ApiModelProperty(value = "资产类型")
+        @NotNull
+        private String assetType;
+
+    }
+
 }
