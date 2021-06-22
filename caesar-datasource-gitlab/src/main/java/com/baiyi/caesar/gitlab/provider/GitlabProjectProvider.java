@@ -69,9 +69,13 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+            return false;
         if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
             return false;
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
             return false;
         return true;
     }
