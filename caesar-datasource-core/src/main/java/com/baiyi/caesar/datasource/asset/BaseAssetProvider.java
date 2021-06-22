@@ -95,4 +95,5 @@ public abstract class BaseAssetProvider<T> implements SimpleAssetProvider, Initi
         enterAssets(dsInstance, dsConfig, entries);
     }
 
+
 }

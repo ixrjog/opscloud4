@@ -50,9 +50,9 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
 
     @Override
     protected List<GitlabGroup> listEntries(DatasourceConfig dsConfig) {
-        try{
-            GitlabGroupHandler.queryGroups(buildConfig(dsConfig));
-        }catch (IOException ioEx){
+        try {
+            return GitlabGroupHandler.queryGroups(buildConfig(dsConfig));
+        } catch (IOException ioEx) {
         }
         return Lists.newArrayList();
     }

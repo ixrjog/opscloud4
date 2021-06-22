@@ -44,4 +44,10 @@ public class AssetTest extends BaseUnit {
         assetProvider.pullAsset(2);
     }
 
+    @Test
+    void pullAssetByGitlabGroup() {
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.GITLAB.getName(), DsAssetTypeEnum.GITLAB_GROUP.getType());
+        assert assetProvider != null;
+        assetProvider.pullAsset(2);
+    }
 }

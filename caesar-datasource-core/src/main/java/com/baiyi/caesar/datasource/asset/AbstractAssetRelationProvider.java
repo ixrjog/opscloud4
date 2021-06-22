@@ -45,7 +45,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
             AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
             AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstance, target);
             DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
-
+            if (targetAsset == null) return; // 关联对象未录入
             DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
                     .instanceUuid(dsInstance.getUuid())
                     .sourceAssetId(asset.getId())

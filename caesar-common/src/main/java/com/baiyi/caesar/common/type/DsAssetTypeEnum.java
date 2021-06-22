@@ -13,6 +13,7 @@ public enum DsAssetTypeEnum {
     GITLAB_GROUP("GITLAB_GROUP"),
     GITLAB_PROJECT("GITLAB_PROJECT"),
 
+
     ;
 
     private String type;

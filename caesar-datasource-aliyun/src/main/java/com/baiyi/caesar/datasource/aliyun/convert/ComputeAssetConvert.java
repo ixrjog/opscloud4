@@ -1,6 +1,7 @@
 package com.baiyi.caesar.datasource.aliyun.convert;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.builder.AssetContainerBuilder;
 import com.baiyi.caesar.datasource.util.TimeUtil;
@@ -25,35 +26,35 @@ public class ComputeAssetConvert {
         return TimeUtil.toGmtDate(time, TimeUtil.Format.UTC);
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance instance) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(instance.getInstanceId()) // 资产id = 实例id
-                .name(instance.getInstanceName())
+                .assetId(entry.getInstanceId()) // 资产id = 实例id
+                .name(entry.getInstanceName())
                 // priveteIp
-                .assetKey(instance.getInstanceNetworkType().equals(VPC) ? instance.getVpcAttributes().getPrivateIpAddress().get(0) :
-                        instance.getInnerIpAddress().get(0))
+                .assetKey(entry.getInstanceNetworkType().equals(VPC) ? entry.getVpcAttributes().getPrivateIpAddress().get(0) :
+                        entry.getInnerIpAddress().get(0))
                 // publicIp
-                .assetKey2(instance.getPublicIpAddress().size() != 0 ? instance.getPublicIpAddress().get(0) : "")
-                .assetType("ECS")
-                .kind(instance.getInstanceType())
-                .regionId(instance.getRegionId())
-                .zone(instance.getZoneId())
-                .createdTime(toGmtDate(instance.getCreationTime()))
+                .assetKey2(entry.getPublicIpAddress().size() != 0 ? entry.getPublicIpAddress().get(0) : "")
+                .assetType(DsAssetTypeEnum.ECS.name())
+                .kind(entry.getInstanceType())
+                .regionId(entry.getRegionId())
+                .zone(entry.getZoneId())
+                .createdTime(toGmtDate(entry.getCreationTime()))
                 .expiredTime(
-                        instance.getInstanceChargeType().equalsIgnoreCase(PRE_PAID) && !StringUtils.isEmpty(instance.getExpiredTime())
-                                ? toGmtDate(instance.getExpiredTime()) : null)
+                        entry.getInstanceChargeType().equalsIgnoreCase(PRE_PAID) && !StringUtils.isEmpty(entry.getExpiredTime())
+                                ? toGmtDate(entry.getExpiredTime()) : null)
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("cpu", instance.getCpu())
-                .paramProperty("vpcId", instance.getVpcAttributes() != null ? instance.getVpcAttributes().getVpcId() : "")
-                .paramProperty("memory", instance.getMemory())
-                .paramProperty("chargeType", instance.getInstanceChargeType())
-                .paramProperty("imageId", instance.getImageId())
-                .paramProperty("osName",instance.getOSName())
-                .paramProperty("osType",instance.getOSType())
+                .paramProperty("cpu", entry.getCpu())
+                .paramProperty("vpcId", entry.getVpcAttributes() != null ? entry.getVpcAttributes().getVpcId() : "")
+                .paramProperty("memory", entry.getMemory())
+                .paramProperty("chargeType", entry.getInstanceChargeType())
+                .paramProperty("imageId", entry.getImageId())
+                .paramProperty("osName", entry.getOSName())
+                .paramProperty("osType", entry.getOSType())
                 .build();
     }
 }
