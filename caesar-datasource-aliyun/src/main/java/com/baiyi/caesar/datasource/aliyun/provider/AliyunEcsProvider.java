@@ -3,7 +3,7 @@ package com.baiyi.caesar.datasource.aliyun.provider;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.caesar.common.annotation.SingleTask;
 import com.baiyi.caesar.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.caesar.common.datasource.config.AliyunDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsAliyunConfig;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.aliyun.convert.ComputeAssetConvert;
 import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunEcsHandler;
@@ -41,7 +41,7 @@ public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesRespon
         doPull(dsInstanceId);
     }
 
-    private AliyunDsConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -63,7 +63,7 @@ public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesRespon
 
     @Override
     protected List<DescribeInstancesResponse.Instance> listEntries(DatasourceConfig dsConfig) {
-        AliyunDsConfig.Aliyun aliyun = buildConfig(dsConfig);
+        DsAliyunConfig.Aliyun aliyun = buildConfig(dsConfig);
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return instanceList;

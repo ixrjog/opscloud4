@@ -1,6 +1,6 @@
 package com.baiyi.caesar.ldap.repo;
 
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import com.baiyi.caesar.ldap.entry.Person;
 
 import java.util.List;
@@ -19,22 +19,22 @@ public interface PersonRepo {
      * @param groupName
      * @return
      */
-    List<Person> queryGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName);
+    List<Person> queryGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName);
 
-    List<String> getAllPersonNames(LdapDsConfig.Ldap ldapConfig);
+    List<String> getAllPersonNames(DsLdapConfig.Ldap ldapConfig);
 
-    List<Person> getPersonList(LdapDsConfig.Ldap ldapConfig);
+    List<Person> getPersonList(DsLdapConfig.Ldap ldapConfig);
 
-    Person findPersonWithDn(LdapDsConfig.Ldap ldapConfig,String dn);
+    Person findPersonWithDn(DsLdapConfig.Ldap ldapConfig, String dn);
 
-    void create(LdapDsConfig.Ldap ldapConfig,Person person);
+    void create(DsLdapConfig.Ldap ldapConfig, Person person);
 
-    void update(LdapDsConfig.Ldap ldapConfig,Person person);
+    void update(DsLdapConfig.Ldap ldapConfig, Person person);
 
-    void delete(LdapDsConfig.Ldap ldapConfig,String username);
+    void delete(DsLdapConfig.Ldap ldapConfig, String username);
 
-    Boolean checkPersonInLdap(LdapDsConfig.Ldap ldapConfig,String username);
+    Boolean checkPersonInLdap(DsLdapConfig.Ldap ldapConfig, String username);
 
-    List<String> searchUserGroupByUsername(LdapDsConfig.Ldap ldapConfig,String username);
+    List<String> searchUserGroupByUsername(DsLdapConfig.Ldap ldapConfig, String username);
 
 }

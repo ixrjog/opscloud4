@@ -2,7 +2,7 @@ package com.baiyi.caesar.ldap.provider;
 
 import com.baiyi.caesar.common.annotation.SingleTask;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
@@ -40,13 +40,13 @@ public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, G
         return DsTypeEnum.LDAP.name();
     }
 
-    private LdapDsConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
+    private DsLdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
     }
 
     @Override
     protected List<Person> listEntries(DatasourceConfig dsConfig, Group target) {
-        LdapDsConfig.Ldap ldap = buildConfig(dsConfig);
+        DsLdapConfig.Ldap ldap = buildConfig(dsConfig);
         return personRepo.queryGroupMember(ldap, target.getGroupName());
     }
 

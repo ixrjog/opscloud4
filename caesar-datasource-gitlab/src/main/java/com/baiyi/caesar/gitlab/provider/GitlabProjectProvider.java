@@ -2,7 +2,7 @@ package com.baiyi.caesar.gitlab.provider;
 
 import com.baiyi.caesar.common.annotation.SingleTask;
 import com.baiyi.caesar.common.datasource.GitlabDsInstanceConfig;
-import com.baiyi.caesar.common.datasource.config.GitlabDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
@@ -37,7 +37,7 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
         return DsTypeEnum.GITLAB.name();
     }
 
-    private GitlabDsConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+    private DsGitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 

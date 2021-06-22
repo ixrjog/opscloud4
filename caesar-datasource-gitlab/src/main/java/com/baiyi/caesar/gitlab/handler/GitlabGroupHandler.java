@@ -1,6 +1,6 @@
 package com.baiyi.caesar.gitlab.handler;
 
-import com.baiyi.caesar.common.datasource.config.GitlabDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import com.baiyi.caesar.gitlab.factory.GitlabFactory;
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.models.GitlabGroup;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class GitlabGroupHandler {
 
-    public static List<GitlabGroup> queryGroups(GitlabDsConfig.Gitlab gitlab) throws IOException {
+    public static List<GitlabGroup> queryGroups(DsGitlabConfig.Gitlab gitlab) throws IOException {
         return buildAPI(gitlab).getGroups();
     }
 
@@ -24,7 +24,7 @@ public class GitlabGroupHandler {
 //        gitlabProject.
 //    }
 
-    private static GitlabAPI buildAPI(GitlabDsConfig.Gitlab gitlab) {
+    private static GitlabAPI buildAPI(DsGitlabConfig.Gitlab gitlab) {
         return GitlabFactory.buildGitlabAPI(gitlab);
     }
 }

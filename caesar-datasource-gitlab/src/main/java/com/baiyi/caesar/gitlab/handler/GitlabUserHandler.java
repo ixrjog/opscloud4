@@ -1,6 +1,6 @@
 package com.baiyi.caesar.gitlab.handler;
 
-import com.baiyi.caesar.common.datasource.config.GitlabDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import com.baiyi.caesar.gitlab.factory.GitlabFactory;
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.models.GitlabUser;
@@ -14,11 +14,11 @@ import java.util.List;
  */
 public class GitlabUserHandler {
 
-    public static List<GitlabUser> queryUsers(GitlabDsConfig.Gitlab gitlab) {
+    public static List<GitlabUser> queryUsers(DsGitlabConfig.Gitlab gitlab) {
         return buildAPI(gitlab).getUsers();
     }
 
-    private static GitlabAPI buildAPI(GitlabDsConfig.Gitlab gitlab) {
+    private static GitlabAPI buildAPI(DsGitlabConfig.Gitlab gitlab) {
         return GitlabFactory.buildGitlabAPI(gitlab);
     }
 }

@@ -1,6 +1,6 @@
 package com.baiyi.caesar.gitlab.factory;
 
-import com.baiyi.caesar.common.datasource.config.GitlabDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import org.gitlab.api.GitlabAPI;
 
 /**
@@ -10,7 +10,7 @@ import org.gitlab.api.GitlabAPI;
  */
 public class GitlabFactory {
 
-    public static GitlabAPI buildGitlabAPI(GitlabDsConfig.Gitlab gitlab) {
+    public static GitlabAPI buildGitlabAPI(DsGitlabConfig.Gitlab gitlab) {
         return GitlabAPI.connect(gitlab.getUrl(), gitlab.getToken());
     }
 

@@ -1,7 +1,7 @@
 package com.baiyi.caesar.common.datasource;
 
 import com.baiyi.caesar.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.caesar.common.datasource.config.GitlabDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -14,6 +14,6 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GitlabDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private GitlabDsConfig.Gitlab gitlab;
+    private DsGitlabConfig.Gitlab gitlab;
 }
 

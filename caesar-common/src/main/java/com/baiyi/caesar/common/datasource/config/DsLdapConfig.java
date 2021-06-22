@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
  * @Date 2021/5/15 6:46 下午
  * @Version 1.0
  */
-public class LdapDsConfig {
+public class DsLdapConfig {
 
     @Data
     @NoArgsConstructor

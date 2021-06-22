@@ -1,6 +1,6 @@
 package com.baiyi.caesar.ldap.repo.impl;
 
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import com.baiyi.caesar.ldap.entry.Person;
 import com.baiyi.caesar.ldap.handler.LdapHandler;
 import com.baiyi.caesar.ldap.repo.PersonRepo;
@@ -25,7 +25,7 @@ public class PersonRepoImpl implements PersonRepo {
     private LdapHandler ldapHandler;
 
     @Override
-    public List<Person> queryGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName) {
+    public List<Person> queryGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName) {
         List<String> usernames = ldapHandler.queryGroupMember(ldapConfig, groupName);
         List<Person> people = Lists.newArrayList();
         for (String username : usernames) {
@@ -48,7 +48,7 @@ public class PersonRepoImpl implements PersonRepo {
      * @return
      */
     @Override
-    public List<String> getAllPersonNames(LdapDsConfig.Ldap ldapConfig) {
+    public List<String> getAllPersonNames(DsLdapConfig.Ldap ldapConfig) {
         return ldapHandler.queryPersonNameList(ldapConfig);
     }
 
@@ -58,7 +58,7 @@ public class PersonRepoImpl implements PersonRepo {
      * @return
      */
     @Override
-    public List<Person> getPersonList(LdapDsConfig.Ldap ldapConfig) {
+    public List<Person> getPersonList(DsLdapConfig.Ldap ldapConfig) {
         return ldapHandler.queryPersonList(ldapConfig);
     }
 
@@ -69,33 +69,33 @@ public class PersonRepoImpl implements PersonRepo {
      * @return
      */
     @Override
-    public Person findPersonWithDn(LdapDsConfig.Ldap ldapConfig, String dn) {
+    public Person findPersonWithDn(DsLdapConfig.Ldap ldapConfig, String dn) {
         return ldapHandler.getPersonWithDn(ldapConfig, dn);
     }
 
     @Override
-    public void create(LdapDsConfig.Ldap ldapConfig, Person person) {
+    public void create(DsLdapConfig.Ldap ldapConfig, Person person) {
         ldapHandler.bindPerson(ldapConfig, person);
     }
 
     @Override
-    public void update(LdapDsConfig.Ldap ldapConfig, Person person) {
+    public void update(DsLdapConfig.Ldap ldapConfig, Person person) {
         ldapHandler.updatePerson(ldapConfig, person);
     }
 
     @Override
-    public void delete(LdapDsConfig.Ldap ldapConfig, String username) {
+    public void delete(DsLdapConfig.Ldap ldapConfig, String username) {
         //  ldapHandler.unbind(ldapConfig.buildUserDN(username));
     }
 
     @Override
-    public Boolean checkPersonInLdap(LdapDsConfig.Ldap ldapConfig, String username) {
+    public Boolean checkPersonInLdap(DsLdapConfig.Ldap ldapConfig, String username) {
         return ldapHandler.checkPersonInLdap(ldapConfig, username);
 
     }
 
     @Override
-    public List<String> searchUserGroupByUsername(LdapDsConfig.Ldap ldapConfig, String username) {
+    public List<String> searchUserGroupByUsername(DsLdapConfig.Ldap ldapConfig, String username) {
         return ldapHandler.searchLdapGroup(ldapConfig, username);
     }
 

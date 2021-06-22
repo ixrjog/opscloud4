@@ -2,7 +2,7 @@ package com.baiyi.caesar.common.datasource;
 
 
 import com.baiyi.caesar.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -15,5 +15,5 @@ import lombok.EqualsAndHashCode;
 @Data
 public class LdapDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private LdapDsConfig.Ldap ldap;
+    private DsLdapConfig.Ldap ldap;
 }

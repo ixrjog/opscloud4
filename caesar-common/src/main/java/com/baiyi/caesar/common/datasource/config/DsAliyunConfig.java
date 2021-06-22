@@ -11,7 +11,7 @@ import java.util.Set;
  * @Date 2021/6/17 3:51 下午
  * @Version 1.0
  */
-public class AliyunDsConfig {
+public class DsAliyunConfig {
 
     @Data
     @NoArgsConstructor

@@ -20,6 +20,7 @@
         <module>caesar-datasource-aliyun-core</module>
         <module>caesar-datasource-aliyun-ecs</module>
         <module>caesar-datasource-gitlab</module>
+        <module>caesar-datasource-zabbix</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -233,6 +234,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>caesar-datasource-gitlab</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>caesar-datasource-zabbix</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

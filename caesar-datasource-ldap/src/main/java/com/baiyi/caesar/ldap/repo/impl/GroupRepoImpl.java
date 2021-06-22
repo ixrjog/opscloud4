@@ -1,6 +1,6 @@
 package com.baiyi.caesar.ldap.repo.impl;
 
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import com.baiyi.caesar.ldap.entry.Group;
 import com.baiyi.caesar.ldap.handler.LdapHandler;
 import com.baiyi.caesar.ldap.repo.GroupRepo;
@@ -24,17 +24,17 @@ public class GroupRepoImpl implements GroupRepo {
     private LdapHandler ldapHandler;
 
     @Override
-    public List<Group> getGroupList(LdapDsConfig.Ldap ldapConfig) {
+    public List<Group> getGroupList(DsLdapConfig.Ldap ldapConfig) {
         return ldapHandler.queryGroupList(ldapConfig);
     }
 
     @Override
-    public List<String> queryGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName) {
+    public List<String> queryGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName) {
         return ldapHandler.queryGroupMember(ldapConfig, groupName);
     }
 
     @Override
-    public List<Group> searchGroupByUsername(LdapDsConfig.Ldap ldapConfig, String username) {
+    public List<Group> searchGroupByUsername(DsLdapConfig.Ldap ldapConfig, String username) {
         List<String> groupNames = ldapHandler.searchLdapGroup(ldapConfig, username);
         return groupNames.stream().map(e ->
                 ldapHandler.getGroupWithDn(ldapConfig, ldapConfig.buildGroupDn(e))
@@ -42,22 +42,22 @@ public class GroupRepoImpl implements GroupRepo {
     }
 
     @Override
-    public void removeGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName, String username) {
+    public void removeGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName, String username) {
         ldapHandler.removeGroupMember(ldapConfig, groupName, username);
     }
 
     @Override
-    public void addGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName, String username) {
+    public void addGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName, String username) {
         ldapHandler.addGroupMember(ldapConfig, groupName, username);
     }
 
     @Override
-    public void create(LdapDsConfig.Ldap ldapConfig, String groupName) {
+    public void create(DsLdapConfig.Ldap ldapConfig, String groupName) {
 
     }
 
     @Override
-    public void delete(LdapDsConfig.Ldap ldapConfig, String groupName) {
+    public void delete(DsLdapConfig.Ldap ldapConfig, String groupName) {
     }
 
 }

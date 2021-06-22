@@ -1,6 +1,6 @@
 package com.baiyi.caesar.ldap.repo;
 
-import com.baiyi.caesar.common.datasource.config.LdapDsConfig;
+import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import com.baiyi.caesar.ldap.entry.Group;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface GroupRepo {
 
-    List<Group> getGroupList(LdapDsConfig.Ldap ldapConfig);
+    List<Group> getGroupList(DsLdapConfig.Ldap ldapConfig);
 
     /**
      * 查询用户组成员名列表
@@ -20,9 +20,9 @@ public interface GroupRepo {
      * @param groupName
      * @return
      */
-    List<String> queryGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName);
+    List<String> queryGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName);
 
-    List<Group> searchGroupByUsername(LdapDsConfig.Ldap ldapConfig,String username);
+    List<Group> searchGroupByUsername(DsLdapConfig.Ldap ldapConfig, String username);
 
     /**
      * 移除group中的用户
@@ -31,11 +31,11 @@ public interface GroupRepo {
      * @param username
      * @return
      */
-    void removeGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName, String username);
+    void removeGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName, String username);
 
-    void addGroupMember(LdapDsConfig.Ldap ldapConfig, String groupName, String username);
+    void addGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName, String username);
 
-    void create(LdapDsConfig.Ldap ldapConfig, String groupName);
+    void create(DsLdapConfig.Ldap ldapConfig, String groupName);
 
-    void delete(LdapDsConfig.Ldap ldapConfig, String groupName);
+    void delete(DsLdapConfig.Ldap ldapConfig, String groupName);
 }
