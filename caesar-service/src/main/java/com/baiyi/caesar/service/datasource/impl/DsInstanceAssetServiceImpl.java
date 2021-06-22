@@ -27,6 +27,11 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     private DatasourceInstanceAssetMapper dsInstanceAssetMapper;
 
     @Override
+    public void deleteById(Integer id) {
+        dsInstanceAssetMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public DatasourceInstanceAsset getById(Integer id) {
         return dsInstanceAssetMapper.selectByPrimaryKey(id);
     }

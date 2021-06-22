@@ -1,6 +1,8 @@
 package com.baiyi.caesar.domain.vo.datasource;
 
+import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.domain.vo.base.BaseVO;
+import com.baiyi.caesar.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -22,7 +24,15 @@ public class DsAssetVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Asset extends BaseVO {
+    public static class Asset extends BaseVO implements  TagVO.ITags{
+
+        // ITags
+        private List<TagVO.Tag> tags;
+        private final int businessType = BusinessTypeEnum.ASSET.getType();
+        @Override
+        public int getBusinessId() {
+            return id;
+        }
 
         private Map<String, String> properties;
 

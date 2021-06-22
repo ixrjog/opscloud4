@@ -39,4 +39,11 @@ public class DatasourceInstanceController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "删除指定的资产")
+    @DeleteMapping(value = "/asset/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteAssetById(@RequestParam @Valid int id) {
+        dsInstanceFacade.deleteAssetById(id);
+        return HttpResult.SUCCESS;
+    }
+
 }

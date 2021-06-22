@@ -11,6 +11,8 @@ import com.baiyi.caesar.domain.param.datasource.DsAssetParam;
  */
 public interface DsInstanceAssetService {
 
+    void deleteById(Integer id);
+
     DatasourceInstanceAsset getById(Integer id);
 
     void add(DatasourceInstanceAsset asset);

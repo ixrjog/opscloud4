@@ -11,10 +11,20 @@ import java.util.List;
  */
 public interface DsInstanceAssetRelationService {
 
+    void deleteById(Integer id);
+
     void add(DatasourceInstanceAssetRelation relation);
 
     void save(DatasourceInstanceAssetRelation relation);
 
     List<DatasourceInstanceAssetRelation> queryTargetAsset(String instanceUuid, Integer sourceAssetId);
+
+    /**
+     * 按资产id查询双向关系
+     *
+     * @param assetId
+     * @return
+     */
+    List<DatasourceInstanceAssetRelation> queryByAssetId(Integer assetId);
 
 }

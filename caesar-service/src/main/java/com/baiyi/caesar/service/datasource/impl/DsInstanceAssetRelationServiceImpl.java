@@ -21,6 +21,11 @@ public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelati
     private DatasourceInstanceAssetRelationMapper dsInstanceAssetRelationMapper;
 
     @Override
+    public void deleteById(Integer id) {
+        dsInstanceAssetRelationMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public void add(DatasourceInstanceAssetRelation relation) {
         dsInstanceAssetRelationMapper.insert(relation);
     }
@@ -43,6 +48,15 @@ public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelati
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", instanceUuid)
                 .andEqualTo("sourceAssetId", sourceAssetId);
+        return dsInstanceAssetRelationMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<DatasourceInstanceAssetRelation> queryByAssetId(Integer assetId) {
+        Example example = new Example(DatasourceInstanceAssetRelation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sourceAssetId", assetId)
+                .orEqualTo("targetAssetId", assetId);
         return dsInstanceAssetRelationMapper.selectByExample(example);
     }
 }

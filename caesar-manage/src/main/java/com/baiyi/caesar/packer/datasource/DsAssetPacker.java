@@ -7,6 +7,7 @@ import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAssetRelation;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.domain.param.IRelation;
 import com.baiyi.caesar.domain.vo.datasource.DsAssetVO;
+import com.baiyi.caesar.packer.tag.TagPacker;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetService;
@@ -38,10 +39,14 @@ public class DsAssetPacker {
     @Resource
     private DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
+    @Resource
+    private TagPacker tagPacker;
+
     public List<DsAssetVO.Asset> wrapVOList(List<DatasourceInstanceAsset> data, IExtend iExtend, IRelation iRelation) {
         return data.stream().map(e -> {
             DsAssetVO.Asset asset = toVO(e);
             if (ExtendUtil.isExtend(iExtend)) {
+                tagPacker.wrap(asset);
                 wrap(asset);
                 if (RelationUtil.isRelation(iRelation))
                     wrapRelation(asset);

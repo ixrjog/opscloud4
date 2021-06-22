@@ -11,6 +11,7 @@ public enum BusinessTypeEnum {
     SERVERGROUP(2,"服务器组"),
     USER(3,"用户"),
     USERGROUP(4,"用户组"),
+    ASSET(5,"资产"),
     // CLOUD_DATABASE(5,"CLOUD_DATABASE"),
     /**
      * 服务器器管理员账户

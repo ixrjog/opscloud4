@@ -14,4 +14,6 @@ public interface DsInstanceFacade {
     DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery);
 
     void pullAsset(DsAssetParam.PullAsset pullAsset);
+
+    void deleteAssetById(Integer id);
 }
