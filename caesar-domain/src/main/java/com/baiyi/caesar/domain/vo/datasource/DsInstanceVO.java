@@ -4,9 +4,7 @@ import com.baiyi.caesar.domain.types.BusinessTypeEnum;
 import com.baiyi.caesar.domain.vo.base.BaseVO;
 import com.baiyi.caesar.domain.vo.tag.TagVO;
 import io.swagger.annotations.ApiModel;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Date;
 import java.util.List;
@@ -25,7 +23,6 @@ public class DsInstanceVO {
     public static class Instance extends BaseVO implements TagVO.ITags {
 
         private final int businessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
-
         private List<TagVO.Tag> tags;
 
         @Override
@@ -33,31 +30,34 @@ public class DsInstanceVO {
             return this.id;
         }
 
+        private List<AssetDetail> assetDetails;
+
         private List<Instance> children;
-
         private Integer id;
-
         private Integer parentId;
-
         private String instanceName;
-
         private String uuid;
-
         private String instanceType;
-
         private String kind;
-
         private String version;
-
         private Boolean isActive;
-
         private Integer configId;
-
         private Date createTime;
-
         private Date updateTime;
-
         private String comment;
 
     }
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class AssetDetail {
+
+        private String assetType;
+        private Integer assetSize;
+
+    }
+
 }

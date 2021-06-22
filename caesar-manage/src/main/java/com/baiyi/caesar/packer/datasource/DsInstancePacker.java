@@ -4,6 +4,7 @@ import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.param.IExtend;
 import com.baiyi.caesar.packer.tag.TagPacker;
+import com.baiyi.caesar.service.datasource.DsInstanceAssetService;
 import com.baiyi.caesar.util.ExtendUtil;
 import com.baiyi.caesar.domain.vo.datasource.DsInstanceVO;
 import org.springframework.stereotype.Component;
@@ -23,11 +24,23 @@ public class DsInstancePacker {
     @Resource
     private TagPacker tagPacker;
 
-    public static DsInstanceVO.Instance toVO(DatasourceInstance datasourceInstance){
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
+
+    public static DsInstanceVO.Instance toVO(DatasourceInstance datasourceInstance) {
         return BeanCopierUtil.copyProperties(datasourceInstance, DsInstanceVO.Instance.class);
     }
 
-    public void wrap(DsInstanceVO.Instance instance){
+    public void wrap(DsInstanceVO.Instance instance) {
+        List<String> assetTypes = dsInstanceAssetService.queryInstanceAssetTypes(instance.getUuid());
+        instance.setAssetDetails(
+                assetTypes.stream().map(e ->
+                        DsInstanceVO.AssetDetail.builder()
+                                .assetType(e)
+                                .assetSize(dsInstanceAssetService.countByInstanceAssetType(instance.getUuid(), e))
+                                .build()
+                ).collect(Collectors.toList())
+        );
         tagPacker.wrap(instance);
     }
 
@@ -41,7 +54,7 @@ public class DsInstancePacker {
             return voList;
 
         return voList.stream().peek(e ->
-            wrap(e)
+                wrap(e)
         ).collect(Collectors.toList());
     }
 }

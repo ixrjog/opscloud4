@@ -82,4 +82,18 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         List<DatasourceInstanceAsset> data = dsInstanceAssetMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
+
+    @Override
+    public List<String> queryInstanceAssetTypes(String instanceUuid) {
+        return dsInstanceAssetMapper.queryInstanceAssetTypes(instanceUuid);
+    }
+
+    @Override
+    public int countByInstanceAssetType(String instanceUuid, String assetType) {
+        Example example = new Example(DatasourceInstanceAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid)
+                .andEqualTo("assetType", assetType);
+        return dsInstanceAssetMapper.selectCountByExample(example);
+    }
 }
