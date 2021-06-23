@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /**
+ * 认证供应商管理类
  * @Author baiyi
  * @Date 2021/6/23 1:13 下午
  * @Version 1.0
@@ -43,6 +44,9 @@ public class AuthProviderManager {
 
     private static final String TAG_AUTHORIZATION = "Authorization";
 
+    /**
+     * 支持认证的实例类型
+     */
     private static final DsTypeEnum[] authorizationInstanceTypes = {DsTypeEnum.LDAP};
 
     /**

@@ -124,16 +124,4 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         }
     }
 
-    /**
-     * 校验密码
-     *
-     * @param password         密码
-     * @param encryptdPassword 加密的密码
-     * @return
-     */
-    private boolean verifyPassword(String password, String encryptdPassword) {
-        return password.equals(stringEncryptor.decrypt(encryptdPassword));
-    }
-
-
 }
