@@ -19,4 +19,6 @@ public interface BusinessTagService {
     void deleteById(Integer id);
 
     void deleteByBusinessTypeAndId(Integer businessType, Integer businessId);
+
+    int countByParam(BusinessTag businessTag);
 }

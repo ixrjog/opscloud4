@@ -17,6 +17,8 @@ import java.util.List;
 public class DsInstanceVO {
 
     @EqualsAndHashCode(callSuper = true)
+    @Builder
+    @AllArgsConstructor
     @Data
     @NoArgsConstructor
     @ApiModel
@@ -29,6 +31,8 @@ public class DsInstanceVO {
         public int getBusinessId() {
             return this.id;
         }
+
+        private DsConfigVO.DsConfig dsConfig;
 
         private List<AssetDetail> assetDetails;
 

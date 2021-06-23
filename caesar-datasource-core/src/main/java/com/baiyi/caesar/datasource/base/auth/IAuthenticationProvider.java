@@ -1,5 +1,6 @@
 package com.baiyi.caesar.datasource.base.auth;
 
+import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.model.Authorization;
 
 /**
@@ -9,6 +10,6 @@ import com.baiyi.caesar.domain.model.Authorization;
  */
 public interface IAuthenticationProvider {
 
-    boolean auth(Authorization.Credential credential);
+    boolean login(DatasourceInstance instance,Authorization.Credential credential);
 
 }

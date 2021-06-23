@@ -3,6 +3,8 @@ package com.baiyi.caesar.domain.param.datasource;
 import com.baiyi.caesar.domain.param.IExtend;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,16 +18,19 @@ import javax.validation.Valid;
 public class DsInstanceParam {
 
     @Data
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
     public static class DsInstanceQuery implements IExtend {
 
-        @ApiModelProperty(value = "数据源类型", example = "1")
+        @ApiModelProperty(value = "数据源类型")
         @Valid
-        private Integer instanceType;
+        private String instanceType;
 
         @ApiModelProperty(value = "有效")
-        private Boolean isActive;
+        @Builder.Default
+        private Boolean isActive = true;
 
         private Boolean extend;
 

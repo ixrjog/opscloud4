@@ -48,4 +48,14 @@ public class BusinessTagServiceImpl implements BusinessTagService {
         criteria.andEqualTo("businessId", businessId);
         businessTagMapper.deleteByExample(example);
     }
+
+    @Override
+    public int countByParam(BusinessTag businessTag){
+        Example example = new Example(BusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType",  businessTag.getBusinessType());
+        criteria.andEqualTo("businessId", businessTag.getBusinessId());
+        criteria.andEqualTo("tagId", businessTag.getTagId());
+        return businessTagMapper.selectCountByExample(example);
+    }
 }

@@ -11,6 +11,7 @@ public enum ErrorEnum {
     AUTH_ROLE_HAS_USED(11001, "用户角色正在使用！"),
     AUTH_RESOURCE_HAS_USED(11003, "资源正在使用！"),
     AUTH_USER_LOGIN_FAILUER(20001,"登录失败请检查用户名或密码是否正确，请重试！"),
+    AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILUER(20001,"没有可认证的实例！"),
 
     // ----------------------- DATASOURCE -----------------------
     DATASOURCE_PROPS_EMPTY(20001,"数据源属性配置为空！"),
