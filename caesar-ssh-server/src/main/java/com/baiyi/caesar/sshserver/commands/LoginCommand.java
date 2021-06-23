@@ -9,7 +9,7 @@ import com.baiyi.caesar.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.caesar.sshcore.model.HostSystem;
 import com.baiyi.caesar.sshcore.model.JSchSession;
 import com.baiyi.caesar.sshcore.model.JSchSessionContainer;
-import com.baiyi.caesar.sshcore.task.server.ServerSentOutputTask;
+import com.baiyi.caesar.sshcore.task.ssh.SshSentOutputTask;
 import com.baiyi.caesar.sshserver.PromptColor;
 import com.baiyi.caesar.sshserver.SshContext;
 import com.baiyi.caesar.sshserver.SshShellCommandFactory;
@@ -53,7 +53,7 @@ public final class LoginCommand {
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
         String instanceId = IdUtil.buildUUID();
         Terminal terminal = getTerminal();
-        Runnable run = new ServerSentOutputTask(sessionId, serverSession, terminal);
+        Runnable run = new SshSentOutputTask(sessionId, serverSession, terminal);
         Thread thread = new Thread(run);
         thread.start();
         try {
@@ -89,10 +89,10 @@ public final class LoginCommand {
                 }
             }
         } catch (SshRuntimeException e) {
-            ((ServerSentOutputTask) run).stop();
+            ((SshSentOutputTask) run).stop();
             throw e;
         }
-        ((ServerSentOutputTask) run).stop();
+        ((SshSentOutputTask) run).stop();
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 

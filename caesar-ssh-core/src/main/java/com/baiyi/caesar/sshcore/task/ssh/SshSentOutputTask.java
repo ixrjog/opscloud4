@@ -1,4 +1,4 @@
-package com.baiyi.caesar.sshcore.task.server;
+package com.baiyi.caesar.sshcore.task.ssh;
 
 import com.baiyi.caesar.sshcore.model.SessionOutput;
 import com.baiyi.caesar.sshcore.util.SessionOutputUtil;
@@ -15,14 +15,14 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public class ServerSentOutputTask implements Runnable {
+public class SshSentOutputTask implements Runnable {
 
     ServerSession serverSession;
     String sessionId;
     Terminal terminal;
     Boolean stop;
 
-    public ServerSentOutputTask(String sessionId, ServerSession serverSession, Terminal terminal) {
+    public SshSentOutputTask(String sessionId, ServerSession serverSession, Terminal terminal) {
         this.sessionId = sessionId;
         this.serverSession = serverSession;
         this.terminal = terminal;

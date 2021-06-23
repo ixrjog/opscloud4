@@ -1,7 +1,7 @@
 package com.baiyi.caesar.datasource.asset;
 
+import com.baiyi.caesar.datasource.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
-import com.baiyi.caesar.datasource.common.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;

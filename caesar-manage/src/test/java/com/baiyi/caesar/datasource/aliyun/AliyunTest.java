@@ -1,7 +1,7 @@
 package com.baiyi.caesar.datasource.aliyun;
 
 import com.baiyi.caesar.BaseUnit;
-import com.baiyi.caesar.datasource.common.SimpleAssetProvider;
+import com.baiyi.caesar.datasource.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;

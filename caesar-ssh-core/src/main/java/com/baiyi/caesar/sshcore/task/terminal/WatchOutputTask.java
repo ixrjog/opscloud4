@@ -40,12 +40,12 @@ import java.io.InputStreamReader;
  * Task to watch for output read from the ssh session stream
  */
 @Slf4j
-public class SecureShellTask implements Runnable {
+public class WatchOutputTask implements Runnable {
 
     InputStream outFromChannel;
     SessionOutput sessionOutput;
 
-    public SecureShellTask(SessionOutput sessionOutput, InputStream outFromChannel) {
+    public WatchOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
         this.sessionOutput = sessionOutput;
         this.outFromChannel = outFromChannel;
     }
@@ -63,7 +63,6 @@ public class SecureShellTask implements Runnable {
                 Thread.sleep(50);
             }
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
-
         } catch (Exception ex) {
             log.error(ex.toString(), ex);
         }

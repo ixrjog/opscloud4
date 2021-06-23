@@ -3,7 +3,7 @@ package com.baiyi.caesar.sshcore.handler;
 import com.baiyi.caesar.domain.generator.caesar.Credential;
 import com.baiyi.caesar.sshcore.message.BaseMessage;
 import com.baiyi.caesar.sshcore.model.*;
-import com.baiyi.caesar.sshcore.task.terminal.SecureShellTask;
+import com.baiyi.caesar.sshcore.task.terminal.WatchOutputTask;
 import com.baiyi.caesar.sshcore.util.ChannelShellUtil;
 import com.baiyi.caesar.sshcore.util.SessionConfigUtil;
 import com.jcraft.jsch.ChannelShell;
@@ -76,7 +76,7 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new SecureShellTask(sessionOutput, channel.getInputStream());
+            Runnable run = new WatchOutputTask(sessionOutput, channel.getInputStream());
             Thread thread = new Thread(run);
             thread.start();
 
@@ -135,7 +135,7 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new SecureShellTask(sessionOutput, channel.getInputStream());
+            Runnable run = new WatchOutputTask(sessionOutput, channel.getInputStream());
             Thread thread = new Thread(run);
             thread.start();
 

@@ -1,7 +1,7 @@
 package com.baiyi.caesar.facade.datasource.impl;
 
 import com.baiyi.caesar.common.base.Global;
-import com.baiyi.caesar.datasource.common.SimpleAssetProvider;
+import com.baiyi.caesar.datasource.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.annotation.TagClear;
