@@ -1,7 +1,6 @@
 package com.baiyi.caesar.sshserver.commands;
 
 import com.baiyi.caesar.domain.DataTable;
-import com.baiyi.caesar.domain.generator.caesar.Env;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
 import com.baiyi.caesar.domain.generator.caesar.User;
@@ -44,8 +43,8 @@ import static com.baiyi.caesar.sshserver.util.TableUtil.DIVIDING_LINE;
  */
 @Slf4j
 @SshShellComponent
-@ShellCommandGroup("Show")
-public class ShowCommand {
+@ShellCommandGroup("List")
+public class ListCommand {
 
     @Resource
     private SshShellHelper helper;
@@ -69,7 +68,7 @@ public class ShowCommand {
 
     private static final Map<String, ServerParam.UserPermissionServerPageQuery> userSessionServerQueryContainer = Maps.newConcurrentMap();
 
-    private void doShowServer(ShowCommandContext commandContext) {
+    private void doListServer(ShowCommandContext commandContext) {
         Terminal terminal = getTerminal();
         SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
                 .column("id")
@@ -87,7 +86,7 @@ public class ShowCommand {
         com.baiyi.caesar.common.util.SessionUtil.setUserId(user.getId());
         com.baiyi.caesar.common.util.SessionUtil.setUsername(user.getUsername());
 
-        if (user == null || !user.getIsActive()) {
+        if (!user.getIsActive()) {
             helper.print("未经授权的访问！", PromptColor.RED);
             return;
         }
@@ -118,8 +117,8 @@ public class ShowCommand {
                 PromptColor.GREEN);
     }
 
-    @ShellMethod(value = "Show server", key = {"ls", "list", "host", "s", "show"})
-    public void showServer(@ShellOption(help = "ServerName", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
+    @ShellMethod(value = "List server", key = {"ls", "list" })
+    public void listServer(@ShellOption(help = "ServerName", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
                 .name(name)
@@ -131,10 +130,10 @@ public class ShowCommand {
                 .username(helper.getSshSession().getUsername())
                 .queryParam(pageQuery)
                 .build();
-        doShowServer(commandContext);
+        doListServer(commandContext);
     }
 
-    @ShellMethod(value = "Show server before page", key = "b")
+    @ShellMethod(value = "List server before page", key = "b")
     public void beforePage() {
         String sessionId = buildSessionId();
         if (userSessionServerQueryContainer.containsKey(sessionId)) {
@@ -145,14 +144,14 @@ public class ShowCommand {
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
                     .build();
-            doShowServer(commandContext);
+            doListServer(commandContext);
         } else {
-            showServer("", "");
+            listServer("", "");
         }
     }
 
 
-    @ShellMethod(value = "Show server next page", key = "n")
+    @ShellMethod(value = "List server next page", key = "n")
     public void nextPage() {
         String sessionId = buildSessionId();
         if (userSessionServerQueryContainer.containsKey(sessionId)) {
@@ -163,17 +162,9 @@ public class ShowCommand {
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
                     .build();
-            doShowServer(commandContext);
+            doListServer(commandContext);
         } else {
-            showServer("", "");
-        }
-    }
-
-    private static String buildDisplayEnv(Env env) {
-        if (env.getPromptColor() == null) {
-            return env.getEnvName();
-        } else {
-            return "[" + (new AttributedStringBuilder()).append(env.getEnvName(), AttributedStyle.DEFAULT.foreground(env.getPromptColor())).toAnsi() + "]";
+            listServer("", "");
         }
     }
 
