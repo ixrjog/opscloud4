@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>caesar</artifactId>
+        <groupId>com.baiyi</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>caesar-datasource-kubernetes</artifactId>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-datasource-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-client</artifactId>
+            <version>4.9.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/io.fabric8/kubernetes-model-->
+        <dependency>
+            <groupId>io.fabric8</groupId>
+            <artifactId>kubernetes-model</artifactId>
+            <version>4.9.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.aliyun/cs20151215 -->
+<!--        <dependency>-->
+<!--            <groupId>com.aliyun</groupId>-->
+<!--            <artifactId>cs20151215</artifactId>-->
+<!--            <version>2.4.1</version>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.baiyi</groupId>-->
+<!--            <artifactId>opscloud-aliyun-core</artifactId>-->
+<!--        </dependency>-->
+
+<!--        <dependency>-->
+<!--            <groupId>com.aliyun</groupId>-->
+<!--            <artifactId>aliyun-java-sdk-cr</artifactId>-->
+<!--            <version>4.1.2</version>-->
+<!--        </dependency>-->
+
+    </dependencies>
+
+
+</project>
