@@ -3,7 +3,7 @@ package com.baiyi.caesar.ldap.provider;
 import com.baiyi.caesar.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.config.DsLdapConfig;
 import com.baiyi.caesar.common.type.DsTypeEnum;
-import com.baiyi.caesar.datasource.auth.BaseAuthProvider;
+import com.baiyi.caesar.datasource.provider.auth.BaseAuthProvider;
 import com.baiyi.caesar.datasource.model.DsInstanceContext;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.model.Authorization;

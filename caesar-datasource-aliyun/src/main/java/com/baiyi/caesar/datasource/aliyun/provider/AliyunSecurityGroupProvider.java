@@ -8,7 +8,8 @@ import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.aliyun.convert.SecurityGroupAssetConvert;
 import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunEcsHandler;
-import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.datasource.util.AssetUtil;
@@ -64,8 +65,8 @@ public class AliyunSecurityGroupProvider extends BaseAssetProvider<DescribeSecur
     }
 
     @Override
-    protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntries(DatasourceConfig dsConfig) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsConfig);
+    protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntries(DsInstanceContext dsInstanceContext) {
+        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroupList = Lists.newArrayList();

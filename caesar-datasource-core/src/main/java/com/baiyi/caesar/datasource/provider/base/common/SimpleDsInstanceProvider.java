@@ -1,4 +1,4 @@
-package com.baiyi.caesar.datasource.base.common;
+package com.baiyi.caesar.datasource.provider.base.common;
 
 import com.baiyi.caesar.datasource.model.DsInstanceContext;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;

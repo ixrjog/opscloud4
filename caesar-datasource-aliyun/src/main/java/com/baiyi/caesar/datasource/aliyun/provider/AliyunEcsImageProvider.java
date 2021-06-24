@@ -8,7 +8,8 @@ import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.aliyun.convert.EcsImageAssetConvert;
 import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunEcsHandler;
-import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.datasource.util.AssetUtil;
@@ -65,8 +66,8 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     }
 
     @Override
-    protected List<DescribeImagesResponse.Image> listEntries(DatasourceConfig dsConfig) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsConfig);
+    protected List<DescribeImagesResponse.Image> listEntries( DsInstanceContext dsInstanceContext) {
+        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeImagesResponse.Image> imageList = Lists.newArrayList();

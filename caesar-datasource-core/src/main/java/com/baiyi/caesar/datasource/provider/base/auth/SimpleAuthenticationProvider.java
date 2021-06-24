@@ -1,6 +1,6 @@
-package com.baiyi.caesar.datasource.base.auth;
+package com.baiyi.caesar.datasource.provider.base.auth;
 
-import com.baiyi.caesar.datasource.base.common.IInstanceType;
+import com.baiyi.caesar.datasource.provider.base.common.IInstanceType;
 
 /**
  * @Author baiyi

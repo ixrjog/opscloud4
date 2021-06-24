@@ -1,7 +1,7 @@
-package com.baiyi.caesar.datasource.auth;
+package com.baiyi.caesar.datasource.provider.auth;
 
-import com.baiyi.caesar.datasource.base.auth.SimpleAuthenticationProvider;
-import com.baiyi.caesar.datasource.base.common.SimpleDsInstanceProvider;
+import com.baiyi.caesar.datasource.provider.base.auth.SimpleAuthenticationProvider;
+import com.baiyi.caesar.datasource.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.caesar.datasource.factory.AuthProviderFactory;
 import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.datasource.model.DsInstanceContext;

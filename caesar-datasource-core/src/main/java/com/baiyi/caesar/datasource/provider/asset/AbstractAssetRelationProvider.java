@@ -1,10 +1,9 @@
-package com.baiyi.caesar.datasource.asset;
+package com.baiyi.caesar.datasource.provider.asset;
 
-import com.baiyi.caesar.datasource.base.common.ITargetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
-import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
-import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.base.common.ITargetProvider;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAssetRelation;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetRelationService;
@@ -25,29 +24,29 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
     @Resource
     private DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
-    protected abstract List<S> listEntries(DatasourceConfig dsConfig, T target);
+    protected abstract List<S> listEntries(DsInstanceContext dsInstanceContext, T target);
 
     private AbstractAssetRelationProvider<T, S> getTargetProvider() {
         return AssetProviderFactory.getProvider(getInstanceType(), getTargetAssetKey());
     }
 
-    protected List<T> listTarget(DatasourceConfig dsConfig, S source) {
+    protected List<T> listTarget(DsInstanceContext dsInstanceContext, S source) {
         AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
         if (targetAssetProvider == null) return Collections.emptyList();
-        return targetAssetProvider.listEntries(dsConfig, source);
+        return targetAssetProvider.listEntries(dsInstanceContext, source);
     }
 
     @Override
-    protected void enterEntry(DatasourceInstance dsInstance, DatasourceConfig dsConfig, S source) {
-        DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstance, source));
-        List<T> targets = listTarget(dsConfig, source);
+    protected void enterEntry(DsInstanceContext dsInstanceContext, S source) {
+        DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), source));
+        List<T> targets = listTarget(dsInstanceContext, source);
         targets.forEach(target -> {
             AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
-            AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstance, target);
+            AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
             DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
             if (targetAsset == null) return; // 关联对象未录入
             DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
-                    .instanceUuid(dsInstance.getUuid())
+                    .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
                     .sourceAssetId(asset.getId())
                     .targetAssetId(targetAsset.getId())
                     .relationType(getTargetAssetKey())

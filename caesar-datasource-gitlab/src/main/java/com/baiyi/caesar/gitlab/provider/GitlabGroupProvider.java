@@ -5,7 +5,8 @@ import com.baiyi.caesar.common.datasource.GitlabDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
-import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.datasource.util.AssetUtil;
@@ -44,15 +45,16 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    protected List<GitlabGroup> listEntries(DatasourceConfig dsConfig, GitlabProject target) {
+    protected List<GitlabGroup> listEntries(DsInstanceContext dsInstanceContext, GitlabProject target) {
         return Lists.newArrayList();
     }
 
     @Override
-    protected List<GitlabGroup> listEntries(DatasourceConfig dsConfig) {
+    protected List<GitlabGroup> listEntries(DsInstanceContext dsInstanceContext) {
         try {
-            return GitlabGroupHandler.queryGroups(buildConfig(dsConfig));
-        } catch (IOException ioEx) {
+            return GitlabGroupHandler.queryGroups(buildConfig(dsInstanceContext.getDsConfig()));
+        } catch (IOException ex) {
+            ex.printStackTrace();
         }
         return Lists.newArrayList();
     }

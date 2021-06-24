@@ -1,4 +1,4 @@
-package com.baiyi.caesar.datasource.base.common;
+package com.baiyi.caesar.datasource.provider.base.common;
 
 /**
  * @Author baiyi

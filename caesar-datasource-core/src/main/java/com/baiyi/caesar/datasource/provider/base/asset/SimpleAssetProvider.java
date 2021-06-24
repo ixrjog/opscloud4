@@ -1,4 +1,4 @@
-package com.baiyi.caesar.datasource.base.asset;
+package com.baiyi.caesar.datasource.provider.base.asset;
 
 /**
  * @Author baiyi

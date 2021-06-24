@@ -8,7 +8,8 @@ import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.datasource.aliyun.convert.VSwitchAssetConvert;
 import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunVpcHandler;
-import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.datasource.util.AssetUtil;
@@ -64,8 +65,8 @@ public class AliyunVSwitchProvider extends BaseAssetProvider<DescribeVSwitchesRe
     }
 
     @Override
-    protected List<DescribeVSwitchesResponse.VSwitch> listEntries(DatasourceConfig dsConfig) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsConfig);
+    protected List<DescribeVSwitchesResponse.VSwitch> listEntries(DsInstanceContext dsInstanceContext) {
+        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeVSwitchesResponse.VSwitch> vSwitchList = Lists.newArrayList();

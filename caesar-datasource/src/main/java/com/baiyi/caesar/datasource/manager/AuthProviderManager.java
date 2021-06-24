@@ -2,7 +2,7 @@ package com.baiyi.caesar.datasource.manager;
 
 import com.baiyi.caesar.common.exception.auth.AuthRuntimeException;
 import com.baiyi.caesar.common.type.DsTypeEnum;
-import com.baiyi.caesar.datasource.auth.BaseAuthProvider;
+import com.baiyi.caesar.datasource.provider.auth.BaseAuthProvider;
 import com.baiyi.caesar.datasource.factory.AuthProviderFactory;
 import com.baiyi.caesar.domain.ErrorEnum;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;

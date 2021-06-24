@@ -5,7 +5,8 @@ import com.baiyi.caesar.common.datasource.GitlabDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.config.DsGitlabConfig;
 import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
-import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.datasource.util.AssetUtil;
@@ -46,8 +47,8 @@ public class GitlabUserProvider extends BaseAssetProvider<GitlabUser> {
     }
 
     @Override
-    protected List<GitlabUser> listEntries(DatasourceConfig dsConfig) {
-        return GitlabUserHandler.queryUsers(buildConfig(dsConfig));
+    protected List<GitlabUser> listEntries(DsInstanceContext dsInstanceContext) {
+        return GitlabUserHandler.queryUsers(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

@@ -1,6 +1,6 @@
 package com.baiyi.caesar.datasource.factory;
 
-import com.baiyi.caesar.datasource.asset.AbstractAssetRelationProvider;
+import com.baiyi.caesar.datasource.provider.asset.AbstractAssetRelationProvider;
 import com.google.common.collect.Maps;
 import org.springframework.data.util.CastUtils;
 

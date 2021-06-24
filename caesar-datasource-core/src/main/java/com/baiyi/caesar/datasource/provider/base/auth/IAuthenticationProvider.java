@@ -1,4 +1,4 @@
-package com.baiyi.caesar.datasource.base.auth;
+package com.baiyi.caesar.datasource.provider.base.auth;
 
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.model.Authorization;

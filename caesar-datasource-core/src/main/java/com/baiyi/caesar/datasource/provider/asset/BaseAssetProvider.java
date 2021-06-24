@@ -1,15 +1,14 @@
-package com.baiyi.caesar.datasource.asset;
+package com.baiyi.caesar.datasource.provider.asset;
 
-import com.baiyi.caesar.datasource.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.DsConfigFactory;
-import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
+import com.baiyi.caesar.datasource.model.DsInstanceContext;
+import com.baiyi.caesar.datasource.provider.base.asset.SimpleAssetProvider;
+import com.baiyi.caesar.datasource.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
-import com.baiyi.caesar.service.datasource.DsConfigService;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetService;
-import com.baiyi.caesar.service.datasource.DsInstanceService;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
@@ -21,13 +20,13 @@ import java.util.Map;
  * @Date 2021/6/19 4:22 下午
  * @Version 1.0
  */
-public abstract class BaseAssetProvider<T> implements SimpleAssetProvider, InitializingBean {
+public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider, InitializingBean {
 
-    @Resource
-    private DsInstanceService dsInstanceService;
-
-    @Resource
-    private DsConfigService dsConfigService;
+//    @Resource
+//    private DsInstanceService dsInstanceService;
+//
+//    @Resource
+//    private DsConfigService dsConfigService;
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
@@ -38,14 +37,14 @@ public abstract class BaseAssetProvider<T> implements SimpleAssetProvider, Initi
     @Resource
     protected DsConfigFactory dsFactory;
 
-    protected abstract List<T> listEntries(DatasourceConfig dsConfig);
+    protected abstract List<T> listEntries(DsInstanceContext dsInstanceContext);
 
-    private void enterAssets(DatasourceInstance dsInstance, DatasourceConfig dsConfig, List<T> entries) {
-        entries.forEach(e -> enterEntry(dsInstance, dsConfig, e));
+    private void enterAssets( DsInstanceContext dsInstanceContext , List<T> entries) {
+        entries.forEach(e -> enterEntry(dsInstanceContext, e));
     }
 
-    protected void enterEntry(DatasourceInstance dsInstance, DatasourceConfig dsConfig, T entry) {
-        enterAsset(toAssetContainer(dsInstance, entry));
+    protected void enterEntry( DsInstanceContext dsInstanceContext , T entry) {
+        enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
     }
 
     protected DatasourceInstanceAsset enterAsset(AssetContainer assetContainer) {
@@ -89,10 +88,12 @@ public abstract class BaseAssetProvider<T> implements SimpleAssetProvider, Initi
     protected abstract AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entry);
 
     protected void doPull(int dsInstanceId) {
-        DatasourceInstance dsInstance = dsInstanceService.getById(dsInstanceId);
-        DatasourceConfig dsConfig = dsConfigService.getById(dsInstance.getConfigId());
-        List<T> entries = listEntries(dsConfig);
-        enterAssets(dsInstance, dsConfig, entries);
+      // DatasourceInstance dsInstance = dsInstanceService.getById(dsInstanceId);
+      //  DatasourceConfig dsConfig = dsConfigService.getById(dsInstance.getConfigId());
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
+
+        List<T> entries = listEntries(dsInstanceContext);
+        enterAssets(  dsInstanceContext , entries);
     }
 
 

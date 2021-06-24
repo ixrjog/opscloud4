@@ -1,6 +1,6 @@
-package com.baiyi.caesar.datasource.base.asset;
+package com.baiyi.caesar.datasource.provider.base.asset;
 
-import com.baiyi.caesar.datasource.base.common.IInstanceType;
+import com.baiyi.caesar.datasource.provider.base.common.IInstanceType;
 
 /**
  * @Author baiyi

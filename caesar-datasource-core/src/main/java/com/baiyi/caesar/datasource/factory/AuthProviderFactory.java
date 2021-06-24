@@ -1,6 +1,6 @@
 package com.baiyi.caesar.datasource.factory;
 
-import com.baiyi.caesar.datasource.auth.BaseAuthProvider;
+import com.baiyi.caesar.datasource.provider.auth.BaseAuthProvider;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
