@@ -58,9 +58,8 @@ spring:
         max-pool-prepared-statement-per-connection-size: 20
 
 
-
 # java -jar -Djasypt.encryptor.password=${password}
-#jasypt:
-#  encryptor:
-#    password: ${password}
-
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
