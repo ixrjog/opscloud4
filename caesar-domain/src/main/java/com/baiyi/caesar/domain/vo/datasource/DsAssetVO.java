@@ -24,11 +24,12 @@ public class DsAssetVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Asset extends BaseVO implements  TagVO.ITags{
+    public static class Asset extends BaseVO implements TagVO.ITags {
 
         // ITags
         private List<TagVO.Tag> tags;
         private final int businessType = BusinessTypeEnum.ASSET.getType();
+
         @Override
         public int getBusinessId() {
             return id;
@@ -36,7 +37,9 @@ public class DsAssetVO {
 
         private Map<String, String> properties;
 
-        private Map<String,List<DsAssetVO.Asset>> children;
+        private Map<String, List<DsAssetVO.Asset>> children;
+
+        private Map<String, List<DsAssetVO.Asset>> tree;
 
         private Integer id;
         private Integer parentId;

@@ -16,8 +16,10 @@ import com.baiyi.caesar.util.RelationUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -50,6 +52,7 @@ public class DsAssetPacker {
                 wrap(asset);
                 if (RelationUtil.isRelation(iRelation))
                     wrapRelation(asset);
+                asset.setTree(wrapTree(asset));
             }
             return asset;
         }).collect(Collectors.toList());
@@ -63,6 +66,10 @@ public class DsAssetPacker {
 
     private DsAssetVO.Asset toVO(DatasourceInstanceAsset asset) {
         return BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class);
+    }
+
+    private List<DsAssetVO.Asset> toVOList(List<DatasourceInstanceAsset> assetList) {
+        return BeanCopierUtil.copyListProperties(assetList, DsAssetVO.Asset.class);
     }
 
     private void wrapRelation(DsAssetVO.Asset asset) {
@@ -79,4 +86,12 @@ public class DsAssetPacker {
         asset.setChildren(children);
     }
 
+    private Map<String, List<DsAssetVO.Asset>> wrapTree(DsAssetVO.Asset asset) {
+        List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(asset.getId());
+        if (CollectionUtils.isEmpty(assetList))
+            return Collections.emptyMap();
+        List<DsAssetVO.Asset> assetVOList = toVOList(assetList);
+        assetVOList.forEach(a -> a.setChildren(wrapTree(a)));
+        return assetVOList.stream().collect(Collectors.groupingBy(DsAssetVO.Asset::getAssetType));
+    }
 }

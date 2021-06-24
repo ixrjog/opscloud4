@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class UserPacker extends DesensitizedPacker<UserVO.User> {
+public class UserPacker {
 
     @Resource
     private AuthRolePacker authRolePacker;
@@ -29,10 +29,13 @@ public class UserPacker extends DesensitizedPacker<UserVO.User> {
     @Resource
     private UserCredentialPacker userCredentialPacker;
 
+    @Resource
+    private DesensitizedPacker<UserVO.User> desensitizedPacker;
+
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
         return userList.stream()
-                .map(this::desensitized)
+                .map(e -> desensitizedPacker.desensitized(e))
                 .collect(Collectors.toList());
     }
 
@@ -60,6 +63,6 @@ public class UserPacker extends DesensitizedPacker<UserVO.User> {
     public UserVO.User wrap(UserVO.User user) {
         authRolePacker.wrap(user);
         userCredentialPacker.wrap(user);
-        return desensitized(user);
+        return desensitizedPacker.desensitized(user);
     }
 }

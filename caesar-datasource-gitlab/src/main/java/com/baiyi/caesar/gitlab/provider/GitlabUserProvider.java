@@ -45,7 +45,6 @@ public class GitlabUserProvider extends BaseAssetProvider<GitlabUser> {
         return dsFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 
-
     @Override
     protected List<GitlabUser> listEntries(DatasourceConfig dsConfig) {
         return GitlabUserHandler.queryUsers(buildConfig(dsConfig));
