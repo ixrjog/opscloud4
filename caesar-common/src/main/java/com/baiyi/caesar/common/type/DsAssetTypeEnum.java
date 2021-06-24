@@ -12,8 +12,10 @@ public enum DsAssetTypeEnum {
     ECS("ECS"),
     GITLAB_GROUP("GITLAB_GROUP"),
     GITLAB_PROJECT("GITLAB_PROJECT"),
-
-
+    VPC("VPC"),
+    V_SWITCH("V_SWITCH"),
+    ECS_IMAGE("ECS_IMAGE"),
+    ECS_SG("ECS_SG"),
     ;
 
     private String type;

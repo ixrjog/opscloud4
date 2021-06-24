@@ -25,14 +25,14 @@ public class DsAssetParam {
     public static class AssetPageQuery extends PageParam implements IExtend, IRelation {
 
         @ApiModelProperty(value = "实例id")
-        @NotNull
+        @NotNull(message = "实例id不能为空")
         private Integer instanceId;
 
         @ApiModelProperty(value = "实例uuid")
         private String instanceUuid;
 
         @ApiModelProperty(value = "资产类型")
-        @NotNull
+        @NotNull(message = "资产类型不能为空")
         private String assetType;
 
         @ApiModelProperty(value = "模糊查询")

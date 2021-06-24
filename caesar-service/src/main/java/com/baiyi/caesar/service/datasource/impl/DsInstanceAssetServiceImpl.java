@@ -96,4 +96,12 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
                 .andEqualTo("assetType", assetType);
         return dsInstanceAssetMapper.selectCountByExample(example);
     }
+
+    @Override
+    public List<DatasourceInstanceAsset> listByParentId(Integer parentId) {
+        Example example = new Example(DatasourceInstanceAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("parentId", parentId);
+        return dsInstanceAssetMapper.selectByExample(example);
+    }
 }

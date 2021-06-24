@@ -1,16 +1,16 @@
 package com.baiyi.caesar.datasource.aliyun.provider;
 
-import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.baiyi.caesar.common.annotation.SingleTask;
 import com.baiyi.caesar.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.caesar.common.datasource.config.DsAliyunConfig;
 import com.baiyi.caesar.common.type.DsAssetTypeEnum;
 import com.baiyi.caesar.common.type.DsTypeEnum;
-import com.baiyi.caesar.datasource.aliyun.convert.ComputeAssetConvert;
-import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunEcsHandler;
+import com.baiyi.caesar.datasource.aliyun.convert.VpcAssetConvert;
+import com.baiyi.caesar.datasource.aliyun.ecs.handler.AliyunVpcHandler;
+import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
-import com.baiyi.caesar.datasource.asset.BaseAssetProvider;
 import com.baiyi.caesar.datasource.util.AssetUtil;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
@@ -24,21 +24,21 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @Author baiyi
- * @Date 2021/6/17 4:47 下午
- * @Version 1.0
+ * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Date 2021/6/23 1:21 下午
+ * @Since 1.0
  */
 @Component
-public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesResponse.Instance> {
+public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vpc> {
 
     @Resource
-    private AliyunEcsHandler aliyunEcsHandler;
+    private AliyunVpcHandler aliyunVpcHandler;
 
     @Resource
-    private AliyunEcsProvider aliyunEcsProvider;
+    private AliyunVpcProvider aliyunVpcProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunEcs", lockTime = 300)
+    @SingleTask(name = "PullAliyunVpc", lockTime = 300)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -48,29 +48,25 @@ public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesRespon
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entry) {
-        return ComputeAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entry) {
+        return VpcAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
-            return false;
         if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
-            return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
             return false;
         return true;
     }
 
     @Override
-    protected List<DescribeInstancesResponse.Instance> listEntries(DatasourceConfig dsConfig) {
+    protected List<DescribeVpcsResponse.Vpc> listEntries(DatasourceConfig dsConfig) {
         DsAliyunConfig.Aliyun aliyun = buildConfig(dsConfig);
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> instanceList.addAll(aliyunEcsHandler.listInstances(regionId, aliyun)));
-        return instanceList;
+        List<DescribeVpcsResponse.Vpc> vpcList = Lists.newArrayList();
+        aliyun.getRegionIds().forEach(regionId -> vpcList.addAll(aliyunVpcHandler.listVpcs(regionId, aliyun)));
+        return vpcList;
     }
 
     @Override
@@ -80,12 +76,12 @@ public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesRespon
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ECS.getType();
+        return DsAssetTypeEnum.VPC.getType();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunEcsProvider);
+        AssetProviderFactory.register(aliyunVpcProvider);
     }
 
 }

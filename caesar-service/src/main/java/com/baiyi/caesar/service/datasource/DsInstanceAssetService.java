@@ -29,4 +29,6 @@ public interface DsInstanceAssetService {
 
     int countByInstanceAssetType(String instanceUuid, String assetType);
 
+    List<DatasourceInstanceAsset> listByParentId(Integer parentId);
+
 }

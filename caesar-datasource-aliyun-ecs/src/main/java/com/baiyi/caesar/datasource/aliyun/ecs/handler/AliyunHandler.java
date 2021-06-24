@@ -16,7 +16,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class AliyunInstanceHandler extends BaseAliyunHandler {
+public class AliyunHandler extends BaseAliyunHandler {
 
     @Retryable(value = ClientException.class, maxAttempts = 4, backoff = @Backoff(delay = 3000, multiplier = 1.5))
     public <T extends AcsResponse> T getAcsResponse(String regionId, DsAliyunConfig.Aliyun aliyun, AcsRequest<T> describe) throws ClientException {
