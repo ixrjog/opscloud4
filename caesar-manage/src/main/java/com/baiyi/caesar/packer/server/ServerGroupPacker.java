@@ -3,6 +3,7 @@ package com.baiyi.caesar.packer.server;
 import com.baiyi.caesar.common.util.BeanCopierUtil;
 import com.baiyi.caesar.domain.generator.caesar.ServerGroup;
 import com.baiyi.caesar.domain.param.IExtend;
+import com.baiyi.caesar.service.server.ServerGroupService;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.util.ExtendUtil;
 import com.baiyi.caesar.domain.vo.server.ServerGroupVO;
@@ -27,6 +28,9 @@ public final class ServerGroupPacker {
     @Resource
     private ServerService serverService;
 
+    @Resource
+    private ServerGroupService serverGroupService;
+
     public List<ServerGroupVO.ServerGroup> wrapVOList(List<ServerGroup> data) {
         return BeanCopierUtil.copyListProperties(data, ServerGroupVO.ServerGroup.class);
     }
@@ -43,13 +47,18 @@ public final class ServerGroupPacker {
         return voList.stream().peek(this::wrap).collect(Collectors.toList());
     }
 
-    public ServerGroupVO.ServerGroup wrap(ServerGroup serverGroup){
+    public ServerGroupVO.ServerGroup wrap(ServerGroup serverGroup) {
         return BeanCopierUtil.copyProperties(serverGroup, ServerGroupVO.ServerGroup.class);
     }
 
     private void wrap(ServerGroupVO.ServerGroup vo) {
         serverGroupTypePacker.wrap(vo);
         vo.setServerSize(serverService.countByServerGroupId(vo.getId()));
+    }
+
+    public void wrap(ServerGroupVO.IServerGroup iServerGroup) {
+        ServerGroup serverGroup = serverGroupService.getById(iServerGroup.getServerGroupId());
+        iServerGroup.setServerGroup(wrap(serverGroup));
     }
 
 }

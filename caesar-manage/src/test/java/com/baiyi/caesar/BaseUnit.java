@@ -1,5 +1,6 @@
 package com.baiyi.caesar;
 
+import com.alibaba.fastjson.JSON;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.retry.annotation.Retryable;
@@ -18,5 +19,9 @@ import org.springframework.test.context.ActiveProfiles;
 @ActiveProfiles(profiles = "dev")
 @Retryable
 public class BaseUnit {
+
+   public void print(Object t){
+        System.err.print(JSON.toJSONString(t));
+    }
 
 }

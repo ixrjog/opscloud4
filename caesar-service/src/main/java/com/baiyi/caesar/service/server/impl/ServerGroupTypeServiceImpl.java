@@ -59,4 +59,12 @@ public class ServerGroupTypeServiceImpl implements ServerGroupTypeService {
     public ServerGroupType getById(Integer id) {
         return serverGroupTypeMapper.selectByPrimaryKey(id);
     }
+
+    @Override
+    public ServerGroupType getByName(String name) {
+        Example example = new Example(ServerGroupType.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andLike("name", name);
+        return serverGroupTypeMapper.selectOneByExample(example);
+    }
 }

@@ -31,6 +31,14 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     }
 
     @Override
+    public ServerGroup getByName(String name) {
+        Example example = new Example(ServerGroup.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", name);
+        return serverGroupMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void add(ServerGroup serverGroup) {
         serverGroupMapper.insert(serverGroup);
     }

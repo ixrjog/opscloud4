@@ -16,6 +16,8 @@ public interface ServerGroupService {
 
     ServerGroup getById(Integer id);
 
+    ServerGroup getByName(String name);
+
     void add(ServerGroup serverGroup);
 
     void update(ServerGroup serverGroup);

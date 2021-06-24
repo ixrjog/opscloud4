@@ -24,11 +24,11 @@ public class ServerParam {
     @ApiModel
     public static class ServerPageQuery extends PageParam implements IExtend {
 
-        @ApiModelProperty(value = "服务器名")
-        private String name;
+        @ApiModelProperty(value = "关键字查询")
+        private String queryName;
 
-        @ApiModelProperty(value = "查询ip")
-        private String queryIp;
+//        @ApiModelProperty(value = "查询ip")
+//        private String queryIp;
 
         @ApiModelProperty(value = "服务器组id")
         private Integer serverGroupId;

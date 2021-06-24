@@ -20,4 +20,6 @@ public interface ServerGroupTypeService {
     void deleteById(Integer id);
 
     ServerGroupType getById(Integer id);
+
+    ServerGroupType getByName(String name);
 }

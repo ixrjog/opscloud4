@@ -36,6 +36,11 @@ public class UserCredentialFacadeImpl implements UserCredentialFacade {
     public void saveUserCredential(UserCredentialVO.Credential credential) {
         User user = userService.getByUsername(SessionUtil.getUsername());
         if (user == null) return;
+       saveUserCredential(credential,user);
+    }
+
+    @Override
+    public void saveUserCredential(UserCredentialVO.Credential credential,User user) {
         credential.setUserId(user.getId());
         if (credential.getCredentialType() == UserCredentialTypeEnum.PUB_KEY.getType()) {
             savePubKey(credential);

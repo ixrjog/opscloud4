@@ -1,6 +1,9 @@
 package com.baiyi.caesar.domain.generator.caesar;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -9,6 +12,9 @@ import javax.persistence.Id;
 import java.io.Serializable;
 import java.util.Date;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 public class Server implements Serializable {
     private static final long serialVersionUID = -912214650070659359L;

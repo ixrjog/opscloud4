@@ -30,6 +30,14 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public Server getByPrivateIp(String privateIp) {
+        Example example = new Example(Server.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("privateIp", privateIp);
+        return serverMapper.selectOneByExample(example);
+    }
+
+    @Override
     public DataTable<Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Server> data = serverMapper.queryServerByParam(pageQuery);

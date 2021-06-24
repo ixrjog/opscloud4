@@ -28,6 +28,8 @@ public class UserCredentialVO {
     }
 
     @EqualsAndHashCode(callSuper = true)
+    @Builder
+    @AllArgsConstructor
     @Data
     @NoArgsConstructor
     @ApiModel

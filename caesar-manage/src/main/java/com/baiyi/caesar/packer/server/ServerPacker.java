@@ -30,6 +30,9 @@ public class ServerPacker {
     @Resource
     private ServerAccountPacker accountPacker;
 
+    @Resource
+    private ServerGroupPacker serverGroupPacker;
+
     public List<ServerVO.Server> wrapVOList(List<Server> data) {
         return BeanCopierUtil.copyListProperties(data, ServerVO.Server.class);
     }
@@ -45,6 +48,7 @@ public class ServerPacker {
         envPacker.wrap(server);
         tagPacker.wrap(server);
         accountPacker.wrap(server);
+        serverGroupPacker.wrap(server);
     }
 
 

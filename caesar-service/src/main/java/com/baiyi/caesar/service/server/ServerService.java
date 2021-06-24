@@ -15,6 +15,8 @@ public interface ServerService {
 
     Server getById(Integer id);
 
+    Server getByPrivateIp(String privateIp);
+
     void add(Server server);
 
     void update(Server server);

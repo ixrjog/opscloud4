@@ -1,5 +1,6 @@
 package com.baiyi.caesar.facade.user;
 
+import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.vo.user.UserCredentialVO;
 
 /**
@@ -10,5 +11,12 @@ import com.baiyi.caesar.domain.vo.user.UserCredentialVO;
 public interface UserCredentialFacade {
 
     void saveUserCredential(UserCredentialVO.Credential credential);
+
+    /**
+     * 内部使用
+     * @param credential
+     * @param user
+     */
+    void saveUserCredential(UserCredentialVO.Credential credential, User user);
 
 }
