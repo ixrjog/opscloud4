@@ -16,7 +16,9 @@ import java.util.stream.Collectors;
 public class KubernetesNamespaceHandler {
 
     public static List<Namespace> listNamespace(DsKubernetesConfig.Kubernetes kubernetes) {
-        NamespaceList namespaceList = KubeClient.build(kubernetes).namespaces().list();
+        NamespaceList namespaceList = KubeClient.build(kubernetes)
+                .namespaces()
+                .list();
         return namespaceList.getItems().stream().filter(e -> filter(kubernetes, e)
         ).collect(Collectors.toList());
     }
