@@ -15,6 +15,8 @@ import java.util.List;
  */
 public interface DsFacade {
 
+    void setDsInstanceConfig(int instanceId);
+
     DataTable<DsConfigVO.DsConfig> queryDsConfigPage(DsConfigParam.DsConfigPageQuery pageQuery);
 
     void addDsConfig(DsConfigVO.DsConfig dsConfig);

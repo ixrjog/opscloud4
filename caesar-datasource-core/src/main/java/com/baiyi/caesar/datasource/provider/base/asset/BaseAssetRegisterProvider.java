@@ -7,6 +7,6 @@ import com.baiyi.caesar.datasource.provider.base.common.IInstanceType;
  * @Date 2021/6/18 11:13 上午
  * @Version 1.0
  */
-public interface BaseAssetRegisterProvider extends IInstanceType, IAssetType {
+public interface BaseAssetRegisterProvider extends IAssetType, IInstanceType {
 
 }

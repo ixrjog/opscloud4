@@ -28,6 +28,11 @@
             <artifactId>caesar-datasource-gitlab</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-datasource-kubernetes</artifactId>
+        </dependency>
+
     </dependencies>
 
 

@@ -40,6 +40,11 @@ public class DsFacadeImpl implements DsFacade {
     private DsInstancePacker dsInstancePacker;
 
     @Override
+    public void setDsInstanceConfig(int instanceId) {
+
+    }
+
+    @Override
     public DataTable<DsConfigVO.DsConfig> queryDsConfigPage(DsConfigParam.DsConfigPageQuery pageQuery) {
         DataTable<DatasourceConfig> table = dsConfigService.queryPageByParam(pageQuery);
         return new DataTable<>(dsConfigPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());

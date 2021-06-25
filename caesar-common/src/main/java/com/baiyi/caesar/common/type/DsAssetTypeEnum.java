@@ -16,6 +16,8 @@ public enum DsAssetTypeEnum {
     V_SWITCH("V_SWITCH"),
     ECS_IMAGE("ECS_IMAGE"),
     ECS_SG("ECS_SG"),
+    KUBERNETES_NAMESPACE("KUBERNETES_NAMESPACE"),
+    KUBERNETES_POD("KUBERNETES_POD"),
     ;
 
     private String type;

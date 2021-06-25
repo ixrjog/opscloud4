@@ -57,6 +57,13 @@ public class DatasourceController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "设置实例配置")
+    @PutMapping(value = "/instance/config/set", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setDsInstanceConfig(@RequestParam int instanceId) {
+        datasourceFacade.setDsInstanceConfig(instanceId);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "注册数据源实例")
     @PostMapping(value = "/instance/register", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> registerDsInstance(@RequestBody @Valid DsInstanceParam.RegisterDsInstance registerDsInstance) {
@@ -69,5 +76,7 @@ public class DatasourceController {
     public HttpResult<List<DsInstanceVO.Instance>> queryDsInstance(@RequestBody @Valid DsInstanceParam.DsInstanceQuery query) {
         return new HttpResult<>(datasourceFacade.queryDsInstance(query));
     }
+
+
 
 }

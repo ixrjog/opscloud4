@@ -22,12 +22,6 @@ import java.util.Map;
  */
 public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider, InitializingBean {
 
-//    @Resource
-//    private DsInstanceService dsInstanceService;
-//
-//    @Resource
-//    private DsConfigService dsConfigService;
-
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
 
@@ -39,11 +33,11 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
 
     protected abstract List<T> listEntries(DsInstanceContext dsInstanceContext);
 
-    private void enterAssets( DsInstanceContext dsInstanceContext , List<T> entries) {
+    private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entries) {
         entries.forEach(e -> enterEntry(dsInstanceContext, e));
     }
 
-    protected void enterEntry( DsInstanceContext dsInstanceContext , T entry) {
+    protected void enterEntry(DsInstanceContext dsInstanceContext, T entry) {
         enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
     }
 
@@ -66,7 +60,12 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
                 .build();
         asset = dsInstanceAssetService.getByUniqueKey(asset);
         if (asset == null) {
-            dsInstanceAssetService.add(preAsset);
+            try {
+                dsInstanceAssetService.add(preAsset);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+
         } else {
             preAsset.setId(asset.getId());
             preAsset.setIsActive(asset.getIsActive());
@@ -88,13 +87,9 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     protected abstract AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entry);
 
     protected void doPull(int dsInstanceId) {
-      // DatasourceInstance dsInstance = dsInstanceService.getById(dsInstanceId);
-      //  DatasourceConfig dsConfig = dsConfigService.getById(dsInstance.getConfigId());
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-
         List<T> entries = listEntries(dsInstanceContext);
-        enterAssets(  dsInstanceContext , entries);
+        enterAssets(dsInstanceContext, entries);
     }
-
 
 }

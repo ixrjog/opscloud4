@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -46,7 +47,7 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
 
     @Override
     protected List<GitlabGroup> listEntries(DsInstanceContext dsInstanceContext, GitlabProject target) {
-        return Lists.newArrayList();
+        return Collections.emptyList();
     }
 
     @Override
