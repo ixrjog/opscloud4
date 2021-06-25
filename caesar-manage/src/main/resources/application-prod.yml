@@ -20,7 +20,7 @@ spring:
   redis:
     host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com
     port: 6379
-    password: ENC(4R1OwE95Fqmj5TlYcEYeraEDnKzQLZTL52EAGOn675QoaSTE1DQjMg==)
+    password: ENC(dfsfmmYcMcuCEYWQb2Uxi2Q6osIwVHeSjX8SMywWfgVOg47NKT8ckQ==)
     jedis:
       pool:
         max-wait: 5000
@@ -58,9 +58,8 @@ spring:
         max-pool-prepared-statement-per-connection-size: 20
 
 
-
 # java -jar -Djasypt.encryptor.password=${password}
-#jasypt:
-#  encryptor:
-#    password: ${password}
-
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'

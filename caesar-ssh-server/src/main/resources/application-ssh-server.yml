@@ -5,15 +5,6 @@ ssh:
     authentication: security
     # if authentication set to 'security' the AuthenticationProvider bean name
     # if not specified and only one AuthenticationProvider bean is present in the context, it will be used
-    auth-provider-bean-name:
-    # since 1.2.2, optional file containing authorized public keys (standard authorized_keys format, one key per line
-    # starting with 'ssh-rsa'), takes precedence over authentication (simple or not)
-    authorized-public-keys-file:
-    # since 1.5.5, optional spring resource containing authorized public keys (file:, classpath: , etc)
-    # note: in case of a non file resource, a temporary file is created with given content and deleted on process exit
-    # this is due to ssh external library which only accepts file in api
-    authorized-public-keys:
-    # for ssh helper 'confirm' method
     confirmation-words:
       - y
       - yes

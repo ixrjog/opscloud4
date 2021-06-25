@@ -8,10 +8,10 @@
 
     <!-- 获取application.yml中的变量，使用方式${basedir}. 缺点，会额外生成一个bootstrap的日志文件目录。 取bootstrap中的文件，不会有问题 -->
     <!--<springProperty scope="" name="baseDir" source="spring.application.name"/>-->
-<!--    <springProperty scope="context" name="APP_HOME" source="spring.application.name"/>-->
-<!--    <springProperty scope="context" name="LOG_FILE_PATH" source="logging.file.path"/>-->
+    <springProperty scope="context" name="APP_HOME" source="spring.application.name"/>
+    <springProperty scope="context" name="LOG_FILE_PATH" source="logging.file.path"/>
     <appender name="RollingInfoLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/${HOME}/info.log</file>
+        <file>/${LOG_FILE_PATH}/${APP_HOME}/info.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/logs/${APP_HOME}/info.log.%d{yyyy-MM-dd}</fileNamePattern>
             <maxHistory>15</maxHistory>
@@ -27,7 +27,7 @@
     </appender>
 
     <appender name="RollingErrorLogger" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        <file>/${HOME}/error.log</file>
+        <file>/${LOG_FILE_PATH}/${APP_HOME}/error.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>/logs/${APP_HOME}/error.log.%d{yyyy-MM-dd}</fileNamePattern>
             <maxHistory>15</maxHistory>

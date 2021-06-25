@@ -20,8 +20,6 @@ import com.baiyi.caesar.sshserver.command.properties.CommandProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.File;
@@ -70,11 +68,7 @@ public class SshShellProperties {
 
     private AuthenticationType authentication = AuthenticationType.simple;
 
-    private String authProviderBeanName;
-
     private File hostKeyFile = new File(System.getProperty("java.io.tmpdir"), "hostKey.ser");
-
-    private Resource authorizedPublicKeys;
 
     private File historyFile = new File(System.getProperty("java.io.tmpdir"), "sshShellHistory.log");
 
@@ -94,10 +88,6 @@ public class SshShellProperties {
     private Prompt prompt = new Prompt();
 
     private Commands commands = new Commands();
-
-    public void setAuthorizedPublicKeysFile(File file) {
-        this.authorizedPublicKeys = new FileSystemResource(file);
-    }
 
     /**
      * Prompt configuration
