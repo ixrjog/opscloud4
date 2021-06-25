@@ -44,6 +44,13 @@ public class KubernetesTest extends BaseUnit {
     }
 
     @Test
+    void pullPodTest() {
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_POD.getType());
+        assert assetProvider != null;
+        assetProvider.pullAsset(5);
+    }
+
+    @Test
     void namespaceTest() {
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
         // KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
