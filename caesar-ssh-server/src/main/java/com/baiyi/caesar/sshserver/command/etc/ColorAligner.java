@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.caesar.sshserver.commands.etc;
+package com.baiyi.caesar.sshserver.command.etc;
 
 
 import com.baiyi.caesar.sshserver.PromptColor;

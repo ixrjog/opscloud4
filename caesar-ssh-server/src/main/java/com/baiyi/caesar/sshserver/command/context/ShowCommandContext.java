@@ -1,4 +1,4 @@
-package com.baiyi.caesar.sshserver.commands.context;
+package com.baiyi.caesar.sshserver.command.context;
 
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import lombok.AllArgsConstructor;

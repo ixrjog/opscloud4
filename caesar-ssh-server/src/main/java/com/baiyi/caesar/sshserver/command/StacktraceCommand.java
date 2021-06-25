@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.caesar.sshserver.commands;
+package com.baiyi.caesar.sshserver.command;
 
 import com.baiyi.caesar.sshserver.postprocess.TypePostProcessorResultHandler;
 import org.jline.terminal.Terminal;

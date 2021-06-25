@@ -1,4 +1,4 @@
-package com.baiyi.caesar.sshserver.commands;
+package com.baiyi.caesar.sshserver.command;
 
 import com.baiyi.caesar.common.exception.ssh.SshRuntimeException;
 import com.baiyi.caesar.common.util.IdUtil;

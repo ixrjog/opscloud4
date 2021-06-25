@@ -1,5 +1,6 @@
-package com.baiyi.caesar.sshserver.commands;
+package com.baiyi.caesar.sshserver.command;
 
+import com.baiyi.caesar.common.base.AccessLevel;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
@@ -7,12 +8,14 @@ import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import com.baiyi.caesar.domain.vo.env.EnvVO;
 import com.baiyi.caesar.domain.vo.server.ServerVO;
+import com.baiyi.caesar.service.auth.AuthRoleService;
 import com.baiyi.caesar.service.server.ServerService;
+import com.baiyi.caesar.service.user.UserPermissionService;
 import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.sshcore.account.SshAccount;
 import com.baiyi.caesar.sshserver.*;
-import com.baiyi.caesar.sshserver.commands.context.ShowCommandContext;
-import com.baiyi.caesar.sshserver.commands.etc.ColorAligner;
+import com.baiyi.caesar.sshserver.command.context.ShowCommandContext;
+import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.TableUtil;
@@ -61,6 +64,12 @@ public class ListCommand {
     @Resource
     private SshServerPacker sshServerPacker;
 
+    @Resource
+    private UserPermissionService userPermissionService;
+
+    @Resource
+    private AuthRoleService authRoleService;
+
     private interface LoginType {
         int LOW_AUTHORITY = 0;
         int HIGH_AUTHORITY = 1;
@@ -90,8 +99,10 @@ public class ListCommand {
             helper.print("未经授权的访问！", PromptColor.RED);
             return;
         }
+        boolean isAdmin = isAdmin();
+
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
-        pageQuery.setUserId(user.getId());
+        pageQuery.setUserId(isAdmin ? null : user.getId());
         pageQuery.setLength(terminal.getSize().getRows() - 6);
         userSessionServerQueryContainer.put(commandContext.getSessionId(), pageQuery);
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
@@ -108,7 +119,7 @@ public class ListCommand {
                     String.format(" %-32s|", s.getServerGroup().getName()),
                     String.format(" %-20s|", envName),
                     String.format(" %-31s|", buildDisplayIp(s)),
-                    buildDisplayAccount(s, false)));
+                    buildDisplayAccount(s, isAdmin)));
         });
         helper.print(helper.renderTable(builder.build()));
         helper.print(TableUtil.buildPagination(table.getTotalNum(),
@@ -117,7 +128,7 @@ public class ListCommand {
                 PromptColor.GREEN);
     }
 
-    @ShellMethod(value = "List server", key = {"ls", "list" })
+    @ShellMethod(value = "List server", key = {"ls", "list"})
     public void listServer(@ShellOption(help = "ServerName", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
@@ -148,6 +159,16 @@ public class ListCommand {
         } else {
             listServer("", "");
         }
+    }
+
+    /**
+     * OPS角色以上即认定为系统管理员
+     *
+     * @return
+     */
+    private boolean isAdmin() {
+        int accessLevel = authRoleService.getRoleAccessLevelByUsername(com.baiyi.caesar.common.util.SessionUtil.getUsername());
+        return accessLevel >= AccessLevel.OPS.getLevel();
     }
 
 
@@ -202,7 +223,7 @@ public class ListCommand {
     }
 
     private Terminal getTerminal() {
-        SshContext sshContext = (SshContext) SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
+        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
         if (sshContext == null) {
             throw new IllegalStateException("Unable to find ssh context");
         } else {
