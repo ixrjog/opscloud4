@@ -1,6 +1,7 @@
 package com.baiyi.caesar.datasource.kubernetes.client;
 
 import com.baiyi.caesar.common.datasource.config.DsKubernetesConfig;
+import com.baiyi.caesar.datasource.util.SystemEnvUtil;
 import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;
@@ -21,10 +22,8 @@ public class KubeClient {
     public static KubernetesClient build(DsKubernetesConfig.Kubernetes kubernetes) {
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
                 buildKubeconfPath(kubernetes));
-
         io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
-                //.withMasterUrl(ocKubernetesCluster.getMasterUrl())
-                //.withMasterUrl("https://121.40.168.164:6443")
+                //.withMasterUrl kubeconfg中获取
                 .withTrustCerts(true)
                 .build();
         config.setConnectionTimeout(CONNECTION_TIMEOUT);
@@ -34,6 +33,6 @@ public class KubeClient {
 
     private static String buildKubeconfPath(DsKubernetesConfig.Kubernetes kubernetes) {
         String path = Joiner.on("/").join(kubernetes.getKubeconfig().getPath(), io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE);
-        return path.replace("${HOME}", System.getenv("HOME"));
+        return SystemEnvUtil.renderEnvHome(path);
     }
 }
