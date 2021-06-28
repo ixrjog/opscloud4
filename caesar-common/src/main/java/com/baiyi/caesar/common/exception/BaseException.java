@@ -25,6 +25,10 @@ public abstract class BaseException extends RuntimeException {
         this.code = code;
     }
 
+    public BaseException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public BaseException(ErrorEnum errorEnum) {
         super(errorEnum.getMessage());
         this.code = errorEnum.getCode();

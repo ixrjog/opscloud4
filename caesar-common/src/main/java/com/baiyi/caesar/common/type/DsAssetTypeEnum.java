@@ -18,6 +18,8 @@ public enum DsAssetTypeEnum {
     ECS_SG("ECS_SG"),
     KUBERNETES_NAMESPACE("KUBERNETES_NAMESPACE"),
     KUBERNETES_POD("KUBERNETES_POD"),
+    ZABBIX_USER("ZABBIX_USER"),
+    ZABBIX_USER_GROUP("ZABBIX_USER_GROUP"),
     ;
 
     private String type;

@@ -24,4 +24,8 @@ public class CommonRuntimeException extends BaseException {
     public CommonRuntimeException(ErrorEnum errorEnum) {
         super(errorEnum);
     }
+
+    public CommonRuntimeException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }
