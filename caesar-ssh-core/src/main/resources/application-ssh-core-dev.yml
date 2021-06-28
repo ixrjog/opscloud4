@@ -2,6 +2,6 @@
 # openAudit :on 开启审计日志 off 关闭审计日志
 
 terminal:
-  auditPath: ${HOME}/Documents/workspace/opscloud-data/xterm/audit
+  auditPath: ${HOME}/caesar-data/ssh/audit
   openAudit: on
 

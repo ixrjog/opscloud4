@@ -53,7 +53,7 @@ public final class LoginCommand {
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
         String instanceId = IdUtil.buildUUID();
         Terminal terminal = getTerminal();
-        Runnable run = new SshSentOutputTask(sessionId, serverSession, terminal);
+        SshSentOutputTask run = new SshSentOutputTask(sessionId, serverSession, terminal);
         Thread thread = new Thread(run);
         thread.start();
         try {
@@ -64,24 +64,18 @@ public final class LoginCommand {
             hostSystem.setTerminalSize(helper.terminalSize());
             RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem);
             TerminalUtil.enterRawMode(terminal);
-            Instant inst1 = Instant.now();
+            Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
             while (true) {
                 try {
-                    if (!terminal.getSize().equals(size)) {
-                        size = terminal.getSize();
-                        TerminalUtil.resize(sessionId, instanceId, size);
-                    }
-                    int ch = terminal.reader().read(25L);
-                    if (ch >= 0) {
-                        printCommand(sessionId, instanceId, (char) ch);
-                    }
                     if (isClosed(sessionId, instanceId)) {
                         Thread.sleep(150L);
                         sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
                         break;
                     }
-                    Thread.sleep(25L);
+                    tryResize(size, terminal, sessionId, instanceId);
+                    printJSchSession(sessionId, instanceId, terminal.reader().read(25L));
+                    //Thread.sleep(25L); // 循环延迟补偿
                 } catch (Exception e) {
                     e.printStackTrace();
                     sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
@@ -89,15 +83,18 @@ public final class LoginCommand {
                 }
             }
         } catch (SshRuntimeException e) {
-            ((SshSentOutputTask) run).stop();
+            run.stop();
             throw e;
         }
-        ((SshSentOutputTask) run).stop();
+        run.stop();
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
-    private void sessionClosed(String logout, Instant inst1) {
-        helper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
+    private void tryResize(Size size, Terminal terminal, String sessionId, String instanceId) {
+        if (!terminal.getSize().equals(size)) {
+            size = terminal.getSize();
+            TerminalUtil.resize(sessionId, instanceId, size);
+        }
     }
 
     private Terminal getTerminal() {
@@ -109,16 +106,21 @@ public final class LoginCommand {
         }
     }
 
+    private void sessionClosed(String logout, Instant inst1) {
+        helper.print(String.format(logout, Duration.between(inst1, Instant.now()).getSeconds()), PromptColor.RED);
+    }
+
     private boolean isClosed(String sessionId, String instanceId) {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         assert jSchSession != null;
         return jSchSession.getChannel().isClosed();
     }
 
-    private void printCommand(String sessionId, String instanceId, char cmd) throws Exception {
+    private void printJSchSession(String sessionId, String instanceId, int ch) throws Exception {
+        if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
-        jSchSession.getCommander().print(cmd);
+        jSchSession.getCommander().print((char) ch);
     }
 
 }

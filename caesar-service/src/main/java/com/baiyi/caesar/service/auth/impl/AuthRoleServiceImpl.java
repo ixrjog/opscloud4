@@ -47,7 +47,7 @@ public class AuthRoleServiceImpl implements AuthRoleService {
             Example.Criteria criteria = example.createCriteria();
             criteria.andLike("roleName", SQLUtil.toLike(pageQuery.getRoleName()));
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("access_level desc, create_time");
         List<AuthRole> data = authRoleMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }

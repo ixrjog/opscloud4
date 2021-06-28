@@ -44,8 +44,6 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
 
     abstract protected BaseMessage getMessage(String message);
 
-
-
     protected Boolean isBatch(TerminalSession terminalSession) {
         Boolean isBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
         return isBatch == null ? false : isBatch;

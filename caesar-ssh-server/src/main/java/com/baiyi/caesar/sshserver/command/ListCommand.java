@@ -10,11 +10,10 @@ import com.baiyi.caesar.domain.vo.env.EnvVO;
 import com.baiyi.caesar.domain.vo.server.ServerVO;
 import com.baiyi.caesar.service.auth.AuthRoleService;
 import com.baiyi.caesar.service.server.ServerService;
-import com.baiyi.caesar.service.user.UserPermissionService;
 import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.sshcore.account.SshAccount;
 import com.baiyi.caesar.sshserver.*;
-import com.baiyi.caesar.sshserver.command.context.ShowCommandContext;
+import com.baiyi.caesar.sshserver.command.context.ListCommandContext;
 import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
@@ -26,6 +25,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -65,10 +66,15 @@ public class ListCommand {
     private SshServerPacker sshServerPacker;
 
     @Resource
-    private UserPermissionService userPermissionService;
-
-    @Resource
     private AuthRoleService authRoleService;
+
+    private Terminal terminal;
+
+    @Autowired
+    @Lazy
+    public void setTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;
@@ -77,8 +83,7 @@ public class ListCommand {
 
     private static final Map<String, ServerParam.UserPermissionServerPageQuery> userSessionServerQueryContainer = Maps.newConcurrentMap();
 
-    private void doListServer(ShowCommandContext commandContext) {
-        Terminal terminal = getTerminal();
+    private void doListServer(ListCommandContext commandContext) {
         SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
                 .column("id")
                 .column("name")
@@ -136,7 +141,7 @@ public class ListCommand {
                 .queryIp(ip)
                 .build();
         pageQuery.setPage(1);
-        ShowCommandContext commandContext = ShowCommandContext.builder()
+        ListCommandContext commandContext = ListCommandContext.builder()
                 .sessionId(sessionId)
                 .username(helper.getSshSession().getUsername())
                 .queryParam(pageQuery)
@@ -150,7 +155,7 @@ public class ListCommand {
         if (userSessionServerQueryContainer.containsKey(sessionId)) {
             ServerParam.UserPermissionServerPageQuery pageQuery = userSessionServerQueryContainer.get(sessionId);
             pageQuery.setPage(pageQuery.getPage() > 1 ? pageQuery.getPage() - 1 : pageQuery.getPage());
-            ShowCommandContext commandContext = ShowCommandContext.builder()
+            ListCommandContext commandContext = ListCommandContext.builder()
                     .sessionId(sessionId)
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
@@ -178,7 +183,7 @@ public class ListCommand {
         if (userSessionServerQueryContainer.containsKey(sessionId)) {
             ServerParam.UserPermissionServerPageQuery pageQuery = userSessionServerQueryContainer.get(sessionId);
             pageQuery.setPage(pageQuery.getPage() + 1);
-            ShowCommandContext commandContext = ShowCommandContext.builder()
+            ListCommandContext commandContext = ListCommandContext.builder()
                     .sessionId(sessionId)
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
@@ -220,15 +225,6 @@ public class ListCommand {
                 ).collect(Collectors.toList()));
             }
         return displayAccount;
-    }
-
-    private Terminal getTerminal() {
-        SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-        if (sshContext == null) {
-            throw new IllegalStateException("Unable to find ssh context");
-        } else {
-            return sshContext.getTerminal();
-        }
     }
 
     private String buildSessionId() {

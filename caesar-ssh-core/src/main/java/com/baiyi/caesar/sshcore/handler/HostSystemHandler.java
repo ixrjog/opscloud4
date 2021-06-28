@@ -65,14 +65,6 @@ public class HostSystemHandler {
         int HIGH_AUTHORITY = 1;
     }
 
-//    public HostSystem buildHostSystem(Server server) {
-//        SshCredential sshCredential = buildSshCredential(server);
-//        return HostSystem.builder()
-//                .host(server.getPrivateIp()) // 避免绕过未授权服务器
-//                .sshCredential(sshCredential)
-//                .build();
-//    }
-
     public HostSystem buildHostSystem(Server server, String username, String account) throws SshRuntimeException {
         User user = userService.getByUsername(username);
         SessionUtil.setUsername(username);
@@ -85,7 +77,7 @@ public class HostSystemHandler {
         UserPermission userPermission = userPermissionService.getByUserPermission(query);
         if (userPermission == null)
             throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILUER);
-        SshCredential sshCredential = null;
+        SshCredential sshCredential;
         if (StringUtils.isEmpty(account)) {
             sshCredential = getSshCredential(server, LoginType.LOW_AUTHORITY);
             if (sshCredential == null && "admin".equalsIgnoreCase(userPermission.getPermissionRole()))
@@ -94,7 +86,8 @@ public class HostSystemHandler {
             ServerAccount serverAccount = serverAccountService.getPermissionServerAccountByUsernameAndProtocol(server.getId(), account, ProtocolEnum.SSH.getType());
             if (serverAccount == null)
                 throw new SshRuntimeException(ErrorEnum.SSH_SERVER_ACCOUNT_NOT_EXIST);
-            if (serverAccount.getAccountType() == 1 && !"admin".equalsIgnoreCase(userPermission.getPermissionRole()))
+            if (serverAccount.getAccountType() == LoginType.HIGH_AUTHORITY
+                    && !"admin".equalsIgnoreCase(userPermission.getPermissionRole()))
                 throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILUER);
             sshCredential = buildSshCredential(serverAccount);
         }
@@ -127,11 +120,6 @@ public class HostSystemHandler {
         return accessLevel >= AccessLevel.OPS.getLevel();
     }
 
-
-    private SshCredential buildSshCredential(Server server) {
-        return getSshCredentialByAdmin(server.getId(), 1);
-    }
-
     private SshCredential buildSshCredential(BaseMessage baseMessage, Server server) {
         if (baseMessage.isAdmin()) {
             return getSshCredentialByAdmin(server.getId(), baseMessage.getLoginType());
@@ -147,7 +135,7 @@ public class HostSystemHandler {
      * @param loginType
      * @return
      */
-    private SshCredential getSshCredential(Server server, Integer loginType) {
+    private SshCredential getSshCredential(Server server, int loginType) {
         UserPermission query = UserPermission.builder()
                 .userId(SessionUtil.getUserId())
                 .businessType(BusinessTypeEnum.SERVERGROUP.getType())
@@ -167,7 +155,7 @@ public class HostSystemHandler {
     }
 
     // 管理员
-    private SshCredential getSshCredentialByAdmin(Integer serverId, Integer loginType) {
+    private SshCredential getSshCredentialByAdmin(Integer serverId, int loginType) {
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(serverId);
         if (accountCatMap == null) return null;
         if (accountCatMap.containsKey(loginType)) {

@@ -25,12 +25,22 @@ import java.util.UUID;
 @Slf4j
 public class RemoteInvokeHandler {
 
+    private static final int SSH_PORT = 22;
+
     private static String appId = UUID.randomUUID().toString();
 
     private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
     public static final int SESSION_TIMEOUT = 60000;
     public static final int CHANNEL_TIMEOUT = 60000;
 
+    /**
+     * 按类型注入凭据
+     *
+     * @param hostSystem
+     * @param jsch
+     * @param session
+     * @throws JSchException
+     */
     private static void invokeSshCredential(HostSystem hostSystem, JSch jsch, Session session) throws JSchException {
         Credential credential = hostSystem.getSshCredential().getCredential();
         // 按凭证类型
@@ -38,10 +48,10 @@ public class RemoteInvokeHandler {
             case 1: // password
                 session.setPassword(credential.getCredential());
                 break;
-            case 2:   // prvKey
+            case 2: // prvKey
                 jsch.addIdentity(credential.getCredential(), credential.getPassphrase().getBytes());
                 break;
-            case 3:  // prvKey + pubKey
+            case 3: // prvKey + pubKey
                 jsch.addIdentity(appId, credential.getCredential().trim().getBytes(), credential.getCredential2().getBytes(), credential.getPassphrase().getBytes());
                 break;
         }
@@ -63,15 +73,13 @@ public class RemoteInvokeHandler {
         try {
             if (hostSystem.getSshCredential() == null) return;
             Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),
-                    hostSystem.getPort() == null ? 22 : hostSystem.getPort());
+                    hostSystem.getPort() == null ? SSH_PORT : hostSystem.getPort());
             invokeSshCredential(hostSystem, jsch, session);
             SessionConfigUtil.setDefault(session); // 默认设置
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             ChannelShellUtil.setDefault(channel);
 
             setChannelPtySize(channel, hostSystem.getLoginMessage());
-
-            //setChannelPtySize(channel, hostSystem.getLoginMessage());
 
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
@@ -115,11 +123,10 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHTermOnSystemForSSHServer(String sessionId,  HostSystem hostSystem) {
+    public static void openSSHTermOnSystemForSSHServer(String sessionId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
-
 
         try {
             if (hostSystem.getSshCredential() == null) return;
@@ -130,7 +137,6 @@ public class RemoteInvokeHandler {
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             ChannelShellUtil.setDefault(channel);
             setChannelPtySize(channel, hostSystem.getTerminalSize());
-
 
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
@@ -168,9 +174,9 @@ public class RemoteInvokeHandler {
         }
     }
 
-    public static void setChannelPtySize(ChannelShell channel, BaseMessage baseMessage) {
-        int width = baseMessage.getTerminal().getWidth();
-        int height = baseMessage.getTerminal().getHeight();
+    public static void setChannelPtySize(ChannelShell channel, BaseMessage message) {
+        int width = message.getTerminal().getWidth();
+        int height = message.getTerminal().getHeight();
         // int cols = (int) Math.floor(width / 7.2981);
         int cols = (int) Math.floor(width / 7.0);
         int rows = (int) Math.floor(height / 14.4166);
