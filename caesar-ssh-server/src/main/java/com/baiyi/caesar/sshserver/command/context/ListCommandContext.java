@@ -18,9 +18,7 @@ import lombok.NoArgsConstructor;
 public class ListCommandContext {
 
     private String sessionId;
-
     private String username;
-
     private ServerParam.UserPermissionServerPageQuery queryParam;
 
 }

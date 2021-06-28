@@ -4,15 +4,16 @@ import com.baiyi.caesar.common.base.AccessLevel;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
-import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import com.baiyi.caesar.domain.vo.env.EnvVO;
 import com.baiyi.caesar.domain.vo.server.ServerVO;
 import com.baiyi.caesar.service.auth.AuthRoleService;
 import com.baiyi.caesar.service.server.ServerService;
-import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.sshcore.account.SshAccount;
-import com.baiyi.caesar.sshserver.*;
+import com.baiyi.caesar.sshserver.PromptColor;
+import com.baiyi.caesar.sshserver.SimpleTable;
+import com.baiyi.caesar.sshserver.SshShellHelper;
+import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.caesar.sshserver.command.context.ListCommandContext;
 import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;
@@ -59,8 +60,7 @@ public class ListCommand {
     @Resource
     private SshAccount sshAccount;
 
-    @Resource
-    private UserService userService;
+
 
     @Resource
     private SshServerPacker sshServerPacker;
@@ -95,19 +95,9 @@ public class ListCommand {
                 .borderStyle(BorderStyle.fancy_light)
                 .headerAligner(new ColorAligner(PromptColor.GREEN))
                 .useFullBorder(false);
-        User user = userService.getByUsername(commandContext.getUsername());
-
-        com.baiyi.caesar.common.util.SessionUtil.setUserId(user.getId());
-        com.baiyi.caesar.common.util.SessionUtil.setUsername(user.getUsername());
-
-        if (!user.getIsActive()) {
-            helper.print("未经授权的访问！", PromptColor.RED);
-            return;
-        }
-        boolean isAdmin = isAdmin();
 
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
-        pageQuery.setUserId(isAdmin ? null : user.getId());
+        pageQuery.setUserId(com.baiyi.caesar.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.caesar.common.util.SessionUtil.getUserId());
         pageQuery.setLength(terminal.getSize().getRows() - 6);
         userSessionServerQueryContainer.put(commandContext.getSessionId(), pageQuery);
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
@@ -116,7 +106,6 @@ public class ListCommand {
         helper.print(DIVIDING_LINE, PromptColor.GREEN);
 
         sshServerPacker.wrapToVO(table.getData()).forEach(s -> {
-
             String envName = buildDisplayEnv(s.getEnv());
             builder.line(Arrays.asList(
                     String.format(" %-6s|", s.getId()),
@@ -124,7 +113,7 @@ public class ListCommand {
                     String.format(" %-32s|", s.getServerGroup().getName()),
                     String.format(" %-20s|", envName),
                     String.format(" %-31s|", buildDisplayIp(s)),
-                    buildDisplayAccount(s, isAdmin)));
+                    buildDisplayAccount(s, com.baiyi.caesar.common.util.SessionUtil.getIsAdmin())));
         });
         helper.print(helper.renderTable(builder.build()));
         helper.print(TableUtil.buildPagination(table.getTotalNum(),
@@ -133,6 +122,7 @@ public class ListCommand {
                 PromptColor.GREEN);
     }
 
+    @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server", key = {"ls", "list"})
     public void listServer(@ShellOption(help = "ServerName", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
@@ -149,6 +139,7 @@ public class ListCommand {
         doListServer(commandContext);
     }
 
+    @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server before page", key = "b")
     public void beforePage() {
         String sessionId = buildSessionId();
@@ -177,6 +168,7 @@ public class ListCommand {
     }
 
 
+    @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server next page", key = "n")
     public void nextPage() {
         String sessionId = buildSessionId();

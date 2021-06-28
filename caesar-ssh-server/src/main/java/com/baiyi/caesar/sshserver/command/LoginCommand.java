@@ -14,6 +14,7 @@ import com.baiyi.caesar.sshserver.PromptColor;
 import com.baiyi.caesar.sshserver.SshContext;
 import com.baiyi.caesar.sshserver.SshShellCommandFactory;
 import com.baiyi.caesar.sshserver.SshShellHelper;
+import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.TerminalUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +37,7 @@ import java.time.Instant;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Login")
-public final class LoginCommand {
+public class LoginCommand {
 
     @Resource
     private SshShellHelper helper;
@@ -47,6 +48,7 @@ public final class LoginCommand {
     @Resource
     private HostSystemHandler hostSystemHandler;
 
+    @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "Login server", key = {"open", "login"})
     public void login(@ShellOption(help = "Server id") int id, @ShellOption(help = "Account name", defaultValue = "") String account) {
         ServerSession serverSession = helper.getSshSession();
@@ -59,7 +61,7 @@ public final class LoginCommand {
         try {
             HostSystem hostSystem;
             Server server = serverService.getById(id);
-            hostSystem = hostSystemHandler.buildHostSystem(server, serverSession.getUsername(), account);
+            hostSystem = hostSystemHandler.buildHostSystem(server, account);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
             RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem);
