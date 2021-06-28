@@ -14,6 +14,8 @@ public interface DsInstanceService {
 
     DatasourceInstance getById(Integer id);
 
+    DatasourceInstance getByUuid(String uuid);
+
     List<DatasourceInstance> queryByParam(DsInstanceParam.DsInstanceQuery query);
 
     void add(DatasourceInstance datasourceInstance);

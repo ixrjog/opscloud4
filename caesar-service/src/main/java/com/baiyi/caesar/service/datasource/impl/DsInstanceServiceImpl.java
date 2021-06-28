@@ -23,8 +23,16 @@ public class DsInstanceServiceImpl implements DsInstanceService {
     private DatasourceInstanceMapper dsInstanceMapper;
 
     @Override
-    public DatasourceInstance getById(Integer id){
+    public DatasourceInstance getById(Integer id) {
         return dsInstanceMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public DatasourceInstance getByUuid(String uuid) {
+        Example example = new Example(DatasourceInstance.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("uuid", uuid);
+        return dsInstanceMapper.selectOneByExample(example);
     }
 
     @Override
@@ -52,7 +60,7 @@ public class DsInstanceServiceImpl implements DsInstanceService {
     }
 
     @Override
-    public int countByConfigId(Integer configId){
+    public int countByConfigId(Integer configId) {
         Example example = new Example(DatasourceInstance.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("configId", configId);

@@ -1,6 +1,5 @@
 package com.baiyi.caesar.sshserver.command;
 
-import com.baiyi.caesar.common.base.AccessLevel;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
@@ -18,7 +17,7 @@ import com.baiyi.caesar.sshserver.command.context.ListCommandContext;
 import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
-import com.baiyi.caesar.sshserver.util.TableUtil;
+import com.baiyi.caesar.sshserver.util.ServerTableUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.baiyi.caesar.sshserver.util.TableUtil.DIVIDING_LINE;
+import static com.baiyi.caesar.sshserver.util.ServerTableUtil.DIVIDING_LINE;
 
 /**
  * @Author baiyi
@@ -49,7 +48,7 @@ import static com.baiyi.caesar.sshserver.util.TableUtil.DIVIDING_LINE;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("List")
-public class ListCommand {
+public class ListServerCommand {
 
     @Resource
     private SshShellHelper helper;
@@ -59,8 +58,6 @@ public class ListCommand {
 
     @Resource
     private SshAccount sshAccount;
-
-
 
     @Resource
     private SshServerPacker sshServerPacker;
@@ -101,7 +98,7 @@ public class ListCommand {
         pageQuery.setLength(terminal.getSize().getRows() - 6);
         userSessionServerQueryContainer.put(commandContext.getSessionId(), pageQuery);
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
-        helper.print(TableUtil.TABLE_HEADERS
+        helper.print(ServerTableUtil.TABLE_HEADERS
                 , PromptColor.GREEN);
         helper.print(DIVIDING_LINE, PromptColor.GREEN);
 
@@ -116,7 +113,7 @@ public class ListCommand {
                     buildDisplayAccount(s, com.baiyi.caesar.common.util.SessionUtil.getIsAdmin())));
         });
         helper.print(helper.renderTable(builder.build()));
-        helper.print(TableUtil.buildPagination(table.getTotalNum(),
+        helper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
                 pageQuery.getPage(),
                 pageQuery.getLength()),
                 PromptColor.GREEN);
@@ -156,17 +153,6 @@ public class ListCommand {
             listServer("", "");
         }
     }
-
-    /**
-     * OPS角色以上即认定为系统管理员
-     *
-     * @return
-     */
-    private boolean isAdmin() {
-        int accessLevel = authRoleService.getRoleAccessLevelByUsername(com.baiyi.caesar.common.util.SessionUtil.getUsername());
-        return accessLevel >= AccessLevel.OPS.getLevel();
-    }
-
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server next page", key = "n")
