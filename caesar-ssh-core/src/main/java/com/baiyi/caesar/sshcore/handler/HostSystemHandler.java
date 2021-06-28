@@ -127,14 +127,7 @@ public class HostSystemHandler {
      * @return
      */
     private SshCredential getSshCredential(Server server, int loginType) {
-        UserPermission query = UserPermission.builder()
-                .userId(SessionUtil.getUserId())
-                .businessType(BusinessTypeEnum.SERVERGROUP.getType())
-                .businessId(server.getServerGroupId())
-                .build();
-        UserPermission userPermission = userPermissionService.getByUserPermission(query);
-        if (userPermission == null) return null;
-        if ("Admin".equalsIgnoreCase(userPermission.getPermissionRole()))
+        if (SessionUtil.getIsAdmin())
             return getSshCredentialByAdmin(server.getId(), loginType);
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(server.getId(), loginType, ProtocolEnum.SSH.getType());
         if (CollectionUtils.isEmpty(accounts)) return null;
