@@ -21,10 +21,7 @@ import io.fabric8.kubernetes.client.dsl.LogWatch;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -98,9 +95,26 @@ public class KubernetesTest extends BaseUnit {
 
 
         try {
-            readStream(logWatch.getOutput());
-        } catch (Exception e) {
+            InputStream is = logWatch.getOutput();
+            print(is);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        logWatch.close();
 
+    }
+
+
+    public static void print(InputStream is) throws UnsupportedEncodingException {
+        InputStreamReader isr = new InputStreamReader(is, "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        try {
+            while ((br.read()) != -1) {
+                System.out.println(br.readLine());
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
     }
 
@@ -117,7 +131,7 @@ public class KubernetesTest extends BaseUnit {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream), 1);
             String line;
             while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
+                System.out.println("111111111111111111");
             }
             inStream.close();
             bufferedReader.close();

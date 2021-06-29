@@ -6,7 +6,6 @@ import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import com.baiyi.caesar.domain.vo.env.EnvVO;
 import com.baiyi.caesar.domain.vo.server.ServerVO;
-import com.baiyi.caesar.service.auth.AuthRoleService;
 import com.baiyi.caesar.service.server.ServerService;
 import com.baiyi.caesar.sshcore.account.SshAccount;
 import com.baiyi.caesar.sshserver.PromptColor;
@@ -16,8 +15,8 @@ import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.caesar.sshserver.command.context.ListCommandContext;
 import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;
-import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.ServerTableUtil;
+import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -47,7 +46,7 @@ import static com.baiyi.caesar.sshserver.util.ServerTableUtil.DIVIDING_LINE;
  */
 @Slf4j
 @SshShellComponent
-@ShellCommandGroup("List")
+@ShellCommandGroup("Server")
 public class ListServerCommand {
 
     @Resource
@@ -61,9 +60,6 @@ public class ListServerCommand {
 
     @Resource
     private SshServerPacker sshServerPacker;
-
-    @Resource
-    private AuthRoleService authRoleService;
 
     private Terminal terminal;
 

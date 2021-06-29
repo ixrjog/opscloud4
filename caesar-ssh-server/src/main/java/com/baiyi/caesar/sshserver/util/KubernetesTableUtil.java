@@ -10,14 +10,16 @@ import com.google.common.base.Joiner;
 public class KubernetesTableUtil {
 
 
-    public static final String DIVIDING_LINE = "------+------------------------------------+---------------------------------------------------+--------------------------------+-------------------------------------";
+    public static final String DIVIDING_LINE = "------+------------------------------------+---------------------------------------------------+----------------------------------------------------------------------";
 
     public static final String TABLE_HEADERS = buildTableHeaders();
 
     public static String buildTableHeaders() {
         return Joiner.on("").join(String.format(" %-5s|", "ID"),
                 String.format(" %-35s|", "Kubernetes Instance Name"),
-                String.format(" %-50s|", "Pod Name"));
+                String.format(" %-50s|", "Pod Name"),
+                String.format(" %-50s", "Containers Name")
+                );
     }
 
     public static String buildPagination(long totalNum,int page, int length) {

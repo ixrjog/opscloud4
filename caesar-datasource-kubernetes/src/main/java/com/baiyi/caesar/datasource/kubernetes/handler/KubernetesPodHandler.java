@@ -4,6 +4,7 @@ import com.baiyi.caesar.common.datasource.config.DsKubernetesConfig;
 import com.baiyi.caesar.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.dsl.LogWatch;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
@@ -34,10 +35,9 @@ public class KubernetesPodHandler {
     }
 
     /**
-     *
      * @param kubernetes
      * @param namespace
-     * @param name podName
+     * @param name       podName
      * @return
      */
     public static Pod getPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
@@ -46,5 +46,20 @@ public class KubernetesPodHandler {
                 .inNamespace(namespace)
                 .withName(name)
                 .get();
+    }
+
+    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName) {
+        return KubeClient.build(kubernetes).pods()
+                .inNamespace(namespace)
+                .withName(podName)
+                .watchLog();
+    }
+
+    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName) {
+        return KubeClient.build(kubernetes).pods()
+                .inNamespace(namespace)
+                .withName(podName)
+                .inContainer(containerName)
+                .watchLog();
     }
 }
