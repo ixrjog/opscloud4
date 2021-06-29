@@ -7,11 +7,7 @@ package com.baiyi.caesar.common.factory;
  */
 public interface BaseProviderFactory<T> {
 
+    T getProviderByKey(String key);
 
-
-
-
-     T getProviderByKey(String key) ;
-
-    void register(T bean) ;
+    void register(T bean);
 }

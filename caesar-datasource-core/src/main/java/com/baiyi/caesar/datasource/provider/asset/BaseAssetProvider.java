@@ -65,7 +65,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
             }catch (Exception e){
                 e.printStackTrace();
             }
-
         } else {
             preAsset.setId(asset.getId());
             preAsset.setIsActive(asset.getIsActive());

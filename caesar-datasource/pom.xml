@@ -33,6 +33,11 @@
             <artifactId>caesar-datasource-kubernetes</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>caesar-datasource-zabbix</artifactId>
+        </dependency>
+
     </dependencies>
 
 
