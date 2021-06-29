@@ -1,8 +1,10 @@
 package com.baiyi.caesar.facade.datasource.impl;
 
 import com.baiyi.caesar.common.base.Global;
-import com.baiyi.caesar.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
+import com.baiyi.caesar.datasource.factory.SetDsInstanceConfigFactory;
+import com.baiyi.caesar.datasource.provider.base.asset.SimpleAssetProvider;
+import com.baiyi.caesar.datasource.provider.base.common.AbstractSetDsInstanceConfigProvider;
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.annotation.TagClear;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
@@ -75,5 +77,12 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
                 dsInstanceAssetRelationService.deleteById(e.getId())
         );
         dsInstanceAssetService.deleteById(id);
+    }
+
+    @Override
+    public void setDsInstanceConfig(DsAssetParam.SetDsInstanceConfig setDsInstanceConfig) {
+        AbstractSetDsInstanceConfigProvider setDsInstanceConfigProvider = SetDsInstanceConfigFactory.getProvider(setDsInstanceConfig.getInstanceType());
+        assert setDsInstanceConfigProvider != null;
+        setDsInstanceConfigProvider.setConfig(setDsInstanceConfig.getInstanceId());
     }
 }

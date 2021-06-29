@@ -52,7 +52,7 @@ public class DsAssetParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class  PullAsset {
+    public static class PullAsset {
 
         @ApiModelProperty(value = "实例id")
         @NotNull
@@ -64,4 +64,18 @@ public class DsAssetParam {
 
     }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class SetDsInstanceConfig {
+
+        @ApiModelProperty(value = "实例id")
+        @NotNull
+        private Integer instanceId;
+
+        @ApiModelProperty(value = "实例类型")
+        @NotNull
+        private String instanceType;
+
+    }
 }

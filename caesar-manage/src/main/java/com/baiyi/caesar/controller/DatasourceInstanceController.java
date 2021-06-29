@@ -46,4 +46,11 @@ public class DatasourceInstanceController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "设置数据源配置文件")
+    @PutMapping(value = "/asset/set/config", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setDsInstanceConfig(@RequestBody DsAssetParam.SetDsInstanceConfig setDsInstanceConfig) {
+        dsInstanceFacade.setDsInstanceConfig(setDsInstanceConfig);
+        return HttpResult.SUCCESS;
+    }
+
 }
