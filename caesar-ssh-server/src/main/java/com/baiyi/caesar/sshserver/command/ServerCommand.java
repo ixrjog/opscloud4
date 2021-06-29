@@ -1,21 +1,22 @@
-package com.baiyi.caesar.sshserver.commands;
+package com.baiyi.caesar.sshserver.command;
 
 import com.baiyi.caesar.domain.DataTable;
 import com.baiyi.caesar.domain.generator.caesar.Server;
 import com.baiyi.caesar.domain.generator.caesar.ServerAccount;
-import com.baiyi.caesar.domain.generator.caesar.User;
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import com.baiyi.caesar.domain.vo.env.EnvVO;
 import com.baiyi.caesar.domain.vo.server.ServerVO;
 import com.baiyi.caesar.service.server.ServerService;
-import com.baiyi.caesar.service.user.UserService;
 import com.baiyi.caesar.sshcore.account.SshAccount;
-import com.baiyi.caesar.sshserver.*;
-import com.baiyi.caesar.sshserver.commands.context.ShowCommandContext;
-import com.baiyi.caesar.sshserver.commands.etc.ColorAligner;
+import com.baiyi.caesar.sshserver.PromptColor;
+import com.baiyi.caesar.sshserver.SimpleTable;
+import com.baiyi.caesar.sshserver.SshShellHelper;
+import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
+import com.baiyi.caesar.sshserver.command.context.ListCommandContext;
+import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;
+import com.baiyi.caesar.sshserver.util.ServerTableUtil;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
-import com.baiyi.caesar.sshserver.util.TableUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -23,6 +24,8 @@ import org.apache.commons.lang3.StringUtils;
 import org.jline.terminal.Terminal;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -34,7 +37,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.baiyi.caesar.sshserver.util.TableUtil.DIVIDING_LINE;
+import static com.baiyi.caesar.sshserver.util.ServerTableUtil.DIVIDING_LINE;
 
 /**
  * @Author baiyi
@@ -43,8 +46,8 @@ import static com.baiyi.caesar.sshserver.util.TableUtil.DIVIDING_LINE;
  */
 @Slf4j
 @SshShellComponent
-@ShellCommandGroup("List")
-public class ListCommand {
+@ShellCommandGroup("Server")
+public class ServerCommand {
 
     @Resource
     private SshShellHelper helper;
@@ -56,10 +59,15 @@ public class ListCommand {
     private SshAccount sshAccount;
 
     @Resource
-    private UserService userService;
-
-    @Resource
     private SshServerPacker sshServerPacker;
+
+    private Terminal terminal;
+
+    @Autowired
+    @Lazy
+    public void setTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;
@@ -68,8 +76,7 @@ public class ListCommand {
 
     private static final Map<String, ServerParam.UserPermissionServerPageQuery> userSessionServerQueryContainer = Maps.newConcurrentMap();
 
-    private void doListServer(ShowCommandContext commandContext) {
-        Terminal terminal = getTerminal();
+    private void doListServer(ListCommandContext commandContext) {
         SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
                 .column("id")
                 .column("name")
@@ -81,26 +88,17 @@ public class ListCommand {
                 .borderStyle(BorderStyle.fancy_light)
                 .headerAligner(new ColorAligner(PromptColor.GREEN))
                 .useFullBorder(false);
-        User user = userService.getByUsername(commandContext.getUsername());
 
-        com.baiyi.caesar.common.util.SessionUtil.setUserId(user.getId());
-        com.baiyi.caesar.common.util.SessionUtil.setUsername(user.getUsername());
-
-        if (!user.getIsActive()) {
-            helper.print("未经授权的访问！", PromptColor.RED);
-            return;
-        }
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
-        pageQuery.setUserId(user.getId());
+        pageQuery.setUserId(com.baiyi.caesar.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.caesar.common.util.SessionUtil.getUserId());
         pageQuery.setLength(terminal.getSize().getRows() - 6);
         userSessionServerQueryContainer.put(commandContext.getSessionId(), pageQuery);
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
-        helper.print(TableUtil.TABLE_HEADERS
+        helper.print(ServerTableUtil.TABLE_HEADERS
                 , PromptColor.GREEN);
         helper.print(DIVIDING_LINE, PromptColor.GREEN);
 
         sshServerPacker.wrapToVO(table.getData()).forEach(s -> {
-
             String envName = buildDisplayEnv(s.getEnv());
             builder.line(Arrays.asList(
                     String.format(" %-6s|", s.getId()),
@@ -108,16 +106,17 @@ public class ListCommand {
                     String.format(" %-32s|", s.getServerGroup().getName()),
                     String.format(" %-20s|", envName),
                     String.format(" %-31s|", buildDisplayIp(s)),
-                    buildDisplayAccount(s, false)));
+                    buildDisplayAccount(s, com.baiyi.caesar.common.util.SessionUtil.getIsAdmin())));
         });
         helper.print(helper.renderTable(builder.build()));
-        helper.print(TableUtil.buildPagination(table.getTotalNum(),
+        helper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
                 pageQuery.getPage(),
                 pageQuery.getLength()),
                 PromptColor.GREEN);
     }
 
-    @ShellMethod(value = "List server", key = {"ls", "list" })
+    @InvokeSessionUser(invokeAdmin = true)
+    @ShellMethod(value = "List server", key = {"ls", "list"})
     public void listServer(@ShellOption(help = "ServerName", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
@@ -125,7 +124,7 @@ public class ListCommand {
                 .queryIp(ip)
                 .build();
         pageQuery.setPage(1);
-        ShowCommandContext commandContext = ShowCommandContext.builder()
+        ListCommandContext commandContext = ListCommandContext.builder()
                 .sessionId(sessionId)
                 .username(helper.getSshSession().getUsername())
                 .queryParam(pageQuery)
@@ -133,13 +132,14 @@ public class ListCommand {
         doListServer(commandContext);
     }
 
+    @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server before page", key = "b")
     public void beforePage() {
         String sessionId = buildSessionId();
         if (userSessionServerQueryContainer.containsKey(sessionId)) {
             ServerParam.UserPermissionServerPageQuery pageQuery = userSessionServerQueryContainer.get(sessionId);
             pageQuery.setPage(pageQuery.getPage() > 1 ? pageQuery.getPage() - 1 : pageQuery.getPage());
-            ShowCommandContext commandContext = ShowCommandContext.builder()
+            ListCommandContext commandContext = ListCommandContext.builder()
                     .sessionId(sessionId)
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
@@ -150,14 +150,14 @@ public class ListCommand {
         }
     }
 
-
+    @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server next page", key = "n")
     public void nextPage() {
         String sessionId = buildSessionId();
         if (userSessionServerQueryContainer.containsKey(sessionId)) {
             ServerParam.UserPermissionServerPageQuery pageQuery = userSessionServerQueryContainer.get(sessionId);
             pageQuery.setPage(pageQuery.getPage() + 1);
-            ShowCommandContext commandContext = ShowCommandContext.builder()
+            ListCommandContext commandContext = ListCommandContext.builder()
                     .sessionId(sessionId)
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
@@ -199,15 +199,6 @@ public class ListCommand {
                 ).collect(Collectors.toList()));
             }
         return displayAccount;
-    }
-
-    private Terminal getTerminal() {
-        SshContext sshContext = (SshContext) SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-        if (sshContext == null) {
-            throw new IllegalStateException("Unable to find ssh context");
-        } else {
-            return sshContext.getTerminal();
-        }
     }
 
     private String buildSessionId() {

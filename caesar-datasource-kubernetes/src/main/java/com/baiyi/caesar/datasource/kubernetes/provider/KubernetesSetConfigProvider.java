@@ -6,6 +6,7 @@ import com.baiyi.caesar.common.type.DsTypeEnum;
 import com.baiyi.caesar.common.util.IOUtil;
 import com.baiyi.caesar.datasource.model.DsInstanceContext;
 import com.baiyi.caesar.datasource.provider.base.common.AbstractSetDsInstanceConfigProvider;
+import com.baiyi.caesar.datasource.util.SystemEnvUtil;
 import com.baiyi.caesar.domain.generator.caesar.Credential;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.google.common.base.Joiner;
@@ -31,10 +32,9 @@ public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProv
     protected void doSet(DsInstanceContext dsInstanceContext) {
         DsKubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         // 取配置文件路径
-        String kubeconfigPath = kubernetes.getKubeconfig().getPath() ;
-        kubeconfigPath = kubeconfigPath.replace("${HOME}", System.getenv("HOME"));
+        String kubeconfigPath = SystemEnvUtil.renderEnvHome(kubernetes.getKubeconfig().getPath());
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         String kubeconfig = stringEncryptor.decrypt(credential.getCredential());
-        IOUtil.writeFile(kubeconfig, Joiner.on("/").join(kubeconfigPath,io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE));
+        IOUtil.writeFile(kubeconfig, Joiner.on("/").join(kubeconfigPath, io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE));
     }
 }

@@ -17,7 +17,7 @@ public enum CredentialKindEnum {
     SSH_USERNAME_WITH_KEY_PAIR(3,"SSH Username with key pair"),
     TOKEN(4,"Token"),
     ACCESS_KEY(5,"Access key"),
-    KUBE_CONFIG(6,"Kube config") // Kubernetes Config 客户端配置文件
+    KUBE_CONFIG(6,"Kubernetes kubeconfig"), // Kubernetes Config 客户端配置文件
     ;
 
     private int kind;

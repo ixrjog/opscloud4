@@ -5,9 +5,7 @@ import com.baiyi.caesar.domain.param.IRelation;
 import com.baiyi.caesar.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -19,7 +17,9 @@ import javax.validation.constraints.NotNull;
 public class DsAssetParam {
 
     @Data
+    @Builder
     @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
     public static class AssetPageQuery extends PageParam implements IExtend, IRelation {
@@ -45,7 +45,8 @@ public class DsAssetParam {
         private Boolean relation;
 
         @ApiModelProperty(value = "是否有效")
-        private Boolean isActive;
+        @Builder.Default
+        private Boolean isActive = true;
     }
 
     @Data

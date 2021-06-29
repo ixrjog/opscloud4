@@ -24,8 +24,6 @@ import java.util.List;
  * @Date 2021/6/10 2:16 下午
  * @Since 1.0
  */
-
-
 @Configuration
 public class SshAuthenticationConfig {
 
@@ -51,14 +49,12 @@ public class SshAuthenticationConfig {
             try {
                 User user = userService.getByUsername(username);
                 List<UserCredential> userCredentialList = userCredentialService.queryByUserIdAndType(user.getId(), UserCredentialTypeEnum.PUB_KEY.getType());
-                if (CollectionUtils.isEmpty(userCredentialList)) {
+                if (CollectionUtils.isEmpty(userCredentialList))
                     return false;
-                }
                 File tmp = Files.createTempFile("sshShellPubKeys-", ".tmp").toFile();
                 FileWriter fw = new FileWriter(tmp);
-                for (UserCredential userCredential : userCredentialList) {
+                for (UserCredential userCredential : userCredentialList)
                     fw.write(userCredential.getCredential() + "\n");
-                }
                 fw.close();
                 boolean result = new SshShellPublicKeyAuthenticationProvider(tmp).authenticate(username, publicKey, serverSession);
                 tmp.delete();

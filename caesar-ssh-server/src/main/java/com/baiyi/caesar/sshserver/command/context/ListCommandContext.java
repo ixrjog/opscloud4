@@ -1,4 +1,4 @@
-package com.baiyi.caesar.sshserver.commands.context;
+package com.baiyi.caesar.sshserver.command.context;
 
 import com.baiyi.caesar.domain.param.server.ServerParam;
 import lombok.AllArgsConstructor;
@@ -15,12 +15,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ShowCommandContext {
+public class ListCommandContext {
 
     private String sessionId;
-
     private String username;
-
     private ServerParam.UserPermissionServerPageQuery queryParam;
 
 }

@@ -45,6 +45,12 @@ public class AuditRecordHandler {
         }
     }
 
+    /**
+     * 用户命令操作审计日志，暂不使用
+     * @param commander
+     * @param sessionId
+     * @param instanceId
+     */
     public static void recordCommanderLog(StringBuffer commander, String sessionId, String instanceId) {
         try {
             String log = new String(commander);

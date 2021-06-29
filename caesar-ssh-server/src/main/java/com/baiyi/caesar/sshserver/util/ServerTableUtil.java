@@ -7,7 +7,7 @@ import com.google.common.base.Joiner;
  * @Date 2021/6/8 4:31 下午
  * @Version 1.0
  */
-public class TableUtil {
+public class ServerTableUtil {
 
     public static final String DIVIDING_LINE = "------+---------------------------------+---------------------------------+------------+--------------------------------+-------------------------------------";
 
@@ -15,11 +15,11 @@ public class TableUtil {
 
     public static String buildTableHeaders() {
         return Joiner.on("").join(String.format(" %-5s|", "ID"),
-                String.format(" %-27s|", "服务器名称"),
-                String.format(" %-28s|", "服务器组"),
-                String.format(" %-9s|", "环境"),
+                String.format(" %-32s|", "Server Name"),
+                String.format(" %-32s|", "ServerGroup Name"),
+                String.format(" %-11s|", "Env"),
                 String.format(" %-31s|", "IP"),
-                String.format(" %-4s", "账户"));
+                String.format(" %-4s", "Account"));
     }
 
     public static String buildPagination(long totalNum,int page, int length) {

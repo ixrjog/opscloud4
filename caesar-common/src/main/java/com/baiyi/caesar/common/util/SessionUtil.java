@@ -15,7 +15,9 @@ public class SessionUtil {
 
     private static ThreadLocal<Integer> userId = new ThreadLocal<>();
 
-    public static void setUserToken(UserToken userToken){
+    private static ThreadLocal<Boolean> isAdmin = new ThreadLocal<>();
+
+    public static void setUserToken(UserToken userToken) {
         username.set(userToken.getUsername());
         token.set(userToken.getToken());
     }
@@ -26,6 +28,14 @@ public class SessionUtil {
 
     public static void setUserId(Integer param) {
         userId.set(param);
+    }
+
+    public static void setIsAdmin(Boolean param) {
+        isAdmin.set(param);
+    }
+
+    public static Boolean getIsAdmin() {
+        return isAdmin.get() == null ? false : isAdmin.get();
     }
 
     public static String getUsername() {

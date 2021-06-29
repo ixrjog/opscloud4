@@ -16,7 +16,7 @@
 
 package com.baiyi.caesar.sshserver;
 
-import com.baiyi.caesar.sshserver.commands.properties.CommandProperties;
+import com.baiyi.caesar.sshserver.command.properties.CommandProperties;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.boot.context.properties.NestedConfigurationProperty;

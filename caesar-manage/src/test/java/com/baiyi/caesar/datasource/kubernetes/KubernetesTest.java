@@ -9,6 +9,7 @@ import com.baiyi.caesar.datasource.factory.AssetProviderFactory;
 import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.datasource.kubernetes.client.KubeClient;
 import com.baiyi.caesar.datasource.kubernetes.handler.KubernetesNamespaceHandler;
+import com.baiyi.caesar.datasource.kubernetes.handler.KubernetesTestHandler;
 import com.baiyi.caesar.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceConfig;
 import com.baiyi.caesar.service.datasource.DsConfigService;
@@ -16,9 +17,11 @@ import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
 import io.fabric8.kubernetes.client.KubernetesClient;
+import io.fabric8.kubernetes.client.dsl.LogWatch;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -39,6 +42,20 @@ public class KubernetesTest extends BaseUnit {
     @Test
     void pullNamespaceTest() {
         SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_NAMESPACE.getType());
+        assert assetProvider != null;
+        assetProvider.pullAsset(5);
+    }
+
+    @Test
+    void pullPodTest() {
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_POD.getType());
+        assert assetProvider != null;
+        assetProvider.pullAsset(5);
+    }
+
+    @Test
+    void pullDeploymentTest() {
+        SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType());
         assert assetProvider != null;
         assetProvider.pullAsset(5);
     }
@@ -65,7 +82,61 @@ public class KubernetesTest extends BaseUnit {
         List<Pod> pods = podList.getItems().stream().filter(e -> e.getStatus().getPhase().equals("Running")).collect(Collectors.toList());
 
         for (Pod item : pods) {
+
             System.err.print(item.getSpec());
+        }
+    }
+
+
+    @Test
+    void logTest() {
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        LogWatch logWatch = KubernetesTestHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment-5db56d8d8c-54svd");
+
+
+        try {
+            InputStream is = logWatch.getOutput();
+            print(is);
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        logWatch.close();
+
+    }
+
+
+    public static void print(InputStream is) throws UnsupportedEncodingException {
+        InputStreamReader isr = new InputStreamReader(is, "utf-8");
+        BufferedReader br = new BufferedReader(isr);
+        try {
+            while ((br.read()) != -1) {
+                System.out.println(br.readLine());
+            }
+        } catch (IOException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * 读取流
+     *
+     * @param inStream
+     * @return 字节数组
+     * @throws Exception
+     */
+    public static void readStream(InputStream inStream) throws Exception {
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inStream), 1);
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println("111111111111111111");
+            }
+            inStream.close();
+            bufferedReader.close();
+        } catch (IOException ioe) {
+            ioe.printStackTrace();
         }
     }
 
