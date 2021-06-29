@@ -54,7 +54,7 @@ import static com.baiyi.caesar.sshserver.util.KubernetesTableUtil.DIVIDING_LINE;
 @SshShellComponent
 @ShellCommandGroup("Kubernetes")
 public class KubernetesCommand {
-
+    // ^C
     private static final int QUIT = 3;
 
     @Resource
@@ -74,7 +74,7 @@ public class KubernetesCommand {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List kubernetes pods", key = {"list-k8s-pod"})
-    public void listKubernetes(@ShellOption(help = "Name", defaultValue = "") String name) {
+    public void listKubernetesPod(@ShellOption(help = "Name", defaultValue = "") String name) {
         // String sessionId = buildSessionId();
 
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
@@ -94,6 +94,7 @@ public class KubernetesCommand {
                 .column("ID")
                 .column("Kubernetes Instance Name")
                 .column("Pod Name")
+                .column("Pod IP")
                 .column("Containers Name")
                 .displayHeaders(false)
                 .borderStyle(BorderStyle.fancy_light)
@@ -111,8 +112,9 @@ public class KubernetesCommand {
             List<String> names = containers.stream().map(Container::getName).collect(Collectors.toList());
             builder.line(Arrays.asList(
                     String.format(" %-6s|", e.getId()),
-                    String.format(" %-35s|", instance.getInstanceName()),
+                    String.format(" %-25s|", instance.getInstanceName()),
                     String.format(" %-50s|", e.getName()),
+                    String.format(" %-16s|", e.getAssetKey()),
                     String.format(" %-50s", Joiner.on(",").join(names)))
             );
         });
