@@ -76,6 +76,9 @@ public class ServerGroupVO {
         @ApiModelProperty(value = "资源描述")
         private String comment;
 
+        private Boolean isAdmin;
+
+
     }
 
 }
