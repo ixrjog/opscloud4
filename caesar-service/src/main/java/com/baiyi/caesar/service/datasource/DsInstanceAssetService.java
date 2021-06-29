@@ -21,6 +21,8 @@ public interface DsInstanceAssetService {
 
     void update(DatasourceInstanceAsset asset);
 
+    List<DatasourceInstanceAsset> listByInstanceAssetType(String instanceUuid, String assetType);
+
     DatasourceInstanceAsset getByUniqueKey(DatasourceInstanceAsset asset);
 
     DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.AssetPageQuery pageQuery);

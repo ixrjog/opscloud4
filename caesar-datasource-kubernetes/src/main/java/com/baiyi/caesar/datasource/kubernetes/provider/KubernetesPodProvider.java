@@ -68,6 +68,8 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
+        if (!AssetUtil.equals(preAsset.getAssetId(), asset.getAssetId()))
+            return false;
         if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
             return false;
         if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))

@@ -7,13 +7,16 @@ import com.baiyi.caesar.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
+import com.baiyi.caesar.facade.datasource.BaseDsAssetFacade;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.caesar.service.datasource.DsInstanceAssetService;
+import com.google.common.collect.Sets;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @Author baiyi
@@ -29,12 +32,55 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     @Resource
+    private BaseDsAssetFacade baseDsAssetFacade;
+
+    @Resource
     protected DsConfigFactory dsFactory;
+
+    public interface Model {
+        boolean INCREMENT = false; // 增量模式: 不删除旧数据
+        boolean SYNC = true;       // 同步模式: 删除旧数据
+    }
+
+    protected boolean executeMode() {
+        return Model.SYNC;
+    }
 
     protected abstract List<T> listEntries(DsInstanceContext dsInstanceContext);
 
     private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entries) {
-        entries.forEach(e -> enterEntry(dsInstanceContext, e));
+        if (executeMode()) {
+            Set<Integer> idSet = listAssetsIdSet(dsInstanceContext);
+            entries.forEach(e -> enterEntry(dsInstanceContext, idSet, e));
+            idSet.forEach(id -> baseDsAssetFacade.deleteAssetById(id));
+        } else {
+            entries.forEach(e -> enterEntry(dsInstanceContext, e));
+        }
+    }
+
+    /**
+     * 查询已录入资产
+     *
+     * @param dsInstanceContext
+     * @return
+     */
+    private List<DatasourceInstanceAsset> listAssets(DsInstanceContext dsInstanceContext) {
+        return dsInstanceAssetService.listByInstanceAssetType(dsInstanceContext.getDsInstance().getUuid(), getAssetType());
+    }
+
+    private Set<Integer> listAssetsIdSet(DsInstanceContext dsInstanceContext) {
+        Set<Integer> idSet = Sets.newHashSet();
+        listAssets(dsInstanceContext).forEach(e -> idSet.add(e.getId()));
+        return idSet;
+    }
+
+    protected void enterEntry(DsInstanceContext dsInstanceContext, Set<Integer> idSet, T entry) {
+        DatasourceInstanceAsset asset = enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
+        filterAsset(idSet, asset.getId());
+    }
+
+    private void filterAsset(Set<Integer> idSet, Integer id) {
+        idSet.remove(id);
     }
 
     protected void enterEntry(DsInstanceContext dsInstanceContext, T entry) {
@@ -62,7 +108,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         if (asset == null) {
             try {
                 dsInstanceAssetService.add(preAsset);
-            }catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         } else {

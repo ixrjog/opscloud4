@@ -47,6 +47,15 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     }
 
     @Override
+    public List<DatasourceInstanceAsset> listByInstanceAssetType(String instanceUuid,String assetType) {
+        Example example = new Example(DatasourceInstanceAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid)
+                .andEqualTo("assetType", assetType);
+        return dsInstanceAssetMapper.selectByExample(example);
+    }
+
+    @Override
     public DatasourceInstanceAsset getByUniqueKey(DatasourceInstanceAsset asset) {
         Example example = new Example(DatasourceInstanceAsset.class);
         Example.Criteria criteria = example.createCriteria();
