@@ -37,7 +37,7 @@ import java.time.Instant;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Server")
-public class LoginCommand {
+public class ServerLoginCommand {
 
     @Resource
     private SshShellHelper helper;

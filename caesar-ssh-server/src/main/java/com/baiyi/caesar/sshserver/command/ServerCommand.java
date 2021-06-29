@@ -47,7 +47,7 @@ import static com.baiyi.caesar.sshserver.util.ServerTableUtil.DIVIDING_LINE;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Server")
-public class ListServerCommand {
+public class ServerCommand {
 
     @Resource
     private SshShellHelper helper;

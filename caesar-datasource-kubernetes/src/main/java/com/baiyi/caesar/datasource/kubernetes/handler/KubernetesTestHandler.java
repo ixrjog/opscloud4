@@ -28,7 +28,6 @@ public class KubernetesTestHandler {
                // .inContainer(containerName) // 如果Pod中只有一个容器，不需要指定
                 .writingOutput(System.out)
                 .exec("sh", "-c", cmd);
-
         return null;
 
     }

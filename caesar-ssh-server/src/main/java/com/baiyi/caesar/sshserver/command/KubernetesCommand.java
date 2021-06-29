@@ -21,8 +21,12 @@ import com.baiyi.caesar.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
+import io.fabric8.kubernetes.client.Callback;
+import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
+import io.fabric8.kubernetes.client.utils.NonBlockingInputStreamPumper;
 import lombok.extern.slf4j.Slf4j;
+import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
@@ -31,13 +35,12 @@ import org.springframework.shell.table.BorderStyle;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import static com.baiyi.caesar.sshserver.util.KubernetesTableUtil.DIVIDING_LINE;
@@ -50,7 +53,7 @@ import static com.baiyi.caesar.sshserver.util.KubernetesTableUtil.DIVIDING_LINE;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Kubernetes")
-public class ListKubernetesCommand {
+public class KubernetesCommand {
 
     private static final int QUIT = 3;
 
@@ -103,6 +106,7 @@ public class ListKubernetesCommand {
             KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
 
             Pod pod = KubernetesPodHandler.getPod(kubernetesDsInstanceConfig.getKubernetes(), e.getAssetKey2(), e.getName());
+            if (pod == null) return;
             List<Container> containers = pod.getSpec().getContainers();
             List<String> names = containers.stream().map(Container::getName).collect(Collectors.toList());
             builder.line(Arrays.asList(
@@ -131,7 +135,7 @@ public class ListKubernetesCommand {
         if (StringUtils.isEmpty(name)) {
             logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName());
         } else {
-            logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName());
+            logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName(), name);
         }
         Terminal terminal = getTerminal();
         TerminalUtil.enterRawMode(terminal);
@@ -150,6 +154,98 @@ public class ListKubernetesCommand {
         } catch (IOException e) {
             // TODO
             e.printStackTrace();
+        }
+    }
+
+    @InvokeSessionUser(invokeAdmin = true)
+    @ShellMethod(value = "Show kubernetes (pod)container log [ press ctrl+c quit ]", key = {"exec-container-cmd"})
+    public void execContainerCommand(@ShellOption(help = "ID", defaultValue = "") Integer id, @ShellOption(help = "ContainerName", defaultValue = "") String name
+            , @ShellOption(help = "Exec Command") String command) {
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
+        DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
+        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+        ByteArrayOutputStream stderr = new ByteArrayOutputStream();
+        //  ExecWatch execWatch = KubernetesPodHandler.getPodExecWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName(), name, stderr, command);
+
+
+        Terminal terminal = getTerminal();
+        TerminalUtil.enterRawMode(terminal);
+        //execWatch.
+        //InputStream inputStream = execWatch.getOutput();
+        //  try {
+        //  InputStreamReader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
+//            BufferedReader br = new BufferedReader(isr);
+//            while ((br.read()) != -1) {
+//                terminal.writer().print(br.readLine() + "\n");
+//                terminal.flush();
+//                if (terminal.reader().read(25L) == QUIT)
+//                    break;
+//            }
+//            inputStream.close();
+//            isr.close();
+//        } catch (IOException e) {
+//            // TODO
+//            e.printStackTrace();
+//        }
+    }
+
+
+    @InvokeSessionUser
+    @ShellMethod(value = "Login container [ press ctrl+c quit ]", key = {"login-container"})
+    public void loginContainer(@ShellOption(help = "ID", defaultValue = "") Integer id, @ShellOption(help = "ContainerName", defaultValue = "") String name) {
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
+        DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
+        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+
+        Terminal terminal = getTerminal();
+        ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
+                kubernetesDsInstanceConfig.getKubernetes(),
+                asset.getAssetKey2(),
+                asset.getName(),
+                name,
+                terminal.output());
+
+        Size size = terminal.getSize();
+        execWatch.resize(size.getColumns(), size.getRows());
+
+        TerminalUtil.enterRawMode(terminal); // 行模式
+        ExecutorService executorService = Executors.newSingleThreadExecutor();
+
+        NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(execWatch.getOutput(), new OutCallback());
+        executorService.submit(pump); // run
+        try {
+            while (true) {
+                int ch = terminal.reader().read(25L);
+                if (ch >= 0)
+                    execWatch.getInput().write(ch);
+                if (ch == QUIT) {
+                    helper.print("\n用户正常退出容器！", PromptColor.GREEN);
+                    break;
+                }
+                tryResize(size, terminal, execWatch);
+            }
+        } catch (Exception e) {
+            helper.print("\n用户异常退出容器！", PromptColor.RED);
+            e.printStackTrace();
+        } finally {
+            execWatch.close();
+            executorService.shutdownNow();
+        }
+    }
+
+    private void tryResize(Size size, Terminal terminal, ExecWatch execWatch) {
+        if (!terminal.getSize().equals(size)) {
+            size = terminal.getSize();
+            execWatch.resize(size.getColumns(), size.getRows());
+        }
+    }
+
+    private static class OutCallback implements Callback<byte[]> {
+        @Override
+        public void call(byte[] data) {
+            // System.out.print(new String(data));
         }
     }
 

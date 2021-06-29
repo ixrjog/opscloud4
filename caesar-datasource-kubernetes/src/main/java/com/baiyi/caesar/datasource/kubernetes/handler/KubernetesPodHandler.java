@@ -4,9 +4,11 @@ import com.baiyi.caesar.common.datasource.config.DsKubernetesConfig;
 import com.baiyi.caesar.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import org.springframework.util.CollectionUtils;
 
+import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -61,5 +63,31 @@ public class KubernetesPodHandler {
                 .withName(podName)
                 .inContainer(containerName)
                 .watchLog();
+    }
+
+    /**
+     * @param kubernetes
+     * @param namespace
+     * @return
+     */
+    public static ExecWatch loginPodContainer(DsKubernetesConfig.Kubernetes kubernetes,
+                                            String namespace,
+                                            String podName,
+                                            String containerName,
+                                              OutputStream out
+                                              ) {
+        return KubeClient.build(kubernetes).pods()
+                .inNamespace(namespace)
+                .withName(podName)
+                .inContainer(containerName) // 如果Pod中只有一个容器，不需要指定
+                .redirectingInput()
+                //.redirectingOutput()
+                //.redirectingError()
+                //.redirectingErrorChannel()
+                //.readingInput(in)
+                .writingOutput(out)
+                .writingError(System.err)
+                .withTTY()
+                .exec("sh");
     }
 }
