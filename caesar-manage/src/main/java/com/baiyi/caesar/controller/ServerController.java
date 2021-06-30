@@ -21,7 +21,7 @@ import javax.validation.Valid;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/server")
+@RequestMapping("/api/server")
 @Api(tags = "系统管理")
 public class ServerController {
 

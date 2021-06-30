@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/sys/env")
+@RequestMapping("/api/sys/env")
 @Api(tags = "环境管理")
 public class EnvController {
 

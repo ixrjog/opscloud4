@@ -20,7 +20,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/log")
+@RequestMapping("/api/log")
 @Api(tags = "用户登录")
 public class LogController {
 

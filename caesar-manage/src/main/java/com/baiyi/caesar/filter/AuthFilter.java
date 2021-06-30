@@ -59,6 +59,7 @@ public class AuthFilter extends OncePerRequestFilter {
             }
             //静态资源不拦截
             if (resourceName.endsWith(".js")
+                    || resourceName.endsWith(".md")
                     || resourceName.endsWith(".css")
                     || resourceName.endsWith(".woff")
                     || resourceName.endsWith(".otf")

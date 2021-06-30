@@ -6,11 +6,11 @@ import com.baiyi.caesar.domain.param.auth.AuthGroupParam;
 import com.baiyi.caesar.domain.param.auth.AuthResourceParam;
 import com.baiyi.caesar.domain.param.auth.AuthRoleParam;
 import com.baiyi.caesar.domain.param.auth.AuthUserRoleParam;
-import com.baiyi.caesar.facade.auth.AuthFacade;
 import com.baiyi.caesar.domain.vo.auth.AuthGroupVO;
 import com.baiyi.caesar.domain.vo.auth.AuthResourceVO;
 import com.baiyi.caesar.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.caesar.domain.vo.auth.AuthRoleVO;
+import com.baiyi.caesar.facade.auth.AuthFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
@@ -25,7 +25,7 @@ import javax.validation.Valid;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/auth")
+@RequestMapping( "/api/auth")
 @Api(tags = "权限配置")
 public class AuthController {
 

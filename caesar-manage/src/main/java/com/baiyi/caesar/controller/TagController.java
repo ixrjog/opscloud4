@@ -23,7 +23,7 @@ import java.util.List;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/tag")
+@RequestMapping("/api/tag")
 @Api(tags = "标签管理")
 public class TagController {
 

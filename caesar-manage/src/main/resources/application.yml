@@ -1,6 +1,6 @@
-server:
-  servlet:
-    context-path: /cs
+#server:
+#  servlet:
+#    context-path: /cs
 
 spring:
   profiles:

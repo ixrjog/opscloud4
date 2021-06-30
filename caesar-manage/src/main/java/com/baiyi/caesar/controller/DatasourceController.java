@@ -24,7 +24,7 @@ import java.util.List;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/datasource")
+@RequestMapping("/api/datasource")
 @Api(tags = "数据源")
 public class DatasourceController {
 

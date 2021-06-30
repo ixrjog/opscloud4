@@ -17,7 +17,7 @@ import java.util.Map;
  * @Date 2021/5/21 3:58 下午
  * @Version 1.0
  */
-@ServerEndpoint(value = "/ws/guacamole/tunnel", subprotocols = "guacamole")
+@ServerEndpoint(value = "/api/ws/guacamole/tunnel", subprotocols = "guacamole")
 @Component
 public final class GuacamoleController extends BaseGuacamoleWebSocket {
 
