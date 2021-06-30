@@ -16,6 +16,7 @@
 
 package com.baiyi.caesar.sshserver.command;
 
+import com.baiyi.caesar.sshserver.command.component.SshShellComponent;
 import com.baiyi.caesar.sshserver.postprocess.TypePostProcessorResultHandler;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;

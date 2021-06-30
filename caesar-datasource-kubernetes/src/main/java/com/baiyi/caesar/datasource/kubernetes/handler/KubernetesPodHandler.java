@@ -60,11 +60,12 @@ public class KubernetesPodHandler {
                 .watchLog();
     }
 
-    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName) {
+    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName,Integer lines) {
         return KubeClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
                 .inContainer(containerName)
+                .tailingLines(lines)
                 .watchLog();
     }
 

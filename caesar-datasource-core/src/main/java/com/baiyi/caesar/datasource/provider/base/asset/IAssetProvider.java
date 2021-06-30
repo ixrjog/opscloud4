@@ -8,4 +8,5 @@ package com.baiyi.caesar.datasource.provider.base.asset;
 public interface IAssetProvider {
 
     void pullAsset(int dsInstanceId);
+
 }

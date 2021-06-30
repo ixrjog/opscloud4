@@ -14,6 +14,7 @@ import com.baiyi.caesar.service.datasource.DsInstanceAssetService;
 import com.baiyi.caesar.service.datasource.DsInstanceService;
 import com.baiyi.caesar.sshserver.*;
 import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
+import com.baiyi.caesar.sshserver.command.component.SshShellComponent;
 import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.util.KubernetesTableUtil;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
@@ -32,7 +33,6 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 import org.springframework.shell.table.BorderStyle;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.io.*;
@@ -129,17 +129,21 @@ public class KubernetesCommand {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "Show kubernetes (pod)container log [ press Ctrl+C quit ]", key = {"show-k8s-container-log"})
-    public void showContainerLog(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
+    public void showContainerLog(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id,
+                                 @ShellOption(help = "Container Name", defaultValue = "") String name,
+                                 @ShellOption(help = "Tailing Lines", defaultValue = "100") Integer lines) {
+        if (lines == null || lines <= 100)
+            lines = 100;
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
         DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
-        LogWatch logWatch;
-        if (StringUtils.isEmpty(name)) {
-            logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName());
-        } else {
-            logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName(), name);
-        }
+        LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
+                asset.getAssetKey2(),
+                asset.getName(),
+                name,
+                lines);
+
         Terminal terminal = getTerminal();
         TerminalUtil.enterRawMode(terminal);
         InputStream inputStream = logWatch.getOutput();
@@ -160,8 +164,8 @@ public class KubernetesCommand {
         }
     }
 
-    @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "Show kubernetes (pod)container log [ press ctrl+c quit ]", key = {"exec-container-cmd"})
+    // @InvokeSessionUser(invokeAdmin = true)
+    //  @ShellMethod(value = "Show kubernetes (pod)container log [ press ctrl+c quit ]", key = {"exec-container-cmd"})
     public void execContainerCommand(@ShellOption(help = "ID", defaultValue = "") Integer id, @ShellOption(help = "ContainerName", defaultValue = "") String name
             , @ShellOption(help = "Exec Command") String command) {
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
@@ -170,7 +174,6 @@ public class KubernetesCommand {
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
         ByteArrayOutputStream stderr = new ByteArrayOutputStream();
         //  ExecWatch execWatch = KubernetesPodHandler.getPodExecWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName(), name, stderr, command);
-
 
         Terminal terminal = getTerminal();
         TerminalUtil.enterRawMode(terminal);
@@ -192,7 +195,6 @@ public class KubernetesCommand {
 //            e.printStackTrace();
 //        }
     }
-
 
 
     @InvokeSessionUser
@@ -228,16 +230,15 @@ public class KubernetesCommand {
                         execWatch.getInput().write(EOF);
                         Thread.sleep(200L); // 等待退出，避免sh残留
                         break;
-                    }else{
+                    } else {
                         execWatch.getInput().write(ch);
                     }
                 }
                 tryResize(size, terminal, execWatch);
             }
-        }catch (IOException |InterruptedException e){
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
-        }
-        finally {
+        } finally {
             execWatch.close();
             pump.close();
             helper.print("\n用户退出容器！", PromptColor.GREEN);

@@ -18,6 +18,7 @@ package com.baiyi.caesar.sshserver.command;
 
 import com.baiyi.caesar.sshserver.SshShellHelper;
 import com.baiyi.caesar.sshserver.SshShellProperties;
+import com.baiyi.caesar.sshserver.command.component.SshShellComponent;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellCommandGroup;

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.caesar.sshserver.command;
+package com.baiyi.caesar.sshserver.command.component;
 
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.shell.standard.ShellComponent;

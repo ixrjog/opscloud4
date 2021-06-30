@@ -15,6 +15,7 @@ import com.baiyi.caesar.sshserver.SshContext;
 import com.baiyi.caesar.sshserver.SshShellCommandFactory;
 import com.baiyi.caesar.sshserver.SshShellHelper;
 import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
+import com.baiyi.caesar.sshserver.command.component.SshShellComponent;
 import com.baiyi.caesar.sshserver.util.SessionUtil;
 import com.baiyi.caesar.sshserver.util.TerminalUtil;
 import lombok.extern.slf4j.Slf4j;
