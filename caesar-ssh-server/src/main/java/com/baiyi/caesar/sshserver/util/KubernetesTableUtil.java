@@ -17,7 +17,7 @@ public class KubernetesTableUtil {
         return Joiner.on("").join(String.format(" %-5s|", "ID"),
                 String.format(" %-25s|", "Kubernetes Instance Name"),
                 String.format(" %-50s|", "Pod Name"),
-                String.format(" %-16s|", "Node IP/Pod IP"),
+                String.format(" %-16s|", "Pod IP"),
                 String.format(" %-50s", "Containers Name")
                 );
     }

@@ -50,7 +50,7 @@ public class ServerLoginCommand {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "Login server", key = {"open", "login"})
-    public void login(@ShellOption(help = "Server id") int id, @ShellOption(help = "Account name", defaultValue = "") String account) {
+    public void login(@ShellOption(help = "Server Id") int id, @ShellOption(help = "Account Name", defaultValue = "") String account) {
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
         String instanceId = IdUtil.buildUUID();
