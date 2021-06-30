@@ -28,7 +28,4 @@ public class ZabbixRequest {
         params.put(key, value);
     }
 
-    public Object removeParam(String key) {
-        return params.remove(key);
-    }
 }

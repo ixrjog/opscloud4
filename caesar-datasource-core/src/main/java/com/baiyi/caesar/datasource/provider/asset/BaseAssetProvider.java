@@ -1,10 +1,13 @@
 package com.baiyi.caesar.datasource.provider.asset;
 
+import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.datasource.model.DsInstanceContext;
 import com.baiyi.caesar.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.caesar.datasource.provider.base.common.SimpleDsInstanceProvider;
+import com.baiyi.caesar.datasource.provider.base.param.AssetFilterParam;
+import com.baiyi.caesar.datasource.provider.base.param.UniqueAssetParam;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstance;
 import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
 import com.baiyi.caesar.facade.datasource.BaseDsAssetFacade;
@@ -47,6 +50,14 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     }
 
     protected abstract List<T> listEntries(DsInstanceContext dsInstanceContext);
+
+    protected T getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+        throw new CommonRuntimeException("该数据源实例不支持单个查询资产");
+    }
+
+    protected List<T> listEntries(DsInstanceContext dsInstanceContext, AssetFilterParam param) {
+        throw new CommonRuntimeException("该数据源实例不支持筛选资产");
+    }
 
     private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entries) {
         if (executeMode()) {
@@ -137,4 +148,25 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         enterAssets(dsInstanceContext, entries);
     }
 
+    protected void doPull(int dsInstanceId, UniqueAssetParam param) {
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
+        T entry = getEntry(dsInstanceContext, param);
+        enterEntry(dsInstanceContext, entry);
+    }
+
+    protected void doPull(int dsInstanceId, AssetFilterParam filter) {
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
+        List<T> entries = listEntries(dsInstanceContext, filter);
+        enterAssets(dsInstanceContext, entries);
+    }
+
+    @Override
+    public void pullAsset(int dsInstanceId, UniqueAssetParam param) {
+        doPull(dsInstanceId, param);
+    }
+
+    @Override
+    public void pullAsset(int dsInstanceId, AssetFilterParam filter) {
+        doPull(dsInstanceId, filter);
+    }
 }
