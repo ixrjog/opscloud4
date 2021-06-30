@@ -4,7 +4,6 @@ import com.baiyi.caesar.sshserver.PromptColor;
 import com.baiyi.caesar.sshserver.SshShellHelper;
 import com.baiyi.caesar.sshserver.listeners.SshShellListener;
 import org.jline.terminal.Terminal;
-import org.jline.utils.InfoCmp;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +24,8 @@ public class SshServerConfig {
 
     private Terminal terminal;
 
+
+
     @Autowired
     @Lazy
     public void setTerminal(Terminal terminal) {
@@ -34,7 +35,8 @@ public class SshServerConfig {
     @Bean
     public SshShellListener sshShellListener() {
         return event -> {
-            this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
+            // 清屏
+            // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
             String welcome = String.format("%s 欢迎使用 Caesar SSH Server! \n", event.getSession().getServerSession().getUsername());
             helper.print(welcome, PromptColor.RED);
         };

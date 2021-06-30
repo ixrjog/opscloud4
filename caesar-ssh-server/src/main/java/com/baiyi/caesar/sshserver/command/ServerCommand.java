@@ -117,7 +117,7 @@ public class ServerCommand {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server", key = {"ls", "list"})
-    public void listServer(@ShellOption(help = "ServerName", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
+    public void listServer(@ShellOption(help = "Server Name", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
                 .name(name)

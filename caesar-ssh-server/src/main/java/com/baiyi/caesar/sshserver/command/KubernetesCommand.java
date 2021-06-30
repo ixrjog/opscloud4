@@ -56,6 +56,7 @@ import static com.baiyi.caesar.sshserver.util.KubernetesTableUtil.DIVIDING_LINE;
 public class KubernetesCommand {
     // ^C
     private static final int QUIT = 3;
+    private static final int EOF = 4;
 
     @Resource
     private SshShellHelper helper;
@@ -128,7 +129,7 @@ public class KubernetesCommand {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "Show kubernetes (pod)container log [ press Ctrl+C quit ]", key = {"show-k8s-container-log"})
-    public void showContainerLog(@ShellOption(help = "ID", defaultValue = "") Integer id, @ShellOption(help = "ContainerName", defaultValue = "") String name) {
+    public void showContainerLog(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
         DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
@@ -193,20 +194,22 @@ public class KubernetesCommand {
     }
 
 
+
     @InvokeSessionUser
-    @ShellMethod(value = "Login container [ press ctrl+c quit ]", key = {"login-container"})
-    public void loginContainer(@ShellOption(help = "ID", defaultValue = "") Integer id, @ShellOption(help = "ContainerName", defaultValue = "") String name) {
+    @ShellMethod(value = "Login container [ press ctrl+d quit ]", key = {"login-container"})
+    public void loginContainer(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
         DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
-
+        KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
         Terminal terminal = getTerminal();
         ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
                 kubernetesDsInstanceConfig.getKubernetes(),
                 asset.getAssetKey2(),
                 asset.getName(),
                 name,
+                listener,
                 terminal.output());
 
         Size size = terminal.getSize();
@@ -218,22 +221,26 @@ public class KubernetesCommand {
         NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(execWatch.getOutput(), new OutCallback());
         executorService.submit(pump); // run
         try {
-            while (true) {
+            while (!listener.isClosed()) {
                 int ch = terminal.reader().read(25L);
-                if (ch >= 0)
-                    execWatch.getInput().write(ch);
-                if (ch == QUIT) {
-                    helper.print("\n用户正常退出容器！", PromptColor.GREEN);
-                    break;
+                if (ch >= 0) {
+                    if (ch == EOF) {
+                        execWatch.getInput().write(EOF);
+                        Thread.sleep(200L); // 等待退出，避免sh残留
+                        break;
+                    }else{
+                        execWatch.getInput().write(ch);
+                    }
                 }
                 tryResize(size, terminal, execWatch);
             }
-        } catch (Exception e) {
-            helper.print("\n用户异常退出容器！", PromptColor.RED);
+        }catch (IOException |InterruptedException e){
             e.printStackTrace();
-        } finally {
+        }
+        finally {
             execWatch.close();
-            executorService.shutdownNow();
+            pump.close();
+            helper.print("\n用户退出容器！", PromptColor.GREEN);
         }
     }
 
