@@ -2,6 +2,7 @@ package com.baiyi.caesar.datasource.provider.base.asset;
 
 import com.baiyi.caesar.datasource.provider.base.param.AssetFilterParam;
 import com.baiyi.caesar.datasource.provider.base.param.UniqueAssetParam;
+import com.baiyi.caesar.domain.generator.caesar.DatasourceInstanceAsset;
 
 /**
  * @Author baiyi
@@ -12,7 +13,7 @@ public interface IAssetProvider {
 
     void pullAsset(int dsInstanceId);
 
-    void pullAsset(int dsInstanceId, UniqueAssetParam param);
+    DatasourceInstanceAsset pullAsset(int dsInstanceId, UniqueAssetParam param);
 
     void pullAsset(int dsInstanceId, AssetFilterParam param);
 }

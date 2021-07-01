@@ -1,6 +1,5 @@
 package com.baiyi.caesar.datasource.provider.asset;
 
-import com.baiyi.caesar.common.exception.common.CommonRuntimeException;
 import com.baiyi.caesar.datasource.builder.AssetContainer;
 import com.baiyi.caesar.datasource.factory.DsConfigFactory;
 import com.baiyi.caesar.datasource.model.DsInstanceContext;
@@ -52,11 +51,11 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     protected abstract List<T> listEntries(DsInstanceContext dsInstanceContext);
 
     protected T getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        throw new CommonRuntimeException("该数据源实例不支持单个查询资产");
+        throw new UnsupportedOperationException("该数据源实例不支持单个查询资产");
     }
 
     protected List<T> listEntries(DsInstanceContext dsInstanceContext, AssetFilterParam param) {
-        throw new CommonRuntimeException("该数据源实例不支持筛选资产");
+        throw new UnsupportedOperationException("该数据源实例不支持筛选资产");
     }
 
     private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entries) {
@@ -94,8 +93,8 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         idSet.remove(id);
     }
 
-    protected void enterEntry(DsInstanceContext dsInstanceContext, T entry) {
-        enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
+    protected DatasourceInstanceAsset enterEntry(DsInstanceContext dsInstanceContext, T entry) {
+        return enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
     }
 
     protected DatasourceInstanceAsset enterAsset(AssetContainer assetContainer) {
@@ -148,10 +147,10 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         enterAssets(dsInstanceContext, entries);
     }
 
-    protected void doPull(int dsInstanceId, UniqueAssetParam param) {
+    protected DatasourceInstanceAsset doPull(int dsInstanceId, UniqueAssetParam param) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         T entry = getEntry(dsInstanceContext, param);
-        enterEntry(dsInstanceContext, entry);
+        return enterEntry(dsInstanceContext, entry);
     }
 
     protected void doPull(int dsInstanceId, AssetFilterParam filter) {
@@ -161,8 +160,8 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     }
 
     @Override
-    public void pullAsset(int dsInstanceId, UniqueAssetParam param) {
-        doPull(dsInstanceId, param);
+    public DatasourceInstanceAsset pullAsset(int dsInstanceId, UniqueAssetParam param) {
+        return doPull(dsInstanceId, param);
     }
 
     @Override

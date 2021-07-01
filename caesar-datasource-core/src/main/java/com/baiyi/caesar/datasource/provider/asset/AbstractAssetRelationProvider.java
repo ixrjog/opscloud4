@@ -37,7 +37,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
     }
 
     @Override
-    protected void enterEntry(DsInstanceContext dsInstanceContext, S source) {
+    protected DatasourceInstanceAsset enterEntry(DsInstanceContext dsInstanceContext, S source) {
         DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), source));
         List<T> targets = listTarget(dsInstanceContext, source);
         targets.forEach(target -> {
@@ -53,6 +53,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
                     .build();
             enterRelation(relation);
         });
+        return asset;
     }
 
     private void enterRelation(DatasourceInstanceAssetRelation relation) {
