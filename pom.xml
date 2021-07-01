@@ -4,25 +4,25 @@
     <modelVersion>4.0.0</modelVersion>
     <packaging>pom</packaging>
     <modules>
-        <module>caesar-manage</module>
-        <module>caesar-service</module>
-        <module>caesar-domain</module>
-        <module>caesar-common</module>
-        <module>caesar-guacamole</module>
-        <module>caesar-terminal</module>
-        <module>caesar-ssh-server</module>
-        <module>caesar-ssh-core</module>
-        <module>caesar-datasource</module>
-        <module>caesar-datasource-ldap</module>
-        <module>caesar-datasource-core</module>
-        <module>caesar-datasource-aliyun</module>
-        <module>caesar-datasource-aliyun-core</module>
-        <module>caesar-datasource-aliyun-ecs</module>
-        <module>caesar-datasource-gitlab</module>
-        <module>caesar-datasource-zabbix</module>
-        <module>caesar-datasource-ansible</module>
-        <module>caesar-opscloud</module>
-        <module>caesar-datasource-kubernetes</module>
+        <module>opscloud-manage</module>
+        <module>opscloud-service</module>
+        <module>opscloud-domain</module>
+        <module>opscloud-common</module>
+        <module>opscloud-guacamole</module>
+        <module>opscloud-terminal</module>
+        <module>opscloud-ssh-server</module>
+        <module>opscloud-ssh-core</module>
+        <module>opscloud-datasource</module>
+        <module>opscloud-datasource-ldap</module>
+        <module>opscloud-datasource-core</module>
+        <module>opscloud-datasource-aliyun</module>
+        <module>opscloud-datasource-aliyun-core</module>
+        <module>opscloud-datasource-aliyun-ecs</module>
+        <module>opscloud-datasource-gitlab</module>
+        <module>opscloud-datasource-zabbix</module>
+        <module>opscloud-datasource-ansible</module>
+        <module>opscloud-opscloud3</module>
+        <module>opscloud-datasource-kubernetes</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -31,10 +31,10 @@
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.baiyi</groupId>
-    <artifactId>caesar</artifactId>
+    <artifactId>opscloud</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>caesar</name>
-    <description>凯撒持续集成平台</description>
+    <name>opscloud</name>
+    <description>运维IaC平台</description>
 
     <properties>
         <java.version>1.8</java.version>
@@ -166,118 +166,112 @@
         <dependencies>
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-common</artifactId>
+                <artifactId>opscloud-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-domain</artifactId>
+                <artifactId>opscloud-domain</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-manage</artifactId>
+                <artifactId>opscloud-manage</artifactId>
                 <version>${project.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-service</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.baiyi</groupId>
-                <artifactId>caesar-guacamole</artifactId>
+                <artifactId>opscloud-service</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-terminal</artifactId>
+                <artifactId>opscloud-guacamole</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-ssh-server</artifactId>
+                <artifactId>opscloud-terminal</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-ssh-core</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-<!--            <dependency>-->
-<!--                <groupId>com.baiyi</groupId>-->
-<!--                <artifactId>caesar-account</artifactId>-->
-<!--                <version>${project.version}</version>-->
-<!--            </dependency>-->
-
-            <dependency>
-                <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-core</artifactId>
+                <artifactId>opscloud-ssh-server</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource</artifactId>
+                <artifactId>opscloud-ssh-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-ldap</artifactId>
+                <artifactId>opscloud-datasource-core</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-gitlab</artifactId>
+                <artifactId>opscloud-datasource</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-zabbix</artifactId>
+                <artifactId>opscloud-datasource-ldap</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-ansible</artifactId>
+                <artifactId>opscloud-datasource-gitlab</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-aliyun</artifactId>
+                <artifactId>opscloud-datasource-zabbix</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-aliyun-ecs</artifactId>
+                <artifactId>opscloud-datasource-ansible</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-aliyun-core</artifactId>
+                <artifactId>opscloud-datasource-aliyun</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-datasource-kubernetes</artifactId>
+                <artifactId>opscloud-datasource-aliyun-ecs</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
-                <artifactId>caesar-opscloud</artifactId>
+                <artifactId>opscloud-datasource-aliyun-core</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-kubernetes</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-opscloud3</artifactId>
                 <version>${project.version}</version>
             </dependency>
         </dependencies>

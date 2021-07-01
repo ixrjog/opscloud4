@@ -1,0 +1,74 @@
+logging:
+  level:
+    # swagger 警告日志忽略
+    io.swagger.models.parameters.AbstractSerializableParameter: error
+  file:
+    path: /logs
+
+# 白名单配置
+white:
+  urls:
+    - /*.js
+    - /*.css
+    - /*.jpg
+    - /swagger-resources
+    - /swagger-ui.html
+    - /v2/api-docs
+    - /api/ws/guacamole/tunnel
+    - /api/ws/terminal
+    - /doc.html
+
+
+spring:
+  profiles:
+    include:
+      - common
+      - ssh-core-prod
+      - ssh-server
+      - opscloud
+  redis:
+    host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com
+    port: 6379
+    password: ENC(dfsfmmYcMcuCEYWQb2Uxi2Q6osIwVHeSjX8SMywWfgVOg47NKT8ckQ==)
+    jedis:
+      pool:
+        max-wait: 5000
+        max-idle: 20
+        max-active: 100
+        min-idle: 0
+  jackson:
+    time-zone: GMT+8
+  datasource:
+    druid:
+      opscloud:
+        url: jdbc:mysql://rm-bp14453fwr49f19cu90130.mysql.rds.aliyuncs.com:3306/caesar2?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        username: caesar
+        password: ENC(RGHKySCNTxkxJ3UTuinFc1eUqguuVOxLB6bCePqLFho=)
+        initial-size: 5
+        min-idle: 5
+        max-active: 20
+        # 获取连接时最大等待时间，单位毫秒。配置了maxWait之后，缺省启用公平锁，并发效率会有所下降，如果需要可以通过配置useUnfairLock属性为true使用非公平锁。
+        max-wait: 1000
+        # 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+        time-between-eviction-runs-millis: 60000
+        # 配置一个连接在池中最小生存的时间，单位是毫秒
+        min-evictable-idle-time-millis: 300000
+        # 用来检测连接是否有效的sql
+        validation-query: select 1
+        # 申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效
+        test-while-idle: on
+        # 申请连接时执行validationQuery检测连接是否有效, 默认true:检测,false:不检测
+        test-on-borrow: off
+        # 归还连接时执行validationQuery检测连接是否有效,默认false:不检测,ture:检测
+        test-on-return: off
+        # 打开PSCache(preparedStatement)，并且指定每个连接上PSCache的大小
+        pool-prepared-statements: on
+        # 要启用PSCache，必须配置大于0，当大于0时，poolPreparedStatements自动触发修改为true
+        max-pool-prepared-statement-per-connection-size: 20
+
+
+# java -jar -Djasypt.encryptor.password=${password}
+jasypt:
+  encryptor:
+    algorithm: PBEWithMD5AndDES
+    iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
