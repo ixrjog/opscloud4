@@ -17,6 +17,7 @@ white:
     - /api/ws/guacamole/tunnel
     - /api/ws/terminal
     - /doc.html
+
 spring:
   profiles:
     include:

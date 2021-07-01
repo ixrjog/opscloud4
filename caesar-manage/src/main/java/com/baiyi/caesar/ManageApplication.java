@@ -46,7 +46,7 @@ public class ManageApplication {
     public static void main(String[] args) {
         Instant inst1 = Instant.now();
         SpringApplication.run(ManageApplication.class, args);
-        log.info("Caesar2 IaC 基础架构即代码 <Spring Boot {}>", SpringBootVersion.getVersion());
+        log.info("OPSCLOUD 4 IaC 基础架构即代码 <Spring Boot {}>", SpringBootVersion.getVersion());
         log.info("启动成功! 耗时:{}/s", Duration.between(inst1, Instant.now()).getSeconds());
     }
 }

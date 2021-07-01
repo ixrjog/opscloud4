@@ -25,6 +25,7 @@ spring:
       - common
       - ssh-core-prod
       - ssh-server
+      - opscloud
   redis:
     host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com
     port: 6379

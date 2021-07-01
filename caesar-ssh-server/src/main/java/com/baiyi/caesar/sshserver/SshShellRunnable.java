@@ -37,6 +37,7 @@ import org.jline.terminal.TerminalBuilder;
 import org.jline.utils.AttributedString;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
+import org.jline.utils.InfoCmp;
 import org.springframework.boot.Banner;
 import org.springframework.core.env.Environment;
 import org.springframework.shell.ExitRequest;
@@ -164,6 +165,8 @@ public class SshShellRunnable
                         terminal.raise(Terminal.Signal.WINCH);
                     }, Signal.WINCH);
                 }
+                // 清理屏幕
+                terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
 
                 if (properties.isDisplayBanner() && shellBanner != null) {
                     shellBanner.printBanner(environment, this.getClass(), ps);
