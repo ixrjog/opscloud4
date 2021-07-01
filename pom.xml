@@ -23,6 +23,7 @@
         <module>opscloud-datasource-ansible</module>
         <module>opscloud-opscloud3</module>
         <module>opscloud-datasource-kubernetes</module>
+        <module>opscloud-datasource-jenkins</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -266,6 +267,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-kubernetes</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-jenkins</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
