@@ -1,8 +1,5 @@
-package com.baiyi.caesar.domain.vo.jenkins;
+package com.baiyi.opscloud.domain.vo.jenkins;
 
-import com.baiyi.caesar.domain.vo.base.AgoVO;
-import com.baiyi.caesar.domain.vo.build.BuildExecutorVO;
-import com.baiyi.caesar.domain.vo.user.UserVO;
 import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import lombok.Builder;
@@ -23,17 +20,11 @@ public class JenkinsPipelineVO {
     @Data
     @Builder
     @ApiModel
-    public static class Pipeline implements AgoVO.IAgo, BuildExecutorVO.IBuildExecutors, UserVO.IUser, Serializable {
+    public static class Pipeline implements  Serializable {
 
         private static final long serialVersionUID = -1020196514240621058L;
 
-        @Override
-        public Integer getBuildId() {
-            return id;
-        }
 
-        private int buildType;
-        private List<BuildExecutorVO.BuildExecutor> executors;
 
         @Builder.Default
         private String chartHeight = "120px";
@@ -51,12 +42,7 @@ public class JenkinsPipelineVO {
 
         // UserVO.IUser
         private String username;
-        private UserVO.User user;
 
-        @Override
-        public Date getAgoTime() {
-            return startTime;
-        }
 
         private String ago;
 

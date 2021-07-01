@@ -1,4 +1,4 @@
-package com.baiyi.caesar.jenkins.api.http;
+package com.baiyi.opscloud.datasource.model;
 
 import lombok.Builder;
 import lombok.Data;
@@ -18,7 +18,8 @@ public class Authentication {
 
     public final static Authentication FREE = Authentication.builder().isFree(true).build();
 
-    private String header;
+    @Builder.Default
+    private String header = Header.AUTHENTICATION;
     private String token;
     @Builder.Default
     private Boolean isFree = false;

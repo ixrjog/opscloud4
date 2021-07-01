@@ -1,13 +1,10 @@
-package com.baiyi.caesar.domain.vo.jenkins;
+package com.baiyi.opscloud.domain.vo.jenkins;
 
-import com.baiyi.caesar.domain.base.BusinessType;
-import com.baiyi.caesar.domain.vo.tag.TagVO;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.Date;
-import java.util.List;
 
 /**
  * @Author baiyi
@@ -27,27 +24,7 @@ public class JobTplVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class JobTpl implements TagVO.ITags, JenkinsInstanceVO.IInstance {
-
-        private int businessType = BusinessType.JENKINS_TPL.getType();
-
-        @Override
-        public void setInstance(JenkinsInstanceVO.Instance instance) {
-            this.jenkinsInstance = instance;
-        }
-
-        @Override
-        public Integer getInstanceId() {
-            return this.jenkinsInstanceId;
-        }
-
-        @Override
-        public int getBusinessId() {
-            return id;
-        }
-
-        private List<TagVO.Tag> tags;
-        private JenkinsInstanceVO.Instance jenkinsInstance;
+    public static class JobTpl {
 
         private Integer id;
         private Integer jenkinsInstanceId;

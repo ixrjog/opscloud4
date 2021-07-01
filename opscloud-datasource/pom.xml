@@ -38,6 +38,11 @@
             <artifactId>opscloud-datasource-zabbix</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-jenkins</artifactId>
+        </dependency>
+
     </dependencies>
 
 

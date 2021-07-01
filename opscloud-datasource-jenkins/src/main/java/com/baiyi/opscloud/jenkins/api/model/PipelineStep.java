@@ -1,4 +1,4 @@
-package com.baiyi.caesar.jenkins.api.model;
+package com.baiyi.opscloud.jenkins.api.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;

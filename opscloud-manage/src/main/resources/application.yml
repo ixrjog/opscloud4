@@ -2,6 +2,9 @@
 #  servlet:
 #    context-path: /cs
 
+knife4j:
+  enable: true
+
 spring:
   profiles:
     active: '@env@'

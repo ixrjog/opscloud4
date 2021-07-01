@@ -1,7 +1,7 @@
-package com.baiyi.caesar.jenkins.util;
+package com.baiyi.opscloud.jenkins.util;
 
-import com.baiyi.caesar.domain.vo.jenkins.JenkinsPipelineVO;
-import com.baiyi.caesar.jenkins.api.model.PipelineNode;
+import com.baiyi.opscloud.domain.vo.jenkins.JenkinsPipelineVO;
+import com.baiyi.opscloud.jenkins.api.model.PipelineNode;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.factory;
 
 import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetRelationProvider;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import org.springframework.data.util.CastUtils;
 
@@ -17,21 +18,32 @@ public class AssetTargetProviderFactory {
     private AssetTargetProviderFactory() {
     }
 
-    //         instanceType & key
-    static private Map<String, Map<String, AbstractAssetRelationProvider<?,?>>> context = new ConcurrentHashMap<>();
 
+    static private Map<String, Map<String, AbstractAssetRelationProvider<?, ?>>> context = new ConcurrentHashMap<>();
 
-    public static <T extends AbstractAssetRelationProvider<?,?>> T getProvider(String instanceType, String key) {
+    public static <T extends AbstractAssetRelationProvider<?, ?>> T getProvider(String instanceType, String assetType, String targetType) {
         if (context.containsKey(instanceType))
-            return CastUtils.cast(context.get(instanceType).get(key));
+            return CastUtils.cast(context.get(instanceType).get(buildKey(assetType, targetType)));
         return null;
     }
 
-    public static <T extends AbstractAssetRelationProvider<?,?>> void register(T bean) {
-        if (context.containsKey(bean.getInstanceType()))
-            context.get(bean.getInstanceType()).put(bean.getAssetType(), bean);
-        Map<String, AbstractAssetRelationProvider<?,?>> elasticComputeContext = Maps.newConcurrentMap();
-        elasticComputeContext.put(bean.getAssetType(), bean);
-        context.put(bean.getInstanceType(), elasticComputeContext);
+    public static <T extends AbstractAssetRelationProvider<?, ?>> void register(T bean) {
+        String key = buildKey(bean);
+        if (context.containsKey(bean.getInstanceType())) {
+            context.get(bean.getInstanceType()).put(key, bean);
+        } else {
+            Map<String, AbstractAssetRelationProvider<?, ?>> target = Maps.newConcurrentMap();
+            target.put(key, bean);
+            context.put(bean.getInstanceType(), target);
+        }
     }
+
+    private static <T extends AbstractAssetRelationProvider<?, ?>> String buildKey(T bean) {
+        return buildKey(bean.getAssetType(), bean.getTargetAssetKey());
+    }
+
+    private static String buildKey(String assetType, String targetType) {
+        return Joiner.on(":").join(assetType, targetType);
+    }
+
 }

@@ -11,5 +11,17 @@
 
     <artifactId>opscloud-datasource-jenkins</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-core</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.offbytwo.jenkins</groupId>
+            <artifactId>jenkins-client</artifactId>
+            <version>0.3.8</version>
+        </dependency>
+    </dependencies>
 
 </project>

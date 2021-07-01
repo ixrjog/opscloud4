@@ -1,6 +1,6 @@
-package com.baiyi.caesar.jenkins.api.mapper;
+package com.baiyi.opscloud.jenkins.api.mapper;
 
-import com.baiyi.caesar.jenkins.api.model.PipelineNode;
+import com.baiyi.opscloud.jenkins.api.model.PipelineNode;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;

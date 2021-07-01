@@ -1,6 +1,6 @@
-package com.baiyi.caesar.jenkins.api.model;
+package com.baiyi.opscloud.jenkins.api.model;
 
-import com.baiyi.caesar.jenkins.util.PipelineUtil;
+import com.baiyi.opscloud.jenkins.util.PipelineUtil;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 

@@ -28,6 +28,8 @@ public class AssetProviderFactory {
     }
 
     public static <T extends SimpleAssetProvider> void register(T bean) {
+
+
         if (context.containsKey(bean.getInstanceType())) {
             context.get(bean.getInstanceType()).put(bean.getAssetType(), bean);
         } else {

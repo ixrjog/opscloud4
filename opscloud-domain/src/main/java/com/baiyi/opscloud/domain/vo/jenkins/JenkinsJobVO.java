@@ -1,4 +1,4 @@
-package com.baiyi.caesar.domain.vo.jenkins;
+package com.baiyi.opscloud.domain.vo.jenkins;
 
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
