@@ -11,7 +11,8 @@ import java.util.List;
  * @Author baiyi
  * @Date 2021/6/1 11:36 上午
  * @Version 1.0
- */@Data
+ */
+@Data
 @Component
 @ConfigurationProperties(prefix = "white", ignoreInvalidFields = true)
 public class WhiteConfig {

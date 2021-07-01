@@ -12,6 +12,7 @@ import com.baiyi.caesar.sshserver.PromptColor;
 import com.baiyi.caesar.sshserver.SimpleTable;
 import com.baiyi.caesar.sshserver.SshShellHelper;
 import com.baiyi.caesar.sshserver.annotation.InvokeSessionUser;
+import com.baiyi.caesar.sshserver.command.component.SshShellComponent;
 import com.baiyi.caesar.sshserver.command.context.ListCommandContext;
 import com.baiyi.caesar.sshserver.command.etc.ColorAligner;
 import com.baiyi.caesar.sshserver.packer.SshServerPacker;

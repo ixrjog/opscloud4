@@ -7,8 +7,16 @@ logging:
 
 # 白名单配置
 white:
-  urls: /*.js;/*.css;/*.jpg;/swagger-resources/*;/error;/webjars/*;/swagger-ui/*;v2/*;
-
+  urls:
+    - /*.js
+    - /*.css
+    - /*.jpg
+    - /swagger-resources
+    - /swagger-ui.html
+    - /v2/api-docs
+    - /api/ws/guacamole/tunnel
+    - /api/ws/terminal
+    - /doc.html
 spring:
   profiles:
     include:

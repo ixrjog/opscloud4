@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/server/account")
+@RequestMapping("/api/server/account")
 @Api(tags = "服务器账户管理")
 public class ServerAccountController {
 

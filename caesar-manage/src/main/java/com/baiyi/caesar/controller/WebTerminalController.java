@@ -29,7 +29,7 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/ws/terminal")
+@ServerEndpoint(value = "/api/ws/terminal")
 @Component
 public final class WebTerminalController extends BaseWebSocketController {
 

@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/datasource/instance")
+@RequestMapping("/api/datasource/instance")
 @Api(tags = "数据源实例")
 public class DatasourceInstanceController {
 

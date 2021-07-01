@@ -21,7 +21,7 @@ import javax.validation.Valid;
  * @Version 1.0
  */
 @RestController
-@RequestMapping("/sys/doc")
+@RequestMapping("/api/sys/doc")
 @Api(tags = "文档管理")
 public class DocumentController {
 
