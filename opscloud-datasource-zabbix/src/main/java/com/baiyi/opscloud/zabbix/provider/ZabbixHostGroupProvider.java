@@ -14,10 +14,10 @@ import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
-import com.baiyi.opscloud.zabbix.handler.ZabbixUserHandler;
+import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
+import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.handler.ZabbixHostGroupHandler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,18 +25,18 @@ import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/6/25 3:32 下午
+ * @Date 2021/7/1 2:23 下午
  * @Since 1.0
  */
 
 @Component
-public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser, ZabbixUserGroup> {
+public class ZabbixHostGroupProvider extends AbstractAssetRelationProvider<ZabbixHostGroup, ZabbixHost> {
 
     @Resource
-    private ZabbixUserHandler zabbixUserHandler;
+    private ZabbixHostGroupHandler zabbixHostGroupHandler;
 
     @Resource
-    private ZabbixUserProvider zabbixUserProvider;
+    private ZabbixHostGroupProvider zabbixHostGroupProvider;
 
     @Override
     public String getInstanceType() {
@@ -48,42 +48,40 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     }
 
     @Override
-    protected List<ZabbixUser> listEntries(DsInstanceContext dsInstanceContext, ZabbixUserGroup target) {
+    protected List<ZabbixHostGroup> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixUserHandler.listUsersByGroup(zabbix, target);
+        return zabbixHostGroupHandler.listGroupsByHost(zabbix, target);
     }
 
     @Override
-    protected List<ZabbixUser> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixUserHandler.listUsers(buildConfig(dsInstanceContext.getDsConfig()));
+    protected List<ZabbixHostGroup> listEntries(DsInstanceContext dsInstanceContext) {
+        return zabbixHostGroupHandler.listGroups(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
-    protected ZabbixUser getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixUserHandler.getUserById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+    protected ZabbixHostGroup getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+        return zabbixHostGroupHandler.getGroupById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override
-    @SingleTask(name = "PullZabbixUser", lockTime = "5m")
+    @SingleTask(name = "PullZabbixHostGroup", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ZABBIX_USER.getType();
+        return DsAssetTypeEnum.ZABBIX_HOST_GROUP.getType();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.ZABBIX_USER_GROUP.getType();
+        return DsAssetTypeEnum.ZABBIX_HOST.getType();
     }
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
-            return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
             return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
@@ -91,12 +89,12 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entry) {
-        return ZabbixUserAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHostGroup entry) {
+        return ZabbixHostAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(zabbixUserProvider);
+        AssetProviderFactory.register(zabbixHostGroupProvider);
     }
 }

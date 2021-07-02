@@ -61,7 +61,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     }
 
     @Override
-    @SingleTask(name = "PullKubernetesPod", lockTime = 300)
+    @SingleTask(name = "PullKubernetesPod", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

@@ -53,7 +53,7 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
     }
 
     @Override
-    @SingleTask(name = "PullGitlabProject", lockTime = 300)
+    @SingleTask(name = "PullGitlabProject", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
