@@ -2,6 +2,7 @@ package com.baiyi.opscloud.sshserver.command;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
+import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.ListCommandContext;
@@ -20,6 +21,7 @@ import org.springframework.shell.standard.ShellOption;
 @ShellCommandGroup("Server")
 public class ServerCommand extends BaseServerCommand {
 
+    @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server", key = {"ls", "list"})
     public void listServer(@ShellOption(help = "Server Name", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
@@ -37,6 +39,7 @@ public class ServerCommand extends BaseServerCommand {
         doListServer(commandContext);
     }
 
+    @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server before page", key = "b")
     public void beforePage() {
@@ -55,6 +58,7 @@ public class ServerCommand extends BaseServerCommand {
         }
     }
 
+    @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List server next page", key = "n")
     public void nextPage() {

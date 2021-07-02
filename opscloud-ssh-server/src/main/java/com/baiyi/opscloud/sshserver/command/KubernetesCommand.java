@@ -14,6 +14,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.sshserver.*;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
+import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.etc.ColorAligner;
 import com.baiyi.opscloud.sshserver.util.KubernetesTableUtil;
@@ -73,6 +74,7 @@ public class KubernetesCommand {
     @Resource
     private DsConfigFactory dsFactory;
 
+    @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List kubernetes pods", key = {"list-k8s-pod"})
     public void listKubernetesPod(@ShellOption(help = "Name", defaultValue = "") String name) {
@@ -127,6 +129,7 @@ public class KubernetesCommand {
                 PromptColor.GREEN);
     }
 
+    @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "Show kubernetes (pod)container log [ press Ctrl+C quit ]", key = {"show-k8s-container-log"})
     public void showContainerLog(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id,
@@ -196,7 +199,7 @@ public class KubernetesCommand {
 //        }
     }
 
-
+    @ScreenClear
     @InvokeSessionUser
     @ShellMethod(value = "Login container [ press ctrl+d quit ]", key = {"login-container"})
     public void loginContainer(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
