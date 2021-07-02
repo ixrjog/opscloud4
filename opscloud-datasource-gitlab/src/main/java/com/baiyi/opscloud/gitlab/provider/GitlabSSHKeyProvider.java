@@ -19,35 +19,27 @@ import com.google.common.collect.Lists;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
- * @Date 2021/6/21 4:38 下午
+ * @Date 2021/7/2 3:01 下午
  * @Version 1.0
  */
 @Component
-public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser, GitlabSSHKey> {
+public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSSHKey, GitlabUser> {
 
     @Resource
-    private GitlabUserProvider gitlabUserProvider;
+    private GitlabSSHKeyProvider gitlabSSHKeyProvider;
 
     @Override
     public String getInstanceType() {
         return DsTypeEnum.GITLAB.name();
-    }
-
-    @Override
-    public String getAssetType() {
-        return DsAssetTypeEnum.GITLAB_USER.getType();
-    }
-
-    @Override
-    public String getTargetAssetKey() {
-        return DsAssetTypeEnum.GITLAB_SSHKEY.getType();
     }
 
     private DsGitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
@@ -55,46 +47,72 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
     }
 
     @Override
-    protected List<GitlabUser> listEntries(DsInstanceContext dsInstanceContext, GitlabSSHKey target) {
+    protected List<GitlabSSHKey> listEntries(DsInstanceContext dsInstanceContext, GitlabUser target) {
         DsGitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
-        List<GitlabUser> users = Lists.newArrayList();
         try {
-            users.add(GitlabUserHandler.getUser(gitlab, target.getUser().getId()));
+            return GitlabUserHandler.getUserSSHKeys(gitlab, target.getId()).stream().peek(e ->
+                    e.setUser(target)
+            ).collect(Collectors.toList());
         } catch (IOException ignored) {
         }
-        return users;
-    }
-
-
-    @Override
-    protected List<GitlabUser> listEntries(DsInstanceContext dsInstanceContext) {
-        return GitlabUserHandler.queryUsers(buildConfig(dsInstanceContext.getDsConfig()));
+        return Lists.newArrayList();
     }
 
     @Override
-    @SingleTask(name = "PullGitlabUser", lockTime = "5m")
+    protected List<GitlabSSHKey> listEntries(DsInstanceContext dsInstanceContext) {
+        DsGitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
+        List<GitlabUser> users = GitlabUserHandler.queryUsers(gitlab);
+        List<GitlabSSHKey> keys = Lists.newArrayList();
+        if (CollectionUtils.isEmpty(users))
+            return keys;
+        users.forEach(u -> {
+            try {
+                keys.addAll(GitlabUserHandler.getUserSSHKeys(gitlab, u.getId()).stream().peek(e ->
+                        e.setUser(u)
+                ).collect(Collectors.toList()));
+            } catch (IOException ignored) {
+            }
+        });
+        return keys;
+    }
+
+    @Override
+    @SingleTask(name = "PullGitlabSSHKey", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
 
     @Override
+    public String getAssetType() {
+        return DsAssetTypeEnum.GITLAB_SSHKEY.getType();
+    }
+
+    @Override
+    public String getTargetAssetKey() {
+        return DsAssetTypeEnum.GITLAB_USER.getType();
+    }
+
+    @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
+            return false;
         if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
             return false;
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
             return false;
         return true;
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabUser entry) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabSSHKey entry) {
         return GitlabAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(gitlabUserProvider);
+        AssetProviderFactory.register(gitlabSSHKeyProvider);
     }
 }
+

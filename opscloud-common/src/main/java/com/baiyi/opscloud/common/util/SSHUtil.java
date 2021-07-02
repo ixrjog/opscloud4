@@ -20,7 +20,7 @@ public class SSHUtil {
      * @return fingerprint of public key
      */
     public static String getFingerprint(String publicKey) {
-        String fingerprint = null;
+        String fingerprint = "-";
         if (StringUtils.isNotEmpty(publicKey)) {
             if (publicKey.contains("ssh-")) {
                 publicKey = publicKey.substring(publicKey.indexOf("ssh-"));

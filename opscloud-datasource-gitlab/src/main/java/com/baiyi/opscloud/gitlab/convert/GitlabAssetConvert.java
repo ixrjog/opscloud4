@@ -1,12 +1,15 @@
 package com.baiyi.opscloud.gitlab.convert;
 
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
+import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.builder.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import lombok.extern.slf4j.Slf4j;
 import org.gitlab.api.models.GitlabGroup;
 import org.gitlab.api.models.GitlabProject;
+import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
 
 /**
@@ -14,6 +17,7 @@ import org.gitlab.api.models.GitlabUser;
  * @Date 2021/6/21 5:05 下午
  * @Version 1.0
  */
+@Slf4j
 public class GitlabAssetConvert {
 
 
@@ -26,7 +30,7 @@ public class GitlabAssetConvert {
                 .assetKey2(entry.getEmail())
                 .isActive(entry.isBlocked() == null || !entry.isBlocked())
                 .createdTime(entry.getCreatedAt())
-                .assetType(DsAssetTypeEnum.USER.name())
+                .assetType(DsAssetTypeEnum.GITLAB_USER.name())
                 .kind("gitlabUser")
                 .build();
 
@@ -77,8 +81,28 @@ public class GitlabAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("visibility",entry.getVisibility())
+                .paramProperty("visibility", entry.getVisibility())
                 .paramProperty("parentId", entry.getParentId())
+                .build();
+    }
+
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabSSHKey entry) {
+        GitlabUser gitlabUser = entry.getUser();
+        log.info(entry.getKey());
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(String.valueOf(entry.getId()))
+                .name(entry.getTitle())
+                .assetKey(SSHUtil.getFingerprint(entry.getKey()))
+                .assetKey2(entry.getKey())
+                .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
+                .kind("gitlabUser")
+                .build();
+
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .paramProperty("userId", gitlabUser.getId())
+                .paramProperty("username", gitlabUser.getUsername())
                 .build();
     }
 }
