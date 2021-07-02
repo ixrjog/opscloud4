@@ -64,7 +64,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     }
 
     @Override
-    @SingleTask(name = "PullJenkinsComputer", lockTime = 300)
+    @SingleTask(name = "PullJenkinsComputer", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
