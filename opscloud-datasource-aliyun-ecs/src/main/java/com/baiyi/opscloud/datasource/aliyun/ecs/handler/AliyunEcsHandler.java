@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.ecs.handler;
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.google.common.collect.Lists;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
@@ -10,7 +11,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.datasource.aliyun.ecs.common.BaseAliyunHandler.Query.PAGE_SIZE;
+import static com.baiyi.opscloud.datasource.aliyun.core.common.BaseAliyunHandler.Query.PAGE_SIZE;
 
 /**
  * @Author baiyi

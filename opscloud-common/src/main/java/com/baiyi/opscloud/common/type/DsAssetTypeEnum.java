@@ -10,6 +10,8 @@ public enum DsAssetTypeEnum {
     GROUP("GROUP"),
     USER("USER"),
     ECS("ECS"),
+    RAM_USER("RAM_USER"),
+    RAM_POLICY("RAM_POLICY"),
     GITLAB_USER("GITLAB_USER"),
     GITLAB_GROUP("GITLAB_GROUP"),
     GITLAB_PROJECT("GITLAB_PROJECT"),

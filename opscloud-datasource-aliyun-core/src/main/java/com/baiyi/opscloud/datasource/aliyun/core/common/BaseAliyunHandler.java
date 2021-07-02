@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.aliyun.ecs.common;
+package com.baiyi.opscloud.datasource.aliyun.core.common;
 
 import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
