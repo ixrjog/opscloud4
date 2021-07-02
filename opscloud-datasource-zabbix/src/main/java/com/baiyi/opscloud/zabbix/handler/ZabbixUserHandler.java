@@ -8,6 +8,7 @@ import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -27,26 +28,35 @@ public class ZabbixUserHandler {
         String QUERY_USER = "user.get";
     }
 
-    public List<ZabbixUser> ListUsers(DsZabbixConfig.Zabbix zabbix) {
+    public List<ZabbixUser> listUsers(DsZabbixConfig.Zabbix zabbix) {
         ZabbixRequest request = ZabbixRequestBuilder.builder()
                 .method(Method.QUERY_USER)
                 // 在medias 属性返回用户使用的媒体。
 //                .paramEntry("selectMedias", "extend")
-                // 在usrgrps 属性返回用户所属的组
-//                .paramEntry("selectUsrgrps", "extend")
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get("result"), ZabbixUser.class);
     }
 
-    public List<ZabbixUser> ListUsersByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixUserGroup userGroup) {
+    public List<ZabbixUser> listUsersByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixUserGroup userGroup) {
         ZabbixRequest request = ZabbixRequestBuilder.builder()
                 .method(Method.QUERY_USER)
-                // 只返回用户给定用户组ID。
                 .paramEntry("usrgrpids", userGroup.getUserGroupId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get("result"), ZabbixUser.class);
+    }
+
+    public ZabbixUser getUserById(DsZabbixConfig.Zabbix zabbix, String userId) {
+        ZabbixRequest request = ZabbixRequestBuilder.builder()
+                .method(Method.QUERY_USER)
+                .paramEntry("userids", userId)
+                .build();
+        JsonNode data = zabbixHandler.call(zabbix, request);
+        List<ZabbixUser> users = ZabbixMapper.mapperList(data.get("result"), ZabbixUser.class);
+        if (CollectionUtils.isEmpty(users))
+            throw new RuntimeException("ZabbixUser不存在");
+        return users.get(0);
     }
 
 }

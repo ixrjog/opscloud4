@@ -85,7 +85,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     }
 
     protected void enterEntry(DsInstanceContext dsInstanceContext, Set<Integer> idSet, T entry) {
-        DatasourceInstanceAsset asset = enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
+        DatasourceInstanceAsset asset = enterEntry(dsInstanceContext, entry);
         filterAsset(idSet, asset.getId());
     }
 

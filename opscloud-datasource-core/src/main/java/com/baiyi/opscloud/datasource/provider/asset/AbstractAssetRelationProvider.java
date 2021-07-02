@@ -4,6 +4,7 @@ import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.common.ITargetProvider;
+import com.baiyi.opscloud.datasource.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
@@ -12,6 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -27,7 +29,11 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
     protected abstract List<S> listEntries(DsInstanceContext dsInstanceContext, T target);
 
     private AbstractAssetRelationProvider<T, S> getTargetProvider() {
-        return AssetProviderFactory.getProvider(getInstanceType(), getTargetAssetKey());
+        List<AbstractAssetRelationProvider<T, S>> providers = AssetProviderFactory.getProviders(getInstanceType(), getTargetAssetKey());
+        Optional<AbstractAssetRelationProvider<T, S>> optional = providers.stream()
+                .filter(e -> e.getTargetAssetKey().equals(this.getAssetType()))
+                .findFirst();
+        return optional.orElse(null);
     }
 
     protected List<T> listTarget(DsInstanceContext dsInstanceContext, S source) {
@@ -44,7 +50,17 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
             AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
             AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
             DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
-            if (targetAsset == null) return; // 关联对象未录入
+            if (targetAsset == null) {
+                UniqueAssetParam param = UniqueAssetParam.builder()
+                        .assetId(assetContainer.getAsset().getAssetId())
+                        .build();
+                try {
+                    targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
+                }catch (Exception e) {
+                    log.info(e.getMessage(),e);
+                    return;
+                }
+            }
             DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
                     .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
                     .sourceAssetId(asset.getId())

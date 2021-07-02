@@ -3,6 +3,8 @@ package com.baiyi.opscloud.common.aspect;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.InstantUtil;
+import com.baiyi.opscloud.common.util.StringToDurationUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.JoinPoint;
@@ -14,6 +16,8 @@ import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.time.Duration;
+import java.time.Instant;
 
 /**
  * @Author baiyi
@@ -47,22 +51,28 @@ public class SingleTaskAspect {
         String key = buildKey(singleTask.name());
         try {
             if (!isLocked(key)) {
+                log.info("同步任务开始，taskKey = {}", key);
+                Instant instant = Instant.now();
                 lock(key, singleTask.lockTime());
-                joinPoint.proceed();
+                Object result = joinPoint.proceed();
                 unlocking(key);
+                log.info("同步任务结束，taskKey = {}, 消耗时间 = {}s", key, InstantUtil.timerSeconds(instant));
+                return result;
             } else {
                 log.info("任务重复执行: taskKey = {} !", key);
                 return new CommonRuntimeException(ErrorEnum.SINGLE_TASK_RUNNING);
             }
         } catch (Exception e) {
             unlocking(key);
-            return new Throwable();
+        } finally {
+            unlocking(key);
         }
-        return joinPoint;
+        return new Throwable();
     }
 
-    private void lock(String lockKey, long time) {
-        redisUtil.set(lockKey, RUNNING, time);
+    private void lock(String lockKey, String time) {
+        Duration duration = StringToDurationUtil.parse(time);
+        redisUtil.set(lockKey, RUNNING, duration.getSeconds());
     }
 
     private void unlocking(String lockKey) {

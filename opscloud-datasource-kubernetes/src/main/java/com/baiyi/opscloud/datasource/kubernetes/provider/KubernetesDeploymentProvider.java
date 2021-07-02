@@ -61,7 +61,7 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     @Override
-    @SingleTask(name = "PullKubernetesDeployment", lockTime = 300)
+    @SingleTask(name = "PullKubernetesDeployment", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

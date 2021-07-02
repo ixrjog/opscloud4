@@ -52,7 +52,7 @@ public class GitlabUserProvider extends BaseAssetProvider<GitlabUser> {
     }
 
     @Override
-    @SingleTask(name = "PullGitlabUser", lockTime = 300)
+    @SingleTask(name = "PullGitlabUser", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

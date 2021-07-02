@@ -39,7 +39,7 @@ public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesRespon
     private AliyunEcsProvider aliyunEcsProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunEcs", lockTime = 300)
+    @SingleTask(name = "PullAliyunEcs", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
