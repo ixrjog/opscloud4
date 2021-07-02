@@ -20,6 +20,13 @@ import java.util.Base64;
 @Component
 public class JenkinsClient {
 
+    /**
+     * https://github.com/jenkinsci/blueocean-plugin/tree/master/blueocean-rest
+     * @param jenkins
+     * @param api
+     * @return
+     * @throws IOException
+     */
 
     public static JsonNode get(DsJenkinsConfig.Jenkins jenkins, String api) throws IOException {
         Authentication authentication = Authentication.builder()

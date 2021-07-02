@@ -38,7 +38,6 @@ public class KubernetesTest extends BaseUnit {
     @Resource
     private DsConfigFactory dsFactory;
 
-
     @Test
     void pullNamespaceTest() {
         SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.KUBERNETES.getName(), DsAssetTypeEnum.KUBERNETES_NAMESPACE.getType());
