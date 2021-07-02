@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
 import org.springframework.stereotype.Component;
 
@@ -25,18 +25,18 @@ import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/7/1 6:07 下午
+ * @Date 2021/7/2 5:02 下午
  * @Since 1.0
  */
 
 @Component
-public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvider<ZabbixHost, ZabbixTemplate> {
+public class ZabbixHostTargetTriggerProvider extends AbstractAssetRelationProvider<ZabbixHost, ZabbixTrigger> {
 
     @Resource
     private ZabbixHostHandler zabbixHostHandler;
 
     @Resource
-    private ZabbixHostTargetTemplateProvider zabbixHostTargetTemplateProvider;
+    private ZabbixHostTargetTriggerProvider zabbixHostTargetTriggerProvider;
 
     @Override
     public String getInstanceType() {
@@ -48,9 +48,9 @@ public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvi
     }
 
     @Override
-    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTemplate target) {
+    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTrigger target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostHandler.listHostsByTemplate(zabbix, target);
+        return zabbixHostHandler.listHostsByTrigger(zabbix, target);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvi
     }
 
     @Override
-    @SingleTask(name = "PullZabbixHostTargetTemplate", lockTime = "5m")
+    @SingleTask(name = "PullZabbixHostTargetTrigger", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -76,7 +76,7 @@ public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvi
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.ZABBIX_TEMPLATE.getType();
+        return DsAssetTypeEnum.ZABBIX_TRIGGER.getType();
     }
 
     @Override
@@ -87,7 +87,7 @@ public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvi
             return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
-        if (preAsset.getIsActive() != asset.getIsActive())
+        if (preAsset.getIsActive() == asset.getIsActive())
             return false;
         if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
             return false;
@@ -101,6 +101,6 @@ public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvi
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(zabbixHostTargetTemplateProvider);
+        AssetProviderFactory.register(zabbixHostTargetTriggerProvider);
     }
 }

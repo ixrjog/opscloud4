@@ -14,10 +14,10 @@ import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
+import com.baiyi.opscloud.zabbix.convert.ZabbixTriggerAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
+import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.handler.ZabbixTriggerHandler;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,18 +25,18 @@ import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/7/1 6:07 下午
+ * @Date 2021/7/2 3:43 下午
  * @Since 1.0
  */
 
 @Component
-public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvider<ZabbixHost, ZabbixTemplate> {
+public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixTrigger, ZabbixHost> {
 
     @Resource
-    private ZabbixHostHandler zabbixHostHandler;
+    private ZabbixTriggerHandler zabbixTriggerHandler;
 
     @Resource
-    private ZabbixHostTargetTemplateProvider zabbixHostTargetTemplateProvider;
+    private ZabbixTriggerProvider zabbixTriggerProvider;
 
     @Override
     public String getInstanceType() {
@@ -48,59 +48,58 @@ public class ZabbixHostTargetTemplateProvider extends AbstractAssetRelationProvi
     }
 
     @Override
-    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTemplate target) {
+    protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostHandler.listHostsByTemplate(zabbix, target);
+        return zabbixTriggerHandler.listTriggerByHost(zabbix, target);
     }
 
     @Override
-    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixHostHandler.listHosts(buildConfig(dsInstanceContext.getDsConfig()));
+    protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext) {
+        return zabbixTriggerHandler.listTriggers(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
-    protected ZabbixHost getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixHostHandler.getHostById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+    protected ZabbixTrigger getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+        return zabbixTriggerHandler.getTriggerById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override
-    @SingleTask(name = "PullZabbixHostTargetTemplate", lockTime = "5m")
+    @SingleTask(name = "PullZabbixTrigger", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ZABBIX_HOST.getType();
+        return DsAssetTypeEnum.ZABBIX_TRIGGER.getType();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.ZABBIX_TEMPLATE.getType();
+        return DsAssetTypeEnum.ZABBIX_HOST.getType();
     }
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
-            return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
-            return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
         if (preAsset.getIsActive() != asset.getIsActive())
             return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
+        if (preAsset.getCreatedTime() != asset.getCreatedTime())
             return false;
         return true;
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHost entry) {
-        return ZabbixHostAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger entry) {
+        return ZabbixTriggerAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(zabbixHostTargetTemplateProvider);
+        AssetProviderFactory.register(zabbixTriggerProvider);
     }
 }
+

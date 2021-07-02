@@ -1,9 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.entry.*;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
@@ -51,6 +49,15 @@ public class ZabbixHostHandler {
         ZabbixRequest request = ZabbixRequestBuilder.builder()
                 .method(Method.QUERY_HOST)
                 .paramEntry("templateids", template.getTemplateId())
+                .build();
+        JsonNode data = zabbixHandler.call(zabbix, request);
+        return ZabbixMapper.mapperList(data.get("result"), ZabbixHost.class);
+    }
+
+    public List<ZabbixHost> listHostsByTrigger(DsZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
+        ZabbixRequest request = ZabbixRequestBuilder.builder()
+                .method(Method.QUERY_HOST)
+                .paramEntry("triggerids", trigger.getTriggerId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get("result"), ZabbixHost.class);

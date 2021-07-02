@@ -123,7 +123,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
             }
         } else {
             preAsset.setId(asset.getId());
-            preAsset.setIsActive(asset.getIsActive());
+//            preAsset.setIsActive(asset.getIsActive());
             if (!equals(asset, preAsset))
                 dsInstanceAssetService.update(preAsset);
         }
