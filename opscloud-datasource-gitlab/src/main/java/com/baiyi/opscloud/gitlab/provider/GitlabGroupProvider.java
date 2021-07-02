@@ -61,7 +61,7 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    @SingleTask(name = "PullGitlabGroup", lockTime = 300)
+    @SingleTask(name = "PullGitlabGroup", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

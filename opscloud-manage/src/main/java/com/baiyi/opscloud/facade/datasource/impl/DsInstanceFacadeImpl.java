@@ -22,6 +22,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -61,9 +62,8 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
         DatasourceInstance dsInstance = dsInstanceService.getById(pullAsset.getInstanceId());
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
         dsInstancePacker.wrap(instance);
-        SimpleAssetProvider simpleAssetProvider = AssetProviderFactory.getProvider(instance.getInstanceType(), pullAsset.getAssetType());
-        assert simpleAssetProvider != null;
-        simpleAssetProvider.pullAsset(pullAsset.getInstanceId());
+        List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), pullAsset.getAssetType());
+        providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
     }
 
     @Override

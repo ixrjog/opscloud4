@@ -11,7 +11,6 @@ import java.util.Date;
  */
 public class AssetUtil {
 
-
     public static boolean equals(String var1, String var2) {
         if (StringUtils.isEmpty(var1))
             return StringUtils.isEmpty(var2);

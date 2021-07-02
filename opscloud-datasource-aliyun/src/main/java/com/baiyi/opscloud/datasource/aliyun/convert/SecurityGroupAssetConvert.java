@@ -50,7 +50,7 @@ public class SecurityGroupAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("securityGroupType",entry.getSecurityGroupType())
+                .paramProperty("securityGroupType", entry.getSecurityGroupType())
                 .build();
     }
 }

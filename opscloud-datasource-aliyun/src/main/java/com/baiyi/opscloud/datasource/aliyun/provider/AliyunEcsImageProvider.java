@@ -40,7 +40,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     private AliyunEcsImageProvider aliyunEcsImageProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunEcsImage", lockTime = 300)
+    @SingleTask(name = "PullAliyunEcsImage", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

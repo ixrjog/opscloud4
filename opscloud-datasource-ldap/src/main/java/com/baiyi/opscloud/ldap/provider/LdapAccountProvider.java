@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.ldap.provider;
 
+import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsLdapConfig;
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
@@ -56,7 +57,7 @@ public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, G
     }
 
     @Override
-//    @SingleTask(name = "PullLdapUser", lockTime = 300)
+    @SingleTask(name = "PullLdapUser", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
