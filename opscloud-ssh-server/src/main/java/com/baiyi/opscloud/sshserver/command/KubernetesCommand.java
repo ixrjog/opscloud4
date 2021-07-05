@@ -16,11 +16,14 @@ import com.baiyi.opscloud.sshserver.*;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.context.KubernetesDsInstance;
+import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.etc.ColorAligner;
 import com.baiyi.opscloud.sshserver.util.KubernetesTableUtil;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
+import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.Callback;
@@ -30,6 +33,8 @@ import io.fabric8.kubernetes.client.utils.NonBlockingInputStreamPumper;
 import lombok.extern.slf4j.Slf4j;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -40,6 +45,7 @@ import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
@@ -59,6 +65,8 @@ public class KubernetesCommand {
     private static final int QUIT = 3;
     private static final int EOF = 4;
 
+    protected static final int PAGE_FOOTER_SIZE = 5;
+
     @Resource
     private SshShellHelper helper;
 
@@ -74,6 +82,14 @@ public class KubernetesCommand {
     @Resource
     private DsConfigFactory dsFactory;
 
+    private Terminal terminal;
+
+    @Autowired
+    @Lazy
+    public void setTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
+
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "List kubernetes pods", key = {"list-k8s-pod"})
@@ -85,7 +101,7 @@ public class KubernetesCommand {
                 .queryName(name)
                 .isActive(true)
                 .build();
-        pageQuery.setLength(10);
+        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
         pageQuery.setPage(1);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
 
@@ -104,29 +120,44 @@ public class KubernetesCommand {
                 .headerAligner(new ColorAligner(PromptColor.GREEN))
                 .useFullBorder(false);
 
-        table.getData().forEach(e -> {
-            DatasourceInstance instance = dsInstanceService.getByUuid(e.getInstanceUuid());
-            DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
-            KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
-
-            Pod pod = KubernetesPodHandler.getPod(kubernetesDsInstanceConfig.getKubernetes(), e.getAssetKey2(), e.getName());
-            if (pod == null) return;
+        Map<Integer, Integer> idMapper = Maps.newHashMap();
+        Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
+        int id = 1;
+        for (DatasourceInstanceAsset asset : table.getData()) {
+            String instanceUuid = asset.getInstanceUuid();
+            if(!kubernetesDsInstanceMap.containsKey(instanceUuid)){
+                KubernetesDsInstance kubernetesDsInstance = KubernetesDsInstance.builder()
+                        .dsInstance(dsInstanceService.getByUuid(instanceUuid))
+                        .kubernetesDsInstanceConfig(buildConfig(instanceUuid))
+                        .build();
+                kubernetesDsInstanceMap.put(instanceUuid,kubernetesDsInstance);
+            }
+            Pod pod = KubernetesPodHandler.getPod(kubernetesDsInstanceMap.get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), asset.getAssetKey2(), asset.getName());
+            if (pod == null) continue;
             List<Container> containers = pod.getSpec().getContainers();
             List<String> names = containers.stream().map(Container::getName).collect(Collectors.toList());
+            idMapper.put(id, asset.getId());
             builder.line(Arrays.asList(
-                    String.format(" %-6s|", e.getId()),
-                    String.format(" %-25s|", instance.getInstanceName()),
-                    String.format(" %-50s|", e.getName()),
-                    String.format(" %-16s|", e.getAssetKey()),
+                    String.format(" %-6s|", id),
+                    String.format(" %-25s|", kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName()),
+                    String.format(" %-50s|", asset.getName()),
+                    String.format(" %-16s|", asset.getAssetKey()),
                     String.format(" %-50s", Joiner.on(",").join(names)))
             );
-        });
-
+            id++;
+        }
+        SessionCommandContext.setIdMapper(idMapper);
         helper.print(helper.renderTable(builder.build()));
         helper.print(KubernetesTableUtil.buildPagination(table.getTotalNum(),
                 pageQuery.getPage(),
                 pageQuery.getLength()),
                 PromptColor.GREEN);
+    }
+
+    private KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
+        DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
+        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
+        return dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
     }
 
     @ScreenClear
@@ -137,16 +168,14 @@ public class KubernetesCommand {
                                  @ShellOption(help = "Tailing Lines", defaultValue = "100") Integer lines) {
         if (lines == null || lines <= 100)
             lines = 100;
-        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
-        DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
-        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+        Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(idMapper.get(id));
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(asset.getInstanceUuid());
         LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
                 asset.getAssetKey2(),
                 asset.getName(),
                 name,
                 lines);
-
         Terminal terminal = getTerminal();
         TerminalUtil.enterRawMode(terminal);
         InputStream inputStream = logWatch.getOutput();
@@ -203,10 +232,10 @@ public class KubernetesCommand {
     @InvokeSessionUser
     @ShellMethod(value = "Login container [ press ctrl+d quit ]", key = {"login-container"})
     public void loginContainer(@ShellOption(help = "Pod Asset Id", defaultValue = "") Integer id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
-        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(id);
-        DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
-        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+        Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(idMapper.get(id));
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(asset.getInstanceUuid());
+
         KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
         Terminal terminal = getTerminal();
         ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(

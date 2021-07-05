@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,7 +25,8 @@ public class UserCredentialVO {
     @NoArgsConstructor
     @ApiModel
     public static class CredentialDetails {
-        private Map<String, List<Credential>> credentialMap;
+        private Map<String, List<Credential>> credentialMap; // 用户凭据
+        private Map<String,List<DsAssetVO.Asset>> assetCredentialMap; // 资产凭据
     }
 
     @EqualsAndHashCode(callSuper = true)

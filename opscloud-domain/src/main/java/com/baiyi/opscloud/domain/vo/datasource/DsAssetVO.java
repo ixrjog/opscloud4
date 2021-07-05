@@ -41,6 +41,8 @@ public class DsAssetVO {
 
         private Map<String, List<DsAssetVO.Asset>> tree;
 
+        private DsInstanceVO.Instance dsInstance;
+
         private Integer id;
         private Integer parentId;
         private String instanceUuid;

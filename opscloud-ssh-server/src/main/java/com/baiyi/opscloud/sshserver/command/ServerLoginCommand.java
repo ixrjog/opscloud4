@@ -16,6 +16,7 @@ import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import org.springframework.shell.standard.ShellOption;
 import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -61,7 +63,8 @@ public class ServerLoginCommand {
         thread.start();
         try {
             HostSystem hostSystem;
-            Server server = serverService.getById(id);
+            Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
+            Server server = serverService.getById(idMapper.get(id));
             hostSystem = hostSystemHandler.buildHostSystem(server, account);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());

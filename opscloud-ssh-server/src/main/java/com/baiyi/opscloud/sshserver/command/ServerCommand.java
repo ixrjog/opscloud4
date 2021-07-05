@@ -5,7 +5,8 @@ import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
-import com.baiyi.opscloud.sshserver.command.context.ListCommandContext;
+import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
+import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
@@ -31,7 +32,7 @@ public class ServerCommand extends BaseServerCommand {
                 .queryIp(ip)
                 .build();
         pageQuery.setPage(1);
-        ListCommandContext commandContext = ListCommandContext.builder()
+        ListServerCommand commandContext = ListServerCommand.builder()
                 .sessionId(sessionId)
                 .username(helper.getSshSession().getUsername())
                 .queryParam(pageQuery)
@@ -44,15 +45,15 @@ public class ServerCommand extends BaseServerCommand {
     @ShellMethod(value = "List server before page", key = "b")
     public void beforePage() {
         String sessionId = buildSessionId();
-        if (userSessionServerQueryContainer.containsKey(sessionId)) {
-            ServerParam.UserPermissionServerPageQuery pageQuery = userSessionServerQueryContainer.get(sessionId);
+        ServerParam.UserPermissionServerPageQuery pageQuery = SessionCommandContext.getServerQuery();
+        if (pageQuery != null) {
             pageQuery.setPage(pageQuery.getPage() > 1 ? pageQuery.getPage() - 1 : pageQuery.getPage());
-            ListCommandContext commandContext = ListCommandContext.builder()
+            ListServerCommand listServerCommand = ListServerCommand.builder()
                     .sessionId(sessionId)
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
                     .build();
-            doListServer(commandContext);
+            doListServer(listServerCommand);
         } else {
             listServer("", "");
         }
@@ -63,15 +64,15 @@ public class ServerCommand extends BaseServerCommand {
     @ShellMethod(value = "List server next page", key = "n")
     public void nextPage() {
         String sessionId = buildSessionId();
-        if (userSessionServerQueryContainer.containsKey(sessionId)) {
-            ServerParam.UserPermissionServerPageQuery pageQuery = userSessionServerQueryContainer.get(sessionId);
+        ServerParam.UserPermissionServerPageQuery pageQuery = SessionCommandContext.getServerQuery();
+        if (pageQuery != null) {
             pageQuery.setPage(pageQuery.getPage() + 1);
-            ListCommandContext commandContext = ListCommandContext.builder()
+            ListServerCommand listServerCommand = ListServerCommand.builder()
                     .sessionId(sessionId)
                     .username(helper.getSshSession().getUsername())
                     .queryParam(pageQuery)
                     .build();
-            doListServer(commandContext);
+            doListServer(listServerCommand);
         } else {
             listServer("", "");
         }

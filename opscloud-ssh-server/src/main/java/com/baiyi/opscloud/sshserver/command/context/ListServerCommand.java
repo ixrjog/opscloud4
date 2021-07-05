@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ListCommandContext {
+public class ListServerCommand {
 
     private String sessionId;
     private String username;

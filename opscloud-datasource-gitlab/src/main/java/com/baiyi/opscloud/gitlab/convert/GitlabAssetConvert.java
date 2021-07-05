@@ -92,17 +92,17 @@ public class GitlabAssetConvert {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(String.valueOf(entry.getId()))
-                .name(entry.getTitle())
+                .name(gitlabUser.getUsername())
                 .assetKey(SSHUtil.getFingerprint(entry.getKey()))
                 .assetKey2(entry.getKey())
                 .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
-                .kind("gitlabUser")
+                .kind("gitlabSshKey")
+                .description(entry.getTitle())
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramProperty("userId", gitlabUser.getId())
-                .paramProperty("username", gitlabUser.getUsername())
                 .build();
     }
 }

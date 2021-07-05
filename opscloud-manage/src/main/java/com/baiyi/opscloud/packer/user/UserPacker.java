@@ -32,6 +32,8 @@ public class UserPacker {
     @Resource
     private DesensitizedPacker<UserVO.User> desensitizedPacker;
 
+
+
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
         return userList.stream()
@@ -65,4 +67,5 @@ public class UserPacker {
         userCredentialPacker.wrap(user);
         return desensitizedPacker.desensitized(user);
     }
+
 }
