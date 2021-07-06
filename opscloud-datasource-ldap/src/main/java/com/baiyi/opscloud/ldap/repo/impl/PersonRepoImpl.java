@@ -85,7 +85,7 @@ public class PersonRepoImpl implements PersonRepo {
 
     @Override
     public void delete(DsLdapConfig.Ldap ldapConfig, String username) {
-        //  ldapHandler.unbind(ldapConfig.buildUserDN(username));
+        ldapHandler.unbind(ldapConfig, ldapConfig.buildUserDn(username));
     }
 
     @Override

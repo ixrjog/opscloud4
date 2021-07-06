@@ -6,14 +6,18 @@ import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.ldap.entry.Group;
 import com.baiyi.opscloud.ldap.entry.Person;
 import com.baiyi.opscloud.ldap.handler.LdapHandler;
+import com.baiyi.opscloud.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -31,6 +35,12 @@ public class LdapTest extends BaseUnit {
 
     @Resource
     private LdapHandler ldapHandler;
+
+    @Resource
+    private UserService userService;
+
+    @Resource
+    private PersonRepo PersonRepo;
 
     //
 //    @Test
@@ -66,5 +76,23 @@ public class LdapTest extends BaseUnit {
     BaseDsInstanceConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(1);
         return dsFactory.build(datasourceConfig, LdapDsInstanceConfig.class);
+    }
+
+    @Test
+    void xxx() {
+        List<User> userList = userService.listInactive();
+        LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
+
+        userList.forEach(user -> {
+            // ,dc=xincheng,dc=org
+            String dn = ldapDsInstanceConfig.getLdap().buildUserDn(user.getUsername());
+//            ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), dn);
+
+
+//            Person person = PersonRepo.findPersonWithDn(ldapDsInstanceConfig.getLdap(), dn);
+            System.out.println(dn);
+        });
+
+
     }
 }

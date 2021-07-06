@@ -67,4 +67,12 @@ public class UserServiceImpl implements UserService {
         criteria.andEqualTo("isActive", true);
         return userMapper.selectByExample(example);
     }
+
+    @Override
+    public List<User> listInactive() {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("isActive", false);
+        return userMapper.selectByExample(example);
+    }
 }

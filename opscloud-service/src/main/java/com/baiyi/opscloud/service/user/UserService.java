@@ -27,4 +27,6 @@ public interface UserService {
 
     List<User> listActive();
 
+    List<User> listInactive();
+
 }
