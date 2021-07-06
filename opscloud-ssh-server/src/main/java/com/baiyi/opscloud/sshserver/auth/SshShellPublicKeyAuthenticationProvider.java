@@ -2,7 +2,6 @@ package com.baiyi.opscloud.sshserver.auth;
 
 import org.apache.sshd.server.config.keys.AuthorizedKeysAuthenticator;
 import org.apache.sshd.server.session.ServerSession;
-import org.springframework.stereotype.Component;
 
 import java.io.File;
 import java.security.PublicKey;
@@ -15,7 +14,6 @@ import static com.baiyi.opscloud.sshserver.auth.SshShellAuthenticationProvider.A
  * @Since 1.0
  */
 
-@Component
 public class SshShellPublicKeyAuthenticationProvider extends AuthorizedKeysAuthenticator {
 
     /**
