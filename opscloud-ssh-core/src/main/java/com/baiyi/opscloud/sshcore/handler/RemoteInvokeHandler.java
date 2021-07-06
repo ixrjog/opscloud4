@@ -146,7 +146,7 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new WatchSshOutputTask(sessionOutput, channel.getInputStream(),terminal);
+            Runnable run = new WatchSshOutputTask(sessionOutput, channel.getInputStream(), terminal);
             Thread thread = new Thread(run);
             thread.start();
 

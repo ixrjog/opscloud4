@@ -56,7 +56,7 @@ public class WatchOutputTask implements Runnable {
         BufferedReader br = new BufferedReader(isr);
         try {
             SessionOutputUtil.addOutput(sessionOutput);
-            char[] buff = new char[1024];
+            char[] buff = new char[32768]; // 1024
             int read;
             while ((read = br.read(buff)) != -1) {
                 SessionOutputUtil.addToOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buff, 0, read);
