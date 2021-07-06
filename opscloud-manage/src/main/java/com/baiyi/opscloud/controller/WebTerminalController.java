@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/api/ws/terminal")
 @Component
-public final class WebTerminalController extends BaseWebSocketController {
+public class WebTerminalController extends BaseWebSocketController {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
