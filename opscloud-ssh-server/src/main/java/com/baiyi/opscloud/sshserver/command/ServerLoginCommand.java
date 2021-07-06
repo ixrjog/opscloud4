@@ -68,12 +68,13 @@ public class ServerLoginCommand {
             hostSystem = hostSystemHandler.buildHostSystem(server, account);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
-            RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem,terminal);
-            TerminalUtil.enterRawMode(terminal);
+            RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem, terminal);
+            terminal.enterRawMode();
+            TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
-            while (true) {
-                try {
+            try {
+                while (true) {
                     if (isClosed(sessionId, instanceId)) {
                         Thread.sleep(150L);
                         sessionClosed("用户正常退出登录! 耗时:%s/s", inst1);
@@ -81,12 +82,11 @@ public class ServerLoginCommand {
                     }
                     tryResize(size, terminal, sessionId, instanceId);
                     printJSchSession(sessionId, instanceId, terminal.reader().read(25L));
-                    Thread.sleep(25L); // 循环延迟补偿
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
-                    break;
+                    // Thread.sleep(25L); // 循环延迟补偿
                 }
+            } catch (Exception e) {
+                e.printStackTrace();
+                sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             }
         } catch (SshRuntimeException e) {
             run.stop();

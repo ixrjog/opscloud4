@@ -177,7 +177,7 @@ public class KubernetesCommand {
                 name,
                 lines);
         Terminal terminal = getTerminal();
-        TerminalUtil.enterRawMode(terminal);
+        TerminalUtil.rawModeSupportVintr(terminal);
         InputStream inputStream = logWatch.getOutput();
         try {
             InputStreamReader isr = new InputStreamReader(inputStream, StandardCharsets.UTF_8);
@@ -208,7 +208,7 @@ public class KubernetesCommand {
         //  ExecWatch execWatch = KubernetesPodHandler.getPodExecWatch(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getName(), name, stderr, command);
 
         Terminal terminal = getTerminal();
-        TerminalUtil.enterRawMode(terminal);
+        TerminalUtil.rawModeSupportVintr(terminal);
         //execWatch.
         //InputStream inputStream = execWatch.getOutput();
         //  try {
@@ -249,7 +249,7 @@ public class KubernetesCommand {
         Size size = terminal.getSize();
         execWatch.resize(size.getColumns(), size.getRows());
 
-        TerminalUtil.enterRawMode(terminal); // 行模式
+        TerminalUtil.rawModeSupportVintr(terminal); // 行模式
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 
         NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(execWatch.getOutput(), new OutCallback());
