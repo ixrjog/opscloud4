@@ -2,7 +2,11 @@ package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.BaseMessage;
-import com.baiyi.opscloud.sshcore.model.*;
+import com.baiyi.opscloud.sshcore.model.HostSystem;
+import com.baiyi.opscloud.sshcore.model.JSchSession;
+import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.SessionOutput;
+import com.baiyi.opscloud.sshcore.task.ssh.WatchSshOutputTask;
 import com.baiyi.opscloud.sshcore.task.terminal.WatchOutputTask;
 import com.baiyi.opscloud.sshcore.util.ChannelShellUtil;
 import com.baiyi.opscloud.sshcore.util.SessionConfigUtil;
@@ -12,6 +16,7 @@ import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
 import lombok.extern.slf4j.Slf4j;
 import org.jline.terminal.Size;
+import org.jline.terminal.Terminal;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -123,7 +128,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHTermOnSystemForSSHServer(String sessionId, HostSystem hostSystem) {
+    public static void openSSHTermOnSystemForSSHServer(String sessionId, HostSystem hostSystem, Terminal terminal) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -141,7 +146,7 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new WatchOutputTask(sessionOutput, channel.getInputStream());
+            Runnable run = new WatchSshOutputTask(sessionOutput, channel.getInputStream(),terminal);
             Thread thread = new Thread(run);
             thread.start();
 

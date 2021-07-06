@@ -23,7 +23,7 @@ import org.springframework.boot.context.properties.NestedConfigurationProperty;
 import org.springframework.validation.annotation.Validated;
 
 import java.io.File;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -118,7 +118,7 @@ public class SshShellProperties {
     public static class Commands {
 
         @NestedConfigurationProperty
-        private CommandProperties actuator = CommandProperties.withAuthorizedRoles(Arrays.asList(ACTUATOR_ROLE));
+        private CommandProperties actuator = CommandProperties.withAuthorizedRoles(Collections.singletonList(ACTUATOR_ROLE));
 
         @NestedConfigurationProperty
         private CommandProperties postprocessors = CommandProperties.notRestrictedByDefault();
