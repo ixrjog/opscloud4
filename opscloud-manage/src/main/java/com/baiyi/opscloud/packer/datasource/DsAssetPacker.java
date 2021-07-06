@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelat
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
@@ -43,6 +44,12 @@ public class DsAssetPacker {
 
     @Resource
     private TagPacker tagPacker;
+
+    public DsAssetVO.Asset wrap(DsInstanceVO.Instance instance, DatasourceInstanceAsset dsInstanceAsset) {
+        DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(dsInstanceAsset, DsAssetVO.Asset.class);
+        asset.setDsInstance(instance);
+        return asset;
+    }
 
     public List<DsAssetVO.Asset> wrapVOList(List<DatasourceInstanceAsset> data, IExtend iExtend, IRelation iRelation) {
         return data.stream().map(e -> {

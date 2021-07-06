@@ -16,6 +16,7 @@ import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
+import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ import org.springframework.shell.standard.ShellOption;
 import javax.annotation.Resource;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -61,11 +63,12 @@ public class ServerLoginCommand {
         thread.start();
         try {
             HostSystem hostSystem;
-            Server server = serverService.getById(id);
+            Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
+            Server server = serverService.getById(idMapper.get(id));
             hostSystem = hostSystemHandler.buildHostSystem(server, account);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
-            RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem);
+            RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem,terminal);
             TerminalUtil.enterRawMode(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
@@ -78,7 +81,7 @@ public class ServerLoginCommand {
                     }
                     tryResize(size, terminal, sessionId, instanceId);
                     printJSchSession(sessionId, instanceId, terminal.reader().read(25L));
-                    //Thread.sleep(25L); // 循环延迟补偿
+                    Thread.sleep(25L); // 循环延迟补偿
                 } catch (Exception e) {
                     e.printStackTrace();
                     sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);

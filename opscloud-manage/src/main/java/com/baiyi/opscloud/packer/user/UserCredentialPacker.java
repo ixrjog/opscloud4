@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.packer.user;
 
+import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserCredentialVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.service.user.UserCredentialService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -25,10 +28,14 @@ public class UserCredentialPacker {
     @Resource
     private UserCredentialService userCredentialService;
 
+    @Resource
+    private DsInstanceAssetFacade dsInstanceAssetFacade;
+
     public void wrap(UserVO.User user) {
         List<UserCredential> userCredentials = userCredentialService.queryByUserId(user.getId());
         UserCredentialVO.CredentialDetails credentialDetails = UserCredentialVO.CredentialDetails.builder()
                 .credentialMap(buildCredentialMap(userCredentials))
+                .assetCredentialMap(buildAssetCredentialMap(user.getUsername()))
                 .build();
         user.setCredentialDetails(credentialDetails);
     }
@@ -45,5 +52,11 @@ public class UserCredentialPacker {
             }
         });
         return credentialMap;
+    }
+
+    private Map<String, List<DsAssetVO.Asset>> buildAssetCredentialMap(String username) {
+        Map<String, List<DsAssetVO.Asset>> assetCredentialMap = Maps.newHashMap();
+        assetCredentialMap.put(DsAssetTypeEnum.GITLAB_SSHKEY.getType(), dsInstanceAssetFacade.querySshKeyAssets(username));
+        return assetCredentialMap;
     }
 }

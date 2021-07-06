@@ -39,15 +39,9 @@ public class SshSentOutputTask implements Runnable {
             List<SessionOutput> outputList = SessionOutputUtil.getOutput(sessionId);
             try {
                 if (CollectionUtils.isNotEmpty(outputList)) {
-                    try {
-                        if (CollectionUtils.isNotEmpty(outputList)) {
-                            outputList.forEach(e ->
-                                    terminal.writer().append(e.getOutput())
-                            );
-                            terminal.flush();
-                        }
-                    } catch (Exception ex) {
-                        log.error(ex.toString(), ex);
+                    for (SessionOutput sessionOutput : outputList) {
+                        terminal.writer().append(sessionOutput.getOutput());
+                        terminal.writer().flush();
                     }
                 }
                 Thread.sleep(25L);
