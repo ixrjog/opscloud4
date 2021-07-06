@@ -36,7 +36,6 @@ public class WatchSshOutputTask implements Runnable {
             char[] buff = new char[32768];
             int read;
             while ((read = br.read(buff)) != -1) {
-                log.info("read = {}", read);
                 terminal.writer().write( buff, 0, read);
                 terminal.writer().flush();
                 //  SessionOutputUtil.addToOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buff, 0, read);
