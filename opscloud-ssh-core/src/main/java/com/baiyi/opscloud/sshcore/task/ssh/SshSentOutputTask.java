@@ -14,6 +14,7 @@ import java.util.List;
  * @Date 2021/6/3 12:43 下午
  * @Version 1.0
  */
+@Deprecated
 @Slf4j
 public class SshSentOutputTask implements Runnable {
 

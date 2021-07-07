@@ -9,7 +9,6 @@ import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.sshcore.task.ssh.SshSentOutputTask;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
@@ -58,9 +57,6 @@ public class ServerLoginCommand {
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());
         String instanceId = IdUtil.buildUUID();
         Terminal terminal = getTerminal();
-        SshSentOutputTask run = new SshSentOutputTask(sessionId, serverSession, terminal);
-        Thread thread = new Thread(run);
-        thread.start();
         try {
             HostSystem hostSystem;
             Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
@@ -82,17 +78,14 @@ public class ServerLoginCommand {
                     }
                     tryResize(size, terminal, sessionId, instanceId);
                     printJSchSession(sessionId, instanceId, terminal.reader().read(25L));
-                    // Thread.sleep(25L); // 循环延迟补偿
                 }
             } catch (Exception e) {
                 e.printStackTrace();
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             }
         } catch (SshRuntimeException e) {
-            run.stop();
             throw e;
         }
-        run.stop();
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 

@@ -248,7 +248,6 @@ public class KubernetesCommand {
 
         Size size = terminal.getSize();
         execWatch.resize(size.getColumns(), size.getRows());
-
         TerminalUtil.rawModeSupportVintr(terminal); // 行模式
         ExecutorService executorService = Executors.newSingleThreadExecutor();
 

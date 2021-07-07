@@ -28,47 +28,26 @@
 package com.baiyi.opscloud.sshcore.task.terminal;
 
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
+import com.baiyi.opscloud.sshcore.task.base.AbstractOutputTask;
 import com.baiyi.opscloud.sshcore.util.SessionOutputUtil;
 import lombok.extern.slf4j.Slf4j;
 
-import java.io.BufferedReader;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 
 /**
  * Task to watch for output read from the ssh session stream
  */
 @Slf4j
-public class WatchOutputTask implements Runnable {
+public class WatchWebTerminalOutputTask extends AbstractOutputTask {
 
-    InputStream outFromChannel;
-    SessionOutput sessionOutput;
-
-    private static final int SIZE = 65536;
-
-    public WatchOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
-        this.sessionOutput = sessionOutput;
-        this.outFromChannel = outFromChannel;
+    public WatchWebTerminalOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
+        super(sessionOutput, outFromChannel);
     }
 
     @Override
-    public void run() {
-        InputStreamReader isr = new InputStreamReader(outFromChannel);
-        BufferedReader br = new BufferedReader(isr,SIZE);
-        try {
-            SessionOutputUtil.addOutput(sessionOutput);
-            char[] buff = new char[SIZE]; // 1024
-            int read;
-            while ((read = br.read(buff)) != -1) {
-                SessionOutputUtil.addToOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buff, 0, read);
-                if (read < SIZE)
-                    Thread.sleep(50);
-            }
-            SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
-        } catch (Exception ex) {
-            log.error(ex.toString(), ex);
-        }
+    public void write(char[] buf, int off, int len) {
+        SessionOutputUtil.addToOutput(getSessionOutput().getSessionId(), getSessionOutput().getInstanceId(), buf, off, len);
     }
 
 }
