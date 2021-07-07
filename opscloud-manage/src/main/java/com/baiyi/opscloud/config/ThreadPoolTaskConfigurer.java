@@ -3,7 +3,6 @@ package com.baiyi.opscloud.config;
 import com.baiyi.opscloud.common.base.Global;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
@@ -13,7 +12,6 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Date 2020/3/30 1:21 下午
  * @Version 1.0
  */
-@EnableAsync
 @Configuration
 public class ThreadPoolTaskConfigurer {
     // https://blog.csdn.net/CJ_66/article/details/82503665
@@ -39,9 +37,6 @@ public class ThreadPoolTaskConfigurer {
      * 线程池名前缀
      */
     private static final String threadNamePrefix = "Async-Service-";
-
-
-
 
     @Bean(name = Global.TaskPools.EXECUTOR)
     public ThreadPoolTaskExecutor getExecutor() {
