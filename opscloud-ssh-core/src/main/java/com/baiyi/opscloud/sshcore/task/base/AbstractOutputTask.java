@@ -41,10 +41,11 @@ public abstract class AbstractOutputTask implements IOutputTask {
                 if (read < MAX_BUFF_SIZE)
                     Thread.sleep(50);
             }
-            SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
-            log.info("outputTask线程结束! sessionId = {} , instanceId = {}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         } catch (Exception ex) {
             log.error(ex.toString(), ex);
+        }finally {
+            log.info("outputTask线程结束! sessionId = {} , instanceId = {}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+            SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         }
     }
 
