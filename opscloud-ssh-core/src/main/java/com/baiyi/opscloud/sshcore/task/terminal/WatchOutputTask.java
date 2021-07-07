@@ -45,6 +45,8 @@ public class WatchOutputTask implements Runnable {
     InputStream outFromChannel;
     SessionOutput sessionOutput;
 
+    private static final int SIZE = 65536;
+
     public WatchOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
         this.sessionOutput = sessionOutput;
         this.outFromChannel = outFromChannel;
@@ -53,14 +55,15 @@ public class WatchOutputTask implements Runnable {
     @Override
     public void run() {
         InputStreamReader isr = new InputStreamReader(outFromChannel);
-        BufferedReader br = new BufferedReader(isr);
+        BufferedReader br = new BufferedReader(isr,SIZE);
         try {
             SessionOutputUtil.addOutput(sessionOutput);
-            char[] buff = new char[32768]; // 1024
+            char[] buff = new char[SIZE]; // 1024
             int read;
             while ((read = br.read(buff)) != -1) {
                 SessionOutputUtil.addToOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buff, 0, read);
-                Thread.sleep(50);
+                if (read < SIZE)
+                    Thread.sleep(50);
             }
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         } catch (Exception ex) {

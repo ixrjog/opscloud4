@@ -21,6 +21,8 @@ public class WatchSshOutputTask implements Runnable {
     SessionOutput sessionOutput;
     Terminal terminal;
 
+    private static final int SIZE = 10240;
+
     public WatchSshOutputTask(SessionOutput sessionOutput, InputStream outFromChannel, Terminal terminal) {
         this.sessionOutput = sessionOutput;
         this.outFromChannel = outFromChannel;
@@ -30,16 +32,18 @@ public class WatchSshOutputTask implements Runnable {
     @Override
     public void run() {
         InputStreamReader isr = new InputStreamReader(outFromChannel);
-        BufferedReader br = new BufferedReader(isr);
+        BufferedReader br = new BufferedReader(isr,SIZE );
         try {
             SessionOutputUtil.addOutput(sessionOutput);
-            char[] buff = new char[32768];
+            char[] buff = new char[SIZE];
             int read;
             while ((read = br.read(buff)) != -1) {
-                terminal.writer().write( buff, 0, read);
+                log.info("SshServer read: {}", read);
+                terminal.writer().write(buff, 0, read);
                 terminal.writer().flush();
                 //  SessionOutputUtil.addToOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buff, 0, read);
-                Thread.sleep(50);
+                if (read < SIZE)
+                    Thread.sleep(50);
             }
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         } catch (Exception ex) {

@@ -34,7 +34,7 @@ public class ThreadPoolTaskConfigurer {
     /**
      * 缓冲队列大小
      */
-    private static final int queueCapacity = 200;
+    private static final int queueCapacity = 500;
     /**
      * 线程池名前缀
      */
@@ -86,7 +86,7 @@ public class ThreadPoolTaskConfigurer {
          *
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
-        executor.setCorePoolSize(10);
+        executor.setCorePoolSize(50);
         executor.setMaxPoolSize(maxPoolSize);
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
