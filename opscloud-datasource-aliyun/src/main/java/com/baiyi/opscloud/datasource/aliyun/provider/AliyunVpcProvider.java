@@ -8,10 +8,11 @@ import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunVpcHandler;
-import com.baiyi.opscloud.datasource.model.DsInstanceContext;
-import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
+import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.datasource.provider.annotation.EnablePullChild;
+import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -39,6 +40,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
     private AliyunVpcProvider aliyunVpcProvider;
 
     @Override
+    @EnablePullChild(type = DsAssetTypeEnum.VPC)
     @SingleTask(name = "PullAliyunVpc", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);

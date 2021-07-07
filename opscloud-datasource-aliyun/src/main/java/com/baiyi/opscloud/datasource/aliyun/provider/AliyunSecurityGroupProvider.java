@@ -9,6 +9,7 @@ import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.SecurityGroupAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
@@ -31,6 +32,7 @@ import java.util.List;
  */
 
 @Component
+@ChildProvider(parentType = DsAssetTypeEnum.VPC)
 public class AliyunSecurityGroupProvider extends BaseAssetProvider<DescribeSecurityGroupsResponse.SecurityGroup> {
 
     @Resource
