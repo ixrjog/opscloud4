@@ -35,7 +35,7 @@ public class SingleTaskAspect {
     private RedisUtil redisUtil;
 
     private String buildKey(String taskName) {
-        return String.format("Opscloud.V4.SingleTask.%s.Running", taskName);
+        return String.format("Opscloud.V4.SingleTask.%s", taskName);
     }
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.SingleTask)")

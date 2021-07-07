@@ -54,7 +54,6 @@ public class VSwitchAssetConvert {
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramProperty("isDefault", entry.getIsDefault())
-
                 .build();
     }
 }
