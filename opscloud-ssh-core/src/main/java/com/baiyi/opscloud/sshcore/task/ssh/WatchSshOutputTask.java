@@ -21,7 +21,7 @@ public class WatchSshOutputTask implements Runnable {
     SessionOutput sessionOutput;
     Terminal terminal;
 
-    private static final int SIZE = 10240;
+    private static final int SIZE = 32768;
 
     public WatchSshOutputTask(SessionOutput sessionOutput, InputStream outFromChannel, Terminal terminal) {
         this.sessionOutput = sessionOutput;
