@@ -22,7 +22,7 @@ public class ThreadPoolTaskConfigurer {
     /**
      * 核心线程数（默认线程数）
      */
-    private static final int corePoolSize = 50;
+    private static final int corePoolSize = 100;
     /**
      * 最大线程数
      */
