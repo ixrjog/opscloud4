@@ -1,9 +1,9 @@
-package com.baiyi.opscloud.sshserver.command;
+package com.baiyi.opscloud.sshserver.command.server;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
-import com.baiyi.opscloud.sshserver.command.base.BaseServerCommand;
+import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
@@ -24,7 +24,7 @@ public class ServerCommand extends BaseServerCommand {
 
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "List server", key = {"ls", "list"})
+    @ShellMethod(value = "查询授权服务器列表信息", key = {"ls", "list"})
     public void listServer(@ShellOption(help = "Server Name", defaultValue = "") String name, @ShellOption(help = "IP", defaultValue = "") String ip) {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = ServerParam.UserPermissionServerPageQuery.builder()
@@ -42,7 +42,7 @@ public class ServerCommand extends BaseServerCommand {
 
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "List server before page", key = "b")
+    @ShellMethod(value = "查询授权服务器列表信息（上一页）", key = "b")
     public void beforePage() {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = SessionCommandContext.getServerQuery();
@@ -61,7 +61,7 @@ public class ServerCommand extends BaseServerCommand {
 
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "List server next page", key = "n")
+    @ShellMethod(value = "查询授权服务器列表信息（下一页）", key = "n")
     public void nextPage() {
         String sessionId = buildSessionId();
         ServerParam.UserPermissionServerPageQuery pageQuery = SessionCommandContext.getServerQuery();

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import io.fabric8.kubernetes.client.dsl.ExecListener;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
@@ -14,6 +15,7 @@ import org.springframework.util.CollectionUtils;
 import java.io.OutputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -33,6 +35,34 @@ public class KubernetesPodHandler {
         PodList podList = KubeClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
+                .list();
+        if (CollectionUtils.isEmpty(podList.getItems()))
+            return Collections.emptyList();
+        return podList.getItems();
+    }
+
+    public static List<Pod> listPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
+        KubernetesClient client = KubeClient.build(kubernetes);
+        Map<String, String> matchLabels = client.apps()
+                .deployments()
+                .inNamespace(namespace)
+                .withName(deploymentName)
+                .get()
+                .getSpec()
+                .getSelector()
+                .getMatchLabels();
+        if (matchLabels.isEmpty()) return Collections.emptyList();
+        List<Pod> items = client.pods().inNamespace(namespace).withLabels(matchLabels).list().getItems();
+        if (CollectionUtils.isEmpty(items))
+            return Collections.emptyList();
+        return items;
+    }
+
+    public static List<Pod> listPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
+        PodList podList = KubeClient.build(kubernetes)
+                .pods()
+                .inNamespace(namespace)
+                .withLabels(labels)
                 .list();
         if (CollectionUtils.isEmpty(podList.getItems()))
             return Collections.emptyList();
@@ -60,13 +90,13 @@ public class KubernetesPodHandler {
                 .watchLog();
     }
 
-    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName,Integer lines) {
+    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
         return KubeClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
                 .inContainer(containerName)
                 .tailingLines(lines)
-                .watchLog();
+                .watchLog(outputStream);
     }
 
     /**

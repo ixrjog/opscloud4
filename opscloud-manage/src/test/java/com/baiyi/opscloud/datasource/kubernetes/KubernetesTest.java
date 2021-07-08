@@ -9,6 +9,7 @@ import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesNamespaceHandler;
+import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesTestHandler;
 import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -82,6 +83,33 @@ public class KubernetesTest extends BaseUnit {
 
         for (Pod item : pods) {
 
+            System.err.print(item.getSpec());
+        }
+    }
+
+    @Test
+    void podTest2() {
+//        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+//        KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
+//
+//        Map<String, String> matchLabels =  kubernetesClient.apps()
+//                .deployments()
+//                .inNamespace("dev")
+//                .withName("coms-dev-deployment")
+//                .get()
+//                .getSpec()
+//                .getSelector()
+//                .getMatchLabels();
+//
+//        List<Pod> items = client.pods().inNamespace(nsName).withLabels(matchLabels).list().getItems();
+//        if (CollectionUtils.isEmpty(items)) {
+//            return null;
+//        }
+        //  System.err.print(JSON.toJSONString(matchLabels));
+
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        List<Pod> pods = KubernetesPodHandler.listPod(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment");
+        for (Pod item : pods) {
             System.err.print(item.getSpec());
         }
     }

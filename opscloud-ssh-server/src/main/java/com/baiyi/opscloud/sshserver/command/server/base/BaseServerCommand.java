@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.command.base;
+package com.baiyi.opscloud.sshserver.command.server.base;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.sshserver.util.ServerTableUtil.DIVIDING_LINE;
+
 
 /**
  * @Author baiyi
@@ -89,7 +89,6 @@ public class BaseServerCommand {
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
         helper.print(ServerTableUtil.TABLE_HEADERS
                 , PromptColor.GREEN);
-        helper.print(DIVIDING_LINE, PromptColor.GREEN);
 
         Map<Integer, Integer> idMapper = Maps.newHashMap();
         int id = 1;
@@ -97,7 +96,7 @@ public class BaseServerCommand {
             String envName = buildDisplayEnv(s.getEnv());
             idMapper.put(id, s.getId());
             builder.line(Arrays.asList(
-                    String.format(" %-6s|", id),
+                    String.format(" %-5s|", id),
                     String.format(" %-32s|", s.getDisplayName()),
                     String.format(" %-32s|", s.getServerGroup().getName()),
                     String.format(" %-20s|", envName),
@@ -149,4 +148,7 @@ public class BaseServerCommand {
     protected String buildSessionId() {
         return SessionUtil.buildSessionId(helper.getSshSession().getIoSession());
     }
+
+
+
 }
