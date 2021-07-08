@@ -1,19 +1,18 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
+import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunVpcHandler;
+import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
 import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.datasource.provider.asset.AbstractChildAssetProvider;
-import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -27,22 +26,22 @@ import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/6/23 2:00 下午
+ * @Date 2021/7/8 2:46 下午
  * @Since 1.0
  */
 
 @Component
-@ChildProvider(parentType = DsAssetTypeEnum.VPC)
-public class AliyunVSwitchProvider extends AbstractChildAssetProvider<DescribeVSwitchesResponse.VSwitch> {
+@ChildProvider(parentType = DsAssetTypeEnum.RAM_USER)
+public class AliyunRamAccessKeyProvider extends AbstractChildAssetProvider<ListAccessKeysResponse.AccessKey> {
 
     @Resource
-    private AliyunVpcHandler aliyunVpcHandler;
+    private AliyunRamHandler aliyunRamHandler;
 
     @Resource
-    private AliyunVSwitchProvider aliyunVSwitchProvider;
+    private AliyunRamAccessKeyProvider aliyunRamAccessKeyProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunVSwitch")
+    @SingleTask(name = "PullAliyunRamAccessKey")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -52,25 +51,23 @@ public class AliyunVSwitchProvider extends AbstractChildAssetProvider<DescribeVS
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVSwitchesResponse.VSwitch entry) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entry) {
+        return RamAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
-            return false;
-        return true;
+        return preAsset.getIsActive().equals(asset.getIsActive());
     }
 
     @Override
-    protected List<DescribeVSwitchesResponse.VSwitch> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+    protected List<ListAccessKeysResponse.AccessKey> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<DescribeVSwitchesResponse.VSwitch> vSwitchList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> vSwitchList.addAll(aliyunVpcHandler.listVSwitches(regionId, aliyun, asset)));
-        return vSwitchList;
+        List<ListAccessKeysResponse.AccessKey> accessKeyList = Lists.newArrayList();
+        aliyun.getRegionIds().forEach(regionId -> accessKeyList.addAll(aliyunRamHandler.listAccessKeys(regionId, aliyun, asset.getAssetKey())));
+        return accessKeyList;
     }
 
     @Override
@@ -80,12 +77,11 @@ public class AliyunVSwitchProvider extends AbstractChildAssetProvider<DescribeVS
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.V_SWITCH.getType();
+        return DsAssetTypeEnum.RAM_ACCESS_KEY.getType();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunVSwitchProvider);
+        AssetProviderFactory.register(aliyunRamAccessKeyProvider);
     }
-
 }

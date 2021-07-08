@@ -11,6 +11,7 @@ import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
 import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.datasource.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -39,6 +40,7 @@ public class AliyunRamUserProvider extends BaseAssetProvider<ListUsersResponse.U
     private AliyunRamUserProvider aliyunRamUserProvider;
 
     @Override
+    @EnablePullChild(type = DsAssetTypeEnum.RAM_USER)
     @SingleTask(name = "PullAliyunRamUse", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);

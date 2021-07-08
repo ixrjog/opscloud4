@@ -6,13 +6,13 @@ import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.SecurityGroupAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
-import com.baiyi.opscloud.datasource.model.DsInstanceContext;
-import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
-import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
+import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
+import com.baiyi.opscloud.datasource.provider.asset.AbstractChildAssetProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -33,16 +33,13 @@ import java.util.List;
 
 @Component
 @ChildProvider(parentType = DsAssetTypeEnum.VPC)
-public class AliyunSecurityGroupProvider extends BaseAssetProvider<DescribeSecurityGroupsResponse.SecurityGroup> {
+public class AliyunSecurityGroupProvider extends AbstractChildAssetProvider<DescribeSecurityGroupsResponse.SecurityGroup> {
 
     @Resource
     private AliyunEcsHandler aliyunEcsHandler;
 
     @Resource
     private AliyunSecurityGroupProvider aliyunSecurityGroupProvider;
-
-    @Resource
-    private SecurityGroupAssetConvert securityGroupAssetConvert;
 
     @Override
     @SingleTask(name = "PullAliyunSecurityGroup")
@@ -56,7 +53,7 @@ public class AliyunSecurityGroupProvider extends BaseAssetProvider<DescribeSecur
 
     @Override
     protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entry) {
-        return securityGroupAssetConvert.toAssetContainer(dsInstance, entry);
+        return VpcAssetConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
@@ -67,12 +64,12 @@ public class AliyunSecurityGroupProvider extends BaseAssetProvider<DescribeSecur
     }
 
     @Override
-    protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntries(DsInstanceContext dsInstanceContext,DatasourceInstanceAsset asset) {
         DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroupList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> securityGroupList.addAll(aliyunEcsHandler.listSecurityGroups(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> securityGroupList.addAll(aliyunEcsHandler.listSecurityGroups(regionId, aliyun,asset)));
         return securityGroupList;
     }
 

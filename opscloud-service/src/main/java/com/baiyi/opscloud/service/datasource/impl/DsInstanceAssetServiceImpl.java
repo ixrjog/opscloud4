@@ -56,6 +56,16 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
     }
 
     @Override
+    public List<DatasourceInstanceAsset> listByUuidParentIdAssetAndType(String instanceUuid, Integer parentId, String assetType) {
+        Example example = new Example(DatasourceInstanceAsset.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid)
+                .andEqualTo("parentId", parentId)
+                .andEqualTo("assetType", assetType);
+        return dsInstanceAssetMapper.selectByExample(example);
+    }
+
+    @Override
     public DatasourceInstanceAsset getByUniqueKey(DatasourceInstanceAsset asset) {
         Example example = new Example(DatasourceInstanceAsset.class);
         Example.Criteria criteria = example.createCriteria();
@@ -98,8 +108,8 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         Example example = new Example(DatasourceInstanceAsset.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", asset.getInstanceUuid())
-                .andEqualTo("assetType",asset.getAssetType())
-                .andEqualTo("name",asset.getName())
+                .andEqualTo("assetType", asset.getAssetType())
+                .andEqualTo("name", asset.getName())
                 .andEqualTo("isActive", true);
         example.setOrderByClause("create_time");
         return dsInstanceAssetMapper.selectByExample(example);

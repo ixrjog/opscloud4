@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.convert;
 
+import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
@@ -52,4 +53,22 @@ public class RamAssetConvert {
                 .paramAsset(asset)
                 .build();
     }
+
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entry) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(entry.getAccessKeyId())
+                .name(entry.getAccessKeyId())
+                .assetKey(entry.getAccessKeyId())
+                .kind("ramAccessKey")
+                .assetType(DsAssetTypeEnum.RAM_ACCESS_KEY.name())
+                .createdTime(toGmtDate(entry.getCreateDate()))
+                .isActive("Active".equals(entry.getStatus()))
+                .build();
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .build();
+    }
+
+
 }

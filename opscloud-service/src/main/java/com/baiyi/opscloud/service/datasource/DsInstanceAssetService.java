@@ -23,6 +23,8 @@ public interface DsInstanceAssetService {
 
     List<DatasourceInstanceAsset> listByInstanceAssetType(String instanceUuid, String assetType);
 
+    List<DatasourceInstanceAsset> listByUuidParentIdAssetAndType(String instanceUuid, Integer parentId, String assetType);
+
     DatasourceInstanceAsset getByUniqueKey(DatasourceInstanceAsset asset);
 
     DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.AssetPageQuery pageQuery);

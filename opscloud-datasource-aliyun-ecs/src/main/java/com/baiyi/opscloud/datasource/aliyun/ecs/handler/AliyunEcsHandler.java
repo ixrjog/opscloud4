@@ -4,6 +4,7 @@ import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
@@ -70,12 +71,13 @@ public class AliyunEcsHandler {
         return images;
     }
 
-    public List<DescribeSecurityGroupsResponse.SecurityGroup> listSecurityGroups(String regionId, DsAliyunConfig.Aliyun aliyun) {
+    public List<DescribeSecurityGroupsResponse.SecurityGroup> listSecurityGroups(String regionId, DsAliyunConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
         List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroups = Lists.newArrayList();
         try {
             DescribeSecurityGroupsRequest describe = new DescribeSecurityGroupsRequest();
             describe.setSysRegionId(regionId);
             describe.setPageSize(PAGE_SIZE);
+            describe.setVpcId(asset.getAssetId());
             int size = PAGE_SIZE;
             int pageNumber = 1;
             while (PAGE_SIZE <= size) {

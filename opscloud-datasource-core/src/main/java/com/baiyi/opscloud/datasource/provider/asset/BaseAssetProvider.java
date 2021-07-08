@@ -34,7 +34,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     @Resource
-    private BaseDsAssetFacade baseDsAssetFacade;
+    protected BaseDsAssetFacade baseDsAssetFacade;
 
     @Resource
     protected DsConfigFactory dsFactory;

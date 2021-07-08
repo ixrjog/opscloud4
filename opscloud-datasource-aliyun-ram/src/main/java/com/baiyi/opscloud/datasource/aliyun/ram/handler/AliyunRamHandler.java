@@ -1,10 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.ram.handler;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.ram.model.v20150501.ListPoliciesRequest;
-import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.aliyuncs.ram.model.v20150501.ListUsersRequest;
-import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
+import com.aliyuncs.ram.model.v20150501.*;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.google.common.collect.Lists;
@@ -12,6 +9,7 @@ import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Collections;
 import java.util.List;
 
 import static com.baiyi.opscloud.datasource.aliyun.core.common.BaseAliyunHandler.Query.PAGE_SIZE;
@@ -62,5 +60,17 @@ public class AliyunRamHandler {
             e.printStackTrace();
         }
         return policyList;
+    }
+
+    public List<ListAccessKeysResponse.AccessKey> listAccessKeys(String regionId, DsAliyunConfig.Aliyun aliyun, String username) {
+        try {
+            ListAccessKeysRequest request = new ListAccessKeysRequest();
+            request.setUserName(username);
+            ListAccessKeysResponse response = aliyunHandler.getAcsResponse(regionId, aliyun, request);
+            return response.getAccessKeys();
+        } catch (ClientException e) {
+            e.printStackTrace();
+        }
+        return Collections.emptyList();
     }
 }
