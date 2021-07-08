@@ -263,7 +263,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                         terminal.writer().print(helper.getColored("\n输入 [ ctrl+c ] 关闭日志!\n", PromptColor.RED));
                     }
                 }
-                Thread.sleep(25L);
+                Thread.sleep(200L);
             } catch (Exception ignored) {
             }
         }
