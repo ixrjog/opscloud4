@@ -27,6 +27,4 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
         terminal.writer().write(buf, off, len);
         terminal.writer().flush();
     }
-
-
 }

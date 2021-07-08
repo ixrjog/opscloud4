@@ -130,9 +130,7 @@ public class RemoteInvokeHandler {
      */
     public static void openSSHTermOnSystemForSSHServer(String sessionId, HostSystem hostSystem, Terminal terminal) {
         JSch jsch = new JSch();
-
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
-
         try {
             if (hostSystem.getSshCredential() == null) return;
             Session session = jsch.getSession(hostSystem.getSshCredential().getServerAccount().getUsername(), hostSystem.getHost(),

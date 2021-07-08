@@ -32,6 +32,7 @@ public class KubernetesTestHandler {
 
     }
 
+
     // LogWatch handle = client.load('/workspace/pod.yml').watchLog(System.out);
 
     public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String name) {

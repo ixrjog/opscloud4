@@ -20,6 +20,7 @@ public class TerminalUtil {
 
     // 行模式支持 Ctrl+C
     public static void rawModeSupportVintr(Terminal terminal) {
+        terminal.enterRawMode();
         Attributes prvAttr = terminal.getAttributes();
         Attributes newAttr = new Attributes(prvAttr);
         newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);

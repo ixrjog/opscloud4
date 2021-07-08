@@ -21,7 +21,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
     private InputStream outFromChannel;
     private SessionOutput sessionOutput;
 
-    private static final int MAX_BUFF_SIZE = 1024 * 32; // 3
+    private static final int MAX_BUFF_SIZE = 1024 * 8; // 8kb
 
     public AbstractOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
         setSessionOutput(sessionOutput);

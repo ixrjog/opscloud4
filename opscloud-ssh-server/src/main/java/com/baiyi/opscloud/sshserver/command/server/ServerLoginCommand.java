@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshserver.command;
+package com.baiyi.opscloud.sshserver.command.server;
 
 import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -51,7 +51,7 @@ public class ServerLoginCommand {
     private HostSystemHandler hostSystemHandler;
 
     @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "Login server", key = {"open", "login"})
+    @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
     public void login(@ShellOption(help = "Server Id") int id, @ShellOption(help = "Account Name", defaultValue = "") String account) {
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionUtil.buildSessionId(serverSession.getIoSession());

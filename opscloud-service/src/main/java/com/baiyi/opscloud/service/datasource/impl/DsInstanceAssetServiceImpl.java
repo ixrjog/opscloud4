@@ -111,6 +111,14 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
                 .andEqualTo("assetType", asset.getAssetType())
                 .andEqualTo("name", asset.getName())
                 .andEqualTo("isActive", true);
+        if (!StringUtils.isEmpty(asset.getInstanceUuid()))
+            criteria.andEqualTo("instanceUuid", asset.getInstanceUuid());
+        if (!StringUtils.isEmpty(asset.getName()))
+            criteria.andEqualTo("name", asset.getName());
+        if (!StringUtils.isEmpty(asset.getAssetKey()))
+            criteria.andLike("assetKey", SQLUtil.toLike(asset.getAssetKey()));
+        if (!StringUtils.isEmpty(asset.getAssetKey2()))
+            criteria.andEqualTo("assetKey2", asset.getAssetKey2());
         example.setOrderByClause("create_time");
         return dsInstanceAssetMapper.selectByExample(example);
     }
