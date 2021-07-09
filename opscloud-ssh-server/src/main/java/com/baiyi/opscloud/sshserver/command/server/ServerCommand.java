@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.sshserver.command.server;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
-import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
@@ -22,6 +23,7 @@ import org.springframework.shell.standard.ShellOption;
 @ShellCommandGroup("Server")
 public class ServerCommand extends BaseServerCommand {
 
+    @CheckTerminalSize(cols = 167,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息", key = {"ls", "list"})
@@ -40,6 +42,7 @@ public class ServerCommand extends BaseServerCommand {
         doListServer(commandContext);
     }
 
+    @CheckTerminalSize(cols = 167,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息（上一页）", key = "b")
@@ -59,6 +62,7 @@ public class ServerCommand extends BaseServerCommand {
         }
     }
 
+    @CheckTerminalSize(cols = 167,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息（下一页）", key = "n")

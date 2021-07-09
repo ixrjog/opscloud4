@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SimpleTable;
+import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
@@ -35,6 +36,7 @@ import java.util.Map;
 @ShellCommandGroup("Kubernetes")
 public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
 
+    @CheckTerminalSize(cols = 116,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询无状态列表信息", key = {"list-k8s-deployment"})
