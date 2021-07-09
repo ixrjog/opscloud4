@@ -154,7 +154,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                     podMapper.put(seq, podContext);
                     List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
                     builder.line(Arrays.asList(
-
                             String.format(" %-5s|", seq),
                             String.format(" %-25s|", kubernetesDsInstanceMap
                                     .get(instanceUuid).getDsInstance().getInstanceName()),
@@ -287,10 +286,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     }
 
     private void tryResize(Size size, Terminal terminal, ExecWatch execWatch) {
-        if (!terminal.getSize().equals(size)) {
-            size = terminal.getSize();
-            execWatch.resize(size.getColumns(), size.getRows());
-        }
+        if (terminal.getSize().equals(size)) return;
+        size = terminal.getSize();
+        execWatch.resize(size.getColumns(), size.getRows());
+
     }
 
     public static final String TABLE_HEADERS = buildTableHeaders();
