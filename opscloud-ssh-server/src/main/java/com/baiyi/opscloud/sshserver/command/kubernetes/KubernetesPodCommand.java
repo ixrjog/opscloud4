@@ -9,6 +9,7 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SimpleTable;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
+import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
@@ -154,7 +155,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                     podMapper.put(seq, podContext);
                     List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
                     builder.line(Arrays.asList(
-
                             String.format(" %-5s|", seq),
                             String.format(" %-25s|", kubernetesDsInstanceMap
                                     .get(instanceUuid).getDsInstance().getInstanceName()),
@@ -176,6 +176,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         helper.print(helper.renderTable(builder.build()));
     }
 
+    @CheckTerminalSize(cols = 171,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询容器组列表信息", key = {"list-k8s-pod"})
@@ -287,10 +288,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     }
 
     private void tryResize(Size size, Terminal terminal, ExecWatch execWatch) {
-        if (!terminal.getSize().equals(size)) {
-            size = terminal.getSize();
-            execWatch.resize(size.getColumns(), size.getRows());
-        }
+        if (terminal.getSize().equals(size)) return;
+        size = terminal.getSize();
+        execWatch.resize(size.getColumns(), size.getRows());
+
     }
 
     public static final String TABLE_HEADERS = buildTableHeaders();
