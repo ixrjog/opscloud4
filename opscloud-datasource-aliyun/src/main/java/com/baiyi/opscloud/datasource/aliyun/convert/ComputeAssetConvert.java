@@ -7,6 +7,8 @@ import com.baiyi.opscloud.datasource.builder.AssetContainerBuilder;
 import com.baiyi.opscloud.datasource.util.TimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import org.apache.logging.log4j.util.Strings;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
@@ -35,7 +37,7 @@ public class ComputeAssetConvert {
                 .assetKey(entry.getInstanceNetworkType().equals(VPC) ? entry.getVpcAttributes().getPrivateIpAddress().get(0) :
                         entry.getInnerIpAddress().get(0))
                 // publicIp
-                .assetKey2(entry.getPublicIpAddress().size() != 0 ? entry.getPublicIpAddress().get(0) : "")
+                .assetKey2(getPublicIp(entry))
                 .assetType(DsAssetTypeEnum.ECS.name())
                 .kind(entry.getInstanceType())
                 .regionId(entry.getRegionId())
@@ -56,5 +58,13 @@ public class ComputeAssetConvert {
                 .paramProperty("osName", entry.getOSName())
                 .paramProperty("osType", entry.getOSType())
                 .build();
+    }
+
+    private static String getPublicIp(DescribeInstancesResponse.Instance entry) {
+        if (!CollectionUtils.isEmpty(entry.getPublicIpAddress()))
+            return entry.getPublicIpAddress().get(0);
+        if (entry.getEipAddress() != null)
+            return entry.getEipAddress().getIpAddress();
+        return Strings.EMPTY;
     }
 }

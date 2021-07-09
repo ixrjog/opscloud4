@@ -55,6 +55,10 @@ public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesRespon
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+            return false;
+        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+            return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
         if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
