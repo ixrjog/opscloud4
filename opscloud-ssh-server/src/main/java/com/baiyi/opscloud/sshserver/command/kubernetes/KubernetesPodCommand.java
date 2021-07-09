@@ -9,6 +9,7 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SimpleTable;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
+import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
@@ -175,6 +176,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         helper.print(helper.renderTable(builder.build()));
     }
 
+    @CheckTerminalSize(cols = 171,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询容器组列表信息", key = {"list-k8s-pod"})
