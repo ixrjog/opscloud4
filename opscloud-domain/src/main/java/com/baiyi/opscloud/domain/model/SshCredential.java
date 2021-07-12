@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.bo;
+package com.baiyi.opscloud.domain.model;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;

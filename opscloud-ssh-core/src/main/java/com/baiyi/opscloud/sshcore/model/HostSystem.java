@@ -27,7 +27,7 @@
  */
 package com.baiyi.opscloud.sshcore.model;
 
-import com.baiyi.opscloud.domain.bo.SshCredential;
+import com.baiyi.opscloud.domain.model.SshCredential;
 import com.baiyi.opscloud.sshcore.message.BaseMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
