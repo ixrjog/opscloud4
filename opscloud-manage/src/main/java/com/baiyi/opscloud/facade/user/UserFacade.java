@@ -2,9 +2,11 @@ package com.baiyi.opscloud.facade.user;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 
 /**
@@ -25,4 +27,6 @@ public interface UserFacade {
     ServerTreeVO.ServerTree queryUserServerTree(ServerGroupParam.UserServerTreeQuery queryParam);
 
     DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
+
+    DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery queryParam);
 }

@@ -1,9 +1,11 @@
 package com.baiyi.opscloud.controller;
 
-import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.guacamole.BaseGuacamoleWebSocket;
+import com.baiyi.opscloud.controller.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.base.SimpleLogin;
+import com.baiyi.opscloud.guacamole.tunnel.BaseGuacamoleTunnel;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.GuacamoleTunnel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.EndpointConfig;
@@ -19,12 +21,16 @@ import java.util.Map;
  */
 @ServerEndpoint(value = "/api/ws/guacamole/tunnel", subprotocols = "guacamole")
 @Component
-public final class GuacamoleController extends BaseGuacamoleWebSocket {
+public final class GuacamoleController extends BaseGuacamoleTunnel {
+
+    private static SimpleAuthentication simpleAuthentication;
+
+    @Autowired
+    public void setSimpleAuthentication(SimpleAuthentication simpleAuthentication){
+        GuacamoleController.simpleAuthentication = simpleAuthentication;
+    }
 
     /**
-     * protocol = rdp/vnc
-     * serverId = 1
-     * accountType = 0/1
      *
      * @param session
      * @param endpointConfig
@@ -34,8 +40,11 @@ public final class GuacamoleController extends BaseGuacamoleWebSocket {
     @Override
     protected GuacamoleTunnel createTunnel(Session session, EndpointConfig endpointConfig) throws GuacamoleException {
         Map<String, List<String>> parameterMap = session.getRequestParameterMap();
-        System.err.println(JSON.toJSON(parameterMap));
-        System.err.println("鉴权！！！！！");
+        String token = getGuacamoleParam(parameterMap, "token");
+        SimpleLogin simpleLogin = SimpleLogin.builder()
+                .token(token)
+                .build();
+        String username = simpleAuthentication.authentication(simpleLogin);
         return super.createTunnel(session, endpointConfig);
     }
 

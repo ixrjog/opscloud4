@@ -2,7 +2,7 @@ package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.controller.base.BaseWebSocketController;
+import com.baiyi.opscloud.controller.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.terminal.builder.TerminalSessionBuilder;
@@ -31,7 +31,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @Slf4j
 @ServerEndpoint(value = "/api/ws/terminal")
 @Component
-public class WebTerminalController extends BaseWebSocketController {
+public class WebTerminalController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。

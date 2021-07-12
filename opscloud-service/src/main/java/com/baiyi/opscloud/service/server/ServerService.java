@@ -27,6 +27,8 @@ public interface ServerService {
 
     DataTable<Server> queryUserPermissionServerPage(ServerParam.UserPermissionServerPageQuery pageQuery);
 
+    DataTable<Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery);
+
     Server getMaxSerialNumberServer(Integer serverGroupId, Integer envType);
 
     int countByServerGroupId(Integer serverGroupId);

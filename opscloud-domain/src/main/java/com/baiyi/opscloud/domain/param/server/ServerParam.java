@@ -57,6 +57,40 @@ public class ServerParam {
     @NoArgsConstructor
     @AllArgsConstructor
     @ApiModel
+    public static class UserRemoteServerPageQuery extends PageParam implements IExtend {
+
+        private Integer userId;
+
+        @ApiModelProperty(value = "关键字查询")
+        private String queryName;
+
+        @ApiModelProperty(value = "服务器组id")
+        private Integer serverGroupId;
+
+        @ApiModelProperty(value = "环境类型")
+        private Integer envType;
+
+        @ApiModelProperty(value = "有效")
+        private Boolean isActive;
+
+        @ApiModelProperty(value = "状态")
+        private Integer serverStatus;
+
+        @ApiModelProperty(value = "标签id")
+        private Integer tagId;
+
+        private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
+
+        private Boolean extend;
+
+    }
+
+    @Data
+    @Builder
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
     public static class UserPermissionServerPageQuery extends PageParam implements IExtend {
 
         @ApiModelProperty(value = "用户id")

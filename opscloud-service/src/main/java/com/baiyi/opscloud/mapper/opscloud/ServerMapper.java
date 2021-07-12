@@ -11,4 +11,6 @@ public interface ServerMapper extends Mapper<Server> {
     List<Server> queryServerByParam(ServerParam.ServerPageQuery pageQuery);
 
     List<Server> queryUserPermissionServerByParam(ServerParam.UserPermissionServerPageQuery pageQuery);
+
+    List<Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery);
 }

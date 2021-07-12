@@ -17,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class BaseWebSocketController {
+public class SimpleAuthentication {
 
     protected static final String MESSAGE_STATE = "state";
 
@@ -27,15 +27,15 @@ public class BaseWebSocketController {
 
     @Autowired
     public void setUserTokenService(UserTokenService userTokenService) {
-        BaseWebSocketController.userTokenService = userTokenService;
+        SimpleAuthentication.userTokenService = userTokenService;
     }
 
     @Autowired
     public void setUserService(UserService userService) {
-        BaseWebSocketController.userService = userService;
+        SimpleAuthentication.userService = userService;
     }
 
-    protected String authentication(ILoginMessage loginMessage) {
+    public String authentication(ILoginMessage loginMessage) {
         UserToken userToken = userTokenService.getByVaildToken(loginMessage.getToken());
         if (userToken == null) return null;
         SessionUtil.setUsername(userToken.getUsername()); // 设置当前会话用户身份

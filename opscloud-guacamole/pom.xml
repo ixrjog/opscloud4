@@ -15,7 +15,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-common</artifactId>
+            <artifactId>opscloud-service</artifactId>
         </dependency>
 
         <dependency>

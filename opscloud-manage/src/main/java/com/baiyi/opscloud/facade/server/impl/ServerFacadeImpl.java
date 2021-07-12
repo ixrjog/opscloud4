@@ -75,4 +75,10 @@ public class ServerFacadeImpl implements ServerFacade {
         serverEventHandler.deleteHandle(delete);
     }
 
+    @Override
+    public DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery) {
+        DataTable<Server> table = serverService.queryUserRemoteServerPage(pageQuery);
+        return new DataTable<>(serverPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
 }

@@ -3,10 +3,12 @@ package com.baiyi.opscloud.controller;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
 import com.baiyi.opscloud.facade.user.*;
 import io.swagger.annotations.Api;
@@ -106,6 +108,12 @@ public class UserController {
     @PostMapping(value = "/server/tree/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<ServerTreeVO.ServerTree> queryUserServerTree(@RequestBody @Valid ServerGroupParam.UserServerTreeQuery queryParam) {
         return new HttpResult<>(userFacade.queryUserServerTree(queryParam));
+    }
+
+    @ApiOperation(value = "查询用户授权的远程服务器")
+    @PostMapping(value = "/server/remote/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ServerVO.Server>> queryUserRemoteServerPage(@RequestBody @Valid ServerParam.UserRemoteServerPageQuery queryParam) {
+        return new HttpResult<>(userFacade.queryUserRemoteServerPage(queryParam));
     }
 
     @ApiOperation(value = "分页查询用户组列表")

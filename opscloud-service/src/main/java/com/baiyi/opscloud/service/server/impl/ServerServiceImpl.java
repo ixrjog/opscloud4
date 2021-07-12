@@ -52,6 +52,13 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public   DataTable<Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery){
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<Server> data = serverMapper.queryUserRemoteServerPage(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
     public void add(Server server) {
         serverMapper.insert(server);
     }
@@ -91,4 +98,6 @@ public class ServerServiceImpl implements ServerService {
         criteria.andEqualTo("serverGroupId", serverGroupId);
         return serverMapper.selectByExample(example);
     }
+
+
 }

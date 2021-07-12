@@ -7,10 +7,13 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
+import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
@@ -38,6 +41,9 @@ public class UserFacadeImpl implements UserFacade {
 
     @Resource
     private ServerGroupFacade serverGroupFacade;
+
+    @Resource
+    private ServerFacade serverFacade;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -79,5 +85,12 @@ public class UserFacadeImpl implements UserFacade {
         if (iQuery != null)
             return iQuery.queryUserBusinessPermissionPage(pageQuery);
         throw new CommonRuntimeException(ErrorEnum.USER_BUSINESS_TYPE_ERROR);
+    }
+
+    @Override
+    public DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery queryParam) {
+        User user = userService.getByUsername(SessionUtil.getUsername());
+        queryParam.setUserId(user.getId());
+        return serverFacade.queryUserRemoteServerPage(queryParam);
     }
 }
