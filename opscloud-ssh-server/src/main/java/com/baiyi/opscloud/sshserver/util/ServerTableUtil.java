@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.sshserver.util;
 
-import com.baiyi.opscloud.sshserver.command.util.TableHeaderBuilder;
 import com.google.common.base.Joiner;
 
 /**
@@ -9,22 +8,7 @@ import com.google.common.base.Joiner;
  * @Version 1.0
  */
 public class ServerTableUtil {
-
-   // public static final String DIVIDING_LINE = "------+---------------------------------+---------------------------------+------------+--------------------------------+-------------------------------------";
-
-    public static final String TABLE_HEADERS = buildTableHeaders();
-
-    public static String buildTableHeaders() {
-        return TableHeaderBuilder.newBuilder()
-                .addHeader("ID", 4)
-                .addHeader("Server Name", 32)
-                .addHeader("ServerGroup Name", 32)
-                .addHeader("Env", 11)
-                .addHeader("IP", 31)
-                .addHeader("Account", 25)
-                .build();
-    }
-
+    
     public static String buildPagination(long totalNum,int page, int length) {
         int tp = 0;
         try {

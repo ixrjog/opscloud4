@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
-import com.baiyi.opscloud.sshserver.SimpleTable;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
 import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
@@ -15,10 +15,8 @@ import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.KubernetesDsInstance;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.command.etc.ColorAligner;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.BaseKubernetesCommand;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.PodContext;
-import com.baiyi.opscloud.sshserver.command.util.TableHeaderBuilder;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.google.common.base.Joiner;
@@ -35,10 +33,8 @@ import org.jline.terminal.Terminal;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.table.BorderStyle;
 
-import java.io.*;
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -74,61 +70,49 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             helper.print(buildPagination(0));
             return;
         }
-        SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
-                .column("ID")
-                .column("Kubernetes Instance Name")
-                .column("Namespace")
-                .column("Pod Name")
-                .column("Pod IP")
-                .column("Container Name")
-                .displayHeaders(false)
-                .borderStyle(BorderStyle.fancy_light)
-                .headerAligner(new ColorAligner(PromptColor.GREEN))
-                .useFullBorder(false);
-
+        PrettyTable pt = PrettyTable
+                .fieldNames("ID",
+                        "Kubernetes Instance Name",
+                        "Namespace",
+                        "Pod Name",
+                        "Pod IP",
+                        "Container Name"
+                );
         int seq = 1;
         for (Pod pod : pods) {
             idMapper.put(seq, asset.getId());
             List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
-            builder.line(Arrays.asList(
-                    String.format(" %-5s|", seq),
-                    String.format(" %-25s|", datasourceInstance.getInstanceName()),
-                    String.format(" %-15s|", pod.getMetadata().getNamespace()),
-                    String.format(" %-50s|", pod.getMetadata().getName()),
-                    String.format(" %-15s|", pod.getStatus().getPodIP()),
-                    String.format(" %-50s", Joiner.on(",").join(names)))
+            pt.addRow(seq,
+                    datasourceInstance.getInstanceName(),
+                    pod.getMetadata().getNamespace(),
+                    pod.getMetadata().getName(),
+                    pod.getStatus().getPodIP(),
+                    Joiner.on(",").join(names)
             );
             seq++;
         }
         SessionCommandContext.setIdMapper(idMapper);
-        helper.print(TABLE_HEADERS
-                , PromptColor.GREEN);
-        helper.print(helper.renderTable(builder.build()));
+        helper.print(pt.toString());
         helper.print(buildPagination(pods.size()), PromptColor.GREEN);
     }
 
     private void listPodByDeploymentName(String deploymentName) {
         Size size = terminal.getSize();
-
         final int maxSize = size.getRows() - 5;
-
         DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
                 .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType())
                 .assetKey(deploymentName)
                 .build();
         List<DatasourceInstanceAsset> deploymentAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
-        SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
-                .column("ID")
-                .column("Kubernetes Instance Name")
-                .column("Namespace")
-                .column("Pod Name")
-                .column("Pod IP")
-                .column("Container Name")
-                .displayHeaders(false)
-                .borderStyle(BorderStyle.fancy_light)
-                .headerAligner(new ColorAligner(PromptColor.GREEN))
-                .useFullBorder(false);
+        PrettyTable pt = PrettyTable
+                .fieldNames("ID",
+                        "Kubernetes Instance Name",
+                        "Namespace",
+                        "Pod Name",
+                        "Pod IP",
+                        "Container Name"
+                );
         Map<Integer, PodContext> podMapper = Maps.newHashMap();
         int seq = 1;
         for (DatasourceInstanceAsset datasourceAsset : deploymentAssets) {
@@ -154,14 +138,14 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                             .build();
                     podMapper.put(seq, podContext);
                     List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
-                    builder.line(Arrays.asList(
-                            String.format(" %-5s|", seq),
-                            String.format(" %-25s|", kubernetesDsInstanceMap
-                                    .get(instanceUuid).getDsInstance().getInstanceName()),
-                            String.format(" %-15s|", pod.getMetadata().getNamespace()),
-                            String.format(" %-50s|", podName),
-                            String.format(" %-15s|", pod.getStatus().getPodIP()),
-                            String.format(" %-50s", Joiner.on(",").join(names)))
+
+                    pt.addRow(seq,
+                            kubernetesDsInstanceMap
+                                    .get(instanceUuid).getDsInstance().getInstanceName(),
+                            pod.getMetadata().getNamespace(),
+                            podName,
+                            pod.getStatus().getPodIP(),
+                            Joiner.on(",").join(names)
                     );
                     seq++;
                     if (seq >= maxSize) break;
@@ -171,12 +155,10 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             if (seq >= maxSize) break;
         }
         SessionCommandContext.setPodMapper(podMapper);
-        helper.print(TABLE_HEADERS
-                , PromptColor.GREEN);
-        helper.print(helper.renderTable(builder.build()));
+        helper.print(pt.toString());
     }
 
-    @CheckTerminalSize(cols = 171,rows = 10)
+    @CheckTerminalSize(cols = 171, rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询容器组列表信息", key = {"list-k8s-pod"})
@@ -292,19 +274,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         size = terminal.getSize();
         execWatch.resize(size.getColumns(), size.getRows());
 
-    }
-
-    public static final String TABLE_HEADERS = buildTableHeaders();
-
-    public static String buildTableHeaders() {
-        return TableHeaderBuilder.newBuilder()
-                .addHeader("ID", 4)
-                .addHeader("Kubernetes Instance Name", 25)
-                .addHeader("Namespace", 15)
-                .addHeader("Pod Name", 50)
-                .addHeader("Pod IP", 15)
-                .addHeader("Container Name", 50)
-                .build();
     }
 
     public static String buildPagination(int podSize) {

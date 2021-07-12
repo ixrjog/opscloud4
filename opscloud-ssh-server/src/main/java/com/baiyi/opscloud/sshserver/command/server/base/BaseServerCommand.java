@@ -8,12 +8,11 @@ import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.account.SshAccount;
+import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
-import com.baiyi.opscloud.sshserver.SimpleTable;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.command.etc.ColorAligner;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
@@ -25,10 +24,8 @@ import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
-import org.springframework.shell.table.BorderStyle;
 
 import javax.annotation.Resource;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -70,42 +67,37 @@ public class BaseServerCommand {
     }
 
     protected void doListServer(ListServerCommand commandContext) {
-        SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
-                .column("ID")
-                .column("Server Name")
-                .column("ServerGroup Name")
-                .column("Env")
-                .column("IP")
-                .column("Account")
-                .displayHeaders(false)
-                .borderStyle(BorderStyle.fancy_light)
-                .headerAligner(new ColorAligner(PromptColor.GREEN))
-                .useFullBorder(false);
-
+        PrettyTable pt = PrettyTable
+                .fieldNames("ID",
+                        "Server Name",
+                        "ServerGroup Name",
+                        "Env",
+                        "IP",
+                        "Account"
+                );
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
         SessionCommandContext.setServerQuery(pageQuery); // 设置上下文
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
-        helper.print(ServerTableUtil.TABLE_HEADERS
-                , PromptColor.GREEN);
+
 
         Map<Integer, Integer> idMapper = Maps.newHashMap();
         int id = 1;
         for (ServerVO.Server s : sshServerPacker.wrapToVO(table.getData())) {
             String envName = buildDisplayEnv(s.getEnv());
             idMapper.put(id, s.getId());
-            builder.line(Arrays.asList(
-                    String.format(" %-5s|", id),
-                    String.format(" %-32s|", s.getDisplayName()),
-                    String.format(" %-32s|", s.getServerGroup().getName()),
-                    String.format(" %-20s|", envName),
-                    String.format(" %-31s|", buildDisplayIp(s)),
-                    buildDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())));
+            pt.addRow(id,
+                    s.getDisplayName(),
+                    s.getServerGroup().getName(),
+                    envName,
+                    buildDisplayIp(s),
+                    buildDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
+            );
             id++;
         }
         SessionCommandContext.setIdMapper(idMapper);
-        helper.print(helper.renderTable(builder.build()));
+        helper.print(pt.toString());
         helper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
                 pageQuery.getPage(),
                 pageQuery.getLength()),

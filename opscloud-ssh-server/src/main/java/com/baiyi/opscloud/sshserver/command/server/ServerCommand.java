@@ -23,7 +23,7 @@ import org.springframework.shell.standard.ShellOption;
 @ShellCommandGroup("Server")
 public class ServerCommand extends BaseServerCommand {
 
-    @CheckTerminalSize(cols = 167,rows = 10)
+    @CheckTerminalSize(cols = 130,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息", key = {"ls", "list"})
@@ -42,7 +42,7 @@ public class ServerCommand extends BaseServerCommand {
         doListServer(commandContext);
     }
 
-    @CheckTerminalSize(cols = 167,rows = 10)
+    @CheckTerminalSize(cols = 130,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息（上一页）", key = "b")
@@ -62,7 +62,7 @@ public class ServerCommand extends BaseServerCommand {
         }
     }
 
-    @CheckTerminalSize(cols = 167,rows = 10)
+    @CheckTerminalSize(cols = 130,rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询授权服务器列表信息（下一页）", key = "n")

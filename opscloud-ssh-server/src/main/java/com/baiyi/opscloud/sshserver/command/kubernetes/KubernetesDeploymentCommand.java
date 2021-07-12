@@ -4,26 +4,22 @@ import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
-import com.baiyi.opscloud.sshserver.SimpleTable;
 import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.KubernetesDsInstance;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.command.etc.ColorAligner;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.BaseKubernetesCommand;
-import com.baiyi.opscloud.sshserver.command.util.TableHeaderBuilder;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
-import org.springframework.shell.table.BorderStyle;
 
-import java.util.Arrays;
 import java.util.Map;
 
 /**
@@ -36,7 +32,7 @@ import java.util.Map;
 @ShellCommandGroup("Kubernetes")
 public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
 
-    @CheckTerminalSize(cols = 116,rows = 10)
+    @CheckTerminalSize(cols = 116, rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询无状态列表信息", key = {"list-k8s-deployment"})
@@ -50,18 +46,12 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
         pageQuery.setPage(1);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
 
-        helper.print(TABLE_HEADERS
-                , PromptColor.GREEN);
-
-        SimpleTable.SimpleTableBuilder builder = SimpleTable.builder()
-                .column("ID")
-                .column("Kubernetes Instance Name")
-                .column("Namespace")
-                .column("Deployment Name")
-                .displayHeaders(false)
-                .borderStyle(BorderStyle.fancy_light)
-                .headerAligner(new ColorAligner(PromptColor.GREEN))
-                .useFullBorder(false);
+        PrettyTable pt = PrettyTable
+                .fieldNames("ID",
+                        "Kubernetes Instance Name",
+                        "Namespace",
+                        "Deployment Name"
+                );
 
         Map<Integer, Integer> idMapper = Maps.newHashMap();
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
@@ -76,31 +66,19 @@ public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
                 kubernetesDsInstanceMap.put(instanceUuid, kubernetesDsInstance);
             }
             idMapper.put(id, asset.getId());
-            builder.line(Arrays.asList(
-                    String.format(" %-5s|", id),
-                    String.format(" %-25s|", kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName()),
-                    String.format(" %-15s|", asset.getAssetKey2()),
-                    String.format(" %-50s", asset.getAssetKey()))
+            pt.addRow(id,
+                    kubernetesDsInstanceMap.get(instanceUuid).getDsInstance().getInstanceName(),
+                    asset.getAssetKey2(),
+                    asset.getAssetKey()
             );
             id++;
         }
         SessionCommandContext.setIdMapper(idMapper);
-        helper.print(helper.renderTable(builder.build()));
+        helper.print(pt.toString());
         helper.print(buildPagination(table.getTotalNum(),
                 pageQuery.getPage(),
                 pageQuery.getLength()),
                 PromptColor.GREEN);
-    }
-
-    public static final String TABLE_HEADERS = buildTableHeaders();
-
-    public static String buildTableHeaders() {
-        return TableHeaderBuilder.newBuilder()
-                .addHeader("ID", 4)
-                .addHeader("Kubernetes Instance Name", 25)
-                .addHeader("Namespace", 15)
-                .addHeader("Deployment Name", 50)
-                .build();
     }
 
     public static String buildPagination(long totalNum, int page, int length) {
