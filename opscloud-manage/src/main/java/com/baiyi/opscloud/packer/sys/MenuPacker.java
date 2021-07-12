@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.packer.sys;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthUserRole;
@@ -13,8 +12,6 @@ import com.baiyi.opscloud.service.auth.AuthUserRoleService;
 import com.baiyi.opscloud.service.sys.MenuChildService;
 import com.baiyi.opscloud.service.sys.MenuService;
 import com.google.common.collect.Lists;
-import org.springframework.cache.annotation.CacheEvict;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -123,7 +120,6 @@ public class MenuPacker {
         return menuChildService.listByIdList(idList);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.COMMON, key = "'menuPacker_username_' + #username")
     public List<MenuVO.Menu> toVOList(String username) {
         List<AuthUserRole> authUserRoleList = authUserRoleService.queryByUsername(username);
         if (CollectionUtils.isEmpty(authUserRoleList))
@@ -136,8 +132,5 @@ public class MenuPacker {
         return wrapVOList(menuChildren);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.COMMON, key = "'menuPacker_username_' + #username")
-    public void evictMenuVOList(String username) {
-    }
 }
 

@@ -6,17 +6,14 @@ import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;
 import com.baiyi.opscloud.domain.generator.opscloud.Menu;
 import com.baiyi.opscloud.domain.generator.opscloud.MenuChild;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.sys.MenuParam;
 import com.baiyi.opscloud.domain.vo.common.TreeVO;
 import com.baiyi.opscloud.domain.vo.sys.MenuVO;
 import com.baiyi.opscloud.facade.sys.MenuFacade;
 import com.baiyi.opscloud.packer.sys.MenuPacker;
 import com.baiyi.opscloud.service.auth.AuthRoleMenuService;
-import com.baiyi.opscloud.service.auth.AuthUserRoleService;
 import com.baiyi.opscloud.service.sys.MenuChildService;
 import com.baiyi.opscloud.service.sys.MenuService;
-import com.baiyi.opscloud.service.user.UserService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,12 +44,6 @@ public class MenuFacadeImpl implements MenuFacade {
     @Resource
     private AuthRoleMenuService authRoleMenuService;
 
-    @Resource
-    private AuthUserRoleService authUserRoleService;
-
-    @Resource
-    private UserService userService;
-
     @Override
     public void saveMenu(MenuParam.MenuSave param) {
         List<Menu> menuList = menuPacker.toDOList(param.getMenuList());
@@ -65,7 +56,6 @@ public class MenuFacadeImpl implements MenuFacade {
             else
                 menuService.update(menu);
         });
-        clearUserMenu();
     }
 
     private Boolean validMenuList(List<Menu> menuList) {
@@ -87,7 +77,6 @@ public class MenuFacadeImpl implements MenuFacade {
             else
                 menuChildService.update(menuChild);
         });
-        clearUserMenu();
     }
 
     private Boolean validMenuChildList(List<MenuChild> menuChildList) {
@@ -116,13 +105,11 @@ public class MenuFacadeImpl implements MenuFacade {
         if (!CollectionUtils.isEmpty(menuChildList))
             throw new CommonRuntimeException(ErrorEnum.MENU_CHILD_IS_NOT_EMPTY);
         menuService.del(id);
-        clearUserMenu();
     }
 
     @Override
     public void delMenuChildById(Integer id) {
         menuChildService.del(id);
-        clearUserMenu();
     }
 
     @Override
@@ -142,7 +129,6 @@ public class MenuFacadeImpl implements MenuFacade {
         }).collect(Collectors.toList());
         try {
             authRoleMenuService.addList(authRoleMenuList);
-            clearUserMenu();
         } catch (Exception e) {
             throw new CommonRuntimeException(ErrorEnum.ROLE_MENU_SAVE_FAIL);
         }
@@ -163,8 +149,4 @@ public class MenuFacadeImpl implements MenuFacade {
         return menuPacker.toVOList(SessionUtil.getUsername());
     }
 
-    private void clearUserMenu() {
-        List<User> userList = userService.listActive();
-        userList.forEach(ocUser -> menuPacker.evictMenuVOList(ocUser.getUsername()));
-    }
 }

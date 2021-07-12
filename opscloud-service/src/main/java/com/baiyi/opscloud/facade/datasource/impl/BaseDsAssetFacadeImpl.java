@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -9,6 +10,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
@@ -31,8 +33,9 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
     @Resource
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
-    @TagClear(type = BusinessTypeEnum.ASSET)
     @Override
+    @TagClear(type = BusinessTypeEnum.ASSET)
+    @Transactional(rollbackFor = {Exception.class})
     public void deleteAssetById(Integer id) {
         // 删除关系
         List<DatasourceInstanceAssetRelation> relations = dsInstanceAssetRelationService.queryByAssetId(id);
@@ -46,6 +49,10 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
             for (DatasourceInstanceAssetProperty property : properties) {
                 dsInstanceAssetPropertyService.deleteById(property.getId());
             }
+        // 删除children
+        List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
+        if (!CollectionUtils.isEmpty(relations))
+            assetList.parallelStream().forEach(x -> deleteAssetById(x.getId()));
         // 删除自己
         dsInstanceAssetService.deleteById(id);
     }
