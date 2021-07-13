@@ -20,7 +20,11 @@ public class TagVO {
 
     public interface ITags {
         void setTags(List<Tag> tags);
+
+        List<Tag> getTags();
+
         int getBusinessType();
+
         int getBusinessId();
     }
 

@@ -12,4 +12,6 @@ import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 public interface ApplicationFacade {
 
     DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery);
+
+    DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.ApplicationPageQuery pageQuery);
 }

@@ -30,4 +30,14 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         return new DataTable<>(applicationPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
     }
+
+    @Override
+    public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.ApplicationPageQuery pageQuery) {
+        DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
+        return new DataTable<>(applicationPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
+
+
+
 }

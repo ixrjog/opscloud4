@@ -26,7 +26,7 @@ public enum BusinessTypeEnum {
      * Gitlab项目
      **/
     GITLAB_PROJECT(9,"GITLAB_PROJECT"),
-    JENKINS_TPL(10,"JENKINS_TPL"),
+    //JENKINS_TPL(10,"JENKINS_TPL"),
     DINGTALK(11,"DINGTALK"),
     ALIYUN_OSS_BUCKET(12,"ALIYUN_OSS_BUCKET"),
     /**
@@ -45,7 +45,6 @@ public enum BusinessTypeEnum {
     private String name;
 
     private int type;
-
 
     public static BusinessTypeEnum getByType(int type) {
         for (BusinessTypeEnum typeEnum : BusinessTypeEnum.values())

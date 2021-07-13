@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.facade.sys.TagFacade;
+import com.baiyi.opscloud.facade.tag.TagFacade;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import org.springframework.stereotype.Component;
 

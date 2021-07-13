@@ -4,7 +4,6 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.account.SshAccount;
@@ -13,15 +12,13 @@ import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.command.context.ListServerCommand;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
-import org.apache.commons.lang3.StringUtils;
 import org.jline.terminal.Terminal;
-import org.jline.utils.AttributedStringBuilder;
-import org.jline.utils.AttributedStyle;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 
@@ -73,6 +70,7 @@ public class BaseServerCommand {
                         "ServerGroup Name",
                         "Env",
                         "IP",
+                        "Tag",
                         "Account"
                 );
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
@@ -80,19 +78,17 @@ public class BaseServerCommand {
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
         SessionCommandContext.setServerQuery(pageQuery); // 设置上下文
         DataTable<Server> table = serverService.queryUserPermissionServerPage(pageQuery);
-
-
         Map<Integer, Integer> idMapper = Maps.newHashMap();
         int id = 1;
         for (ServerVO.Server s : sshServerPacker.wrapToVO(table.getData())) {
-            String envName = buildDisplayEnv(s.getEnv());
             idMapper.put(id, s.getId());
             pt.addRow(id,
                     s.getDisplayName(),
                     s.getServerGroup().getName(),
-                    envName,
-                    buildDisplayIp(s),
-                    buildDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
+                    ServerUtil.toDisplayEnv(s.getEnv()),
+                    ServerUtil.toDisplayIp(s),
+                    ServerUtil.toDisplayTag(s),
+                    toDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
             );
             id++;
         }
@@ -104,23 +100,9 @@ public class BaseServerCommand {
                 PromptColor.GREEN);
     }
 
-    private static String buildDisplayEnv(EnvVO.Env env) {
-        if (env.getPromptColor() == null) {
-            return env.getEnvName();
-        } else {
-            return "[" + (new AttributedStringBuilder()).append(env.getEnvName(), AttributedStyle.DEFAULT.foreground(env.getPromptColor())).toAnsi() + "]";
-        }
-    }
 
-    private static String buildDisplayIp(ServerVO.Server server) {
-        if (!StringUtils.isEmpty(server.getPublicIp())) {
-            return Joiner.on("/").join(server.getPublicIp(), server.getPrivateIp());
-        } else {
-            return server.getPrivateIp();
-        }
-    }
 
-    private String buildDisplayAccount(ServerVO.Server server, boolean isAdmin) {
+    private String toDisplayAccount(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
         if (accountCatMap.containsKey(LoginType.LOW_AUTHORITY)) {

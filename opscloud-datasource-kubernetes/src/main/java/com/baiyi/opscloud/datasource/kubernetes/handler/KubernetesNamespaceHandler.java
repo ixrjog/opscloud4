@@ -24,7 +24,7 @@ public class KubernetesNamespaceHandler {
     }
 
     private static boolean filter(DsKubernetesConfig.Kubernetes kubernetes, Namespace namespace) {
-        for (String s : kubernetes.getNamespace().getFilter()) {
+        for (String s : kubernetes.getNamespace().getIgnore()) {
             if (namespace.getMetadata().getName().equalsIgnoreCase(s))
                 return false;
         }

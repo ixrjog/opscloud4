@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.sys.impl;
+package com.baiyi.opscloud.facade.tag.impl;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.facade.sys.TagFacade;
+import com.baiyi.opscloud.facade.tag.TagFacade;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.facade.sys.TagFacade;
+import com.baiyi.opscloud.facade.tag.TagFacade;
 import com.baiyi.opscloud.util.OptionsUtil;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;

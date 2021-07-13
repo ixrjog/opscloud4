@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
@@ -38,6 +39,9 @@ public class SshServerPacker {
     @Resource
     private UserPermissionService permissionService;
 
+    @Resource
+    private TagPacker tagPacker;
+
     public void wrap(UserVO.IUserPermission iUserPermission) {
         UserPermission query = UserPermission.builder()
                 .userId(iUserPermission.getUserId())
@@ -61,6 +65,7 @@ public class SshServerPacker {
             Env env = envService.getByEnvType(server.getEnvType());
             server.setEnv(BeanCopierUtil.copyProperties(env, EnvVO.Env.class));
             ServerUtil.wrapDisplayName(server);
+            tagPacker.wrap(server);
             return server;
         }).collect(Collectors.toList());
     }

@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -47,6 +49,16 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     private DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
+    }
+
+    @Override
+    public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
+        DsKubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        List<Pod> pods = KubernetesPodHandler.listPod(kubernetes, params.get("namespace"), params.get("deploymentName"));
+        return pods.stream().map(e->
+            toAssetContainer(dsInstanceContext.getDsInstance(),e)
+        ).collect(Collectors.toList());
     }
 
     @Override

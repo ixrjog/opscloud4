@@ -38,7 +38,7 @@ public class DsKubernetesConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Namespace {
-        private List<String> filter;
+        private List<String> ignore;
     }
 
     @Data

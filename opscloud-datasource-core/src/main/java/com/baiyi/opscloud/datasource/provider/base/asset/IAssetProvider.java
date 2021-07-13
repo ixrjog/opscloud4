@@ -1,8 +1,12 @@
 package com.baiyi.opscloud.datasource.provider.base.asset;
 
+import com.baiyi.opscloud.datasource.builder.AssetContainer;
 import com.baiyi.opscloud.datasource.provider.base.param.AssetFilterParam;
 import com.baiyi.opscloud.datasource.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -16,4 +20,6 @@ public interface IAssetProvider {
     DatasourceInstanceAsset pullAsset(int dsInstanceId, UniqueAssetParam param);
 
     void pullAsset(int dsInstanceId, AssetFilterParam param);
+
+    List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params);
 }

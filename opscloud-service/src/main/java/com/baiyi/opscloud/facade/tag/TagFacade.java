@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.facade.sys;
+package com.baiyi.opscloud.facade.tag;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
