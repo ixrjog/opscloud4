@@ -46,7 +46,7 @@ public class WatchWebTerminalOutputTask extends AbstractOutputTask {
     }
 
     @Override
-    public void write(char[] buf, int off, int len) {
+    public void write(char[] buf, int off, int len)  {
         SessionOutputUtil.addToOutput(getSessionOutput().getSessionId(), getSessionOutput().getInstanceId(), buf, off, len);
     }
 

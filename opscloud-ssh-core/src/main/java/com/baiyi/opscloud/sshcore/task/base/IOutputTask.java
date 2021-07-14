@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
+import java.io.IOException;
+
 /**
  * @Author baiyi
  * @Date 2021/7/7 12:54 下午
@@ -14,6 +16,6 @@ public interface IOutputTask extends Runnable {
      * @param off
      * @param len
      */
-    void write(char[] buf, int off, int len);
+    void write(char[] buf, int off, int len) throws IOException;
 
 }
