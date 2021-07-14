@@ -1,14 +1,18 @@
 package com.baiyi.opscloud.datasource.kubernetes.convert;
 
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
-import com.baiyi.opscloud.datasource.builder.AssetContainer;
-import com.baiyi.opscloud.datasource.builder.AssetContainerBuilder;
 import com.baiyi.opscloud.datasource.util.TimeUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -35,10 +39,23 @@ public class PodAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
+                .paramChildren(toChildren(entry.getSpec().getContainers()))
                 .paramProperty("phase", entry.getStatus().getPhase())
                 .paramProperty("startTime", toGmtDate(entry.getStatus().getStartTime()))
-                .paramProperty("nodeName",entry.getSpec().getNodeName())
-                .paramProperty("hostIp",entry.getStatus().getHostIP())
+                .paramProperty("nodeName", entry.getSpec().getNodeName())
+                .paramProperty("hostIp", entry.getStatus().getHostIP())
                 .build();
     }
+
+    private static List<AssetContainer> toChildren(List<Container> containers) {
+        if (CollectionUtils.isEmpty(containers)) return null;
+        return containers.stream().map(c -> {
+            DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                        .name(c.getName())
+                        .build();
+            return AssetContainerBuilder.newBuilder()
+                    .paramAsset(asset).build();
+        }).collect(Collectors.toList());
+    }
+
 }

@@ -77,7 +77,8 @@ public class ServerLoginCommand {
                         break;
                     }
                     tryResize(size, terminal, sessionId, instanceId);
-                    printJSchSession(sessionId, instanceId, terminal.reader().read(25L));
+                    printJSchSession(sessionId, instanceId, terminal.reader().read(0L));
+                    Thread.sleep(25L);
                 }
             } catch (Exception e) {
                 e.printStackTrace();

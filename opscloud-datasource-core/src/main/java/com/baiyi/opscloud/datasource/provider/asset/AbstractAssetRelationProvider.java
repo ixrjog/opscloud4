@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.provider.asset;
 
-import com.baiyi.opscloud.datasource.builder.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.common.ITargetProvider;

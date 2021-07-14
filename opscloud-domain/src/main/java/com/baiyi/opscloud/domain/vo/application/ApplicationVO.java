@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/7/12 1:11 下午
@@ -19,6 +21,8 @@ public class ApplicationVO {
     @NoArgsConstructor
     @ApiModel
     public static class Application extends BaseVO {
+
+        private List<ApplicationResourceVO.Resource> resources;
 
         @ApiModelProperty(value = "主键",example="1")
         private Integer id;

@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.zabbix.convert;
 
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
-import com.baiyi.opscloud.datasource.builder.AssetContainer;
-import com.baiyi.opscloud.datasource.builder.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;

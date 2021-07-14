@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.builder.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.DeploymentAssetConvert;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesDeploymentHandler;

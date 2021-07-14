@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.provider.base.asset;
 
-import com.baiyi.opscloud.datasource.builder.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.provider.base.param.AssetFilterParam;
 import com.baiyi.opscloud.datasource.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;

@@ -1,7 +1,9 @@
-package com.baiyi.opscloud.datasource.builder;
+package com.baiyi.opscloud.domain.builder.asset;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -27,6 +29,16 @@ public class AssetContainerBuilder {
 
     public AssetContainerBuilder paramAsset(DatasourceInstanceAsset asset) {
         assetContainer.setAsset(asset);
+        return this;
+    }
+
+    public AssetContainerBuilder paramChildren(List<AssetContainer> children) {
+        assetContainer.setChildren(children);
+        return this;
+    }
+
+    public AssetContainerBuilder paramChild(AssetContainer child) {
+        assetContainer.getChildren().add(child);
         return this;
     }
 

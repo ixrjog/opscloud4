@@ -158,7 +158,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         helper.print(pt.toString());
     }
 
-    @CheckTerminalSize(cols = 171, rows = 10)
+    @CheckTerminalSize(cols = 130, rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询容器组列表信息", key = {"list-k8s-pod"})
@@ -244,6 +244,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                         break;
                     } else {
                         terminal.writer().print(helper.getColored("\n输入 [ ctrl+c ] 关闭日志!\n", PromptColor.RED));
+                        terminal.writer().flush();
                     }
                 }
                 Thread.sleep(200L);

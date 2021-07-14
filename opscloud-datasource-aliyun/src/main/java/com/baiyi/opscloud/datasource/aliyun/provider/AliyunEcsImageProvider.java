@@ -10,7 +10,7 @@ import com.baiyi.opscloud.datasource.aliyun.convert.EcsImageAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
-import com.baiyi.opscloud.datasource.builder.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
