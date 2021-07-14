@@ -147,9 +147,7 @@ public class RemoteInvokeHandler {
             Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
             Thread thread = new Thread(run);
             thread.start();
-
             OutputStream inputToChannel = channel.getOutputStream();
-
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())
@@ -160,7 +158,6 @@ public class RemoteInvokeHandler {
                     .build();
             jSchSession.setSessionOutput(sessionOutput);
             JSchSessionContainer.addSession(jSchSession);
-
             channel.connect();
         } catch (Exception e) {
             log.info(e.toString(), e);

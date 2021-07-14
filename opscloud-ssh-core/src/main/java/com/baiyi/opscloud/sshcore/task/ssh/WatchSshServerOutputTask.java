@@ -6,7 +6,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.jline.terminal.Terminal;
 
 import java.io.InputStream;
-import java.util.Date;
 
 /**
  * @Author baiyi
@@ -25,9 +24,7 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
 
     @Override
     public void write(char[] buf, int off, int len) {
-        long t1 = new Date().getTime();
         terminal.writer().write(buf, off, len);
-        terminal.writer().flush();
-        log.info("flush: {}/ms",(new Date().getTime() - t1));
+        terminal.flush();
     }
 }
