@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
-import com.baiyi.opscloud.sshcore.message.BaseMessage;
+import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -174,7 +174,7 @@ public class RemoteInvokeHandler {
         }
     }
 
-    public static void setChannelPtySize(ChannelShell channel, BaseMessage message) {
+    public static void setChannelPtySize(ChannelShell channel, BaseServerMessage message) {
         int width = message.getTerminal().getWidth();
         int height = message.getTerminal().getHeight();
         // int cols = (int) Math.floor(width / 7.2981);

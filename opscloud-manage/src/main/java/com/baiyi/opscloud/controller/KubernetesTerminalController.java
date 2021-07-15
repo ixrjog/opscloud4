@@ -5,12 +5,12 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
-import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
-import com.baiyi.opscloud.terminal.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
+import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
 import com.baiyi.opscloud.sshcore.message.server.LoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
+import com.baiyi.opscloud.terminal.builder.TerminalSessionBuilder;
+import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,13 +26,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @Author baiyi
- * @Date 2021/5/28 9:15 上午
+ * @Date 2021/7/14 5:06 下午
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/api/ws/terminal")
+@ServerEndpoint(value = "/api/ws/kubernetes/terminal")
 @Component
-public class WebTerminalController extends SimpleAuthentication {
+public class KubernetesTerminalController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包的线程安全Set，用来存放每个客户端对应的Session对象。
@@ -46,13 +46,13 @@ public class WebTerminalController extends SimpleAuthentication {
 
     private final static HostInfo serverInfo = HostInfo.build();
 
-    private static TerminalSessionService terminalSessionService;
-
     private TerminalSession terminalSession;
+
+    private static TerminalSessionService terminalSessionService;
 
     @Autowired
     public void setTerminalSessionService(TerminalSessionService terminalSessionService) {
-        WebTerminalController.terminalSessionService = terminalSessionService;
+        KubernetesTerminalController.terminalSessionService = terminalSessionService;
     }
 
     /**
@@ -61,9 +61,9 @@ public class WebTerminalController extends SimpleAuthentication {
     @OnOpen
     public void onOpen(Session session) {
         log.info("终端会话尝试链接，sessionId = {}", sessionId);
-        TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.WEB_TERMINAL);
-        terminalSessionService.add(terminalSession);
+        TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
         this.terminalSession = terminalSession;
+        terminalSessionService.add(terminalSession);
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
         log.info("有连接加入，当前连接数为：{}", cnt);

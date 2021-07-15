@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshcore.message;
+package com.baiyi.opscloud.sshcore.message.server;
 
 import com.baiyi.opscloud.sshcore.model.ServerNode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class DuplicateSessionMessage extends BaseMessage {
+public class DuplicateSessionMessage extends BaseServerMessage {
 
     // 源会话
     private ServerNode duplicateServerNode;

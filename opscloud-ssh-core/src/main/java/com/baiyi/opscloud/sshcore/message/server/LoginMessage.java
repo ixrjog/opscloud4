@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshcore.message;
+package com.baiyi.opscloud.sshcore.message.server;
 
 import com.baiyi.opscloud.domain.model.message.ILoginMessage;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
@@ -16,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class LoginMessage extends BaseMessage implements ILoginMessage {
+public class LoginMessage extends BaseServerMessage implements ILoginMessage {
 
     private Set<ServerNode> serverNodes;
 

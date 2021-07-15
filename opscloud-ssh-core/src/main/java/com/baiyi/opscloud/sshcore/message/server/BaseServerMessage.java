@@ -1,9 +1,9 @@
-package com.baiyi.opscloud.sshcore.message;
+package com.baiyi.opscloud.sshcore.message.server;
 
 import com.baiyi.opscloud.domain.model.message.IState;
+import com.baiyi.opscloud.sshcore.message.base.BaseMessage;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
  */
 @Data
 @JsonIgnoreProperties
-public class BaseMessage implements IState {
+public class BaseServerMessage implements IState {
 
     private String id;
 
@@ -22,12 +22,7 @@ public class BaseMessage implements IState {
     private Integer loginType;
 
     private boolean isAdmin;
-    private Terminal terminal;
 
-    @Data
-    @NoArgsConstructor
-    public static class Terminal {
-        private Integer width;
-        private Integer height;
-    }
+    private BaseMessage.Terminal terminal;
+
 }

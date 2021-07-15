@@ -25,6 +25,7 @@
         <module>opscloud-datasource-kubernetes</module>
         <module>opscloud-datasource-jenkins</module>
         <module>opscloud-datasource-aliyun-ram</module>
+        <module>opscloud-kubernetes-terminal</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -288,6 +289,13 @@
                 <artifactId>opscloud-opscloud3</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-kubernetes-terminal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

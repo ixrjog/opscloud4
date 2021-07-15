@@ -10,7 +10,7 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.config.TerminalConfig;
 import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
-import com.baiyi.opscloud.sshcore.message.BaseMessage;
+import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -42,7 +42,7 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
     @Resource
     protected HostSystemHandler hostSystemHandler;
 
-    abstract protected BaseMessage getMessage(String message);
+    abstract protected BaseServerMessage getMessage(String message);
 
     protected Boolean isBatch(TerminalSession terminalSession) {
         Boolean isBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());

@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.terminal.enums.MessageState;
+import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.terminal.factory.BaseProcess;
 import com.baiyi.opscloud.terminal.factory.ITerminalProcess;
-import com.baiyi.opscloud.sshcore.message.BaseMessage;
-import com.baiyi.opscloud.sshcore.message.BatchCommandMessage;
+import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
+import com.baiyi.opscloud.sshcore.message.server.BatchCommandMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -39,7 +39,7 @@ public class BatchCommandProcess extends BaseProcess implements ITerminalProcess
     }
 
     @Override
-    protected BaseMessage getMessage(String message) {
+    protected BaseServerMessage getMessage(String message) {
         return new GsonBuilder().create().fromJson(message, BatchCommandMessage.class);
     }
 

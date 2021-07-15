@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.enums;
+package com.baiyi.opscloud.sshcore.enums;
 
 /**
  * @Author baiyi

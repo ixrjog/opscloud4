@@ -10,8 +10,8 @@ import java.util.Date;
 
 @Data
 @Builder
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @Table(name = "terminal_session")
 public class TerminalSession {
     @Id
@@ -59,9 +59,12 @@ public class TerminalSession {
     @Column(name = "server_addr")
     private String serverAddr;
 
-    @Column(name = "create_time", insertable = false, updatable = false)
+    @Column(name = "session_type")
+    private String sessionType;
+
+    @Column(name = "create_time")
     private Date createTime;
 
-    @Column(name = "update_time", insertable = false, updatable = false)
+    @Column(name = "update_time")
     private Date updateTime;
 }

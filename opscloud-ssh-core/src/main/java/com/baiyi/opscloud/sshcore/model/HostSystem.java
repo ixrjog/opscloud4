@@ -28,7 +28,7 @@
 package com.baiyi.opscloud.sshcore.model;
 
 import com.baiyi.opscloud.domain.model.SshCredential;
-import com.baiyi.opscloud.sshcore.message.BaseMessage;
+import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -66,7 +66,7 @@ public class HostSystem {
      */
     private SshCredential sshCredential;
 
-    private BaseMessage loginMessage;
+    private BaseServerMessage loginMessage;
 
     public static final String INITIAL_STATUS = "INITIAL";
     public static final String AUTH_FAIL_STATUS = "AUTHFAIL";

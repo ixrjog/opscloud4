@@ -14,6 +14,7 @@
     <result column="close_time" jdbcType="TIMESTAMP" property="closeTime" />
     <result column="server_hostname" jdbcType="VARCHAR" property="serverHostname" />
     <result column="server_addr" jdbcType="VARCHAR" property="serverAddr" />
+    <result column="session_type" jdbcType="VARCHAR" property="sessionType" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
   </resultMap>
