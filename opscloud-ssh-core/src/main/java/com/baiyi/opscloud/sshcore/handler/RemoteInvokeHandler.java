@@ -6,7 +6,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.*;
 import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
-import com.baiyi.opscloud.sshcore.task.ssh.WatchSshServerOutputTask;
 import com.baiyi.opscloud.sshcore.task.terminal.WatchWebTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.util.ChannelShellUtil;
 import com.baiyi.opscloud.sshcore.util.SessionConfigUtil;
@@ -143,13 +142,16 @@ public class RemoteInvokeHandler {
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             ChannelShellUtil.setDefault(channel);
             setChannelPtySize(channel, hostSystem.getTerminalSize());
-
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
-            Thread thread = new Thread(run);
-            thread.start();
+//            Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
+//            Thread thread = new Thread(run);
+//            thread.start();
+            /////////////////////
+            channel.setOutputStream(terminal.output());
+           // channel.setInputStream(terminal.input());
+
             OutputStream inputToChannel = channel.getOutputStream();
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
