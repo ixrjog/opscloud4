@@ -5,7 +5,12 @@ import com.baiyi.opscloud.sshcore.task.base.AbstractOutputTask;
 import lombok.extern.slf4j.Slf4j;
 import org.jline.terminal.Terminal;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author baiyi
@@ -23,8 +28,19 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
     }
 
     @Override
-    public void write(char[] buf, int off, int len) {
-        terminal.writer().write(buf, off, len);
-        terminal.flush();
+    public void write(char[] buf, int off, int len) throws IOException {
+       // terminal.writer().write(buf, off, len);
+      //  terminal.flush();
+        terminal.output().write(getBytes(buf), off, len);
+        terminal.output().flush();
+    }
+
+    public static byte[] getBytes(char[] chars) {
+        Charset cs = StandardCharsets.UTF_8;
+        CharBuffer cb = CharBuffer.allocate(chars.length);
+        cb.put(chars);
+        cb.flip();
+        ByteBuffer bb = cs.encode(cb);
+        return bb.array();
     }
 }

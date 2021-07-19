@@ -32,7 +32,6 @@ public class ApplicationResourceVO {
         @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 
-
         @NotNull(message = "应用id不能为空")
         private Integer applicationId;
 
