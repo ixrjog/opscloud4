@@ -9,6 +9,7 @@ import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.util.ExtendUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -33,7 +34,6 @@ public class UserPacker {
     private DesensitizedPacker<UserVO.User> desensitizedPacker;
 
 
-
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
         return userList.stream()
@@ -52,9 +52,10 @@ public class UserPacker {
 
     public User toDO(UserVO.User user) {
         User pre = BeanCopierUtil.copyProperties(user, User.class);
-        if (!StringUtils.isEmpty(pre.getPassword())) {
+        if (!StringUtils.isEmpty(pre.getPassword()))
             RegexUtil.checkPasswordRule(pre.getPassword());
-        }
+        if (!RegexUtil.isPhone(user.getPhone()))
+            pre.setPhone(Strings.EMPTY);
         return pre;
     }
 

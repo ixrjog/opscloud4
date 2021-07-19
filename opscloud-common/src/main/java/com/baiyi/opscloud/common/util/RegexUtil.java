@@ -14,6 +14,15 @@ import java.util.regex.Pattern;
  */
 public class RegexUtil {
 
+    private interface RegexMatches {
+        String PHONE = "^1[3456789]\\d{9}$";
+        String USERNAME = "[a-zA-Z][\\w]{3,15}";
+        String SERVER_NAME = "[a-z][\\d0-9a-z-]{1,55}";
+        String SERVER_GROUP_NAME = "group_[a-z][\\d0-9a-z-]{2,64}";
+        String EMAIL = "[A-z0-9-_\\.]+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
+        String JOB_KEY = "[a-z0-9-_]{3,64}";
+    }
+
     /**
      * 校验字符串是否为手机号
      *
@@ -21,12 +30,7 @@ public class RegexUtil {
      * @return
      */
     public static boolean isPhone(String phone) {
-        if (StringUtils.isEmpty(phone))
-            return false;
-        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(17[013678])|(18[0-9]))\\d{8}$";
-        Pattern pattern = Pattern.compile(regex);
-        Matcher matcher = pattern.matcher(phone);
-        return matcher.matches();
+        return phone.matches(RegexMatches.PHONE);
     }
 
     /**
@@ -36,11 +40,7 @@ public class RegexUtil {
      * @return
      */
     public static boolean isUsernameRule(String username) {
-        return username.matches("[a-zA-Z][\\w]{3,15}");
-    }
-
-    public static boolean isApplicationNameRule(String appName) {
-        return appName.matches("[a-z][\\d0-9a-z-]{2,24}");
+        return username.matches(RegexMatches.USERNAME);
     }
 
     /**
@@ -50,7 +50,7 @@ public class RegexUtil {
      * @return
      */
     public static void tryServerGroupNameRule(String serverGroupName) {
-        if (!serverGroupName.matches("group_[a-z][\\d0-9a-z-]{2,64}"))
+        if (!serverGroupName.matches(RegexMatches.SERVER_GROUP_NAME))
             throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_NON_COMPLIANCE_WITH_RULES);
     }
 
@@ -59,12 +59,11 @@ public class RegexUtil {
     }
 
     public static boolean isServerNameRule(String serverName) {
-        return serverName.matches("[a-z][\\d0-9a-z-]{1,55}");
+        return serverName.matches(RegexMatches.SERVER_NAME);
     }
 
     public static boolean isEmail(String email) {
-        String repx = "[A-z0-9-_\\.]+@([\\w]+[\\w-]*)(\\.[\\w]+[-\\w]*)+";
-        return email.matches(repx);
+        return email.matches(RegexMatches.EMAIL);
     }
 
     private static final String SPECIAL_SIGNS = "@!#$%^&*()_=+-[]|:;,.<>?";
@@ -139,13 +138,7 @@ public class RegexUtil {
     public static boolean isJobKeyRule(String key) {
         if (key.endsWith("-") || key.startsWith("-"))
             return false;
-        return key.matches("[a-z0-9-_]{3,64}");
-    }
-
-    public static boolean isApplicationKeyRule(String key) {
-        if (key.endsWith("-") || key.startsWith("-"))
-            return false;
-        return key.matches("[A-Z0-9-]{3,32}");
+        return key.matches(RegexMatches.JOB_KEY);
     }
 
 }
