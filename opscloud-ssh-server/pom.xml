@@ -19,11 +19,6 @@
         </dependency>
 
         <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-service</artifactId>
-        </dependency>
-
-        <dependency>
             <groupId>io.bretty</groupId>
             <artifactId>console-table-builder</artifactId>
             <version>1.2</version>

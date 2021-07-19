@@ -12,6 +12,6 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class CloseMessage extends BaseServerMessage {
+public class ServerCloseMessage extends BaseServerMessage {
 
 }

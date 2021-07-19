@@ -5,12 +5,12 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.controller.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
-import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
-import com.baiyi.opscloud.terminal.builder.TerminalSessionBuilder;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
-import com.baiyi.opscloud.sshcore.message.server.LoginMessage;
+import com.baiyi.opscloud.sshcore.enums.SessionTypeEnum;
+import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import com.baiyi.opscloud.sshcore.task.terminal.SentOutputTask;
+import com.baiyi.opscloud.sshcore.builder.TerminalSessionBuilder;
+import com.baiyi.opscloud.terminal.factory.TerminalProcessFactory;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,10 +95,10 @@ public class WebTerminalController extends SimpleAuthentication {
     @OnMessage
     public void onMessage(String message, Session session) {
         if (!session.isOpen() || StringUtils.isEmpty(message)) return;
-        String state = getSatae(message);
+        String state = getState(message);
         if (StringUtils.isEmpty(this.terminalSession.getUsername())) {
             if (MessageState.LOGIN.getState().equals(state))       // 鉴权并更新会话信息
-                setUser(authentication(new GsonBuilder().create().fromJson(message, LoginMessage.class)));
+                setUser(authentication(new GsonBuilder().create().fromJson(message, SimpleLoginMessage.class)));
         } else {
             SessionUtil.setUsername(this.terminalSession.getUsername());
         }

@@ -16,7 +16,7 @@ import java.util.Set;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class LoginMessage extends BaseServerMessage implements ILoginMessage {
+public class ServerLoginMessage extends BaseServerMessage implements ILoginMessage {
 
     private Set<ServerNode> serverNodes;
 

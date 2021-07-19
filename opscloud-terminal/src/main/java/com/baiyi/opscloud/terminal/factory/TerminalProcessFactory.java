@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.terminal.factory;
 
+import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
+
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 

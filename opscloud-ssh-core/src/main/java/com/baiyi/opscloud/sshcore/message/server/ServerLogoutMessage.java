@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class LogoutMessage extends BaseServerMessage {
+public class ServerLogoutMessage extends BaseServerMessage {
 
     private String instanceId;
 }

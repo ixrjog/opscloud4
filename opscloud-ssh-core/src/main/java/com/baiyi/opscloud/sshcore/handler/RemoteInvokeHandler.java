@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.sshcore.handler;
 
+import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
+import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
-import com.baiyi.opscloud.sshcore.model.HostSystem;
-import com.baiyi.opscloud.sshcore.model.JSchSession;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
-import com.baiyi.opscloud.sshcore.model.SessionOutput;
+import com.baiyi.opscloud.sshcore.model.*;
+import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.task.ssh.WatchSshServerOutputTask;
 import com.baiyi.opscloud.sshcore.task.terminal.WatchWebTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.util.ChannelShellUtil;
@@ -14,7 +14,10 @@ import com.jcraft.jsch.ChannelShell;
 import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.JSchException;
 import com.jcraft.jsch.Session;
+import io.fabric8.kubernetes.client.dsl.ExecWatch;
+import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 
@@ -69,7 +72,7 @@ public class RemoteInvokeHandler {
      * @param instanceId
      * @param hostSystem
      */
-    public static void openSSHTermOnSystemForWebTerminal(String sessionId, String instanceId, HostSystem hostSystem) {
+    public static void openWebTerminal(String sessionId, String instanceId, HostSystem hostSystem) {
         JSch jsch = new JSch();
 
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
@@ -128,7 +131,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHTermOnSystemForSSHServer(String sessionId, HostSystem hostSystem, Terminal terminal) {
+    public static void openSSHServer(String sessionId, HostSystem hostSystem, Terminal terminal) {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
@@ -172,6 +175,56 @@ public class RemoteInvokeHandler {
                 hostSystem.setStatusCd(HostSystem.GENERIC_FAIL_STATUS);
             }
         }
+    }
+
+    public static void openKubernetesLog(String sessionId, String instanceId, DsKubernetesConfig.Kubernetes kubernetes,
+                                         KubernetesResource.Pod pod, KubernetesResource.Container container, Integer lines) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetes,
+                pod.getNamespace(),
+                pod.getName(),
+                container.getName(),
+                lines, out);
+        SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
+        // 启动线程处理会话
+        WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
+        Thread thread = new Thread(run);
+        thread.start();
+
+        KubernetesSession kubernetesSession = KubernetesSession.builder()
+                .sessionId(sessionId)
+                .instanceId(instanceId)
+                .logWatch(logWatch)
+                .watchKubernetesTerminalOutputTask(run)
+                .build();
+        kubernetesSession.setSessionOutput(sessionOutput);
+        KubernetesSessionContainer.addSession(kubernetesSession);
+    }
+
+    public static void openKubernetesTerminal(String sessionId, String instanceId, DsKubernetesConfig.Kubernetes kubernetes,
+                                         KubernetesResource.Pod pod, KubernetesResource.Container container) {
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
+        ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
+                kubernetes,
+                pod.getNamespace(),
+                pod.getName(),
+                container.getName(),
+                listener,
+                out);
+        SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
+        // 启动线程处理会话
+        WatchKubernetesTerminalOutputTask run = new WatchKubernetesTerminalOutputTask(sessionOutput, out);
+        Thread thread = new Thread(run);
+        thread.start();
+        KubernetesSession kubernetesSession = KubernetesSession.builder()
+                .sessionId(sessionId)
+                .instanceId(instanceId)
+                .execWatch( execWatch)
+                .watchKubernetesTerminalOutputTask(run)
+                .build();
+        kubernetesSession.setSessionOutput(sessionOutput);
+        KubernetesSessionContainer.addSession(kubernetesSession);
     }
 
     public static void setChannelPtySize(ChannelShell channel, BaseServerMessage message) {

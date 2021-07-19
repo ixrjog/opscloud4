@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.terminal.builder;
+package com.baiyi.opscloud.sshcore.builder;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;

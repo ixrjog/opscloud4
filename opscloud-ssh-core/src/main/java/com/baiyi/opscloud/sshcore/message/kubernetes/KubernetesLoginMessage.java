@@ -15,12 +15,10 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class LoginKubernetesMessage extends BaseKubernetesMessage implements ILoginMessage, ISessionType {
+public class KubernetesLoginMessage extends BaseKubernetesMessage implements ILoginMessage, ISessionType {
 
     private KubernetesResource data;
-
     private String sessionType;
-
     private String token;
 
 }

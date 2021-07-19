@@ -13,7 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class DuplicateSessionMessage extends BaseServerMessage {
+public class ServerDuplicateSessionMessage extends BaseServerMessage {
 
     // 源会话
     private ServerNode duplicateServerNode;

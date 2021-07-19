@@ -29,15 +29,20 @@ package com.baiyi.opscloud.sshcore.model;
 
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+
 
 /**
  * Output from ssh session
  */
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class SessionOutput extends HostSystem {
 
     String sessionId;
     StringBuilder output = new StringBuilder();
+    ByteArrayOutputStream outputStream ;
 
     public SessionOutput() {
     }
@@ -46,10 +51,17 @@ public class SessionOutput extends HostSystem {
         this.sessionId = sessionId;
         this.setId(hostSystem.getId());
         this.setInstanceId(hostSystem.getInstanceId());
-        //  this.setUser(hostSystem.getUser());
         this.setHost(hostSystem.getHost());
         this.setPort(hostSystem.getPort());
         this.setDisplayNm(hostSystem.getDisplayNm());
         this.setAuthorizedKeys(hostSystem.getAuthorizedKeys());
     }
+
+    // StringBuilder output
+    public SessionOutput(String sessionId, String instanceId) {
+        this.sessionId = sessionId;
+        this.setInstanceId(instanceId);
+
+    }
+
 }
