@@ -46,9 +46,7 @@ public enum BusinessTypeEnum {
     ;
 
     private String name;
-
     private int type;
-
     private boolean inApplication;
 
     public static BusinessTypeEnum getByType(int type) {
@@ -65,9 +63,6 @@ public enum BusinessTypeEnum {
     }
 
     BusinessTypeEnum(int type, String name) {
-        this.type = type;
-        this.name = name;
-        this.inApplication = false;
+        this(type, name, false);
     }
-
 }
