@@ -85,4 +85,14 @@ public class ApplicationPacker {
         return BeanCopierUtil.copyListProperties(data, ApplicationVO.Application.class);
     }
 
+    public ApplicationVO.Application wrapVO(Application application) {
+        ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
+        List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
+        List<ApplicationResourceVO.Resource> resources = BeanCopierUtil.copyListProperties(applicationResourceList, ApplicationResourceVO.Resource.class);
+        Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
+                .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
+        vo.setResourceMap(resourcesMap);
+        return vo;
+    }
+
 }

@@ -38,6 +38,13 @@ public enum ErrorEnum {
 
     USER_BUSINESS_TYPE_ERROR(21000,"用户业务类型错误错误！"),
 
+    // ----------------------- 应用 -----------------------
+    APPLICATION_NOT_EXIST(10001, "应用不存在！"),
+    APPLICATION_ALREADY_EXIST(10001, "应用已存在！"),
+    APPLICATION_RES_ALREADY_EXIST(10001, "应用资源已存在！"),
+    APPLICATION_RES_IS_NOT_EMPTY(10001, "应用资源不为空！"),
+
+
 
 
 

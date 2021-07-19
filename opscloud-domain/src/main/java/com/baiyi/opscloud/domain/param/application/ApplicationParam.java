@@ -8,6 +8,8 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author baiyi
  * @Date 2021/7/12 1:10 下午
@@ -27,5 +29,13 @@ public class ApplicationParam {
         @ApiModelProperty(value = "展开")
         private Boolean extend;
 
+    }
+
+    @Data
+    public static class Query {
+
+        @NotNull
+        @ApiModelProperty(value = "应用id")
+        private Integer applicationId;
     }
 }

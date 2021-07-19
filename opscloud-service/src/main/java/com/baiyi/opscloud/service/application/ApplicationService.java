@@ -15,6 +15,8 @@ public interface ApplicationService {
 
     Application getById(Integer id);
 
+    Application getByKey(String applicationKey);
+
     void add(Application application);
 
     void update(Application application);

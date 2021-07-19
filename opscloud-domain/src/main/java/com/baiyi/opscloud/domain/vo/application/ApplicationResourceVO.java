@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -31,16 +32,21 @@ public class ApplicationResourceVO {
         @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 
+
+        @NotNull(message = "应用id不能为空")
         private Integer applicationId;
 
         private String name;
 
         private Boolean virtualResource;
 
+        @NotNull(message = "资源类型不能为空")
         private String resourceType;
 
+        @NotNull(message = "业务id不能为空")
         private Integer businessId;
 
+        @NotNull(message = "业务类型不能为空")
         private Integer businessType;
 
         private String comment;

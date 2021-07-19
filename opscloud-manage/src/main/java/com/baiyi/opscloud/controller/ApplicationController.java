@@ -3,15 +3,13 @@ package com.baiyi.opscloud.controller;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
@@ -35,4 +33,50 @@ public class ApplicationController {
         return new HttpResult<>(applicationFacade.queryApplicationPageByWebTerminal(pageQuery));
     }
 
+    @ApiOperation(value = "分页查询应用列表")
+    @PostMapping(value = "/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ApplicationVO.Application>> queryApplicationPage(@RequestBody @Valid ApplicationParam.ApplicationPageQuery pageQuery) {
+        return new HttpResult<>(applicationFacade.queryApplicationPage(pageQuery));
+    }
+
+    @ApiOperation(value = "查询应用")
+    @PostMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ApplicationVO.Application> queryApplicationById(@RequestBody @Valid ApplicationParam.Query query) {
+        return new HttpResult<>(applicationFacade.queryApplicationById(query));
+    }
+
+    @ApiOperation(value = "新增应用")
+    @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addApplication(@RequestBody @Valid ApplicationVO.Application application) {
+        applicationFacade.addApplication(application);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除应用")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteApplication(@RequestParam Integer id) {
+        applicationFacade.deleteApplication(id);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "更新应用")
+    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateApplication(@RequestBody @Valid ApplicationVO.Application application) {
+        applicationFacade.updateApplication(application);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "应用资源绑定")
+    @PutMapping(value = "/res/bind", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> bindApplicationResource(@RequestBody @Valid ApplicationResourceVO.Resource resource) {
+        applicationFacade.bindApplicationResource(resource);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "应用资源解除绑定")
+    @DeleteMapping(value = "/res/unbind", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> unbindApplicationResource(@RequestParam Integer id) {
+        applicationFacade.unbindApplicationResource(id);
+        return HttpResult.SUCCESS;
+    }
 }

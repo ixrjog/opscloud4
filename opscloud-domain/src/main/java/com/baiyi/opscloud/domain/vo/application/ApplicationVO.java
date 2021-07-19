@@ -7,7 +7,9 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -24,12 +26,16 @@ public class ApplicationVO {
 
         private List<ApplicationResourceVO.Resource> resources;
 
-        @ApiModelProperty(value = "主键",example="1")
+        private Map<String, List<ApplicationResourceVO.Resource>> resourceMap;
+
+        @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 
+        @NotNull(message = "应用名称不能为空")
         @ApiModelProperty(value = "应用名称")
         private String name;
 
+        @NotNull(message = "应用关键字不能为空")
         @ApiModelProperty(value = "应用关键字")
         private String applicationKey;
 

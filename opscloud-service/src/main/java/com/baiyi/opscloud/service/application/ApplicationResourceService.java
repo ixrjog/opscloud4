@@ -15,10 +15,14 @@ public interface ApplicationResourceService {
 
     void update(ApplicationResource applicationResource);
 
+    void delete(Integer id);
+
     List<ApplicationResource> queryByApplication(Integer applicationId);
 
     List<ApplicationResource> queryByApplication(Integer applicationId, String resourceType);
 
     List<ApplicationResource> queryByApplication(Integer applicationId, String resourceType, int businessType);
+
+    ApplicationResource getByIdAndType(Integer applicationId, Integer businessId, Integer businessType);
 
 }

@@ -31,6 +31,21 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     }
 
     @Override
+    public void delete(Integer id) {
+        applicationResourceMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
+    public ApplicationResource getByIdAndType(Integer applicationId, Integer businessId, Integer businessType) {
+        Example example = new Example(ApplicationResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applicationId", applicationId)
+                .andEqualTo("businessId", businessId)
+                .andEqualTo("businessType", businessType);
+        return applicationResourceMapper.selectOneByExample(example);
+    }
+
+    @Override
     public List<ApplicationResource> queryByApplication(Integer applicationId) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();

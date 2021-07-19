@@ -45,6 +45,14 @@ public class ApplicationServiceImpl implements ApplicationService {
     }
 
     @Override
+    public Application getByKey(String applicationKey) {
+        Example example = new Example(Application.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("applicationKey", applicationKey);
+        return applicationMapper.selectOneByExample(example);
+    }
+
+    @Override
     public void add(Application application) {
         applicationMapper.insert(application);
     }

@@ -107,7 +107,6 @@ public class ServerVO {
 
         @ApiModelProperty(value = "有效")
         private Boolean isActive;
-
     }
 
     @Data
