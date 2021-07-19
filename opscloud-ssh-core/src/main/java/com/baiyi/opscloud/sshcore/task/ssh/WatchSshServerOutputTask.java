@@ -31,6 +31,8 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
     public void write(char[] buf, int off, int len) throws IOException {
        // terminal.writer().write(buf, off, len);
       //  terminal.flush();
+        System.out.print(buf);
+        System.out.println("off = " + off + "; len = " + len);
         terminal.output().write(getBytes(buf), off, len);
         terminal.output().flush();
     }
