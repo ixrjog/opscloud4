@@ -51,7 +51,6 @@ public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandM
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) return;
         jSchSession.getCommander().print(cmd);
-
     }
 
     @Override

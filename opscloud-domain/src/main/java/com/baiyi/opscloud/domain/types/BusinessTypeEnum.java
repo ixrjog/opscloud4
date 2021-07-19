@@ -1,17 +1,20 @@
 package com.baiyi.opscloud.domain.types;
 
+import lombok.Getter;
+
 /**
  * @Author baiyi
  * @Date 2020/2/22 5:46 下午
  * @Version 1.0
  */
+@Getter
 public enum BusinessTypeEnum {
     COMMON(0, "通用"),
-    SERVER(1, "服务器"),
-    SERVERGROUP(2, "服务器组"),
+    SERVER(1, "服务器", true),
+    SERVERGROUP(2, "服务器组", true),
     USER(3, "用户"),
     USERGROUP(4, "用户组"),
-    ASSET(5, "资产"),
+    ASSET(5, "资产", true),
     // CLOUD_DATABASE(5,"CLOUD_DATABASE"),
     /**
      * 服务器器管理员账户
@@ -46,6 +49,8 @@ public enum BusinessTypeEnum {
 
     private int type;
 
+    private boolean inApplication;
+
     public static BusinessTypeEnum getByType(int type) {
         for (BusinessTypeEnum typeEnum : BusinessTypeEnum.values())
             if (typeEnum.type == type)
@@ -53,16 +58,16 @@ public enum BusinessTypeEnum {
         return null;
     }
 
+    BusinessTypeEnum(int type, String name, boolean inApplication) {
+        this.type = type;
+        this.name = name;
+        this.inApplication = inApplication;
+    }
+
     BusinessTypeEnum(int type, String name) {
         this.type = type;
         this.name = name;
+        this.inApplication = false;
     }
 
-    public int getType() {
-        return this.type;
-    }
-
-    public String getName() {
-        return this.name;
-    }
 }

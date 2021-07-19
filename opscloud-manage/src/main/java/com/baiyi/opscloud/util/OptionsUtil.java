@@ -28,6 +28,21 @@ public class OptionsUtil {
                 .build();
     }
 
+    public static OptionsVO.Options toApplicationBusinessTypeOptions() {
+        List<OptionsVO.Option> optionList = Lists.newArrayList();
+        for (BusinessTypeEnum e : BusinessTypeEnum.values()) {
+            if (!e.isInApplication()) continue;
+            OptionsVO.Option o = OptionsVO.Option.builder()
+                    .label(e.getName())
+                    .value(e.getType())
+                    .build();
+            optionList.add(o);
+        }
+        return OptionsVO.Options.builder()
+                .options(optionList)
+                .build();
+    }
+
     public static OptionsVO.Options toProtocolOptions() {
         List<OptionsVO.Option> optionList = Lists.newArrayList();
         for (ProtocolEnum e : ProtocolEnum.values()) {

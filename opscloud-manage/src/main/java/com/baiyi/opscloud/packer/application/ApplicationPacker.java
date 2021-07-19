@@ -68,7 +68,7 @@ public class ApplicationPacker {
 
     private ApplicationResourceVO.Resource wrapPodByDeployment(ApplicationResource resource) {
         DatasourceInstanceAsset dsInstanceAsset = dsInstanceAssetService.getById(resource.getBusinessId());
-        DatasourceInstance dsInstance = dsInstanceService.getByUuid(dsInstanceAsset.getInstanceUuid());
+         DatasourceInstance dsInstance = dsInstanceService.getByUuid(dsInstanceAsset.getInstanceUuid());
         Map<String, String> params = SimpleDictBuilder.newBuilder()
                 .paramEntry("namespace", dsInstanceAsset.getAssetKey2())
                 .paramEntry("deploymentName", dsInstanceAsset.getAssetKey())
