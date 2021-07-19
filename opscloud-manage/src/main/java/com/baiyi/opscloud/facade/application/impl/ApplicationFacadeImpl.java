@@ -82,7 +82,7 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
 
     @Override
     public void bindApplicationResource(ApplicationResourceVO.Resource resource) {
-        if (applicationResourceService.getByIdAndType(resource.getApplicationId(), resource.getBusinessId(), resource.getBusinessType()) != null)
+        if (applicationResourceService.getByTypeAndId(resource.getApplicationId(), resource.getBusinessType(), resource.getBusinessId()) != null)
             throw new CommonRuntimeException(ErrorEnum.APPLICATION_RES_ALREADY_EXIST);
         ApplicationResource res = BeanCopierUtil.copyProperties(resource, ApplicationResource.class);
         applicationResourceService.add(res);

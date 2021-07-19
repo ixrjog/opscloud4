@@ -36,12 +36,12 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     }
 
     @Override
-    public ApplicationResource getByIdAndType(Integer applicationId, Integer businessId, Integer businessType) {
+    public ApplicationResource getByTypeAndId(Integer applicationId, Integer businessType, Integer businessId) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applicationId", applicationId)
-                .andEqualTo("businessId", businessId)
-                .andEqualTo("businessType", businessType);
+                .andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
         return applicationResourceMapper.selectOneByExample(example);
     }
 
@@ -72,5 +72,12 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
         return applicationResourceMapper.selectByExample(example);
     }
 
-
+    @Override
+    public List<ApplicationResource> listByBusiness(Integer businessType, Integer businessId) {
+        Example example = new Example(ApplicationResource.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
+        return applicationResourceMapper.selectByExample(example);
+    }
 }

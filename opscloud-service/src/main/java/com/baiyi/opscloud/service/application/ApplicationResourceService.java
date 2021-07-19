@@ -23,6 +23,8 @@ public interface ApplicationResourceService {
 
     List<ApplicationResource> queryByApplication(Integer applicationId, String resourceType, int businessType);
 
-    ApplicationResource getByIdAndType(Integer applicationId, Integer businessId, Integer businessType);
+    ApplicationResource getByTypeAndId(Integer applicationId, Integer businessType, Integer businessId);
+
+    List<ApplicationResource> listByBusiness(Integer businessType,Integer businessId);
 
 }
