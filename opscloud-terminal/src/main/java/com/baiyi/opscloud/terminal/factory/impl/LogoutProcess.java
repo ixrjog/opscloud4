@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
-import com.baiyi.opscloud.sshcore.message.server.LogoutMessage;
-import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.terminal.factory.BaseProcess;
-import com.baiyi.opscloud.terminal.factory.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.message.server.ServerLogoutMessage;
+import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class LogoutProcess extends BaseProcess implements ITerminalProcess {
+public class LogoutProcess extends AbstractServerTerminalProcess<ServerLogoutMessage> implements ITerminalProcess {
 
     /**
      * 单个关闭
@@ -34,15 +33,14 @@ public class LogoutProcess extends BaseProcess implements ITerminalProcess {
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        LogoutMessage baseMessage = (LogoutMessage) getMessage(message);
+        ServerLogoutMessage baseMessage = getMessage(message);
         recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         closeSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
-
         JSchSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 
     @Override
-    protected BaseServerMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, LogoutMessage.class);
+    protected ServerLogoutMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerLogoutMessage.class);
     }
 }

@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class BatchCommandMessage extends BaseServerMessage {
+public class ServerBatchCommandMessage extends BaseServerMessage {
 
     private Boolean isBatch; // 会话批量指令
 

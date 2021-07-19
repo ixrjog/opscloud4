@@ -11,7 +11,7 @@ import java.util.List;
  * @Date 2021/5/15 1:22 下午
  * @Version 1.0
  */
-public enum DsTypeEnum {
+public enum DsTypeEnum  {
 
     LDAP(1, "LDAP"),
     JENKINS(2, "JENKINS"),

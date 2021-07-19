@@ -6,11 +6,11 @@ import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccoutUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.model.SshCredential;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.model.SshCredential;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -109,7 +109,6 @@ public class HostSystemHandler {
                 .loginMessage(message)
                 .build();
     }
-
 
     private SshCredential buildSshCredential(BaseServerMessage baseMessage, Server server) {
         if (baseMessage.isAdmin()) {

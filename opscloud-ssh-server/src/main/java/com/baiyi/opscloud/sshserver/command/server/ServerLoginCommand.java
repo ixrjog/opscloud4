@@ -64,7 +64,7 @@ public class ServerLoginCommand {
             hostSystem = hostSystemHandler.buildHostSystem(server, account);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
-            RemoteInvokeHandler.openSSHTermOnSystemForSSHServer(sessionId, hostSystem, terminal);
+            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, terminal);
             terminal.enterRawMode();
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
@@ -77,7 +77,7 @@ public class ServerLoginCommand {
                         break;
                     }
                     tryResize(size, terminal, sessionId, instanceId);
-                    printJSchSession(sessionId, instanceId, terminal.reader().read(0L));
+                    printJSchSession(sessionId, instanceId, terminal.reader().read(1L));
                     Thread.sleep(25L);
                 }
             } catch (Exception e) {

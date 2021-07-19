@@ -5,12 +5,12 @@ import com.baiyi.opscloud.common.redis.TerminalKeyUtil;
 import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.model.UserSessionsOutput;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -57,7 +57,6 @@ public class SessionOutputUtil {
      * @param instanceId id of host system instance
      */
     public static void removeOutput(String sessionId, String instanceId) {
-
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().remove(instanceId);
@@ -89,15 +88,20 @@ public class SessionOutputUtil {
      * @param offset     The initial offset
      * @param count      The length
      */
-    public static void addToOutput(String sessionId, String instanceId, char value[], int offset, int count) {
-
+    public static void addToOutput(String sessionId, String instanceId, char[] value, int offset, int count) {
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().get(instanceId).getOutput().append(value, offset, count);
         }
-
     }
 
+    public static SessionOutput getSessionOutput(String sessionId, String instanceId) {
+        UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
+        if (userSessionsOutput != null) {
+            return userSessionsOutput.getSessionOutputMap().get(instanceId);
+        }
+        return null;
+    }
 
     /**
      * returns list of output lines
@@ -106,7 +110,7 @@ public class SessionOutputUtil {
      * @return session output list
      */
     public static List<SessionOutput> getOutput(String sessionId) {
-        List<SessionOutput> outputList = new ArrayList<>();
+        List<SessionOutput> outputList = Lists.newArrayList();
         UserSessionsOutput userSessionsOutput = userSessionsOutputMap.get(sessionId);
         if (userSessionsOutput != null) {
             userSessionsOutput.getSessionOutputMap().keySet().forEach(instanceId -> {
@@ -115,7 +119,6 @@ public class SessionOutputUtil {
                     SessionOutput sessionOutput = userSessionsOutput.getSessionOutputMap().get(instanceId);
                     if (sessionOutput != null && sessionOutput.getOutput() != null
                             && StringUtils.isNotEmpty(sessionOutput.getOutput())) {
-
                         outputList.add(sessionOutput);
                         userSessionsOutput.getSessionOutputMap().put(instanceId, new SessionOutput(sessionId, sessionOutput));
                         auditing(sessionId, instanceId, sessionOutput);

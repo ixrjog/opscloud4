@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
+import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.config.TerminalConfig;
 import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
@@ -25,7 +26,7 @@ import java.util.Date;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseProcess implements ITerminalProcess, InitializingBean {
+public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage> implements ITerminalProcess, InitializingBean {
 
     @Resource
     protected TerminalSessionService terminalSessionService;
@@ -42,7 +43,7 @@ public abstract class BaseProcess implements ITerminalProcess, InitializingBean 
     @Resource
     protected HostSystemHandler hostSystemHandler;
 
-    abstract protected BaseServerMessage getMessage(String message);
+    abstract protected T getMessage(String message);
 
     protected Boolean isBatch(TerminalSession terminalSession) {
         Boolean isBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());

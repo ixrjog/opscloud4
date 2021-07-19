@@ -1,14 +1,13 @@
 package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
+import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.terminal.factory.BaseProcess;
-import com.baiyi.opscloud.terminal.factory.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
-import com.baiyi.opscloud.sshcore.message.server.ResizeMessage;
+import com.baiyi.opscloud.sshcore.message.server.ServerResizeMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
 import com.google.gson.GsonBuilder;
 import com.jcraft.jsch.ChannelShell;
 import org.springframework.stereotype.Component;
@@ -21,10 +20,11 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class ResizeProcess extends BaseProcess implements ITerminalProcess {
+public class ResizeProcess extends AbstractServerTerminalProcess<ServerResizeMessage> implements ITerminalProcess {
 
     /**
      * XTerm改变形体
+     *
      * @return
      */
 
@@ -35,17 +35,17 @@ public class ResizeProcess extends BaseProcess implements ITerminalProcess {
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ResizeMessage resizeMessage= (ResizeMessage) getMessage(message);
+        ServerResizeMessage resizeMessage = getMessage(message);
         try {
             JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
-            RemoteInvokeHandler.setChannelPtySize((ChannelShell)jSchSession.getChannel(),resizeMessage);
+            RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), resizeMessage);
         } catch (Exception ignored) {
         }
     }
 
     @Override
-    protected BaseServerMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, ResizeMessage.class);
+    protected ServerResizeMessage getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerResizeMessage.class);
     }
 }
 

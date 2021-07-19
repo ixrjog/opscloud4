@@ -23,12 +23,14 @@ public class KubernetesResource {
     private Integer businessType;
     private String resourceType;
     private List<Pod> pods;
+    private Integer lines;
 
     @Data
     public static class Pod {
         private String name;
         private String namespace;
-        private Container containers;
+        private String podIp;
+        private List<Container> containers;
     }
 
     @Data

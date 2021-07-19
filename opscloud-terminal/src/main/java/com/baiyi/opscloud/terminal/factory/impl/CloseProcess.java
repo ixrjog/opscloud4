@@ -2,8 +2,8 @@ package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.terminal.factory.BaseProcess;
-import com.baiyi.opscloud.terminal.factory.ITerminalProcess;
+import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
+import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class CloseProcess extends BaseProcess implements ITerminalProcess {
+public class CloseProcess extends AbstractServerTerminalProcess<BaseServerMessage> implements ITerminalProcess {
 
     /**
      * 关闭会话

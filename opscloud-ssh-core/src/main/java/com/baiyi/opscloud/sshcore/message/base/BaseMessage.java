@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
  * @Date 2021/7/14 5:36 下午
  * @Version 1.0
  */
-public abstract class BaseMessage {
+public class BaseMessage {
 
     @Data
     @NoArgsConstructor

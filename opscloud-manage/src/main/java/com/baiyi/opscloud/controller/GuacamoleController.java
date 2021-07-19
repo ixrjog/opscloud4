@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.controller;
 
 import com.baiyi.opscloud.controller.base.SimpleAuthentication;
-import com.baiyi.opscloud.controller.base.SimpleLogin;
 import com.baiyi.opscloud.guacamole.tunnel.BaseGuacamoleTunnel;
+import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import org.apache.guacamole.GuacamoleException;
 import org.apache.guacamole.net.GuacamoleTunnel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,12 +26,11 @@ public final class GuacamoleController extends BaseGuacamoleTunnel {
     private static SimpleAuthentication simpleAuthentication;
 
     @Autowired
-    public void setSimpleAuthentication(SimpleAuthentication simpleAuthentication){
+    public void setSimpleAuthentication(SimpleAuthentication simpleAuthentication) {
         GuacamoleController.simpleAuthentication = simpleAuthentication;
     }
 
     /**
-     *
      * @param session
      * @param endpointConfig
      * @return
@@ -41,7 +40,7 @@ public final class GuacamoleController extends BaseGuacamoleTunnel {
     protected GuacamoleTunnel createTunnel(Session session, EndpointConfig endpointConfig) throws GuacamoleException {
         Map<String, List<String>> parameterMap = session.getRequestParameterMap();
         String token = getGuacamoleParam(parameterMap, "token");
-        SimpleLogin simpleLogin = SimpleLogin.builder()
+        SimpleLoginMessage simpleLogin = SimpleLoginMessage.builder()
                 .token(token)
                 .build();
         String username = simpleAuthentication.authentication(simpleLogin);

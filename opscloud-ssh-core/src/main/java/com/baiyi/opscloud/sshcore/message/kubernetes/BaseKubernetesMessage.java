@@ -14,6 +14,10 @@ import lombok.Data;
 @JsonIgnoreProperties
 public class BaseKubernetesMessage implements IState {
 
+    public static BaseKubernetesMessage HEARTBEAT = new BaseKubernetesMessage();
+
+    public static BaseKubernetesMessage CLOSE = new BaseKubernetesMessage();
+
     private String id;
 
     private String state;

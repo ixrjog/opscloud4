@@ -44,7 +44,7 @@ public class SimpleAuthentication {
         return userToken.getUsername();
     }
 
-    protected String getSatae(String message){
+    protected String getState(String message){
         JSONObject jsonObject = JSON.parseObject(message);
         return jsonObject.getString(MESSAGE_STATE);
     }

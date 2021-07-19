@@ -39,7 +39,7 @@ public class PodAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramChildren(toChildren(entry.getSpec().getContainers()))
+                .paramChildren(toChildren(entry))
                 .paramProperty("phase", entry.getStatus().getPhase())
                 .paramProperty("startTime", toGmtDate(entry.getStatus().getStartTime()))
                 .paramProperty("nodeName", entry.getSpec().getNodeName())
@@ -47,12 +47,14 @@ public class PodAssetConvert {
                 .build();
     }
 
-    private static List<AssetContainer> toChildren(List<Container> containers) {
+    private static List<AssetContainer> toChildren(Pod pod) {
+        List<Container> containers = pod.getSpec().getContainers();
         if (CollectionUtils.isEmpty(containers)) return null;
         return containers.stream().map(c -> {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
-                        .name(c.getName())
-                        .build();
+                    .name(c.getName())
+                    .assetKey(pod.getMetadata().getName()) // podName
+                    .build();
             return AssetContainerBuilder.newBuilder()
                     .paramAsset(asset).build();
         }).collect(Collectors.toList());

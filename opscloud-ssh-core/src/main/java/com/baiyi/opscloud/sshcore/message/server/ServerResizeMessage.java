@@ -12,7 +12,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 @JsonIgnoreProperties
-public class ResizeMessage extends BaseServerMessage {
+public class ServerResizeMessage extends BaseServerMessage {
 
     private String instanceId;
 }
