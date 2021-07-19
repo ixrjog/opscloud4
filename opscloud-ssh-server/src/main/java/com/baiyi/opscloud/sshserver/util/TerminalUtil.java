@@ -8,6 +8,8 @@ import org.jline.terminal.Attributes;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 
+import java.util.EnumSet;
+
 /**
  * @Author baiyi
  * @Date 2021/6/7 9:55 上午
@@ -20,10 +22,18 @@ public class TerminalUtil {
 
     // 行模式支持 Ctrl+C
     public static void rawModeSupportVintr(Terminal terminal) {
-        terminal.enterRawMode();
+//        terminal.enterRawMode();
+//        Attributes prvAttr = terminal.getAttributes();
+//        Attributes newAttr = new Attributes(prvAttr);
+//        newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);
+//        terminal.setAttributes(newAttr);
         Attributes prvAttr = terminal.getAttributes();
         Attributes newAttr = new Attributes(prvAttr);
-        newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);
+        newAttr.setLocalFlags(EnumSet.of(Attributes.LocalFlag.ICANON, Attributes.LocalFlag.ECHO, Attributes.LocalFlag.IEXTEN), false);
+        newAttr.setInputFlags(EnumSet.of(Attributes.InputFlag.IXON, Attributes.InputFlag.ICRNL, Attributes.InputFlag.INLCR), false);
+        newAttr.setControlChar(Attributes.ControlChar.VMIN, 1); // 1
+        newAttr.setControlChar(Attributes.ControlChar.VTIME, 0); // 0
+        newAttr.setControlChar(Attributes.ControlChar.VINTR, 0);  // 0
         terminal.setAttributes(newAttr);
     }
 
