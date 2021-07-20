@@ -30,8 +30,7 @@ public class SshServerConfig {
     @Bean
     public SshShellListener sshShellListener() {
         return event -> {
-            // 清屏
-            // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);
+            // this.terminal.puts(InfoCmp.Capability.clear_screen, new Object[0]);  // 清屏
             String welcome = String.format("%s 欢迎使用 Opscloud SSH Server! \n", event.getSession().getServerSession().getUsername());
             helper.print(welcome, PromptColor.RED);
         };
