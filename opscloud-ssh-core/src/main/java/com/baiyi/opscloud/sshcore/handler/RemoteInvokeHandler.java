@@ -36,9 +36,9 @@ public class RemoteInvokeHandler {
 
     private static String appId = UUID.randomUUID().toString();
 
-    private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
-    public static final int SESSION_TIMEOUT = 60000;
-    public static final int CHANNEL_TIMEOUT = 60000;
+//    private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
+//    public static final int SESSION_TIMEOUT = 60000;
+//    public static final int CHANNEL_TIMEOUT = 60000;
 
     /**
      * 按类型注入凭据
@@ -145,12 +145,12 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-//            Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
-//            Thread thread = new Thread(run);
-//            thread.start();
+            //  Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
+            // Thread thread = new Thread(run);
+            // thread.start();
             /////////////////////
             channel.setOutputStream(terminal.output());
-           // channel.setInputStream(terminal.input());
+            //  channel.setInputStream(terminal.input());
 
             OutputStream inputToChannel = channel.getOutputStream();
             JSchSession jSchSession = JSchSession.builder()
@@ -204,7 +204,7 @@ public class RemoteInvokeHandler {
     }
 
     public static void openKubernetesTerminal(String sessionId, String instanceId, DsKubernetesConfig.Kubernetes kubernetes,
-                                         KubernetesResource.Pod pod, KubernetesResource.Container container) {
+                                              KubernetesResource.Pod pod, KubernetesResource.Container container) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
         ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
@@ -222,7 +222,7 @@ public class RemoteInvokeHandler {
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)
                 .instanceId(instanceId)
-                .execWatch( execWatch)
+                .execWatch(execWatch)
                 .watchKubernetesTerminalOutputTask(run)
                 .build();
         kubernetesSession.setSessionOutput(sessionOutput);

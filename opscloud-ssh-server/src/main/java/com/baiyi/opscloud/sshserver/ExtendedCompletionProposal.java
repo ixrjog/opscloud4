@@ -53,8 +53,7 @@ public class ExtendedCompletionProposal extends CompletionProposal {
         if (!(o instanceof ExtendedCompletionProposal)) return false;
         final ExtendedCompletionProposal other = (ExtendedCompletionProposal) o;
         if (!other.canEqual((Object) this)) return false;
-        if (this.isComplete() != other.isComplete()) return false;
-        return true;
+        return this.isComplete() == other.isComplete();
     }
 
     protected boolean canEqual(final Object other) {

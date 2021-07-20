@@ -65,7 +65,7 @@ public class ServerLoginCommand {
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, terminal);
-            terminal.enterRawMode();
+            // terminal.enterRawMode();
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();

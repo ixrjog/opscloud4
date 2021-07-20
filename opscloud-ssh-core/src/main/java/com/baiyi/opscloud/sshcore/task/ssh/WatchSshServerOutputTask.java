@@ -29,12 +29,12 @@ public class WatchSshServerOutputTask extends AbstractOutputTask {
 
     @Override
     public void write(char[] buf, int off, int len) throws IOException {
-       // terminal.writer().write(buf, off, len);
-      //  terminal.flush();
-        System.out.print(buf);
+        terminal.writer().write(buf, off, len);
+        terminal.flush();
+        System.out.println(buf);
         System.out.println("off = " + off + "; len = " + len);
-        terminal.output().write(getBytes(buf), off, len);
-        terminal.output().flush();
+       // terminal.output().write(getBytes(buf), off, len);
+        // terminal.output().flush();
     }
 
     public static byte[] getBytes(char[] chars) {
