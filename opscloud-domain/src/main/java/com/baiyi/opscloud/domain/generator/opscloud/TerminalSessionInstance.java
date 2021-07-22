@@ -36,6 +36,13 @@ public class TerminalSessionInstance {
     @Column(name = "duplicate_instance_id")
     private String duplicateInstanceId;
 
+
+    /**
+     * 实例会话类型
+     */
+    @Column(name = "instance_session_type")
+    private String instanceSessionType;
+
     /**
      * 登录账户
      */

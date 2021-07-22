@@ -5,9 +5,11 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.redis.TerminalKeyUtil;
 import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
-import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -16,8 +18,8 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.config.TerminalConfig;
+import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
-import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
 import com.baiyi.opscloud.sshcore.message.kubernetes.BaseKubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
@@ -25,7 +27,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 /**
  * @Author baiyi
@@ -48,7 +49,7 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
     private TerminalConfig terminalConfig;
 
     @Resource
-    protected HostSystemHandler hostSystemHandler;
+    protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     @Resource
     protected DsInstanceService dsInstanceService;
@@ -89,13 +90,13 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
         return isBatch == null ? false : isBatch;
     }
 
-    protected void closeSessionInstance(TerminalSession terminalSession, String instanceId) {
-        TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
-        terminalSessionInstance.setCloseTime((new Date()));
-        terminalSessionInstance.setInstanceClosed(true);
-        terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.buildAuditLogPath(terminalSession.getSessionId(), instanceId)));
-        terminalSessionInstanceService.update(terminalSessionInstance);
-    }
+//    protected void closeSessionInstance(TerminalSession terminalSession, String instanceId) {
+//        TerminalSessionInstance terminalSessionInstance = terminalSessionInstanceService.getByUniqueKey(terminalSession.getSessionId(), instanceId);
+//        terminalSessionInstance.setCloseTime((new Date()));
+//        terminalSessionInstance.setInstanceClosed(true);
+//        terminalSessionInstance.setOutputSize(IOUtil.fileSize(terminalConfig.buildAuditLogPath(terminalSession.getSessionId(), instanceId)));
+//        terminalSessionInstanceService.update(terminalSessionInstance);
+//    }
 
     protected void recordAuditLog(TerminalSession terminalSession, String instanceId) {
         AuditRecordHandler.recordAuditLog(terminalSession.getSessionId(), instanceId);

@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.*;
 import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
+import com.baiyi.opscloud.sshcore.task.ssh.WatchSshServerOutputTask;
 import com.baiyi.opscloud.sshcore.task.terminal.WatchWebTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.util.ChannelShellUtil;
 import com.baiyi.opscloud.sshcore.util.SessionConfigUtil;
@@ -18,7 +19,6 @@ import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.jline.terminal.Size;
-import org.jline.terminal.Terminal;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -130,7 +130,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHServer(String sessionId, HostSystem hostSystem, Terminal terminal) {
+    public static void openSSHServer(String sessionId, HostSystem hostSystem,OutputStream out) {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
@@ -145,19 +145,22 @@ public class RemoteInvokeHandler {
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            //  Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
-            // Thread thread = new Thread(run);
-            // thread.start();
+              Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
+              Thread thread = new Thread(run);
+              thread.start();
             /////////////////////
-            channel.setOutputStream(terminal.output());
-            //  channel.setInputStream(terminal.input());
 
+
+            //  channel.setOutputStream(terminal.output());
+           // channel.setOutputStream(outputStream);
+
+            //   channel.setInputStream(terminal.input());
             OutputStream inputToChannel = channel.getOutputStream();
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())
                     .commander(new PrintStream(inputToChannel, true))
-                    .inputToChannel(inputToChannel)
+                    //.inputToChannel(inputToChannel)
                     .channel(channel)
                     .hostSystem(hostSystem)
                     .build();

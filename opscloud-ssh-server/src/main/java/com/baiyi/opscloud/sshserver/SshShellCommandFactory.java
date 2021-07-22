@@ -16,11 +16,15 @@
 
 package com.baiyi.opscloud.sshserver;
 
+import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
+import com.baiyi.opscloud.sshcore.model.SshIO;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.sshd.common.io.IoSession;
 import org.apache.sshd.server.ExitCallback;
 import org.apache.sshd.server.channel.ChannelSession;
 import org.apache.sshd.server.command.Command;
+import org.apache.sshd.server.session.ServerSession;
 import org.jline.reader.Parser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.Banner;
@@ -31,6 +35,7 @@ import org.springframework.shell.jline.JLineShellAutoConfiguration;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
@@ -68,6 +73,9 @@ public class SshShellCommandFactory implements Command {
     public static final ThreadLocal<SshIO> SSH_IO_CONTEXT = ThreadLocal.withInitial(SshIO::new);
 
     private Map<ChannelSession, Thread> threads = new ConcurrentHashMap<>();
+
+    @Resource
+    private SshShellHelper helper;
 
     /**
      * Constructor
@@ -107,12 +115,18 @@ public class SshShellCommandFactory implements Command {
     @Override
     public void start(ChannelSession channelSession, org.apache.sshd.server.Environment env) {
         SshIO sshIO = SSH_IO_CONTEXT.get();
-        Thread sshThread = new Thread(new ThreadGroup("ssh-shell"), new SshShellRunnable(properties,
+        Thread sshThread = new Thread(new ThreadGroup("ssh-shell"),
+                new SshShellRunnable(properties,
                 channelSession, shellListenerService, shellBanner, promptProvider, shell, completerAdapter, parser,
                 environment, env, this, sshIO.getIs(), sshIO.getOs(), sshIO.getEc()),
                 "ssh-session-" + System.nanoTime());
         sshThread.start();
         threads.put(channelSession, sshThread);
+
+
+        ServerSession serverSession = channelSession.getSession();
+        IoSession ioSession = serverSession.getIoSession();
+        SessionIdMapper.put(ioSession);
         log.debug("{}: started [{} session(s) currently active]", channelSession, threads.size());
     }
 
