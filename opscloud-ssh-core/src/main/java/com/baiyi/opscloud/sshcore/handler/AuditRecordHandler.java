@@ -31,7 +31,15 @@ public class AuditRecordHandler {
         AuditRecordHandler.terminalConfig = terminalConfig;
     }
 
-    public static void recordAuditLog(String sessionId, String instanceId) {
+    public static void recordAuditLog(String sessionId, String instanceId,char[] buf) {
+        try {
+                IOUtil.appendFile(new String(buf), terminalConfig.buildAuditLogPath(sessionId, instanceId));
+        } catch (Exception e) {
+            log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
+        }
+    }
+
+    private static void recordAuditLog(String sessionId, String instanceId) {
         String cacheKey = TerminalKeyUtil.buildAuditLogKey(sessionId, instanceId);
         try {
             if (redisUtil.hasKey(cacheKey)) {

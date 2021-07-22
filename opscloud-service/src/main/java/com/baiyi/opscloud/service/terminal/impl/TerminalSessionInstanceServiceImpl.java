@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -27,6 +28,14 @@ public class TerminalSessionInstanceServiceImpl implements TerminalSessionInstan
     @Override
     public void update(TerminalSessionInstance terminalSessionInstance){
         sessionInstanceMapper.updateByPrimaryKey(terminalSessionInstance);
+    }
+
+    @Override
+    public List<TerminalSessionInstance> queryBySessionId(String sessionId){
+        Example example = new Example(TerminalSessionInstance.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sessionId", sessionId);
+        return sessionInstanceMapper.selectByExample(example);
     }
 
     @Override

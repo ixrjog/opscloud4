@@ -1,13 +1,23 @@
 package com.baiyi.opscloud.service.terminal.impl;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.Env;
+import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
+import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
 import com.baiyi.opscloud.mapper.opscloud.TerminalSessionMapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
+import com.baiyi.opscloud.util.SQLUtil;
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -28,6 +38,21 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
     @Override
     public void update(TerminalSession terminalSession) {
         sessionMapper.updateByPrimaryKey(terminalSession);
+    }
+
+    @Override
+    public DataTable<TerminalSession> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        Example example = new Example(TerminalSession.class);
+        Example.Criteria criteria = example.createCriteria();
+        if (StringUtils.isNotBlank(pageQuery.getUsername())) {
+            criteria.andLike("username", SQLUtil.toLike(pageQuery.getUsername()));
+        }
+        if(!StringUtils.isEmpty(pageQuery.getSessionType()))
+            criteria.andEqualTo("sessionType",pageQuery.getSessionType());
+        example.setOrderByClause("create_time");
+        List<TerminalSession> data = sessionMapper.selectByExample(example);
+        return new DataTable<>(data, page.getTotal());
     }
 
     @Override

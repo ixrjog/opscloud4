@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.base;
 
+import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.util.SessionOutputUtil;
 import lombok.Data;
@@ -47,6 +48,7 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
                 int read;
                 while ((read = br.read(buff)) != -1) {
                     write(buff, 0, read);
+                    auditing(buff);
                 }
             }
         } catch (Exception ex) {
@@ -56,6 +58,16 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         }
     }
+
+    /**
+     * 审计日志
+     *
+     * @param buf
+     */
+    private void auditing(char[] buf) {
+        AuditRecordHandler.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(),buf);
+    }
+
 
     protected byte[] toBytes(char[] chars) {
         return TaskUtil.toBytes(chars);

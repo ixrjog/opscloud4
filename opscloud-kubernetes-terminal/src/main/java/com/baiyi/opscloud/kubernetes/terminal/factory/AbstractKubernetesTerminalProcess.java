@@ -19,7 +19,6 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.config.TerminalConfig;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
-import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
 import com.baiyi.opscloud.sshcore.message.kubernetes.BaseKubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
@@ -98,9 +97,9 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
 //        terminalSessionInstanceService.update(terminalSessionInstance);
 //    }
 
-    protected void recordAuditLog(TerminalSession terminalSession, String instanceId) {
-        AuditRecordHandler.recordAuditLog(terminalSession.getSessionId(), instanceId);
-    }
+//    protected void recordAuditLog(TerminalSession terminalSession, String instanceId) {
+//        AuditRecordHandler.recordAuditLog(terminalSession.getSessionId(), instanceId);
+//    }
 
     protected void heartbeat(String sessionId) {
         redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
