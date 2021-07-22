@@ -2,6 +2,7 @@ package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.server.ServerLoginMessage;
@@ -38,7 +39,7 @@ public class LoginProcess extends AbstractServerTerminalProcess<ServerLoginMessa
         loginMessage.getServerNodes().forEach(serverNode -> {
             HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverNode, loginMessage);
             RemoteInvokeHandler.openWebTerminal(terminalSession.getSessionId(), serverNode.getInstanceId(), hostSystem);
-            terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem));
+            terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, hostSystem, InstanceSessionTypeEnum.SERVER));
         });
     }
 

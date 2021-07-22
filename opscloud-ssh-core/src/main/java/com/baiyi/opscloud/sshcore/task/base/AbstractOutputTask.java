@@ -21,7 +21,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
     private InputStream outFromChannel;
     private SessionOutput sessionOutput;
 
-    private static final int BUFF_SIZE = 1024 * 20; // 1KB
+    private static final int BUFF_SIZE = 1024 * 8; // 8KB
 
     public AbstractOutputTask(SessionOutput sessionOutput, InputStream outFromChannel) {
         setSessionOutput(sessionOutput);
@@ -38,8 +38,7 @@ public abstract class AbstractOutputTask implements IOutputTask {
             int read;
             while ((read = br.read(buff)) != -1) {
                 write(buff, 0, read);
-                // if (read < MAX_BUFF_SIZE)
-               // Thread.sleep(10);
+                Thread.sleep(10);
             }
         } catch (Exception ex) {
             log.error(ex.toString(), ex);
@@ -47,6 +46,10 @@ public abstract class AbstractOutputTask implements IOutputTask {
             log.info("outputTask线程结束! sessionId = {} , instanceId = {}", sessionOutput.getSessionId(), sessionOutput.getInstanceId());
             SessionOutputUtil.removeOutput(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         }
+    }
+
+    protected byte[] toBytes(char[] chars) {
+       return TaskUtil.toBytes(chars);
     }
 
 }

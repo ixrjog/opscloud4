@@ -9,6 +9,7 @@
     <result column="session_id" jdbcType="VARCHAR" property="sessionId" />
     <result column="instance_id" jdbcType="VARCHAR" property="instanceId" />
     <result column="duplicate_instance_id" jdbcType="VARCHAR" property="duplicateInstanceId" />
+    <result column="instance_session_type" jdbcType="VARCHAR" property="instanceSessionType" />
     <result column="login_user" jdbcType="VARCHAR" property="loginUser" />
     <result column="host_ip" jdbcType="VARCHAR" property="hostIp" />
     <result column="output_size" jdbcType="BIGINT" property="outputSize" />

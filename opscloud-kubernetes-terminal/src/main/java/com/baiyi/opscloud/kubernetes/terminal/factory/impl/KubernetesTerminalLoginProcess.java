@@ -7,6 +7,7 @@ import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminal
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
+import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
 import com.baiyi.opscloud.sshcore.message.kubernetes.KubernetesLoginMessage;
@@ -76,7 +77,9 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
                 pod,
                 container,
                 kubernetesResource.getLines());
-        terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, pod, toInstanceId(pod, container)));
+        simpleTerminalSessionFacade.recordTerminalSessionInstance(
+                TerminalSessionInstanceBuilder.build(terminalSession.getSessionId(), pod, toInstanceId(pod, container),InstanceSessionTypeEnum.CONTAINER_LOG)
+        );
     }
 
     // 终端
@@ -87,7 +90,9 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
                 kubernetes,
                 pod,
                 container);
-        terminalSessionInstanceService.add(TerminalSessionInstanceBuilder.build(terminalSession, pod, toInstanceId(pod, container)));
+        simpleTerminalSessionFacade.recordTerminalSessionInstance(
+                TerminalSessionInstanceBuilder.build(terminalSession.getSessionId(), pod, toInstanceId(pod, container), InstanceSessionTypeEnum.CONTAINER_TERMINAL)
+        );
     }
 
 

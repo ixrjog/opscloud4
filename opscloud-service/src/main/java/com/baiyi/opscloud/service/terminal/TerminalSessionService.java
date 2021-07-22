@@ -12,4 +12,6 @@ public interface TerminalSessionService {
     void add(TerminalSession terminalSession);
 
     void update(TerminalSession terminalSession);
+
+    TerminalSession getBySessionId(String sessionId);
 }

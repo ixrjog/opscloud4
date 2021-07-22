@@ -33,7 +33,7 @@ public class KubernetesTerminalLogoutProcess  extends AbstractKubernetesTerminal
     public void process(String message, Session session, TerminalSession terminalSession) {
         KubernetesLogoutMessage baseMessage = getMessage(message);
         recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
-        closeSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
+        simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId());  // 设置关闭会话
         KubernetesSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 

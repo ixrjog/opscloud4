@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +40,9 @@ public class BaseKubernetesCommand {
     private DsConfigFactory dsFactory;
 
     protected Terminal terminal;
+
+    @Resource
+    protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     @Autowired
     @Lazy
