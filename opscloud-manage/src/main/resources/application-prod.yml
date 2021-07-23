@@ -14,10 +14,11 @@ white:
     - /swagger-resources
     - /swagger-ui.html
     - /v2/api-docs
+    - /doc.html
     - /api/ws/guacamole/tunnel
     - /api/ws/terminal
     - /api/ws/kubernetes/terminal
-    - /doc.html
+    - /api/ws/terminal/session/audit
 
 
 spring:

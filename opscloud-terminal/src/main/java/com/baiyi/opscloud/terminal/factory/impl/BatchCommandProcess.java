@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.server.ServerBatchCommandMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -19,7 +18,7 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class BatchCommandProcess extends AbstractServerTerminalProcess<ServerBatchCommandMessage> implements ITerminalProcess {
+public class BatchCommandProcess extends AbstractServerTerminalProcess<ServerBatchCommandMessage> {
 
     /**
      * 设置批量命令

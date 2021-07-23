@@ -1,12 +1,8 @@
 package com.baiyi.opscloud.service.terminal.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.Env;
-import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
-import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
 import com.baiyi.opscloud.mapper.opscloud.TerminalSessionMapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -50,7 +46,7 @@ public class TerminalSessionServiceImpl implements TerminalSessionService {
         }
         if(!StringUtils.isEmpty(pageQuery.getSessionType()))
             criteria.andEqualTo("sessionType",pageQuery.getSessionType());
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("create_time desc");
         List<TerminalSession> data = sessionMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }

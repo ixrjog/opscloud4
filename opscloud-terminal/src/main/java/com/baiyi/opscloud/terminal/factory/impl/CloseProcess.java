@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
@@ -18,7 +17,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class CloseProcess extends AbstractServerTerminalProcess<BaseServerMessage> implements ITerminalProcess {
+public class CloseProcess extends AbstractServerTerminalProcess<BaseServerMessage> {
 
     /**
      * 关闭会话
@@ -38,7 +37,7 @@ public class CloseProcess extends AbstractServerTerminalProcess<BaseServerMessag
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
-               // recordAuditLog(terminalSession, instanceId); // 写审计日志
+                // recordAuditLog(terminalSession, instanceId); // 写审计日志
                 //  writeCommanderLog(jSchSession.getCommanderLog(),ocTerminalSession, instanceId); // 写命令日志
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
             } catch (Exception e) {

@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
-import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.server.ServerCommandMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
@@ -22,7 +21,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
-public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandMessage> implements ITerminalProcess {
+public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandMessage> {
 
     /**
      * 发送指令

@@ -15,7 +15,12 @@ public enum MessageState {
     RESIZE("RESIZE", "改变形体"),
     CLOSE("CLOSE", "关闭所有Term会话"),
     LOGOUT("LOGOUT", "关闭Term会话"),
-    BATCH_COMMAND("BATCH_COMMAND","批量命令");
+    BATCH_COMMAND("BATCH_COMMAND","批量命令"),
+
+    PLAY("PLAY","播放"),
+
+
+    ;
     private String state;
     private String desc;
 

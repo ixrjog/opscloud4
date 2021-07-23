@@ -48,7 +48,7 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
                 int read;
                 while ((read = br.read(buff)) != -1) {
                     write(buff, 0, read);
-                    auditing(buff);
+                    auditing(buff, 0, read);
                 }
             }
         } catch (Exception ex) {
@@ -64,8 +64,8 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
      *
      * @param buf
      */
-    private void auditing(char[] buf) {
-        AuditRecordHandler.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(),buf);
+    private void auditing(char[] buf, int off, int len) {
+        AuditRecordHandler.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
     }
 
 

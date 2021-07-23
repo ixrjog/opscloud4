@@ -28,6 +28,8 @@ public class TerminalSessionInstanceVO {
     @NoArgsConstructor
     @ApiModel
     public static class SessionInstance extends BaseVO {
+        @ApiModelProperty(value = "会话时长")
+        private Integer sessionDuration;
 
         private Integer id;
         private String sessionId;
@@ -46,6 +48,8 @@ public class TerminalSessionInstanceVO {
         @ApiModelProperty(value = "会话实例关闭时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
+
+
 
     }
 }

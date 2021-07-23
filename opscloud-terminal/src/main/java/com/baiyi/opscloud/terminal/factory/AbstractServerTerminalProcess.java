@@ -1,7 +1,5 @@
 package com.baiyi.opscloud.terminal.factory;
 
-import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.redis.TerminalKeyUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
@@ -27,9 +25,6 @@ public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage>
     protected TerminalSessionInstanceService terminalSessionInstanceService;
 
     @Resource
-    protected RedisUtil redisUtil;
-
-    @Resource
     protected HostSystemHandler hostSystemHandler;
 
     @Resource
@@ -42,17 +37,9 @@ public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage>
         return isBatch == null ? false : isBatch;
     }
 
-//    protected void recordAuditLog(TerminalSession terminalSession, String instanceId) {
-//        AuditRecordHandler.recordAuditLog(terminalSession.getSessionId(), instanceId);
-//    }
-
-
-//    protected void recordCommanderLog(StringBuffer commander, TerminalSession terminalSession, String instanceId) {
-//        AuditRecordHandler.recordCommanderLog(commander, terminalSession.getSessionId(), instanceId);
-//    }
 
     protected void heartbeat(String sessionId) {
-        redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
+       // redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
     }
 
     /**

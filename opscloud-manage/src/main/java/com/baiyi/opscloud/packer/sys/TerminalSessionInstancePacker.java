@@ -7,7 +7,9 @@ import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -22,6 +24,14 @@ public class TerminalSessionInstancePacker {
 
     public void wrapVO(TerminalSessionInstanceVO.ISessionInstances iSessionInstances) {
         List<TerminalSessionInstance> sessionInstances = terminalSessionInstanceService.queryBySessionId(iSessionInstances.getSessionId());
-        iSessionInstances.setSessionInstances(BeanCopierUtil.copyListProperties(sessionInstances, TerminalSessionInstanceVO.SessionInstance.class));
+        iSessionInstances.setSessionInstances(sessionInstances.stream().map(this::wrapVO).collect(Collectors.toList()));
+    }
+
+    public TerminalSessionInstanceVO.SessionInstance wrapVO(TerminalSessionInstance terminalSessionInstance) {
+        TerminalSessionInstanceVO.SessionInstance vo = BeanCopierUtil.copyProperties(terminalSessionInstance, TerminalSessionInstanceVO.SessionInstance.class);
+        // 会话时长
+        Date endTime = vo.getInstanceClosed() ? vo.getCloseTime() : new Date();
+        vo.setSessionDuration(Long.valueOf((endTime.getTime() - vo.getOpenTime().getTime()) / 1000).intValue());
+        return vo;
     }
 }
