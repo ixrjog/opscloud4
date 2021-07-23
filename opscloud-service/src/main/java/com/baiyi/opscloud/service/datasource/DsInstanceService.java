@@ -18,6 +18,8 @@ public interface DsInstanceService {
 
     List<DatasourceInstance> queryByParam(DsInstanceParam.DsInstanceQuery query);
 
+    List<DatasourceInstance> listByInstanceType(String instanceType);
+
     void add(DatasourceInstance datasourceInstance);
 
     void update(DatasourceInstance datasourceInstance);

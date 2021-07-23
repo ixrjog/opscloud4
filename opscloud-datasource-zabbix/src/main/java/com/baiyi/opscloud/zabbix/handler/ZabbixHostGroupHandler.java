@@ -3,10 +3,13 @@ package com.baiyi.opscloud.zabbix.handler;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -26,6 +29,7 @@ public class ZabbixHostGroupHandler {
 
     private interface Method {
         String QUERY_GROUP = "hostgroup.get";
+        String CREATE_GROUP = "hostgroup.create";
     }
 
     public List<ZabbixHostGroup> listGroups(DsZabbixConfig.Zabbix zabbix) {
@@ -56,4 +60,31 @@ public class ZabbixHostGroupHandler {
             throw new RuntimeException("ZabbixHostGroup不存在");
         return groups.get(0);
     }
+
+    public List<ZabbixHostGroup> listGroupByNames(DsZabbixConfig.Zabbix zabbix, List<String> names) {
+        ZabbixFilter filter = ZabbixFilterBuilder.builder()
+                .putEntry("name", names)
+                .build();
+        ZabbixRequest request = ZabbixRequestBuilder.builder()
+                .method(Method.QUERY_GROUP)
+                .filter(filter)
+                .build();
+        JsonNode data = zabbixHandler.call(zabbix, request);
+        return ZabbixMapper.mapperList(data.get("result"), ZabbixHostGroup.class);
+    }
+
+    public String createGroup(DsZabbixConfig.Zabbix zabbix, String name) {
+        List<ZabbixHostGroup> groups = listGroupByNames(zabbix, Lists.newArrayList(name));
+        if (!CollectionUtils.isEmpty(groups))
+            return groups.get(0).getGroupId();
+        ZabbixRequest request = ZabbixRequestBuilder.builder()
+                .method(Method.CREATE_GROUP)
+                .paramEntry("name", name)
+                .build();
+        JsonNode data = zabbixHandler.call(zabbix, request);
+        if (data.get("result").get("groupids").isEmpty())
+            throw new RuntimeException("ZabbixHost创建失败");
+        return ZabbixMapper.mapperList(data.get("result").get("groupids"), String.class).get(0);
+    }
+
 }

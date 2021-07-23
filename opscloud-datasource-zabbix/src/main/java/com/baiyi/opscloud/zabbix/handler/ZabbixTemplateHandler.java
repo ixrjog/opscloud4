@@ -4,6 +4,8 @@ import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
@@ -66,5 +68,17 @@ public class ZabbixTemplateHandler {
         if (CollectionUtils.isEmpty(templates))
             throw new RuntimeException("ZabbixTemplate不存在");
         return templates.get(0);
+    }
+
+    public List<ZabbixTemplate> listTemplateByNames(DsZabbixConfig.Zabbix zabbix, List<String> names) {
+        ZabbixFilter filter = ZabbixFilterBuilder.builder()
+                .putEntry("host", names)
+                .build();
+        ZabbixRequest request = ZabbixRequestBuilder.builder()
+                .method(Method.QUERY_TEMPLATE)
+                .filter(filter)
+                .build();
+        JsonNode data = zabbixHandler.call(zabbix, request);
+        return ZabbixMapper.mapperList(data.get("result"), ZabbixTemplate.class);
     }
 }

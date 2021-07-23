@@ -12,7 +12,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class    ZabbixHost {
+public class ZabbixHost {
 
     @JsonProperty("hostid")
     private String hostId;

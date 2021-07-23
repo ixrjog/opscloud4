@@ -172,6 +172,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
 
     @Override
     public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
-        return Collections.EMPTY_LIST;
+        return Collections.emptyList();
     }
 }

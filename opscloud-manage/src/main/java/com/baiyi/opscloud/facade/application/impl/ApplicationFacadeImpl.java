@@ -13,7 +13,7 @@ import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.packer.application.ApplicationPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;

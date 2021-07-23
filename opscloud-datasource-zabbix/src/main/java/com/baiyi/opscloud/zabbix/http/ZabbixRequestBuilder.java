@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.zabbix.http;
 
+import org.apache.commons.lang3.ObjectUtils;
+
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -33,6 +36,19 @@ public class ZabbixRequestBuilder {
 
     public ZabbixRequestBuilder paramEntry(String key, Object value) {
         request.putParam(key, value);
+        return this;
+    }
+
+    public ZabbixRequestBuilder paramEntry(Map<String, Object> map) {
+        map.forEach((k, v) -> {
+            if (ObjectUtils.isNotEmpty(v))
+                request.putParam(k, v);
+        });
+        return this;
+    }
+
+    public ZabbixRequestBuilder filter(ZabbixFilter zabbixFilter) {
+        request.putParam("filter", zabbixFilter.getFilter());
         return this;
     }
 

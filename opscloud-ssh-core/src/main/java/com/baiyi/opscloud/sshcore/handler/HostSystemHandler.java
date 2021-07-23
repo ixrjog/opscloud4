@@ -69,7 +69,7 @@ public class HostSystemHandler {
                     .build();
             UserPermission userPermission = userPermissionService.getByUserPermission(query);
             if (userPermission == null)
-                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILUER);
+                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
             isAdmin = "admin".equalsIgnoreCase(userPermission.getPermissionRole());
         }
         return isAdmin;
@@ -88,7 +88,7 @@ public class HostSystemHandler {
             if (serverAccount == null)
                 throw new SshRuntimeException(ErrorEnum.SSH_SERVER_ACCOUNT_NOT_EXIST);
             if (serverAccount.getAccountType() == LoginType.HIGH_AUTHORITY && !isAdmin)
-                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILUER);
+                throw new SshRuntimeException(ErrorEnum.SSH_SERVER_AUTHENTICATION_FAILURE);
             sshCredential = buildSshCredential(serverAccount);
         }
         if (sshCredential == null)

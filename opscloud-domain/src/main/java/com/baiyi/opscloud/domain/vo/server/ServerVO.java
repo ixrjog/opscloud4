@@ -107,6 +107,9 @@ public class ServerVO {
 
         @ApiModelProperty(value = "有效")
         private Boolean isActive;
+
+        @ApiModelProperty(value = "资产id")
+        private Integer assetId;
     }
 
     @Data

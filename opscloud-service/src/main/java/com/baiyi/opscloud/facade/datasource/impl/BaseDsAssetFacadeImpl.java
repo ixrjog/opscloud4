@@ -1,13 +1,11 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.domain.annotation.TagClear;
-import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.business.BusinessRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -38,6 +36,9 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
     @Resource
     private ApplicationResourceService applicationResourceService;
 
+    @Resource
+    private BusinessRelationService businessRelationService;
+
     @Override
     @TagClear(type = BusinessTypeEnum.ASSET)
     @Transactional(rollbackFor = {Exception.class})
@@ -46,6 +47,9 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
         List<DatasourceInstanceAssetRelation> relations = dsInstanceAssetRelationService.queryByAssetId(id);
         if (!CollectionUtils.isEmpty(relations))
             relations.forEach(relation -> dsInstanceAssetRelationService.deleteById(relation.getId()));
+        List<BusinessRelation> businessRelations = businessRelationService.listByBusiness(BusinessTypeEnum.ASSET.getType(), id);
+        if (!CollectionUtils.isEmpty(businessRelations))
+            businessRelations.forEach(relation -> businessRelationService.deleteById(relation.getId()));
         // 删除属性
         List<DatasourceInstanceAssetProperty> properties = dsInstanceAssetPropertyService.queryByAssetId(id);
         if (!CollectionUtils.isEmpty(properties))

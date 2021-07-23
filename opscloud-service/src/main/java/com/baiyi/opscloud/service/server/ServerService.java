@@ -21,7 +21,7 @@ public interface ServerService {
 
     void update(Server server);
 
-    void del(Integer id);
+    void delete(Integer id);
 
     DataTable<Server> queryServerPage(ServerParam.ServerPageQuery pageQuery);
 
