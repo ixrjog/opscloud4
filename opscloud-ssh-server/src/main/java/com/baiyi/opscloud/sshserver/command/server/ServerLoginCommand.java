@@ -101,7 +101,6 @@ public class ServerLoginCommand {
                     }
                     tryResize(size, terminal, sessionId, instanceId);
                     printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
-                    Thread.sleep(20L);
                 }
             } catch (Exception e) {
                 e.printStackTrace();
