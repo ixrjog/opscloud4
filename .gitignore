@@ -10,6 +10,10 @@ target/
 *.gz
 .DS_Store
 
+### Static
+static/
+static/index.html
+
 ### 含隐私
 application-dev.yml
 application.properties

@@ -86,9 +86,9 @@
             </properties>
         </profile>
         <profile>
-            <id>pre</id>
+            <id>demo</id>
             <properties>
-                <env>pre</env>
+                <env>demo</env>
             </properties>
         </profile>
         <profile>
