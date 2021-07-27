@@ -12,7 +12,7 @@ target/
 
 ### Static
 static/
-static/index.html
+
 
 ### 含隐私
 application-dev.yml

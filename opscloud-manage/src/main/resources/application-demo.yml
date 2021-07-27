@@ -6,7 +6,7 @@ logging:
     path: ${HOME}/log
 
 server:
-  port: 8081
+  port: 80
 
 # debug: true
 
@@ -77,3 +77,4 @@ jasypt:
   encryptor:
     algorithm: PBEWithMD5AndDES
     iv-generator-classname: 'org.jasypt.iv.NoIvGenerator'
+    password: 'DE1SxYrfDa6mzcIjpJNdqeS3vnjOYI9ppfLdmW40692LrWmcOV5MGx90aTTTFznvMO'
