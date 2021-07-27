@@ -27,6 +27,7 @@
         <module>opscloud-datasource-aliyun-ram</module>
         <module>opscloud-kubernetes-terminal</module>
         <module>opscloud-terminal-audit</module>
+        <module>opscloud-event</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
