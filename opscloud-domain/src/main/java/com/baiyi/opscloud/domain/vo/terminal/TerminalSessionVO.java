@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.terminal;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -24,9 +25,11 @@ public class TerminalSessionVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Session extends BaseVO implements TerminalSessionInstanceVO.ISessionInstances, Serializable {
+    public static class Session extends BaseVO implements TerminalSessionInstanceVO.ISessionInstances, UserVO.IUser, Serializable {
 
         private List<TerminalSessionInstanceVO.SessionInstance> sessionInstances;
+
+        private UserVO.User user;
 
         private Integer id;
         private String sessionId;

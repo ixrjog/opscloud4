@@ -13,7 +13,6 @@ target/
 ### Static
 static/
 
-
 ### 含隐私
 application-dev.yml
 application.properties
