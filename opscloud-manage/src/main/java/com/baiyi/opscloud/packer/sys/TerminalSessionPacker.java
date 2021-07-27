@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
+import com.baiyi.opscloud.packer.user.UserPacker;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,6 +20,9 @@ import java.util.stream.Collectors;
 public class TerminalSessionPacker {
 
     @Resource
+    private UserPacker userPacker;
+
+    @Resource
     private TerminalSessionInstancePacker sessionInstancePacker;
 
     public List<TerminalSessionVO.Session> wrapVOList(List<TerminalSession> data, IExtend iExtend) {
@@ -30,6 +34,7 @@ public class TerminalSessionPacker {
     public TerminalSessionVO.Session wrapVO(TerminalSession terminalSession, IExtend iExtend) {
         TerminalSessionVO.Session session = BeanCopierUtil.copyProperties(terminalSession, TerminalSessionVO.Session.class);
         if (iExtend.getExtend()) {
+            userPacker.wrap(session);
             sessionInstancePacker.wrapVO(session);
         }
         return session;

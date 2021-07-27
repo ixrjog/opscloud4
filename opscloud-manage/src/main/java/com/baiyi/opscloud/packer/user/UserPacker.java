@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
+import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.util.ExtendUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -32,6 +33,9 @@ public class UserPacker {
 
     @Resource
     private DesensitizedPacker<UserVO.User> desensitizedPacker;
+
+    @Resource
+    private UserService userService;
 
 
     public List<UserVO.User> wrapVOList(List<User> data) {
@@ -59,6 +63,8 @@ public class UserPacker {
         return pre;
     }
 
+
+
     public UserVO.User wrap(User user) {
         return wrap(BeanCopierUtil.copyProperties(user, UserVO.User.class));
     }
@@ -69,4 +75,9 @@ public class UserPacker {
         return desensitizedPacker.desensitized(user);
     }
 
+    public void wrap(UserVO.IUser iUser) {
+        User user = userService.getByUsername(iUser.getUsername());
+        if(user != null)
+            iUser.setUser(wrap(user));
+    }
 }
