@@ -6,12 +6,16 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
+import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.sshcore.model.*;
+import com.baiyi.opscloud.sshcore.model.HostSystem;
+import com.baiyi.opscloud.sshcore.model.JSchSession;
+import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
+import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
@@ -46,6 +50,9 @@ import java.util.Map;
 public class ServerLoginCommand {
 
     @Resource
+    private AuditServerCommandHandler auditCommandHandler;
+
+    @Resource
     private SshShellHelper helper;
 
     @Resource
@@ -70,7 +77,6 @@ public class ServerLoginCommand {
     public void login(@ShellOption(help = "Server Id") int id, @ShellOption(help = "Account Name", defaultValue = "") String account) {
         ServerSession serverSession = helper.getSshSession();
 
-
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
 
@@ -88,7 +94,7 @@ public class ServerLoginCommand {
                     terminalSessionInstance
             );
 
-            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem,sshContext.getSshShellRunnable().getOs());
+            RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
@@ -111,6 +117,7 @@ public class ServerLoginCommand {
         } catch (SshRuntimeException e) {
             throw e;
         }
+        auditCommandHandler.recordCommand(sessionId, instanceId);
         JSchSessionContainer.closeSession(sessionId, instanceId);
     }
 
@@ -156,6 +163,7 @@ public class ServerLoginCommand {
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
         jSchSession.getCommander().print((char) ch);
+        //  AuditRecordHandler.recordCommanderLog(sessionId, instanceId, ch);
     }
 
 }

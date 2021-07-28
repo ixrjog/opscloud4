@@ -37,9 +37,8 @@ public class CloseProcess extends AbstractServerTerminalProcess<BaseServerMessag
             try {
                 JSchSession jSchSession = sessionMap.get(instanceId);
                 jSchSession.getChannel().disconnect();
-                // recordAuditLog(terminalSession, instanceId); // 写审计日志
-                //  writeCommanderLog(jSchSession.getCommanderLog(),ocTerminalSession, instanceId); // 写命令日志
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId); // 设置关闭会话
+                auditCommandHandler.recordCommand(terminalSession.getSessionId(),instanceId);
             } catch (Exception e) {
                 e.printStackTrace();
             }

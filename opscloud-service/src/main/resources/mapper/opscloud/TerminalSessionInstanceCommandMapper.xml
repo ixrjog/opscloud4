@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.TerminalSessionInstanceCommandMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="terminal_session_instance_id" jdbcType="INTEGER" property="terminalSessionInstanceId" />
+    <result column="prompt" jdbcType="VARCHAR" property="prompt" />
+    <result column="is_formatted" jdbcType="BIT" property="isFormatted" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="input" jdbcType="LONGVARCHAR" property="input" />
+    <result column="input_formatted" jdbcType="LONGVARCHAR" property="inputFormatted" />
+    <result column="output" jdbcType="LONGVARCHAR" property="output" />
+  </resultMap>
+</mapper>

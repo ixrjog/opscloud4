@@ -21,6 +21,8 @@ public class TerminalConfig {
     public interface Suffix {
         String AUDIT_LOG = ".log";
         String COMMAND_LOG = "_commander.log";
+        String FMT_COMMAND_LOG = "_commander_fmt.log";   // formatted
+
     }
 
     public String buildAuditLogPath(String sessionId, String instanceId) {
@@ -29,5 +31,9 @@ public class TerminalConfig {
 
     public String buildCommanderLogPath(String sessionId, String instanceId) {
         return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.COMMAND_LOG);
+    }
+
+    public String buildFmtCommanderLogPath(String sessionId, String instanceId) {
+        return Joiner.on("/").join(auditPath, sessionId, instanceId + Suffix.FMT_COMMAND_LOG);
     }
 }

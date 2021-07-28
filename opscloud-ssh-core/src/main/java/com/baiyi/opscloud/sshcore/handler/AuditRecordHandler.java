@@ -42,19 +42,9 @@ public class AuditRecordHandler {
         return terminalConfig.buildAuditLogPath(sessionId, instanceId);
     }
 
-//    private static void recordAuditLog(String sessionId, String instanceId) {
-//        String cacheKey = TerminalKeyUtil.buildAuditLogKey(sessionId, instanceId);
-//        try {
-//            if (redisUtil.hasKey(cacheKey)) {
-//                // 追加内容
-//                String log = (String) redisUtil.get(cacheKey);
-//                IOUtil.appendFile(log, terminalConfig.buildAuditLogPath(sessionId, instanceId));
-//                redisUtil.del(cacheKey); // 清空缓存
-//            }
-//        } catch (Exception e) {
-//            log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
-//        }
-//    }
+
+
+
 
     /**
      * 用户命令操作审计日志，暂不使用
@@ -66,7 +56,7 @@ public class AuditRecordHandler {
     public static void recordCommanderLog(StringBuffer commander, String sessionId, String instanceId) {
         try {
             String log = new String(commander);
-            log.replaceAll("(\n|\r\n)\\s+", "");
+            log = log.replaceAll("(\n|\r\n)\\s+", "");
             while (log.contains("\b")) {
                 log = log.replaceFirst(".\b", ""); // 退格处理
             }

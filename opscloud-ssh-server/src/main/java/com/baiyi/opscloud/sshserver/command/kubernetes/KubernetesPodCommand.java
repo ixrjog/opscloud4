@@ -6,6 +6,7 @@ import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.sshcore.audit.AuditPodCommandHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
@@ -42,6 +43,7 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -56,6 +58,9 @@ import java.util.stream.Collectors;
 @SshShellComponent
 @ShellCommandGroup("Kubernetes")
 public class KubernetesPodCommand extends BaseKubernetesCommand {
+
+    @Resource
+    private AuditPodCommandHandler auditPodCommandHandler;
 
     // ^C
     private static final int QUIT = 3;
@@ -230,6 +235,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
             e.printStackTrace();
         } finally {
             simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
+            auditPodCommandHandler.recordCommand(sessionId, instanceId);
             execWatch.close();
             // pump.close();
             helper.print("\n用户退出容器！", PromptColor.GREEN);

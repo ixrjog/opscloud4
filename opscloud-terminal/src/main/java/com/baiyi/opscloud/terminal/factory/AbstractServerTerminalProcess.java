@@ -2,6 +2,7 @@ package com.baiyi.opscloud.terminal.factory;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
+import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
@@ -20,6 +21,9 @@ import javax.annotation.Resource;
  */
 @Slf4j
 public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage> implements ITerminalProcess, InitializingBean {
+
+    @Resource
+    protected AuditServerCommandHandler auditCommandHandler;
 
     @Resource
     protected TerminalSessionInstanceService terminalSessionInstanceService;
