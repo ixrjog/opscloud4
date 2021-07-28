@@ -16,6 +16,7 @@ import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -45,7 +46,7 @@ public class HttpUtil {
 
     private static void settingRequest(HttpRequestBase httpRequestBase, Authentication authentication) {
         httpRequestBase.setConfig(buildRequestConfig());
-        httpRequestBase.setHeader("Content-Type", "application/json;charset=utf-8");
+        httpRequestBase.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         if (!authentication.getIsFree())
             httpRequestBase.setHeader(authentication.getHeader(), authentication.getToken());
     }

@@ -38,6 +38,11 @@ import java.util.Map;
 @Component
 public class ZabbixHostServerProvider extends BaseServer {
 
+    private interface Action {
+        Boolean CRETE = true;
+        Boolean UPDATE = false;
+    }
+
     @Resource
     private ZabbixHostHandler zabbixHostHandler;
 
@@ -72,8 +77,30 @@ public class ZabbixHostServerProvider extends BaseServer {
 
     @Override
     public DatasourceInstanceAsset create(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties) {
-        Map<String, Object> createParamMap = buildCreateParamMap(dsInstanceContext, server, serverProperties);
+        Map<String, Object> createParamMap = buildParamMap(dsInstanceContext, server, serverProperties, Action.CRETE);
         String hostId = zabbixHostHandler.createHost(buildConfig(dsInstanceContext), server, createParamMap);
+        return pullAsset(dsInstanceContext, hostId);
+    }
+
+    @Override
+    public DatasourceInstanceAsset update(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties) {
+        Map<String, Object> createParamMap = buildParamMap(dsInstanceContext, server, serverProperties, Action.UPDATE);
+        DatasourceInstanceAsset asset = getBindAsset(server.getId());
+        String hostId;
+        if (asset != null) {
+            hostId = zabbixHostHandler.updateHost(buildConfig(dsInstanceContext), server, asset.getAssetId(), createParamMap);
+        } else {
+            hostId = zabbixHostHandler.createHost(buildConfig(dsInstanceContext), server, createParamMap);
+        }
+        return pullAsset(dsInstanceContext, hostId);
+    }
+
+    @Override
+    protected void destroy(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+        zabbixHostHandler.deleteHostById(buildConfig(dsInstanceContext), asset.getAssetId());
+    }
+
+    private DatasourceInstanceAsset pullAsset(DsInstanceContext dsInstanceContext, String hostId) {
         List<SimpleAssetProvider> providers = getSimpleAssetProviderList();
         Iterator<SimpleAssetProvider> iterator = providers.iterator();
         UniqueAssetParam param = UniqueAssetParam.builder()
@@ -87,23 +114,15 @@ public class ZabbixHostServerProvider extends BaseServer {
     }
 
     @Override
-    public DatasourceInstanceAsset update(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties) {
-        return null;
-    }
-
-    @Override
-    public void destroy(DsInstanceContext dsInstanceContext, Server server) {
-
-    }
-
-    @Override
     public void afterPropertiesSet() throws Exception {
         ServerFactory.register(zabbixHostServerProvider);
     }
 
-    private Map<String, Object> buildCreateParamMap(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties) {
+    private Map<String, Object> buildParamMap(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties, Boolean action) {
         Map<String, Object> paramMap = new HashMap<>();
-        paramMap.put("interfaces", buildCreateInterfaceParam(server));
+        if (action) {
+            paramMap.put("interfaces", buildCreateInterfaceParam(server));
+        }
         paramMap.put("groups", buildCreateGroupParam(dsInstanceContext, server));
         paramMap.put("tags", buildCreateTagParam(server));
         paramMap.put("templates", buildCreateTemplateParam(dsInstanceContext, serverProperties.get(BusinessPropertyConstants.Zabbix.TEMPLATES)));

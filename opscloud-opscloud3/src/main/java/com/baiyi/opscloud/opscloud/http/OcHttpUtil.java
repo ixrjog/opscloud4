@@ -17,6 +17,7 @@ import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -61,7 +62,7 @@ public class OcHttpUtil {
 
     private static void invokeRequest(HttpRequestBase httpRequestBase) {
         httpRequestBase.setConfig(buildRequestConfig());
-        httpRequestBase.setHeader("Content-Type", "application/json;charset=utf-8");
+        httpRequestBase.setHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE);
         httpRequestBase.setHeader(X_TOKEN, ocConfig.getApiToken());
     }
 

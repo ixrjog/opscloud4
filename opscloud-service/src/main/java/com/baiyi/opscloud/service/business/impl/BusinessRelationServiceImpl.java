@@ -82,4 +82,15 @@ public class BusinessRelationServiceImpl implements BusinessRelationService {
                 .andEqualTo("targetBusinessId", businessRelation.getTargetBusinessId());
         return businessRelationMapper.selectOneByExample(example);
     }
+
+    @Override
+    public BusinessRelation getBusinessRelation(Integer sourceBusinessType, Integer sourceBusinessId, Integer targetBusinessType, String relationType) {
+        Example example = new Example(BusinessRelation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("sourceBusinessType", sourceBusinessType)
+                .andEqualTo("sourceBusinessId", sourceBusinessId)
+                .andEqualTo("targetBusinessType", targetBusinessType)
+                .andEqualTo("relationType", relationType);
+        return businessRelationMapper.selectOneByExample(example);
+    }
 }

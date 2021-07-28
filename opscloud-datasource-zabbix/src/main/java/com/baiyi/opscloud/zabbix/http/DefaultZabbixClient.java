@@ -20,10 +20,13 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.impl.conn.PoolingHttpClientConnectionManager;
 import org.apache.http.util.EntityUtils;
 import org.apache.logging.log4j.util.Strings;
+import org.springframework.http.MediaType;
 
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.RESULT;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -71,6 +74,7 @@ public class DefaultZabbixClient implements IZabbixClient {
                 .build();
     }
 
+    @Override
     public void destroy() {
         if (httpClient != null) {
             try {
@@ -83,11 +87,12 @@ public class DefaultZabbixClient implements IZabbixClient {
 
     @Override
     public JsonNode call(ZabbixRequest request) {
-        if (Strings.isBlank(request.getAuth()))
+        if (Strings.isBlank(request.getAuth())) {
             request.setAuth(this.auth);
+        }
         try {
             HttpUriRequest httpRequest = RequestBuilder.post().setUri(uri)
-                    .addHeader("Content-Type", "application/json")
+                    .addHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
                     .setEntity(new StringEntity(JSON.toJSONString(request), ContentType.APPLICATION_JSON))
                     .build();
             CloseableHttpResponse response = httpClient.execute(httpRequest);
@@ -107,14 +112,14 @@ public class DefaultZabbixClient implements IZabbixClient {
     @Override
     public ZabbixUser login() {
         this.auth = null;
-        ZabbixRequest request = ZabbixRequestBuilder.builder()
+        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
                 .paramEntry("user", zabbix.getUser())
                 .paramEntry("password", zabbix.getPassword())
                 .paramEntry("userData", true)
                 .method("user.login")
                 .build();
         JsonNode response = call(request);
-        ZabbixUser user = ZabbixMapper.mapper(response.get("result"), ZabbixUser.class);
+        ZabbixUser user = ZabbixMapper.mapper(response.get(RESULT), ZabbixUser.class);
         this.auth = user.getSessionId();
         return user;
     }

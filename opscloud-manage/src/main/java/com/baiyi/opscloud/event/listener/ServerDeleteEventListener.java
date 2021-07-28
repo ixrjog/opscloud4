@@ -5,7 +5,6 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.param.ServerEventParam;
 import com.baiyi.opscloud.facade.business.BusinessFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
-import com.baiyi.opscloud.service.business.BusinessRelationService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.google.common.eventbus.Subscribe;
 import lombok.extern.slf4j.Slf4j;
@@ -28,9 +27,6 @@ public class ServerDeleteEventListener {
 
     @Resource
     private ServerService serverService;
-
-    @Resource
-    private BusinessRelationService businessRelationService;
 
     @Resource
     private BusinessFacade businessFacade;

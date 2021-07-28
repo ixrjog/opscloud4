@@ -30,9 +30,9 @@ public class ServerProviderManager {
     }
 
     @Async(value = Global.TaskPools.EXECUTOR)
-    public void destroy(Server server) {
+    public void destroy(Integer id) {
         Map<String, IServer> serverProviders = ServerFactory.getIServerContainer();
-        serverProviders.forEach((k, v) -> v.destroy(server));
+        serverProviders.forEach((k, v) -> v.destroy(id));
     }
 
 }

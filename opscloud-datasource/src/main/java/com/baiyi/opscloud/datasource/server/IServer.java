@@ -29,9 +29,9 @@ public interface IServer extends IAssetType {
     /**
      * 销毁
      *
-     * @param server
+     * @param id
      */
-    void destroy(Server server);
+    void destroy(Integer id);
 
 
 }

@@ -87,6 +87,8 @@ public class ServerFacadeImpl implements ServerFacade {
                 .server(pre).build();
         serverEventHandler.updateHandle(update);
         serverService.update(pre);
+        serverProviderManager.update(pre);
+
     }
 
     private Server toDO(ServerVO.Server server) {
@@ -103,6 +105,7 @@ public class ServerFacadeImpl implements ServerFacade {
     public void deleteServerById(Integer id) {
         ServerEventParam.delete delete = ServerEventParam.delete.builder()
                 .id(id).build();
+        serverProviderManager.destroy(id);
         serverEventHandler.deleteHandle(delete);
         serverService.delete(id);
     }

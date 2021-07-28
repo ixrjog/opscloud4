@@ -6,8 +6,8 @@ import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequest;
+import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
@@ -15,6 +15,8 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+
+import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -33,38 +35,38 @@ public class ZabbixTemplateHandler {
     }
 
     public List<ZabbixTemplate> listTemplates(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixRequest request = ZabbixRequestBuilder.builder()
+        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_TEMPLATE)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get("result"), ZabbixTemplate.class);
+        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
     public List<ZabbixTemplate> listTemplatesByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixRequest request = ZabbixRequestBuilder.builder()
+        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_TEMPLATE)
-                .paramEntry("hostids", host.getHostId())
+                .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get("result"), ZabbixTemplate.class);
+        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
     public List<ZabbixTemplate> listTemplatesByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
-        ZabbixRequest request = ZabbixRequestBuilder.builder()
+        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_TEMPLATE)
-                .paramEntry("groupids", group.getGroupId())
+                .paramEntry(HOST_GROUP_IDS, group.getGroupId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get("result"), ZabbixTemplate.class);
+        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
     public ZabbixTemplate getTemplateById(DsZabbixConfig.Zabbix zabbix, String templateId) {
-        ZabbixRequest request = ZabbixRequestBuilder.builder()
+        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_TEMPLATE)
-                .paramEntry("templateids", templateId)
+                .paramEntry(TEMPLATE_IDS, templateId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
-        List<ZabbixTemplate> templates = ZabbixMapper.mapperList(data.get("result"), ZabbixTemplate.class);
+        List<ZabbixTemplate> templates = ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
         if (CollectionUtils.isEmpty(templates))
             throw new RuntimeException("ZabbixTemplate不存在");
         return templates.get(0);
@@ -74,11 +76,11 @@ public class ZabbixTemplateHandler {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", names)
                 .build();
-        ZabbixRequest request = ZabbixRequestBuilder.builder()
+        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_TEMPLATE)
                 .filter(filter)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get("result"), ZabbixTemplate.class);
+        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 }

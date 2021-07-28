@@ -39,15 +39,17 @@ public class BusinessFacadeImpl implements BusinessFacade {
 
     @Override
     public void saveBusinessRelation(BusinessRelation businessRelation) {
-        if (businessRelationService.getByUnique(businessRelation) == null)
+        if (businessRelationService.getByUnique(businessRelation) == null) {
             businessRelationService.add(businessRelation);
+        }
     }
 
     @Override
     public void deleteBusinessRelation(Integer businessType, Integer businessId) {
         List<BusinessRelation> businessRelations = businessRelationService.listByBusiness(businessType, businessId);
-        if (!CollectionUtils.isEmpty(businessRelations))
+        if (!CollectionUtils.isEmpty(businessRelations)) {
             businessRelations.forEach(relation -> businessRelationService.deleteById(relation.getId()));
+        }
     }
 
     @Override
@@ -55,5 +57,8 @@ public class BusinessFacadeImpl implements BusinessFacade {
         return getBusinessProperty(BusinessTypeEnum.SERVERGROUP.getType(), 0);
     }
 
-
+    @Override
+    public BusinessRelation getBusinessRelation(Integer sourceBusinessType, Integer sourceBusinessId, Integer targetBusinessType, String relationType) {
+        return businessRelationService.getBusinessRelation(sourceBusinessType, sourceBusinessId,targetBusinessType, relationType);
+    }
 }

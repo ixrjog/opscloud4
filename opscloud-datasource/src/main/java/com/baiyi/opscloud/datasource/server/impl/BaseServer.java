@@ -13,6 +13,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.business.BusinessFacade;
+import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.tag.BaseTagService;
 import org.apache.commons.lang3.StringUtils;
@@ -46,6 +48,13 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
     @Resource
     protected DsConfigFactory dsFactory;
 
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
+
+    @Resource
+    private BaseDsAssetFacade baseDsAssetFacade;
+
+    @Override
     public void create(Server server) {
         Map<String, String> serverProperties = getServerProperties(server);
         create(server, serverProperties);
@@ -59,8 +68,17 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
         });
     }
 
+    /**
+     * 创建资产
+     *
+     * @param dsInstanceContext
+     * @param server
+     * @param serverProperties
+     * @return
+     */
     protected abstract DatasourceInstanceAsset create(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties);
 
+    @Override
     public void update(Server server) {
         Map<String, String> serverProperties = getServerProperties(server);
         update(server, serverProperties);
@@ -68,17 +86,43 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
 
     public void update(Server server, Map<String, String> serverProperties) {
         List<DatasourceInstance> instanceList = filterDsInstanceByBusinessTag();
-        instanceList.forEach(instance -> update(buildDsInstanceContext(instance.getId()), server, serverProperties));
+        instanceList.forEach(instance -> {
+            DatasourceInstanceAsset asset = update(buildDsInstanceContext(instance.getId()), server, serverProperties);
+            buildBusinessRelation(server, asset);
+        });
     }
 
+    /**
+     * 更新资产
+     *
+     * @param dsInstanceContext
+     * @param server
+     * @param serverProperties
+     * @return
+     */
     protected abstract DatasourceInstanceAsset update(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties);
 
-    public void destroy(Server server) {
+    @Override
+    public void destroy(Integer id) {
         List<DatasourceInstance> instanceList = filterDsInstanceByBusinessTag();
-        instanceList.forEach(instance -> destroy(buildDsInstanceContext(instance.getId()), server));
+        instanceList.forEach(instance -> destroy(buildDsInstanceContext(instance.getId()), id));
     }
 
-    protected abstract void destroy(DsInstanceContext dsInstanceContext, Server server);
+    private void destroy(DsInstanceContext dsInstanceContext, Integer id) {
+        DatasourceInstanceAsset asset = getBindAsset(id);
+        if (asset != null) {
+            destroy(dsInstanceContext, asset);
+            baseDsAssetFacade.deleteAssetById(asset.getId());
+        }
+    }
+
+    /**
+     * 销毁资产
+     *
+     * @param dsInstanceContext
+     * @param asset
+     */
+    protected abstract void destroy(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset);
 
     protected void buildBusinessRelation(Server server, DatasourceInstanceAsset asset) {
         BusinessRelation businessRelation = BusinessRelation.builder()
@@ -96,8 +140,9 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
     }
 
     public List<SimpleAssetProvider> getSimpleAssetProviderList() {
-        if (CollectionUtils.isEmpty(simpleAssetProviderList))
+        if (CollectionUtils.isEmpty(simpleAssetProviderList)) {
             setSimpleAssetProviderList();
+        }
         return simpleAssetProviderList;
     }
 
@@ -107,11 +152,12 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
 
     private List<DatasourceInstance> filterDsInstanceByBusinessTag() {
         List<DatasourceInstance> instanceList = dsInstanceService.listByInstanceType(getInstanceType());
-        if (StringUtils.isNotBlank(getFilterDsInstanceTagKey()))
+        if (StringUtils.isNotBlank(getFilterDsInstanceTagKey())) {
             return instanceList.stream()
                     .filter(instance ->
                             baseTagService.hasBusinessTag(getFilterDsInstanceTagKey(), BusinessTypeEnum.DATASOURCE_INSTANCE.getType(), instance.getId(), true)
                     ).collect(Collectors.toList());
+        }
         return instanceList;
     }
 
@@ -127,6 +173,17 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
         Map<String, String> serverProperties = businessFacade.getBusinessProperty(BusinessTypeEnum.SERVER.getType(), server.getServerGroupId());
         map.putAll(serverProperties);
         return map;
+    }
+
+    protected DatasourceInstanceAsset getBindAsset(Integer id) {
+        BusinessRelation relation = businessFacade.getBusinessRelation(BusinessTypeEnum.SERVER.getType(), id, BusinessTypeEnum.ASSET.getType(), getAssetType());
+        if (relation != null) {
+            DatasourceInstanceAsset asset = dsInstanceAssetService.getById(relation.getTargetBusinessId());
+            if (asset != null) {
+                return asset;
+            }
+        }
+        return null;
     }
 
 }

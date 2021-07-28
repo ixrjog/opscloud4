@@ -26,4 +26,6 @@ public interface BusinessRelationService {
     List<BusinessRelation> listByTargetBusiness(Integer businessType, Integer businessId);
 
     BusinessRelation getByUnique(BusinessRelation businessRelation);
+
+    BusinessRelation getBusinessRelation(Integer sourceBusinessType, Integer sourceBusinessId, Integer targetBusinessType, String relationType);
 }

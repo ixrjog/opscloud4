@@ -19,5 +19,6 @@ public interface BusinessFacade {
 
     Map<String, String> getDefaultServerGroupProperty();
 
+    BusinessRelation getBusinessRelation(Integer sourceBusinessType, Integer sourceBusinessId,Integer targetBusinessType, String relationType);
 
 }

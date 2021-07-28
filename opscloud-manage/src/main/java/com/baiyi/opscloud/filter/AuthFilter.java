@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.filter;
 
-import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.config.WhiteConfig;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -31,24 +32,13 @@ public class AuthFilter extends OncePerRequestFilter {
 
     // public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
-    // 改成配置文件
-    private static final String[] AUTH_WHITELIST = {
-            // -- swagger ui
-            "/swagger-resources",
-            "/swagger-ui.html",
-            "/v2/api-docs",
-            "/webjars",
-            "/ws/guacamole/tunnel", // RDP,VNC协议转换通道
-            "/ws/terminal" // WebTerminal
-    };
-
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        response.setContentType("application/json;charset=UTF-8");
-        if (!request.getMethod().equalsIgnoreCase("options")) {
+        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        if (!"options".equalsIgnoreCase(request.getMethod())) {
             String resourceName = request.getServletPath();
             // 单页不拦截页面,只拦截协议请求
-            if (resourceName.equalsIgnoreCase("/dashboard")) {
+            if ("/dashboard".equalsIgnoreCase(resourceName)) {
                 filterChain.doFilter(request, response);
                 return;
             }
@@ -103,6 +93,7 @@ public class AuthFilter extends OncePerRequestFilter {
         response.addHeader("Access-Control-Allow-Credentials", "true");
         response.addHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
         response.addHeader("Access-Control-Allow-Headers", "*");
-        response.addHeader("Access-Control-Max-Age", "1800");//30 min
+        //30 min
+        response.addHeader("Access-Control-Max-Age", "1800");
     }
 }

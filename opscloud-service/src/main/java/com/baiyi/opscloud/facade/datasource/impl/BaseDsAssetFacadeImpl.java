@@ -45,23 +45,28 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
     public void deleteAssetById(Integer id) {
         // 删除关系
         List<DatasourceInstanceAssetRelation> relations = dsInstanceAssetRelationService.queryByAssetId(id);
-        if (!CollectionUtils.isEmpty(relations))
+        if (!CollectionUtils.isEmpty(relations)) {
             relations.forEach(relation -> dsInstanceAssetRelationService.deleteById(relation.getId()));
+        }
         List<BusinessRelation> businessRelations = businessRelationService.listByBusiness(BusinessTypeEnum.ASSET.getType(), id);
-        if (!CollectionUtils.isEmpty(businessRelations))
+        if (!CollectionUtils.isEmpty(businessRelations)) {
             businessRelations.forEach(relation -> businessRelationService.deleteById(relation.getId()));
+        }
         // 删除属性
         List<DatasourceInstanceAssetProperty> properties = dsInstanceAssetPropertyService.queryByAssetId(id);
-        if (!CollectionUtils.isEmpty(properties))
+        if (!CollectionUtils.isEmpty(properties)) {
             properties.forEach(property -> dsInstanceAssetPropertyService.deleteById(property.getId()));
+        }
         // 删除应用绑定关系
         List<ApplicationResource> resourceList = applicationResourceService.listByBusiness(BusinessTypeEnum.ASSET.getType(), id);
-        if (!CollectionUtils.isEmpty(resourceList))
+        if (!CollectionUtils.isEmpty(resourceList)) {
             resourceList.forEach(resource -> applicationResourceService.delete(resource.getId()));
+        }
         // 删除children
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
-        if (!CollectionUtils.isEmpty(relations))
+        if (!CollectionUtils.isEmpty(relations)) {
             assetList.parallelStream().forEach(x -> deleteAssetById(x.getId()));
+        }
         // 删除自己
         dsInstanceAssetService.deleteById(id);
     }
