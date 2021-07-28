@@ -22,5 +22,7 @@ public class PodContext {
 
     private String podName;
 
+    private String podIp;
+
     private Set<String> containerNames;
 }

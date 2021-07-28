@@ -26,6 +26,8 @@
         <module>opscloud-datasource-jenkins</module>
         <module>opscloud-datasource-aliyun-ram</module>
         <module>opscloud-kubernetes-terminal</module>
+        <module>opscloud-terminal-audit</module>
+        <module>opscloud-event</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -293,6 +295,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-kubernetes-terminal</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-terminal-audit</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

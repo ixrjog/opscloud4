@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.sshcore.handler;
 
-import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.redis.TerminalKeyUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.sshcore.config.TerminalConfig;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 
 /**
  * @Author baiyi
@@ -17,36 +16,49 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuditRecordHandler {
 
-    private static RedisUtil redisUtil;
+    // private static RedisUtil redisUtil;
 
     private static TerminalConfig terminalConfig;
 
-    @Autowired
-    private void setRedisUtil(RedisUtil redisUtil) {
-        AuditRecordHandler.redisUtil = redisUtil;
-    }
+//    @Autowired
+//    private void setRedisUtil(RedisUtil redisUtil) {
+//        AuditRecordHandler.redisUtil = redisUtil;
+//    }
 
     @Autowired
-    private void setXTerminalConfig(TerminalConfig terminalConfig) {
+    private void setTerminalConfig(TerminalConfig terminalConfig) {
         AuditRecordHandler.terminalConfig = terminalConfig;
     }
 
-    public static void recordAuditLog(String sessionId, String instanceId) {
-        String cacheKey = TerminalKeyUtil.buildAuditLogKey(sessionId, instanceId);
+    public static void recordAuditLog(String sessionId, String instanceId, char[] buf, int off, int len) {
         try {
-            if (redisUtil.hasKey(cacheKey)) {
-                // 追加内容
-                String log = (String) redisUtil.get(cacheKey);
-                IOUtil.appendFile(log, terminalConfig.buildAuditLogPath(sessionId, instanceId));
-                redisUtil.del(cacheKey); // 清空缓存
-            }
+            IOUtil.appendFile(new String(buf).substring(off, len), terminalConfig.buildAuditLogPath(sessionId, instanceId));
         } catch (Exception e) {
             log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
         }
     }
 
+    public static String getAuditLogPath(String sessionId, String instanceId) {
+        return terminalConfig.buildAuditLogPath(sessionId, instanceId);
+    }
+
+//    private static void recordAuditLog(String sessionId, String instanceId) {
+//        String cacheKey = TerminalKeyUtil.buildAuditLogKey(sessionId, instanceId);
+//        try {
+//            if (redisUtil.hasKey(cacheKey)) {
+//                // 追加内容
+//                String log = (String) redisUtil.get(cacheKey);
+//                IOUtil.appendFile(log, terminalConfig.buildAuditLogPath(sessionId, instanceId));
+//                redisUtil.del(cacheKey); // 清空缓存
+//            }
+//        } catch (Exception e) {
+//            log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
+//        }
+//    }
+
     /**
      * 用户命令操作审计日志，暂不使用
+     *
      * @param commander
      * @param sessionId
      * @param instanceId

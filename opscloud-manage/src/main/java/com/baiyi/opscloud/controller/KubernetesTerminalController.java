@@ -60,13 +60,13 @@ public class KubernetesTerminalController extends SimpleAuthentication {
      */
     @OnOpen
     public void onOpen(Session session) {
-        log.info("终端会话尝试链接，sessionId = {}", sessionId);
+        log.info("Kubernetes终端会话尝试链接，sessionId = {}", sessionId);
         TerminalSession terminalSession = TerminalSessionBuilder.build(sessionId, serverInfo, SessionTypeEnum.KUBERNETES_TERMINAL);
         this.terminalSession = terminalSession;
         terminalSessionService.add(terminalSession);
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("有连接加入，当前连接数为：{}", cnt);
+        log.info("Kubernetes终端会话有连接加入，当前连接数为：{}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
         // 线程启动

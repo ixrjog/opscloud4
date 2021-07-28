@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.baiyi.opscloud.sshserver;
+package com.baiyi.opscloud.sshcore.model;
 
 import lombok.Data;
 import org.apache.sshd.server.ExitCallback;

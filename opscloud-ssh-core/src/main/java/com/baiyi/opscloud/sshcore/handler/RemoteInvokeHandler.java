@@ -19,7 +19,6 @@ import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
 import org.jline.terminal.Size;
-import org.jline.terminal.Terminal;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
@@ -37,9 +36,9 @@ public class RemoteInvokeHandler {
 
     private static String appId = UUID.randomUUID().toString();
 
-    private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
-    public static final int SESSION_TIMEOUT = 60000;
-    public static final int CHANNEL_TIMEOUT = 60000;
+//    private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
+//    public static final int SESSION_TIMEOUT = 60000;
+//    public static final int CHANNEL_TIMEOUT = 60000;
 
     /**
      * 按类型注入凭据
@@ -131,7 +130,7 @@ public class RemoteInvokeHandler {
      * @param sessionId
      * @param hostSystem
      */
-    public static void openSSHServer(String sessionId, HostSystem hostSystem, Terminal terminal) {
+    public static void openSSHServer(String sessionId, HostSystem hostSystem,OutputStream out) {
         JSch jsch = new JSch();
         hostSystem.setStatusCd(HostSystem.SUCCESS_STATUS);
         try {
@@ -143,19 +142,25 @@ public class RemoteInvokeHandler {
             ChannelShell channel = (ChannelShell) session.openChannel("shell");
             ChannelShellUtil.setDefault(channel);
             setChannelPtySize(channel, hostSystem.getTerminalSize());
-
             // new session output
             SessionOutput sessionOutput = new SessionOutput(sessionId, hostSystem);
             // 启动线程处理会话
-            Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), terminal);
-            Thread thread = new Thread(run);
-            thread.start();
+              Runnable run = new WatchSshServerOutputTask(sessionOutput, channel.getInputStream(), out);
+              Thread thread = new Thread(run);
+              thread.start();
+            /////////////////////
+
+
+            //  channel.setOutputStream(terminal.output());
+           // channel.setOutputStream(outputStream);
+
+            //   channel.setInputStream(terminal.input());
             OutputStream inputToChannel = channel.getOutputStream();
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)
                     .instanceId(hostSystem.getInstanceId())
                     .commander(new PrintStream(inputToChannel, true))
-                    .inputToChannel(inputToChannel)
+                    //.inputToChannel(inputToChannel)
                     .channel(channel)
                     .hostSystem(hostSystem)
                     .build();
@@ -202,7 +207,7 @@ public class RemoteInvokeHandler {
     }
 
     public static void openKubernetesTerminal(String sessionId, String instanceId, DsKubernetesConfig.Kubernetes kubernetes,
-                                         KubernetesResource.Pod pod, KubernetesResource.Container container) {
+                                              KubernetesResource.Pod pod, KubernetesResource.Container container) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
         ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
@@ -220,7 +225,7 @@ public class RemoteInvokeHandler {
         KubernetesSession kubernetesSession = KubernetesSession.builder()
                 .sessionId(sessionId)
                 .instanceId(instanceId)
-                .execWatch( execWatch)
+                .execWatch(execWatch)
                 .watchKubernetesTerminalOutputTask(run)
                 .build();
         kubernetesSession.setSessionOutput(sessionOutput);

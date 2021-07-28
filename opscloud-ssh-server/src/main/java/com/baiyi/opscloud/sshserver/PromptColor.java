@@ -29,7 +29,10 @@ public enum PromptColor {
     MAGENTA(5),
     CYAN(6),
     WHITE(7),
-    BRIGHT(8);
+    BRIGHT(8),
+    COLOR64(64),
+    COLOR128(128)
+    ;
 
     private final int value;
 

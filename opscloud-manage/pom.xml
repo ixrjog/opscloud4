@@ -34,6 +34,11 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-terminal-audit</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-ssh-server</artifactId>
         </dependency>
 
@@ -81,9 +86,9 @@
             </properties>
         </profile>
         <profile>
-            <id>pre</id>
+            <id>demo</id>
             <properties>
-                <env>pre</env>
+                <env>demo</env>
             </properties>
         </profile>
         <profile>

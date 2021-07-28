@@ -55,18 +55,21 @@ public class SshServerPacker {
     }
 
     public List<ServerVO.Server> wrapToVO(List<Server> servers) {
-        return servers.stream().map(s -> {
-            ServerVO.Server server = BeanCopierUtil.copyProperties(s, ServerVO.Server.class);
-            ServerGroup group = serverGroupService.getById(server.getServerGroupId());
-            ServerGroupVO.ServerGroup serverGroup = BeanCopierUtil.copyProperties(group, ServerGroupVO.ServerGroup.class);
-            serverGroup.setUserId(SessionUtil.getUserId());
-            wrap(serverGroup);
-            server.setServerGroup(serverGroup);
-            Env env = envService.getByEnvType(server.getEnvType());
-            server.setEnv(BeanCopierUtil.copyProperties(env, EnvVO.Env.class));
-            ServerUtil.wrapDisplayName(server);
-            tagPacker.wrap(server);
-            return server;
-        }).collect(Collectors.toList());
+        return servers.stream().map(this::wrapToVO
+        ).collect(Collectors.toList());
+    }
+
+    public ServerVO.Server wrapToVO(Server server){
+        ServerVO.Server vo = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
+        ServerGroup group = serverGroupService.getById(server.getServerGroupId());
+        ServerGroupVO.ServerGroup serverGroup = BeanCopierUtil.copyProperties(group, ServerGroupVO.ServerGroup.class);
+        serverGroup.setUserId(SessionUtil.getUserId());
+        wrap(serverGroup);
+        vo.setServerGroup(serverGroup);
+        Env env = envService.getByEnvType(vo.getEnvType());
+        vo.setEnv(BeanCopierUtil.copyProperties(env, EnvVO.Env.class));
+        ServerUtil.wrapDisplayName(vo);
+        tagPacker.wrap(vo);
+        return vo;
     }
 }

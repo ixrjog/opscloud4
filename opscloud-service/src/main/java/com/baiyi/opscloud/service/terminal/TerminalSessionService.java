@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.terminal;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
+import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
 
 /**
  * @Author baiyi
@@ -12,4 +14,9 @@ public interface TerminalSessionService {
     void add(TerminalSession terminalSession);
 
     void update(TerminalSession terminalSession);
+
+    TerminalSession getBySessionId(String sessionId);
+
+    DataTable<TerminalSession> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery);
+
 }

@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.terminal;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/28 11:28 上午
@@ -12,6 +14,8 @@ public interface TerminalSessionInstanceService {
     void add(TerminalSessionInstance terminalSessionInstance);
 
     void update(TerminalSessionInstance terminalSessionInstance);
+
+    List<TerminalSessionInstance> queryBySessionId(String sessionId);
 
     TerminalSessionInstance getByUniqueKey(String sessionId,String instanceId);
 }

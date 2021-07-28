@@ -18,6 +18,7 @@ package com.baiyi.opscloud.sshserver;
 
 import com.baiyi.opscloud.sshserver.auth.SshAuthentication;
 import com.baiyi.opscloud.sshserver.listeners.SshShellListenerService;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.sshd.common.Factory;
 import org.apache.sshd.server.ChannelSessionAware;
@@ -92,6 +93,7 @@ public class SshShellRunnable
 
     private InputStream is;
 
+    @Getter
     private OutputStream os;
 
     private ExitCallback ec;

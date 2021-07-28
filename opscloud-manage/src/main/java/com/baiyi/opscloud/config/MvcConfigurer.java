@@ -5,10 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.util.unit.DataSize;
-import org.springframework.web.servlet.config.annotation.CorsRegistry;
-import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
-import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.*;
 
 import javax.servlet.MultipartConfigElement;
 /**
@@ -19,21 +16,21 @@ import javax.servlet.MultipartConfigElement;
 @Configuration
 public class MvcConfigurer implements WebMvcConfigurer {
 
-//    @Resource
-//    private AuthInterceptor authInterceptor;
+    /**
+     * 首页
+     *
+     * @param registry
+     */
+    @Override
+    public void addViewControllers(ViewControllerRegistry registry) {
+        registry.addViewController("/").setViewName("index.html");
+    }
+
 
     @Override
     public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
         configurer.enable();
     }
-
-//    @Bean
-//    public ServletRegistrationBean apiV1ServletBean(WebApplicationContext wac) {
-//        DispatcherServlet ds = new DispatcherServlet(wac);
-//        ServletRegistrationBean bean = new ServletRegistrationBean(ds, "/oc3/*");
-//        bean.setName("opscloud-api");
-//        return bean;
-//    }
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
@@ -52,10 +49,6 @@ public class MvcConfigurer implements WebMvcConfigurer {
 
     }
 
-//    @Override
-//    public void addInterceptors(InterceptorRegistry registry) {
-//        registry.addInterceptor(authInterceptor).addPathPatterns("/**");
-//    }
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {

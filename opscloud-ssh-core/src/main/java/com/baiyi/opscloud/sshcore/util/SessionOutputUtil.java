@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.sshcore.util;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.redis.TerminalKeyUtil;
-import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
+import com.baiyi.opscloud.common.redis.TerminalLogUtil;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.model.UserSessionsOutput;
 import com.google.common.collect.Lists;
@@ -121,7 +120,7 @@ public class SessionOutputUtil {
                             && StringUtils.isNotEmpty(sessionOutput.getOutput())) {
                         outputList.add(sessionOutput);
                         userSessionsOutput.getSessionOutputMap().put(instanceId, new SessionOutput(sessionId, sessionOutput));
-                        auditing(sessionId, instanceId, sessionOutput);
+                        //  auditing(sessionId, instanceId, sessionOutput);
                     }
                 } catch (Exception ex) {
                     log.error(ex.toString(), ex);
@@ -148,7 +147,7 @@ public class SessionOutputUtil {
             auditLog = sessionOutput.getOutput().toString();
         }
 
-        String cacheKey = TerminalKeyUtil.buildAuditLogKey(sessionId, instanceId);
+        String cacheKey = TerminalLogUtil.toAuditLogKey(sessionId, instanceId);
         String logRepo;
         if (redisUtil.hasKey(cacheKey)) {
             logRepo = new StringBuilder((String) redisUtil.get(cacheKey)).append(auditLog).toString();
@@ -157,8 +156,8 @@ public class SessionOutputUtil {
         }
         redisUtil.set(cacheKey, logRepo, 6000);
 
-        if (logRepo.length() > 10240)
-            AuditRecordHandler.recordAuditLog(sessionId, instanceId);
+//        if (logRepo.length() > 10240)
+//            AuditRecordHandler.recordAuditLog(sessionId, instanceId);
 
     }
 

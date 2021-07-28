@@ -3,9 +3,10 @@ package com.baiyi.opscloud.sshcore.task.ssh;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.base.AbstractOutputTask;
 import lombok.extern.slf4j.Slf4j;
-import org.jline.terminal.Terminal;
 
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 
 /**
  * @Author baiyi
@@ -15,16 +16,18 @@ import java.io.InputStream;
 @Slf4j
 public class WatchSshServerOutputTask extends AbstractOutputTask {
 
-    Terminal terminal;
+    OutputStream out;
 
-    public WatchSshServerOutputTask(SessionOutput sessionOutput, InputStream outFromChannel, Terminal terminal) {
+    public WatchSshServerOutputTask(SessionOutput sessionOutput, InputStream outFromChannel, OutputStream out) {
         super(sessionOutput, outFromChannel);
-        this.terminal = terminal;
+        this.out = out;
     }
 
     @Override
-    public void write(char[] buf, int off, int len) {
-        terminal.writer().write(buf, off, len);
-        terminal.flush();
+    public void write(char[] buf, int off, int len) throws IOException {
+        out.write(toBytes(buf), off, len);
+        out.flush();
     }
+
+
 }

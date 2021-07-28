@@ -100,6 +100,12 @@ public class SshShellHelper {
         return getBackgroundColoredMessage(message, backgroundColor);
     }
 
+    public String getColoredMessage(String message, int colorCode) {
+        return new AttributedStringBuilder().append(message,
+                AttributedStyle.DEFAULT.foreground(colorCode)).toAnsi();
+
+    }
+
     /**
      * Color message with given background color
      *

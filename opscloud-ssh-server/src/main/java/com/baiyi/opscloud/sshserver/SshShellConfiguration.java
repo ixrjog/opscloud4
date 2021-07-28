@@ -83,6 +83,7 @@ public class SshShellConfiguration {
         }
         server.setPort(properties.getPort());
         server.setShellFactory(channelSession -> shellCommandFactory);
+      //  server.setIoServiceFactoryFactory( e -> new Nio2ServiceFactoryFactory);
         server.setCommandFactory((channelSession, s) -> shellCommandFactory);
         return server;
     }

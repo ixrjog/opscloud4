@@ -5,7 +5,14 @@ import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
+import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
+import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
+import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
+import com.baiyi.opscloud.sshcore.task.ssh.WatchKubernetesSshOutputTask;
+import com.baiyi.opscloud.sshcore.util.TerminalSessionUtil;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshContext;
 import com.baiyi.opscloud.sshserver.SshShellCommandFactory;
@@ -26,8 +33,9 @@ import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.Callback;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
-import io.fabric8.kubernetes.client.utils.NonBlockingInputStreamPumper;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
 import org.springframework.shell.standard.ShellCommandGroup;
@@ -37,8 +45,6 @@ import org.springframework.shell.standard.ShellOption;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 /**
@@ -54,7 +60,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     // ^C
     private static final int QUIT = 3;
     private static final int EOF = 4;
-
 
     private void listPodById(int id) {
         Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
@@ -135,6 +140,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                             .podName(podName)
                             .instanceUuid(instanceUuid)
                             .namespace(pod.getMetadata().getNamespace())
+                            .podIp(pod.getStatus().getPodIP())
                             .build();
                     podMapper.put(seq, podContext);
                     List<String> names = pod.getSpec().getContainers().stream().map(Container::getName).collect(Collectors.toList());
@@ -176,26 +182,36 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     public void loginPod(@ShellOption(help = "Pod ID", defaultValue = "") int id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
-
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
-
         KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
-        Terminal terminal = getTerminal();
+        ServerSession serverSession = helper.getSshSession();
+        String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
+        String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
+        TerminalSessionInstance terminalSessionInstance =
+                TerminalSessionInstanceBuilder.build(sessionId, podContext.getPodIp(), instanceId, InstanceSessionTypeEnum.CONTAINER_TERMINAL);
+        simpleTerminalSessionFacade.recordTerminalSessionInstance(
+                terminalSessionInstance
+        );
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
                 kubernetesDsInstanceConfig.getKubernetes(),
                 podContext.getNamespace(),
                 podContext.getPodName(),
                 name,
                 listener,
-                terminal.output());
-
+                baos);
         Size size = terminal.getSize();
         execWatch.resize(size.getColumns(), size.getRows());
         TerminalUtil.rawModeSupportVintr(terminal); // 行模式
-        ExecutorService executorService = Executors.newSingleThreadExecutor();
+        SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
 
-        NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(execWatch.getOutput(), new OutCallback());
-        executorService.submit(pump); // run
+        SshContext sshContext = getSshContext();
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        Thread thread = new Thread(run);
+        thread.start();
+        // ExecutorService executorService = Executors.newSingleThreadExecutor();
+        // NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(sshIO.getIs(), new OutCallback());
+        // executorService.submit(pump); // run
         try {
             while (!listener.isClosed()) {
                 int ch = terminal.reader().read(25L);
@@ -213,8 +229,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         } finally {
+            simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
             execWatch.close();
-            pump.close();
+            // pump.close();
             helper.print("\n用户退出容器！", PromptColor.GREEN);
         }
     }
@@ -228,23 +245,33 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
         LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
                 podContext.getNamespace(),
                 podContext.getPodName(),
                 name,
-                lines, getTerminal().output());
-        Terminal terminal = getTerminal();
+                lines, baos);
+
+        SshContext sshContext = getSshContext();
+        Terminal terminal = sshContext.getTerminal();
         TerminalUtil.rawModeSupportVintr(terminal);
+        ServerSession serverSession = helper.getSshSession();
+        String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
+
+        String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
+        SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        Thread thread = new Thread(run);
+        thread.start();
         while (true) {
             try {
-                terminal.flush();
                 int ch = terminal.reader().read(25L);
                 if (ch != -2) {
                     if (ch == QUIT) {
+                        run.close();
                         break;
                     } else {
                         terminal.writer().print(helper.getColored("\n输入 [ ctrl+c ] 关闭日志!\n", PromptColor.RED));
-                        terminal.writer().flush();
                     }
                 }
                 Thread.sleep(200L);
@@ -254,19 +281,19 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         logWatch.close();
     }
 
-    private Terminal getTerminal() {
+    private SshContext getSshContext() {
         SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
         if (sshContext == null) {
             throw new IllegalStateException("Unable to find ssh context");
         } else {
-            return sshContext.getTerminal();
+            return sshContext;
         }
     }
 
     private static class OutCallback implements Callback<byte[]> {
         @Override
         public void call(byte[] data) {
-            System.out.print(new String(data));
+            // System.out.print(new String(data));
         }
     }
 
@@ -280,5 +307,6 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     public static String buildPagination(int podSize) {
         return Joiner.on(" ").join("容器组数量:", podSize);
     }
+
 }
 
