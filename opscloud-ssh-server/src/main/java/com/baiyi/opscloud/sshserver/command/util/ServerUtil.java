@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.google.common.base.Joiner;
-import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jline.utils.AttributedStringBuilder;
 import org.jline.utils.AttributedStyle;

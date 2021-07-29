@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.datasource;
 
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessRelationVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -24,7 +25,7 @@ public class DsAssetVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Asset extends BaseVO implements TagVO.ITags {
+    public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelation {
 
         // ITags
         private List<TagVO.Tag> tags;
@@ -42,6 +43,10 @@ public class DsAssetVO {
         private Map<String, List<DsAssetVO.Asset>> tree;
 
         private DsInstanceVO.Instance dsInstance;
+
+        private List<BusinessRelationVO.Relation> sourceBusinessRelations;
+
+        private List<BusinessRelationVO.Relation> targetBusinessRelations;
 
         private Integer id;
         private Integer parentId;

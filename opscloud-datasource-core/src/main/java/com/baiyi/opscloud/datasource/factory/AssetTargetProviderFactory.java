@@ -13,11 +13,11 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/6/19 7:44 下午
  * @Version 1.0
  */
+@Deprecated
 public class AssetTargetProviderFactory {
 
     private AssetTargetProviderFactory() {
     }
-
 
     static private Map<String, Map<String, AbstractAssetRelationProvider<?, ?>>> context = new ConcurrentHashMap<>();
 

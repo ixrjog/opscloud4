@@ -25,6 +25,18 @@ public class ZabbixHandler {
 
     private static final String ZABBIX_AUTH_CACHE_KAY = "opscloud:v4:zabbix_auth";
 
+    public interface ApiConstant {
+        String RESULT = "result";
+        String USER_IDS = "userids";
+        String USER_GROUP_IDS = "usrgrpids";
+        String HOST_GROUP_IDS = "groupids";
+        String HOST_IDS = "hostids";
+        String HOST_ID = "hostid";
+        String EVENT_IDS = "eventids";
+        String TEMPLATE_IDS = "templateids";
+        String TRIGGER_IDS = "triggerids";
+    }
+
     @Resource
     private RedisUtil redisUtil;
 
@@ -35,8 +47,9 @@ public class ZabbixHandler {
     }
 
     private DefaultZabbixClient getZabbixClient(DsZabbixConfig.Zabbix zabbix) {
-        if (redisUtil.hasKey(ZABBIX_AUTH_CACHE_KAY))
+        if (redisUtil.hasKey(ZABBIX_AUTH_CACHE_KAY)) {
             return new DefaultZabbixClient(zabbix, (String) redisUtil.get(ZABBIX_AUTH_CACHE_KAY));
+        }
         DefaultZabbixClient zabbixClient = new DefaultZabbixClient(zabbix);
         ZabbixUser zabbixUser = zabbixClient.login();
         redisUtil.set(ZABBIX_AUTH_CACHE_KAY, zabbixUser.getSessionId(), getAuthCacheTime(zabbixUser));
@@ -44,8 +57,10 @@ public class ZabbixHandler {
     }
 
     private long getAuthCacheTime(ZabbixUser zabbixUser) {
-        if (1 == zabbixUser.getAutoLogin())
-            return 7 * 24 * 60 * 60 * 60; // 缓存7天
+        if (1 == zabbixUser.getAutoLogin()) {
+            // 缓存7天
+            return 7 * 24 * 60 * 60 * 60;
+        }
         Duration cacheTime = StringToDurationUtil.parse(zabbixUser.getAutoLogout());
         return cacheTime.getSeconds();
     }

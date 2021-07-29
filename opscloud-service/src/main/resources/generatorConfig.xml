@@ -91,13 +91,13 @@
          -->
         <table tableName="terminal_session_instance_command">
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
-<!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
+            <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         </table>
 
-<!--        <table tableName="sys_menu_child">-->
-<!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
-<!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
-<!--        </table>-->
+        <!--        <table tableName="sys_menu_child">-->
+        <!--            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>-->
+        <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
+        <!--        </table>-->
 
 
     </context>

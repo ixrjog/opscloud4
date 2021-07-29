@@ -17,7 +17,7 @@ class ServerGroupFacadeImplTest extends BaseUnit {
     private ServerGroupFacade serverGroupFacade;
 
     @Test
-    void ddd(){
+    void ddd() {
         serverGroupFacade.deleteServerGroupById(1);
     }
 

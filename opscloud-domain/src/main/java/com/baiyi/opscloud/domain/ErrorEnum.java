@@ -10,14 +10,14 @@ public enum ErrorEnum {
     AUTH_GROUP_HAS_USED(11005, "资源组正在使用！"),
     AUTH_ROLE_HAS_USED(11001, "用户角色正在使用！"),
     AUTH_RESOURCE_HAS_USED(11003, "资源正在使用！"),
-    AUTH_USER_LOGIN_FAILUER(20001,"登录失败请检查用户名或密码是否正确，请重试！"),
-    AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILUER(20001,"没有可认证的实例！"),
+    AUTH_USER_LOGIN_FAILURE(20001, "登录失败请检查用户名或用户未激活，请重试！"),
+    AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILURE(20001, "没有可认证的实例！"),
 
     // ----------------------- DATASOURCE -----------------------
-    DATASOURCE_PROPS_EMPTY(20001,"数据源属性配置为空！"),
-    DATASOURCE_PROPS_CONVERT_ERROR(20001,"数据源属性配置装换错误！"),
+    DATASOURCE_PROPS_EMPTY(20001, "数据源属性配置为空！"),
+    DATASOURCE_PROPS_CONVERT_ERROR(20001, "数据源属性配置装换错误！"),
 
-    DATASOURCE_INSTANCE_TYPE_NOT_SUPPORT_ERROR(20001,"数据源实例类型错误或不支持当前操作！"),
+    DATASOURCE_INSTANCE_TYPE_NOT_SUPPORT_ERROR(20001, "数据源实例类型错误或不支持当前操作！"),
 
     // ----------------------- TAG -----------------------
     TAG_KEY_ALREADY_EXIST(12001, "标签key已存在！"),
@@ -27,16 +27,16 @@ public enum ErrorEnum {
     TAG_UPDATE_ERROR(12004, "新增标签错误，请确认Key是否唯一！"),
 
 
-    SINGLE_TASK_RUNNING(13000,"后台任务执行中！"),
+    SINGLE_TASK_RUNNING(13000, "后台任务执行中！"),
 
-    SSH_SERVER_AUTHENTICATION_FAILUER(20001,"SSH服务器鉴权失败！"),
-    SSH_SERVER_ACCOUNT_NOT_EXIST(20001,"登录账户不存在，请重新输入！"),
+    SSH_SERVER_AUTHENTICATION_FAILURE(20001, "SSH服务器鉴权失败！"),
+    SSH_SERVER_ACCOUNT_NOT_EXIST(20001, "登录账户不存在，请重新输入！"),
     // No accounts available
-    SSH_SERVER_NO_ACCOUNTS_AVAILABLE(20001,"SSH服务器没有可用的账户！"),
+    SSH_SERVER_NO_ACCOUNTS_AVAILABLE(20001, "SSH服务器没有可用的账户！"),
     // ----------------------- 系统级错误 -----------------------
     SYSTEM_ERROR(10001, "系统错误！"),
 
-    USER_BUSINESS_TYPE_ERROR(21000,"用户业务类型错误错误！"),
+    USER_BUSINESS_TYPE_ERROR(21000, "用户业务类型错误错误！"),
 
     // ----------------------- 应用 -----------------------
     APPLICATION_NOT_EXIST(10001, "应用不存在！"),
@@ -44,17 +44,17 @@ public enum ErrorEnum {
     APPLICATION_RES_ALREADY_EXIST(10001, "应用资源已存在！"),
     APPLICATION_RES_IS_NOT_EMPTY(10001, "应用资源不为空！"),
 
-
-
+    // ----------------------- 资产 -----------------------
+    ASSET_NOT_EXIST(10001, "资产不存在！"),
 
 
     // 权限
-    AUTHENTICATION_FAILUER(20001,"鉴权失败！"),
-    AUTHENTICATION_API_FAILUER(401,"Api鉴权失败！"),
-    AUTHENTICATION_RESOURCE_NOT_EXIST(20002,"资源路径不存在！"),
-    AUTHENTICATION_REQUEST_NO_TOKEN(20003,"请求中未携带有效令牌！"),
-    AUTHENTICATION_TOKEN_INVALID(401,"令牌无效！"),
-    AUTHENTICATION_API_TOKEN_INVALID(401,"Api令牌无效！"),
+    AUTHENTICATION_FAILURE(20001, "鉴权失败！"),
+    AUTHENTICATION_API_FAILURE(401, "Api鉴权失败！"),
+    AUTHENTICATION_RESOURCE_NOT_EXIST(20002, "资源路径不存在！"),
+    AUTHENTICATION_REQUEST_NO_TOKEN(20003, "请求中未携带有效令牌！"),
+    AUTHENTICATION_TOKEN_INVALID(401, "令牌无效！"),
+    AUTHENTICATION_API_TOKEN_INVALID(401, "Api令牌无效！"),
 
 
     // auth
@@ -77,16 +77,16 @@ public enum ErrorEnum {
     // Account is disabled
     ACCOUNT_IS_DISABLE(12002, "账户被禁用！"),
     //applyUserApiToken
-    USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003,"申请ApiToken描述不能为空"),
-    USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003,"申请ApiToken过期时间为空或格式错误"),
-    USER_CREDENTIAL_TYPE_ERROR(12003,"用户凭据类型为空或类型错误"),
-    USER_CREDENTIAL_ERROR(12003,"用户凭据为空或凭据格式错误!"),
+    USER_APPLY_API_TOKEN_COMMENT_IS_NULL(12003, "申请ApiToken描述不能为空"),
+    USER_APPLY_API_TOKEN_EXPIRED_TIME_FORMAT_ERROR(12003, "申请ApiToken过期时间为空或格式错误"),
+    USER_CREDENTIAL_TYPE_ERROR(12003, "用户凭据类型为空或类型错误"),
+    USER_CREDENTIAL_ERROR(12003, "用户凭据为空或凭据格式错误!"),
 
     // resignationUser
-    USER_RESIGNATION_ERROR(12003,"用户离职账户禁用错误!"),
+    USER_RESIGNATION_ERROR(12003, "用户离职账户禁用错误!"),
 
     // UserPermission
-    USER_PERMISSION_EXIST(12003,"用户授权已存在!"),
+    USER_PERMISSION_EXIST(12003, "用户授权已存在!"),
 
 
     // userGroup
@@ -140,7 +140,7 @@ public enum ErrorEnum {
     CLOUD_INSTANCE_TEMPLATE_NAME_NON_COMPLIANCE_WITH_RULES(12002, "云实例模版名称不合规！"),
 
     // cloudServer
-    CLOUD_SERVER_POWER_MGMT_FAILED(30001,"云主机启停失败"),
+    CLOUD_SERVER_POWER_MGMT_FAILED(30001, "云主机启停失败"),
     CLOUD_SERVER_NOT_EXIST(30002, "云主机不存在！"),
 
     // cloudDB
@@ -158,8 +158,8 @@ public enum ErrorEnum {
     CLOUD_VPC_VSWITCH_NOT_EXIST(30002, "云VPC虚拟交换机不存在！"),
 
     // create instance Zone must be selected
-    CREATE_CLOUD_INSTANCE_ZONEID_MUST_BE_SELECTED(30002,"必须指定创建实例的可用区"),
-    CREATE_CLOUD_INSTANCE_VSWITCHIDS_MUST_BE_SELECTED(30002,"必须指定创建实例的虚拟交换机列表"),
+    CREATE_CLOUD_INSTANCE_ZONEID_MUST_BE_SELECTED(30002, "必须指定创建实例的可用区"),
+    CREATE_CLOUD_INSTANCE_VSWITCHIDS_MUST_BE_SELECTED(30002, "必须指定创建实例的虚拟交换机列表"),
 
     // aliyunRDSMysql
     ALIYUN_RDS_MYSQL_CREATE_ACCOUNT_ERROR(30002, "创建云数据库账户错误！"),
@@ -183,7 +183,7 @@ public enum ErrorEnum {
     ORG_DEPARTMENT_DROP_ERROR(60001, "拖拽类型错误"),
     ORG_DEPARTMENT_MEMBER_ALREADY_EXISTS(60001, "部门成员已存在"),
     ORG_DEPARTMENT_MEMBER_NOT_EXIST(60001, "部门成员不存在"),
-    ORG_DEPARTMENT_SUB_DEPT_EXISTS(60001,"有子部门存在"),
+    ORG_DEPARTMENT_SUB_DEPT_EXISTS(60001, "有子部门存在"),
     ORG_DEPARTMENT_MEMBER_IS_NOT_EMPTY(60001, "部门成员不为空"),
     ORG_DEPARTMENT_MEMBER_DELETE_ERROR(60001, "删除部门成员错误"),
     ORG_DEPARTMENT_MEMBER_IS_LEADER(60001, "经理不能随意变更部门"),
@@ -213,43 +213,43 @@ public enum ErrorEnum {
     KUBERNETES_DELETE_SERVICE_ERROR(70001, "Kubernetes删除Service错误！"),
 
 
-    GITLAB_BRANCH_COMMIT_ERROR(80001,"查询代码仓库commit错误！"),
-    GITLAB_INSTANCE_NOT_EXIST(80001,"GITLAB实例不存在！"),
-    GITLAB_USER_NOT_EXIST(80001,"GITLAB用户不存在！"),
-    GITLAB_API_ERROR(80001,"GITLAB接口错误！"),
-    JENKINS_JOB_TPL_READ_ERROR(80001,"读取任务模版错误！"),
-    JENKINS_JOB_TPL_HOST_PATTERN_IS_NOT_CONFIGURED(80001,"任务模版参数hostPattern未配置！"),
-    JENKINS_JOB_TPL_WRITE_ERROR(80001,"写入任务模版错误！"),
-    JENKINS_JOB_ENGINE_NOT_CONFIGURED(80001,"任务工作引擎未配置！"),
-    JENKINS_JOB_NO_ENGINES_AVAILABLE(80001,"没有可用的工作引擎！"),
-    JENKINS_JOB_EXISTS(80001,"任务已存在！"),
-    JENKINS_JOB_BUILD_OUTPUT_NOT_EXIST(80001,"任务构建日志不存在！"),
+    GITLAB_BRANCH_COMMIT_ERROR(80001, "查询代码仓库commit错误！"),
+    GITLAB_INSTANCE_NOT_EXIST(80001, "GITLAB实例不存在！"),
+    GITLAB_USER_NOT_EXIST(80001, "GITLAB用户不存在！"),
+    GITLAB_API_ERROR(80001, "GITLAB接口错误！"),
+    JENKINS_JOB_TPL_READ_ERROR(80001, "读取任务模版错误！"),
+    JENKINS_JOB_TPL_HOST_PATTERN_IS_NOT_CONFIGURED(80001, "任务模版参数hostPattern未配置！"),
+    JENKINS_JOB_TPL_WRITE_ERROR(80001, "写入任务模版错误！"),
+    JENKINS_JOB_ENGINE_NOT_CONFIGURED(80001, "任务工作引擎未配置！"),
+    JENKINS_JOB_NO_ENGINES_AVAILABLE(80001, "没有可用的工作引擎！"),
+    JENKINS_JOB_EXISTS(80001, "任务已存在！"),
+    JENKINS_JOB_BUILD_OUTPUT_NOT_EXIST(80001, "任务构建日志不存在！"),
     APPLICATION_SCM_NOT_EXIST(70001, "应用仓库配置不存在！"),
     APPLICATION_NOT_ADMIN(70001, "你不是此应用的管理员！"),
-    APPLICATION_SCM_CONFIGURATION_WAS_NOT_DELETED(70001,"未删除应用的SCM配置!"),
-    APPLICATION_SERVERGROUP_CONFIGURATION_WAS_NOT_DELETED(70001,"未删除应用的服务器组配置!"),
-    APPLICATION_ENGINE_CONFIGURATION_WAS_NOT_DELETED(70001,"未删除应用的引擎配置!"),
-    APPLICATION_BUILD_JOB_CONFIGURATION_WAS_NOT_DELETED(70001,"未删除应用的构建任务配置!"),
-    APPLICATION_DEPLOYMENT_JOB_CONFIGURATION_WAS_NOT_DELETED(70001,"未删除应用的部署配置!"),
+    APPLICATION_SCM_CONFIGURATION_WAS_NOT_DELETED(70001, "未删除应用的SCM配置!"),
+    APPLICATION_SERVERGROUP_CONFIGURATION_WAS_NOT_DELETED(70001, "未删除应用的服务器组配置!"),
+    APPLICATION_ENGINE_CONFIGURATION_WAS_NOT_DELETED(70001, "未删除应用的引擎配置!"),
+    APPLICATION_BUILD_JOB_CONFIGURATION_WAS_NOT_DELETED(70001, "未删除应用的构建任务配置!"),
+    APPLICATION_DEPLOYMENT_JOB_CONFIGURATION_WAS_NOT_DELETED(70001, "未删除应用的部署配置!"),
     JOB_KEY_NON_COMPLIANCE_WITH_RULES(13002, "任务名不合规！"),
     APPLICATION_KEY_NON_COMPLIANCE_WITH_RULES(13002, "应用名不合规！"),
     APPLICATION_SERVERGROUP_ALREADY_EXIST(12001, "应用服务器组配置已存在！"),
     APPLICATION_SERVERGROUP_NON_COMPLIANCE(12001, "应用中未指定此服务器组配置！"),
-    APPLICATION_JOB_AUTHENTICATION_FAILUER(20001,"鉴权失败！测试总监管控日常环境权限！"),
-    APPLICATION_JOB_AUTHENTICATION_FAILUER_2(20001,"鉴权失败！请联系应用管理员授权任务权限"),
+    APPLICATION_JOB_AUTHENTICATION_FAILURE(20001, "鉴权失败！测试总监管控日常环境权限！"),
+    APPLICATION_JOB_AUTHENTICATION_FAILURE_2(20001, "鉴权失败！请联系应用管理员授权任务权限"),
     JENKINS_LIMIT_CONCURRENT_JOB(12001, "不允许并发执行任务，请等待任务执行完毕！"),
-    JENKINS_CORRECTION_JOB_ENGINE(12001,"校正任务引擎错误！"),
-    JENKINS_DELETE_JOB_BUILD_DETAILS_ERROR(12001,"删除任务构建详情错误！"),
-    JENKINS_DELETE_JOB_ENGINE_ERROR(12001,"删除任务构建引擎错误！"),
-    JENKINS_PARAM_HOST_PATTERN_EMPTY(12001,"部署任务'主机分组'参数不能为空！"),
-    JENKINS_PARAM_HOST_PATTERN_ERROR(12001,"部署任务'主机分组'参数错误，参数不存在服务器分组中！"),
-    JENKINS_PARAM_SERVER_GROUP_EMPTY(12001,"部署任务'服务器组'配置不能为空！"),
+    JENKINS_CORRECTION_JOB_ENGINE(12001, "校正任务引擎错误！"),
+    JENKINS_DELETE_JOB_BUILD_DETAILS_ERROR(12001, "删除任务构建详情错误！"),
+    JENKINS_DELETE_JOB_ENGINE_ERROR(12001, "删除任务构建引擎错误！"),
+    JENKINS_PARAM_HOST_PATTERN_EMPTY(12001, "部署任务'主机分组'参数不能为空！"),
+    JENKINS_PARAM_HOST_PATTERN_ERROR(12001, "部署任务'主机分组'参数错误，参数不存在服务器分组中！"),
+    JENKINS_PARAM_SERVER_GROUP_EMPTY(12001, "部署任务'服务器组'配置不能为空！"),
 
-    BLOCK_RULE_P0(13001,"封网中，禁用发布平台！"),
-    BLOCK_RULE_P1(13001,"封网中，非管理员禁用发布平台！"),
-    BLOCK_RULE_P3(13001,"封网中，禁用发布平台！"),
-    BLOCK_RULE_PROHIBIT_PROD_BUILD(13001,"封网中，生产环境禁止构建/发布！"),
-    BLOCK_RULE_PROHIBIT_GRAY_BUILD(13001,"封网中，灰度环境禁止构建/发布！"),
+    BLOCK_RULE_P0(13001, "封网中，禁用发布平台！"),
+    BLOCK_RULE_P1(13001, "封网中，非管理员禁用发布平台！"),
+    BLOCK_RULE_P3(13001, "封网中，禁用发布平台！"),
+    BLOCK_RULE_PROHIBIT_PROD_BUILD(13001, "封网中，生产环境禁止构建/发布！"),
+    BLOCK_RULE_PROHIBIT_GRAY_BUILD(13001, "封网中，灰度环境禁止构建/发布！"),
 
     MENU_LIST_EMPTY(999, "菜单列表为空"),
     MENU_CHILD_IS_NOT_EMPTY(999, "子菜单列表不为空"),

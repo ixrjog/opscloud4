@@ -81,7 +81,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         // 校验用户是否可以访问资源路径
         if (userTokenService.checkUserHasResourceAuthorize(token, resourceName) == 0) {
             if (userTokenService.checkUserHasRole(token, SUPER_ADMIN) == 0) {
-                throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILUER);
+                throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
             } else {
                 grantRoleResource(authResource);
             }
@@ -105,12 +105,12 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         User user = userService.getByUsername(loginParam.getUsername());
         // 判断用户是否有效
         if (user == null || !user.getIsActive())
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILUER);
+            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
         // user.password 为空则允许空密码登录
         if (loginParam.isEmptyPassword()) {
             if (StringUtils.isEmpty(user.getPassword()))
                 return userTokenFacade.userLogin(user);     // 空密码登录成功
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILUER);
+            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
         }
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {
@@ -120,7 +120,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             userService.update(user);
             return userTokenFacade.userLogin(user);
         } else {
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILUER); // 登录失败
+            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
         }
     }
 

@@ -69,7 +69,7 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public void del(Integer id) {
+    public void delete(Integer id) {
         serverMapper.deleteByPrimaryKey(id);
     }
 

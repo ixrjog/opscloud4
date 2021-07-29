@@ -50,7 +50,8 @@ public class DsConfigServiceImpl implements DsConfigService {
     public List<DatasourceConfig> queryByDsType(Integer dsType) {
         Example example = new Example(DatasourceConfig.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("dsType", dsType).andEqualTo("isActive", true);
+        criteria.andEqualTo("dsType", dsType)
+                .andEqualTo("isActive", true);
         example.setOrderByClause("create_time");
         return dsConfigMapper.selectByExample(example);
     }

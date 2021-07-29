@@ -30,7 +30,7 @@ public class ZabbixMapper {
         try {
             return mapper.readValue(jsonNode.toString(), clazz);
         } catch (JsonProcessingException e) {
-            throw new RuntimeException(String.format("mapper %s exception", clazz.getName()), e);
+            return null;
         }
     }
 }

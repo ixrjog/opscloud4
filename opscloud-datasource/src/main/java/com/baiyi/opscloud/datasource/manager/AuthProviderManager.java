@@ -73,7 +73,7 @@ public class AuthProviderManager {
     public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthRuntimeException {
         List<DatasourceInstance> instances = listAuthorizationInstance();
         if (CollectionUtils.isEmpty(instances))
-            throw new AuthRuntimeException(ErrorEnum.AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILUER);
+            throw new AuthRuntimeException(ErrorEnum.AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILURE);
         Authorization.Credential credential = Authorization.Credential.builder()
                 .username(loginParam.getUsername())
                 .password(loginParam.getPassword())
