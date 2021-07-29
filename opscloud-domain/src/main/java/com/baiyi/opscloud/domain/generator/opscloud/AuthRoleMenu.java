@@ -24,9 +24,9 @@ public class AuthRoleMenu {
     @Column(name = "menu_child_id")
     private Integer menuChildId;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 }
