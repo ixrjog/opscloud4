@@ -39,7 +39,7 @@ public class BusinessFacadeImpl implements BusinessFacade {
 
     @Override
     public void saveBusinessRelation(BusinessRelation businessRelation) {
-        if (businessRelationService.getByUnique(businessRelation) == null) {
+        if (businessRelationService.getByUniqueKey(businessRelation) == null) {
             businessRelationService.add(businessRelation);
         }
     }

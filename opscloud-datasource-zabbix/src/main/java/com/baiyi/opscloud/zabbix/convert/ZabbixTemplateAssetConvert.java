@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.convert;
 
-import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.datasource.provider.base.asset.IAssetRelation;

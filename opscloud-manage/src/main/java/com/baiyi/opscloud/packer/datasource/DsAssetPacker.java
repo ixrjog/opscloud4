@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.packer.datasource;
 
+import com.baiyi.opscloud.asset.IAssetConvert;
+import com.baiyi.opscloud.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
@@ -62,6 +64,7 @@ public class DsAssetPacker {
                 tagPacker.wrap(asset);
                 businessRelationPacker.wrap(asset);
                 wrap(asset);
+                wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
                 if (RelationUtil.isRelation(iRelation))
                     wrapRelation(asset);
                 asset.setTree(wrapTree(asset));
@@ -70,6 +73,16 @@ public class DsAssetPacker {
         }).collect(Collectors.toList());
     }
 
+    //  to   AssetConvertFactory
+    private void wrapConvertBusinessTypes(DsAssetVO.Asset asset) {
+        IAssetConvert iAssetConvert = AssetConvertFactory.getIAssetConvertByAssetType(asset.getAssetType());
+        if (iAssetConvert != null) {
+            asset.setConvertBusinessTypes(iAssetConvert.toBusinessTypes(asset));
+        }
+    }
+
+
+    // asset properties
     private void wrap(DsAssetVO.Asset asset) {
         Map<String, String> properties = dsInstanceAssetPropertyService.queryByAssetId(asset.getId())
                 .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));

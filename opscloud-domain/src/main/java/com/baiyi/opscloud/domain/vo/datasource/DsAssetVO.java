@@ -25,11 +25,16 @@ public class DsAssetVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelation {
+    public static class Asset<T> extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelation {
 
         // ITags
         private List<TagVO.Tag> tags;
         private final int businessType = BusinessTypeEnum.ASSET.getType();
+
+
+        //        private List<BusinessTypeEnum> convertBusinessTypes;
+        // 此资产可转换为其它业务对象
+        private Map<BusinessTypeEnum,T> convertBusinessTypes;
 
         @Override
         public int getBusinessId() {

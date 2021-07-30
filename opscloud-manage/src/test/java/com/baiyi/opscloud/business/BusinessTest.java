@@ -2,7 +2,7 @@ package com.baiyi.opscloud.business;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -44,11 +44,17 @@ public class BusinessTest extends BaseUnit {
                         .targetBusinessId(asset.getId())
                         .relationType(asset.getAssetType())
                         .build();
-                if (businessRelationService.getByUnique(relation) == null)
+                if (businessRelationService.getByUniqueKey(relation) == null)
                     businessRelationService.add(relation);
             } else {
                 System.err.println(JSON.toJSONString(asset));
             }
         });
     }
+
+    @Test
+    void test2() {
+        System.err.println(JSON.toJSONString(BusinessTypeEnum.SERVER));
+    }
+
 }

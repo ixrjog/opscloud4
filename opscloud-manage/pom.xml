@@ -57,10 +57,21 @@
             <artifactId>opscloud-kubernetes-terminal</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-asset</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-asset</artifactId>
+        </dependency>
+
 
     </dependencies>
     <profiles>

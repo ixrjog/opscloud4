@@ -50,7 +50,9 @@ public class KubernetesPodWatch {
             });
 
             // Wait till watch gets closed
+            System.err.println("111111111111111111");
             isWatchClosed.await();
+            System.err.println("222222222222222222");
         } catch (InterruptedException interruptedException) {
             log.warn("Interrupted while waiting for the watch to close: {}", interruptedException.getMessage());
             Thread.currentThread().interrupt();

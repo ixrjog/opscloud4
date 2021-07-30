@@ -73,7 +73,7 @@ public class BusinessRelationServiceImpl implements BusinessRelationService {
     }
 
     @Override
-    public BusinessRelation getByUnique(BusinessRelation businessRelation) {
+    public BusinessRelation getByUniqueKey(BusinessRelation businessRelation) {
         Example example = new Example(BusinessRelation.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("sourceBusinessType", businessRelation.getSourceBusinessType())
@@ -93,4 +93,6 @@ public class BusinessRelationServiceImpl implements BusinessRelationService {
                 .andEqualTo("relationType", relationType);
         return businessRelationMapper.selectOneByExample(example);
     }
+
+
 }

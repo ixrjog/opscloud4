@@ -34,6 +34,8 @@ public class ServerProperty {
     @JsonProperty("metadata")
     private Map<String, String> metadata;
 
+    private Integer port;
+
     @JsonProperty("spec")
     private Map<String, Object> spec;
 }

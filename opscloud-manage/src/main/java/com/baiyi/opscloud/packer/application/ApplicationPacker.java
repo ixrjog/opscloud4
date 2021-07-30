@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.application;
 
 import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
-import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;

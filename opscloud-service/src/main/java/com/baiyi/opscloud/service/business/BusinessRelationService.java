@@ -9,6 +9,7 @@ import java.util.List;
  * @Date 2021/7/21 2:40 下午
  * @Since 1.0
  */
+@Deprecated
 public interface BusinessRelationService {
 
     BusinessRelation getById(int id);
@@ -25,7 +26,7 @@ public interface BusinessRelationService {
 
     List<BusinessRelation> listByTargetBusiness(Integer businessType, Integer businessId);
 
-    BusinessRelation getByUnique(BusinessRelation businessRelation);
+    BusinessRelation getByUniqueKey(BusinessRelation businessRelation);
 
     BusinessRelation getBusinessRelation(Integer sourceBusinessType, Integer sourceBusinessId, Integer targetBusinessType, String relationType);
 }

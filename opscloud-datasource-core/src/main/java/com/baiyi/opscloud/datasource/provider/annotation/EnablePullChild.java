@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.provider.annotation;
 
-import com.baiyi.opscloud.common.type.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 
 import java.lang.annotation.*;
 

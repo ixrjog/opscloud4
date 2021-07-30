@@ -7,9 +7,7 @@ import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -32,7 +30,9 @@ public class ServerVO {
 
 
     @EqualsAndHashCode(callSuper = true)
+    @Builder
     @Data
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
     public static class Server extends BaseVO implements EnvVO.IEnv, TagVO.ITags, ServerGroupVO.IServerGroup, ServerAccountVO.IAccount, Serializable {
@@ -47,6 +47,9 @@ public class ServerVO {
         private final int businessType = BusinessTypeEnum.SERVER.getType();
 
         private List<ServerAccountVO.Account> accounts;
+
+        // 需要绑定关系的资产id
+        private Integer datasourceInstanceAssetId;
 
         @Override
         public Integer getServerId() {
