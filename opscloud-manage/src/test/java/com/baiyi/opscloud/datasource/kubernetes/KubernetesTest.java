@@ -8,6 +8,8 @@ import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesPodWatch;
+import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesWatchEvent;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesNamespaceHandler;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesTestHandler;
@@ -129,6 +131,18 @@ public class KubernetesTest extends BaseUnit {
         }
         logWatch.close();
 
+    }
+
+    @Test
+    void watchEventTest() {
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesWatchEvent.watch(kubernetesDsInstanceConfig.getKubernetes(),"dev");
+    }
+
+    @Test
+    void watchEvent2Test() {
+        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesPodWatch.watch(kubernetesDsInstanceConfig.getKubernetes(),"dev");
     }
 
 

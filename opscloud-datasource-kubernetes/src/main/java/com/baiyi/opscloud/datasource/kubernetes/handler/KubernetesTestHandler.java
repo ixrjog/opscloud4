@@ -40,4 +40,6 @@ public class KubernetesTestHandler {
                 .inNamespace(namespace)
                 .withName(name).watchLog(System.out);
     }
+
+
 }
