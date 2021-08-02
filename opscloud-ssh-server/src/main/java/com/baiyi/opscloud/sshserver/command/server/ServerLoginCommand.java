@@ -74,12 +74,10 @@ public class ServerLoginCommand {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
-    public void login(@ShellOption(help = "Server Id") int id, @ShellOption(help = "Account Name", defaultValue = "") String account,@ShellOption({"-S", "--supe"}) boolean supe) {
-
-        helper.print("Super = " + supe);
-
+    public void login(@ShellOption(help = "Server Id") int id,
+                      @ShellOption(help = "Account Name", defaultValue = "") String account,
+                      @ShellOption( value = {"-A", "--admin"},help = "Admin") boolean admin) {
         ServerSession serverSession = helper.getSshSession();
-
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
 
@@ -133,8 +131,6 @@ public class ServerLoginCommand {
 
     private Terminal getTerminal() {
         SshContext sshContext = SshShellCommandFactory.SSH_THREAD_CONTEXT.get();
-
-
         if (sshContext == null) {
             throw new IllegalStateException("Unable to find ssh context");
         } else {
