@@ -1,8 +1,9 @@
-package com.baiyi.opscloud.asset.impl;
+package com.baiyi.opscloud.datasource.asset.impl;
 
-import com.baiyi.opscloud.asset.impl.base.BaseAssetConvert;
+import com.baiyi.opscloud.datasource.asset.impl.base.BaseAssetConvert;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.google.common.collect.Lists;
@@ -16,35 +17,29 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class EcsAssetConvert extends BaseAssetConvert<ServerVO.Server> {
+public class EcsAssetConvert extends BaseAssetConvert {
 
     @Override
     public String getAssetType() {
         return DsAssetTypeEnum.ECS.getType();
     }
 
-    protected ServerVO.Server toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
-        ServerVO.Server server = ServerVO.Server.builder()
+    protected BusinessAssetRelationVO.IBusinessAssetRelation toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
+        return ServerVO.Server.builder()
                 .id(0)
                 .name(asset.getName())
                 .privateIp(asset.getAssetKey())
                 .publicIp(asset.getAssetKey2())
                 .envType(getDefaultEnvType())
-                .osType(captureName(asset.getProperties().get("osType").toString()))
+                .osType(captureName(asset.getProperties().get("osType"))) //首字大写
                 .area(asset.getZone())
-                .serverType(0)
-                .isActive(true)
-                .serialNumber(0)
-                .datasourceInstanceAssetId(asset.getId()) //建立关系
+                .assetId(asset.getId()) // 资产id
                 .build();
-        return server;
     }
-
 
     @Override
     protected List<BusinessTypeEnum> getBusinessTypes() {
         return Lists.newArrayList(BusinessTypeEnum.SERVER);
     }
-
 
 }

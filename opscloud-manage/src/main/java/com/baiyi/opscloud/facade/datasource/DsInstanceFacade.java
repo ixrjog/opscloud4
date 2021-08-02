@@ -18,4 +18,6 @@ public interface DsInstanceFacade {
     void deleteAssetById(Integer id);
 
     void setDsInstanceConfig(DsAssetParam.SetDsInstanceConfig setDsInstanceConfig);
+
+    void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness);
 }

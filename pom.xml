@@ -28,7 +28,6 @@
         <module>opscloud-kubernetes-terminal</module>
         <module>opscloud-terminal-audit</module>
         <module>opscloud-event</module>
-        <module>opscloud-asset</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -308,12 +307,6 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-event</artifactId>
-                <version>${project.version}</version>
-            </dependency>
-
-            <dependency>
-                <groupId>com.baiyi</groupId>
-                <artifactId>opscloud-asset</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

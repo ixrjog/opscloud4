@@ -2,16 +2,15 @@ package com.baiyi.opscloud.domain.vo.server;
 
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -28,14 +27,17 @@ public class ServerVO {
         Integer getServerId();
     }
 
-
     @EqualsAndHashCode(callSuper = true)
     @Builder
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Server extends BaseVO implements EnvVO.IEnv, TagVO.ITags, ServerGroupVO.IServerGroup, ServerAccountVO.IAccount, Serializable {
+    public static class Server extends BaseVO implements EnvVO.IEnv, TagVO.ITags,
+            ServerGroupVO.IServerGroup,
+            ServerAccountVO.IAccount,
+            BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            Serializable {
 
         private static final long serialVersionUID = -1011261913967456450L;
         private List<TagVO.Tag> tags;
@@ -47,9 +49,6 @@ public class ServerVO {
         private final int businessType = BusinessTypeEnum.SERVER.getType();
 
         private List<ServerAccountVO.Account> accounts;
-
-        // 需要绑定关系的资产id
-        private Integer datasourceInstanceAssetId;
 
         @Override
         public Integer getServerId() {
@@ -88,7 +87,8 @@ public class ServerVO {
 
         @ApiModelProperty(value = "服务器类型", example = "1")
         @NotNull(message = "服务器类型不能为空")
-        private Integer serverType;
+        @Builder.Default
+        private Integer serverType = 0;
 
         @ApiModelProperty(value = "地区")
         private String area;
@@ -97,7 +97,8 @@ public class ServerVO {
         private String osType;
 
         @ApiModelProperty(value = "序号", example = "1")
-        private Integer serialNumber;
+        @Builder.Default
+        private Integer serialNumber = 0;
 
         @ApiModelProperty(value = "监控状态", example = "1")
         private Integer monitorStatus;
@@ -109,30 +110,11 @@ public class ServerVO {
         private Integer serverStatus;
 
         @ApiModelProperty(value = "有效")
-        private Boolean isActive;
+        @Builder.Default
+        private Boolean isActive = true;
 
         @ApiModelProperty(value = "资产id")
         private Integer assetId;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @ApiModel
-    public static class DeployVersion {
-
-        @ApiModelProperty(value = "版本名称")
-        private String versionName;
-
-        private Integer buildId;
-
-        private Integer jobId;
-
-        private String privateIp;
-
-        @ApiModelProperty(value = "创建时间")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date createTime;
-
     }
 
 }

@@ -18,6 +18,5 @@
             <artifactId>opscloud-service</artifactId>
         </dependency>
 
-
     </dependencies>
 </project>

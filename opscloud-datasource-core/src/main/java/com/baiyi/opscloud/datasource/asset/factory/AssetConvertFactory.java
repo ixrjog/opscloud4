@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.asset.factory;
+package com.baiyi.opscloud.datasource.asset.factory;
 
-import com.baiyi.opscloud.asset.IAssetConvert;
+import com.baiyi.opscloud.datasource.asset.IAssetConvert;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -26,6 +26,5 @@ public class AssetConvertFactory {
     public static void register(IAssetConvert bean) {
         context.put(bean.getAssetType(), bean);
     }
-
 
 }

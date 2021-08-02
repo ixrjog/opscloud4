@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.provider.base.asset;
 
+import com.baiyi.opscloud.datasource.asset.IAssetType;
 import com.baiyi.opscloud.datasource.provider.base.common.IInstanceType;
 
 /**

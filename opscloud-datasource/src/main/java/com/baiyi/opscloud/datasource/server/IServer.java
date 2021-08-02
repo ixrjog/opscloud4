@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.server;
 
-import com.baiyi.opscloud.datasource.provider.base.asset.IAssetType;
+import com.baiyi.opscloud.datasource.asset.IAssetType;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 
 /**

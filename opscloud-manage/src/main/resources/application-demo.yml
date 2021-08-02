@@ -16,6 +16,7 @@ white:
     - /*.js
     - /*.css
     - /*.jpg
+    - /*.ico
     - /swagger-resources
     - /swagger-ui.html
     - /v2/api-docs

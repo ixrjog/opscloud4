@@ -102,19 +102,19 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
      */
     protected abstract DatasourceInstanceAsset update(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties);
 
-    @Override
-    public void destroy(Integer id) {
-        List<DatasourceInstance> instanceList = filterDsInstanceByBusinessTag();
-        instanceList.forEach(instance -> destroy(buildDsInstanceContext(instance.getId()), id));
-    }
+//    @Override
+//    public void destroy(Integer id) {
+//        List<DatasourceInstance> instanceList = filterDsInstanceByBusinessTag();
+//        instanceList.forEach(instance -> destroy(buildDsInstanceContext(instance.getId()), id));
+//    }
 
-    private void destroy(DsInstanceContext dsInstanceContext, Integer id) {
-        DatasourceInstanceAsset asset = getBindAsset(id);
-        if (asset != null) {
-            destroy(dsInstanceContext, asset);
-            baseDsAssetFacade.deleteAssetById(asset.getId());
-        }
-    }
+//    private void destroy(DsInstanceContext dsInstanceContext, Integer id) {
+//        DatasourceInstanceAsset asset = getBindAsset(id);
+//        if (asset != null) {
+//            destroy(dsInstanceContext, asset);
+//            baseDsAssetFacade.deleteAssetById(asset.getId());
+//        }
+//    }
 
     /**
      * 销毁资产
@@ -132,7 +132,7 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
                 .targetBusinessId(asset.getId())
                 .relationType(asset.getAssetType())
                 .build();
-        businessFacade.saveBusinessRelation(businessRelation);
+     //   businessFacade.saveBusinessRelation(businessRelation);
     }
 
     private void setSimpleAssetProviderList() {
@@ -175,15 +175,6 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
         return map;
     }
 
-    protected DatasourceInstanceAsset getBindAsset(Integer id) {
-        BusinessRelation relation = businessFacade.getBusinessRelation(BusinessTypeEnum.SERVER.getType(), id, BusinessTypeEnum.ASSET.getType(), getAssetType());
-        if (relation != null) {
-            DatasourceInstanceAsset asset = dsInstanceAssetService.getById(relation.getTargetBusinessId());
-            if (asset != null) {
-                return asset;
-            }
-        }
-        return null;
-    }
+
 
 }

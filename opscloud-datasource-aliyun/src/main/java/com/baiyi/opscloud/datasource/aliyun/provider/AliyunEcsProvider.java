@@ -4,18 +4,18 @@ import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
-import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
+import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetBusinessRelationProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -30,7 +30,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AliyunEcsProvider extends BaseAssetProvider<DescribeInstancesResponse.Instance> {
+public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<DescribeInstancesResponse.Instance> {
 
     @Resource
     private AliyunEcsHandler aliyunEcsHandler;

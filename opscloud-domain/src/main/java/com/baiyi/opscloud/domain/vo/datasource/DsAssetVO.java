@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.datasource;
 
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessRelationVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,16 +26,14 @@ public class DsAssetVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Asset<T> extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelation {
+    public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelation {
 
         // ITags
         private List<TagVO.Tag> tags;
         private final int businessType = BusinessTypeEnum.ASSET.getType();
 
-
-        //        private List<BusinessTypeEnum> convertBusinessTypes;
         // 此资产可转换为其它业务对象
-        private Map<BusinessTypeEnum,T> convertBusinessTypes;
+        private Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> convertBusinessTypes;
 
         @Override
         public int getBusinessId() {

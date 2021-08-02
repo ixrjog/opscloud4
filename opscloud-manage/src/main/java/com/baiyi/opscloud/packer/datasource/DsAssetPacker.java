@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.datasource;
 
-import com.baiyi.opscloud.asset.IAssetConvert;
-import com.baiyi.opscloud.asset.factory.AssetConvertFactory;
+import com.baiyi.opscloud.datasource.asset.IAssetConvert;
+import com.baiyi.opscloud.datasource.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
@@ -10,7 +10,6 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.IRelation;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
-import com.baiyi.opscloud.packer.business.BusinessRelationPacker;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
@@ -48,9 +47,6 @@ public class DsAssetPacker {
     @Resource
     private TagPacker tagPacker;
 
-    @Resource
-    private BusinessRelationPacker businessRelationPacker;
-
     public DsAssetVO.Asset wrap(DsInstanceVO.Instance instance, DatasourceInstanceAsset dsInstanceAsset) {
         DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(dsInstanceAsset, DsAssetVO.Asset.class);
         asset.setDsInstance(instance);
@@ -62,7 +58,6 @@ public class DsAssetPacker {
             DsAssetVO.Asset asset = toVO(e);
             if (ExtendUtil.isExtend(iExtend)) {
                 tagPacker.wrap(asset);
-                businessRelationPacker.wrap(asset);
                 wrap(asset);
                 wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
                 if (RelationUtil.isRelation(iRelation))

@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.event.listener;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.param.ServerEventParam;
 import com.baiyi.opscloud.facade.business.BusinessFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
@@ -39,7 +38,7 @@ public class ServerDeleteEventListener {
 
     @Subscribe
     public void deleteBusinessRelation(ServerEventParam.delete delete) {
-        businessFacade.deleteBusinessRelation(BusinessTypeEnum.SERVER.getType(), delete.getId());
+       // businessFacade.deleteBusinessRelation(BusinessTypeEnum.SERVER.getType(), delete.getId());
     }
 
 }

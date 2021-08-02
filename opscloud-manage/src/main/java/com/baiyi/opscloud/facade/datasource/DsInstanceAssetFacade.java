@@ -17,4 +17,5 @@ public interface DsInstanceAssetFacade {
      * @return
      */
     List<DsAssetVO.Asset> querySshKeyAssets(String username);
+
 }

@@ -63,6 +63,7 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
         dsInstancePacker.wrap(instance);
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), pullAsset.getAssetType());
+        assert providers != null;
         providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
     }
 
@@ -76,5 +77,10 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
         AbstractSetDsInstanceConfigProvider setDsInstanceConfigProvider = SetDsInstanceConfigFactory.getProvider(setDsInstanceConfig.getInstanceType());
         assert setDsInstanceConfigProvider != null;
         setDsInstanceConfigProvider.setConfig(setDsInstanceConfig.getInstanceId());
+    }
+
+    @Override
+    public void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness){
+
     }
 }

@@ -1,7 +1,5 @@
 package com.baiyi.opscloud.facade.business;
 
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessRelation;
-
 import java.util.Map;
 
 /**
@@ -13,12 +11,7 @@ public interface BusinessFacade {
 
     Map<String, String> getBusinessProperty(Integer businessType, Integer businessId);
 
-    void saveBusinessRelation(BusinessRelation businessRelation);
-
-    void deleteBusinessRelation(Integer businessType, Integer businessId);
-
     Map<String, String> getDefaultServerGroupProperty();
 
-    BusinessRelation getBusinessRelation(Integer sourceBusinessType, Integer sourceBusinessId,Integer targetBusinessType, String relationType);
 
 }

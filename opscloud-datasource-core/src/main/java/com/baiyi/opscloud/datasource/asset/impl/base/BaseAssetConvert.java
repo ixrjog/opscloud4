@@ -1,9 +1,10 @@
-package com.baiyi.opscloud.asset.impl.base;
+package com.baiyi.opscloud.datasource.asset.impl.base;
 
-import com.baiyi.opscloud.asset.IAssetConvert;
-import com.baiyi.opscloud.asset.factory.AssetConvertFactory;
+import com.baiyi.opscloud.datasource.asset.IAssetConvert;
+import com.baiyi.opscloud.datasource.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.google.common.collect.Maps;
@@ -21,18 +22,18 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseAssetConvert<T> implements IAssetConvert<T>, InitializingBean {
+public abstract class BaseAssetConvert implements IAssetConvert, InitializingBean {
 
     @Resource
     protected BusinessAssetRelationService businessAssetRelationService;
 
     protected abstract List<BusinessTypeEnum> getBusinessTypes();
 
-    protected abstract T toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum);
+    protected abstract BusinessAssetRelationVO.IBusinessAssetRelation toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum);
 
     @Override
-    public Map<BusinessTypeEnum, T> toBusinessTypes(DsAssetVO.Asset asset) {
-        Map<BusinessTypeEnum, T> businessTypeMap = Maps.newHashMap();
+    public Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> toBusinessTypes(DsAssetVO.Asset asset) {
+        Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> businessTypeMap = Maps.newHashMap();
         for (BusinessTypeEnum businessType : getBusinessTypes()) {
             List<BusinessAssetRelation> businessAssetRelations = queryBusinessAssetRelations(asset, businessType);
             if (CollectionUtils.isEmpty(businessAssetRelations)) {
@@ -53,12 +54,12 @@ public abstract class BaseAssetConvert<T> implements IAssetConvert<T>, Initializ
 
     /**
      * 将字符串的首字母转大写
+     * 进行字母的ascii编码前移，效率要高于截取字符串进行转换的操作
      *
      * @param str 需要转换的字符串
      * @return
      */
     protected String captureName(String str) {
-        // 进行字母的ascii编码前移，效率要高于截取字符串进行转换的操作
         char[] cs = str.toCharArray();
         cs[0] -= 32;
         return String.valueOf(cs);

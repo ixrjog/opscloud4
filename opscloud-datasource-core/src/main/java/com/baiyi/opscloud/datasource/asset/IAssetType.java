@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.provider.base.asset;
+package com.baiyi.opscloud.datasource.asset;
 
 /**
  * @Author baiyi

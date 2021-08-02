@@ -52,7 +52,7 @@ public class DsAssetParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PullAsset {
+    public static class BaseAsset{
 
         @ApiModelProperty(value = "实例id")
         @NotNull
@@ -61,7 +61,20 @@ public class DsAssetParam {
         @ApiModelProperty(value = "资产类型")
         @NotNull
         private String assetType;
+    }
 
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class PullAsset extends BaseAsset{
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class ScanAssetBusiness extends BaseAsset{
     }
 
     @Data

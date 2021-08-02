@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.tag;
 
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -16,16 +17,13 @@ import java.util.List;
  * @Date 2020/2/22 1:17 下午
  * @Version 1.0
  */
-public class TagVO {
+public class TagVO  {
 
-    public interface ITags {
+    public interface ITags extends BaseBusiness.IBusiness{
         void setTags(List<Tag> tags);
 
         List<Tag> getTags();
 
-        int getBusinessType();
-
-        int getBusinessId();
     }
 
     @EqualsAndHashCode(callSuper = true)

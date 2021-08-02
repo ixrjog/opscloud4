@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.config.WhiteConfig;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -14,6 +13,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_UTF8_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 
 @Component
@@ -34,7 +36,8 @@ public class AuthFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+        response.setContentType(APPLICATION_JSON_VALUE);
+        // response.setContentType(MediaType.APPLICATION_JSON_UTF8_VALUE);
         if (!"options".equalsIgnoreCase(request.getMethod())) {
             String resourceName = request.getServletPath();
             // 单页不拦截页面,只拦截协议请求
@@ -67,15 +70,13 @@ public class AuthFilter extends OncePerRequestFilter {
                 userAuthFacade.tryUserHasResourceAuthorize(token, resourceName);
                 filterChain.doFilter(request, response);
             } catch (AuthRuntimeException ex) {
-                HttpResult result = new HttpResult(ex);
+                response.setContentType(APPLICATION_JSON_UTF8_VALUE);
                 setHeaders(request, response);
-                // response.setContentType("application/json;charset=UTF-8");
+                HttpResult result = new HttpResult(ex);
                 response.getWriter().println(result);
-
             }
         } else {
             setHeaders(request, response);
-            // response.setContentType("application/json;charset=UTF-8");
             filterChain.doFilter(request, response);
         }
     }

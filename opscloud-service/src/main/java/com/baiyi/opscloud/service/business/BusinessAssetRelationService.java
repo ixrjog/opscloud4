@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.business;
 
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 
 import java.util.List;
 
@@ -17,6 +18,10 @@ public interface BusinessAssetRelationService {
      * @return
      */
     BusinessAssetRelation getByUniquekey(BusinessAssetRelation businessAssetRelation);
+
+    BusinessAssetRelation getByUniquekey(BusinessAssetRelationVO.Relation relation);
+
+    void add(BusinessAssetRelation businessAssetRelation);
 
     /**
      * 查询资产的绑定列表
