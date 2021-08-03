@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.facade.sys;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.terminal.TerminalSessionInstanceCommandParam;
 import com.baiyi.opscloud.domain.param.terminal.TerminalSessionParam;
+import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionInstanceCommandVO;
 import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
 
 /**
@@ -12,4 +14,6 @@ import com.baiyi.opscloud.domain.vo.terminal.TerminalSessionVO;
 public interface TerminalSessionFacade {
 
     DataTable<TerminalSessionVO.Session> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery);
+
+    DataTable<TerminalSessionInstanceCommandVO.Command> queryTerminalSessionCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery  pageQuery);
 }

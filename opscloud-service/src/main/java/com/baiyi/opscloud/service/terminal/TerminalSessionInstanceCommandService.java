@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.terminal;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
+import com.baiyi.opscloud.domain.param.terminal.TerminalSessionInstanceCommandParam;
 
 import java.util.List;
 
@@ -14,4 +16,6 @@ public interface TerminalSessionInstanceCommandService {
     void add(TerminalSessionInstanceCommand command);
 
     List<TerminalSessionInstanceCommand> queryByInstanceId(Integer terminalSessionInstanceId);
+
+    DataTable<TerminalSessionInstanceCommand> queryTerminalSessionInstanceCommandPage(TerminalSessionInstanceCommandParam.InstanceCommandPageQuery pageQuery);
 }

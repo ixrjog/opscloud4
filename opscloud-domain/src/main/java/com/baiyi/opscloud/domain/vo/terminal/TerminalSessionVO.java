@@ -18,7 +18,6 @@ import java.util.List;
  */
 public class TerminalSessionVO {
 
-
     @EqualsAndHashCode(callSuper = true)
     @Data
     @Builder
@@ -47,4 +46,5 @@ public class TerminalSessionVO {
         private String sessionType;
 
     }
+
 }

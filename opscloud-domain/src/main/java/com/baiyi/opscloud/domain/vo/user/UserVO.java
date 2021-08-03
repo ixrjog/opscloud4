@@ -14,6 +14,7 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
 
@@ -81,7 +82,8 @@ public class UserVO {
         @ApiModelProperty(value = "邮箱")
         private String email;
 
-        @ApiModelProperty(value = "活跃用户")
+        @ApiModelProperty(value = "有效用户")
+        @NotNull(message = "有效用户字段不能为空")
         private Boolean isActive;
 
         @ApiModelProperty(value = "最后登录时间")
