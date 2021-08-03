@@ -34,17 +34,20 @@ public class ZabbixTemplateHandler {
         String QUERY_TEMPLATE = "template.get";
     }
 
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
+                .method(Method.QUERY_TEMPLATE);
+    }
+
     public List<ZabbixTemplate> listTemplates(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TEMPLATE)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
     public List<ZabbixTemplate> listTemplatesByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TEMPLATE)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -52,8 +55,7 @@ public class ZabbixTemplateHandler {
     }
 
     public List<ZabbixTemplate> listTemplatesByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TEMPLATE)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, group.getGroupId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -61,8 +63,7 @@ public class ZabbixTemplateHandler {
     }
 
     public ZabbixTemplate getTemplateById(DsZabbixConfig.Zabbix zabbix, String templateId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TEMPLATE)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(TEMPLATE_IDS, templateId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -76,8 +77,7 @@ public class ZabbixTemplateHandler {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", names)
                 .build();
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TEMPLATE)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .filter(filter)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

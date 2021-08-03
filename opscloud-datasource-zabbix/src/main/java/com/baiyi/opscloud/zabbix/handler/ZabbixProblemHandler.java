@@ -31,17 +31,20 @@ public class ZabbixProblemHandler {
         String QUERY_PROBLEM = "problem.get";
     }
 
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
+                .method(Method.QUERY_PROBLEM);
+    }
+
     public List<ZabbixProblem> listProblems(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_PROBLEM)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
     public List<ZabbixProblem> listProblemsByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_PROBLEM)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -49,8 +52,7 @@ public class ZabbixProblemHandler {
     }
 
     public ZabbixProblem getProblemById(DsZabbixConfig.Zabbix zabbix, String eventId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_PROBLEM)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(EVENT_IDS, eventId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

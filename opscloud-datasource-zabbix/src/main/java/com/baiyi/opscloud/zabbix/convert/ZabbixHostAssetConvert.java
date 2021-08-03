@@ -21,7 +21,7 @@ public class ZabbixHostAssetConvert {
                 .assetId(entry.getHostId())
                 .name(entry.getName())
                 .assetKey(entry.getHostId())
-                .assetKey2(entry.getHost())
+                .assetKey2(entry.getInterfaces().get(0).getIp())
                 .kind(String.valueOf(entry.getFlags()))
                 .isActive(0 == entry.getStatus())
                 .assetType(DsAssetTypeEnum.ZABBIX_HOST.name())

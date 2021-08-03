@@ -30,19 +30,22 @@ public class ZabbixUserHandler {
         String QUERY_USER = "user.get";
     }
 
-    public List<ZabbixUser> listUsers(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_USER)
                 // 在medias 属性返回用户使用的媒体。
-//                .paramEntry("selectMedias", "extend")
+                .paramEntry("selectMedias", "extend");
+    }
+
+    public List<ZabbixUser> listUsers(DsZabbixConfig.Zabbix zabbix) {
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixUser.class);
     }
 
     public List<ZabbixUser> listUsersByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixUserGroup userGroup) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_USER)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(USER_GROUP_IDS, userGroup.getUserGroupId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -50,8 +53,7 @@ public class ZabbixUserHandler {
     }
 
     public ZabbixUser getUserById(DsZabbixConfig.Zabbix zabbix, String userId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_USER)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(USER_IDS, userId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

@@ -31,17 +31,20 @@ public class ZabbixUserGroupHandler {
         String QUERY_GROUP = "usergroup.get";
     }
 
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
+                .method(Method.QUERY_GROUP);
+    }
+
     public List<ZabbixUserGroup> listGroups(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixUserGroup.class);
     }
 
     public List<ZabbixUserGroup> listGroupsByUser(DsZabbixConfig.Zabbix zabbix, ZabbixUser user) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(USER_IDS, user.getUserId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -50,8 +53,7 @@ public class ZabbixUserGroupHandler {
 
 
     public ZabbixUserGroup getGroupById(DsZabbixConfig.Zabbix zabbix, String groupId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(USER_GROUP_IDS, groupId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

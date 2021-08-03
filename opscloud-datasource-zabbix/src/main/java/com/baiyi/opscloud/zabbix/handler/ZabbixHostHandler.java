@@ -38,17 +38,20 @@ public class ZabbixHostHandler {
         String DELETE_HOST = "host.delete";
     }
 
-    public List<ZabbixHost> listHosts(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_HOST)
-                .build();
+                .paramEntry("selectInterfaces", "extend");
+    }
+
+    public List<ZabbixHost> listHosts(DsZabbixConfig.Zabbix zabbix) {
+        ZabbixCommonRequest request = queryRequestBuilder().build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
     public List<ZabbixHost> listHostsByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_HOST)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, group.getGroupId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -56,8 +59,7 @@ public class ZabbixHostHandler {
     }
 
     public List<ZabbixHost> listHostsByTemplate(DsZabbixConfig.Zabbix zabbix, ZabbixTemplate template) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_HOST)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(TEMPLATE_IDS, template.getTemplateId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -65,8 +67,7 @@ public class ZabbixHostHandler {
     }
 
     public List<ZabbixHost> listHostsByTrigger(DsZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_HOST)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(TRIGGER_IDS, trigger.getTriggerId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -74,8 +75,7 @@ public class ZabbixHostHandler {
     }
 
     public ZabbixHost getHostById(DsZabbixConfig.Zabbix zabbix, String hostId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_HOST)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, hostId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -103,8 +103,7 @@ public class ZabbixHostHandler {
     }
 
     private JsonNode queryHostByFilter(DsZabbixConfig.Zabbix zabbix, ZabbixFilter filter) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_HOST)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .filter(filter)
                 .build();
         return zabbixHandler.call(zabbix, request);

@@ -34,17 +34,20 @@ public class ZabbixHostGroupHandler {
         String CREATE_GROUP = "hostgroup.create";
     }
 
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
+                .method(Method.QUERY_GROUP);
+    }
+
     public List<ZabbixHostGroup> listGroups(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHostGroup.class);
     }
 
     public List<ZabbixHostGroup> listGroupsByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -52,8 +55,7 @@ public class ZabbixHostGroupHandler {
     }
 
     public ZabbixHostGroup getGroupById(DsZabbixConfig.Zabbix zabbix, String groupId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, groupId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -67,8 +69,7 @@ public class ZabbixHostGroupHandler {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", names)
                 .build();
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_GROUP)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .filter(filter)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

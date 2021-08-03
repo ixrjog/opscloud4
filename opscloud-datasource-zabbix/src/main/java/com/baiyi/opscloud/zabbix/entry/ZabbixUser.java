@@ -20,8 +20,12 @@ public class ZabbixUser {
     private String userId;
     private String alias;
     private String name;
-    // 姓
+
+    /**
+     * 姓
+     */
     private String surname;
+
     /**
      * 允许自动登录。
      * 0 - (default) 禁止自动登录;
@@ -46,9 +50,8 @@ public class ZabbixUser {
     @JsonProperty("sessionid")
     private String sessionId;
 
-    // 用户所属的组
-//    @JsonProperty("usrgrps")
-//    private List<ZabbixUserGroup> userGroups;
-    // 用户使用的媒体
+    /**
+     * 用户使用的媒体
+     */
     private List<ZabbixMedia> medias;
 }

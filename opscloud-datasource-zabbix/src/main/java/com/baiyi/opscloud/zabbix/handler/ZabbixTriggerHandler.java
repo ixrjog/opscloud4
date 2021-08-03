@@ -31,8 +31,8 @@ public class ZabbixTriggerHandler {
         String QUERY_TRIGGER = "trigger.get";
     }
 
-    public List<ZabbixTrigger> listTriggers(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
+    private ZabbixCommonRequestBuilder queryRequestBuilder() {
+        return ZabbixCommonRequestBuilder.builder()
                 .method(Method.QUERY_TRIGGER)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
                 .paramEntry("active", 1)
@@ -43,20 +43,18 @@ public class ZabbixTriggerHandler {
                 // 只返回最近处于问题状态的触发器（处于告警状态的主机）
                 .paramEntry("only_true", 1)
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
-                .paramEntry("expandDescription", 1)
+                .paramEntry("expandDescription", 1);
+    }
+
+    public List<ZabbixTrigger> listTriggers(DsZabbixConfig.Zabbix zabbix) {
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
     public List<ZabbixTrigger> listTriggerByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TRIGGER)
-                .paramEntry("active", 1)
-                .paramEntry("skipDependent", 1)
-                .paramEntry("monitored", 1)
-                .paramEntry("only_true", 1)
-                .paramEntry("expandDescription", 1)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -64,13 +62,7 @@ public class ZabbixTriggerHandler {
     }
 
     public ZabbixTrigger getTriggerById(DsZabbixConfig.Zabbix zabbix, String triggerId) {
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_TRIGGER)
-                .paramEntry("active", 1)
-                .paramEntry("skipDependent", 1)
-                .paramEntry("monitored", 1)
-                .paramEntry("only_true", 1)
-                .paramEntry("expandDescription", 1)
+        ZabbixCommonRequest request = queryRequestBuilder()
                 .paramEntry(TRIGGER_IDS, triggerId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

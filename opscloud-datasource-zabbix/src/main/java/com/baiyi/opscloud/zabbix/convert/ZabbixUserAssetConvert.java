@@ -1,12 +1,17 @@
 package com.baiyi.opscloud.zabbix.convert;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
+import org.springframework.util.CollectionUtils;
+
+import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -25,9 +30,22 @@ public class ZabbixUserAssetConvert {
                 .kind(String.valueOf(entry.getType()))
                 .assetType(DsAssetTypeEnum.ZABBIX_USER.name())
                 .build();
-        return AssetContainerBuilder.newBuilder()
-                .paramAsset(asset)
-                .build();
+        AssetContainerBuilder builder = AssetContainerBuilder.newBuilder()
+                .paramAsset(asset);
+        List<ZabbixMedia> medias = entry.getMedias();
+        if (!CollectionUtils.isEmpty(medias)) {
+            for (ZabbixMedia media : medias) {
+                if ("1".equals(media.getMediaTypeId())) {
+                    String email = ZabbixMapper.mapperList(media.getSendTo(), String.class).get(0);
+                    builder.paramProperty("email", email);
+                    continue;
+                }
+                if ("3".equals(media.getMediaTypeId())) {
+                    builder.paramProperty("phone", media.getSendTo().asText());
+                }
+            }
+        }
+        return builder.build();
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup entry) {

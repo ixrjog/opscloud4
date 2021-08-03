@@ -64,8 +64,6 @@ public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationPro
         return DsAssetTypeEnum.ZABBIX_HOST.getType();
     }
 
-
-
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
@@ -74,7 +72,7 @@ public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationPro
             return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;
-        if (preAsset.getIsActive() == asset.getIsActive())
+        if (!preAsset.getIsActive().equals(asset.getIsActive()))
             return false;
         if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
             return false;

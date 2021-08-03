@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
+import java.util.List;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/1 1:54 下午
@@ -17,7 +19,9 @@ public class ZabbixHost {
     @JsonProperty("hostid")
     private String hostId;
 
-    // 主机的正式名称。
+    /**
+     * 主机的正式名称
+     */
     private String host;
 
     /**
@@ -37,7 +41,9 @@ public class ZabbixHost {
      */
     private Integer flags;
 
-    // 主机可见名。
+    /**
+     * 主机可见名
+     */
     private String name;
 
     /**
@@ -46,4 +52,7 @@ public class ZabbixHost {
      * 1 - 未监控的主机。
      */
     private Integer status;
+
+    private List<ZabbixHostInterface> interfaces;
+
 }
