@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.controller.base;
+package com.baiyi.opscloud.controller.ws.base;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;

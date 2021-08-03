@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.controller;
+package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;

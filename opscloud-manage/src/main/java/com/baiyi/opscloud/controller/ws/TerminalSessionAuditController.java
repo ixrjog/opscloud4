@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.controller;
+package com.baiyi.opscloud.controller.ws;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.baiyi.opscloud.controller.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.terminal.audit.ITerminalAuditProcess;
 import com.baiyi.opscloud.terminal.audit.TerminalAuditProcessFactory;
 import lombok.extern.slf4j.Slf4j;

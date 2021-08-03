@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.controller;
+package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.controller.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;

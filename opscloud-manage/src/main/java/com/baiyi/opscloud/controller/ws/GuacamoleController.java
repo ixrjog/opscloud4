@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.controller;
+package com.baiyi.opscloud.controller.ws;
 
-import com.baiyi.opscloud.controller.base.SimpleAuthentication;
+import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.guacamole.tunnel.BaseGuacamoleTunnel;
 import com.baiyi.opscloud.sshcore.message.base.SimpleLoginMessage;
 import org.apache.guacamole.GuacamoleException;

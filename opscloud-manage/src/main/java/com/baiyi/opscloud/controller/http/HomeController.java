@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.controller;
+package com.baiyi.opscloud.controller.http;
 
 import org.springframework.stereotype.Controller;
 
