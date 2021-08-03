@@ -27,8 +27,6 @@ public abstract class BaseAssetConvert implements IAssetConvert, InitializingBea
     @Resource
     protected BusinessAssetRelationService businessAssetRelationService;
 
-    protected abstract List<BusinessTypeEnum> getBusinessTypes();
-
     protected abstract BusinessAssetRelationVO.IBusinessAssetRelation toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum);
 
     @Override

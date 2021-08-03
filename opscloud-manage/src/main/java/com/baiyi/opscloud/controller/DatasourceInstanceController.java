@@ -55,7 +55,7 @@ public class DatasourceInstanceController {
 
     @ApiOperation(value = "扫描资产与业务对象关系")
     @PutMapping(value = "/asset/business/scan", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> setDsInstanceConfig(@RequestBody DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
+    public HttpResult<Boolean> scanAssetBusiness(@RequestBody DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
         dsInstanceFacade.scanAssetBusiness(scanAssetBusiness);
         return HttpResult.SUCCESS;
     }

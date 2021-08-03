@@ -38,7 +38,7 @@ public class EcsAssetConvert extends BaseAssetConvert {
     }
 
     @Override
-    protected List<BusinessTypeEnum> getBusinessTypes() {
+    public List<BusinessTypeEnum> getBusinessTypes() {
         return Lists.newArrayList(BusinessTypeEnum.SERVER);
     }
 

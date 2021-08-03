@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -12,6 +13,8 @@ import java.util.Map;
  * @Version 1.0
  */
 public interface IAssetConvert extends IAssetType {
+
+    List<BusinessTypeEnum> getBusinessTypes();
 
     Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> toBusinessTypes(DsAssetVO.Asset asset);
 }

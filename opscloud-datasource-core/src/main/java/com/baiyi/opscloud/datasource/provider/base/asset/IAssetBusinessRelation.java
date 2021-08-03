@@ -10,8 +10,13 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 public interface IAssetBusinessRelation {
 
     /**
+     * 扫描所有资产与业务对象绑定关系
+     * @param dsInstanceId
+     */
+    void scan(int dsInstanceId);
+
+    /**
      * 扫描资产与业务对象绑定关系
-     *
      * @param asset
      */
     void scan(DsAssetVO.Asset asset);
