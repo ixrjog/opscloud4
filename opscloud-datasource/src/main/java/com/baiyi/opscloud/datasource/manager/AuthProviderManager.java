@@ -2,9 +2,8 @@ package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.datasource.factory.AuthProviderFactory;
-import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.datasource.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.Authorization;
@@ -24,6 +23,7 @@ import java.util.stream.Collectors;
 
 /**
  * 认证供应商管理类
+ *
  * @Author baiyi
  * @Date 2021/6/23 1:13 下午
  * @Version 1.0
@@ -72,27 +72,30 @@ public class AuthProviderManager {
 
     public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthRuntimeException {
         List<DatasourceInstance> instances = listAuthorizationInstance();
-        if (CollectionUtils.isEmpty(instances))
-            throw new AuthRuntimeException(ErrorEnum.AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILURE);
-        Authorization.Credential credential = Authorization.Credential.builder()
-                .username(loginParam.getUsername())
-                .password(loginParam.getPassword())
-                .build();
-        for (DatasourceInstance instance : instances) {
-            BaseAuthProvider authProvider = AuthProviderFactory.getProvider(instance.getInstanceType());
-            if (authProvider == null) continue;
-            if (authProvider.login(instance, credential)) return true;
+        if (!CollectionUtils.isEmpty(instances)) {
+            Authorization.Credential credential = Authorization.Credential.builder()
+                    .username(loginParam.getUsername())
+                    .password(loginParam.getPassword())
+                    .build();
+            for (DatasourceInstance instance : instances) {
+                BaseAuthProvider authProvider = AuthProviderFactory.getProvider(instance.getInstanceType());
+                if (authProvider == null) continue;
+                if (authProvider.login(instance, credential)) return true;
+            }
+            return false; // 有认证实例不允许本地认证
         }
-        return localLogin(user,loginParam);
+        //   throw new AuthRuntimeException(ErrorEnum.AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILURE);
+        return localLogin(user, loginParam);
     }
 
     /**
      * 本地认证
+     *
      * @param user
      * @param loginParam
      * @return
      */
-    private boolean localLogin(User user,LoginParam.Login loginParam){
+    private boolean localLogin(User user, LoginParam.Login loginParam) {
         return verifyPassword(loginParam.getPassword(), user.getPassword());
     }
 

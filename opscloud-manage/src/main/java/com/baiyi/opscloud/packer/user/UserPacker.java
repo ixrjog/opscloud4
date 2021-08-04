@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
@@ -60,9 +61,11 @@ public class UserPacker {
             RegexUtil.checkPasswordRule(pre.getPassword());
         if (!RegexUtil.isPhone(user.getPhone()))
             pre.setPhone(Strings.EMPTY);
+        if (StringUtils.isEmpty(user.getUuid())) {
+            pre.setUuid(IdUtil.buildUUID());
+        }
         return pre;
     }
-
 
 
     public UserVO.User wrap(User user) {
@@ -77,7 +80,7 @@ public class UserPacker {
 
     public void wrap(UserVO.IUser iUser) {
         User user = userService.getByUsername(iUser.getUsername());
-        if(user != null)
+        if (user != null)
             iUser.setUser(wrap(user));
     }
 }

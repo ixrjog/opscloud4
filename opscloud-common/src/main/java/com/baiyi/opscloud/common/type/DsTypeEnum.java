@@ -11,21 +11,21 @@ import java.util.List;
  * @Date 2021/5/15 1:22 下午
  * @Version 1.0
  */
-public enum DsTypeEnum  {
+public enum DsTypeEnum {
 
+    LOCAL(0, "LOCAL"),
     LDAP(1, "LDAP"),
     JENKINS(2, "JENKINS"),
     GITLAB(3, "GITLAB"),
-    SONAR(4,"SONAR"),
-    ANSIBLE(5,"ANSIBLE"),
-    KUBERNETES(6,"KUBERNETES"),
-    ZABBIX(7,"ZABBIX"),
-    PROMETHEUS(8,"PROMETHEUS"),
-    GUACAMOLE(9,"GUACAMOLE"),
-    NEXUS(10,"NEXUS"),
-    ALIYUN(50,"ALIYUN"),
-    AWS(51,"AWS")
-    ;
+    SONAR(4, "SONAR"),
+    ANSIBLE(5, "ANSIBLE"),
+    KUBERNETES(6, "KUBERNETES"),
+    ZABBIX(7, "ZABBIX"),
+    PROMETHEUS(8, "PROMETHEUS"),
+    GUACAMOLE(9, "GUACAMOLE"),
+    NEXUS(10, "NEXUS"),
+    ALIYUN(50, "ALIYUN"),
+    AWS(51, "AWS");
 
     private int type;
     private String name;

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.datasource.manager.AuthProviderManager;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.annotation.PermitEmptyPasswords;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthResource;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRole;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -23,7 +24,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-
 import java.util.Date;
 
 import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
@@ -101,17 +101,9 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     }
 
     @Override
+    @PermitEmptyPasswords // 允许空密码登录
     public LogVO.Login login(LoginParam.Login loginParam) {
         User user = userService.getByUsername(loginParam.getUsername());
-        // 判断用户是否有效
-        if (user == null || !user.getIsActive())
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
-        // user.password 为空则允许空密码登录
-        if (loginParam.isEmptyPassword()) {
-            if (StringUtils.isEmpty(user.getPassword()))
-                return userTokenFacade.userLogin(user);     // 空密码登录成功
-            throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE);
-        }
         // 尝试使用authProvider 认证
         if (authProviderManager.tryLogin(user, loginParam)) {
             // 更新用户登录信息
