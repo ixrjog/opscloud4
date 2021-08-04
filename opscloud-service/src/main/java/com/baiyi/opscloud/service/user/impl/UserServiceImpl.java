@@ -53,7 +53,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Encrypt
     public void update(User user) {
         userMapper.updateByPrimaryKey(user);
     }
