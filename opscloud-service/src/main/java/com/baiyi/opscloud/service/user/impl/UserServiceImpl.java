@@ -47,11 +47,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Encrypt
     public void add(User user) {
         userMapper.insert(user);
     }
 
     @Override
+    @Encrypt
     public void update(User user) {
         userMapper.updateByPrimaryKey(user);
     }
