@@ -14,6 +14,7 @@ import com.baiyi.opscloud.service.sys.MenuService;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -121,6 +122,8 @@ public class MenuPacker {
     }
 
     public List<MenuVO.Menu> toVOList(String username) {
+        if(StringUtils.isEmpty(username))
+            return Collections.emptyList();
         List<AuthUserRole> authUserRoleList = authUserRoleService.queryByUsername(username);
         if (CollectionUtils.isEmpty(authUserRoleList))
             return Collections.emptyList();
