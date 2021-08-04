@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.domain.annotation.Encrypt;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -35,7 +36,7 @@ public class EncryptorAspect {
         handleEncrypt(requestObj);
         return pjp.proceed();
     }
-     
+
     private void handleEncrypt(Object requestObj) throws IllegalAccessException {
         if (Objects.isNull(requestObj)) {
             return;
@@ -45,7 +46,9 @@ public class EncryptorAspect {
             if (field.isAnnotationPresent(Encrypt.class)) {
                 field.setAccessible(true);
                 String plaintextValue = (String) field.get(requestObj);
-                field.set(requestObj, stringEncryptor.encrypt(plaintextValue));
+                if (StringUtils.isNotBlank(plaintextValue)) {
+                    field.set(requestObj, stringEncryptor.encrypt(plaintextValue));
+                }
             }
         }
     }
