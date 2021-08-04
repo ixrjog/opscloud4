@@ -4,7 +4,6 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
@@ -66,7 +65,6 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    @Encrypt
     public void updateUser(UserVO.User user) {
         User pre = userPacker.toDO(user);
         userService.updateBySelective(pre);

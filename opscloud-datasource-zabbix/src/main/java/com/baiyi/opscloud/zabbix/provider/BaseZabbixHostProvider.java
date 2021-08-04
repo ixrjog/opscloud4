@@ -68,7 +68,7 @@ public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationPro
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
         if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
-        if (!AssetUtil.equals(preAsset.getAssetKey2(), asset.getAssetKey2()))
+        if (!AssetUtil.equals(preAsset.getAssetKey(), asset.getAssetKey()))
             return false;
         if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
             return false;

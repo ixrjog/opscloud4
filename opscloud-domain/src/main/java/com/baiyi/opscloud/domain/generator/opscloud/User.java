@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
 import com.baiyi.opscloud.domain.annotation.Decrypt;
+import com.baiyi.opscloud.domain.annotation.Encrypt;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -26,6 +27,7 @@ public class User {
      */
     private String uuid;
 
+    @Encrypt
     private String password;
 
     /**

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.mapper.opscloud.UserMapper;
@@ -56,6 +57,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Encrypt
     public void updateBySelective(User user) {
         userMapper.updateByPrimaryKeySelective(user);
     }

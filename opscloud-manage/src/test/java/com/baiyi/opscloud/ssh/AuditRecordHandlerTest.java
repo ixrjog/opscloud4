@@ -24,11 +24,17 @@ public class AuditRecordHandlerTest extends BaseUnit {
     @Resource
     private AuditServerCommandHandler auditCommandHandler;
 
-
     @Resource
     private TerminalConfig terminalConfig;
 
     private static final String REGEX = "\\u001b.*\\$?";
+
+    @Test
+    void dddddd(){
+        String cmd = "\u001B]0;xincheng@account-gray-1:~\u0007[xincheng@account-gray-1 ~]$ pwd";
+        boolean isInput = Pattern.matches(".*]?[$|#].*", cmd);
+        System.err.println(isInput);
+    }
 
 
     @Test

@@ -10,7 +10,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class AuditServerCommandHandler extends AbstractCommandHandler {
 
-    private static final String INPUT_REGEX = "\\u001b.*\\[$|#]?";
+    // private static final String INPUT_REGEX = "\\u001b.*\\[\\$|#]?";
+
+    private static final String INPUT_REGEX = ".*]?[$|#].*";
 
     private static final String BS_REGEX = ".?\b\\u001b\\[J";
 

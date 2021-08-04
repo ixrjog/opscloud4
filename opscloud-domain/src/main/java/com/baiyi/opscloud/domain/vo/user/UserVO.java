@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
-import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
@@ -68,7 +67,6 @@ public class UserVO {
         private String uuid;
 
         @DesensitizedField(type = SensitiveTypeEnum.PASSWORD)
-        @Encrypt
         @ApiModelProperty(value = "密码")
         private String password;
 
