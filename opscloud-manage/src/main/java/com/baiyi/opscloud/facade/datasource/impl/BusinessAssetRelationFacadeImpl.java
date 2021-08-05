@@ -34,7 +34,7 @@ public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFac
     @Override
     public void bindAsset(BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
-        if (businessAssetRelationService.getByUniquekey(relation) != null) return;
+        if (businessAssetRelationService.getByUniqueKey(relation) != null) return;
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iBusinessAssetRelation.getAssetId());
         if (asset == null) return;
         relation.setAssetType(asset.getAssetType());

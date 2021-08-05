@@ -19,5 +19,5 @@ public interface BusinessPropertyService {
 
     void deleteById(int id);
 
-    List<BusinessProperty> listByBusiness(Integer businessType, Integer businessId);
+    List<BusinessProperty> queryByBusiness(Integer businessType, Integer businessId);
 }

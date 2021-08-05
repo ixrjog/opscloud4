@@ -120,7 +120,7 @@ public class MenuFacadeImpl implements MenuFacade {
     @Override
     @Transactional(rollbackFor = {CommonRuntimeException.class, Exception.class})
     public void saveAuthRoleMenu(MenuParam.AuthRoleMenuSave param) {
-        authRoleMenuService.delByRoleId(param.getRoleId());
+        authRoleMenuService.deleteByRoleId(param.getRoleId());
         List<AuthRoleMenu> authRoleMenuList = param.getMenuChildIdList().stream().map(menuChildId -> {
             AuthRoleMenu authRoleMenu = new AuthRoleMenu();
             authRoleMenu.setRoleId(param.getRoleId());
@@ -136,7 +136,7 @@ public class MenuFacadeImpl implements MenuFacade {
 
     @Override
     public List<AuthRoleMenu> queryAuthRoleMenu(Integer roleId) {
-        return authRoleMenuService.listByRoleId(roleId);
+        return authRoleMenuService.queryByRoleId(roleId);
     }
 
     @Override

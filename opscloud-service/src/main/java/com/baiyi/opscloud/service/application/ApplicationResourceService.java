@@ -25,6 +25,6 @@ public interface ApplicationResourceService {
 
     ApplicationResource getByTypeAndId(Integer applicationId, Integer businessType, Integer businessId);
 
-    List<ApplicationResource> listByBusiness(Integer businessType,Integer businessId);
+    List<ApplicationResource> queryByBusiness(Integer businessType, Integer businessId);
 
 }

@@ -26,7 +26,7 @@ public class BusinessFacadeImpl implements BusinessFacade {
 
     @Override
     public Map<String, String> getBusinessProperty(Integer businessType, Integer businessId) {
-        List<BusinessProperty> properties = businessPropertyService.listByBusiness(businessType, businessId);
+        List<BusinessProperty> properties = businessPropertyService.queryByBusiness(businessType, businessId);
         Map<String, String> map = Maps.newHashMapWithExpectedSize(properties.size());
         properties.forEach(property -> map.put(property.getName(), property.getValue()));
         return map;

@@ -86,7 +86,7 @@ public class MenuPacker {
     }
 
     public List<MenuVO.Menu> toVOList(Integer roleId) {
-        List<AuthRoleMenu> authRoleMenuList = authRoleMenuService.listByRoleId(roleId);
+        List<AuthRoleMenu> authRoleMenuList = authRoleMenuService.queryByRoleId(roleId);
         if (CollectionUtils.isEmpty(authRoleMenuList))
             return Collections.emptyList();
         List<MenuChild> menuChildren = querySubmenu(authRoleMenuList);
@@ -127,7 +127,7 @@ public class MenuPacker {
         List<AuthUserRole> authUserRoleList = authUserRoleService.queryByUsername(username);
         if (CollectionUtils.isEmpty(authUserRoleList))
             return Collections.emptyList();
-        List<AuthRoleMenu> authRoleMenuList = authRoleMenuService.listByRoleIdList(
+        List<AuthRoleMenu> authRoleMenuList = authRoleMenuService.queryByRoleIds(
                 authUserRoleList.stream().map(AuthUserRole::getRoleId).collect(Collectors.toList()));
         if (CollectionUtils.isEmpty(authRoleMenuList))
             return Collections.emptyList();

@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.business;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 
@@ -14,17 +15,21 @@ public interface BusinessAssetRelationService {
 
     /**
      * 联合主键查询
+     *
      * @param businessAssetRelation
      * @return
      */
-    BusinessAssetRelation getByUniquekey(BusinessAssetRelation businessAssetRelation);
+    BusinessAssetRelation getByUniqueKey(BusinessAssetRelation businessAssetRelation);
 
-    BusinessAssetRelation getByUniquekey(BusinessAssetRelationVO.Relation relation);
+    default BusinessAssetRelation getByUniqueKey(BusinessAssetRelationVO.Relation relation) {
+        return getByUniqueKey(BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class));
+    }
 
     void add(BusinessAssetRelation businessAssetRelation);
 
     /**
      * 查询资产的绑定列表
+     *
      * @param businessType
      * @param datasourceInstanceAssetId
      * @return

@@ -13,9 +13,9 @@ public interface AuthRoleMenuService {
 
     void addList(List<AuthRoleMenu> authRoleMenuList);
 
-    void delByRoleId(Integer roleId);
+    void deleteByRoleId(Integer roleId);
 
-    List<AuthRoleMenu> listByRoleId(Integer roleId);
+    List<AuthRoleMenu> queryByRoleId(Integer roleId);
 
-    List<AuthRoleMenu> listByRoleIdList(List<Integer> roleIdList);
+    List<AuthRoleMenu> queryByRoleIds(List<Integer> roleIdList);
 }

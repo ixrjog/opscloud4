@@ -22,7 +22,7 @@ public class BusinessPropertyPacker {
     private BusinessPropertyService businessPropertyService;
 
     public void wrap(BusinessPropertyVO.IProperty iProperty) {
-        List<BusinessProperty> properties = businessPropertyService.listByBusiness(iProperty.getBusinessType(), iProperty.getBusinessType());
+        List<BusinessProperty> properties = businessPropertyService.queryByBusiness(iProperty.getBusinessType(), iProperty.getBusinessType());
         iProperty.setBusinessProperties(wrapVOList(properties));
     }
 

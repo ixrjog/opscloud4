@@ -72,7 +72,7 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
 
     private void bind(DsAssetVO.Asset asset, BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
-        if (businessAssetRelationService.getByUniquekey(relation) == null) {
+        if (businessAssetRelationService.getByUniqueKey(relation) == null) {
             BusinessAssetRelation businessAssetRelation = BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class);
             businessAssetRelation.setAssetType(asset.getAssetType());
             businessAssetRelationService.add(businessAssetRelation);

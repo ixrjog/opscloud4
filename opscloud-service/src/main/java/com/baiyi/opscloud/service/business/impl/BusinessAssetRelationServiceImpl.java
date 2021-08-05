@@ -1,8 +1,6 @@
 package com.baiyi.opscloud.service.business.impl;
 
-import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
-import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.mapper.opscloud.BusinessAssetRelationMapper;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import org.springframework.stereotype.Service;
@@ -23,18 +21,13 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     private BusinessAssetRelationMapper businessAssetRelationMapper;
 
     @Override
-    public BusinessAssetRelation getByUniquekey(BusinessAssetRelation businessAssetRelation) {
+    public BusinessAssetRelation getByUniqueKey(BusinessAssetRelation businessAssetRelation) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessAssetRelation.getBusinessType())
                 .andEqualTo("businessId", businessAssetRelation.getBusinessId())
                 .andEqualTo("datasourceInstanceAssetId", businessAssetRelation.getDatasourceInstanceAssetId());
         return businessAssetRelationMapper.selectOneByExample(example);
-    }
-
-    @Override
-    public BusinessAssetRelation getByUniquekey(BusinessAssetRelationVO.Relation relation) {
-        return getByUniquekey(BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class));
     }
 
     @Override

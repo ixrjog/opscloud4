@@ -27,7 +27,7 @@ public class AuthRoleMenuServiceImpl implements AuthRoleMenuService {
     }
 
     @Override
-    public void delByRoleId(Integer roleId) {
+    public void deleteByRoleId(Integer roleId) {
         Example example = new Example(AuthRoleMenu.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("roleId", roleId);
@@ -35,7 +35,7 @@ public class AuthRoleMenuServiceImpl implements AuthRoleMenuService {
     }
 
     @Override
-    public List<AuthRoleMenu> listByRoleId(Integer roleId) {
+    public List<AuthRoleMenu> queryByRoleId(Integer roleId) {
         Example example = new Example(AuthRoleMenu.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("roleId", roleId);
@@ -43,10 +43,10 @@ public class AuthRoleMenuServiceImpl implements AuthRoleMenuService {
     }
 
     @Override
-    public List<AuthRoleMenu> listByRoleIdList(List<Integer> roleIdList) {
+    public List<AuthRoleMenu> queryByRoleIds(List<Integer> roleIds) {
         Example example = new Example(AuthRoleMenu.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andIn("roleId", roleIdList);
+        criteria.andIn("roleId", roleIds);
         return authRoleMenuMapper.selectByExample(example);
     }
 }

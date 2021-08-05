@@ -73,7 +73,7 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     }
 
     @Override
-    public List<ApplicationResource> listByBusiness(Integer businessType, Integer businessId) {
+    public List<ApplicationResource> queryByBusiness(Integer businessType, Integer businessId) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessType)

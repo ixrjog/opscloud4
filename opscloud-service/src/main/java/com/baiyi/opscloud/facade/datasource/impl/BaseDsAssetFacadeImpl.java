@@ -54,7 +54,7 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
             properties.forEach(property -> dsInstanceAssetPropertyService.deleteById(property.getId()));
         }
         // 删除应用绑定关系
-        List<ApplicationResource> resourceList = applicationResourceService.listByBusiness(BusinessTypeEnum.ASSET.getType(), id);
+        List<ApplicationResource> resourceList = applicationResourceService.queryByBusiness(BusinessTypeEnum.ASSET.getType(), id);
         if (!CollectionUtils.isEmpty(resourceList)) {
             resourceList.forEach(resource -> applicationResourceService.delete(resource.getId()));
         }

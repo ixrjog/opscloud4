@@ -42,7 +42,7 @@ public class BusinessPropertyServiceImpl implements BusinessPropertyService {
     }
 
     @Override
-    public List<BusinessProperty> listByBusiness(Integer businessType, Integer businessId) {
+    public List<BusinessProperty> queryByBusiness(Integer businessType, Integer businessId) {
         Example example = new Example(BusinessProperty.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessType)
