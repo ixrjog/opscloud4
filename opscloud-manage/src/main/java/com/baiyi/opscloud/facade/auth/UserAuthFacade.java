@@ -12,10 +12,14 @@ public interface UserAuthFacade {
 
     void tryUserHasResourceAuthorize(String token, String resourceName);
 
+    void tryUserHasResourceAuthorizeByAccessToken(String accessToken, String resourceName);
+
     /**
      * 用户登录认证
      * @param loginParam
      * @return
      */
     LogVO.Login login(LoginParam.Login loginParam);
+
+    void logout();
 }

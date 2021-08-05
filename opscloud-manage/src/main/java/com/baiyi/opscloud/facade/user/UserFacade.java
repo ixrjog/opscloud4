@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 
 /**
@@ -29,4 +30,17 @@ public interface UserFacade {
     DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
     DataTable<ServerVO.Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery queryParam);
+
+
+    /**
+     * 授予用户AccessToken
+     * @param accessToken
+     * @return
+     */
+    AccessTokenVO.AccessToken grantUserAccessToken(AccessTokenVO.AccessToken accessToken);
+
+    /**
+     * 撤销用户AccessToken
+     */
+    void revokeUserAccessToken(String tokenId);
 }

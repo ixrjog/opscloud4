@@ -1,6 +1,6 @@
-package com.baiyi.opscloud.util;
+package com.baiyi.opscloud.util.time;
 
-import com.baiyi.opscloud.domain.vo.base.IAgo;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -38,14 +38,13 @@ public class AgoUtil {
 
     }
 
-    public static void decorator(IAgo iAgo){
+    public static void wrap(ShowTime.IAgo iAgo){
         iAgo.setAgo(format(iAgo.getAgoTime()));
     }
 
-
     public static String format(Date date) {
         long delta = new Date().getTime() - date.getTime();
-        if (delta < 1L * ONE_MINUTE) {
+        if (delta < ONE_MINUTE) {
             long seconds = toSeconds(delta);
             return (seconds <= 0 ? 1 : seconds) + ONE_SECOND_AGO;
         }

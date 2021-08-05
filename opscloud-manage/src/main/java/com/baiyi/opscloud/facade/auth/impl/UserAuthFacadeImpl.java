@@ -5,10 +5,7 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.datasource.manager.AuthProviderManager;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.PermitEmptyPasswords;
-import com.baiyi.opscloud.domain.generator.opscloud.AuthResource;
-import com.baiyi.opscloud.domain.generator.opscloud.AuthRole;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleResourceVO;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
@@ -17,6 +14,7 @@ import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
+import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import org.jasypt.encryption.StringEncryptor;
@@ -38,6 +36,9 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Resource
     private UserTokenService userTokenService;
+
+    @Resource
+    private AccessTokenService accessTokenService;
 
     @Resource
     private AuthResourceService authResourceService;
@@ -88,6 +89,25 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         }
     }
 
+    @Override
+    public void tryUserHasResourceAuthorizeByAccessToken(String accessToken, String resourceName) {
+        AuthResource authResource = authResourceService.queryByName(resourceName);
+        if (authResource == null)
+            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_RESOURCE_NOT_EXIST); // 资源不存在
+        if (!authResource.getNeedAuth())
+            return; // 此接口不需要鉴权
+        if (StringUtils.isEmpty(accessToken))
+            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_REQUEST_NO_TOKEN); // request请求中没有AccessToken
+        AccessToken token = accessTokenService.getByToken(accessToken);
+        if (token == null)
+            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_TOKEN_INVALID); // Token无效
+        SessionUtil.setUsername(token.getUsername()); // 设置会话用户
+        // 校验用户是否可以访问资源路径
+        if (accessTokenService.checkUserHasResourceAuthorize(accessToken, resourceName) == 0) {
+            throw new AuthRuntimeException(ErrorEnum.AUTHENTICATION_FAILURE);
+        }
+    }
+
     // 授权资源到SA角色
     private void grantRoleResource(AuthResource authResource) {
         AuthRole authRole = authRoleService.getByRoleName(SUPER_ADMIN);
@@ -115,5 +135,10 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
             throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败
         }
     }
+
+    @Override
+    public void logout() {
+    }
+
 
 }

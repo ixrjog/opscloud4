@@ -57,6 +57,9 @@ public class UserVO {
         @ApiModelProperty(value = "用户凭证")
         private UserCredentialVO.CredentialDetails credentialDetails;
 
+        @ApiModelProperty(value = "有效的AccessToken")
+        private List<AccessTokenVO.AccessToken> accessTokens;
+
         @ApiModelProperty(value = "主键")
         private Integer id;
 

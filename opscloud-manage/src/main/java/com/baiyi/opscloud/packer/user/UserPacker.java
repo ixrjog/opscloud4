@@ -38,6 +38,8 @@ public class UserPacker {
     @Resource
     private UserService userService;
 
+    @Resource
+    private UserAccessTokenPacker userAccessTokenPacker;
 
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
@@ -75,6 +77,7 @@ public class UserPacker {
     public UserVO.User wrap(UserVO.User user) {
         authRolePacker.wrap(user);
         userCredentialPacker.wrap(user);
+        userAccessTokenPacker.wrap(user);
         return desensitizedPacker.desensitized(user);
     }
 

@@ -1,11 +1,15 @@
 package com.baiyi.opscloud.domain.vo.user;
 
+import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -13,12 +17,15 @@ import java.util.Date;
  * @Date 2020/2/26 6:05 下午
  * @Version 1.0
  */
-public class UserApiTokenVO {
+public class AccessTokenVO {
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class UserApiToken {
+    public static class AccessToken extends BaseVO implements ShowTime.ILater {
+
+        private String later;
 
         @ApiModelProperty(value = "主键")
         private Integer id;
@@ -29,25 +36,20 @@ public class UserApiTokenVO {
         @ApiModelProperty(value = "是否有效")
         private Boolean valid;
 
-        @ApiModelProperty(value = "登录唯一标识")
+        @ApiModelProperty(value = "令牌")
         private String token;
 
-        @ApiModelProperty(value = "令牌id")
+        @ApiModelProperty(value = "令牌标识")
         private String tokenId;
 
         @ApiModelProperty(value = "过期时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
+        @NotNull(message = "必须指定过期时间")
         private Date expiredTime;
 
-        @ApiModelProperty(value = "留言")
+        @ApiModelProperty(value = "描述")
+        @NotNull(message = "必须指定描述")
         private String comment;
 
-        @ApiModelProperty(value = "创建时间")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date createTime;
-
-        @ApiModelProperty(value = "更新时间")
-        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
-        private Date updateTime;
     }
 }

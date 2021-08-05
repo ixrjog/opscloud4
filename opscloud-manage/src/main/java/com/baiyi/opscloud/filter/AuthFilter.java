@@ -5,6 +5,7 @@ import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.config.WhiteConfig;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.annotation.Resource;
@@ -31,6 +32,12 @@ public class AuthFilter extends OncePerRequestFilter {
      * 前端框架 token 名称
      */
     public static final String AUTHORIZATION = "Authorization";
+
+    /**
+     * API 令牌
+     */
+    public static final String ACCESS_TOKEN = "AccessToken";
+
 
     // public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
@@ -66,8 +73,13 @@ public class AuthFilter extends OncePerRequestFilter {
                 return;
             }
             final String token = request.getHeader(AUTHORIZATION);
-            try {
+            if (!StringUtils.isEmpty(token)) {
                 userAuthFacade.tryUserHasResourceAuthorize(token, resourceName);
+            } else {
+                final String accessToken = request.getHeader(ACCESS_TOKEN);
+                userAuthFacade.tryUserHasResourceAuthorizeByAccessToken(accessToken, resourceName);
+            }
+            try {
                 filterChain.doFilter(request, response);
             } catch (AuthRuntimeException ex) {
                 response.setContentType(APPLICATION_JSON_UTF8_VALUE);

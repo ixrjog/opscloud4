@@ -122,11 +122,23 @@ public class UserController {
         return new HttpResult<>(userGroupFacade.queryUserGroupPage(pageQuery));
     }
 
-
     @ApiOperation(value = "分页查询用户授权业务对象列表")
     @PostMapping(value = "/business/permission/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<UserVO.IUserPermission>> queryUserBusinessPermissionPage(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserBusinessPermissionPage(pageQuery));
+    }
+
+    @ApiOperation(value = "授权用户AccessToken")
+    @PostMapping(value = "/access/token/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<AccessTokenVO.AccessToken> grantUserAccessToken(@RequestBody @Valid AccessTokenVO.AccessToken accessToken) {
+        return new HttpResult<>(userFacade.grantUserAccessToken(accessToken));
+    }
+
+    @ApiOperation(value = "撤销用户AccessToken")
+    @PutMapping(value = "/access/token/revoke", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> revokeUserAccessToken(@RequestParam @Valid String tokenId) {
+        userFacade.revokeUserAccessToken(tokenId);
+        return HttpResult.SUCCESS;
     }
 
 }
