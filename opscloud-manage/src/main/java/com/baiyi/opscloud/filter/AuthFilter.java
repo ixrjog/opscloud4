@@ -72,14 +72,14 @@ public class AuthFilter extends OncePerRequestFilter {
                 filterChain.doFilter(request, response);
                 return;
             }
-            final String token = request.getHeader(AUTHORIZATION);
-            if (!StringUtils.isEmpty(token)) {
-                userAuthFacade.tryUserHasResourceAuthorize(token, resourceName);
-            } else {
-                final String accessToken = request.getHeader(ACCESS_TOKEN);
-                userAuthFacade.tryUserHasResourceAuthorizeByAccessToken(accessToken, resourceName);
-            }
             try {
+                final String token = request.getHeader(AUTHORIZATION);
+                if (!StringUtils.isEmpty(token)) {
+                    userAuthFacade.tryUserHasResourceAuthorize(token, resourceName);
+                } else {
+                    final String accessToken = request.getHeader(ACCESS_TOKEN);
+                    userAuthFacade.tryUserHasResourceAuthorizeByAccessToken(accessToken, resourceName);
+                }
                 filterChain.doFilter(request, response);
             } catch (AuthRuntimeException ex) {
                 response.setContentType(APPLICATION_JSON_UTF8_VALUE);
