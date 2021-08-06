@@ -17,7 +17,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class EcsAssetConvert extends BaseAssetConvert {
+public class AliyunEcsAssetConvert extends BaseAssetConvert {
 
     @Override
     public String getAssetType() {
