@@ -16,6 +16,8 @@ public interface UserGroupService {
 
     void update(UserGroup userGroup);
 
+    void deleteById(Integer id);
+
     UserGroup getByName(String name);
 
     UserGroup getById(Integer id);

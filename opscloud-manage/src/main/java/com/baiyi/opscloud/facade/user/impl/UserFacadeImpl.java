@@ -76,6 +76,7 @@ public class UserFacadeImpl implements UserFacade {
         if (StringUtils.isEmpty(pre.getPassword()))
             throw new CommonRuntimeException("密码不能为空");
         userService.add(pre);
+        user.setId(pre.getId());
     }
 
     @Override

@@ -27,6 +27,8 @@ public interface BusinessAssetRelationService {
 
     void add(BusinessAssetRelation businessAssetRelation);
 
+    void deleteById(Integer id);
+
     /**
      * 查询资产的绑定列表
      *
@@ -35,4 +37,12 @@ public interface BusinessAssetRelationService {
      * @return
      */
     List<BusinessAssetRelation> queryAssetRelations(int businessType, int datasourceInstanceAssetId);
+
+    /**
+     * 查询业务对象的绑定列表
+     * @param businessType
+     * @param businessId
+     * @return
+     */
+    List<BusinessAssetRelation> queryBusinessRelations(int businessType, int businessId);
 }

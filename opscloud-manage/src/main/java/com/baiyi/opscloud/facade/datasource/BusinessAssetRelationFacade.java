@@ -9,5 +9,17 @@ import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
  */
 public interface BusinessAssetRelationFacade {
 
+    /**
+     * 业务对象绑定资产
+     *
+     * @param iBusinessAssetRelation
+     */
     void bindAsset(BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation);
+
+    /**
+     * 解除业务对象与资产绑定
+     * @param businessType
+     * @param businessId
+     */
+    void unbindAsset(int businessType, Integer businessId);
 }

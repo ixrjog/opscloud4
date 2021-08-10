@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.facade.user.impl;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
@@ -21,6 +21,7 @@ import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -72,15 +73,18 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     }
 
     @Override
-    @TagClear(type = BusinessTypeEnum.USERGROUP)
+    @TagClear(type = BusinessTypeEnum.USERGROUP) // 清除标签
+    @AssetBusinessUnbindRelation(type = BusinessTypeEnum.USERGROUP) // 解除资产绑定
     public void deleteUserGroupById(Integer id) {
-        // 删除所有组员
+        // 检查组成员
         UserPermission userPermission = UserPermission.builder()
                 .businessId(id)
                 .businessType(BusinessTypeEnum.USERGROUP.getType())
                 .build();
         List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission);
-        System.out.println(JSON.toJSON(userPermissions));
+        if (!CollectionUtils.isEmpty(userPermissions))
+            throw new RuntimeException("必须删除用户组中的用户！");
+        userGroupService.deleteById(id);
     }
 
     @Override

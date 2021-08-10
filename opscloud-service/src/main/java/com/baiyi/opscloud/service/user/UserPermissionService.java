@@ -19,6 +19,8 @@ public interface UserPermissionService {
 
     void add(UserPermission userPermission);
 
+    void deleteById(Integer id);
+
     void deleteByUserPermission(UserPermission userPermission);
 
     /**

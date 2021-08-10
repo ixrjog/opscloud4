@@ -8,8 +8,10 @@ import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -26,11 +28,6 @@ public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFac
     private DsInstanceAssetService dsInstanceAssetService;
 
 
-    /**
-     * 业务对象绑定资产
-     *
-     * @param iBusinessAssetRelation
-     */
     @Override
     public void bindAsset(BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
@@ -39,6 +36,13 @@ public class BusinessAssetRelationFacadeImpl implements BusinessAssetRelationFac
         if (asset == null) return;
         relation.setAssetType(asset.getAssetType());
         businessAssetRelationService.add(BeanCopierUtil.copyProperties(relation, BusinessAssetRelation.class));
+    }
+
+    @Override
+    public void unbindAsset(int businessType, Integer businessId) {
+        List<BusinessAssetRelation> businessAssetRelations = businessAssetRelationService.queryBusinessRelations(businessType, businessId);
+        if (CollectionUtils.isEmpty(businessAssetRelations)) return;
+        businessAssetRelations.forEach(e -> businessAssetRelationService.deleteById(e.getId()));
     }
 
 

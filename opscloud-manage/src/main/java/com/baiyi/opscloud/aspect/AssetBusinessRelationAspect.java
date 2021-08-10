@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.aspect;
 
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
-import com.baiyi.opscloud.service.tag.BusinessTagService;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -13,6 +15,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 
 /**
+ * 业务对象绑定资产(User,UserGroup,Server,ServerGroup)
+ *
  * @Author baiyi
  * @Date 2021/8/6 5:31 下午
  * @Version 1.0
@@ -23,26 +27,37 @@ import javax.annotation.Resource;
 public class AssetBusinessRelationAspect {
 
     @Resource
-    private BusinessTagService businessTagService;
+    private BusinessAssetRelationFacade businessAssetRelationFacade;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.domain.annotation.AssetBusinessRelation)")
     public void annotationPoint() {
     }
 
     @Around("@annotation(assetBusinessRelation)")
-    public Object around(ProceedingJoinPoint joinPoint, AssetBusinessRelation assetBusinessRelation) throws Throwable {
-        Object result = joinPoint.proceed();
+    public Object around(ProceedingJoinPoint joinPoint, AssetBusinessRelation assetBusinessRelation) throws CommonRuntimeException {
+        Object result;
+        try {
+            result = joinPoint.proceed();
+        } catch (Throwable e) {
+            throw new CommonRuntimeException(e.getMessage());
+        }
         MethodSignature methodSignature = (MethodSignature) joinPoint.getSignature();
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
         if (params != null && params.length != 0) {
-            Integer businessId = Integer.valueOf(args[0].toString());
-//            log.info("清除业务标签: businessType = {} , businessId = {}", tagClear.type().getType(), businessId);
-//            businessTagService.deleteByBusinessTypeAndId(tagClear.type().getType(), businessId);
+            Object obj = args[0];
+            if (obj instanceof BusinessAssetRelationVO.IBusinessAssetRelation) {
+                BusinessAssetRelationVO.IBusinessAssetRelation bar = (BusinessAssetRelationVO.IBusinessAssetRelation) obj;
+                bindRelation(bar);
+            }
         }
-
-
-
         return result;
     }
+
+    private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation bar) {
+        if (bar.getAssetId() == null) return;
+        log.info("业务对象绑定资产: businessType = {} , businessId = {} , assetId = {}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
+        businessAssetRelationFacade.bindAsset(bar);
+    }
+
 }

@@ -36,11 +36,25 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     }
 
     @Override
+    public void deleteById(Integer id) {
+        businessAssetRelationMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public List<BusinessAssetRelation> queryAssetRelations(int businessType, int datasourceInstanceAssetId) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessType)
                 .andEqualTo("datasourceInstanceAssetId", datasourceInstanceAssetId);
+        return businessAssetRelationMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<BusinessAssetRelation> queryBusinessRelations(int businessType, int businessId) {
+        Example example = new Example(BusinessAssetRelation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
         return businessAssetRelationMapper.selectByExample(example);
     }
 

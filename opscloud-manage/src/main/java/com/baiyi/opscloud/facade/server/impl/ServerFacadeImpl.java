@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.datasource.manager.ServerProviderManager;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
@@ -11,7 +12,6 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.event.handler.ServerEventHandler;
 import com.baiyi.opscloud.event.param.ServerEventParam;
-import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.packer.server.ServerPacker;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -39,9 +39,6 @@ public class ServerFacadeImpl implements ServerFacade {
     @Resource
     private ServerProviderManager serverProviderManager;
 
-    @Resource
-    private BusinessAssetRelationFacade businessAssetRelationFacade;
-
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
@@ -49,15 +46,14 @@ public class ServerFacadeImpl implements ServerFacade {
     }
 
     @Override
+    @AssetBusinessRelation // 资产绑定业务对象
     public void addServer(ServerVO.Server server) {
         Server pre = toDO(server);
         ServerEventParam.update update = ServerEventParam.update.builder()
                 .server(pre).build();
         serverService.add(pre);
+        server.setId(pre.getId()); // 绑定资产
         serverEventHandler.updateHandle(update);
-        if (server.getAssetId() != null) {
-            businessAssetRelationFacade.bindAsset(server);
-        }
         serverProviderManager.create(pre);
     }
 

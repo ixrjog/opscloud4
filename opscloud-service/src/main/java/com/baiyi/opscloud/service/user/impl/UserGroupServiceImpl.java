@@ -38,6 +38,11 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
+    public void deleteById(Integer id) {
+        userGroupMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public UserGroup getByName(String name) {
         Example example = new Example(UserGroup.class);
         Example.Criteria criteria = example.createCriteria();
@@ -46,7 +51,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
-    public UserGroup getById(Integer id){
+    public UserGroup getById(Integer id) {
         return userGroupMapper.selectByPrimaryKey(id);
     }
 

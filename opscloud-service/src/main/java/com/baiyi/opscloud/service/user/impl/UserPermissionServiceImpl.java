@@ -36,6 +36,11 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
+    public void deleteById(Integer id) {
+        permissionMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public void deleteByUserPermission(UserPermission userPermission) {
         permissionMapper.delete(userPermission);
     }
