@@ -128,4 +128,10 @@ public class UserFacadeImpl implements UserFacade {
         accessTokenService.update(at);
     }
 
+    @Override
+    public DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
+        DataTable<User> table = userService.queryPageByParam(pageQuery);
+        return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
 }

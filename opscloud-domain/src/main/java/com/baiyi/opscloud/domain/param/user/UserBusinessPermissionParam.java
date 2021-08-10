@@ -34,12 +34,41 @@ public class UserBusinessPermissionParam {
         @ApiModelProperty(value = "是否授权")
         @NotNull(message = "是否授权选项不能为空")
         @Builder.Default
-        private Boolean authorized= true;
+        private Boolean authorized = true;
 
         private Boolean extend;
 
         private int businessType;
     }
+
+    @Data
+    @Builder
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class BusinessPermissionUserPageQuery extends PageParam implements IExtend {
+
+        @ApiModelProperty(value = "查询用户")
+        private String queryName;
+
+        @ApiModelProperty(value = "是否授权")
+        @NotNull(message = "是否授权选项不能为空")
+        @Builder.Default
+        private Boolean authorized = true;
+
+        private Boolean extend;
+
+        @ApiModelProperty(value = "业务对象类型")
+        @NotNull(message = "业务对象类型不能为空")
+        private int businessType;
+
+        @ApiModelProperty(value = "业务对象ID")
+        @NotNull(message = "业务对象ID不能为空")
+        private int businessId;
+
+    }
+
 
     @Data
     @EqualsAndHashCode(callSuper = true)

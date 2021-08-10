@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.user.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.mapper.opscloud.UserMapper;
 import com.baiyi.opscloud.service.user.UserService;
@@ -30,6 +31,13 @@ public class UserServiceImpl implements UserService {
     public DataTable<User> queryPageByParam(UserParam.UserPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<User> data = userMapper.queryPageByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
+    public DataTable<User> queryPageByParam(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<User> data = userMapper.queryBusinessPermissionUserPageByParam(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 

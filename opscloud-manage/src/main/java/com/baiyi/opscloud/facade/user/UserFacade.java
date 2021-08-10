@@ -43,4 +43,6 @@ public interface UserFacade {
      * 撤销用户AccessToken
      */
     void revokeUserAccessToken(String tokenId);
+
+    DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);
 }

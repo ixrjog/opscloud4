@@ -30,6 +30,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
 
     private AbstractAssetRelationProvider<T, S> getTargetProvider() {
         List<AbstractAssetRelationProvider<T, S>> providers = AssetProviderFactory.getProviders(getInstanceType(), getTargetAssetKey());
+        assert providers != null;
         Optional<AbstractAssetRelationProvider<T, S>> optional = providers.stream()
                 .filter(e -> e.getTargetAssetKey().equals(this.getAssetType()))
                 .findFirst();

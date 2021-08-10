@@ -42,5 +42,24 @@
         order by create_time
     </select>
 
+    <select id="queryBusinessPermissionUserPageByParam"
+            parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam$BusinessPermissionUserPageQuery"
+            resultMap="BaseResultMap">
+        select * from user
+        where
+        <choose>
+            <when test="authorized">
+                id in ( select user_id from user_permission where business_id = #{businessId} and business_type = #{businessType} )
+            </when>
+            <otherwise>
+                id not in ( select user_id from user_permission where business_id = #{businessId} and business_type = #{businessType} )
+            </otherwise>
+        </choose>
+        <if test="queryName != null and queryName != ''">
+            and ( username like "%" #{queryName} "%" or display_name like "%" #{queryName} "%" )
+        </if>
+        and is_active = true
+        order by create_time
+    </select>
 
 </mapper>

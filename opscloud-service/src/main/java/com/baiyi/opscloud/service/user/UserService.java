@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.user;
 
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 
 import java.util.List;
@@ -16,6 +17,8 @@ public interface UserService {
     User getById(Integer id);
 
     DataTable<User> queryPageByParam(UserParam.UserPageQuery pageQuery);
+
+    DataTable<User> queryPageByParam(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);
 
     User getByUsername(String username);
 

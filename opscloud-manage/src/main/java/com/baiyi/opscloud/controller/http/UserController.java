@@ -99,7 +99,7 @@ public class UserController {
     }
 
     @ApiOperation(value = "删除用户组")
-    @DeleteMapping(value = "/group/del",  produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/group/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteUserGroup(@RequestParam @Valid Integer id) {
         userGroupFacade.deleteUserGroupById(id);
         return HttpResult.SUCCESS;
@@ -148,6 +148,12 @@ public class UserController {
     @PostMapping(value = "/business/permission/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<UserVO.IUserPermission>> queryUserBusinessPermissionPage(@RequestBody @Valid UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
         return new HttpResult<>(userFacade.queryUserBusinessPermissionPage(pageQuery));
+    }
+
+    @ApiOperation(value = "分页查询业务对象授权的用户列表")
+    @PostMapping(value = "/permission/business/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<UserVO.User>> queryBusinessPermissionUserPage(@RequestBody @Valid UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
+        return new HttpResult<>(userFacade.queryBusinessPermissionUserPage(pageQuery));
     }
 
     @ApiOperation(value = "授权用户AccessToken")
