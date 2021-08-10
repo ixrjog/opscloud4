@@ -55,6 +55,7 @@ public class ServerPacker {
     public void wrap(ServerVO.Server server) {
         tagPacker.wrap(server);
         accountPacker.wrap(server);
+        envPacker.wrap(server);
         serverGroupPacker.wrap(server);
     }
 }
