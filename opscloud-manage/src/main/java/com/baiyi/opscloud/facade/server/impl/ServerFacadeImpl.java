@@ -14,7 +14,6 @@ import com.baiyi.opscloud.event.param.ServerEventParam;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.packer.server.ServerPacker;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.server.ServerService;
 import org.springframework.stereotype.Service;
 
@@ -54,25 +53,22 @@ public class ServerFacadeImpl implements ServerFacade {
         Server pre = toDO(server);
         ServerEventParam.update update = ServerEventParam.update.builder()
                 .server(pre).build();
-        serverEventHandler.updateHandle(update);
         serverService.add(pre);
+        serverEventHandler.updateHandle(update);
         if (server.getAssetId() != null) {
             businessAssetRelationFacade.bindAsset(server);
         }
         serverProviderManager.create(pre);
     }
 
-
-
     @Override
     public void updateServer(ServerVO.Server server) {
         Server pre = toDO(server);
         ServerEventParam.update update = ServerEventParam.update.builder()
                 .server(pre).build();
-        serverEventHandler.updateHandle(update);
         serverService.update(pre);
+        serverEventHandler.updateHandle(update);
         serverProviderManager.update(pre);
-
     }
 
     private Server toDO(ServerVO.Server server) {

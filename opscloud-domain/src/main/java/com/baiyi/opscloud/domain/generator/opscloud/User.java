@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.generator.opscloud;
 
 import com.baiyi.opscloud.domain.annotation.Decrypt;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 
 import javax.persistence.Column;
@@ -53,6 +54,7 @@ public class User {
     private Boolean isActive;
 
     @Column(name = "last_login")
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     private Date lastLogin;
 
     private String wechat;
@@ -73,12 +75,14 @@ public class User {
     /**
      * 创建时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
     /**
      * 更新时间
      */
+    @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
 

@@ -32,5 +32,6 @@ public class DsConfigParam {
 
         @ApiModelProperty(value = "是否激活")
         private Boolean isActive;
+
     }
 }

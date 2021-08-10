@@ -25,5 +25,8 @@ public class UserBusinessPermissionFactory {
         context.put(bean.getBusinessType(), bean);
     }
 
+    public static Map<Integer, IUserBusinessPermissionPageQuery> getContext(){
+        return context;
+    }
 
 }

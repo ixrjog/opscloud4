@@ -2,8 +2,11 @@ package com.baiyi.opscloud.domain.vo.user;
 
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.IWorkorder;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -17,20 +20,22 @@ import java.util.List;
  */
 public class UserGroupVO {
 
-
     public interface IUserGroups {
         Integer getUserId();
-
         void setUserGroups(List<UserGroupVO.UserGroup> userGroups);
-
     }
 
     @Data
+    @Builder
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class UserGroup implements UserVO.IUserPermission,IWorkorder {
+    public static class UserGroup implements UserVO.IUserPermission, IWorkorder, BusinessAssetRelationVO.IBusinessAssetRelation {
 
         private final int businessType = BusinessTypeEnum.USERGROUP.getType();
+
+        @ApiModelProperty(value = "资产id")
+        private Integer assetId;
 
         @Override
         public int getBusinessId() {
@@ -48,14 +53,16 @@ public class UserGroupVO {
         private Integer userSize;
 
         @ApiModelProperty(value = "主键")
-        private Integer id;
+        @Builder.Default
+        private Integer id = 0;
 
         @NotBlank(message = "用户组名称不能为空")
         @ApiModelProperty(value = "用户组名称")
         private String name;
 
         @ApiModelProperty(value = "用户组类型")
-        private Integer groupType;
+        @Builder.Default
+        private Integer groupType = 0;
 
         @ApiModelProperty(value = "允许工单申请")
         private Boolean allowWorkorder;
@@ -66,5 +73,9 @@ public class UserGroupVO {
         @ApiModelProperty(value = "留言")
         private String comment;
 
+        @Override
+        public String getBusinessUniqueKey() {
+            return name;
+        }
     }
 }

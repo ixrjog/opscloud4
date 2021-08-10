@@ -37,5 +37,6 @@ public class ApplicationParam {
         @NotNull
         @ApiModelProperty(value = "应用id")
         private Integer applicationId;
+
     }
 }

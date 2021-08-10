@@ -71,15 +71,37 @@ public class UserController {
 
     @ApiOperation(value = "新增用户")
     @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> addServer(@RequestBody @Valid UserVO.User user) {
+    public HttpResult<Boolean> addUser(@RequestBody @Valid UserVO.User user) {
         userFacade.addUser(user);
         return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "更新用户")
     @PutMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<Boolean> updateServer(@RequestBody @Valid UserVO.User user) {
+    public HttpResult<Boolean> updateUser(@RequestBody @Valid UserVO.User user) {
         userFacade.updateUser(user);
+        return HttpResult.SUCCESS;
+    }
+
+
+    @ApiOperation(value = "新增用户组")
+    @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+        userGroupFacade.addUserGroup(userGroup);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "更新用户组")
+    @PutMapping(value = "/group/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateUserGroup(@RequestBody @Valid UserGroupVO.UserGroup userGroup) {
+        userGroupFacade.updateUserGroup(userGroup);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除用户组")
+    @DeleteMapping(value = "/group/del",  produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteUserGroup(@RequestParam @Valid Integer id) {
+        userGroupFacade.deleteUserGroupById(id);
         return HttpResult.SUCCESS;
     }
 

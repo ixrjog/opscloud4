@@ -28,5 +28,6 @@ public class AuthRoleResourceParam {
 
         @ApiModelProperty(value = "是否绑定")
         private Boolean bind;
+
     }
 }

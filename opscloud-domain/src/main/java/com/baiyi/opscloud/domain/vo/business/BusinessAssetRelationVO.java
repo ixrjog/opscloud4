@@ -15,6 +15,14 @@ public class BusinessAssetRelationVO {
 
         Integer getAssetId();
 
+        void setAssetId(Integer assetId);
+
+        /**
+         * 业务对象唯一键
+         * @return
+         */
+        String getBusinessUniqueKey();
+
         default Relation toBusinessAssetRelation() {
             return Relation.builder()
                     .businessType(this.getBusinessType())

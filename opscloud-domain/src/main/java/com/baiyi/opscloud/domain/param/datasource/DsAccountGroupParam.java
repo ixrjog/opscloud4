@@ -37,5 +37,6 @@ public class DsAccountGroupParam {
 
         @ApiModelProperty(value = "是否激活")
         private Boolean isActive;
+
     }
 }

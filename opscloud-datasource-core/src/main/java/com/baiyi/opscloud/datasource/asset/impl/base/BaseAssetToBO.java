@@ -22,12 +22,17 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseAssetConvert implements IAssetConvert, InitializingBean {
+public abstract class BaseAssetToBO implements IAssetConvert, InitializingBean {
 
     @Resource
     protected BusinessAssetRelationService businessAssetRelationService;
 
-    protected abstract BusinessAssetRelationVO.IBusinessAssetRelation toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum);
+    protected abstract BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum);
+
+    private BusinessAssetRelationVO.IBusinessAssetRelation wrap(BusinessAssetRelationVO.IBusinessAssetRelation bo, DsAssetVO.Asset asset) {
+        bo.setAssetId(asset.getId());
+        return bo;
+    }
 
     @Override
     public Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> toBusinessTypes(DsAssetVO.Asset asset) {
@@ -35,7 +40,7 @@ public abstract class BaseAssetConvert implements IAssetConvert, InitializingBea
         for (BusinessTypeEnum businessType : getBusinessTypes()) {
             List<BusinessAssetRelation> businessAssetRelations = queryBusinessAssetRelations(asset, businessType);
             if (CollectionUtils.isEmpty(businessAssetRelations)) {
-                businessTypeMap.put(businessType, toBusinessObject(asset, businessType));
+                businessTypeMap.put(businessType, wrap(toBO(asset, businessType), asset));
             }
         }
         return businessTypeMap;

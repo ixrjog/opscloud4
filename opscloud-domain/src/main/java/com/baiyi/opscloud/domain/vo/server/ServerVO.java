@@ -39,6 +39,11 @@ public class ServerVO {
             BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
             Serializable {
 
+        @Override
+        public String getBusinessUniqueKey() {
+            return privateIp;
+        }
+
         private static final long serialVersionUID = -1011261913967456450L;
         private List<TagVO.Tag> tags;
 
@@ -61,7 +66,8 @@ public class ServerVO {
         }
 
         @ApiModelProperty(value = "主键", example = "1")
-        private Integer id;
+        @Builder.Default
+        private Integer id = 0;
 
         @ApiModelProperty(value = "服务器名称")
         @NotNull(message = "服务器名称不能为空")
@@ -115,6 +121,7 @@ public class ServerVO {
 
         @ApiModelProperty(value = "资产id")
         private Integer assetId;
+
     }
 
 }

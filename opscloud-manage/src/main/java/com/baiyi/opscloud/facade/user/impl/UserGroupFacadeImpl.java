@@ -1,7 +1,11 @@
 package com.baiyi.opscloud.facade.user.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
+import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -13,6 +17,7 @@ import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.user.UserGroupPacker;
 import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.user.UserGroupService;
+import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
@@ -37,6 +42,9 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     @Resource
     private UserPermissionPacker userPermissionPacker;
 
+    @Resource
+    private UserPermissionService userPermissionService;
+
     @Override
     public int getBusinessType() {
         return BusinessTypeEnum.USERGROUP.getType();
@@ -49,9 +57,36 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     }
 
     @Override
-    public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
-        DataTable<UserGroup> table = userGroupService.queryPageByParam(pageQuery);
+    public void addUserGroup(UserGroupVO.UserGroup userGroup) {
+        userGroupService.add(BeanCopierUtil.copyProperties(userGroup, UserGroup.class));
+    }
 
+    @Override
+    public void updateUserGroup(UserGroupVO.UserGroup userGroup) {
+        UserGroup pre = userGroupService.getById(userGroup.getId());
+        if (pre == null) return;
+        pre.setAllowWorkorder(userGroup.getAllowWorkorder());
+        pre.setComment(userGroup.getComment());
+        pre.setSource(userGroup.getSource());
+        userGroupService.update(pre);
+    }
+
+    @Override
+    @TagClear(type = BusinessTypeEnum.USERGROUP)
+    public void deleteUserGroupById(Integer id) {
+        // 删除所有组员
+        UserPermission userPermission = UserPermission.builder()
+                .businessId(id)
+                .businessType(BusinessTypeEnum.USERGROUP.getType())
+                .build();
+        List<UserPermission> userPermissions = userPermissionService.queryByBusiness(userPermission);
+        System.out.println(JSON.toJSON(userPermissions));
+    }
+
+    @Override
+    public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        pageQuery.setBusinessType(getBusinessType());
+        DataTable<UserGroup> table = userGroupService.queryPageByParam(pageQuery);
         List<UserGroupVO.UserGroup> data = userGroupPacker.wrapVOList(table.getData(), pageQuery);
         if (pageQuery.getAuthorized()) {
             data.forEach(e -> {

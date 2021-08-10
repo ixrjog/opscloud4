@@ -34,6 +34,7 @@ public class AuthResourceParam {
         public Boolean getExtend() {
             return true;
         }
+
     }
 
     @Data

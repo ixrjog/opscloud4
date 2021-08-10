@@ -13,4 +13,9 @@ public interface UserGroupFacade {
 
     DataTable<UserGroupVO.UserGroup> queryUserGroupPage(UserGroupParam.UserGroupPageQuery pageQuery);
 
+    void addUserGroup(UserGroupVO.UserGroup userGroup);
+
+    void updateUserGroup(UserGroupVO.UserGroup userGroup);
+
+    void deleteUserGroupById(Integer id);
 }

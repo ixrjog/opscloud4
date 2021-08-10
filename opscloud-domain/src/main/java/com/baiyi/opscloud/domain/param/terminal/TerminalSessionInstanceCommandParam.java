@@ -31,5 +31,6 @@ public class TerminalSessionInstanceCommandParam {
         private String queryName;
 
         private Boolean extend;
+
     }
 }

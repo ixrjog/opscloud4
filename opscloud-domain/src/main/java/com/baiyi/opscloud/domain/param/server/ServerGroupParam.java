@@ -31,6 +31,7 @@ public class ServerGroupParam {
         private Integer serverGroupTypeId;
 
         private Boolean extend;
+
     }
 
     @Data
@@ -72,6 +73,7 @@ public class ServerGroupParam {
         private Boolean isAdmin;
 
         private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
+
     }
 
 }

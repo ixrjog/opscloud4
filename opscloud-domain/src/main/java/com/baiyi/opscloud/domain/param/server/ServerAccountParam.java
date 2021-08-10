@@ -49,5 +49,6 @@ public class ServerAccountParam {
         private String protocol;
 
         private Boolean extend;
+
     }
 }

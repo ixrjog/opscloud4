@@ -38,6 +38,19 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     @Override
+    public UserGroup getByName(String name) {
+        Example example = new Example(UserGroup.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("name", name);
+        return userGroupMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public UserGroup getById(Integer id){
+        return userGroupMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public DataTable<UserGroup> queryPageByParam(UserGroupParam.UserGroupPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(UserGroup.class);

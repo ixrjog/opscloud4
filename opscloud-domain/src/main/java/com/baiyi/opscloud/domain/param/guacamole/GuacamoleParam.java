@@ -17,12 +17,19 @@ public class GuacamoleParam {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class Login {
+
         private Integer serverId;
+
         private String protocol;
+
         private Integer serverAccountId;
+
         private Integer screenWidth;
+
         private Integer screenHeight;
+
         private Integer screenDpi;
+
     }
 
 }

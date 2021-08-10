@@ -3,19 +3,27 @@ package com.baiyi.opscloud.packer.user;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
+import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.util.ExtendUtil;
+import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -69,7 +77,6 @@ public class UserPacker {
         return pre;
     }
 
-
     public UserVO.User wrap(User user) {
         return wrap(BeanCopierUtil.copyProperties(user, UserVO.User.class));
     }
@@ -78,6 +85,7 @@ public class UserPacker {
         authRolePacker.wrap(user);
         userCredentialPacker.wrap(user);
         userAccessTokenPacker.wrap(user);
+        wrapPermission(user);
         return desensitizedPacker.desensitized(user);
     }
 
@@ -86,4 +94,27 @@ public class UserPacker {
         if (user != null)
             iUser.setUser(wrap(user));
     }
+
+    private void wrapPermission(UserVO.User user) {
+        Map<Integer, IUserBusinessPermissionPageQuery> context = UserBusinessPermissionFactory.getContext();
+
+        UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery = UserBusinessPermissionParam.UserBusinessPermissionPageQuery
+                .builder()
+                .userId(user.getId())
+                .build();
+        pageQuery.setPage(1);
+        pageQuery.setLength(10000);
+
+        Map<String, List<UserVO.IUserPermission>> businessPermissions = Maps.newHashMap();
+
+        context.keySet().forEach(k -> {
+            DataTable<UserVO.IUserPermission> table = context.get(k).queryUserBusinessPermissionPage(pageQuery);
+            BusinessTypeEnum businessTypeEnum = BusinessTypeEnum.getByType(k);
+            if (businessTypeEnum != null && !CollectionUtils.isEmpty(table.getData())) {
+                businessPermissions.put(businessTypeEnum.name(), table.getData());
+            }
+        });
+        user.setBusinessPermissions(businessPermissions);
+    }
+
 }

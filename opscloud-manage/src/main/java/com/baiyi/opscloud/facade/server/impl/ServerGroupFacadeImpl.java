@@ -95,6 +95,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
 
     @Override
     public DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery) {
+        pageQuery.setBusinessType(getBusinessType());
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
         List<ServerGroupVO.ServerGroup> data = serverGroupPacker.wrapVOList(table.getData(), pageQuery);
         if (pageQuery.getAuthorized())

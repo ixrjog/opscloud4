@@ -39,6 +39,7 @@ public class UserBusinessGroupParam {
     @NoArgsConstructor
     @ApiModel
     public static class UserUserGroupPageQuery extends PageParam {
+
         @ApiModelProperty(value = "用户id")
         private Integer userId;
 
@@ -51,6 +52,7 @@ public class UserBusinessGroupParam {
     @NoArgsConstructor
     @ApiModel
     public static class UserServerGroupPageQuery extends PageParam {
+
         @ApiModelProperty(value = "用户id")
         private Integer userId;
 
@@ -62,6 +64,7 @@ public class UserBusinessGroupParam {
     @NoArgsConstructor
     @ApiModel
     public static class UserUserGroupPermission {
+
         @ApiModelProperty(value = "用户id")
         private Integer userId;
 

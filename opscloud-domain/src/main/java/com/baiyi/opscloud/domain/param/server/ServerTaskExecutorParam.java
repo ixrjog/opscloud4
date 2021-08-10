@@ -15,7 +15,6 @@ import java.util.Set;
  */
 public class ServerTaskExecutorParam {
 
-
     @Data
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor
@@ -56,6 +55,7 @@ public class ServerTaskExecutorParam {
 
         @ApiModelProperty(value = "按标签执行playbook")
         private Set<String> tags;
+
     }
 
 
@@ -78,6 +78,7 @@ public class ServerTaskExecutorParam {
 
         @ApiModelProperty(value = "任务类型")
         private Integer taskType;
+
     }
 
 

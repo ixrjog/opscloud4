@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.server.impl;
 
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.datasource.provider.base.common.IInstanceType;
@@ -13,8 +12,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.business.BusinessFacade;
-import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.tag.BaseTagService;
 import org.apache.commons.lang3.StringUtils;
@@ -45,14 +42,14 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
     @Resource
     private BaseTagService baseTagService;
 
-    @Resource
-    protected DsConfigFactory dsFactory;
-
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
-
-    @Resource
-    private BaseDsAssetFacade baseDsAssetFacade;
+//    @Resource
+//    protected DsConfigFactory dsFactory;
+//
+//    @Resource
+//    private DsInstanceAssetService dsInstanceAssetService;
+//
+//    @Resource
+//    private BaseDsAssetFacade baseDsAssetFacade;
 
     @Override
     public void create(Server server) {

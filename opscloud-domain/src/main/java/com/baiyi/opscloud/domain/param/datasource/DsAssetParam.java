@@ -47,6 +47,7 @@ public class DsAssetParam {
         @ApiModelProperty(value = "是否有效")
         @Builder.Default
         private Boolean isActive = true;
+
     }
 
     @Data
@@ -61,6 +62,7 @@ public class DsAssetParam {
         @ApiModelProperty(value = "资产类型")
         @NotNull
         private String assetType;
+
     }
 
     @EqualsAndHashCode(callSuper = true)

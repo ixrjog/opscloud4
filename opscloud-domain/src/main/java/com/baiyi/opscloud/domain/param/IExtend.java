@@ -8,4 +8,5 @@ package com.baiyi.opscloud.domain.param;
 public interface IExtend {
 
     Boolean getExtend();
+
 }

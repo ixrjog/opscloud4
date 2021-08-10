@@ -5,17 +5,17 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -43,16 +43,25 @@ public class UserVO {
     }
 
     @EqualsAndHashCode(callSuper = true)
+    @Builder
     @Data
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class User extends BaseVO {
+    public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation // 资产与业务对象绑定关系
+    {
 
         private final int businessType = BusinessTypeEnum.USER.getType();
 
-        private List<AuthRoleVO.Role> roles;
+        @Override
+        public int getBusinessId() {
+            return id;
+        }
 
-        private List<UserGroupVO.UserGroup> userGroups;
+        @ApiModelProperty(value = "资产id")
+        private Integer assetId;
+
+        private List<AuthRoleVO.Role> roles;
 
         @ApiModelProperty(value = "用户凭证")
         private UserCredentialVO.CredentialDetails credentialDetails;
@@ -60,8 +69,11 @@ public class UserVO {
         @ApiModelProperty(value = "有效的AccessToken")
         private List<AccessTokenVO.AccessToken> accessTokens;
 
+        private Map<String, List<IUserPermission>> businessPermissions;
+
         @ApiModelProperty(value = "主键")
-        private Integer id;
+        @Builder.Default
+        private Integer id = 0;
 
         @ApiModelProperty(value = "用户名")
         private String username;
@@ -85,7 +97,8 @@ public class UserVO {
 
         @ApiModelProperty(value = "有效用户")
         @NotNull(message = "有效用户字段不能为空")
-        private Boolean isActive;
+        @Builder.Default
+        private Boolean isActive = true;
 
         @ApiModelProperty(value = "最后登录时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
@@ -107,6 +120,10 @@ public class UserVO {
         @ApiModelProperty(value = "留言")
         private String comment;
 
+        @Override
+        public String getBusinessUniqueKey() {
+            return username;
+        }
     }
 
 }

@@ -32,5 +32,6 @@ public class SeverGroupPropertyParam {
         @ApiModelProperty(value = "环境类型",example = "-1")
         @NotNull
         private Integer envType;
+
     }
 }

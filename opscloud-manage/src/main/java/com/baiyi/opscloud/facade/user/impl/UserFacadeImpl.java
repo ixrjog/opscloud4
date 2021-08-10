@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.PasswordUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
@@ -69,6 +70,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
+    @AssetBusinessRelation // 资产绑定业务对象
     public void addUser(UserVO.User user) {
         User pre = userPacker.toDO(user);
         if (StringUtils.isEmpty(pre.getPassword()))

@@ -14,4 +14,5 @@ public class PageParam {
 
     @ApiModelProperty(value = "分页页长",example = "10")
     private Integer length;
+
 }

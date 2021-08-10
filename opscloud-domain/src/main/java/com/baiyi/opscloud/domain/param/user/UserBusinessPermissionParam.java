@@ -5,9 +5,7 @@ import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -18,13 +16,15 @@ import javax.validation.constraints.NotNull;
  */
 public class UserBusinessPermissionParam {
 
-
     @Data
+    @Builder
     @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
     public static class UserBusinessPermissionPageQuery extends PageParam implements IExtend {
-        @ApiModelProperty(value = "组名")
+
+        @ApiModelProperty(value = "查询名称")
         private String queryName;
 
         @ApiModelProperty(value = "用户id")
@@ -33,7 +33,8 @@ public class UserBusinessPermissionParam {
 
         @ApiModelProperty(value = "是否授权")
         @NotNull(message = "是否授权选项不能为空")
-        private Boolean authorized;
+        @Builder.Default
+        private Boolean authorized= true;
 
         private Boolean extend;
 

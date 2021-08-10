@@ -28,5 +28,6 @@ public class TerminalSessionParam {
         private String sessionType;
 
         private Boolean extend;
+
     }
 }

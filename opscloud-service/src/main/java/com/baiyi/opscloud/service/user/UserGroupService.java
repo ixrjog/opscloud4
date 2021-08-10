@@ -16,6 +16,10 @@ public interface UserGroupService {
 
     void update(UserGroup userGroup);
 
+    UserGroup getByName(String name);
+
+    UserGroup getById(Integer id);
+
     DataTable<UserGroup> queryPageByParam(UserGroupParam.UserGroupPageQuery pageQuery);
 
     DataTable<UserGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);

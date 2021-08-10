@@ -24,6 +24,7 @@ public class UserSettingParam {
 
         @ApiModelProperty(value = "用户设置项")
         private Map<String, String> settingMap;
+
     }
 
 }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.asset.impl;
 
-import com.baiyi.opscloud.datasource.asset.impl.base.BaseAssetConvert;
+import com.baiyi.opscloud.datasource.asset.impl.base.BaseAssetToBO;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
@@ -17,16 +17,15 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class ZabbixHostAssetConvert extends BaseAssetConvert {
+public class ZabbixHostAssetToServer extends BaseAssetToBO {
 
     @Override
     public String getAssetType() {
         return DsAssetTypeEnum.ZABBIX_HOST.getType();
     }
 
-    protected BusinessAssetRelationVO.IBusinessAssetRelation toBusinessObject(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
+    protected BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
         return ServerVO.Server.builder()
-                .id(0)
                 .name(asset.getName())
                 .privateIp(asset.getAssetKey())
                 .publicIp(asset.getAssetKey2())

@@ -17,6 +17,7 @@ import javax.annotation.Resource;
  * @Since 1.0
  */
 
+@SuppressWarnings("ALL")
 @Slf4j
 @Component
 public class ServerEventHandler {

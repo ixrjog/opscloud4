@@ -31,7 +31,6 @@ public class MenuParam {
         private List<MenuVO.Child> menuChildList;
     }
 
-
     @Data
     @NoArgsConstructor
     @ApiModel
@@ -43,6 +42,7 @@ public class MenuParam {
         @NotEmpty(message = "菜单列表不能为空")
         @ApiModelProperty(value = "菜单id列表")
         private List<Integer> menuChildIdList;
+
     }
 }
 

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.datasource.impl;
 import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.factory.SetDsInstanceConfigFactory;
-import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetBusinessRelationProvider;
+import com.baiyi.opscloud.datasource.provider.base.asset.IAssetBusinessRelation;
 import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.datasource.provider.base.common.AbstractSetDsInstanceConfigProvider;
 import com.baiyi.opscloud.domain.DataTable;
@@ -81,6 +81,7 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
     }
 
     @Override
+    @Async
     public void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
         DatasourceInstance dsInstance = dsInstanceService.getById(scanAssetBusiness.getInstanceId());
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
@@ -88,8 +89,8 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), scanAssetBusiness.getAssetType());
         assert providers != null;
         for (SimpleAssetProvider provider : providers) {
-            if (provider instanceof AbstractAssetBusinessRelationProvider) {
-                ((AbstractAssetBusinessRelationProvider) provider).scan(scanAssetBusiness.getInstanceId());
+            if (provider instanceof IAssetBusinessRelation) {
+                ((IAssetBusinessRelation) provider).scan(scanAssetBusiness.getInstanceId());
             }
         }
     }

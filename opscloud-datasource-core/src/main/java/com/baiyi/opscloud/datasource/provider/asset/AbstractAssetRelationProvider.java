@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.datasource.provider.asset;
 
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.common.ITargetProvider;
 import com.baiyi.opscloud.datasource.provider.base.param.UniqueAssetParam;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
@@ -21,7 +21,7 @@ import java.util.Optional;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvider<S> implements ITargetProvider {
+public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetBusinessRelationProvider<S> implements ITargetProvider {
 
     @Resource
     private DsInstanceAssetRelationService dsInstanceAssetRelationService;
@@ -56,8 +56,8 @@ public abstract class AbstractAssetRelationProvider<S, T> extends BaseAssetProvi
                         .build();
                 try {
                     targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
-                }catch (Exception e) {
-                    log.info(e.getMessage(),e);
+                } catch (Exception e) {
+                    log.info(e.getMessage(), e);
                     return;
                 }
             }
