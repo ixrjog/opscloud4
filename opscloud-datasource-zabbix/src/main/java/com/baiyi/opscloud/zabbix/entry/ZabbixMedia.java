@@ -3,6 +3,7 @@ package com.baiyi.opscloud.zabbix.entry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -10,10 +11,15 @@ import lombok.Data;
  * @Date 2021/6/28 1:44 下午
  * @Since 1.0
  */
-
+@Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixMedia {
+
+    public interface MediaType {
+        int MAIL = 1;
+        int PHONE = 3;
+    }
 
 
     /**
@@ -36,15 +42,18 @@ public class ZabbixMedia {
      * 0 - (默认) enabled;
      * 1 - disabled.
      */
-    private Integer active;
+    @Builder.Default
+    private Integer active = 0;
 
     /**
      * 触发发送通知告警级别
      */
-    private Integer severity;
+    @Builder.Default
+    private Integer severity = 48;
 
     /**
      * 当通知可以作为 时间段 发送或者用分号隔开用户宏
      */
-    private String period;
+    @Builder.Default
+    private String period = "1-7,00:00-24:00";
 }

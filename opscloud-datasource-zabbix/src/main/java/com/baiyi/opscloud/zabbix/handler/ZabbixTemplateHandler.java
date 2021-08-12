@@ -4,10 +4,11 @@ import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequestBuilder;
+import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
+import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
@@ -16,7 +17,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -28,26 +29,26 @@ import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
 public class ZabbixTemplateHandler {
 
     @Resource
-    private ZabbixHandler zabbixHandler;
+    private ZabbixServer zabbixHandler;
 
     private interface Method {
         String QUERY_TEMPLATE = "template.get";
     }
 
-    private ZabbixCommonRequestBuilder queryRequestBuilder() {
-        return ZabbixCommonRequestBuilder.builder()
+    private SimpleZabbixRequestBuilder queryRequestBuilder() {
+        return SimpleZabbixRequestBuilder.builder()
                 .method(Method.QUERY_TEMPLATE);
     }
 
     public List<ZabbixTemplate> listTemplates(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
     public List<ZabbixTemplate> listTemplatesByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -55,7 +56,7 @@ public class ZabbixTemplateHandler {
     }
 
     public List<ZabbixTemplate> listTemplatesByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, group.getGroupId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -63,7 +64,7 @@ public class ZabbixTemplateHandler {
     }
 
     public ZabbixTemplate getTemplateById(DsZabbixConfig.Zabbix zabbix, String templateId) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(TEMPLATE_IDS, templateId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -77,7 +78,7 @@ public class ZabbixTemplateHandler {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", names)
                 .build();
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .filter(filter)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

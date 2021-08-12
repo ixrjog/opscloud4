@@ -48,7 +48,7 @@ public class AliyunVSwitchProvider extends AbstractChildAssetProvider<DescribeVS
     }
 
     private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+        return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
     @Override

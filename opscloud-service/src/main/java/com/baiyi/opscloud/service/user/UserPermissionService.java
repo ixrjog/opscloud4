@@ -25,10 +25,19 @@ public interface UserPermissionService {
 
     /**
      * 只查询数量
+     *
      * @param userPermission
      * @return
      */
     int countByBusiness(UserPermission userPermission);
 
     List<UserPermission> queryByBusiness(UserPermission userPermission);
+
+    /**
+     * 查询用户授权信息
+     * @param userId
+     * @param businessType
+     * @return
+     */
+    List<UserPermission> queryByUserPermission(Integer userId, Integer businessType);
 }

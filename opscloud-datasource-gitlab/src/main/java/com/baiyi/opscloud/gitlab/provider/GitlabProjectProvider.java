@@ -39,7 +39,7 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
     }
 
     private DsGitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
+        return dsConfigFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 
     @Override

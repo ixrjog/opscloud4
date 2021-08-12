@@ -40,17 +40,17 @@ public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationPro
     }
 
     protected DsZabbixConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
+        return dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
     }
 
     @Override
     protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixHostHandler.listHosts(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixHostHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixHost getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixHostHandler.getHostById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixHostHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

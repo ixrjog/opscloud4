@@ -2,6 +2,7 @@ package com.baiyi.opscloud.zabbix.entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.Builder;
 import lombok.Data;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * @Date 2021/6/25 3:34 下午
  * @Since 1.0
  */
-
+@Builder
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixUser {

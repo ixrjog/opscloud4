@@ -3,7 +3,10 @@ package com.baiyi.opscloud.domain.generator.opscloud;
 import com.baiyi.opscloud.domain.annotation.Decrypt;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import javax.persistence.Column;
 import javax.persistence.GeneratedValue;
@@ -11,6 +14,9 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import java.util.Date;
 
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Decrypt
 public class User {

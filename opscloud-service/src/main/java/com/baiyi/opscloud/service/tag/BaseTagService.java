@@ -8,4 +8,8 @@ package com.baiyi.opscloud.service.tag;
 public interface BaseTagService {
 
     boolean hasBusinessTag(String tagKey, Integer businessType, Integer businessId, boolean isConstraint);
+
+    default boolean hasBusinessTag(String tagKey, Integer businessType, Integer businessId) {
+        return hasBusinessTag(tagKey, businessType, businessId, true);
+    }
 }

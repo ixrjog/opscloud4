@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.handler;
+package com.baiyi.opscloud.zabbix.handler.base;
 
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
@@ -21,7 +21,7 @@ import java.time.Duration;
  */
 
 @Component
-public class ZabbixHandler {
+public class ZabbixServer {
 
     private static final String ZABBIX_AUTH_CACHE_KAY = "opscloud:v4:zabbix_auth";
 

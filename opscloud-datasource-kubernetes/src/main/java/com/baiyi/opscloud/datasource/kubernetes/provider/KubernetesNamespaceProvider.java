@@ -43,7 +43,7 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
     }
 
     private DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
+        return dsConfigFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
     }
 
     @Override

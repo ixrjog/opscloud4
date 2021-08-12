@@ -27,11 +27,11 @@ public interface IServer extends IAssetType {
 
 
     /**
-     * 销毁
+     * 删除
      *
      * @param id
      */
-    void destroy(Integer id);
+    void delete(Integer id);
 
 
 }

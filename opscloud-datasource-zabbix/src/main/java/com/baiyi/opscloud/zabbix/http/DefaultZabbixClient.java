@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.RESULT;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RESULT;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -112,7 +112,7 @@ public class DefaultZabbixClient implements IZabbixClient {
     @Override
     public ZabbixUser login() {
         this.auth = null;
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .paramEntry("user", zabbix.getUser())
                 .paramEntry("password", zabbix.getPassword())
                 .paramEntry("userData", true)

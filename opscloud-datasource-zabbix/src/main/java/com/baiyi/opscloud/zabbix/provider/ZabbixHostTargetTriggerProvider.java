@@ -29,7 +29,7 @@ public class ZabbixHostTargetTriggerProvider extends BaseZabbixHostProvider<Zabb
     @Override
     protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTrigger target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostHandler.listHostsByTrigger(zabbix, target);
+        return zabbixHostHandler.listByTrigger(zabbix, target);
     }
 
     @Override

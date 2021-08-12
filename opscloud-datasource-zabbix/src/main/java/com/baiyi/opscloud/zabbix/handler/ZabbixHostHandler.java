@@ -7,17 +7,16 @@ import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.handler.base.BaseZabbixHandler;
 import com.baiyi.opscloud.zabbix.http.*;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -26,100 +25,93 @@ import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
  */
 
 @Component
-public class ZabbixHostHandler {
+public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
 
-    @Resource
-    private ZabbixHandler zabbixHandler;
-
-    private interface Method {
-        String QUERY_HOST = "host.get";
-        String CREATE_HOST = "host.create";
-        String UPDATE_HOST = "host.update";
-        String DELETE_HOST = "host.delete";
+    private interface HostAPIMethod {
+        String GET = "host.get";
+        String CREATE = "host.create";
+        String UPDATE = "host.update";
+        String DELETE = "host.delete";
     }
 
-    private ZabbixCommonRequestBuilder queryRequestBuilder() {
-        return ZabbixCommonRequestBuilder.builder()
-                .method(Method.QUERY_HOST)
+    private SimpleZabbixRequestBuilder queryRequestBuilder() {
+        return SimpleZabbixRequestBuilder.builder()
+                .method(HostAPIMethod.GET)
                 .paramEntry("selectInterfaces", "extend");
     }
 
-    public List<ZabbixHost> listHosts(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = queryRequestBuilder().build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
+    public List<ZabbixHost> list(DsZabbixConfig.Zabbix zabbix) {
+        SimpleZabbixRequest request = queryRequestBuilder().build();
+        JsonNode data = call(zabbix, request);
+        return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> listHostsByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+    public List<ZabbixHost> listByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, group.getGroupId())
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
+        JsonNode data = call(zabbix, request);
+        return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> listHostsByTemplate(DsZabbixConfig.Zabbix zabbix, ZabbixTemplate template) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+    public List<ZabbixHost> listByTemplate(DsZabbixConfig.Zabbix zabbix, ZabbixTemplate template) {
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(TEMPLATE_IDS, template.getTemplateId())
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
+        JsonNode data = call(zabbix, request);
+        return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> listHostsByTrigger(DsZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+    public List<ZabbixHost> listByTrigger(DsZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(TRIGGER_IDS, trigger.getTriggerId())
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
-        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
+        JsonNode data = call(zabbix, request);
+        return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public ZabbixHost getHostById(DsZabbixConfig.Zabbix zabbix, String hostId) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+    public ZabbixHost getById(DsZabbixConfig.Zabbix zabbix, String hostId) {
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, hostId)
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
-        List<ZabbixHost> hosts = ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
-        if (CollectionUtils.isEmpty(hosts)) {
-            return null;
-        }
-        return hosts.get(0);
+        JsonNode data = call(zabbix, request);
+        return mapperListGetOne(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> listHostByNames(DsZabbixConfig.Zabbix zabbix, List<String> names) {
+    public List<ZabbixHost> listByNames(DsZabbixConfig.Zabbix zabbix, List<String> names) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", names)
                 .build();
         JsonNode data = queryHostByFilter(zabbix, filter);
-        return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHost.class);
+        return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public ZabbixHost getHostByName(DsZabbixConfig.Zabbix zabbix, String name) {
+    public ZabbixHost getByName(DsZabbixConfig.Zabbix zabbix, String name) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", name)
                 .build();
         JsonNode data = queryHostByFilter(zabbix, filter);
-        return ZabbixMapper.mapper(data.get(RESULT), ZabbixHost.class);
+        return mapperOne(data.get(RESULT), ZabbixHost.class);
     }
 
     private JsonNode queryHostByFilter(DsZabbixConfig.Zabbix zabbix, ZabbixFilter filter) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .filter(filter)
                 .build();
-        return zabbixHandler.call(zabbix, request);
+        return call(zabbix, request);
     }
 
     public String createHost(DsZabbixConfig.Zabbix zabbix, Server server, Map<String, Object> paramMap) {
-        ZabbixHost host = getHostByName(zabbix, ServerUtil.toServerName(server));
+        ZabbixHost host = getByName(zabbix, ServerUtil.toServerName(server));
         if (host != null) {
             return host.getHostId();
         }
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.CREATE_HOST)
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(HostAPIMethod.CREATE)
                 .paramEntry("host", ServerUtil.toServerName(server))
                 .paramEntry(paramMap)
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
+        JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get(HOST_IDS).isEmpty()) {
             throw new RuntimeException("ZabbixHost创建失败");
         }
@@ -127,46 +119,46 @@ public class ZabbixHostHandler {
     }
 
     public String updateHost(DsZabbixConfig.Zabbix zabbix, Server server, String hostId, Map<String, Object> paramMap) {
-        ZabbixHost host = getHostById(zabbix, hostId);
+        ZabbixHost host = getById(zabbix, hostId);
         if (host == null) {
             return createHost(zabbix, server, paramMap);
         }
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
-                .method(Method.UPDATE_HOST)
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(HostAPIMethod.UPDATE)
                 .paramEntry(HOST_ID, hostId)
                 .paramEntry("name", ServerUtil.toServerName(server))
                 .paramEntry("host", ServerUtil.toServerName(server))
                 .paramEntry(paramMap)
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
+        JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get(HOST_IDS).isEmpty()) {
             throw new RuntimeException("ZabbixHost更新失败");
         }
         return ZabbixMapper.mapperList(data.get(RESULT).get(HOST_IDS), String.class).get(0);
     }
 
-    public Boolean deleteHostById(DsZabbixConfig.Zabbix zabbix, String hostId) {
-        ZabbixHost host = getHostById(zabbix, hostId);
+    public boolean deleteById(DsZabbixConfig.Zabbix zabbix, String hostId) {
+        ZabbixHost host = getById(zabbix, hostId);
         if (host == null) {
             return true;
         }
-        return deleteHost(zabbix, host);
+        return delete(zabbix, host);
     }
 
-    public Boolean deleteHostByName(DsZabbixConfig.Zabbix zabbix, String name) {
-        ZabbixHost host = getHostByName(zabbix, name);
+    public boolean deleteByName(DsZabbixConfig.Zabbix zabbix, String name) {
+        ZabbixHost host = getByName(zabbix, name);
         if (host == null) {
             return true;
         }
-        return deleteHost(zabbix, host);
+        return delete(zabbix, host);
     }
 
-    private Boolean deleteHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
+    private boolean delete(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
-                .method(Method.DELETE_HOST)
+                .method(HostAPIMethod.DELETE)
                 .params(new String[]{host.getHostId()})
                 .build();
-        JsonNode data = zabbixHandler.call(zabbix, request);
+        JsonNode data = call(zabbix, request);
         return host.getHostId().equals(ZabbixMapper.mapperList(data.get(RESULT).get(HOST_IDS), String.class).get(0));
     }
 

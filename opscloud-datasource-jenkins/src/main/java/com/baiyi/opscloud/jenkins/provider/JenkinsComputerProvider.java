@@ -46,7 +46,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     }
 
     private DsJenkinsConfig.Jenkins buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, JenkinsDsInstanceConfig.class).getJenkins();
+        return dsConfigFactory.build(dsConfig, JenkinsDsInstanceConfig.class).getJenkins();
     }
 
     @Override

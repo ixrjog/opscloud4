@@ -3,23 +3,18 @@ package com.baiyi.opscloud.datasource.manager;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.factory.AuthProviderFactory;
+import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.Authorization;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
-import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.service.tag.BaseTagService;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
-import com.google.common.collect.Lists;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * 认证供应商管理类
@@ -29,49 +24,31 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class AuthProviderManager {
-
-    @Resource
-    private BaseTagService baseTagService;
-
-    @Resource
-    private DsInstanceService dsInstanceService;
+public class AuthManager extends BaseManager {
 
     @Resource
     private StringEncryptor stringEncryptor;
 
-    protected static final int DsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
 
-    private static final String TAG_AUTHORIZATION = "Authorization";
+    private static final String AUTHORIZATION_TAG = "Authorization";
 
     /**
      * 支持认证的实例类型
      */
     private static final DsTypeEnum[] authorizationInstanceTypes = {DsTypeEnum.LDAP};
 
-    /**
-     * 查询所有可认证的实例
-     *
-     * @return
-     */
-    private List<DatasourceInstance> listAuthorizationInstance() {
-        List<DatasourceInstance> instances = Lists.newArrayList();
-        for (DsTypeEnum typeEnum : authorizationInstanceTypes) {
-            DsInstanceParam.DsInstanceQuery query = DsInstanceParam.DsInstanceQuery.builder()
-                    .instanceType(typeEnum.getName())
-                    .build();
-            // 过滤掉没有 Authorization 标签的实例
-            instances.addAll(
-                    dsInstanceService.queryByParam(query).stream().filter(e ->
-                            baseTagService.hasBusinessTag(TAG_AUTHORIZATION, DsInstanceBusinessType, e.getId(), true)
-                    ).collect(Collectors.toList())
-            );
-        }
-        return instances;
+    @Override
+    protected DsTypeEnum[] getDsTypes() {
+        return authorizationInstanceTypes;
+    }
+
+    @Override
+    protected String getTag(){
+        return AUTHORIZATION_TAG;
     }
 
     public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthRuntimeException {
-        List<DatasourceInstance> instances = listAuthorizationInstance();
+        List<DatasourceInstance> instances = listInstance();
         if (!CollectionUtils.isEmpty(instances)) {
             Authorization.Credential credential = Authorization.Credential.builder()
                     .username(loginParam.getUsername())
@@ -84,7 +61,6 @@ public class AuthProviderManager {
             }
             return false; // 有认证实例不允许本地认证
         }
-        //   throw new AuthRuntimeException(ErrorEnum.AUTH_THERE_ARE_NO_AUTHENTICATED_INSTANCES_FAILURE);
         return localLogin(user, loginParam);
     }
 

@@ -15,7 +15,7 @@ import java.util.Map;
  * @Since 1.0
  */
 @Component
-public class ServerProviderManager {
+public class ServerManager {
 
     @Async(value = Global.TaskPools.EXECUTOR)
     public void create(Server server) {
@@ -30,9 +30,9 @@ public class ServerProviderManager {
     }
 
     @Async(value = Global.TaskPools.EXECUTOR)
-    public void destroy(Integer id) {
+    public void delete(Integer id) {
         Map<String, IServer> serverProviders = ServerFactory.getIServerContainer();
-        serverProviders.forEach((k, v) -> v.destroy(id));
+        serverProviders.forEach((k, v) -> v.delete(id));
     }
 
 }

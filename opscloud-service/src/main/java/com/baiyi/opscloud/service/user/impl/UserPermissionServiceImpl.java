@@ -66,7 +66,15 @@ public class UserPermissionServiceImpl implements UserPermissionService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", userPermission.getBusinessType())
                 .andEqualTo("businessId", userPermission.getBusinessId());
+        return permissionMapper.selectByExample(example);
+    }
 
+    @Override
+    public List<UserPermission> queryByUserPermission(Integer userId, Integer businessType) {
+        Example example = new Example(UserPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", businessType)
+                .andEqualTo("userId", userId);
         return permissionMapper.selectByExample(example);
     }
 

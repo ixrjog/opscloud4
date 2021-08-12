@@ -3,8 +3,9 @@ package com.baiyi.opscloud.zabbix.handler;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
-import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequestBuilder;
+import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
+import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
+import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.stereotype.Component;
@@ -13,7 +14,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -25,14 +26,14 @@ import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
 public class ZabbixTriggerHandler {
 
     @Resource
-    private ZabbixHandler zabbixHandler;
+    private ZabbixServer zabbixHandler;
 
     private interface Method {
         String QUERY_TRIGGER = "trigger.get";
     }
 
-    private ZabbixCommonRequestBuilder queryRequestBuilder() {
-        return ZabbixCommonRequestBuilder.builder()
+    private SimpleZabbixRequestBuilder queryRequestBuilder() {
+        return SimpleZabbixRequestBuilder.builder()
                 .method(Method.QUERY_TRIGGER)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
                 .paramEntry("active", 1)
@@ -47,14 +48,14 @@ public class ZabbixTriggerHandler {
     }
 
     public List<ZabbixTrigger> listTriggers(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
     public List<ZabbixTrigger> listTriggerByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -62,7 +63,7 @@ public class ZabbixTriggerHandler {
     }
 
     public ZabbixTrigger getTriggerById(DsZabbixConfig.Zabbix zabbix, String triggerId) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(TRIGGER_IDS, triggerId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);

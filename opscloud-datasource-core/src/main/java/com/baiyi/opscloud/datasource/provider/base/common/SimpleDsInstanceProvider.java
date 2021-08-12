@@ -27,6 +27,10 @@ public abstract class SimpleDsInstanceProvider {
 
     protected DsInstanceContext buildDsInstanceContext(int dsInstanceId) {
         DatasourceInstance dsInstance = dsInstanceService.getById(dsInstanceId);
+        return buildDsInstanceContext(dsInstance);
+    }
+
+    protected DsInstanceContext buildDsInstanceContext(DatasourceInstance dsInstance) {
         return DsInstanceContext.builder()
                 .dsInstance(dsInstance)
                 .dsConfig(dsConfigService.getById(dsInstance.getConfigId()))

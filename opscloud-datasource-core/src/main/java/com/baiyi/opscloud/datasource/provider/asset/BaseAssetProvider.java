@@ -38,7 +38,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     protected BaseDsAssetFacade baseDsAssetFacade;
 
     @Resource
-    protected DsConfigFactory dsFactory;
+    protected DsConfigFactory dsConfigFactory;
 
     public interface Model {
         boolean INCREMENT = false; // 增量模式: 不删除旧数据

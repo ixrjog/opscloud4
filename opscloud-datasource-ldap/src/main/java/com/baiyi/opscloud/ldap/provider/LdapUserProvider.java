@@ -28,13 +28,13 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, Group>  {
+public class LdapUserProvider extends AbstractAssetRelationProvider<Person, Group>  {
 
     @Resource
     private PersonRepo personRepo;
 
     @Resource
-    private LdapAccountProvider ldapAccountProvider;
+    private LdapUserProvider ldapUserProvider;
 
     @Override
     public String getInstanceType() {
@@ -42,7 +42,7 @@ public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, G
     }
 
     private DsLdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
+        return dsConfigFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
     }
 
     @Override
@@ -88,6 +88,6 @@ public class LdapAccountProvider extends AbstractAssetRelationProvider<Person, G
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(ldapAccountProvider);
+        AssetProviderFactory.register(ldapUserProvider);
     }
 }

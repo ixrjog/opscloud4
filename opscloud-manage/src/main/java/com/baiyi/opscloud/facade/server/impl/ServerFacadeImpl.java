@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.datasource.manager.ServerProviderManager;
+import com.baiyi.opscloud.datasource.manager.ServerManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.TagClear;
@@ -37,7 +37,7 @@ public class ServerFacadeImpl implements ServerFacade {
     private ServerEventHandler serverEventHandler;
 
     @Resource
-    private ServerProviderManager serverProviderManager;
+    private ServerManager serverProviderManager;
 
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
@@ -81,7 +81,7 @@ public class ServerFacadeImpl implements ServerFacade {
     public void deleteServerById(Integer id) {
         ServerEventParam.delete delete = ServerEventParam.delete.builder()
                 .id(id).build();
-        serverProviderManager.destroy(id);
+        serverProviderManager.delete(id);
         serverEventHandler.deleteHandle(delete);
         serverService.delete(id);
     }

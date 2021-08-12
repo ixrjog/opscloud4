@@ -3,10 +3,11 @@ package com.baiyi.opscloud.zabbix.handler;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequest;
-import com.baiyi.opscloud.zabbix.http.ZabbixCommonRequestBuilder;
+import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
+import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
@@ -16,7 +17,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -27,27 +28,27 @@ import static com.baiyi.opscloud.zabbix.handler.ZabbixHandler.ApiConstant.*;
 public class ZabbixHostGroupHandler {
 
     @Resource
-    private ZabbixHandler zabbixHandler;
+    private ZabbixServer zabbixHandler;
 
     private interface Method {
         String QUERY_GROUP = "hostgroup.get";
         String CREATE_GROUP = "hostgroup.create";
     }
 
-    private ZabbixCommonRequestBuilder queryRequestBuilder() {
-        return ZabbixCommonRequestBuilder.builder()
+    private SimpleZabbixRequestBuilder queryRequestBuilder() {
+        return SimpleZabbixRequestBuilder.builder()
                 .method(Method.QUERY_GROUP);
     }
 
     public List<ZabbixHostGroup> listGroups(DsZabbixConfig.Zabbix zabbix) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixHostGroup.class);
     }
 
     public List<ZabbixHostGroup> listGroupsByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostId())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -55,7 +56,7 @@ public class ZabbixHostGroupHandler {
     }
 
     public ZabbixHostGroup getGroupById(DsZabbixConfig.Zabbix zabbix, String groupId) {
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, groupId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -69,7 +70,7 @@ public class ZabbixHostGroupHandler {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", names)
                 .build();
-        ZabbixCommonRequest request = queryRequestBuilder()
+        SimpleZabbixRequest request = queryRequestBuilder()
                 .filter(filter)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -80,7 +81,7 @@ public class ZabbixHostGroupHandler {
         List<ZabbixHostGroup> groups = listGroupByNames(zabbix, Lists.newArrayList(name));
         if (!CollectionUtils.isEmpty(groups))
             return groups.get(0).getGroupId();
-        ZabbixCommonRequest request = ZabbixCommonRequestBuilder.builder()
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(Method.CREATE_GROUP)
                 .paramEntry("name", name)
                 .build();
