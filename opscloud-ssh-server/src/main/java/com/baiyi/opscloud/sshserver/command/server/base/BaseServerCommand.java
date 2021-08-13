@@ -18,6 +18,7 @@ import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import org.apache.commons.lang3.StringUtils;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -28,7 +29,6 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 
-
 /**
  * @Author baiyi
  * @Date 2021/7/1 11:07 上午
@@ -37,6 +37,8 @@ import java.util.stream.Collectors;
 public class BaseServerCommand {
 
     protected static final int PAGE_FOOTER_SIZE = 6;
+
+    private static final int COMMENT_MAX_SIZE = 20;
 
     @Resource
     protected SshShellHelper helper;
@@ -71,7 +73,8 @@ public class BaseServerCommand {
                         "Env",
                         "IP",
                         "Tag",
-                        "Account"
+                        "Account",
+                        "Comment"
                 );
         ServerParam.UserPermissionServerPageQuery pageQuery = commandContext.getQueryParam();
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
@@ -88,7 +91,8 @@ public class BaseServerCommand {
                     ServerUtil.toDisplayEnv(s.getEnv()),
                     ServerUtil.toDisplayIp(s),
                     ServerUtil.toDisplayTag(s),
-                    toDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
+                    toDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin()),
+                    toDisplayComment(s.getComment())
             );
             id++;
         }
@@ -100,7 +104,14 @@ public class BaseServerCommand {
                 PromptColor.GREEN);
     }
 
-
+    private String toDisplayComment(String comment) {
+        if (StringUtils.isEmpty(comment))
+            return "";
+        if (comment.length() >= COMMENT_MAX_SIZE) {
+            return comment.substring(0, COMMENT_MAX_SIZE) + "...";
+        }
+        return comment;
+    }
 
     private String toDisplayAccount(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
@@ -122,7 +133,5 @@ public class BaseServerCommand {
     protected String buildSessionId() {
         return SessionUtil.buildSessionId(helper.getSshSession().getIoSession());
     }
-
-
 
 }

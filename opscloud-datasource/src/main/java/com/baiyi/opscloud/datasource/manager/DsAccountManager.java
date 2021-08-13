@@ -6,6 +6,7 @@ import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
@@ -45,8 +46,6 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     protected String getTag() {
         return ACCOUNT_TAG;
     }
-
-
 
     /**
      * 解密
@@ -92,5 +91,15 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         }
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).delete(e, user));
     }
+
+    public void grant(User user, BaseBusiness.IBusiness businessResource) {
+        List<DatasourceInstance> instances = listInstance();
+        if (CollectionUtils.isEmpty(instances)) {
+            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            return;
+        }
+        instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
+    }
+
 
 }

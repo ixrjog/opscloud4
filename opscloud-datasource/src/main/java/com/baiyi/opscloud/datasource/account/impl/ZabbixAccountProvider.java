@@ -6,11 +6,9 @@ import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.account.convert.AccountConvert;
 import com.baiyi.opscloud.datasource.account.impl.base.BaseAccountProvider;
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
@@ -66,6 +64,25 @@ public class ZabbixAccountProvider extends BaseAccountProvider<DsZabbixConfig.Za
     protected void doDelete(DsZabbixConfig.Zabbix zabbix, User user) {
         zabbixUserHandler.delete(zabbix, user.getUsername());
         log.info("删除Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
+    }
+
+    @Override
+    protected void doGrant(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
+
+    }
+
+    @Override
+    protected void doRevoke(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
+
+    }
+
+    @Override
+    protected int getBusinessResourceType() {
+        return BusinessTypeEnum.SERVERGROUP.getType();
+    }
+
+    private ServerGroup getBusinessResource(int businessId) {
+        return serverGroupService.getById(businessId);
     }
 
     @Override

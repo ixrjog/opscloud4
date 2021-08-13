@@ -25,5 +25,12 @@ public interface IManager<T> {
      */
     void delete(T t);
 
+    /**
+     * 授权
+     * @param t
+     * @param resource
+     */
+   // void grant(T t,String resource);
+
     //void revoke(T t,String obj);
 }

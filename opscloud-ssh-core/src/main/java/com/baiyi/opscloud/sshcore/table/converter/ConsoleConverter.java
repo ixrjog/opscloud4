@@ -77,7 +77,8 @@ public abstract class ConsoleConverter implements Converter, Bordered {
 
                     String colStr = String.valueOf(r[c]);
                     int colorAnisSize = colorAnisSize(colStr);
-                    int width = maxWidth[c];
+                    // 修正中文补偿
+                    int width = maxWidth[c] - fixLength(colStr);
                     int rLength = colStr.length();
                     if (colorAnisSize == 0) {
                         nc = StringUtils.rightPad(colStr, width);
@@ -122,7 +123,8 @@ public abstract class ConsoleConverter implements Converter, Bordered {
         return IntStream.range(0, pt.fieldNames.size())
                 .map(i -> {
                     int n = converted.stream()
-                            .map(f -> colLength(f.get(i)))
+                            .map(f ->
+                                    colLength(f.get(i)))
                             .max(Comparator.naturalOrder())
                             .orElse(0);
                     return Math.max(pt.fieldNames.get(i).length(), n);
@@ -135,10 +137,17 @@ public abstract class ConsoleConverter implements Converter, Bordered {
         // "\u001B[0m"
         colStr = colStr.replace(searchChar, "");
         int newLength = colStr.length();
-
+        // int newLength = getChineseLength(colStr);
         int count = (origialLength - newLength) / 3;
         int length = origialLength - 8 * count;
-        return length;
+        // 补偿中文
+        return length + fixLength(colStr);
+    }
+
+    private int fixLength(String colStr) {
+        int length1 = colStr.length();
+        int length2 = getChineseLength(colStr);
+        return length2 - length1;
     }
 
     private int colorAnisSize(String str) {
@@ -149,6 +158,31 @@ public abstract class ConsoleConverter implements Converter, Bordered {
         int newLength = str.length();
 
         return (origialLength - newLength) / 3;
+    }
+
+    /**
+     * 获取字符串的长度，如果有中文，则每个中文字符计为2位
+     *
+     * @param validateStr 指定的字符串
+     * @return 字符串的长度
+     */
+    public static int getChineseLength(String validateStr) {
+        int valueLength = 0;
+        String chinese = "[\u0391-\uFFE5]";
+        /* 获取字段值的长度，如果含中文字符，则每个中文字符长度为2，否则为1 */
+        for (int i = 0; i < validateStr.length(); i++) {
+            /* 获取一个字符 */
+            String temp = validateStr.substring(i, i + 1);
+            /* 判断是否为中文字符 */
+            if (temp.matches(chinese)) {
+                /* 中文字符长度为2 */
+                valueLength += 2;
+            } else {
+                /* 其他字符长度为1 */
+                valueLength += 1;
+            }
+        }
+        return valueLength;
     }
 
 
