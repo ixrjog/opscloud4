@@ -257,16 +257,14 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 podContext.getPodName(),
                 name,
                 lines, baos);
-
-        SshContext sshContext = getSshContext();
-        Terminal terminal = sshContext.getTerminal();
+       // SshContext sshContext = getSshContext();
         TerminalUtil.rawModeSupportVintr(terminal);
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
-
         String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+       // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.output());
         Thread thread = new Thread(run);
         thread.start();
         while (true) {
@@ -278,6 +276,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                         break;
                     } else {
                         terminal.writer().print(helper.getColored("\n输入 [ ctrl+c ] 关闭日志!\n", PromptColor.RED));
+                        terminal.writer().flush();
+                        Thread.sleep(200L);
                     }
                 }
                 Thread.sleep(200L);

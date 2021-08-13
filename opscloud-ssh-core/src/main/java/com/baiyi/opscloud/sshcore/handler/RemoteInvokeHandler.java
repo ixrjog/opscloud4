@@ -149,12 +149,6 @@ public class RemoteInvokeHandler {
               Thread thread = new Thread(run);
               thread.start();
             /////////////////////
-
-
-            //  channel.setOutputStream(terminal.output());
-           // channel.setOutputStream(outputStream);
-
-            //   channel.setInputStream(terminal.input());
             OutputStream inputToChannel = channel.getOutputStream();
             JSchSession jSchSession = JSchSession.builder()
                     .sessionId(sessionId)

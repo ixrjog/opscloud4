@@ -21,12 +21,13 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
     public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, OutputStream channelOutput) {
         setSessionOutput(sessionOutput);
         setBaos(baos);
-        this.channelOutput =channelOutput;
+        this.channelOutput = channelOutput;
     }
 
     @Override
     public void write(char[] buf, int off, int len) throws IOException {
         this.channelOutput.write(toBytes(buf), off, len);
+       // System.out.write(toBytes(buf),off,len);
         this.channelOutput.flush();
     }
 

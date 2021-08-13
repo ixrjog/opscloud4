@@ -68,7 +68,6 @@ public abstract class AbstractSshChannelOutputTask implements IOutputTask {
         AuditRecordHandler.recordAuditLog(sessionOutput.getSessionId(), sessionOutput.getInstanceId(), buf, off, len);
     }
 
-
     protected byte[] toBytes(char[] chars) {
         return TaskUtil.toBytes(chars);
     }
