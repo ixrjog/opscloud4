@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.zabbix.entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -14,13 +13,13 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixHostInterface {
 
-    @JsonProperty("interfaceid")
-    private String interfaceId;
+   // @JsonProperty("interfaceid")
+    private String interfaceid;
 
     private String dns;
 
-    @JsonProperty("hostid")
-    private String hostId;
+   // @JsonProperty("hostid")
+    private String hostid;
 
     private String ip;
 
@@ -44,6 +43,6 @@ public class ZabbixHostInterface {
     private Integer type;
 
 
-    @JsonProperty("useip")
-    private Integer useIp;
+   // @JsonProperty("useip")
+    private Integer useip;
 }

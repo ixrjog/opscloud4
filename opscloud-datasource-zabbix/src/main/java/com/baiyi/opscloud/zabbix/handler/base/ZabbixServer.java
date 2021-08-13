@@ -3,10 +3,13 @@ package com.baiyi.opscloud.zabbix.handler.base;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.http.DefaultZabbixClient;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.http.IZabbixRequest;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Joiner;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.retry.annotation.Backoff;
 import org.springframework.retry.annotation.Retryable;
 import org.springframework.stereotype.Component;
@@ -23,7 +26,7 @@ import java.time.Duration;
 @Component
 public class ZabbixServer {
 
-    private static final String ZABBIX_AUTH_CACHE_KAY = "opscloud:v4:zabbix_auth";
+    public static final String AUTH_CACHE_KAY_PREFIX = "opscloud:v4:zabbix:auth";
 
     public interface ApiConstant {
         String RESULT = "result";
@@ -40,28 +43,41 @@ public class ZabbixServer {
     @Resource
     private RedisUtil redisUtil;
 
-    @Retryable(value = RuntimeException.class, maxAttempts = 4, backoff = @Backoff(delay = 1000, multiplier = 1.5))
-    public JsonNode call(DsZabbixConfig.Zabbix zabbix, ZabbixRequest request) {
-        DefaultZabbixClient zabbixClient = getZabbixClient(zabbix);
+    @Retryable(value = RuntimeException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 1.5))
+    public JsonNode call(DsZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
+        DefaultZabbixClient zabbixClient = buildZabbixClient(zabbix);
         return zabbixClient.call(request);
     }
 
-    private DefaultZabbixClient getZabbixClient(DsZabbixConfig.Zabbix zabbix) {
-        if (redisUtil.hasKey(ZABBIX_AUTH_CACHE_KAY)) {
-            return new DefaultZabbixClient(zabbix, (String) redisUtil.get(ZABBIX_AUTH_CACHE_KAY));
-        }
+    private DefaultZabbixClient buildZabbixClient(DsZabbixConfig.Zabbix zabbix) {
+        String auth = getAuth(zabbix);
+        if (!StringUtils.isEmpty(auth))
+            return new DefaultZabbixClient(zabbix, auth);
         DefaultZabbixClient zabbixClient = new DefaultZabbixClient(zabbix);
-        ZabbixUser zabbixUser = zabbixClient.login();
-        redisUtil.set(ZABBIX_AUTH_CACHE_KAY, zabbixUser.getSessionId(), getAuthCacheTime(zabbixUser));
+        auth = zabbixClient.getAuth();
+        cacheAuth(zabbix, zabbixClient.getLoginUser(), auth);
         return zabbixClient;
     }
 
-    private long getAuthCacheTime(ZabbixUser zabbixUser) {
-        if (1 == zabbixUser.getAutoLogin()) {
-            // 缓存7天
-            return 7 * 24 * 60 * 60 * 60;
+    private void cacheAuth(DsZabbixConfig.Zabbix zabbix, ZabbixUser loginUser, String auth) {
+        String key = Joiner.on(":").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
+        redisUtil.set(key, auth, getAuthCacheTime(loginUser));
+    }
+
+    private String getAuth(DsZabbixConfig.Zabbix zabbix) {
+        String key = Joiner.on(":").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
+        if (redisUtil.hasKey(key)) {
+            redisUtil.get(key);
         }
-        Duration cacheTime = StringToDurationUtil.parse(zabbixUser.getAutoLogout());
+        return null;
+    }
+
+    private long getAuthCacheTime(ZabbixUser zabbixUser) {
+        if (1 == zabbixUser.getAutologin()) {
+            // 缓存7天
+            return TimeUtil.dayTime / 1000 * 7;
+        }
+        Duration cacheTime = StringToDurationUtil.parse(zabbixUser.getAutologout());
         return cacheTime.getSeconds();
     }
 

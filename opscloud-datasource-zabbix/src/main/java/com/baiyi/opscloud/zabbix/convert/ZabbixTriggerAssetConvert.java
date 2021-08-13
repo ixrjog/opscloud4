@@ -17,11 +17,11 @@ public class ZabbixTriggerAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getTriggerId())
+                .assetId(entry.getTriggerid())
                 .name(entry.getDescription())
-                .assetKey(entry.getTriggerId())
+                .assetKey(entry.getTriggerid())
                 .kind(String.valueOf(entry.getPriority()))
-                .createdTime(entry.getLastChange())
+                .createdTime(entry.getLastchange())
                 .assetType(DsAssetTypeEnum.ZABBIX_TRIGGER.name())
                 .build();
         return AssetContainerBuilder.newBuilder()

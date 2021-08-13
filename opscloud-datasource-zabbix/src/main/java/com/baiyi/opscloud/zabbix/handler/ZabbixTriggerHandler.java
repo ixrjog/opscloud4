@@ -56,7 +56,7 @@ public class ZabbixTriggerHandler {
 
     public List<ZabbixTrigger> listTriggerByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(HOST_IDS, host.getHostId())
+                .paramEntry(HOST_IDS, host.getHostid())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTrigger.class);

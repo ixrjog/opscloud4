@@ -8,8 +8,11 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
+import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -30,6 +33,9 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
      */
     private static final DsTypeEnum[] accountInstanceTypes = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
 
+    @Resource
+    private StringEncryptor stringEncryptor;
+
     @Override
     protected DsTypeEnum[] getDsTypes() {
         return accountInstanceTypes;
@@ -40,6 +46,19 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         return ACCOUNT_TAG;
     }
 
+
+
+    /**
+     * 解密
+     *
+     * @param user
+     * @return
+     */
+    private void decrypt(User user) {
+        if (!StringUtils.isEmpty(user.getPassword()))
+            user.setPassword(stringEncryptor.decrypt(user.getPassword()));
+    }
+
     @Override
     public void create(User user) {
         List<DatasourceInstance> instances = listInstance();
@@ -47,6 +66,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("DsAccountManager数据源账户管理: 无可用实例");
             return;
         }
+        decrypt(user);
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).create(e, user));
     }
 
@@ -58,6 +78,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("DsAccountManager数据源账户管理: 无可用实例");
             return;
         }
+        decrypt(user);
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).update(e, user));
     }
 

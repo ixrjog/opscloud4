@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.zabbix.entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 /**
@@ -14,8 +13,8 @@ import lombok.Data;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixTemplate {
 
-    @JsonProperty("templateid")
-    private String templateId;
+    //@JsonProperty("templateid")
+    private String templateid;
 
     private String name;
 

@@ -48,7 +48,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
 
     public List<ZabbixHost> listByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(HOST_GROUP_IDS, group.getGroupId())
+                .paramEntry(HOST_GROUP_IDS, group.getGroupid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -56,7 +56,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
 
     public List<ZabbixHost> listByTemplate(DsZabbixConfig.Zabbix zabbix, ZabbixTemplate template) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(TEMPLATE_IDS, template.getTemplateId())
+                .paramEntry(TEMPLATE_IDS, template.getTemplateid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -64,7 +64,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
 
     public List<ZabbixHost> listByTrigger(DsZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(TRIGGER_IDS, trigger.getTriggerId())
+                .paramEntry(TRIGGER_IDS, trigger.getTriggerid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -104,7 +104,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
     public String createHost(DsZabbixConfig.Zabbix zabbix, Server server, Map<String, Object> paramMap) {
         ZabbixHost host = getByName(zabbix, ServerUtil.toServerName(server));
         if (host != null) {
-            return host.getHostId();
+            return host.getHostid();
         }
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.CREATE)
@@ -156,10 +156,10 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
     private boolean delete(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
                 .method(HostAPIMethod.DELETE)
-                .params(new String[]{host.getHostId()})
+                .params(new String[]{host.getHostid()})
                 .build();
         JsonNode data = call(zabbix, request);
-        return host.getHostId().equals(ZabbixMapper.mapperList(data.get(RESULT).get(HOST_IDS), String.class).get(0));
+        return host.getHostid().equals(ZabbixMapper.mapperList(data.get(RESULT).get(HOST_IDS), String.class).get(0));
     }
 
 }

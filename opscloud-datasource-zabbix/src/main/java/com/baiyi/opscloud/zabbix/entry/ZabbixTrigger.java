@@ -16,8 +16,8 @@ import java.util.List;
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixTrigger {
-    @JsonProperty("triggerid")
-    private String triggerId;
+   //@JsonProperty("triggerid")
+    private String triggerid;
     private String description;
     /**
      * 触发器的严重性级别。
@@ -31,7 +31,7 @@ public class ZabbixTrigger {
     private String priority;
     //触发器最后更改其状态的时间
     @JsonProperty("lastchange")
-    private Date lastChange;
+    private Date lastchange;
     /**
      * 触发器是否处于启用状态或禁用状态。
      * 0 - (默认) 启用；

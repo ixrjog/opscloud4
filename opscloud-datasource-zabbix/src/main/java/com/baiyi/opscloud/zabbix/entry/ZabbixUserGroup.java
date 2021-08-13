@@ -17,7 +17,7 @@ import java.util.List;
 public class ZabbixUserGroup {
 
     @JsonProperty("usrgrpid")
-    private String userGroupId;
+    private String usrgrpid;
 
     private String name;
 

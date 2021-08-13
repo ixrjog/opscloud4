@@ -49,7 +49,7 @@ public class ZabbixTemplateHandler {
 
     public List<ZabbixTemplate> listTemplatesByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(HOST_IDS, host.getHostId())
+                .paramEntry(HOST_IDS, host.getHostid())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
@@ -57,7 +57,7 @@ public class ZabbixTemplateHandler {
 
     public List<ZabbixTemplate> listTemplatesByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(HOST_GROUP_IDS, group.getGroupId())
+                .paramEntry(HOST_GROUP_IDS, group.getGroupid())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);

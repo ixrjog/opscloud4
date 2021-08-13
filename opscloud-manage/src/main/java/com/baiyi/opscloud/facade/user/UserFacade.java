@@ -25,6 +25,8 @@ public interface UserFacade {
 
     void updateUser(UserVO.User user);
 
+    void deleteUser(Integer id);
+
     ServerTreeVO.ServerTree queryUserServerTree(ServerGroupParam.UserServerTreeQuery queryParam);
 
     DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);

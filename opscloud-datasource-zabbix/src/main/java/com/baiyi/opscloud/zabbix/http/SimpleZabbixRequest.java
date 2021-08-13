@@ -12,7 +12,7 @@ import java.util.Map;
  */
 
 @Data
-public class SimpleZabbixRequest implements ZabbixRequest{
+public class SimpleZabbixRequest implements IZabbixRequest {
 
     private String jsonrpc = "2.0";
 

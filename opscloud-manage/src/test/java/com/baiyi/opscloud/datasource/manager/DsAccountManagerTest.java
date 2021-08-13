@@ -2,6 +2,7 @@ package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.service.user.UserService;
 import org.jasypt.encryption.StringEncryptor;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +18,9 @@ public class DsAccountManagerTest extends BaseUnit {
 
     @Resource
     private DsAccountManager dsAccountManager;
+
+    @Resource
+    private UserService userService;
 
     @Resource
     private StringEncryptor stringEncryptor;
@@ -40,13 +44,17 @@ public class DsAccountManagerTest extends BaseUnit {
     }
 
     private User buildTestUser(){
-        return  User.builder()
-                .username("test2021")
-                .email("test202122222@qq.com")
-                .password(stringEncryptor.encrypt("11111111"))
-                .phone("12345678911")
-                .displayName("我是测试账户2222")
-                .build();
+
+
+//        return  User.builder()
+//                .username("test2021")
+//                .email("test202122222@qq.com")
+//                .password(stringEncryptor.encrypt("11111111"))
+//                .phone("12345678911")
+//                .displayName("我是测试账户2222")
+//                .build();
+
+        return userService.getByUsername("test2024");
     }
 
 }

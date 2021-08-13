@@ -15,7 +15,7 @@ import lombok.Data;
 public class ZabbixHostGroup {
 
     @JsonProperty("groupid")
-    private String groupId;
+    private String groupid;
 
     private String name;
 

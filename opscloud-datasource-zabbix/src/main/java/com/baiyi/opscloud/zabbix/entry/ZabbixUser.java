@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.zabbix.entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
@@ -13,12 +14,14 @@ import java.util.List;
  * @Since 1.0
  */
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixUser {
 
-    @JsonProperty("userid")
-    private String userId;
+   // @JsonProperty("userid")
+    private String userid;
     private String alias;
     private String name;
 
@@ -32,14 +35,14 @@ public class ZabbixUser {
      * 0 - (default) 禁止自动登录;
      * 1 -允许自动登录。
      */
-    @JsonProperty("autologin")
-    private Integer autoLogin;
+    //@JsonProperty("autologin")
+    private Integer autologin;
 
     /**
      * 会话过期时间。 接受具有后缀的秒或时间单位。 如果设置为 0s, 用户登录会话永远不会过期。
      */
-    @JsonProperty("autologout")
-    private String autoLogout;
+    //@JsonProperty("autologout")
+    private String autologout;
 
     /**
      * 用户类型。
@@ -48,8 +51,8 @@ public class ZabbixUser {
      * 3 - Zabbix super admin.
      */
     private Integer type;
-    @JsonProperty("sessionid")
-    private String sessionId;
+    //@JsonProperty("sessionid")
+    private String sessionid;
 
     /**
      * 用户使用的媒体

@@ -11,7 +11,7 @@ import lombok.Data;
 
 @Data
 @Builder
-public class ZabbixDeleteRequest implements ZabbixRequest {
+public class ZabbixDeleteRequest implements IZabbixRequest {
 
     @Builder.Default
     private String jsonrpc = "2.0";

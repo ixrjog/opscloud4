@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler.base;
 
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
-import com.baiyi.opscloud.zabbix.http.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.http.IZabbixRequest;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.springframework.util.CollectionUtils;
@@ -19,7 +19,7 @@ public abstract class BaseZabbixHandler<T> {
     @Resource
     private ZabbixServer zabbixServer;
 
-    protected JsonNode call(DsZabbixConfig.Zabbix zabbix, ZabbixRequest request) {
+    protected JsonNode call(DsZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
         return zabbixServer.call(zabbix, request);
     }
 

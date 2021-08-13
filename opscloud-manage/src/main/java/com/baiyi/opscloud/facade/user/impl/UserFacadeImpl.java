@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.PasswordUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.datasource.manager.DsAccountManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
@@ -57,6 +58,9 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private ServerFacade serverFacade;
 
+    @Resource
+    private DsAccountManager dsAccountManager;
+
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
@@ -72,17 +76,29 @@ public class UserFacadeImpl implements UserFacade {
     @Override
     @AssetBusinessRelation // 资产绑定业务对象
     public void addUser(UserVO.User user) {
-        User pre = userPacker.toDO(user);
-        if (StringUtils.isEmpty(pre.getPassword()))
+        User newUser = userPacker.toDO(user);
+        if (StringUtils.isEmpty(newUser.getPassword()))
             throw new CommonRuntimeException("密码不能为空");
-        userService.add(pre);
-        user.setId(pre.getId());
+        userService.add(newUser);
+        user.setId(newUser.getId());
+        dsAccountManager.create(newUser);
     }
 
     @Override
     public void updateUser(UserVO.User user) {
-        User pre = userPacker.toDO(user);
-        userService.updateBySelective(pre);
+        User updateUser = userPacker.toDO(user);
+        userService.updateBySelective(updateUser);
+        dsAccountManager.update(updateUser);
+    }
+
+    @Override
+    public void deleteUser(Integer id) {
+        User user = userService.getById(id);
+        if (user == null) return;
+        // 不删除用户，只修改isActive字段
+        user.setIsActive(false);
+        userService.update(user);
+        dsAccountManager.delete(user);
     }
 
     @Override

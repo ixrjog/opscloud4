@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.zabbix.entry;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.util.Date;
@@ -17,15 +16,15 @@ import java.util.Date;
 public class ZabbixProblem {
 
 
-    @JsonProperty("eventid")
-    private String eventId;
+    //@JsonProperty("eventid")
+    private String eventid;
 
     private String name;
 
     private Integer object;
 
-    @JsonProperty("objectid")
-    private String objectId;
+    //@JsonProperty("objectid")
+    private String objectid;
 
     // 问题事件创建的时间
     private Date clock;

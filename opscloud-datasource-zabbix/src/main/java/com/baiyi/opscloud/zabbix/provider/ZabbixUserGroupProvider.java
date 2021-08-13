@@ -50,17 +50,17 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
     @Override
     protected List<ZabbixUserGroup> listEntries(DsInstanceContext dsInstanceContext, ZabbixUser target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixUserGroupHandler.listGroupsByUser(zabbix, target);
+        return zabbixUserGroupHandler.listByUser(zabbix, target);
     }
 
     @Override
     protected List<ZabbixUserGroup> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixUserGroupHandler.listGroups(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixUserGroupHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixUserGroup getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixUserGroupHandler.getGroupById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixUserGroupHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

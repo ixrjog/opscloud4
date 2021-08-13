@@ -25,17 +25,20 @@ public class LdapAccountProvider extends BaseAccountProvider<DsLdapConfig.Ldap> 
 
     @Override
     protected void doCreate(DsLdapConfig.Ldap ldap, User user) {
-        personRepo.create(ldap, AccountConvert.toLdapPerson(user));
+        if (!personRepo.checkPersonInLdap(ldap, user.getUsername()))
+            personRepo.create(ldap, AccountConvert.toLdapPerson(user));
     }
 
     @Override
     protected void doUpdate(DsLdapConfig.Ldap ldap, User user) {
-        personRepo.update(ldap, AccountConvert.toLdapPerson(user));
+        if (personRepo.checkPersonInLdap(ldap, user.getUsername()))
+            personRepo.update(ldap, AccountConvert.toLdapPerson(user));
     }
 
     @Override
     protected void doDelete(DsLdapConfig.Ldap ldap, User user) {
-        personRepo.delete(ldap, user.getUsername());
+        if (personRepo.checkPersonInLdap(ldap, user.getUsername()))
+            personRepo.delete(ldap, user.getUsername());
     }
 
     @Override

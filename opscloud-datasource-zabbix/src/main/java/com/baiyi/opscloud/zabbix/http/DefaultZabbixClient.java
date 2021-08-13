@@ -8,6 +8,7 @@ import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.Getter;
 import org.apache.http.HttpEntity;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -37,45 +38,39 @@ public class DefaultZabbixClient implements IZabbixClient {
 
     private CloseableHttpClient httpClient;
     private URI uri;
-    private DsZabbixConfig.Zabbix zabbix;
-    private volatile String auth;
+    @Getter
+    private String auth;
+    @Getter
+    private ZabbixUser loginUser;
+
+    private final static RequestConfig requestConfig = RequestConfig.custom()
+            .setConnectTimeout(5 * 1000)
+            .setConnectionRequestTimeout(5 * 1000)
+            .setSocketTimeout(5 * 1000)
+            .build();
 
     public DefaultZabbixClient(DsZabbixConfig.Zabbix zabbix) {
-        this.zabbix = zabbix;
         try {
             this.uri = new URI(zabbix.getUrl().trim());
-            init();
+            this.httpClient = buildHttpClient();
+            login(zabbix);
         } catch (URISyntaxException e) {
             throw new CommonRuntimeException("zabbix url exception", e);
         }
     }
 
     public DefaultZabbixClient(DsZabbixConfig.Zabbix zabbix, String auth) {
-        this.zabbix = zabbix;
         try {
             this.uri = new URI(zabbix.getUrl().trim());
+            this.httpClient = buildHttpClient();
             this.auth = auth;
-            init();
         } catch (URISyntaxException e) {
             throw new CommonRuntimeException("zabbix url exception", e);
         }
     }
 
-    private void init() {
-        RequestConfig requestConfig = RequestConfig.custom()
-                .setConnectTimeout(5 * 1000)
-                .setConnectionRequestTimeout(5 * 1000)
-                .setSocketTimeout(5 * 1000)
-                .build();
-        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
-        this.httpClient = HttpClients.custom()
-                .setConnectionManager(connManager)
-                .setDefaultRequestConfig(requestConfig)
-                .build();
-    }
-
     @Override
-    public void destroy() {
+    public void close() {
         if (httpClient != null) {
             try {
                 httpClient.close();
@@ -86,7 +81,7 @@ public class DefaultZabbixClient implements IZabbixClient {
     }
 
     @Override
-    public JsonNode call(ZabbixRequest request) {
+    public JsonNode call(IZabbixRequest request) {
         if (Strings.isBlank(request.getAuth())) {
             request.setAuth(this.auth);
         }
@@ -98,19 +93,18 @@ public class DefaultZabbixClient implements IZabbixClient {
             CloseableHttpResponse response = httpClient.execute(httpRequest);
             HttpEntity entity = response.getEntity();
             byte[] data = EntityUtils.toByteArray(entity);
-            return readTree(data);
+            return toJsonNode(data);
         } catch (IOException e) {
             throw new CommonRuntimeException("DefaultZabbixApi call exception", e);
         }
     }
 
-    private static JsonNode readTree(byte[] data) throws JsonProcessingException {
+    private static JsonNode toJsonNode(byte[] data) throws JsonProcessingException {
         JSONMapper mapper = new JSONMapper();
         return mapper.readTree(new String(data));
     }
 
-    @Override
-    public ZabbixUser login() {
+    private void login(DsZabbixConfig.Zabbix zabbix) {
         this.auth = null;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .paramEntry("user", zabbix.getUser())
@@ -118,10 +112,19 @@ public class DefaultZabbixClient implements IZabbixClient {
                 .paramEntry("userData", true)
                 .method("user.login")
                 .build();
-        JsonNode response = call(request);
-        ZabbixUser user = ZabbixMapper.mapper(response.get(RESULT), ZabbixUser.class);
-        this.auth = user.getSessionId();
-        return user;
+        JsonNode data = call(request);
+        JsonNode userData = data.get(RESULT);
+        ZabbixUser user = ZabbixMapper.mapper(userData, ZabbixUser.class);
+        this.auth = user.getSessionid();
+        this.loginUser = user;
+    }
+
+    private CloseableHttpClient buildHttpClient(){
+        PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
+        return HttpClients.custom()
+                .setConnectionManager(connManager)
+                .setDefaultRequestConfig(requestConfig)
+                .build();
     }
 
 }

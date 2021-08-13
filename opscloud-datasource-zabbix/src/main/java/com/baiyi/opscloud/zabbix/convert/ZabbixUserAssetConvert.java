@@ -8,7 +8,6 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
-import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -23,7 +22,7 @@ public class ZabbixUserAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUserId())
+                .assetId(entry.getUserid())
                 .name(entry.getName())
                 .assetKey(entry.getAlias())
                 .assetKey2(entry.getSurname())
@@ -35,13 +34,14 @@ public class ZabbixUserAssetConvert {
         List<ZabbixMedia> medias = entry.getMedias();
         if (!CollectionUtils.isEmpty(medias)) {
             for (ZabbixMedia media : medias) {
-                if ("1".equals(media.getMediaTypeId())) {
-                    String email = ZabbixMapper.mapperList(media.getSendTo(), String.class).get(0);
+                if ("1".equals(media.getMediatypeid())) {
+                    //  String email = ZabbixMapper.mapperList(media.getSendto(), String.class).get(0);
+                    String email = ((List<String>) media.getSendto()).get(0);
                     builder.paramProperty("email", email);
                     continue;
                 }
-                if ("3".equals(media.getMediaTypeId())) {
-                    builder.paramProperty("phone", media.getSendTo().asText());
+                if ("3".equals(media.getMediatypeid())) {
+                    builder.paramProperty("phone", media.getSendto());
                 }
             }
         }
@@ -51,9 +51,9 @@ public class ZabbixUserAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUserGroupId())
+                .assetId(entry.getUsrgrpid())
                 .name(entry.getName())
-                .assetKey(entry.getUserGroupId())
+                .assetKey(entry.getUsrgrpid())
                 .assetType(DsAssetTypeEnum.ZABBIX_USER_GROUP.name())
                 .isActive("0".equals(entry.getStatus()))
                 .kind("zabbixUserGroup")

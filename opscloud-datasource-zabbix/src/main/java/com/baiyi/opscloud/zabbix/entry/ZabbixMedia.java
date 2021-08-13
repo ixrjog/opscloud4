@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.zabbix.entry;
 
+import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.JsonNode;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -12,6 +15,8 @@ import lombok.Data;
  * @Since 1.0
  */
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ZabbixMedia {
@@ -27,15 +32,24 @@ public class ZabbixMedia {
      * 1-email
      * 3-phone
      */
-    @JsonProperty("mediatypeid")
-    private String mediaTypeId;
+    // @JsonProperty("mediatypeid")
+    private String mediatypeid;
 
     /**
      * 地址, 用户名或者接收方的其他标识符。
      * 如果媒介类型是电子邮件, 值被设置为 数组。 其他类型值被设置为字符串。
      */
-    @JsonProperty("sendto")
-    private JsonNode sendTo;
+    //@JsonProperty("sendto")
+    private JsonNode sendto;
+
+
+    @JsonProperty
+    public Object getSendto() {
+        if ("1".equals(mediatypeid)) {
+            return ZabbixMapper.mapperList(this.sendto, String.class);
+        }
+        return ZabbixMapper.mapper(this.sendto, String.class);
+    }
 
     /**
      * 是否启用媒体。

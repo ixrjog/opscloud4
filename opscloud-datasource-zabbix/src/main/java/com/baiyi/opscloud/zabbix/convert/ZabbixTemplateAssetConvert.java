@@ -21,9 +21,9 @@ public class ZabbixTemplateAssetConvert implements IAssetRelation {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTemplate entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getTemplateId())
+                .assetId(entry.getTemplateid())
                 .name(entry.getName())
-                .assetKey(entry.getTemplateId())
+                .assetKey(entry.getTemplateid())
                 .assetKey2(entry.getHost())
                 .assetType(DsAssetTypeEnum.ZABBIX_TEMPLATE.name())
                 .kind("zabbixTemplate")

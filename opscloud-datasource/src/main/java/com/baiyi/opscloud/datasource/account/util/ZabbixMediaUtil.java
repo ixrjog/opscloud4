@@ -1,12 +1,11 @@
-package com.baiyi.opscloud.zabbix.util;
+package com.baiyi.opscloud.datasource.account.util;
 
-import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.common.util.JSONMapper;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.collect.Lists;
 
 import java.util.List;
@@ -40,21 +39,21 @@ public class ZabbixMediaUtil {
 
     private static ZabbixMedia buildMailMedia(String mail) throws JsonProcessingException{
         return ZabbixMedia.builder()
-                .mediaTypeId(String.valueOf(ZabbixMedia.MediaType.MAIL))
-                .sendTo(readTree(JSON.toJSONString(Lists.newArrayList(mail))))
+                .mediatypeid(String.valueOf(ZabbixMedia.MediaType.MAIL))
+                .sendto(toJsonNode(new String[] {mail}))
                 .build();
     }
 
     private static ZabbixMedia buildPhoneMedia(String phone) throws JsonProcessingException{
         return ZabbixMedia.builder()
-                .mediaTypeId(String.valueOf(ZabbixMedia.MediaType.PHONE))
-                .sendTo(readTree(phone))
+                .mediatypeid(String.valueOf(ZabbixMedia.MediaType.PHONE))
+                .sendto(toJsonNode(phone))
                 .build();
     }
 
-    private static JsonNode readTree(String data) throws JsonProcessingException {
-        JSONMapper mapper = new JSONMapper();
-        return mapper.readTree(data);
+    private static JsonNode toJsonNode(Object obj) throws JsonProcessingException {
+        ObjectMapper objectMapper = new ObjectMapper();
+        return objectMapper.convertValue(obj, JsonNode.class);
     }
 
 }

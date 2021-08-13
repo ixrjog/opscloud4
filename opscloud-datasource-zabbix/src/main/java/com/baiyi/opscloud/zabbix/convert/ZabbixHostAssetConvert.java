@@ -18,7 +18,7 @@ public class ZabbixHostAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHost entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getHostId())
+                .assetId(entry.getHostid())
                 .name(entry.getName())
                 .assetKey(entry.getInterfaces().get(0).getIp())
                 //.assetKey2()
@@ -35,9 +35,9 @@ public class ZabbixHostAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHostGroup entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getGroupId())
+                .assetId(entry.getGroupid())
                 .name(entry.getName())
-                .assetKey(entry.getGroupId())
+                .assetKey(entry.getGroupid())
                 .kind(String.valueOf(entry.getFlags()))
                 .assetType(DsAssetTypeEnum.ZABBIX_HOST_GROUP.name())
                 .build();

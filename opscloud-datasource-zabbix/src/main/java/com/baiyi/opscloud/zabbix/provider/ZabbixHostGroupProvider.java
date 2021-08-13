@@ -50,17 +50,17 @@ public class ZabbixHostGroupProvider extends AbstractAssetRelationProvider<Zabbi
     @Override
     protected List<ZabbixHostGroup> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostGroupHandler.listGroupsByHost(zabbix, target);
+        return zabbixHostGroupHandler.listByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixHostGroup> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixHostGroupHandler.listGroups(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixHostGroupHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixHostGroup getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixHostGroupHandler.getGroupById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixHostGroupHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

@@ -12,7 +12,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -45,22 +44,22 @@ public abstract class BaseAccountProvider<T> extends SimpleDsInstanceProvider im
      * @param user
      * @return
      */
-    private User decrypt(User user) {
-        if (!StringUtils.isEmpty(user.getPassword()))
-            user.setPassword(stringEncryptor.decrypt(user.getPassword()));
-        return user;
-    }
+//    private User decrypt(User user) {
+//        if (!StringUtils.isEmpty(user.getPassword()))
+//            user.setPassword(stringEncryptor.decrypt(user.getPassword()));
+//        return user;
+//    }
 
     @Override
     public void create(DatasourceInstance dsInstance, User user) {
         DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doCreate(buildConfig(context.getDsConfig()), decrypt(user));
+        doCreate(buildConfig(context.getDsConfig()), user);
     }
 
     @Override
     public void update(DatasourceInstance dsInstance, User user) {
         DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doUpdate(buildConfig(context.getDsConfig()), decrypt(user));
+        doUpdate(buildConfig(context.getDsConfig()), user);
     }
 
     @Override

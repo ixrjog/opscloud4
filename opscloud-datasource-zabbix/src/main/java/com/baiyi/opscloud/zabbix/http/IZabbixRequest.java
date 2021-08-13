@@ -6,7 +6,7 @@ package com.baiyi.opscloud.zabbix.http;
  * @Since 1.0
  */
 
-public interface ZabbixRequest {
+public interface IZabbixRequest {
 
     void setMethod(String method);
 

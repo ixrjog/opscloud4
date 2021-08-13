@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.zabbix.http;
 
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**
@@ -10,9 +9,8 @@ import com.fasterxml.jackson.databind.JsonNode;
  */
 public interface IZabbixClient {
 
-    void destroy();
+    void close();
 
-    JsonNode call(ZabbixRequest request);
+    JsonNode call(IZabbixRequest request);
 
-    ZabbixUser login();
 }

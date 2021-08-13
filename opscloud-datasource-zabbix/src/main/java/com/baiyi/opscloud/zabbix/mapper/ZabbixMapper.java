@@ -15,21 +15,22 @@ import java.util.List;
  */
 public class ZabbixMapper {
 
-    public static <T> List<T> mapperList(JsonNode jsonNode, Class<T> clazz) {
+    public static <T> List<T> mapperList(JsonNode jsonNode, Class<T> tClass) {
         List<T> list = Lists.newArrayList();
         Iterator<JsonNode> iterator = jsonNode.elements();
         while (iterator.hasNext()) {
             JsonNode data = iterator.next();
-            list.add(mapper(data, clazz));
+            list.add(mapper(data, tClass));
         }
         return list;
     }
 
-    public static <T> T mapper(JsonNode jsonNode, Class<T> clazz) {
+    public static <T> T mapper(JsonNode jsonNode, Class<T> tClass) {
         ObjectMapper mapper = new ObjectMapper();
         try {
-            return mapper.readValue(jsonNode.toString(), clazz);
+            return mapper.readValue(jsonNode.toString(), tClass);
         } catch (JsonProcessingException e) {
+            e.printStackTrace();
             return null;
         }
     }
