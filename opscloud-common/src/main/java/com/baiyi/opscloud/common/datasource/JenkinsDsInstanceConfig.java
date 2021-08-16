@@ -15,4 +15,5 @@ import lombok.EqualsAndHashCode;
 public class JenkinsDsInstanceConfig extends BaseDsInstanceConfig {
 
     private DsJenkinsConfig.Jenkins jenkins;
+
 }

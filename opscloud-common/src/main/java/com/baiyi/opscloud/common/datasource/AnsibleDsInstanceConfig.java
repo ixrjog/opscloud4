@@ -13,5 +13,7 @@ import lombok.EqualsAndHashCode;
 @EqualsAndHashCode(callSuper = true)
 @Data
 public class AnsibleDsInstanceConfig extends BaseDsInstanceConfig {
+
     private DsAnsibleConfig.Ansible ansible;
+
 }

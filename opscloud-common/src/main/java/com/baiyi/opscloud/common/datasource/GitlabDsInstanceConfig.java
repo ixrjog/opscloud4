@@ -15,5 +15,6 @@ import lombok.EqualsAndHashCode;
 public class GitlabDsInstanceConfig extends BaseDsInstanceConfig {
 
     private DsGitlabConfig.Gitlab gitlab;
+
 }
 

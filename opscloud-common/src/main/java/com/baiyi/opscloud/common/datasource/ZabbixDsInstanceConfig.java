@@ -15,5 +15,6 @@ import lombok.EqualsAndHashCode;
 public class ZabbixDsInstanceConfig extends BaseDsInstanceConfig {
 
     private DsZabbixConfig.Zabbix zabbix;
+
 }
 

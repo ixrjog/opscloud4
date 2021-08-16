@@ -15,17 +15,12 @@ public class DsAnsibleConfig {
     @NoArgsConstructor
     @ApiModel
     public static class Ansible {
-
         private String version;
-        private String bin;
-        private String privateKey;
-        private Playbook playbook;
+        private String ansible;
+        //  private String privateKey;
+        private String playbook;
+        private String log;
+        private String data;
     }
 
-    @Data
-    @NoArgsConstructor
-    @ApiModel
-    public static class Playbook {
-        private String bin;
-    }
 }

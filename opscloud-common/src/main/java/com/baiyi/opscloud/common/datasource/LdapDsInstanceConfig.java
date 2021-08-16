@@ -16,4 +16,5 @@ import lombok.EqualsAndHashCode;
 public class LdapDsInstanceConfig extends BaseDsInstanceConfig {
 
     private DsLdapConfig.Ldap ldap;
+
 }

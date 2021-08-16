@@ -13,9 +13,7 @@ import java.util.Map;
 public class BaseDsInstanceConfig {
 
     private String name;
-
     private String url;
-
     private Map<String, String> props;
 
 }

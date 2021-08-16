@@ -15,5 +15,6 @@ import lombok.EqualsAndHashCode;
 public class NexusDsInstanceConfig extends BaseDsInstanceConfig {
 
     private DsNexusConfig.Nexus nexus;
+    
 }
 

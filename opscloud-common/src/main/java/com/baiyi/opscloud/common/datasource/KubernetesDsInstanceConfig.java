@@ -15,4 +15,5 @@ import lombok.EqualsAndHashCode;
 public class KubernetesDsInstanceConfig extends BaseDsInstanceConfig {
 
     private DsKubernetesConfig.Kubernetes kubernetes;
+
 }

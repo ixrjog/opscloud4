@@ -39,7 +39,6 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
     @Resource
     private BusinessAssetRelationService businessAssetRelationService;
 
-
     @Override
     @TagClear(type = BusinessTypeEnum.ASSET)
     @Transactional(rollbackFor = {Exception.class})
