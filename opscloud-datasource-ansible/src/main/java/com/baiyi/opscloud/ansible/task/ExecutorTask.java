@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.datasource.ansible.task;
+package com.baiyi.opscloud.ansible.task;
 
-import com.baiyi.opscloud.datasource.ansible.executor.ExecutorEngine;
-import com.baiyi.opscloud.datasource.ansible.executor.ExecutorEngineBuilder;
+import com.baiyi.opscloud.ansible.executor.ExecutorEngine;
+import com.baiyi.opscloud.ansible.executor.ExecutorEngineBuilder;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecuteResultHandler;

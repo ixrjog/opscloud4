@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.ansible.executor;
+package com.baiyi.opscloud.ansible.executor;
 
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;

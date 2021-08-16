@@ -54,6 +54,7 @@ public class ServerAccountPacker {
     }
 
     public void wrap(ServerAccountVO.Account account) {
+        if (account == null) return;
         account.setDisplayName(Joiner.on("").join(account.getUsername(), "[", account.getProtocol(), "]"));
         credentialPacker.wrap(account);
         account.setServerSize(accountPermissionService.countByServerAccountId(account.getId()));

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.factory;
 
 import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
 import com.google.common.collect.ArrayListMultimap;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.util.CastUtils;
 
 import java.util.List;
@@ -14,7 +15,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/6/18 11:06 上午
  * @Version 1.0
  */
-
+@Slf4j
 public class AssetProviderFactory {
 
     private AssetProviderFactory() {
@@ -36,6 +37,7 @@ public class AssetProviderFactory {
     }
 
     public static <T extends SimpleAssetProvider> void register(T bean) {
+        log.info("AssetProviderFactory注册: instanceType = {} , assetType = {}", bean.getInstanceType(), bean.getAssetType());
         if (context.containsKey(bean.getInstanceType())) {
             context.get(bean.getInstanceType()).put(bean.getAssetType(), bean);
         } else {

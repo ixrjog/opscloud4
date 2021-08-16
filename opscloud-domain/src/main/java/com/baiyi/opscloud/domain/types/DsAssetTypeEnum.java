@@ -32,6 +32,7 @@ public enum DsAssetTypeEnum {
     ZABBIX_TEMPLATE("ZABBIX_TEMPLATE"),
     ZABBIX_TRIGGER("ZABBIX_TRIGGER"),
     ZABBIX_PROBLEM("ZABBIX_PROBLEM"),
+    ANSIBLE_VERSION("ANSIBLE_VERSION")
     ;
 
     private String type;

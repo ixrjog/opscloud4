@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.datasource.ansible.command.base;
+package com.baiyi.opscloud.ansible.command.base;
 
+import com.baiyi.opscloud.ansible.args.CommandArgs;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
-import com.baiyi.opscloud.datasource.ansible.args.CommandArgs;
 import org.apache.commons.exec.CommandLine;
 import org.springframework.util.StringUtils;
 
@@ -23,10 +23,9 @@ public class CommandLineBuilder {
      * @return
      */
     public static CommandLine build(AnsibleDsInstanceConfig config, CommandArgs args) {
-        CommandLine commandLine = new CommandLine(config.getAnsible().getBin());
+        CommandLine commandLine = new CommandLine(config.getAnsible().getAnsible());
         return build(config, commandLine, args);
     }
-
 
     public static CommandLine build(AnsibleDsInstanceConfig config, CommandLine commandLine, CommandArgs args) {
         if (args.isVersion()) {

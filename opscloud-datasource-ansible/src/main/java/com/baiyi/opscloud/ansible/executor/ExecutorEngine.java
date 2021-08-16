@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.datasource.ansible.executor;
+package com.baiyi.opscloud.ansible.executor;
 
 import lombok.Builder;
 import lombok.Data;

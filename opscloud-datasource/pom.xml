@@ -43,6 +43,11 @@
             <artifactId>opscloud-datasource-jenkins</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-ansible</artifactId>
+        </dependency>
+
     </dependencies>
 
 
