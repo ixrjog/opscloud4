@@ -44,8 +44,9 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     public List<BusinessAssetRelation> queryAssetRelations(int businessType, int datasourceInstanceAssetId) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessType)
-                .andEqualTo("datasourceInstanceAssetId", datasourceInstanceAssetId);
+        criteria.andEqualTo("datasourceInstanceAssetId", datasourceInstanceAssetId);
+        if (businessType >= 0)
+            criteria.andEqualTo("businessType", businessType);
         return businessAssetRelationMapper.selectByExample(example);
     }
 

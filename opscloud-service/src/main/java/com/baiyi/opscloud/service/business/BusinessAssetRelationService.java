@@ -38,8 +38,13 @@ public interface BusinessAssetRelationService {
      */
     List<BusinessAssetRelation> queryAssetRelations(int businessType, int datasourceInstanceAssetId);
 
+    default List<BusinessAssetRelation> queryAssetRelations(int datasourceInstanceAssetId) {
+        return queryAssetRelations(-1, datasourceInstanceAssetId);
+    }
+
     /**
      * 查询业务对象的绑定列表
+     *
      * @param businessType
      * @param businessId
      * @return

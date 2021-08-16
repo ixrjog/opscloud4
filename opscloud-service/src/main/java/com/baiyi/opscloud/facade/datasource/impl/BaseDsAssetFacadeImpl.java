@@ -1,13 +1,11 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.domain.annotation.TagClear;
-import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -38,17 +36,25 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
     @Resource
     private ApplicationResourceService applicationResourceService;
 
+    @Resource
+    private BusinessAssetRelationService businessAssetRelationService;
+
 
     @Override
     @TagClear(type = BusinessTypeEnum.ASSET)
     @Transactional(rollbackFor = {Exception.class})
     public void deleteAssetById(Integer id) {
-        // 删除关系
-        List<DatasourceInstanceAssetRelation> relations = dsInstanceAssetRelationService.queryByAssetId(id);
-        if (!CollectionUtils.isEmpty(relations)) {
-            relations.forEach(relation -> dsInstanceAssetRelationService.deleteById(relation.getId()));
+        // 删除业务对象绑定关系
+        List<BusinessAssetRelation> businessAssetRelations = businessAssetRelationService.queryAssetRelations(id);
+        if (!CollectionUtils.isEmpty(businessAssetRelations)) {
+            businessAssetRelations.forEach(e -> businessAssetRelationService.deleteById(e.getId()));
         }
-        // 删除属性
+        // 删除资产间关系
+        List<DatasourceInstanceAssetRelation> datasourceInstanceAssetRelations = dsInstanceAssetRelationService.queryByAssetId(id);
+        if (!CollectionUtils.isEmpty(datasourceInstanceAssetRelations)) {
+            datasourceInstanceAssetRelations.forEach(relation -> dsInstanceAssetRelationService.deleteById(relation.getId()));
+        }
+        // 删除资产属性
         List<DatasourceInstanceAssetProperty> properties = dsInstanceAssetPropertyService.queryByAssetId(id);
         if (!CollectionUtils.isEmpty(properties)) {
             properties.forEach(property -> dsInstanceAssetPropertyService.deleteById(property.getId()));
@@ -60,7 +66,7 @@ public class BaseDsAssetFacadeImpl implements BaseDsAssetFacade {
         }
         // 删除children
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
-        if (!CollectionUtils.isEmpty(relations)) {
+        if (!CollectionUtils.isEmpty(datasourceInstanceAssetRelations)) {
             assetList.parallelStream().forEach(x -> deleteAssetById(x.getId()));
         }
         // 删除自己
