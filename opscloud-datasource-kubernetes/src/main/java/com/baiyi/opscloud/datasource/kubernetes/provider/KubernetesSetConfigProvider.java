@@ -18,17 +18,19 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProvider {
+public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProvider<DsKubernetesConfig.Kubernetes> {
 
     @Override
     public String getInstanceType() {
         return DsTypeEnum.KUBERNETES.name();
     }
 
-    private DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+    @Override
+    protected DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
     }
 
+    @Override
     protected void doSet(DsInstanceContext dsInstanceContext) {
         DsKubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         // 取配置文件路径

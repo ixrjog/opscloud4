@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.ansible.convert;
 
+import com.baiyi.opscloud.ansible.model.AnsibleHosts;
 import com.baiyi.opscloud.ansible.model.AnsibleVersion;
+import com.baiyi.opscloud.common.util.IOUtil;
+import com.baiyi.opscloud.datasource.util.SystemEnvUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -24,9 +27,27 @@ public class AnsibleAssetConvert {
                 .description(entry.getDetails())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.ANSIBLE_VERSION.name())
-                .kind("gitlabUser")
+                .kind("ansibleVersion")
                 .build();
 
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .build();
+    }
+
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleHosts.Hosts entry) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId("1")
+                .name(DsAssetTypeEnum.ANSIBLE_HOSTS.name().toLowerCase())
+                .assetKey(DsAssetTypeEnum.ANSIBLE_HOSTS.name())
+                .assetKey2(SystemEnvUtil.renderEnvHome(entry.getInventoryHost()))
+                .description(entry.toInventory())
+                .isActive(true)
+                .assetType(DsAssetTypeEnum.ANSIBLE_HOSTS.name())
+                .kind("ansibleHosts")
+                .build();
+        IOUtil.writeFile(asset.getDescription(), asset.getAssetKey2());
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .build();

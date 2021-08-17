@@ -14,6 +14,7 @@ public class AssetUtil {
     public static boolean equals(String var1, String var2) {
         if (StringUtils.isEmpty(var1))
             return StringUtils.isEmpty(var2);
+        if (StringUtils.isEmpty(var2)) return false;
         return var1.equals(var2);
     }
 

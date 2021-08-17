@@ -17,7 +17,9 @@ public class DsAnsibleConfig {
     @ApiModel
     public static class Ansible {
 
-        public static final String PRIVATE_KEY = "/private_key/id_rsa";
+        public static final String PRIVATE_KEY = "private_key/id_rsa";
+
+        public static final String INVENTORY_HOSTS = "inventory/ansible_hosts";
 
         private String version;
         private String ansible;
@@ -27,6 +29,10 @@ public class DsAnsibleConfig {
 
         public String getPrivateKey() {
             return Joiner.on("/").join(data, PRIVATE_KEY);
+        }
+
+        public String getInventoryHost() {
+            return Joiner.on("/").join(data, INVENTORY_HOSTS);
         }
     }
 

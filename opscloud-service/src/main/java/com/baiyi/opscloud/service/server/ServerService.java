@@ -31,6 +31,8 @@ public interface ServerService {
 
     Server getMaxSerialNumberServer(Integer serverGroupId, Integer envType);
 
+    List<Server> queryByGroupIdAndEnvType(Integer serverGroupId, Integer envType);
+
     int countByServerGroupId(Integer serverGroupId);
 
     List<Server> queryByServerGroupId(Integer serverGroupId);

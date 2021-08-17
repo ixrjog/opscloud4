@@ -7,11 +7,13 @@ import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvid
 import com.baiyi.opscloud.datasource.provider.base.param.AssetFilterParam;
 import com.baiyi.opscloud.datasource.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.sys.CredentialService;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.InitializingBean;
 
@@ -36,6 +38,9 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
 
     @Resource
     protected BaseDsAssetFacade baseDsAssetFacade;
+
+    @Resource
+    private CredentialService credentialService;
 
     @Resource
     protected DsConfigFactory dsConfigFactory;
@@ -174,5 +179,9 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     @Override
     public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
         return Collections.emptyList();
+    }
+
+    protected Credential getCredential(int credentialId) {
+        return credentialService.getById(credentialId);
     }
 }

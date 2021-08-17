@@ -15,7 +15,6 @@ public class AnsibleVersion {
         String ANSIBLE_PLAYBOOK = "ANSIBLE_PLAYBOOK";
     }
 
-
     @Builder
     @Data
     public static class Version {

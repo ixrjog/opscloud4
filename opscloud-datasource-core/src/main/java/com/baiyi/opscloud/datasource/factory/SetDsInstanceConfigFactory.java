@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.factory;
 
 import com.baiyi.opscloud.datasource.provider.base.common.AbstractSetDsInstanceConfigProvider;
+import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -11,6 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @Date 2021/6/24 7:16 下午
  * @Version 1.0
  */
+@Slf4j
 public class SetDsInstanceConfigFactory {
 
     private SetDsInstanceConfigFactory() {
@@ -23,6 +25,7 @@ public class SetDsInstanceConfigFactory {
     }
 
     public static void register(AbstractSetDsInstanceConfigProvider bean) {
+        log.info("SetDsInstanceConfigFactory注册: instanceType = {}", bean.getInstanceType());
         context.put(bean.getInstanceType(), bean);
     }
 }

@@ -1,17 +1,28 @@
 package com.baiyi.opscloud.common.util;
 
 
+import com.baiyi.opscloud.common.base.Global;
+import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.time.FastDateFormat;
 
 import java.io.*;
 import java.nio.charset.Charset;
+import java.util.Date;
 
 @Slf4j
 public class IOUtil {
 
     private IOUtil() {
+    }
+
+    public static final String COMMENT_SIGN = "#";
+
+    public static String getHeadInfo(String symbol) {
+        FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
+        return Joiner.on(" ").join(symbol, Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
     }
 
     /**

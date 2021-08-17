@@ -84,6 +84,15 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
+    public List<Server> queryByGroupIdAndEnvType(Integer serverGroupId, Integer envType) {
+        Example example = new Example(Server.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverGroupId", serverGroupId);
+        criteria.andEqualTo("envType", envType);
+        return serverMapper.selectByExample(example);
+    }
+
+    @Override
     public int countByServerGroupId(Integer serverGroupId) {
         Example example = new Example(Server.class);
         Example.Criteria criteria = example.createCriteria();

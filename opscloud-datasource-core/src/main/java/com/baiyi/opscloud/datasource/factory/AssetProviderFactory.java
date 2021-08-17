@@ -37,7 +37,7 @@ public class AssetProviderFactory {
     }
 
     public static <T extends SimpleAssetProvider> void register(T bean) {
-        log.info("AssetProviderFactory注册: instanceType = {} , assetType = {}", bean.getInstanceType(), bean.getAssetType());
+        log.info("AssetProviderFactory注册: beanName = {} , instanceType = {} , assetType = {}", bean.getClass().getSimpleName(), bean.getInstanceType(), bean.getAssetType());
         if (context.containsKey(bean.getInstanceType())) {
             context.get(bean.getInstanceType()).put(bean.getAssetType(), bean);
         } else {
