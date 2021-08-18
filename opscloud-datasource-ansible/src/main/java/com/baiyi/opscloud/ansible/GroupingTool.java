@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.ansible;
 
+import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -8,6 +9,9 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -21,6 +25,7 @@ import java.util.Set;
  * @Date 2021/8/16 6:46 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class GroupingTool {
 
@@ -29,6 +34,19 @@ public class GroupingTool {
 
     @Resource
     private EnvService envService;
+
+    /**
+     * 清空缓存
+     */
+    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'grouping_' + #serverGroupId", beforeInvocation = true)
+    public void evictGrouping1(Integer serverGroupId) {
+        log.info("evictBuild 清除缓存，serverGroupId = {}", serverGroupId);
+    }
+
+    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'grouping_' + #serverGroup.id")
+    public Map<String, List<Server>> grouping1(ServerGroup serverGroup){
+        return grouping(serverGroup,true);
+    }
 
     /**
      * 取服务器分组map (可单独对外提供分组配置)

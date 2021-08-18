@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.ansible.provider;
 
-import com.baiyi.opscloud.ansible.GroupingTool;
+import com.baiyi.opscloud.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.ansible.convert.AnsibleAssetConvert;
 import com.baiyi.opscloud.ansible.model.AnsibleHosts;
 import com.baiyi.opscloud.common.annotation.SingleTask;
@@ -42,11 +42,10 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     private ServerGroupService serverGroupService;
 
     @Resource
-    private GroupingTool groupingTool;
+    private ServerGroupingAlgorithm serverGroupingAlgorithm;
 
     @Resource
     private ServerService serverService;
-
 
     @Override
     public String getInstanceType() {
@@ -81,7 +80,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
         table.getData().forEach(e -> {
             int serverSize = serverService.countByServerGroupId(e.getId());
             if (serverSize > 0) {
-                Map<String, List<Server>> serverSubgroup = groupingTool.grouping(e, true);
+                Map<String, List<Server>> serverSubgroup = serverGroupingAlgorithm.grouping(e);
                 // log.info(e.getName());
                 AnsibleHosts.Group group = AnsibleHosts.Group.builder()
                         .serverGroup(e)

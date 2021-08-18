@@ -18,6 +18,7 @@ import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -92,7 +93,8 @@ public class ZabbixAccountProvider extends BaseAccountProvider<DsZabbixConfig.Za
 
     private List<Map<String, String>> getUsrgrps(DsZabbixConfig.Zabbix zabbix, User user) {
         List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
-        userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
+        if (CollectionUtils.isEmpty(userGroups))
+            userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
         return userGroups;
     }
 

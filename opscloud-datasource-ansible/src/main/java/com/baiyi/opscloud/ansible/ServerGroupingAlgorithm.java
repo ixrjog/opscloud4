@@ -1,5 +1,6 @@
-package com.baiyi.opscloud.algorithm;
+package com.baiyi.opscloud.ansible;
 
+import com.baiyi.opscloud.algorithm.BaseAlgorithm;
 import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -22,7 +23,8 @@ import java.util.Set;
  * @Version 1.0
  */
 @Component
-public class ServerAlgorithm extends BaseAlgorithm {
+public class ServerGroupingAlgorithm extends BaseAlgorithm {
+
 
     /**
      * 取服务器分组map，不含重复的主机分组模式
@@ -33,12 +35,11 @@ public class ServerAlgorithm extends BaseAlgorithm {
      * @param serverGroup
      * @return
      */
-    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'serverAlgorithm_grouping_' + #serverGroup.id", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'serverGroupingAlgorithm_' + #serverGroup.id", unless = "#result == null")
     public Map<String, List<Server>> grouping(ServerGroup serverGroup) {
         Map<String, List<Server>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) return serverMap;
         int subgroup = 2; // 分2组
-
         Set<String> keSet = Sets.newHashSet(serverMap.keySet());
         keSet.forEach(k -> {
             List<Server> servers = serverMap.get(k);
@@ -50,7 +51,7 @@ public class ServerAlgorithm extends BaseAlgorithm {
         return serverMap;
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'serverAlgorithm_grouping_' + #serverGroupId")
+    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'serverGroupingAlgorithm_' + #serverGroupId")
     public void evictGrouping(Integer serverGroupId) {
     }
 

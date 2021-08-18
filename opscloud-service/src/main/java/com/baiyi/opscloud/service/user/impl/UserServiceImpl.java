@@ -1,10 +1,13 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.UserMapper;
 import com.baiyi.opscloud.service.user.UserService;
 import com.github.pagehelper.Page;
@@ -56,17 +59,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     @Encrypt
+    @EventPublisher(eventType = BusinessTypeEnum.USER, eventAction = EventActionTypeEnum.CREATE)
     public void add(User user) {
         userMapper.insert(user);
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.USER, eventAction = EventActionTypeEnum.UPDATE)
     public void update(User user) {
         userMapper.updateByPrimaryKey(user);
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.USER, eventAction = EventActionTypeEnum.DELETE)
+    public void delete(User user){
+        user.setIsActive(false);
+        userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
     @Encrypt
+    @EventPublisher(eventType = BusinessTypeEnum.USER, eventAction = EventActionTypeEnum.UPDATE)
     public void updateBySelective(User user) {
         userMapper.updateByPrimaryKeySelective(user);
     }

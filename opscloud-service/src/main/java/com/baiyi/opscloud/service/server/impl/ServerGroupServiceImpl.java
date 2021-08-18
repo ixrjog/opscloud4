@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.service.server.impl;
 
+import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.ServerGroupMapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.github.pagehelper.Page;
@@ -39,13 +42,21 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.SERVERGROUP, eventAction = EventActionTypeEnum.CREATE)
     public void add(ServerGroup serverGroup) {
         serverGroupMapper.insert(serverGroup);
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.SERVERGROUP, eventAction = EventActionTypeEnum.UPDATE)
     public void update(ServerGroup serverGroup) {
         serverGroupMapper.updateByPrimaryKey(serverGroup);
+    }
+
+    @Override
+    @EventPublisher(eventType = BusinessTypeEnum.SERVERGROUP, eventAction = EventActionTypeEnum.DELETE)
+    public void delete(ServerGroup serverGroup) {
+        serverGroupMapper.deleteByPrimaryKey(serverGroup.getId());
     }
 
     @Override

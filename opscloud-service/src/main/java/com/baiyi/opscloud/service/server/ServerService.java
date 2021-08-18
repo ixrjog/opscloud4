@@ -17,11 +17,25 @@ public interface ServerService {
 
     Server getByPrivateIp(String privateIp);
 
+    /**
+     * 创建并触发事件
+     * @param server
+     */
     void add(Server server);
 
+    /**
+     * 更新并触发事件
+     * @param server
+     */
     void update(Server server);
 
     void delete(Integer id);
+
+    /**
+     * 删除并触发事件
+     * @param server
+     */
+    void delete(Server server);
 
     DataTable<Server> queryServerPage(ServerParam.ServerPageQuery pageQuery);
 

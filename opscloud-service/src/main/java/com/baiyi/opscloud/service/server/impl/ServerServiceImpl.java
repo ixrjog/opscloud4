@@ -1,8 +1,11 @@
 package com.baiyi.opscloud.service.server.impl;
 
+import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.ServerMapper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.github.pagehelper.Page;
@@ -52,18 +55,20 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    public   DataTable<Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery){
+    public DataTable<Server> queryUserRemoteServerPage(ServerParam.UserRemoteServerPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         List<Server> data = serverMapper.queryUserRemoteServerPage(pageQuery);
         return new DataTable<>(data, page.getTotal());
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.SERVER, eventAction = EventActionTypeEnum.CREATE)
     public void add(Server server) {
         serverMapper.insert(server);
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.SERVER, eventAction = EventActionTypeEnum.UPDATE)
     public void update(Server server) {
         serverMapper.updateByPrimaryKey(server);
     }
@@ -71,6 +76,11 @@ public class ServerServiceImpl implements ServerService {
     @Override
     public void delete(Integer id) {
         serverMapper.deleteByPrimaryKey(id);
+    }
+
+    @EventPublisher(eventType = BusinessTypeEnum.SERVER, eventAction = EventActionTypeEnum.DELETE)
+    public void delete(Server server) {
+        serverMapper.deleteByPrimaryKey(server.getId());
     }
 
     @Override

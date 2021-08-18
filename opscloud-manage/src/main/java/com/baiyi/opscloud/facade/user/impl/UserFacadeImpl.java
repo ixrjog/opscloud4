@@ -81,14 +81,12 @@ public class UserFacadeImpl implements UserFacade {
             throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
         user.setId(newUser.getId());
-        dsAccountManager.create(newUser);
     }
 
     @Override
     public void updateUser(UserVO.User user) {
         User updateUser = userPacker.toDO(user);
         userService.updateBySelective(updateUser);
-        dsAccountManager.update(updateUser);
     }
 
     @Override
@@ -96,9 +94,7 @@ public class UserFacadeImpl implements UserFacade {
         User user = userService.getById(id);
         if (user == null) return;
         // 不删除用户，只修改isActive字段
-        user.setIsActive(false);
-        userService.update(user);
-        dsAccountManager.delete(user);
+        userService.delete(user);
     }
 
     @Override

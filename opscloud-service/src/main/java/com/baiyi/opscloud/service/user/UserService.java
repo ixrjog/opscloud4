@@ -26,6 +26,8 @@ public interface UserService {
 
     void update(User user);
 
+    void delete(User user);
+
     void updateBySelective(User user);
 
     List<User> listActive();

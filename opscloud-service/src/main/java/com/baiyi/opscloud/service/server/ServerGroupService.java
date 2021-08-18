@@ -24,6 +24,8 @@ public interface ServerGroupService {
 
     Integer countByServerGroupTypeId(Integer serverGroupTypeId);
 
+    void delete(ServerGroup serverGroup);
+
     DataTable<ServerGroup> queryPageByParam(ServerGroupParam.ServerGroupPageQuery pageQuery);
 
     DataTable<ServerGroup> queryPageByParam(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);

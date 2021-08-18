@@ -99,6 +99,7 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
                 .paramEntry("usrgrps", usrgrps)
                 .paramEntrySkipEmpty("user_medias", mediaList)
                 .build();
+      //  System.err.println(JSON.toJSONString(request));
         JsonNode data = call(zabbix, request);
         try {
             List<Integer> userIds = ZabbixMapper.mapperList(data.get(RESULT).get("userids"), Integer.class);

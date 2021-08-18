@@ -8,8 +8,10 @@ import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -28,6 +30,17 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     @Override
     public void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission) {
         permissionService.deleteByUserPermission(BeanCopierUtil.copyProperties(userBusinessPermission, UserPermission.class));
+    }
+
+    @Override
+    public void revokeUserPermissionByBusiness(int businessType, int businessId) {
+        UserPermission userPermission = UserPermission.builder()
+                .businessType(businessType)
+                .businessId(businessId)
+                .build();
+        List<UserPermission> permissions = permissionService.queryByBusiness(userPermission);
+        if(CollectionUtils.isEmpty(permissions)) return;
+        permissions.forEach(e -> permissionService.deleteById(e.getId()));
     }
 
     @Override

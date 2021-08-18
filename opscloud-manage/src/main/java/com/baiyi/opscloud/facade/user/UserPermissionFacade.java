@@ -16,4 +16,6 @@ public interface UserPermissionFacade {
     void settUserBusinessPermission(int id);
 
     int getUserAccessLevel(String username);
+
+    void revokeUserPermissionByBusiness(int businessType, int businessId);
 }

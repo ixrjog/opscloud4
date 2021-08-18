@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.facade.server.impl;
 
-import com.baiyi.opscloud.algorithm.ServerAlgorithm;
+import com.baiyi.opscloud.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -20,8 +21,6 @@ import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
-import com.baiyi.opscloud.event.handler.ServerGroupEventHandler;
-import com.baiyi.opscloud.event.param.ServerGroupEventParam;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
@@ -74,13 +73,10 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
     private ServerService serverService;
 
     @Resource
-    private ServerAlgorithm serverAlgorithm;
+    private ServerGroupingAlgorithm serverAlgorithm;
 
     @Resource
     private ServerTreeUtil serverTreeUtil;
-
-    @Resource
-    private ServerGroupEventHandler serverGroupEventHandler;
 
     @Override
     public int getBusinessType() {
@@ -118,7 +114,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
     @Override
     public void updateServerGroup(ServerGroupVO.ServerGroup serverGroup) {
         try {
-            ServerGroupCacheEvict(serverGroup.getId());
             serverGroupService.update(toDO(serverGroup));
         } catch (Exception ex) {
             throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_ALREADY_EXIST);
@@ -126,11 +121,15 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
     }
 
     @TagClear(type = BusinessTypeEnum.SERVERGROUP)
+    @RevokeUserPermission(type = BusinessTypeEnum.SERVERGROUP)
     @Override
     public void deleteServerGroupById(int id) {
-        ServerGroupEventParam.delete delete = ServerGroupEventParam.delete.builder()
-                .id(id).build();
-        serverGroupEventHandler.deleteHandle(delete);
+        ServerGroup serverGroup = serverGroupService.getById(id);
+        if(serverGroup == null) return;
+        if(serverService.countByServerGroupId(id) > 0)
+            throw new CommonRuntimeException("服务器组不为空：必须删除组内服务器成员！");
+        // 删除用户授权
+        serverGroupService.delete(serverGroup);
     }
 
     private ServerGroup toDO(ServerGroupVO.ServerGroup serverGroup) {
@@ -188,13 +187,6 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
                 .size(treeSize.get())
                 .build();
     }
-
-    @Override
-    public void ServerGroupCacheEvict(Integer serverGroupId) {
-        serverTreeUtil.evictWrap(serverGroupId);
-        serverAlgorithm.evictGrouping(serverGroupId);
-    }
-
 
     /**
      * 注册
