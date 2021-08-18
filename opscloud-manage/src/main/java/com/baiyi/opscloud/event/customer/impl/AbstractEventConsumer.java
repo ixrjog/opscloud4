@@ -64,7 +64,6 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
     protected void postEventProcessing(NoticeEvent noticeEvent) {
     }
 
-
     protected T toEventData(IEvent<T> event) {
         return event.getBody();
     }
