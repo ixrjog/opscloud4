@@ -22,7 +22,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
-import java.util.Date;
 
 import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
 
@@ -128,8 +127,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         if (authProviderManager.tryLogin(user, loginParam)) {
             // 更新用户登录信息
             user.setPassword(stringEncryptor.encrypt(loginParam.getPassword()));
-            user.setLastLogin(new Date());
-            userService.update(user);
+            userService.updateLogin(user);
             return userTokenFacade.userLogin(user);
         } else {
             throw new AuthRuntimeException(ErrorEnum.AUTH_USER_LOGIN_FAILURE); // 登录失败

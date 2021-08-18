@@ -71,6 +71,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public void updateLogin(User user){
+        userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
     @EventPublisher(eventType = BusinessTypeEnum.USER, eventAction = EventActionTypeEnum.DELETE)
     public void delete(User user){
         user.setIsActive(false);

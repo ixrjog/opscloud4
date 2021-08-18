@@ -26,6 +26,12 @@ public interface UserService {
 
     void update(User user);
 
+    /**
+     * 登录更新接口，不触发事件
+     * @param user
+     */
+    void updateLogin(User user);
+
     void delete(User user);
 
     void updateBySelective(User user);
