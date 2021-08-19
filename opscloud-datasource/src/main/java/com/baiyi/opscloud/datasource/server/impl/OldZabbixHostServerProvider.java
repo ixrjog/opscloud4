@@ -7,7 +7,7 @@ package com.baiyi.opscloud.datasource.server.impl;
  */
 
 
-public class ZabbixHostServerProvider {
+public class OldZabbixHostServerProvider {
 
 //    private interface Action {
 //        Boolean CRETE = true;
