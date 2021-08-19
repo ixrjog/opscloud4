@@ -76,7 +76,7 @@ public class ServerLoginCommand {
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
     public void login(@ShellOption(help = "Server Id") int id,
                       @ShellOption(help = "Account Name", defaultValue = "") String account,
-                      @ShellOption( value = {"-A", "--admin"},help = "Admin") boolean admin) {
+                      @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         Terminal terminal = getTerminal();
@@ -96,6 +96,7 @@ public class ServerLoginCommand {
             );
 
             RemoteInvokeHandler.openSSHServer(sessionId, hostSystem, sshContext.getSshShellRunnable().getOs());
+            //terminal.enterRawMode();
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
@@ -161,8 +162,9 @@ public class ServerLoginCommand {
         if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
+        // jSchSession.getCommander().write(String.valueOf((char) ch).getBytes(StandardCharsets.UTF_8 ));
         jSchSession.getCommander().print((char) ch);
-        //  AuditRecordHandler.recordCommanderLog(sessionId, instanceId, ch);
+
     }
 
 }
