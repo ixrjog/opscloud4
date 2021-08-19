@@ -20,6 +20,10 @@ public class TerminalUtil {
     private TerminalUtil() {
     }
 
+    /**
+     * https://ftp.gnu.org/old-gnu/Manuals/glibc-2.2.3/html_node/libc_355.html
+     * @param terminal
+     */
     // 行模式支持 Ctrl+C
     public static void rawModeSupportVintr(Terminal terminal) {
         Attributes prvAttr = terminal.getAttributes();
