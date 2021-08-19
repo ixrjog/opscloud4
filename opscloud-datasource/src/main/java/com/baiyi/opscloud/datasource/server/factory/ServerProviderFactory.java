@@ -1,31 +1,33 @@
 package com.baiyi.opscloud.datasource.server.factory;
 
+import com.baiyi.opscloud.datasource.account.IAccount;
 import com.baiyi.opscloud.datasource.server.IServer;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/7/22 3:33 下午
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2021/8/19 11:11 上午
+ * @Version 1.0
  */
-public class ServerFactory {
+public class ServerProviderFactory {
 
-    private ServerFactory() {
+    private ServerProviderFactory() {
     }
 
     private static Map<String, IServer> context = new ConcurrentHashMap<>();
 
-    public static IServer getIServerByAssetType(String assetType) {
-        return context.get(assetType);
+    public static IServer getIServerByInstanceType(String instanceType) {
+        return context.get(instanceType);
     }
 
     public static void register(IServer bean) {
-       //  context.put(bean.getAssetType(), bean);
+        context.put(bean.getInstanceType(), bean);
     }
 
     public static Map<String, IServer> getIServerContainer() {
         return context;
     }
+
 }

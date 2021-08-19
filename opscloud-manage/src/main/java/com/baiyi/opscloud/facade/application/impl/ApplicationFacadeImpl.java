@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
@@ -48,11 +49,11 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
     }
 
     @Override
-    public ApplicationVO.Application queryApplicationById(ApplicationParam.Query query) {
-        Application application = applicationService.getById(query.getApplicationId());
+    public ApplicationVO.Application getApplicationById(Integer id) {
+        Application application = applicationService.getById(id);
         if (application == null)
             throw new CommonRuntimeException(ErrorEnum.APPLICATION_NOT_EXIST);
-        return applicationPacker.wrapVO(application);
+        return applicationPacker.wrapVO(application, SimpleExtend.EXTEND);
     }
 
     @Override

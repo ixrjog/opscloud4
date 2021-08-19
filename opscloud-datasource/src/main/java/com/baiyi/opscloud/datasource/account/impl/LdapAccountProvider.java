@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsLdapConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.account.convert.AccountConvert;
-import com.baiyi.opscloud.datasource.account.impl.base.BaseAccountProvider;
+import com.baiyi.opscloud.datasource.account.impl.base.AbstractAccountProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class LdapAccountProvider extends BaseAccountProvider<DsLdapConfig.Ldap> {
+public class LdapAccountProvider extends AbstractAccountProvider<DsLdapConfig.Ldap> {
 
     @Resource
     private PersonRepo personRepo;

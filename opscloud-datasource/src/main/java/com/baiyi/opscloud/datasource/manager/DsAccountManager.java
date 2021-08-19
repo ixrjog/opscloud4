@@ -32,14 +32,14 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     /**
      * 支持账户管理的实例类型
      */
-    private static final DsTypeEnum[] accountInstanceTypes = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
+    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
 
     @Resource
     private StringEncryptor stringEncryptor;
 
     @Override
-    protected DsTypeEnum[] getDsTypes() {
-        return accountInstanceTypes;
+    protected DsTypeEnum[] getFilterInstanceTypes() {
+        return filterInstanceTypes;
     }
 
     @Override

@@ -47,10 +47,10 @@ public class ApplicationController {
         return new HttpResult<>(applicationFacade.queryApplicationPage(pageQuery));
     }
 
-    @ApiOperation(value = "查询应用")
-    @PostMapping(value = "/id/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<ApplicationVO.Application> queryApplicationById(@RequestBody @Valid ApplicationParam.Query query) {
-        return new HttpResult<>(applicationFacade.queryApplicationById(query));
+    @ApiOperation(value = "查询应用详情")
+    @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<ApplicationVO.Application> getApplicationById(@Valid Integer id) {
+        return new HttpResult<>(applicationFacade.getApplicationById(id));
     }
 
     @ApiOperation(value = "新增应用")

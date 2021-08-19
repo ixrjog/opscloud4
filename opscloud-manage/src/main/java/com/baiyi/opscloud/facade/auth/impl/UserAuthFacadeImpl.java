@@ -2,7 +2,7 @@ package com.baiyi.opscloud.facade.auth.impl;
 
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.datasource.manager.AuthManager;
+import com.baiyi.opscloud.datasource.manager.DsAuthManager;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.PermitEmptyPasswords;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
@@ -58,7 +58,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
     private StringEncryptor stringEncryptor;
 
     @Resource
-    private AuthManager authProviderManager;
+    private DsAuthManager authProviderManager;
 
     @Override
     public void tryUserHasResourceAuthorize(String token, String resourceName) {

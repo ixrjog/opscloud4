@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.customer.impl;
 
 import com.baiyi.opscloud.ansible.ServerGroupingAlgorithm;
-import com.baiyi.opscloud.datasource.manager.ServerManager;
+import com.baiyi.opscloud.datasource.manager.DsServerManager;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
@@ -24,7 +24,7 @@ public class ServerEventCustomer extends AbstractEventConsumer<Server> {
     private ServerGroupingAlgorithm serverGroupingAlgorithm;
 
     @Resource
-    private ServerManager serverManager;
+    private DsServerManager dsServerManager;
 
     @Override
     public String getEventType() {
@@ -41,19 +41,19 @@ public class ServerEventCustomer extends AbstractEventConsumer<Server> {
     @Override
     protected void onCreateMessage(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
-        serverManager.create(eventData);
+        dsServerManager.create(eventData);
     }
 
     @Override
     protected void onUpdateMessage(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
-        serverManager.update(eventData);
+        dsServerManager.update(eventData);
     }
 
     @Override
     protected void onDeleteMessage(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
-        serverManager.delete(eventData.getId());
+        dsServerManager.delete(eventData);
     }
 
 }

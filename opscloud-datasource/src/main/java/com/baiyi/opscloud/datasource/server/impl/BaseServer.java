@@ -1,11 +1,9 @@
 package com.baiyi.opscloud.datasource.server.impl;
 
-import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.datasource.provider.base.common.IInstanceType;
 import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
-import com.baiyi.opscloud.datasource.server.IServer;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -17,7 +15,6 @@ import com.baiyi.opscloud.service.tag.BaseTagService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.InitializingBean;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -29,7 +26,7 @@ import java.util.stream.Collectors;
  * @Date 2021/7/22 1:47 下午
  * @Since 1.0
  */
-public abstract class BaseServer extends SimpleDsInstanceProvider implements InitializingBean, IServer, IInstanceType {
+public abstract class BaseServer extends SimpleDsInstanceProvider implements InitializingBean, IInstanceType {
 
     private List<SimpleAssetProvider> simpleAssetProviderList;
 
@@ -51,7 +48,7 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
 //    @Resource
 //    private BaseDsAssetFacade baseDsAssetFacade;
 
-    @Override
+
     public void create(Server server) {
         Map<String, String> serverProperties = getServerProperties(server);
         create(server, serverProperties);
@@ -75,7 +72,7 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
      */
     protected abstract DatasourceInstanceAsset create(DsInstanceContext dsInstanceContext, Server server, Map<String, String> serverProperties);
 
-    @Override
+
     public void update(Server server) {
         Map<String, String> serverProperties = getServerProperties(server);
         update(server, serverProperties);
@@ -132,16 +129,16 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
      //   businessFacade.saveBusinessRelation(businessRelation);
     }
 
-    private void setSimpleAssetProviderList() {
-        this.simpleAssetProviderList = AssetProviderFactory.getProviders(getInstanceType(), getAssetType());
-    }
+//    private void setSimpleAssetProviderList() {
+//        this.simpleAssetProviderList = AssetProviderFactory.getProviders(getInstanceType(), getAssetType());
+//    }
 
-    public List<SimpleAssetProvider> getSimpleAssetProviderList() {
-        if (CollectionUtils.isEmpty(simpleAssetProviderList)) {
-            setSimpleAssetProviderList();
-        }
-        return simpleAssetProviderList;
-    }
+//    public List<SimpleAssetProvider> getSimpleAssetProviderList() {
+//        if (CollectionUtils.isEmpty(simpleAssetProviderList)) {
+//            setSimpleAssetProviderList();
+//        }
+//        return simpleAssetProviderList;
+//    }
 
     protected String getFilterDsInstanceTagKey() {
         return Strings.EMPTY;

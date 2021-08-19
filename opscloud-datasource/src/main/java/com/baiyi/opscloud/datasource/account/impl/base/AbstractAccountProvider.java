@@ -11,6 +11,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.service.user.UserPermissionService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
@@ -21,7 +22,8 @@ import java.util.List;
  * @Date 2021/8/11 2:05 下午
  * @Version 1.0
  */
-public abstract class BaseAccountProvider<T> extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
+@Slf4j
+public abstract class AbstractAccountProvider<T> extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
 
     @Resource
     protected DsConfigFactory dsConfigFactory;

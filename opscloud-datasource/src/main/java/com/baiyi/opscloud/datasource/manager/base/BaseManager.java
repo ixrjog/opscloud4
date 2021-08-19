@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.tag.BaseTagService;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -17,6 +18,7 @@ import java.util.stream.Collectors;
  * @Date 2021/8/11 11:18 上午
  * @Version 1.0
  */
+@Slf4j
 public abstract class BaseManager {
 
     @Resource
@@ -27,7 +29,7 @@ public abstract class BaseManager {
 
     protected static final int DsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
 
-    abstract protected DsTypeEnum[] getDsTypes();
+    abstract protected DsTypeEnum[] getFilterInstanceTypes();
 
     abstract protected String getTag();
 
@@ -38,7 +40,7 @@ public abstract class BaseManager {
      */
     protected List<DatasourceInstance> listInstance() {
         List<DatasourceInstance> instances = Lists.newArrayList();
-        for (DsTypeEnum typeEnum : getDsTypes()) {
+        for (DsTypeEnum typeEnum : getFilterInstanceTypes()) {
             DsInstanceParam.DsInstanceQuery query = DsInstanceParam.DsInstanceQuery.builder()
                     .instanceType(typeEnum.getName())
                     .build();
@@ -51,4 +53,5 @@ public abstract class BaseManager {
         }
         return instances;
     }
+
 }

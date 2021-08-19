@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.account.convert.AccountConvert;
-import com.baiyi.opscloud.datasource.account.impl.base.BaseAccountProvider;
+import com.baiyi.opscloud.datasource.account.impl.base.AbstractAccountProvider;
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class ZabbixAccountProvider extends BaseAccountProvider<DsZabbixConfig.Zabbix> {
+public class ZabbixAccountProvider extends AbstractAccountProvider<DsZabbixConfig.Zabbix> {
 
     @Resource
     private ZabbixUserHandler zabbixUserHandler;

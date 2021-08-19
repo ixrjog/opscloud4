@@ -1,41 +1,46 @@
 package com.baiyi.opscloud.domain.model.property;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import lombok.Data;
 
-import java.util.Map;
+import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/27 10:38 上午
  * @Since 1.0
  */
-
-
-@Data
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "version",
-        "kind",
-        "metadata",
-        "spec"
-})
 public class ServerProperty {
 
+    @Data
+    public static class Server {
+        private String kind = "Server";
+        private Metadata metadata;
 
-    @JsonProperty("version")
-    private String version = "v1";
+        private Zabbix zabbix;
+    }
 
-    @JsonProperty("kind")
-    private String kind = "server";
+    @Data
+    public static class Metadata {
 
-    @JsonProperty("metadata")
-    private Map<String, String> metadata;
+        private Integer sshPort = 22;
 
-    private Integer port;
+        private Integer rdpPort = 3389;
 
-    @JsonProperty("spec")
-    private Map<String, Object> spec;
+        private Integer vncPort = 5901;
+        private String manageIp;
+
+    }
+
+    @Data
+    public static class Zabbix {
+
+        private Boolean enable = false;
+        private List<String> templates;
+
+        private Boolean templateUniformity = false;
+        private String proxyName;
+
+    }
+
+
 }

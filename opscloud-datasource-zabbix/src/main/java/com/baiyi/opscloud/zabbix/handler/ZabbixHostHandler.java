@@ -27,7 +27,7 @@ import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
 @Component
 public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
 
-    private interface HostAPIMethod {
+    public interface HostAPIMethod {
         String GET = "host.get";
         String CREATE = "host.create";
         String UPDATE = "host.update";

@@ -24,7 +24,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class AuthManager extends BaseManager {
+public class DsAuthManager extends BaseManager {
 
     @Resource
     private StringEncryptor stringEncryptor;
@@ -35,15 +35,15 @@ public class AuthManager extends BaseManager {
     /**
      * 支持认证的实例类型
      */
-    private static final DsTypeEnum[] authorizationInstanceTypes = {DsTypeEnum.LDAP};
+    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.LDAP};
 
     @Override
-    protected DsTypeEnum[] getDsTypes() {
-        return authorizationInstanceTypes;
+    protected DsTypeEnum[] getFilterInstanceTypes() {
+        return filterInstanceTypes;
     }
 
     @Override
-    protected String getTag(){
+    protected String getTag() {
         return AUTHORIZATION_TAG;
     }
 

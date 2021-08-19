@@ -16,7 +16,7 @@ public interface ApplicationFacade {
 
     DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.ApplicationPageQuery pageQuery);
 
-    ApplicationVO.Application queryApplicationById(ApplicationParam.Query query);
+    ApplicationVO.Application getApplicationById(Integer id);
 
     void addApplication(ApplicationVO.Application application);
 

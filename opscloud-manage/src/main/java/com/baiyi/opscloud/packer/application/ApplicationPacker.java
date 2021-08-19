@@ -48,7 +48,7 @@ public class ApplicationPacker {
     }
 
     public List<ApplicationVO.Application> wrapVOList(List<Application> data, IExtend iExtend) {
-        return BeanCopierUtil.copyListProperties(data, ApplicationVO.Application.class);
+        return data.stream().map(e -> wrapVO(e, iExtend)).collect(Collectors.toList());
     }
 
     /**
@@ -81,7 +81,7 @@ public class ApplicationPacker {
                 List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssets(dsInstance.getId(), params);
                 resourceVO.setAssetContainers(assetContainers);
             }
-        } catch (NullPointerException e) {
+        } catch (NullPointerException ignored) {
         }
         return resourceVO;
     }
@@ -90,13 +90,15 @@ public class ApplicationPacker {
         return BeanCopierUtil.copyListProperties(data, ApplicationVO.Application.class);
     }
 
-    public ApplicationVO.Application wrapVO(Application application) {
+    public ApplicationVO.Application wrapVO(Application application, IExtend iExtend) {
         ApplicationVO.Application vo = BeanCopierUtil.copyProperties(application, ApplicationVO.Application.class);
-        List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
-        List<ApplicationResourceVO.Resource> resources = BeanCopierUtil.copyListProperties(applicationResourceList, ApplicationResourceVO.Resource.class);
-        Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
-                .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
-        vo.setResourceMap(resourcesMap);
+        if (iExtend.getExtend()) {
+            List<ApplicationResource> applicationResourceList = applicationResourceService.queryByApplication(application.getId());
+            List<ApplicationResourceVO.Resource> resources = BeanCopierUtil.copyListProperties(applicationResourceList, ApplicationResourceVO.Resource.class);
+            Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
+                    .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
+            vo.setResourceMap(resourcesMap);
+        }
         return vo;
     }
 

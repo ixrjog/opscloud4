@@ -1,37 +1,25 @@
 package com.baiyi.opscloud.datasource.server;
 
-import com.baiyi.opscloud.datasource.asset.IAssetType;
+import com.baiyi.opscloud.datasource.provider.base.common.IInstanceType;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/22 1:39 下午
  * @Since 1.0
  */
-public interface IServer extends IAssetType {
+public interface IServer extends IInstanceType {
 
+    void create(DatasourceInstance dsInstance, Server server);
 
-    /**
-     * 创建
-     *
-     * @param server
-     */
-    void create(Server server);
+    void update(DatasourceInstance dsInstance, Server server);
 
-    /**
-     * 更新
-     *
-     * @param server
-     */
-    void update(Server server);
+    void delete(DatasourceInstance dsInstance, Server server);
 
+    void add(DatasourceInstance dsInstance, Server server, BaseBusiness.IBusiness businessResource);
 
-    /**
-     * 删除
-     *
-     * @param id
-     */
-    void delete(Integer id);
-
+    void remove(DatasourceInstance dsInstance, Server server, BaseBusiness.IBusiness businessResource);
 
 }
