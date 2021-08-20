@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_permission")
-public class UserPermission {
+public class UserPermission implements BaseBusiness.IBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

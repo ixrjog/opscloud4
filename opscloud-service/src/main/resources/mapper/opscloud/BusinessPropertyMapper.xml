@@ -8,11 +8,9 @@
     <id column="id" jdbcType="INTEGER" property="id" />
     <result column="business_type" jdbcType="INTEGER" property="businessType" />
     <result column="business_id" jdbcType="INTEGER" property="businessId" />
-    <result column="group_name" jdbcType="VARCHAR" property="groupName" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="value" jdbcType="VARCHAR" property="value" />
     <result column="comment" jdbcType="VARCHAR" property="comment" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="property" jdbcType="LONGVARCHAR" property="property" />
   </resultMap>
 </mapper>

@@ -17,11 +17,11 @@ import java.util.List;
  * @Date 2020/2/22 1:17 下午
  * @Version 1.0
  */
-public class TagVO  {
+public class TagVO {
 
-    public interface ITags extends BaseBusiness.IBusiness{
+    public interface ITags extends BaseBusiness.IBusiness {
+
         void setTags(List<Tag> tags);
-
         List<Tag> getTags();
 
     }

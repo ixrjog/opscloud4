@@ -101,5 +101,13 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
     }
 
+    public void revoke(User user, BaseBusiness.IBusiness businessResource) {
+        List<DatasourceInstance> instances = listInstance();
+        if (CollectionUtils.isEmpty(instances)) {
+            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            return;
+        }
+        instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
+    }
 
 }

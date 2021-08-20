@@ -24,16 +24,16 @@ public class SimpleServerNameFacade {
 
 
     /**
-     * 带列号
+     * 带序号
      *
      * @return
      */
     public static String toServerName(Server server) {
         Env env = envService.getByEnvType(server.getEnvType());
-        return acqServerName(server, env);
+        return toName(server, env);
     }
 
-    private static String acqServerName(Server server, Env env) {
+    private static String toName(Server server, Env env) {
         if (env == null || env.getEnvName().equals("prod")) {
             return Joiner.on("-").join(server.getName(), server.getSerialNumber());
         } else {
@@ -42,7 +42,7 @@ public class SimpleServerNameFacade {
     }
 
     /**
-     * 不带列号
+     * 不带序号
      *
      * @return
      */

@@ -17,11 +17,19 @@ public interface UserPermissionService {
 
     void update(UserPermission userPermission);
 
+    /**
+     * 新增并触发事件
+     * @param userPermission
+     */
     void add(UserPermission userPermission);
 
     void deleteById(Integer id);
 
-    void deleteByUserPermission(UserPermission userPermission);
+    /**
+     * 删除并触发事件
+     * @param userPermission
+     */
+    void delete(UserPermission userPermission);
 
     /**
      * 只查询数量

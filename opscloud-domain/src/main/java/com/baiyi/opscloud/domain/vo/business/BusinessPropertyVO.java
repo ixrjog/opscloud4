@@ -7,7 +7,6 @@ import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -16,14 +15,8 @@ import java.util.List;
  */
 public class BusinessPropertyVO {
 
-    public interface IProperty {
-        void setBusinessProperties(List<BusinessPropertyVO.Property> businessProperties);
-
-        List<BusinessPropertyVO.Property> getBusinessProperties();
-
-        int getBusinessType();
-
-        int getBusinessId();
+    public interface IBusinessProperty extends BaseBusiness.IBusiness {
+        void setBusinessProperty(BusinessPropertyVO.Property BusinessProperty);
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -33,15 +26,10 @@ public class BusinessPropertyVO {
     public static class Property extends BaseVO implements Serializable {
 
         private static final long serialVersionUID = -1685813744181450467L;
-
         private Integer id;
-
         private Integer businessType;
-
         private Integer businessId;
-
-        private String name;
-
-        private String value;
+        private String comment;
+        private String property;
     }
 }

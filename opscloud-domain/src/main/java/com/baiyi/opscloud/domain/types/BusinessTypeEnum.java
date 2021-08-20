@@ -43,7 +43,8 @@ public enum BusinessTypeEnum {
     GITLAB_GROUP(15, "GITLAB_GROUP"),
     DATASOURCE_INSTANCE(16, "数据源实例"),
     DATASOURCE_ASSET(17, "数据源实例资产"),
-    ;
+
+    USER_PERMISSION(100, "USER_PERMISSION");
 
     private String name;
     private int type;

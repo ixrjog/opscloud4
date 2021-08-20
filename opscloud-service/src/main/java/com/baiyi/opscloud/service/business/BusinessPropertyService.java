@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.service.business;
 
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
-
-import java.util.List;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -19,5 +18,9 @@ public interface BusinessPropertyService {
 
     void deleteById(int id);
 
-    List<BusinessProperty> queryByBusiness(Integer businessType, Integer businessId);
+    BusinessProperty getByUniqueKey(Integer businessType, Integer businessId);
+
+    default BusinessProperty getByUniqueKey(BaseBusiness.IBusiness iBusiness) {
+        return getByUniqueKey(iBusiness.getBusinessType(), iBusiness.getBusinessId());
+    }
 }

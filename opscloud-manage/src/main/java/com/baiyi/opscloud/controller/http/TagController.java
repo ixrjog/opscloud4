@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.facade.tag.TagFacade;
+import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.util.OptionsUtil;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -28,7 +28,7 @@ import java.util.List;
 public class TagController {
 
     @Resource
-    private TagFacade tagFacade;
+    private SimpleTagFacade tagFacade;
 
     @ApiOperation(value = "查询业务类型选项")
     @GetMapping(value = "/business/options/get", produces = MediaType.APPLICATION_JSON_VALUE)

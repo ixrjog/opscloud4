@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.UserPermissionMapper;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import org.springframework.stereotype.Service;
@@ -31,6 +34,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
+    @EventPublisher(eventType = BusinessTypeEnum.USER_PERMISSION, eventAction = EventActionTypeEnum.CREATE)
     public void add(UserPermission userPermission) {
         permissionMapper.insert(userPermission);
     }
@@ -41,7 +45,8 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
-    public void deleteByUserPermission(UserPermission userPermission) {
+    @EventPublisher(eventType = BusinessTypeEnum.USER_PERMISSION, eventAction = EventActionTypeEnum.DELETE)
+    public void delete(UserPermission userPermission) {
         permissionMapper.delete(userPermission);
     }
 

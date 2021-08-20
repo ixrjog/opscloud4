@@ -10,7 +10,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
+import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.sys.CredentialService;
@@ -37,7 +37,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     @Resource
-    protected BaseDsAssetFacade baseDsAssetFacade;
+    protected SimpleDsAssetFacade baseDsAssetFacade;
 
     @Resource
     private CredentialService credentialService;

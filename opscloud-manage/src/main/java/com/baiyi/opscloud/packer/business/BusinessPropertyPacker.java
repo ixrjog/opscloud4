@@ -7,7 +7,6 @@ import com.baiyi.opscloud.service.business.BusinessPropertyService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -21,14 +20,10 @@ public class BusinessPropertyPacker {
     @Resource
     private BusinessPropertyService businessPropertyService;
 
-    public void wrap(BusinessPropertyVO.IProperty iProperty) {
-        List<BusinessProperty> properties = businessPropertyService.queryByBusiness(iProperty.getBusinessType(), iProperty.getBusinessType());
-        iProperty.setBusinessProperties(wrapVOList(properties));
+    public void wrap(BusinessPropertyVO.IBusinessProperty iBusinessProperty) {
+        BusinessProperty businessProperty = businessPropertyService.getByUniqueKey(iBusinessProperty);
+        if (businessProperty == null) return;
+        iBusinessProperty.setBusinessProperty(BeanCopierUtil.copyProperties(businessProperty, BusinessPropertyVO.Property.class));
     }
-
-    public List<BusinessPropertyVO.Property> wrapVOList(List<BusinessProperty> properties) {
-        return BeanCopierUtil.copyListProperties(properties, BusinessPropertyVO.Property.class);
-    }
-
 
 }

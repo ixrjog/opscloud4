@@ -24,11 +24,11 @@ public class DsInstanceVO {
     @ApiModel
     public static class Instance extends BaseVO implements TagVO.ITags {
 
-        private final int businessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
+        private final Integer businessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
         private List<TagVO.Tag> tags;
 
         @Override
-        public int getBusinessId() {
+        public Integer getBusinessId() {
             return this.id;
         }
 

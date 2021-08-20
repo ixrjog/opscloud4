@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
-import com.baiyi.opscloud.facade.datasource.BaseDsAssetFacade;
+import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
@@ -47,7 +47,7 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
     private DsAssetPacker dsAssetPacker;
 
     @Resource
-    private BaseDsAssetFacade baseDsAssetFacade;
+    private SimpleDsAssetFacade baseDsAssetFacade;
 
     @Override
     public DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery) {

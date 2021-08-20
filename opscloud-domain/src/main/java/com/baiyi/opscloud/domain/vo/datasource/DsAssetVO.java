@@ -30,13 +30,13 @@ public class DsAssetVO {
 
         // ITags
         private List<TagVO.Tag> tags;
-        private final int businessType = BusinessTypeEnum.ASSET.getType();
+        private final Integer businessType = BusinessTypeEnum.ASSET.getType();
 
         // 此资产可转换为其它业务对象
         private Map<BusinessTypeEnum, BusinessAssetRelationVO.IBusinessAssetRelation> convertBusinessTypes;
 
         @Override
-        public int getBusinessId() {
+        public Integer getBusinessId() {
             return id;
         }
 

@@ -9,7 +9,6 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.facade.business.BusinessFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.tag.BaseTagService;
 import org.apache.commons.lang3.StringUtils;
@@ -30,8 +29,8 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
 
     private List<SimpleAssetProvider> simpleAssetProviderList;
 
-    @Resource
-    private BusinessFacade businessFacade;
+//    @Resource
+//    private BusinessFacade businessFacade;
 
     @Resource
     private DsInstanceService dsInstanceService;
@@ -50,8 +49,8 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
 
 
     public void create(Server server) {
-        Map<String, String> serverProperties = getServerProperties(server);
-        create(server, serverProperties);
+//        Map<String, String> serverProperties = getServerProperties(server);
+//        create(server, serverProperties);
     }
 
     public void create(Server server, Map<String, String> serverProperties) {
@@ -74,8 +73,8 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
 
 
     public void update(Server server) {
-        Map<String, String> serverProperties = getServerProperties(server);
-        update(server, serverProperties);
+//        Map<String, String> serverProperties = getServerProperties(server);
+//        update(server, serverProperties);
     }
 
     public void update(Server server, Map<String, String> serverProperties) {
@@ -155,19 +154,7 @@ public abstract class BaseServer extends SimpleDsInstanceProvider implements Ini
         return instanceList;
     }
 
-    protected Map<String, String> getServerGroupProperties(Server server) {
-        Map<String, String> map = businessFacade.getDefaultServerGroupProperty();
-        Map<String, String> serverGroupProperties = businessFacade.getBusinessProperty(BusinessTypeEnum.SERVERGROUP.getType(), server.getServerGroupId());
-        map.putAll(serverGroupProperties);
-        return map;
-    }
 
-    protected Map<String, String> getServerProperties(Server server) {
-        Map<String, String> map = getServerGroupProperties(server);
-        Map<String, String> serverProperties = businessFacade.getBusinessProperty(BusinessTypeEnum.SERVER.getType(), server.getServerGroupId());
-        map.putAll(serverProperties);
-        return map;
-    }
 
 
 

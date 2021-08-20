@@ -7,7 +7,6 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -42,11 +41,12 @@ public class BusinessPropertyServiceImpl implements BusinessPropertyService {
     }
 
     @Override
-    public List<BusinessProperty> queryByBusiness(Integer businessType, Integer businessId) {
+    public BusinessProperty getByUniqueKey(Integer businessType, Integer businessId) {
         Example example = new Example(BusinessProperty.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("businessType", businessType)
                 .andEqualTo("businessId", businessId);
-        return businessPropertyMapper.selectByExample(example);
+        return businessPropertyMapper.selectOneByExample(example);
     }
+
 }

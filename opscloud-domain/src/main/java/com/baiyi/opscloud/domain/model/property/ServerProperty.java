@@ -17,15 +17,23 @@ public class ServerProperty {
         private Metadata metadata;
 
         private Zabbix zabbix;
+        private Ansible ansible;
+    }
+
+    @Data
+    public static class ServerGroup {
+        private String kind = "ServerGroup";
+        private Metadata metadata;
+
+        private Zabbix zabbix;
+        private Ansible ansible;
     }
 
     @Data
     public static class Metadata {
 
         private Integer sshPort = 22;
-
         private Integer rdpPort = 3389;
-
         private Integer vncPort = 5901;
         private String manageIp;
 
@@ -36,10 +44,14 @@ public class ServerProperty {
 
         private Boolean enable = false;
         private List<String> templates;
-
         private Boolean templateUniformity = false;
         private String proxyName;
 
+    }
+
+    @Data
+    public static class Ansible {
+        private Integer subgroup;
     }
 
 

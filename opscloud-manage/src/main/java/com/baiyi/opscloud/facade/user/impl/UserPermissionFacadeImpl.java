@@ -29,7 +29,7 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
     @Override
     public void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission) {
-        permissionService.deleteByUserPermission(BeanCopierUtil.copyProperties(userBusinessPermission, UserPermission.class));
+        permissionService.delete(BeanCopierUtil.copyProperties(userBusinessPermission, UserPermission.class));
     }
 
     @Override

@@ -4,7 +4,9 @@ import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.service.server.ServerGroupService;
@@ -98,5 +100,15 @@ public class ZabbixHostServerProvider extends AbstractServerProvider<DsZabbixCon
     @Override
     public String getInstanceType() {
         return DsTypeEnum.ZABBIX.getName();
+    }
+
+    @Override
+    public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
+
+    }
+
+    @Override
+    public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
+
     }
 }

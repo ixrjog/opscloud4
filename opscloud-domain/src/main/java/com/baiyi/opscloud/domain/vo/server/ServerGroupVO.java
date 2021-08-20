@@ -38,7 +38,7 @@ public class ServerGroupVO {
     public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission, IWorkorder, Serializable {
 
         private static final long serialVersionUID = 5059407999240740609L;
-        private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
+        private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
         @ApiModelProperty(value = "组类型")
         private ServerGroupTypeVO.ServerGroupType serverGroupType;
@@ -46,7 +46,7 @@ public class ServerGroupVO {
         private List<TagVO.Tag> tags;
 
         @Override
-        public int getBusinessId() {
+        public Integer getBusinessId() {
             return id;
         }
 

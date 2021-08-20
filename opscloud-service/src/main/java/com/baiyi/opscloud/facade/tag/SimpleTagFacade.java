@@ -13,7 +13,7 @@ import java.util.List;
  * @Date 2021/5/19 2:33 下午
  * @Version 1.0
  */
-public interface TagFacade {
+public interface SimpleTagFacade {
 
     List<Tag> queryBusinessTagByParam(TagParam.BusinessQuery queryParam);
 

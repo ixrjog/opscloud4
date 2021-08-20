@@ -5,7 +5,7 @@ package com.baiyi.opscloud.facade.datasource;
  * @Date 2021/6/29 4:36 下午
  * @Version 1.0
  */
-public interface BaseDsAssetFacade {
+public interface SimpleDsAssetFacade {
 
     /**
      * 删除资产

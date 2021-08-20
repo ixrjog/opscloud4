@@ -1,19 +1,14 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.util.Date;
 
 @Data
-@Builder
-@NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "business_property")
-public class BusinessProperty {
+public class BusinessProperty implements BaseBusiness.IBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -31,30 +26,18 @@ public class BusinessProperty {
     private Integer businessId;
 
     /**
-     * 属性分组
-     */
-    @Builder.Default
-    @Column(name = "group_name")
-    private String groupName = "default";
-
-    /**
-     * 属性名称
-     */
-    private String name;
-
-    /**
-     * 属性值
-     */
-    private String value;
-
-    /**
      * 说明
      */
     private String comment;
 
-    @Column(name = "create_time")
+    @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;
 
-    @Column(name = "update_time")
+    @Column(name = "update_time", insertable = false, updatable = false)
     private Date updateTime;
+
+    /**
+     * 属性
+     */
+    private String property;
 }

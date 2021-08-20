@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
-import com.baiyi.opscloud.facade.tag.TagFacade;
+import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
@@ -25,7 +25,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
-public class TagFacadeImpl implements TagFacade {
+public class SimpleTagFacadeImpl implements SimpleTagFacade {
 
     @Resource
     private TagService tagService;

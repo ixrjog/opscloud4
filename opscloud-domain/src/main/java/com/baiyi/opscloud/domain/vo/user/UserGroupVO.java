@@ -32,13 +32,13 @@ public class UserGroupVO {
     @ApiModel
     public static class UserGroup implements UserVO.IUserPermission, IWorkorder, BusinessAssetRelationVO.IBusinessAssetRelation {
 
-        private final int businessType = BusinessTypeEnum.USERGROUP.getType();
+        private final Integer businessType = BusinessTypeEnum.USERGROUP.getType();
 
         @ApiModelProperty(value = "资产id")
         private Integer assetId;
 
         @Override
-        public int getBusinessId() {
+        public Integer getBusinessId() {
             return id;
         }
 

@@ -9,9 +9,9 @@ public class BaseBusiness {
 
     public interface IBusiness {
 
-        int getBusinessType();
+        Integer getBusinessType();
 
-        int getBusinessId();
+        Integer getBusinessId();
     }
 
 

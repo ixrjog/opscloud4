@@ -5,6 +5,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
@@ -32,13 +33,9 @@ public class UserVO {
     }
 
 
-    public interface IUserPermission {
+    public interface IUserPermission extends BaseBusiness.IBusiness {
+
         void setUserPermission(UserPermissionVO.UserPermission userPermission);
-
-        int getBusinessType();
-
-        int getBusinessId();
-
         Integer getUserId();
     }
 
@@ -51,10 +48,10 @@ public class UserVO {
     public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation // 资产与业务对象绑定关系
     {
 
-        private final int businessType = BusinessTypeEnum.USER.getType();
+        private final Integer businessType = BusinessTypeEnum.USER.getType();
 
         @Override
-        public int getBusinessId() {
+        public Integer getBusinessId() {
             return id;
         }
 

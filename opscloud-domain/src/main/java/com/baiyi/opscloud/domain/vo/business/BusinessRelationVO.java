@@ -16,7 +16,7 @@ import java.util.List;
  */
 public class BusinessRelationVO {
 
-    public interface IRelation {
+    public interface IRelation extends BaseBusiness.IBusiness {
 
         void setSourceBusinessRelations(List<BusinessRelationVO.Relation> sourceBusinessRelations);
 
@@ -26,9 +26,6 @@ public class BusinessRelationVO {
 
         List<BusinessRelationVO.Relation> getTargetBusinessRelations();
 
-        int getBusinessType();
-
-        int getBusinessId();
     }
 
     @EqualsAndHashCode(callSuper = true)
