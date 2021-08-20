@@ -24,7 +24,7 @@ public class DeploymentAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entry) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getMetadata().getUid()) // 资产id
+                .assetId(entry.getMetadata().getName()) // 资产id entry.getMetadata().getUid()
                 .name(entry.getMetadata().getName())
                 .assetKey(entry.getMetadata().getName())
                 // entry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
