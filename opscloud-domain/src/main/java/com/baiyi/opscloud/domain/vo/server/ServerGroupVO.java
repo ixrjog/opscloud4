@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.vo.server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.IWorkorder;
+import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -35,7 +36,13 @@ public class ServerGroupVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ServerGroup extends BaseVO implements ServerGroupTypeVO.IServerGroupType, TagVO.ITags, UserVO.IUserPermission, IWorkorder, Serializable {
+    public static class ServerGroup extends BaseVO implements
+            ServerGroupTypeVO.IServerGroupType,
+            TagVO.ITags,
+            UserVO.IUserPermission,
+            IWorkorder,
+            BusinessPropertyVO.IBusinessProperty,
+            Serializable {
 
         private static final long serialVersionUID = 5059407999240740609L;
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
@@ -50,8 +57,9 @@ public class ServerGroupVO {
             return id;
         }
 
-        // UserVO.IUserPermission
         private UserPermissionVO.UserPermission userPermission;
+
+        private BusinessPropertyVO.Property businessProperty;
 
         private Integer userId;
 

@@ -33,7 +33,7 @@ import java.util.Set;
 public class CachingConfig extends CachingConfigurerSupport {
 
     public interface Repositories {
-        String COMMON = "opscloud:v4:common";
+        String DEFAULT = "opscloud:v4:default";
         String SERVER = "opscloud:v4:server";
         String ZABBIX = "opscloud:v4:zabbix";
     }
@@ -41,7 +41,10 @@ public class CachingConfig extends CachingConfigurerSupport {
     @Bean
     public CacheManager cacheManager(RedisConnectionFactory factory) {
         // 设置一个初始化的缓存空间set集合
-        Set<String> cacheNames = Sets.newHashSet(Repositories.COMMON, Repositories.SERVER);
+        Set<String> cacheNames = Sets.newHashSet(
+                Repositories.DEFAULT,
+                Repositories.SERVER,
+                Repositories.ZABBIX);
         // 使用自定义的缓存配置初始化一个cacheManager
         return RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -58,8 +61,9 @@ public class CachingConfig extends CachingConfigurerSupport {
         config = config.entryTtl(Duration.ofMinutes(1))
                 // 不缓存空值
                 .disableCachingNullValues();
-        configMap.put(Repositories.COMMON, config.entryTtl(Duration.ofDays(30)));
+        configMap.put(Repositories.DEFAULT, config.entryTtl(Duration.ofDays(30)));
         configMap.put(Repositories.SERVER, config.entryTtl(Duration.ofDays(14)));
+        configMap.put(Repositories.ZABBIX, config.entryTtl(Duration.ofDays(1)));
         return configMap;
     }
 

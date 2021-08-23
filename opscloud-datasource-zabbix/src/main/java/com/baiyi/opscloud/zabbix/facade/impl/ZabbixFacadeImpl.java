@@ -32,6 +32,7 @@ public class ZabbixFacadeImpl implements ZabbixFacade {
      * @param usergroup
      * @return
      */
+    @Override
     public ZabbixUserGroup getOrCreateUserGroup(DsZabbixConfig.Zabbix zabbix, String usergroup) {
         ZabbixUserGroup zabbixUserGroup = zabbixUserGroupHandler.getByName(zabbix, usergroup);
         if (zabbixUserGroup != null) return zabbixUserGroup;
@@ -41,6 +42,7 @@ public class ZabbixFacadeImpl implements ZabbixFacade {
         return zabbixUserGroupHandler.create(zabbix, usergroup, zabbixHostGroup);
     }
 
+    @Override
     public ZabbixHostGroup getOrCreateHostGroup(DsZabbixConfig.Zabbix zabbix, String hostgroup) {
         ZabbixHostGroup zabbixHostGroup = zabbixHostGroupHandler.getByName(zabbix, hostgroup);
         if (zabbixHostGroup != null) return zabbixHostGroup;

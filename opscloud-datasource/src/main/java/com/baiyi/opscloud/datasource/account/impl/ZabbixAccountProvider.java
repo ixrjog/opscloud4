@@ -69,12 +69,12 @@ public class ZabbixAccountProvider extends AbstractAccountProvider<DsZabbixConfi
 
     @Override
     protected void doGrant(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
-
+        // Zabbix不处理用户授权用户组事件
     }
 
     @Override
     protected void doRevoke(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
-
+        // Zabbix不处理用户撤销用户组事件
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.zabbix.entry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ZabbixHost {
+public class ZabbixHost implements Serializable {
 
     //@JsonProperty("hostid")
     private String hostid;

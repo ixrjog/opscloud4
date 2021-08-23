@@ -50,17 +50,17 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
     @Override
     protected List<ZabbixTemplate> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixTemplateHandler.listTemplatesByHost(zabbix, target);
+        return zabbixTemplateHandler.getByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixTemplate> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixTemplateHandler.listTemplates(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixTemplateHandler.listAll(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixTemplate getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixTemplateHandler.getTemplateById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixTemplateHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

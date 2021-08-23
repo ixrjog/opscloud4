@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.model.property;
 
-import lombok.Data;
+import lombok.*;
 
 import java.util.List;
 
@@ -12,46 +12,46 @@ import java.util.List;
 public class ServerProperty {
 
     @Data
+    @Builder
     public static class Server {
+        @Builder.Default
         private String kind = "Server";
-        private Metadata metadata;
-
+        @Builder.Default
+        private Metadata metadata = Metadata.builder().build();
+        @Builder.Default
         private Zabbix zabbix;
-        private Ansible ansible;
     }
 
-    @Data
-    public static class ServerGroup {
-        private String kind = "ServerGroup";
-        private Metadata metadata;
-
-        private Zabbix zabbix;
-        private Ansible ansible;
-    }
-
+    @Builder
     @Data
     public static class Metadata {
-
+        @Builder.Default
         private Integer sshPort = 22;
+        @Builder.Default
         private Integer rdpPort = 3389;
+        @Builder.Default
         private Integer vncPort = 5901;
         private String manageIp;
 
     }
 
+    @Builder
     @Data
     public static class Zabbix {
-
+        @Builder.Default
         private Boolean enable = false;
         private List<String> templates;
+        @Builder.Default
         private Boolean templateUniformity = false;
         private String proxyName;
 
     }
 
     @Data
+    @Builder
     public static class Ansible {
-        private Integer subgroup;
+        @Builder.Default
+        private Integer subgroup = 2;
     }
 
 

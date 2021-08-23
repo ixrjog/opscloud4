@@ -3,22 +3,23 @@ package com.baiyi.opscloud.datasource.server.impl;
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.datasource.server.impl.base.BaseZabbixHostServerProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
-import com.baiyi.opscloud.service.server.ServerGroupService;
-import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
+import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
+import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixUserHandler;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
+import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.HOST_IDS;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RESULT;
 
 /**
  * @Author baiyi
@@ -27,62 +28,69 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
-public class ZabbixHostServerProvider extends AbstractServerProvider<DsZabbixConfig.Zabbix> {
-
-    @Resource
-    private ZabbixUserHandler zabbixUserHandler;
-
-    @Resource
-    private ServerGroupService serverGroupService;
-
-    @Resource
-    private ZabbixFacade zabbixFacade;
-
-    @Resource
-    private ZabbixHostHandler zabbixHostHandler;
-
-
+public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
 
     @Override
     protected void doCreate(DsZabbixConfig.Zabbix zabbix, Server server) {
-
-
+        ServerProperty.Server property = getBusinessProperty(server);
+        if (property.getZabbix() == null || property.getZabbix().getEnable() == null || !property.getZabbix().getEnable())
+            return;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.CREATE)
-             //   .paramEntry("host", getHostname(ocServer))
-              //  .paramEntry("interfaces", ZabbixUtils.buildInterfacesParameter(getManageIp(ocServer)))
-              //  .paramEntry("groups", ZabbixUtils.buildGroupsParameter(zabbixHostgroup))
-              //  .paramEntry("templates", buildTemplatesParameter(serverAttributeMap))
-              //  .paramEntry("tags", buildTagsParameter(ocServer))
-              //  .paramEntrySkipEmpty("macros", ZabbixUtils.buildMacrosParameter(serverAttributeMap))
-              //  .paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
+                .paramEntry("host", SimpleServerNameFacade.toServerName(server))
+                .paramEntry("interfaces", buildHostInterfaceParams(server, property))
+                .paramEntry("groups", buildHostGroupParams(zabbix, server))
+                .paramEntry("templates", buildTemplatesParams(zabbix, property))
+                .paramEntry("tags", buildTagsParams(server))
+                //  .paramEntrySkipEmpty("macros", ZabbixUtils.buildMacrosParameter(serverAttributeMap))
+                //  .paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
                 .build();
-        // JsonNode data = call(zabbix, request);
-//        if (data.get(RESULT).get(HOST_IDS).isEmpty()) {
-//            throw new RuntimeException("ZabbixHost创建失败");
-//        }
-        // return ZabbixMapper.mapperList(data.get(RESULT).get(HOST_IDS), String.class).get(0);
-
-
+        JsonNode data = call(zabbix, request);
+        if (data.get(RESULT).get(HOST_IDS).isEmpty()) {
+            log.error("ZabbixHost创建失败!");
+        }
     }
 
     @Override
     protected void doUpdate(DsZabbixConfig.Zabbix zabbix, Server server) {
-
+        ServerProperty.Server property = getBusinessProperty(server);
+        String manageIp = getManageIp(server, property);
+        ZabbixHost zabbixHost = null;
+        try {
+            zabbixHost = zabbixHostHandler.getByIp(zabbix, manageIp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        if (zabbixHost == null) {
+            doCreate(zabbix, server);
+        } else {
+            // 开始更新
+            updateHost(zabbix, server, property, zabbixHost);
+        }
     }
 
     @Override
     protected void doDelete(DsZabbixConfig.Zabbix zabbix, Server server) {
+        ServerProperty.Server property = getBusinessProperty(server);
+        String manageIp = getManageIp(server, property);
+        try {
+            ZabbixHost zabbixHost = zabbixHostHandler.getByIp(zabbix, manageIp);
+            if (zabbixHost == null) {
+                return;
+            }
+            zabbixHostHandler.deleteById(zabbix, zabbixHost.getHostid());
+            zabbixHostHandler.evictHostById(zabbixHost.getHostid());
+        } catch (Exception ignored) {
+        }
+        zabbixHostHandler.evictHostByIp(manageIp);
     }
 
     @Override
     protected void doGrant(DsZabbixConfig.Zabbix zabbix, Server server, BaseBusiness.IBusiness businessResource) {
-
     }
 
     @Override
     protected void doRevoke(DsZabbixConfig.Zabbix zabbix, Server server, BaseBusiness.IBusiness businessResource) {
-
     }
 
     @Override
@@ -102,13 +110,5 @@ public class ZabbixHostServerProvider extends AbstractServerProvider<DsZabbixCon
         return DsTypeEnum.ZABBIX.getName();
     }
 
-    @Override
-    public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
 
-    }
-
-    @Override
-    public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
-
-    }
 }

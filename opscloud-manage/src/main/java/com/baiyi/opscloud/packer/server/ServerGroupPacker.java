@@ -3,6 +3,7 @@ package com.baiyi.opscloud.packer.server;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.util.ExtendUtil;
@@ -31,6 +32,9 @@ public final class ServerGroupPacker {
     @Resource
     private ServerGroupService serverGroupService;
 
+    @Resource
+    private BusinessPropertyPacker businessPropertyPacker;
+
     public List<ServerGroupVO.ServerGroup> wrapVOList(List<ServerGroup> data) {
         return BeanCopierUtil.copyListProperties(data, ServerGroupVO.ServerGroup.class);
     }
@@ -53,6 +57,7 @@ public final class ServerGroupPacker {
 
     private void wrap(ServerGroupVO.ServerGroup vo) {
         serverGroupTypePacker.wrap(vo);
+        businessPropertyPacker.wrap(vo);
         vo.setServerSize(serverService.countByServerGroupId(vo.getId()));
     }
 

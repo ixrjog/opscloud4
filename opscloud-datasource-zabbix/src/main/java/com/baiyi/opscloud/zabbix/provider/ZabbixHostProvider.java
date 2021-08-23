@@ -26,7 +26,7 @@ public class ZabbixHostProvider extends BaseZabbixHostProvider<ZabbixHostGroup> 
     @Override
     protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixHostGroup target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostHandler.listByGroup(zabbix, target);
+        return zabbixHostHandler.getByGroup(zabbix, target);
     }
 
     @Override

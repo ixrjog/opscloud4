@@ -34,13 +34,11 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     protected void onCreateMessage(NoticeEvent noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
-            dsAccountManager.grant(userService.getById(eventData.getUserId()),eventData);
+            dsAccountManager.grant(userService.getById(eventData.getUserId()), eventData);
             return;
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
-
-            dsServerManager.grant(userService.getById(eventData.getUserId()),eventData);
-            return;
+            dsServerManager.grant(userService.getById(eventData.getUserId()), eventData);
         }
     }
 
@@ -48,7 +46,10 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     protected void onDeleteMessage(NoticeEvent noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
-            dsAccountManager.revoke(userService.getById(eventData.getUserId()),eventData);
+            dsAccountManager.revoke(userService.getById(eventData.getUserId()), eventData);
+        }
+        if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
+            dsServerManager.revoke(userService.getById(eventData.getUserId()), eventData);
         }
     }
 

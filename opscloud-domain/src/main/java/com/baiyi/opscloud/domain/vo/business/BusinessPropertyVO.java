@@ -23,7 +23,7 @@ public class BusinessPropertyVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Property extends BaseVO implements Serializable {
+    public static class Property extends BaseVO implements BaseBusiness.IBusiness, Serializable {
 
         private static final long serialVersionUID = -1685813744181450467L;
         private Integer id;
