@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.business.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
+import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.mapper.opscloud.BusinessPropertyMapper;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
 import org.springframework.stereotype.Service;
@@ -47,6 +48,15 @@ public class BusinessPropertyServiceImpl implements BusinessPropertyService {
         criteria.andEqualTo("businessType", businessType)
                 .andEqualTo("businessId", businessId);
         return businessPropertyMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public void deleteByBusinessTypeAndId(Integer businessType, Integer businessId) {
+        Example example = new Example(BusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", businessType);
+        criteria.andEqualTo("businessId", businessId);
+        businessPropertyMapper.deleteByExample(example);
     }
 
 }

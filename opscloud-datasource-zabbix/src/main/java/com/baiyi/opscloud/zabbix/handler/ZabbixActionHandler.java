@@ -74,9 +74,6 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
     }
 
     public void create(DsZabbixConfig.Zabbix zabbix, String actionName, String usergrpName) {
-//        ZabbixAction zabbixAction = getActionByName(zabbix, actionName);
-//        if (zabbixAction != null) return;
-
         ZabbixHostGroup zabbixHostGroup = zabbixHostGroupHandler.getByName(zabbix, ZabbixUtil.toHostgroupName(usergrpName));
 
         ZabbixFilter filter = ZabbixFilterBuilder.builder()

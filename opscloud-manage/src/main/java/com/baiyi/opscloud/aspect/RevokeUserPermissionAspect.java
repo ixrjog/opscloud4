@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -36,16 +38,27 @@ public class RevokeUserPermissionAspect {
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
         if (params != null && params.length != 0) {
-            int businessId = Integer.parseInt(args[0].toString());
-            log.info("清除当前业务对象的所有用户授权: businessType = {} , businessId = {}", revokeUserPermission.type().getType(), businessId);
-            userPermissionFacade.revokeUserPermissionByBusiness(revokeUserPermission.type().getType(), businessId);
+            Integer businessId = Integer.valueOf(args[0].toString());
+            if (revokeUserPermission.value() == BusinessTypeEnum.COMMON) {
+                // 通过@BusinessType 获取业务类型
+                if (joinPoint.getTarget().getClass().isAnnotationPresent(BusinessType.class)) {
+                    BusinessType businessType = joinPoint.getTarget().getClass().getAnnotation(BusinessType.class);
+                    doRevoke(businessType.value().getType(), businessId);
+                }
+            } else {
+                doRevoke(revokeUserPermission.value().getType(), businessId);
+            }
         }
         try {
             return joinPoint.proceed();
         } catch (Throwable e) {
             throw new CommonRuntimeException(e.getMessage());
         }
+    }
 
+    private void doRevoke(Integer businessType, Integer businessId) {
+        log.info("撤销当前业务对象的所有用户授权: businessType = {} , businessId = {}", businessType, businessId);
+        userPermissionFacade.revokeUserPermissionByBusiness(businessType, businessId);
     }
 
 }

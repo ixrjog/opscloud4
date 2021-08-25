@@ -23,4 +23,6 @@ public interface BusinessPropertyService {
     default BusinessProperty getByUniqueKey(BaseBusiness.IBusiness iBusiness) {
         return getByUniqueKey(iBusiness.getBusinessType(), iBusiness.getBusinessId());
     }
+
+    void deleteByBusinessTypeAndId(Integer businessType, Integer businessId);
 }

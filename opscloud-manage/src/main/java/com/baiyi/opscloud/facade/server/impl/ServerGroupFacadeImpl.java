@@ -7,6 +7,8 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
+import com.baiyi.opscloud.domain.annotation.BusinessPropertyClear;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -48,6 +50,7 @@ import java.util.stream.Collectors;
  * @Date 2021/5/24 10:33 上午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
 public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
@@ -116,15 +119,15 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
         serverGroupService.update(toDO(serverGroup));
     }
 
-    @TagClear(type = BusinessTypeEnum.SERVERGROUP)
-    @RevokeUserPermission(type = BusinessTypeEnum.SERVERGROUP)
+    @TagClear()
+    @BusinessPropertyClear()
+    @RevokeUserPermission()
     @Override
     public void deleteServerGroupById(int id) {
         ServerGroup serverGroup = serverGroupService.getById(id);
         if (serverGroup == null) return;
         if (serverService.countByServerGroupId(id) > 0)
             throw new CommonRuntimeException("服务器组不为空：必须删除组内服务器成员！");
-        // 删除用户授权
         serverGroupService.delete(serverGroup);
     }
 

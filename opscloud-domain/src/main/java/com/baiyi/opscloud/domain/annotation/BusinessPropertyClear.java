@@ -6,13 +6,13 @@ import java.lang.annotation.*;
 
 /**
  * @Author baiyi
- * @Date 2021/5/25 8:56 上午
+ * @Date 2021/8/25 3:27 下午
  * @Version 1.0
  */
 @Documented
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface TagClear {
+public @interface BusinessPropertyClear {
 
     BusinessTypeEnum value() default BusinessTypeEnum.COMMON;
 }

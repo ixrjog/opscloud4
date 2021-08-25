@@ -4,6 +4,8 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
+import com.baiyi.opscloud.domain.annotation.BusinessPropertyClear;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
@@ -21,6 +23,7 @@ import javax.annotation.Resource;
  * @Date 2021/5/24 5:45 下午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.SERVER)
 @Service
 public class ServerFacadeImpl implements ServerFacade {
 
@@ -59,11 +62,12 @@ public class ServerFacadeImpl implements ServerFacade {
         return pre;
     }
 
-    @TagClear(type = BusinessTypeEnum.SERVER)
+    @TagClear()
+    @BusinessPropertyClear()
     @Override
     public void deleteServerById(Integer id) {
         Server server = serverService.getById(id);
-        if(server == null) return;
+        if (server == null) return;
         serverService.delete(server);
     }
 

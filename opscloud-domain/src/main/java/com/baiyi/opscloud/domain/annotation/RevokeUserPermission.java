@@ -15,5 +15,5 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 public  @interface RevokeUserPermission {
 
-    BusinessTypeEnum type();
+    BusinessTypeEnum value() default BusinessTypeEnum.COMMON;
 }
