@@ -3,6 +3,7 @@ package com.baiyi.opscloud.zabbix.entry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -13,7 +14,7 @@ import java.util.Date;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ZabbixProblem {
+public class ZabbixProblem implements Serializable {
 
 
     //@JsonProperty("eventid")

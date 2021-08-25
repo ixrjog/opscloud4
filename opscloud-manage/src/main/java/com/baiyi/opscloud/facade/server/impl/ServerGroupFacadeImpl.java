@@ -104,20 +104,16 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
 
     @Override
     public void addServerGroup(ServerGroupVO.ServerGroup serverGroup) {
-        try {
-            serverGroupService.add(toDO(serverGroup));
-        } catch (Exception ex) {
+        if (serverGroupService.getByName(serverGroup.getName()) != null)
             throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_ALREADY_EXIST);
-        }
+        serverGroupService.add(toDO(serverGroup));
     }
 
     @Override
     public void updateServerGroup(ServerGroupVO.ServerGroup serverGroup) {
-        try {
-            serverGroupService.update(toDO(serverGroup));
-        } catch (Exception ex) {
-            throw new CommonRuntimeException(ErrorEnum.SERVERGROUP_NAME_ALREADY_EXIST);
-        }
+        ServerGroup group = serverGroupService.getById(serverGroup.getId());
+        serverGroup.setName(group.getName()); // 不允许修改名称
+        serverGroupService.update(toDO(serverGroup));
     }
 
     @TagClear(type = BusinessTypeEnum.SERVERGROUP)
@@ -125,8 +121,8 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
     @Override
     public void deleteServerGroupById(int id) {
         ServerGroup serverGroup = serverGroupService.getById(id);
-        if(serverGroup == null) return;
-        if(serverService.countByServerGroupId(id) > 0)
+        if (serverGroup == null) return;
+        if (serverService.countByServerGroupId(id) > 0)
             throw new CommonRuntimeException("服务器组不为空：必须删除组内服务器成员！");
         // 删除用户授权
         serverGroupService.delete(serverGroup);

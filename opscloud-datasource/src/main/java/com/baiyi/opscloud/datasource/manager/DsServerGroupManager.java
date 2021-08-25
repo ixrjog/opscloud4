@@ -3,9 +3,9 @@ package com.baiyi.opscloud.datasource.manager;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
-import com.baiyi.opscloud.datasource.server.factory.ServerProviderFactory;
+import com.baiyi.opscloud.datasource.serverGroup.factory.ServerGroupProviderFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -14,12 +14,12 @@ import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2021/8/19 11:00 上午
+ * @Date 2021/8/24 11:24 上午
  * @Version 1.0
  */
 @Slf4j
 @Component
-public class DsServerManager extends BaseManager implements IManager<Server> {
+public class DsServerGroupManager extends BaseManager implements IManager<ServerGroup> {
 
     private static final String SERVER_TAG = "Server";
 
@@ -39,51 +39,46 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     }
 
     @Override
-    public void create(Server server) {
+    public void create(ServerGroup serverGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("DsServerGroupManager: 无可用实例");
             return;
         }
-        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).create(e, server));
+        instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).create(e, serverGroup));
     }
 
     @Override
-    public void update(Server server) {
+    public void update(ServerGroup serverGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("DsServerGroupManager: 无可用实例");
             return;
         }
-        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).update(e, server));
+        instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).update(e, serverGroup));
     }
 
     @Override
-    // @Async(value = Global.TaskPools.EXECUTOR)
-    public void delete(Server server) {
-        List<DatasourceInstance> instances = listInstance();
-        if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
-            return;
-        }
-        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).delete(e, server));
+    public void delete(ServerGroup serverGroup) {
+       // TODO
     }
 
-//    public void grant(Server server, BaseBusiness.IBusiness businessResource) {
+//    public void grant(User user, BaseBusiness.IBusiness businessResource) {
 //        List<DatasourceInstance> instances = listInstance();
 //        if (CollectionUtils.isEmpty(instances)) {
 //            log.info("DsServerManager: 无可用实例");
 //            return;
 //        }
-//        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
+//        instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
 //    }
 //
-//    public void revoke(Server server, BaseBusiness.IBusiness businessResource) {
+//    public void revoke(User user, BaseBusiness.IBusiness businessResource) {
 //        List<DatasourceInstance> instances = listInstance();
 //        if (CollectionUtils.isEmpty(instances)) {
 //            log.info("DsServerManager: 无可用实例");
 //            return;
 //        }
-//        instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
+//        instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
 //    }
+
 }

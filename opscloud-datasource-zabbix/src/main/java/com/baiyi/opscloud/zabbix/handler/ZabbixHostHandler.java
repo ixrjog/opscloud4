@@ -82,7 +82,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         log.info("清除ZabbixHost缓存 : hostid = {}", hostid);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_hostid_' + #hostid")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_hostid_' + #hostid", unless = "#result == null")
     public ZabbixHost getById(DsZabbixConfig.Zabbix zabbix, String hostid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
@@ -228,9 +228,9 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("hostids").isEmpty()) {
-            log.error("删除ZabbixHost主机失败: hostid = {}",zabbixHost.getHostid());
+            log.error("删除ZabbixHost主机失败: hostid = {}", zabbixHost.getHostid());
         } else {
-            log.info("清除ZabbixHost主机: hostid = {}",zabbixHost.getHostid());
+            log.info("清除ZabbixHost主机: hostid = {}", zabbixHost.getHostid());
         }
     }
 

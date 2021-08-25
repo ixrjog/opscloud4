@@ -1,29 +1,17 @@
 package com.baiyi.opscloud.datasource.account.impl;
 
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.account.convert.AccountConvert;
-import com.baiyi.opscloud.datasource.account.impl.base.AbstractAccountProvider;
+import com.baiyi.opscloud.datasource.account.impl.base.BaseZabbixAccountProvider;
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
-import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
-import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
 import com.baiyi.opscloud.zabbix.handler.ZabbixUserHandler;
-import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
-import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -32,16 +20,10 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Component
-public class ZabbixAccountProvider extends AbstractAccountProvider<DsZabbixConfig.Zabbix> {
+public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
     @Resource
     private ZabbixUserHandler zabbixUserHandler;
-
-    @Resource
-    private ServerGroupService serverGroupService;
-
-    @Resource
-    private ZabbixFacade zabbixFacade;
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
 
@@ -54,16 +36,27 @@ public class ZabbixAccountProvider extends AbstractAccountProvider<DsZabbixConfi
     @Override
     protected void doUpdate(DsZabbixConfig.Zabbix zabbix, User user) {
         ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(zabbix, user.getUsername());
-        if (zabbixUser == null) return; // 用户不存在
-        ZabbixUser updateUser = AccountConvert.toZabbixUser(user);
-        updateUser.setUserid(zabbixUser.getUserid());
-        zabbixUserHandler.update(zabbix, updateUser, ZabbixMediaUtil.buildMedias(user), getUsrgrps(zabbix, user));
-        log.info("更新Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
+        if (zabbixUser == null) {
+            doCreate(zabbix, user);
+        } else {
+            ZabbixUser updateUser = AccountConvert.toZabbixUser(user);
+            updateUser.setUserid(zabbixUser.getUserid());
+            zabbixUserHandler.update(zabbix, updateUser, ZabbixMediaUtil.buildMedias(user), getUsrgrps(zabbix, user));
+            // 清除缓存
+            zabbixUserHandler.evictById(zabbixUser.getUserid());
+            zabbixUserHandler.evictByUsername(user.getUsername());
+            log.info("更新Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
+        }
     }
 
     @Override
     protected void doDelete(DsZabbixConfig.Zabbix zabbix, User user) {
+        ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(zabbix, user.getUsername());
+        if (zabbixUser == null) return;
         zabbixUserHandler.delete(zabbix, user.getUsername());
+        // 清除缓存
+        zabbixUserHandler.evictById(zabbixUser.getUserid());
+        zabbixUserHandler.evictByUsername(user.getUsername());
         log.info("删除Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
     }
 
@@ -77,44 +70,4 @@ public class ZabbixAccountProvider extends AbstractAccountProvider<DsZabbixConfi
         // Zabbix不处理用户撤销用户组事件
     }
 
-    @Override
-    protected int getBusinessResourceType() {
-        return BusinessTypeEnum.SERVERGROUP.getType();
-    }
-
-    private ServerGroup getBusinessResource(int businessId) {
-        return serverGroupService.getById(businessId);
-    }
-
-    @Override
-    protected DsZabbixConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
-    }
-
-    private List<Map<String, String>> getUsrgrps(DsZabbixConfig.Zabbix zabbix, User user) {
-        List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
-        if (CollectionUtils.isEmpty(userGroups))
-            userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
-        return userGroups;
-    }
-
-    private List<Map<String, String>> toUsrgrps(DsZabbixConfig.Zabbix zabbix, List<UserPermission> userPermissions) {
-        return userPermissions.stream().map(e -> {
-            ServerGroup serverGroup = serverGroupService.getById(e.getBusinessId());
-            String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());
-            ZabbixUserGroup zabbixUserGroup = zabbixFacade.getOrCreateUserGroup(zabbix, usergroupName);
-            return buildUsrgrp(zabbixUserGroup.getUsrgrpid());
-        }).collect(Collectors.toList());
-    }
-
-    private Map<String, String> buildUsrgrp(String usrgrpId) {
-        Map<String, String> usrgrp = Maps.newHashMap();
-        usrgrp.put("usrgrpid", usrgrpId);
-        return usrgrp;
-    }
-
-    @Override
-    public String getInstanceType() {
-        return DsTypeEnum.ZABBIX.getName();
-    }
 }

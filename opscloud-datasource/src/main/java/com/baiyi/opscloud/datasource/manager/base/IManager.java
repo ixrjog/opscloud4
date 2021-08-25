@@ -9,28 +9,27 @@ public interface IManager<T> {
 
     /**
      * 业务对象创建资产(User -> Account)
+     *
      * @param t
      */
     void create(T t);
 
     /**
      * 业务对象更新资产(User -> Account)
+     *
      * @param t
      */
     void update(T t);
 
     /**
      * 业务对象删除资产(User -> Account)
+     *
      * @param t
      */
     void delete(T t);
 
-    /**
-     * 授权
-     * @param t
-     * @param resource
-     */
-   // void grant(T t,String resource);
+//    void grant(T t, BaseBusiness.IBusiness businessResource);
+//
+//    void revoke(T t, BaseBusiness.IBusiness businessResource);
 
-    //void revoke(T t,String obj);
 }

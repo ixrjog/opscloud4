@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
+import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
@@ -9,6 +10,7 @@ import com.baiyi.opscloud.zabbix.http.*;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -33,6 +35,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         String DELETE = "user.delete";
     }
 
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_alias_' + #username")
+    public void evictByUsername(String username) {
+        log.info("清除ZabbixUser缓存 : alias = {}", username);
+    }
+
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_alias_' + #username")
     public ZabbixUser getByUsername(DsZabbixConfig.Zabbix zabbix, String username) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("alias", username)
@@ -99,7 +107,6 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
                 .paramEntry("usrgrps", usrgrps)
                 .paramEntrySkipEmpty("user_medias", mediaList)
                 .build();
-      //  System.err.println(JSON.toJSONString(request));
         JsonNode data = call(zabbix, request);
         try {
             List<Integer> userIds = ZabbixMapper.mapperList(data.get(RESULT).get("userids"), Integer.class);
@@ -126,11 +133,17 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         }
     }
 
-    public ZabbixUser getById(DsZabbixConfig.Zabbix zabbix, String userId) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_userid_' + #userid")
+    public void evictById(String userid) {
+        log.info("清除ZabbixUser缓存 : userid = {}", userid);
+    }
+
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_userid_' + #userid")
+    public ZabbixUser getById(DsZabbixConfig.Zabbix zabbix, String userid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
                 .paramEntry("selectMedias", "extend")
-                .paramEntry("userids", userId)
+                .paramEntry("userids", userid)
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixUser.class);

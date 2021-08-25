@@ -46,6 +46,7 @@ public class ZabbixFacadeImpl implements ZabbixFacade {
     public ZabbixHostGroup getOrCreateHostGroup(DsZabbixConfig.Zabbix zabbix, String hostgroup) {
         ZabbixHostGroup zabbixHostGroup = zabbixHostGroupHandler.getByName(zabbix, hostgroup);
         if (zabbixHostGroup != null) return zabbixHostGroup;
-        return zabbixHostGroupHandler.create(zabbix, hostgroup);
+        zabbixHostGroupHandler.create(zabbix, hostgroup);
+        return zabbixHostGroupHandler.getByName(zabbix, hostgroup);
     }
 }

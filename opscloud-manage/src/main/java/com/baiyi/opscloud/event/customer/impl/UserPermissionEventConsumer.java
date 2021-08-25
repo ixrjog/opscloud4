@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.customer.impl;
 
 import com.baiyi.opscloud.datasource.manager.DsAccountManager;
-import com.baiyi.opscloud.datasource.manager.DsServerManager;
+import com.baiyi.opscloud.datasource.manager.DsServerGroupManager;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
@@ -20,7 +20,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     private DsAccountManager dsAccountManager;
 
     @Resource
-    private DsServerManager dsServerManager;
+    private DsServerGroupManager dsServerGroupManager;
 
     @Resource
     private UserService userService;
@@ -38,7 +38,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
             return;
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
-            dsServerManager.grant(userService.getById(eventData.getUserId()), eventData);
+          //  dsServerManager.grant(userService.getById(eventData.getUserId()), eventData);
         }
     }
 
@@ -49,7 +49,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
             dsAccountManager.revoke(userService.getById(eventData.getUserId()), eventData);
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
-            dsServerManager.revoke(userService.getById(eventData.getUserId()), eventData);
+          //  dsServerManager.revoke(userService.getById(eventData.getUserId()), eventData);
         }
     }
 

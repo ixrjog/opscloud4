@@ -3,6 +3,8 @@ package com.baiyi.opscloud.zabbix.entry;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.Data;
 
+import java.io.Serializable;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/8/3 10:02 上午
@@ -11,7 +13,7 @@ import lombok.Data;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ZabbixHostInterface {
+public class ZabbixHostInterface implements Serializable {
 
    // @JsonProperty("interfaceid")
     private String interfaceid;

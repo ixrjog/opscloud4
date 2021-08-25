@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.datasource.server.impl.base;
 
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
-import com.baiyi.opscloud.datasource.server.impl.AbstractServerProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
@@ -26,6 +27,7 @@ import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -51,6 +53,14 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     @Resource
     private ZabbixServer zabbixServer;
 
+    @Override
+    protected void doGrant(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
+    }
+
+    @Override
+    protected void doRevoke(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
+    }
+
     protected JsonNode call(DsZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
         return zabbixServer.call(zabbix, request);
     }
@@ -60,7 +70,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
         // 更新主机名
         if (!hostName.equals(zabbixHost.getName())) {
             zabbixHostHandler.updateHostName(zabbix, zabbixHost, hostName);
-            zabbixHostHandler.evictHostByIp(getManageIp(server,property));
+            zabbixHostHandler.evictHostByIp(getManageIp(server, property));
         }
         // 更新Templates
         updateHostTemplate(zabbix, property, zabbixHost);
@@ -71,6 +81,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
 
     /**
      * 更新主机标签
+     *
      * @param zabbix
      * @param server
      * @param zabbixHost
@@ -188,8 +199,11 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     }
 
     protected String getManageIp(Server server, ServerProperty.Server property) {
-        return StringUtils.isEmpty(property.getMetadata().getManageIp()) ?
-                server.getPrivateIp() : property.getMetadata().getManageIp();
+        String manageIp = Optional.ofNullable(property)
+                .map(ServerProperty.Server::getMetadata)
+                .map(ServerProperty.Metadata::getManageIp)
+                .orElse(server.getPrivateIp());
+        return StringUtils.isEmpty(manageIp) ? server.getPrivateIp() : manageIp;
     }
 
 }
