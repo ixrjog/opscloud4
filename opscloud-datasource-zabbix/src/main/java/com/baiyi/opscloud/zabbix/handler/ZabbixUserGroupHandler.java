@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
+import com.baiyi.opscloud.common.config.CachingConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
@@ -13,6 +14,7 @@ import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -51,15 +53,17 @@ public class ZabbixUserGroupHandler extends BaseZabbixHandler<ZabbixUserGroup> {
         return mapperList(data.get(RESULT), ZabbixUserGroup.class);
     }
 
-    public ZabbixUserGroup getById(DsZabbixConfig.Zabbix zabbix, String groupId) {
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_usergroup_usrgrpid_' + #usrgrpid", unless = "#result == null")
+    public ZabbixUserGroup getById(DsZabbixConfig.Zabbix zabbix, String usrgrpid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserGroupAPIMethod.GET)
-                .paramEntry("usrgrpids", groupId)
+                .paramEntry("usrgrpids", usrgrpid)
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixUserGroup.class);
     }
 
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_usergroup_name_' + #usergroup", unless = "#result == null")
     public ZabbixUserGroup getByName(DsZabbixConfig.Zabbix zabbix, String usergroup) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", usergroup)

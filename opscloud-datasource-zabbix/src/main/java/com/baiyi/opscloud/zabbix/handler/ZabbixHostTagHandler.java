@@ -28,12 +28,12 @@ import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RE
 @Component
 public class ZabbixHostTagHandler extends BaseZabbixHandler<ZabbixHostTag> {
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_tag_hostid' + #zabbixHost.hostid")
-    public void evictHostTag(ZabbixHost zabbixHost) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid")
+    public void evictHostTag(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         log.info("清除ZabbixHostTag缓存 : hostid = {}", zabbixHost.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_tag_hostid' + #zabbixHost.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid", unless = "#result == null")
     public ZabbixHostTag getHostTag(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.GET)
@@ -45,7 +45,7 @@ public class ZabbixHostTagHandler extends BaseZabbixHandler<ZabbixHostTag> {
         return mapperListGetOne(data.get(RESULT), ZabbixHostTag.class);
     }
 
-    public void updateHostTags(DsZabbixConfig.Zabbix zabbix,ZabbixHost zabbixHost, List<ZabbixHostParam.Tag> tags) {
+    public void updateHostTags(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixHostParam.Tag> tags) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.UPDATE)
                 .paramEntry("hostid", zabbixHost.getHostid())

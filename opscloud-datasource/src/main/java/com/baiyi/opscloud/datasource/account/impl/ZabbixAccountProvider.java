@@ -26,6 +26,11 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
 
+    private void postCacheEvict(ZabbixUser zabbixUser, User user) {
+        zabbixUserHandler.evictById(configContext.get(), zabbixUser.getUserid());
+        zabbixUserHandler.evictByUsername(configContext.get(), user.getUsername());
+    }
+
     @Override
     protected void doCreate(User user) {
         zabbixUserHandler.create(configContext.get(), AccountConvert.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
@@ -42,8 +47,7 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
             updateUser.setUserid(zabbixUser.getUserid());
             zabbixUserHandler.update(configContext.get(), updateUser, getUsrgrps(configContext.get(), user), ZabbixMediaUtil.buildMedias(user));
             // 清除缓存
-            zabbixUserHandler.evictById(zabbixUser.getUserid());
-            zabbixUserHandler.evictByUsername(user.getUsername());
+            postCacheEvict(zabbixUser,user);
             log.info("更新Zabbix用户: username = {}", user.getUsername());
         }
     }
@@ -54,8 +58,7 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
         if (zabbixUser == null) return;
         zabbixUserHandler.delete(configContext.get(), user.getUsername());
         // 清除缓存
-        zabbixUserHandler.evictById(zabbixUser.getUserid());
-        zabbixUserHandler.evictByUsername(user.getUsername());
+        postCacheEvict(zabbixUser,user);
         log.info("删除Zabbix用户: username = {}", user.getUsername());
     }
 
@@ -67,8 +70,7 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
         } else {
             zabbixUserHandler.update(configContext.get(), zabbixUser, getUsrgrps(configContext.get(), user));
             // 清除缓存
-            zabbixUserHandler.evictById(zabbixUser.getUserid());
-            zabbixUserHandler.evictByUsername(user.getUsername());
+            postCacheEvict(zabbixUser,user);
             log.info("更新Zabbix用户: username = {}", user.getUsername());
         }
     }

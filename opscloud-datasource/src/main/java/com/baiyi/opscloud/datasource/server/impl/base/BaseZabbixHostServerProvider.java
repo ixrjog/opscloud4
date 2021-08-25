@@ -58,7 +58,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     protected static ThreadLocal<DsZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 
     @Override
-    protected void initialConfig(DatasourceConfig dsConfig){
+    protected void initialConfig(DatasourceConfig dsConfig) {
         configContext.set(dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
     }
 
@@ -67,36 +67,35 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     }
 
     @Override
-    protected void doRevoke( User user, BaseBusiness.IBusiness businessResource) {
+    protected void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
     }
 
     protected JsonNode call(DsZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
         return zabbixServer.call(zabbix, request);
     }
 
-    protected void updateHost(DsZabbixConfig.Zabbix zabbix, Server server, ServerProperty.Server property, ZabbixHost zabbixHost) {
+    protected void updateHost(Server server, ServerProperty.Server property, ZabbixHost zabbixHost) {
         String hostName = SimpleServerNameFacade.toServerName(server);
         // 更新主机名
         if (!hostName.equals(zabbixHost.getName())) {
-            zabbixHostHandler.updateHostName(zabbix, zabbixHost, hostName);
-            zabbixHostHandler.evictHostByIp(getManageIp(server, property));
+            zabbixHostHandler.updateHostName(configContext.get(), zabbixHost, hostName);
+            zabbixHostHandler.evictHostByIp(configContext.get(), getManageIp(server, property));
         }
         // 更新Templates
-        updateHostTemplate(zabbix, property, zabbixHost);
+        updateHostTemplate(property, zabbixHost);
         // 更新Tags
-        updateHostTag(zabbix, server, zabbixHost);
+        updateHostTag(server, zabbixHost);
         // TODO 更新Macros
     }
 
     /**
      * 更新主机标签
      *
-     * @param zabbix
      * @param server
      * @param zabbixHost
      */
-    private void updateHostTag(DsZabbixConfig.Zabbix zabbix, Server server, ZabbixHost zabbixHost) {
-        ZabbixHostTag zabbixHostTag = zabbixHostTagHandler.getHostTag(zabbix, zabbixHost);
+    private void updateHostTag(Server server, ZabbixHost zabbixHost) {
+        ZabbixHostTag zabbixHostTag = zabbixHostTagHandler.getHostTag(configContext.get(), zabbixHost);
         Env env = getEnv(server);
         if (zabbixHostTag != null && !CollectionUtils.isEmpty(zabbixHostTag.getTags())) {
             for (ZabbixTag tag : zabbixHostTag.getTags()) {
@@ -113,38 +112,37 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
                 .tag("env")
                 .value(env.getEnvName())
                 .build();
-        zabbixHostTagHandler.updateHostTags(zabbix, zabbixHost, Lists.newArrayList(tag));
-        zabbixHostTagHandler.evictHostTag(zabbixHost);  //清理缓存
+        zabbixHostTagHandler.updateHostTags(configContext.get(), zabbixHost, Lists.newArrayList(tag));
+        zabbixHostTagHandler.evictHostTag(configContext.get(), zabbixHost);  //清理缓存
     }
 
     /**
      * 更新主机模版（追加）
      *
-     * @param zabbix
      * @param property
      * @param zabbixHost
      */
-    private void updateHostTemplate(DsZabbixConfig.Zabbix zabbix, ServerProperty.Server property, ZabbixHost zabbixHost) {
-        List<ZabbixTemplate> zabbixTemplates = zabbixTemplateHandler.getByHost(zabbix, zabbixHost);
+    private void updateHostTemplate(ServerProperty.Server property, ZabbixHost zabbixHost) {
+        List<ZabbixTemplate> zabbixTemplates = zabbixTemplateHandler.getByHost(configContext.get(), zabbixHost);
         if (hostTemplateEquals(zabbixTemplates, property)) return; // 判断主机模版与配置是否相同，相同则跳过更新
         Set<String> templateNamSet = Sets.newHashSet();
         zabbixTemplates.forEach(t -> templateNamSet.add(t.getName()));
         property.getZabbix().getTemplates().forEach(n -> {
             if (!templateNamSet.contains(n)) {
-                ZabbixTemplate zabbixTemplate = zabbixTemplateHandler.getByName(zabbix, n);
+                ZabbixTemplate zabbixTemplate = zabbixTemplateHandler.getByName(configContext.get(), n);
                 if (zabbixTemplate != null) {
                     zabbixTemplates.add(zabbixTemplate);
                     templateNamSet.add(n);
                 }
             }
         });
-        zabbixHostHandler.updateHostTemplates(zabbix, zabbixHost, zabbixTemplates);
+        zabbixHostHandler.updateHostTemplates(configContext.get(), zabbixHost, zabbixTemplates);
         // 主机模版与配置保持一致，清理多余模版
         if (property.getZabbix().getTemplateUniformity() != null && property.getZabbix().getTemplateUniformity()) {
             clearTemplates(zabbixTemplates, property); // 清理模版
-            zabbixHostHandler.clearHostTemplates(zabbix, zabbixHost, zabbixTemplates);
+            zabbixHostHandler.clearHostTemplates(configContext.get(), zabbixHost, zabbixTemplates);
         }
-        zabbixTemplateHandler.evictHostTemplate(zabbixHost); //清理缓存
+        zabbixTemplateHandler.evictHostTemplate(configContext.get(), zabbixHost); //清理缓存
     }
 
     private void clearTemplates(List<ZabbixTemplate> zabbixTemplates, ServerProperty.Server property) {

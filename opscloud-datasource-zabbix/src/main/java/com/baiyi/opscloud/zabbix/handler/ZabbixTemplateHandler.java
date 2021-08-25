@@ -51,12 +51,12 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'template_hostid_' + #zabbixHost.hostid")
-    public void evictHostTemplate(ZabbixHost zabbixHost) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_hostid_' + #zabbixHost.hostid")
+    public void evictHostTemplate(DsZabbixConfig.Zabbix zabbix,ZabbixHost zabbixHost) {
         log.info("清除ZabbixHost模版缓存 : hostid = {}", zabbixHost.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'template_hostid_' + #host.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_hostid_' + #host.hostid", unless = "#result == null")
     public List<ZabbixTemplate> getByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostid())
@@ -74,7 +74,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
     }
 
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'template_id_' + #templateId", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_id_' + #templateId", unless = "#result == null")
     public ZabbixTemplate getById(DsZabbixConfig.Zabbix zabbix, String templateId) {
         SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(TEMPLATE_IDS, templateId)
@@ -94,7 +94,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'template_name_' + #templateName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_name_' + #templateName", unless = "#result == null")
     public ZabbixTemplate getByName(DsZabbixConfig.Zabbix zabbix,String templateName) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", templateName)

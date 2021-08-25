@@ -29,7 +29,7 @@ import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RE
 public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
 
     @Override
-    protected void doCreate( Server server) {
+    protected void doCreate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
         boolean enable = Optional.ofNullable(property)
                 .map(ServerProperty.Server::getZabbix)
@@ -53,7 +53,7 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
     }
 
     @Override
-    protected void doUpdate( Server server) {
+    protected void doUpdate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
         String manageIp = getManageIp(server, property);
         ZabbixHost zabbixHost = null;
@@ -63,15 +63,15 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
             e.printStackTrace();
         }
         if (zabbixHost == null) {
-            doCreate( server);
+            doCreate(server);
         } else {
             // 开始更新
-            updateHost(configContext.get(), server, property, zabbixHost);
+            updateHost(server, property, zabbixHost);
         }
     }
 
     @Override
-    protected void doDelete( Server server) {
+    protected void doDelete(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
         String manageIp = getManageIp(server, property);
         try {
@@ -80,10 +80,10 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
                 return;
             }
             zabbixHostHandler.deleteById(configContext.get(), zabbixHost.getHostid());
-            zabbixHostHandler.evictHostById(zabbixHost.getHostid());
+            zabbixHostHandler.evictHostById(configContext.get(), zabbixHost.getHostid());
         } catch (Exception ignored) {
         }
-        zabbixHostHandler.evictHostByIp(manageIp);
+        zabbixHostHandler.evictHostByIp(configContext.get(), manageIp);
     }
 
     @Override

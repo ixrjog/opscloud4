@@ -50,7 +50,7 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         return mapperList(data.get(RESULT), ZabbixHostGroup.class);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'hostgroup_groupid_' + #groupid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_groupid_' + #groupid", unless = "#result == null")
     public ZabbixHostGroup getById(DsZabbixConfig.Zabbix zabbix, String groupid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
@@ -60,12 +60,12 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         return mapperListGetOne(data.get(RESULT), ZabbixHostGroup.class);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'hostgroup_name_' + #zabbixHostGroup.name")
-    public void evictHostGroup(ZabbixHostGroup zabbixHostGroup) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #zabbixHostGroup.name")
+    public void evictHostGroup(DsZabbixConfig.Zabbix zabbix, ZabbixHostGroup zabbixHostGroup) {
         log.info("清除ZabbixHostGroup缓存 : name = {}", zabbixHostGroup.getName());
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'hostgroup_name_' + #name", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #name", unless = "#result == null")
     public ZabbixHostGroup getByName(DsZabbixConfig.Zabbix zabbix, String name) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", name)

@@ -77,12 +77,12 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_hostid_' + #hostid")
-    public void evictHostById(String hostid) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid")
+    public void evictHostById(DsZabbixConfig.Zabbix zabbix, String hostid) {
         log.info("清除ZabbixHost缓存 : hostid = {}", hostid);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_hostid_' + #hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid", unless = "#result == null")
     public ZabbixHost getById(DsZabbixConfig.Zabbix zabbix, String hostid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
@@ -93,28 +93,12 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperListGetOne(data.get(RESULT), ZabbixHost.class);
     }
 
-//    public List<ZabbixHost> listByNames(DsZabbixConfig.Zabbix zabbix, List<String> names) {
-//        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-//                .putEntry("host", names)
-//                .build();
-//        JsonNode data = queryHostByFilter(zabbix, filter);
-//        return mapperList(data.get(RESULT), ZabbixHost.class);
-//    }
-
-//    public ZabbixHost getByName(DsZabbixConfig.Zabbix zabbix, String name) {
-//        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-//                .putEntry("host", name)
-//                .build();
-//        JsonNode data = queryHostByFilter(zabbix, filter);
-//        return mapperOne(data.get(RESULT), ZabbixHost.class);
-//    }
-
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_ip_' + #ip")
-    public void evictHostByIp(String ip) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip")
+    public void evictHostByIp(DsZabbixConfig.Zabbix zabbix, String ip) {
         log.info("清除ZabbixHost缓存 : ip = {}", ip);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'host_ip_' + #ip", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip", unless = "#result == null")
     public ZabbixHost getByIp(DsZabbixConfig.Zabbix zabbix, String ip) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("ip", ip)
@@ -136,23 +120,6 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
                 .build();
         return call(zabbix, request);
     }
-
-//    public String createHost(DsZabbixConfig.Zabbix zabbix, Server server, Map<String, Object> paramMap) {
-//        ZabbixHost host = getByName(zabbix, ServerUtil.toServerName(server));
-//        if (host != null) {
-//            return host.getHostid();
-//        }
-//        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
-//                .method(HostAPIMethod.CREATE)
-//                .paramEntry("host", ServerUtil.toServerName(server))
-//                .paramEntry(paramMap)
-//                .build();
-//        JsonNode data = call(zabbix, request);
-//        if (data.get(RESULT).get(HOST_IDS).isEmpty()) {
-//            throw new RuntimeException("ZabbixHost创建失败");
-//        }
-//        return ZabbixMapper.mapperList(data.get(RESULT).get(HOST_IDS), String.class).get(0);
-//    }
 
     public void updateHostName(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, String hostName) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
@@ -212,14 +179,6 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         }
         delete(zabbix, host);
     }
-
-//    public void deleteByName(DsZabbixConfig.Zabbix zabbix, String name) {
-//        ZabbixHost host = getByName(zabbix, name);
-//        if (host == null) {
-//            return;
-//        }
-//        delete(zabbix, host);
-//    }
 
     private void delete(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()

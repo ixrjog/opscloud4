@@ -12,6 +12,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -36,12 +37,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         String DELETE = "user.delete";
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_alias_' + #username")
-    public void evictByUsername(String username) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username")
+    public void evictByUsername(DsZabbixConfig.Zabbix zabbix, String username) {
         log.info("清除ZabbixUser缓存 : alias = {}", username);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_alias_' + #username")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username", unless = "#result == null")
     public ZabbixUser getByUsername(DsZabbixConfig.Zabbix zabbix, String username) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("alias", username)
@@ -143,12 +144,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         }
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_userid_' + #userid")
-    public void evictById(String userid) {
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid")
+    public void evictById(DsZabbixConfig.Zabbix zabbix, String userid) {
         log.info("清除ZabbixUser缓存 : userid = {}", userid);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "'user_userid_' + #userid")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid", unless = "#result == null")
     public ZabbixUser getById(DsZabbixConfig.Zabbix zabbix, String userid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
