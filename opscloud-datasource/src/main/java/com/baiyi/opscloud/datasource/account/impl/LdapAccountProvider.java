@@ -23,7 +23,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class LdapAccountProvider extends AbstractAccountProvider<DsLdapConfig.Ldap> {
+public class LdapAccountProvider extends AbstractAccountProvider {
 
     @Resource
     private PersonRepo personRepo;
@@ -34,37 +34,39 @@ public class LdapAccountProvider extends AbstractAccountProvider<DsLdapConfig.Ld
     @Resource
     private UserGroupService userGroupService;
 
+    protected static ThreadLocal<DsLdapConfig.Ldap> configContext = new ThreadLocal<>();
+
     @Override
-    protected void doCreate(DsLdapConfig.Ldap ldap, User user) {
-        if (!personRepo.checkPersonInLdap(ldap, user.getUsername()))
-            personRepo.create(ldap, AccountConvert.toLdapPerson(user));
+    protected void initialConfig(DatasourceConfig dsConfig) {
+        configContext.set(dsConfigFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap());
     }
 
     @Override
-    protected void doUpdate(DsLdapConfig.Ldap ldap, User user) {
-        if (personRepo.checkPersonInLdap(ldap, user.getUsername()))
-            personRepo.update(ldap, AccountConvert.toLdapPerson(user));
+    protected void doCreate(User user) {
+        if (!personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
+            personRepo.create(configContext.get(), AccountConvert.toLdapPerson(user));
     }
 
     @Override
-    protected void doDelete(DsLdapConfig.Ldap ldap, User user) {
-        if (personRepo.checkPersonInLdap(ldap, user.getUsername()))
-            personRepo.delete(ldap, user.getUsername());
+    protected void doUpdate(User user) {
+        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
+            personRepo.update(configContext.get(), AccountConvert.toLdapPerson(user));
     }
 
     @Override
-    protected DsLdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
+    protected void doDelete(User user) {
+        if (personRepo.checkPersonInLdap(configContext.get(), user.getUsername()))
+            personRepo.delete(configContext.get(), user.getUsername());
     }
 
     @Override
-    protected void doGrant(DsLdapConfig.Ldap ldap, User user, BaseBusiness.IBusiness businessResource) {
-        groupRepo.addGroupMember(ldap, getBusinessResource(businessResource.getBusinessId()).getName(), user.getUsername());
+    public void doGrant(User user, BaseBusiness.IBusiness businessResource) {
+        groupRepo.addGroupMember(configContext.get(), getBusinessResource(businessResource.getBusinessId()).getName(), user.getUsername());
     }
 
     @Override
-    protected void doRevoke(DsLdapConfig.Ldap ldap, User user, BaseBusiness.IBusiness businessResource) {
-        groupRepo.removeGroupMember(ldap, getBusinessResource(businessResource.getBusinessId()).getName(), user.getUsername());
+    public void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
+        groupRepo.removeGroupMember(configContext.get(), getBusinessResource(businessResource.getBusinessId()).getName(), user.getUsername());
     }
 
     private UserGroup getBusinessResource(int businessId) {

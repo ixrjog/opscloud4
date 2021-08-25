@@ -19,49 +19,59 @@ import javax.annotation.Resource;
  * @Date 2021/8/24 1:44 下午
  * @Version 1.0
  */
-public abstract class AbstractServerGroupProvider<T> extends SimpleDsInstanceProvider implements IServerGroup, InitializingBean {
+public abstract class AbstractServerGroupProvider extends SimpleDsInstanceProvider implements IServerGroup, InitializingBean {
 
     @Resource
     protected DsConfigFactory dsConfigFactory;
 
+    protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
 
-    protected abstract T buildConfig(DatasourceConfig dsConfig);
+    protected abstract void initialConfig(DatasourceConfig dsConfig);
+
+    private void pre(DatasourceInstance dsInstance) {
+        dsInstanceContext.set(buildDsInstanceContext(dsInstance.getId()));
+        initialConfig(dsInstanceContext.get().getDsConfig());
+    }
 
     @Override
     public void create(DatasourceInstance dsInstance, ServerGroup serverGroup) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doCreate(buildConfig(context.getDsConfig()), serverGroup);
+        pre(dsInstance);
+        doCreate(serverGroup);
     }
 
     @Override
     public void update(DatasourceInstance dsInstance, ServerGroup serverGroup) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doUpdate(buildConfig(context.getDsConfig()), serverGroup);
+        pre(dsInstance);
+        doUpdate(serverGroup);
     }
 
     @Override
     public void delete(DatasourceInstance dsInstance, ServerGroup serverGroup) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doDelete(buildConfig(context.getDsConfig()), serverGroup);
+        pre(dsInstance);
+        doDelete(serverGroup);
     }
 
     @Override
     public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
+        pre(dsInstance);
+        doGrant(user, businessResource);
     }
 
     @Override
     public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
+        pre(dsInstance);
+        doRevoke(user, businessResource);
     }
 
-    protected abstract void doCreate(T t, ServerGroup serverGroup);
+    protected abstract void doCreate(ServerGroup serverGroup);
 
-    protected abstract void doUpdate(T t, ServerGroup serverGroup);
+    protected abstract void doUpdate(ServerGroup serverGroup);
 
-    protected abstract void doDelete(T t, ServerGroup serverGroup);
+    protected abstract void doDelete(ServerGroup serverGroup);
 
-    protected abstract void doGrant(T t, User user, BaseBusiness.IBusiness businessResource);
+    protected abstract void doGrant(User user, BaseBusiness.IBusiness businessResource);
 
-    protected abstract void doRevoke(T t, User user, BaseBusiness.IBusiness businessResource);
+    protected abstract void doRevoke(User user, BaseBusiness.IBusiness businessResource);
 
     protected abstract int getBusinessResourceType();
 

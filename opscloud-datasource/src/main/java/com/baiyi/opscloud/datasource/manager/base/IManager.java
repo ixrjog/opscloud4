@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.datasource.manager.base;
 
+import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+
 /**
  * @Author baiyi
  * @Date 2021/8/11 11:47 上午
@@ -28,8 +31,8 @@ public interface IManager<T> {
      */
     void delete(T t);
 
-//    void grant(T t, BaseBusiness.IBusiness businessResource);
-//
-//    void revoke(T t, BaseBusiness.IBusiness businessResource);
+    void grant(User user, BaseBusiness.IBusiness businessResource);
+
+    void revoke(User user, BaseBusiness.IBusiness businessResource);
 
 }

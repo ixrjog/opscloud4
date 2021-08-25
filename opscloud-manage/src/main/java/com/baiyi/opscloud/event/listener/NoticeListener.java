@@ -1,10 +1,12 @@
 package com.baiyi.opscloud.event.listener;
 
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.event.customer.EventConsumerFactory;
 import com.baiyi.opscloud.event.customer.IEventConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.ApplicationListener;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 /**
@@ -17,6 +19,7 @@ import org.springframework.stereotype.Component;
 public class NoticeListener implements ApplicationListener<NoticeEvent> {
 
     @Override
+    @Async(value = Global.TaskPools.EXECUTOR)
     public void onApplicationEvent(NoticeEvent noticeEvent) {
         log.info("监听事件 : eventType = {} , action = {}", noticeEvent.getMessage().getEventType(), noticeEvent.getMessage().getAction());
         IEventConsumer iEventConsumer = EventConsumerFactory.getConsumer(noticeEvent.getMessage().getEventType());

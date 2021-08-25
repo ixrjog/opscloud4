@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.datasource.server.impl.base;
 
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -53,12 +55,19 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     @Resource
     private ZabbixServer zabbixServer;
 
+    protected static ThreadLocal<DsZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
+
     @Override
-    protected void doGrant(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
+    protected void initialConfig(DatasourceConfig dsConfig){
+        configContext.set(dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
     }
 
     @Override
-    protected void doRevoke(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
+    protected void doGrant(User user, BaseBusiness.IBusiness businessResource) {
+    }
+
+    @Override
+    protected void doRevoke( User user, BaseBusiness.IBusiness businessResource) {
     }
 
     protected JsonNode call(DsZabbixConfig.Zabbix zabbix, IZabbixRequest request) {

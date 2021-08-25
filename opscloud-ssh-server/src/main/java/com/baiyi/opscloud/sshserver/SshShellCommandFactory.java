@@ -35,7 +35,6 @@ import org.springframework.shell.jline.JLineShellAutoConfiguration;
 import org.springframework.shell.jline.PromptProvider;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Map;
@@ -74,8 +73,8 @@ public class SshShellCommandFactory implements Command {
 
     private Map<ChannelSession, Thread> threads = new ConcurrentHashMap<>();
 
-    @Resource
-    private SshShellHelper helper;
+//    @Resource
+//    private SshShellHelper helper;
 
     /**
      * Constructor

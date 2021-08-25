@@ -27,13 +27,20 @@ import static com.baiyi.opscloud.datasource.account.impl.ZabbixAccountProvider.Z
  * @Date 2021/8/24 9:56 上午
  * @Version 1.0
  */
-public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider<DsZabbixConfig.Zabbix> {
+public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider {
 
     @Resource
     private ServerGroupService serverGroupService;
 
     @Resource
     private ZabbixFacade zabbixFacade;
+
+    protected static ThreadLocal<DsZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
+
+    @Override
+    protected void initialConfig(DatasourceConfig dsConfig) {
+        configContext.set(dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
+    }
 
     protected List<Map<String, String>> getUsrgrps(DsZabbixConfig.Zabbix zabbix, User user) {
         List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
@@ -61,14 +68,6 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider<
     protected int getBusinessResourceType() {
         return BusinessTypeEnum.SERVERGROUP.getType();
     }
-
-
-
-    @Override
-    protected DsZabbixConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
-    }
-
 
     @Override
     public String getInstanceType() {

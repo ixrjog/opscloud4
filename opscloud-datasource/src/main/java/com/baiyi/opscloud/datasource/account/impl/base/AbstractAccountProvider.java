@@ -23,7 +23,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractAccountProvider<T> extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
+public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
 
     @Resource
     protected DsConfigFactory dsConfigFactory;
@@ -31,53 +31,62 @@ public abstract class AbstractAccountProvider<T> extends SimpleDsInstanceProvide
     @Resource
     private UserPermissionService userPermissionService;
 
+    protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
+
     protected List<UserPermission> queryUserPermission(User user, Integer businessType) {
         return userPermissionService.queryByUserPermission(user.getId(), businessType);
     }
 
-    protected abstract T buildConfig(DatasourceConfig dsConfig);
+    protected abstract void initialConfig(DatasourceConfig dsConfig);
+
+    private void pre(DatasourceInstance dsInstance){
+        dsInstanceContext.set(buildDsInstanceContext(dsInstance.getId()));
+        initialConfig(dsInstanceContext.get().getDsConfig());
+    }
 
     @Override
     public void create(DatasourceInstance dsInstance, User user) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doCreate(buildConfig(context.getDsConfig()), user);
+        pre(dsInstance);
+        doCreate(user);
     }
 
     @Override
     public void update(DatasourceInstance dsInstance, User user) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doUpdate(buildConfig(context.getDsConfig()), user);
+        pre(dsInstance);
+        doUpdate(user);
     }
 
     @Override
     public void delete(DatasourceInstance dsInstance, User user) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doDelete(buildConfig(context.getDsConfig()), user);
+        pre(dsInstance);
+        doDelete(user);
     }
 
     @Override
     public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        if (getBusinessResourceType() == businessResource.getBusinessType())
-            doGrant(buildConfig(context.getDsConfig()), user, businessResource);
+        if (getBusinessResourceType() == businessResource.getBusinessType()){
+            pre(dsInstance);
+            doGrant(user,businessResource);
+        }
     }
 
     @Override
     public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        if (getBusinessResourceType() == businessResource.getBusinessType())
-            doRevoke(buildConfig(context.getDsConfig()), user, businessResource);
+        if (getBusinessResourceType() == businessResource.getBusinessType()){
+            pre(dsInstance);
+            doRevoke(user,businessResource);
+        }
     }
 
-    protected abstract void doCreate(T t, User user);
+    protected abstract void doCreate(User user);
 
-    protected abstract void doUpdate(T t, User user);
+    protected abstract void doUpdate(User user);
 
-    protected abstract void doDelete(T t, User user);
+    protected abstract void doDelete(User user);
 
-    protected abstract void doGrant(T t, User user, BaseBusiness.IBusiness businessResource);
+    public abstract void doGrant(User user, BaseBusiness.IBusiness businessResource);
 
-    protected abstract void doRevoke(T t, User user, BaseBusiness.IBusiness businessResource);
+    public abstract void doRevoke(User user, BaseBusiness.IBusiness businessResource);
 
     protected abstract int getBusinessResourceType();
 

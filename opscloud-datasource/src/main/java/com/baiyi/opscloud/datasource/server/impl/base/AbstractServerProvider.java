@@ -36,7 +36,14 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
     @Resource
     private BusinessPropertyHelper businessPropertyHelper;
 
-    protected abstract T buildConfig(DatasourceConfig dsConfig);
+    protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
+
+    protected abstract void initialConfig(DatasourceConfig dsConfig);
+
+    private void pre(DatasourceInstance dsInstance) {
+        dsInstanceContext.set(buildDsInstanceContext(dsInstance.getId()));
+        initialConfig(dsInstanceContext.get().getDsConfig());
+    }
 
     protected Env getEnv(Server server) {
         return envService.getByEnvType(server.getEnvType());
@@ -52,20 +59,20 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
 
     @Override
     public void create(DatasourceInstance dsInstance, Server server) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doCreate(buildConfig(context.getDsConfig()), server);
+        pre(dsInstance);
+        doCreate(server);
     }
 
     @Override
     public void update(DatasourceInstance dsInstance, Server server) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doUpdate(buildConfig(context.getDsConfig()), server);
+        pre(dsInstance);
+        doUpdate(server);
     }
 
     @Override
     public void delete(DatasourceInstance dsInstance, Server server) {
-        DsInstanceContext context = buildDsInstanceContext(dsInstance.getId());
-        doDelete(buildConfig(context.getDsConfig()), server);
+        pre(dsInstance);
+        doDelete(server);
     }
 
 //    @Override
@@ -90,15 +97,15 @@ public abstract class AbstractServerProvider<T> extends SimpleDsInstanceProvider
     public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
     }
 
-    protected abstract void doCreate(T t, Server server);
+    protected abstract void doCreate(Server server);
 
-    protected abstract void doUpdate(T t, Server server);
+    protected abstract void doUpdate(Server server);
 
-    protected abstract void doDelete(T t, Server server);
+    protected abstract void doDelete(Server server);
 
-    protected abstract void doGrant(T t, User user, BaseBusiness.IBusiness businessResource);
+    protected abstract void doGrant(User user, BaseBusiness.IBusiness businessResource);
 
-    protected abstract void doRevoke(T t, User user, BaseBusiness.IBusiness businessResource);
+    protected abstract void doRevoke(User user, BaseBusiness.IBusiness businessResource);
 
     protected abstract int getBusinessResourceType();
 

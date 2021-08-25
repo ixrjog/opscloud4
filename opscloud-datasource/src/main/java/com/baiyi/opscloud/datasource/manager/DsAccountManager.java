@@ -92,6 +92,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).delete(e, user));
     }
 
+    @Override
     public void grant(User user, BaseBusiness.IBusiness businessResource) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
@@ -101,6 +102,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
     }
 
+    @Override
     public void revoke(User user, BaseBusiness.IBusiness businessResource) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {

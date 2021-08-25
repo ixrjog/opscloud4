@@ -9,6 +9,7 @@ import com.baiyi.opscloud.zabbix.handler.base.BaseZabbixHandler;
 import com.baiyi.opscloud.zabbix.http.*;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.stereotype.Component;
@@ -73,21 +74,44 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         return mapperList(data.get(RESULT), ZabbixUser.class);
     }
 
-    public void create(DsZabbixConfig.Zabbix zabbix, ZabbixUser user, List<ZabbixMedia> medias, List<Map<String, String>> usrgrps) {
+    public void create(DsZabbixConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<ZabbixMedia> medias, List<Map<String, String>> usrgrps) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.CREATE)
-                .paramEntry("alias", user.getAlias())
-                .paramEntry("name", user.getName())
+                .paramEntry("alias", zabbixUser.getAlias())
+                .paramEntry("name", zabbixUser.getName())
                 .paramEntry("passwd", UUID.randomUUID())
                 .paramEntry("usrgrps", usrgrps)
                 .paramEntrySkipEmpty("user_medias", medias)
                 .build();
         JsonNode data = call(zabbix, request);
-        try {
-            List<Integer> userIds = ZabbixMapper.mapperList(data.get(RESULT).get("userids"), Integer.class);
-            // TODO 先不处理
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (data.get(RESULT).get("userids").isEmpty()) {
+            log.error("创建ZabbixUser失败: name = {}", zabbixUser.getName());
+        } else {
+            log.info("创建ZabbixUser: name = {}", zabbixUser.getName());
+        }
+    }
+
+    /**
+     * 更新用户信息 需要userid
+     *
+     * @param zabbix
+     * @param zabbixUser
+     * @param mediaList
+     * @param usrgrps
+     */
+    public void update(DsZabbixConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<Map<String, String>> usrgrps, List<ZabbixMedia> mediaList) {
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(UserAPIMethod.UPDATE)
+                .paramEntry("userid", zabbixUser.getUserid())
+                .paramEntry("name", zabbixUser.getName())
+                .paramEntry("usrgrps", usrgrps)
+                .paramEntrySkipEmpty("user_medias", mediaList)
+                .build();
+        JsonNode data = call(zabbix, request);
+        if (data.get(RESULT).get("userids").isEmpty()) {
+            log.error("更新ZabbixUser失败: name = {}", zabbixUser.getName());
+        } else {
+            log.info("更新ZabbixUser: name = {}", zabbixUser.getName());
         }
     }
 
@@ -96,33 +120,19 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
      *
      * @param zabbix
      * @param user
-     * @param mediaList
      * @param usrgrps
      */
-    public void update(DsZabbixConfig.Zabbix zabbix, ZabbixUser user, List<ZabbixMedia> mediaList, List<Map<String, String>> usrgrps) {
-        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
-                .method(UserAPIMethod.UPDATE)
-                .paramEntry("userid", user.getUserid())
-                .paramEntry("name", user.getName())
-                .paramEntry("usrgrps", usrgrps)
-                .paramEntrySkipEmpty("user_medias", mediaList)
-                .build();
-        JsonNode data = call(zabbix, request);
-        try {
-            List<Integer> userIds = ZabbixMapper.mapperList(data.get(RESULT).get("userids"), Integer.class);
-            // TODO 先不处理
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public void update(DsZabbixConfig.Zabbix zabbix, ZabbixUser user, List<Map<String, String>> usrgrps) {
+        update(zabbix, user, usrgrps, Lists.newArrayList());
     }
 
     public void delete(DsZabbixConfig.Zabbix zabbix, String username) {
         ZabbixUser zabbixUser = getByUsername(zabbix, username);
-        if (zabbixUser == null) return ;
+        if (zabbixUser == null) return;
         // 数组形参数 https://www.zabbix.com/documentation/2.2/manual/api/reference/user/delete
-        ZabbixDeleteRequest request  = ZabbixDeleteRequest.builder()
+        ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
                 .method(UserAPIMethod.DELETE)
-                .params(new String[]{ zabbixUser.getUserid()})
+                .params(new String[]{zabbixUser.getUserid()})
                 .build();
         JsonNode data = call(zabbix, request);
         try {

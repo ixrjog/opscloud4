@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.datasource.account.impl;
 
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.datasource.account.convert.AccountConvert;
 import com.baiyi.opscloud.datasource.account.impl.base.BaseZabbixAccountProvider;
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
@@ -28,46 +27,55 @@ public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
 
     @Override
-    protected void doCreate(DsZabbixConfig.Zabbix zabbix, User user) {
-        zabbixUserHandler.create(zabbix, AccountConvert.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(zabbix, user));
-        log.info("创建Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
+    protected void doCreate(User user) {
+        zabbixUserHandler.create(configContext.get(), AccountConvert.toZabbixUser(user), ZabbixMediaUtil.buildMedias(user), getUsrgrps(configContext.get(), user));
+        log.info("创建Zabbix用户: username = {}", user.getUsername());
     }
 
     @Override
-    protected void doUpdate(DsZabbixConfig.Zabbix zabbix, User user) {
-        ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(zabbix, user.getUsername());
+    protected void doUpdate(User user) {
+        ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(configContext.get(), user.getUsername());
         if (zabbixUser == null) {
-            doCreate(zabbix, user);
+            doCreate(user);
         } else {
             ZabbixUser updateUser = AccountConvert.toZabbixUser(user);
             updateUser.setUserid(zabbixUser.getUserid());
-            zabbixUserHandler.update(zabbix, updateUser, ZabbixMediaUtil.buildMedias(user), getUsrgrps(zabbix, user));
+            zabbixUserHandler.update(configContext.get(), updateUser, getUsrgrps(configContext.get(), user), ZabbixMediaUtil.buildMedias(user));
             // 清除缓存
             zabbixUserHandler.evictById(zabbixUser.getUserid());
             zabbixUserHandler.evictByUsername(user.getUsername());
-            log.info("更新Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
+            log.info("更新Zabbix用户: username = {}", user.getUsername());
         }
     }
 
     @Override
-    protected void doDelete(DsZabbixConfig.Zabbix zabbix, User user) {
-        ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(zabbix, user.getUsername());
+    protected void doDelete(User user) {
+        ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(configContext.get(), user.getUsername());
         if (zabbixUser == null) return;
-        zabbixUserHandler.delete(zabbix, user.getUsername());
+        zabbixUserHandler.delete(configContext.get(), user.getUsername());
         // 清除缓存
         zabbixUserHandler.evictById(zabbixUser.getUserid());
         zabbixUserHandler.evictByUsername(user.getUsername());
-        log.info("删除Zabbix用户: url= {} , username = {}", zabbix.getUrl(), user.getUsername());
+        log.info("删除Zabbix用户: username = {}", user.getUsername());
     }
 
     @Override
-    protected void doGrant(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
-        // Zabbix不处理用户授权用户组事件
+    public void doGrant(User user, BaseBusiness.IBusiness businessResource) {
+        ZabbixUser zabbixUser = zabbixUserHandler.getByUsername(configContext.get(), user.getUsername());
+        if (zabbixUser == null) {
+            doCreate(user);
+        } else {
+            zabbixUserHandler.update(configContext.get(), zabbixUser, getUsrgrps(configContext.get(), user));
+            // 清除缓存
+            zabbixUserHandler.evictById(zabbixUser.getUserid());
+            zabbixUserHandler.evictByUsername(user.getUsername());
+            log.info("更新Zabbix用户: username = {}", user.getUsername());
+        }
     }
 
     @Override
-    protected void doRevoke(DsZabbixConfig.Zabbix zabbix, User user, BaseBusiness.IBusiness businessResource) {
-        // Zabbix不处理用户撤销用户组事件
+    public void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
+        doGrant(user, businessResource);
     }
 
 }

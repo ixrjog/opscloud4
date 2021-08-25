@@ -50,7 +50,7 @@ public class SimpleZabbixRequestBuilder {
      * @return
      */
     public SimpleZabbixRequestBuilder paramEntrySkipEmpty(String key, Object value) {
-        if (!StringUtils.isEmpty(key) && !org.springframework.util.ObjectUtils.isEmpty(value)) {
+        if (value != null && !org.springframework.util.ObjectUtils.isEmpty(value) && !StringUtils.isEmpty(key)) {
             String str = JSON.toJSONString(value);
             if (str.equals("{}") || str.equals("[]") || str.equals("\"\""))
                 return this;
