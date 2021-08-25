@@ -3,6 +3,7 @@ package com.baiyi.opscloud.facade.user.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
@@ -32,6 +33,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@BusinessType(BusinessTypeEnum.USERGROUP)
 public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
     @Resource
@@ -73,7 +75,7 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     }
 
     @Override
-    @TagClear(type = BusinessTypeEnum.USERGROUP) // 清除标签
+    @TagClear// 清除标签
     @AssetBusinessUnbindRelation(type = BusinessTypeEnum.USERGROUP) // 解除资产绑定
     public void deleteUserGroupById(Integer id) {
         // 检查组成员

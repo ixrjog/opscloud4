@@ -119,9 +119,9 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
         serverGroupService.update(toDO(serverGroup));
     }
 
-    @TagClear()
-    @BusinessPropertyClear()
-    @RevokeUserPermission()
+    @TagClear
+    @BusinessPropertyClear
+    @RevokeUserPermission
     @Override
     public void deleteServerGroupById(int id) {
         ServerGroup serverGroup = serverGroupService.getById(id);

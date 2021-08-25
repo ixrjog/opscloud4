@@ -62,8 +62,8 @@ public class ServerFacadeImpl implements ServerFacade {
         return pre;
     }
 
-    @TagClear()
-    @BusinessPropertyClear()
+    @TagClear
+    @BusinessPropertyClear
     @Override
     public void deleteServerById(Integer id) {
         Server server = serverService.getById(id);
