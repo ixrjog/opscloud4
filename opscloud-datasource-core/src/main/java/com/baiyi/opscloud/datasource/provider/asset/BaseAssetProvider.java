@@ -37,7 +37,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     @Resource
-    protected SimpleDsAssetFacade baseDsAssetFacade;
+    protected SimpleDsAssetFacade simpleDsAssetFacade;
 
     @Resource
     private CredentialService credentialService;
@@ -68,7 +68,7 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         if (executeMode()) {
             Set<Integer> idSet = listAssetsIdSet(dsInstanceContext);
             entries.forEach(e -> enterEntry(dsInstanceContext, idSet, e));
-            idSet.forEach(id -> baseDsAssetFacade.deleteAssetById(id));
+            idSet.forEach(id -> simpleDsAssetFacade.deleteAssetById(id));
         } else {
             entries.forEach(e -> enterEntry(dsInstanceContext, e));
         }

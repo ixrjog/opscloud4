@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
-import com.baiyi.opscloud.datasource.provider.asset.AbstractChildAssetProvider;
+import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -32,7 +32,7 @@ import java.util.List;
 
 @Component
 @ChildProvider(parentType = DsAssetTypeEnum.RAM_USER)
-public class AliyunRamAccessKeyProvider extends AbstractChildAssetProvider<ListAccessKeysResponse.AccessKey> {
+public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListAccessKeysResponse.AccessKey> {
 
     @Resource
     private AliyunRamHandler aliyunRamHandler;

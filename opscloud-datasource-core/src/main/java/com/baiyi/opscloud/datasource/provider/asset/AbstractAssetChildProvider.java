@@ -17,7 +17,7 @@ import java.util.Set;
  * @Date 2021/7/8 2:56 下午
  * @Since 1.0
  */
-public abstract class AbstractChildAssetProvider<C> extends BaseAssetProvider<C> {
+public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C> {
 
     @Resource
     private DsInstanceAssetService dsInstanceAssetService;
@@ -51,7 +51,7 @@ public abstract class AbstractChildAssetProvider<C> extends BaseAssetProvider<C>
         if (executeMode()) {
             Set<Integer> idSet = listAssetsIdSet(dsInstanceContext, parent);
             entries.forEach(e -> enterEntry(dsInstanceContext, idSet, e, parent));
-            idSet.forEach(id -> baseDsAssetFacade.deleteAssetById(id));
+            idSet.forEach(id -> simpleDsAssetFacade.deleteAssetById(id));
         } else {
             entries.forEach(e -> enterEntry(dsInstanceContext, e));
         }
