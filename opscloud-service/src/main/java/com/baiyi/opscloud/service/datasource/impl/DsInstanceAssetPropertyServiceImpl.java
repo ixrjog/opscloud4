@@ -42,6 +42,34 @@ public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetProper
 
     @Override
     public void saveAssetProperties(int assetId, Map<String, String> properties) {
+        List<DatasourceInstanceAssetProperty> assetProperties = queryByAssetId(assetId);
+        properties.forEach((k, v) -> {
+            DatasourceInstanceAssetProperty assetProperty = DatasourceInstanceAssetProperty.builder()
+                    .datasourceInstanceAssetId(assetId)
+                    .name(k)
+                    .value(v)
+                    .build();
+            saveProperty(assetProperties, assetProperty);
+        });
+        assetProperties.forEach(e -> deleteById(e.getId()));
+    }
+
+    private void saveProperty(List<DatasourceInstanceAssetProperty> assetProperties, DatasourceInstanceAssetProperty assetProperty) {
+        for (DatasourceInstanceAssetProperty property : assetProperties) {
+            if (property.getName().equals(assetProperty.getName())) {
+                if (!property.getValue().equals(assetProperty.getValue())) {
+                    property.setValue(assetProperty.getValue());
+                    dsInstanceAssetPropertyMapper.updateByPrimaryKey(property);
+                }
+                assetProperties.remove(property);
+                return;
+            }
+        }
+        dsInstanceAssetPropertyMapper.insert(assetProperty);
+    }
+
+    // Bug
+    public void saveAssetPropertiesX(int assetId, Map<String, String> properties) {
         List<DatasourceInstanceAssetProperty> assetPropertyList = queryByAssetId(assetId);
         properties.forEach((k, v) -> {
             if (isEmptyProperty(assetPropertyList, k, v)) {

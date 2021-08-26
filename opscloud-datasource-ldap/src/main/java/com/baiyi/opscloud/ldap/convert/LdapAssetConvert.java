@@ -25,7 +25,6 @@ public class LdapAssetConvert {
                 .assetType(DsAssetTypeEnum.USER.name())
                 .kind("user")
                 .build();
-
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramProperty("mobile", entry.getMobile())
