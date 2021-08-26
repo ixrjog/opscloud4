@@ -27,7 +27,6 @@ import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserService;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -77,8 +76,8 @@ public class UserFacadeImpl implements UserFacade {
     @AssetBusinessRelation // 资产绑定业务对象
     public void addUser(UserVO.User user) {
         User newUser = userPacker.toDO(user);
-        if (StringUtils.isEmpty(newUser.getPassword()))
-            throw new CommonRuntimeException("密码不能为空");
+//        if (StringUtils.isEmpty(newUser.getPassword()))
+//            throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
         user.setId(newUser.getId());
     }
