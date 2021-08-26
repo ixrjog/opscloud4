@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.model.property;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -13,7 +14,7 @@ public class ServerProperty {
 
     @Data
     @Builder
-    public static class Server {
+    public static class Server implements Serializable {
         @Builder.Default
         private String kind = "Server";
         @Builder.Default
@@ -24,7 +25,7 @@ public class ServerProperty {
 
     @Builder
     @Data
-    public static class Metadata {
+    public static class Metadata implements Serializable{
         @Builder.Default
         private Integer sshPort = 22;
         @Builder.Default
@@ -38,7 +39,7 @@ public class ServerProperty {
 
     @Builder
     @Data
-    public static class Zabbix {
+    public static class Zabbix implements Serializable{
         @Builder.Default
         private Boolean enable = false;
         private List<String> templates;
@@ -50,7 +51,7 @@ public class ServerProperty {
 
     @Data
     @Builder
-    public static class Ansible {
+    public static class Ansible implements Serializable{
         @Builder.Default
         private Integer subgroup = 2;
     }

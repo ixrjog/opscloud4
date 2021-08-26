@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.server.impl;
 
+import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -11,7 +12,6 @@ import com.baiyi.opscloud.domain.annotation.BusinessPropertyClear;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.annotation.TagClear;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -175,7 +175,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
         AtomicInteger treeSize = new AtomicInteger();
 
         for (ServerGroup group : groups) {
-            Map<String, List<Server>> serverGroupMap = serverAlgorithm.grouping(group);
+            Map<String, List<ServerPack>> serverGroupMap = serverAlgorithm.grouping(group);
             treeList.add(serverTreeUtil.wrap(group, serverGroupMap));
             treeSize.addAndGet(serverTreeUtil.getServerGroupMapSize(serverGroupMap));
         }

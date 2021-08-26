@@ -4,11 +4,11 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.business.BusinessPropertyPacker;
 import com.baiyi.opscloud.packer.sys.EnvPacker;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.util.ExtendUtil;
-import com.baiyi.opscloud.util.ServerUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -41,7 +41,7 @@ public class ServerPacker {
     public ServerVO.Server wrapVO(Server data) {
         ServerVO.Server server = BeanCopierUtil.copyProperties(data, ServerVO.Server.class);
         envPacker.wrap(server);
-        ServerUtil.wrapDisplayName(server);
+        SimpleServerNameFacade.wrapDisplayName(server);
         return server;
     }
 

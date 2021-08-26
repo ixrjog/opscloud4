@@ -28,4 +28,5 @@ public class ZabbixTest extends BaseUnit {
         assert assetProvider != null;
         assetProvider.pullAsset(4);
     }
+
 }

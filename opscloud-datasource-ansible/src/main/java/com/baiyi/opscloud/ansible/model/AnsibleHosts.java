@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.ansible.model;
 
+import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.common.util.IOUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
+import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.google.common.base.Joiner;
 import lombok.Builder;
 import lombok.Data;
@@ -39,7 +40,7 @@ public class AnsibleHosts {
     public static class Group {
 
         private ServerGroup serverGroup;
-        private Map<String, List<Server>> serverMap;
+        private Map<String, List<ServerPack>> serverMap;
 
         private String sshUser;
 
@@ -47,18 +48,19 @@ public class AnsibleHosts {
             StringBuilder result = new StringBuilder(Joiner.on(" ").skipNulls().join("#", serverGroup.getName(), serverGroup.getComment(), "\n"));
             serverMap.keySet().forEach(k -> {
                 result.append("[").append(k).append("]\n");
-                List<Server> serverList = serverMap.get(k);
+                List<ServerPack> serverList = serverMap.get(k);
                 serverList.forEach(s -> result.append(toHostLine(s)));
                 result.append("\n");
             });
             return result.toString();
         }
 
-        private String toHostLine(Server server) {
-            String serverName = SimpleServerNameFacade.toServerName(server);
-            return Joiner.on(" ").skipNulls().join(server.getPrivateIp(),
+        private String toHostLine(ServerPack serverPack) {
+            String serverName = SimpleServerNameFacade.toName(serverPack.getServer(), serverPack.getEnv());
+            return Joiner.on(" ").skipNulls().join(
+                    BusinessPropertyHelper.getManageIp(serverPack),
                     link("ansible_ssh_user", sshUser),
-                    link("ansible_ssh_port", "22"),
+                    link("ansible_ssh_port", String.valueOf(BusinessPropertyHelper.getSshPort(serverPack))),
                     link("hostname", serverName),
                     "#", serverName, "\n");
         }

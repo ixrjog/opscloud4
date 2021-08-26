@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.server;
 
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class SimpleServerNameFacade {
         SimpleServerNameFacade.envService = envService;
     }
 
+    public static void wrapDisplayName(ServerVO.Server server){
+        server.setDisplayName(toServerName(server));
+    }
 
     /**
      * 带序号
@@ -33,11 +37,19 @@ public class SimpleServerNameFacade {
         return toName(server, env);
     }
 
-    private static String toName(Server server, Env env) {
+    public static String toName(Server server, Env env) {
         if (env == null || env.getEnvName().equals("prod")) {
             return Joiner.on("-").join(server.getName(), server.getSerialNumber());
         } else {
             return Joiner.on("-").join(server.getName(), env.getEnvName(), server.getSerialNumber());
+        }
+    }
+
+    private static String toServerName(ServerVO.Server server) {
+        if (server.getEnv() == null || server.getEnv().getEnvName().equals("prod")) {
+            return Joiner.on("-").join(server.getName(), server.getSerialNumber());
+        } else {
+            return Joiner.on("-").join(server.getName(), server.getEnv().getEnvName(), server.getSerialNumber());
         }
     }
 

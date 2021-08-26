@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.algorithm;
 
 import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
+import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.google.common.base.Joiner;
@@ -15,6 +17,7 @@ import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -29,22 +32,26 @@ public abstract class BaseAlgorithm {
     @Resource
     private EnvService envService;
 
+    @Resource
+    private BusinessPropertyHelper businessPropertyHelper;
+
     /**
      * 按环境分组
      *
      * @param serverGroup
      * @return key: envName
      */
-    protected Map<String, List<Server>> groupingByEnv(ServerGroup serverGroup) {
+    protected Map<String, List<ServerPack>> groupingByEnv(ServerGroup serverGroup) {
         List<Server> serverList = serverService.queryByServerGroupId(serverGroup.getId());
-        Map<String, List<Server>> map = Maps.newHashMap();
+        Map<String, List<ServerPack>> map = Maps.newHashMap();
         if (CollectionUtils.isEmpty(serverList)) return map;
-        serverList.forEach(e -> {
-            String groupingName = toSubgroupName(serverGroup, e.getEnvType());
+        List<ServerPack> serverPacks = serverList.stream().map(this::toServerPack).collect(Collectors.toList());
+        serverPacks.forEach(e -> {
+            String groupingName = toSubgroupName(serverGroup, e.getEnv());
             if (map.containsKey(groupingName)) {
                 map.get(groupingName).add(e);
             } else {
-                List<Server> list = Lists.newArrayList();
+                List<ServerPack> list = Lists.newArrayList();
                 list.add(e);
                 map.put(groupingName, list);
             }
@@ -52,15 +59,17 @@ public abstract class BaseAlgorithm {
         return map;
     }
 
-    /**
-     * ddd-prod
-     *
-     * @param ocServerGroup
-     * @param envType
-     * @return
-     */
-    protected String toSubgroupName(ServerGroup ocServerGroup, int envType) {
-        return Joiner.on("-").join(ocServerGroup.getName().replace("group_", ""), getEnvName(envType));
+    private ServerPack toServerPack(Server server) {
+        return ServerPack.builder()
+                .property(businessPropertyHelper.getBusinessProperty(server))
+                .env(envService.getByEnvType(server.getEnvType()))
+                .server(server)
+                .build();
+    }
+
+
+    protected String toSubgroupName(ServerGroup serverGroup, Env env) {
+        return Joiner.on("-").join(serverGroup.getName().replace("group_", ""), env.getEnvName());
     }
 
     public String getHeadInfo() {
@@ -68,8 +77,8 @@ public abstract class BaseAlgorithm {
         return Joiner.on(" ").join("#", Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
     }
 
-    protected String getEnvName(int envType) {
-        return envService.getByEnvType(envType).getEnvName();
-    }
+//   protected String getEnvName(int envType) {
+//        return envService.getByEnvType(envType).getEnvName();
+//    }
 
 }

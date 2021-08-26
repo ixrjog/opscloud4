@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.business;
 
+import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.common.util.BusinessPropertyUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -10,6 +11,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Optional;
 
 /**
  * @Author baiyi
@@ -21,6 +23,26 @@ public class BusinessPropertyHelper {
 
     @Resource
     private BusinessPropertyService businessPropertyService;
+
+
+    public static Integer getSshPort(ServerPack serverPack){
+        return Optional.ofNullable(serverPack.getProperty())
+                .map(ServerProperty.Server::getMetadata)
+                .map(ServerProperty.Metadata::getSshPort)
+                .orElse(22);
+    }
+
+    public static String getManageIp(ServerPack serverPack){
+        return getManageIp(serverPack.getServer(),serverPack.getProperty());
+    }
+
+    public static String getManageIp(Server server, ServerProperty.Server property) {
+        String manageIp = Optional.ofNullable(property)
+                .map(ServerProperty.Server::getMetadata)
+                .map(ServerProperty.Metadata::getManageIp)
+                .orElse(server.getPrivateIp());
+        return StringUtils.isEmpty(manageIp) ? server.getPrivateIp() : manageIp;
+    }
 
     public ServerProperty.Server getBusinessProperty(Server server) {
         ServerProperty.Server serverProperty = getServerProperty(server.getId());

@@ -11,11 +11,11 @@ import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
-import com.baiyi.opscloud.util.ServerUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -68,7 +68,7 @@ public class SshServerPacker {
         vo.setServerGroup(serverGroup);
         Env env = envService.getByEnvType(vo.getEnvType());
         vo.setEnv(BeanCopierUtil.copyProperties(env, EnvVO.Env.class));
-        ServerUtil.wrapDisplayName(vo);
+        SimpleServerNameFacade.wrapDisplayName(vo);
         tagPacker.wrap(vo);
         return vo;
     }
