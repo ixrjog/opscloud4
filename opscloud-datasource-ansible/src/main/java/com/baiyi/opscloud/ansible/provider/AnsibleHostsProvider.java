@@ -4,6 +4,7 @@ import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.ansible.convert.AnsibleAssetConvert;
 import com.baiyi.opscloud.ansible.model.AnsibleHosts;
+import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
@@ -81,7 +82,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
             int serverSize = serverService.countByServerGroupId(e.getId());
             if (serverSize > 0) {
                 Map<String, List<ServerPack>> serverSubgroup = serverGroupingAlgorithm.grouping(e);
-                log.info(e.getName());
+                // log.info(e.getName());
                 AnsibleHosts.Group group = AnsibleHosts.Group.builder()
                         .serverGroup(e)
                         .serverMap(serverSubgroup)
@@ -97,7 +98,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     }
 
     @Override
-    //@SingleTask(name = "PullAnsibleHosts", lockTime = "1m")
+    @SingleTask(name = "PullAnsibleHosts", lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
