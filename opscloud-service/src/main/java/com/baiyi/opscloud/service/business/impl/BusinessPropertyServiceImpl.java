@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.service.business.impl;
 
+import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
+import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.BusinessPropertyMapper;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
 import org.springframework.stereotype.Service;
@@ -14,7 +16,6 @@ import javax.annotation.Resource;
  * @Date 2021/7/21 2:41 下午
  * @Since 1.0
  */
-
 @Service
 public class BusinessPropertyServiceImpl implements BusinessPropertyService {
 
@@ -27,19 +28,27 @@ public class BusinessPropertyServiceImpl implements BusinessPropertyService {
     }
 
     @Override
+    @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void add(BusinessProperty businessProperty) {
         businessPropertyMapper.insert(businessProperty);
     }
 
     @Override
+    @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void update(BusinessProperty businessProperty) {
         businessPropertyMapper.updateByPrimaryKey(businessProperty);
     }
 
     @Override
-    public void deleteById(int id) {
-        businessPropertyMapper.deleteByPrimaryKey(id);
+    @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
+    public void delete(BusinessProperty businessProperty) {
+        businessPropertyMapper.deleteByPrimaryKey(businessProperty.getId());
     }
+
+//    @Override
+//    public void deleteById(int id) {
+//        businessPropertyMapper.deleteByPrimaryKey(id);
+//    }
 
     @Override
     public BusinessProperty getByUniqueKey(Integer businessType, Integer businessId) {

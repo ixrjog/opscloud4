@@ -16,7 +16,13 @@ public interface BusinessPropertyService {
 
     void update(BusinessProperty businessProperty);
 
-    void deleteById(int id);
+    void delete(BusinessProperty businessProperty);
+
+    /**
+     * 不监听事件
+     * @param
+     */
+    //void deleteById(int id);
 
     BusinessProperty getByUniqueKey(Integer businessType, Integer businessId);
 

@@ -15,4 +15,12 @@ public abstract class BaseTask {
 
 
 
+    /**
+     * 实例存活检查
+     * @return
+     */
+    protected boolean isHealth() {
+        return true;
+    }
+
 }

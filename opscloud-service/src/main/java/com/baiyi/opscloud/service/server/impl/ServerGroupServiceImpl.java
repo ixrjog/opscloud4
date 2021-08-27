@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
@@ -22,6 +23,7 @@ import java.util.List;
  * @Date 2021/5/24 1:01 下午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
 public class ServerGroupServiceImpl implements ServerGroupService {
 
@@ -42,19 +44,19 @@ public class ServerGroupServiceImpl implements ServerGroupService {
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.SERVERGROUP, eventAction = EventActionTypeEnum.CREATE)
+    @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(ServerGroup serverGroup) {
         serverGroupMapper.insert(serverGroup);
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.SERVERGROUP, eventAction = EventActionTypeEnum.UPDATE)
+    @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void update(ServerGroup serverGroup) {
         serverGroupMapper.updateByPrimaryKey(serverGroup);
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.SERVERGROUP, eventAction = EventActionTypeEnum.DELETE)
+    @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
     public void delete(ServerGroup serverGroup) {
         serverGroupMapper.deleteByPrimaryKey(serverGroup.getId());
     }

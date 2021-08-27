@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.event.customer.impl;
 
 import com.baiyi.opscloud.common.base.Global;
+import com.baiyi.opscloud.common.topic.TopicHelper;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.event.IEvent;
 import com.baiyi.opscloud.event.NoticeEvent;
@@ -9,12 +10,17 @@ import com.baiyi.opscloud.event.customer.IEventConsumer;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
+import javax.annotation.Resource;
+
 /**
  * @Author baiyi
  * @Date 2021/8/17 7:02 下午
  * @Version 1.0
  */
 public abstract class AbstractEventConsumer<T> implements IEventConsumer, InitializingBean {
+
+    @Resource
+    protected TopicHelper topicHelper;
 
     @Override
     @Async(value = Global.TaskPools.COMMON)

@@ -15,7 +15,16 @@ import java.lang.annotation.*;
 @Target({ElementType.TYPE, ElementType.METHOD})
 public @interface EventPublisher {
 
-    BusinessTypeEnum eventType();
+    /**
+     * 优先级
+     * 1: value
+     * 2: @BusinessType注解指定
+     * 3: 方法参数 BaseBusiness.IBusiness
+     *
+     *
+     * @return
+     */
+    BusinessTypeEnum value() default BusinessTypeEnum.COMMON;
 
     EventActionTypeEnum eventAction();
 }

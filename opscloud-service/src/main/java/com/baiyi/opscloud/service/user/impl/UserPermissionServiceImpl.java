@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
@@ -17,6 +18,7 @@ import java.util.List;
  * @Date 2021/5/26 5:39 下午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.USER_PERMISSION)
 @Service
 public class UserPermissionServiceImpl implements UserPermissionService {
 
@@ -34,7 +36,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.USER_PERMISSION, eventAction = EventActionTypeEnum.CREATE)
+    @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(UserPermission userPermission) {
         permissionMapper.insert(userPermission);
     }
@@ -45,7 +47,7 @@ public class UserPermissionServiceImpl implements UserPermissionService {
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.USER_PERMISSION, eventAction = EventActionTypeEnum.DELETE)
+    @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
     public void delete(UserPermission userPermission) {
         permissionMapper.delete(userPermission);
     }

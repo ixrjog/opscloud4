@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -21,6 +22,7 @@ import java.util.List;
  * @Date 2021/5/24 9:39 上午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.SERVER)
 @Service
 public class ServerServiceImpl implements ServerService {
 
@@ -62,13 +64,13 @@ public class ServerServiceImpl implements ServerService {
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.SERVER, eventAction = EventActionTypeEnum.CREATE)
+    @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(Server server) {
         serverMapper.insert(server);
     }
 
     @Override
-    @EventPublisher(eventType = BusinessTypeEnum.SERVER, eventAction = EventActionTypeEnum.UPDATE)
+    @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void update(Server server) {
         serverMapper.updateByPrimaryKey(server);
     }
@@ -78,7 +80,7 @@ public class ServerServiceImpl implements ServerService {
         serverMapper.deleteByPrimaryKey(id);
     }
 
-    @EventPublisher(eventType = BusinessTypeEnum.SERVER, eventAction = EventActionTypeEnum.DELETE)
+    @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
     public void delete(Server server) {
         serverMapper.deleteByPrimaryKey(server.getId());
     }
