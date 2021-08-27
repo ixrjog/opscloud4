@@ -49,7 +49,6 @@ public class EventPublisherAspect {
         Object[] args = joinPoint.getArgs();// 获取参数值
 
         if (params != null && params.length != 0) {
-            //Integer businessId = Integer.valueOf(args[0].toString());
             if (eventPublisher.value() == BusinessTypeEnum.COMMON) {
                 // 通过@BusinessType 获取业务类型
                 if (joinPoint.getTarget().getClass().isAnnotationPresent(BusinessType.class)) {
@@ -63,8 +62,7 @@ public class EventPublisherAspect {
                     publishEvent(simpleEvent);
                 } else {
                     // 从参数获取
-                    Object body = args[0];
-                    publishEventBusiness(body, eventPublisher.eventAction().name());
+                    publishEventBusiness(args[0], eventPublisher.eventAction().name());
                 }
             } else {
                 Object body = args[0];
