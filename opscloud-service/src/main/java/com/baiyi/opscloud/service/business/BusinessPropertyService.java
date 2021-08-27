@@ -18,12 +18,6 @@ public interface BusinessPropertyService {
 
     void delete(BusinessProperty businessProperty);
 
-    /**
-     * 不监听事件
-     * @param
-     */
-    //void deleteById(int id);
-
     BusinessProperty getByUniqueKey(Integer businessType, Integer businessId);
 
     default BusinessProperty getByUniqueKey(BaseBusiness.IBusiness iBusiness) {

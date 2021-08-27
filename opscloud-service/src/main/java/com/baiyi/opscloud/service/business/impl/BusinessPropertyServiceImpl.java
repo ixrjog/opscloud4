@@ -45,11 +45,6 @@ public class BusinessPropertyServiceImpl implements BusinessPropertyService {
         businessPropertyMapper.deleteByPrimaryKey(businessProperty.getId());
     }
 
-//    @Override
-//    public void deleteById(int id) {
-//        businessPropertyMapper.deleteByPrimaryKey(id);
-//    }
-
     @Override
     public BusinessProperty getByUniqueKey(Integer businessType, Integer businessId) {
         Example example = new Example(BusinessProperty.class);
