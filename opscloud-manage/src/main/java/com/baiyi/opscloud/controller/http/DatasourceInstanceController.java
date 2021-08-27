@@ -3,7 +3,10 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetSubscriptionParam;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -25,6 +28,9 @@ public class DatasourceInstanceController {
 
     @Resource
     private DsInstanceFacade dsInstanceFacade;
+
+    @Resource
+    private DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
 
     @ApiOperation(value = "分页查询数据源资产列表")
     @PostMapping(value = "/asset/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -60,4 +66,9 @@ public class DatasourceInstanceController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "分页查询数据源资产订阅列表")
+    @PostMapping(value = "/asset/subscription/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<DsAssetSubscriptionVO.AssetSubscription>> queryAssetSubscriptionPage(@RequestBody @Valid DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
+        return new HttpResult<>(dsInstanceAssetSubscriptionFacade.queryAssetSubscriptionPage(pageQuery));
+    }
 }

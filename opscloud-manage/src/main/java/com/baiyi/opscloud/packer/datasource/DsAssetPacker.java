@@ -47,6 +47,12 @@ public class DsAssetPacker {
     @Resource
     private TagPacker tagPacker;
 
+    public void wrap(DsAssetVO.IDsAsset iDsAsset) {
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iDsAsset.getAssetId());
+        if (asset == null) return;
+        iDsAsset.setAsset(toVO(asset));
+    }
+
     public DsAssetVO.Asset wrap(DsInstanceVO.Instance instance, DatasourceInstanceAsset dsInstanceAsset) {
         DsAssetVO.Asset asset = BeanCopierUtil.copyProperties(dsInstanceAsset, DsAssetVO.Asset.class);
         asset.setDsInstance(instance);

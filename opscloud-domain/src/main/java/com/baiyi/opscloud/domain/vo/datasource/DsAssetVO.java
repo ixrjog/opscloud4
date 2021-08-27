@@ -22,6 +22,13 @@ import java.util.Map;
  */
 public class DsAssetVO {
 
+    public interface IDsAsset {
+        Integer getAssetId();
+
+        void setAsset(Asset asset);
+
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor

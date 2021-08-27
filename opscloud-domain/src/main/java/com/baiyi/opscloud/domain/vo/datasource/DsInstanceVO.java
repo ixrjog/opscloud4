@@ -16,6 +16,14 @@ import java.util.List;
  */
 public class DsInstanceVO {
 
+    public interface IDsInstance {
+
+        String getInstanceUuid();
+
+        void setInstance(Instance instance);
+
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Builder
     @AllArgsConstructor
