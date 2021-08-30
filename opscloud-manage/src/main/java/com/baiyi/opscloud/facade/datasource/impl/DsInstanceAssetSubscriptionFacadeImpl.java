@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetSubscriptionParam;
@@ -30,9 +31,28 @@ public class DsInstanceAssetSubscriptionFacadeImpl implements DsInstanceAssetSub
     public DataTable<DsAssetSubscriptionVO.AssetSubscription> queryAssetSubscriptionPage(DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
         DataTable<DatasourceInstanceAssetSubscription> table = dsInstanceAssetSubscriptionService.queryPageByParam(pageQuery);
         return new DataTable<>(
-                table.getData().stream().map(e->dsAssetSubscriptionPacker.wrapToVO(e,pageQuery)).collect(Collectors.toList()),
+                table.getData().stream().map(e -> dsAssetSubscriptionPacker.wrapToVO(e, pageQuery)).collect(Collectors.toList()),
                 table.getTotalNum());
     }
 
+    @Override
+    public void updateAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+        DatasourceInstanceAssetSubscription pre = BeanCopierUtil.copyProperties(assetSubscription, DatasourceInstanceAssetSubscription.class);
+        DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription = dsInstanceAssetSubscriptionService.getById(assetSubscription.getId());
+        datasourceInstanceAssetSubscription.setPlaybook(pre.getPlaybook());
+        datasourceInstanceAssetSubscription.setVars(pre.getVars());
+        dsInstanceAssetSubscriptionService.update(datasourceInstanceAssetSubscription);
+    }
+
+    @Override
+    public void addAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+        DatasourceInstanceAssetSubscription pre = BeanCopierUtil.copyProperties(assetSubscription, DatasourceInstanceAssetSubscription.class);
+        dsInstanceAssetSubscriptionService.add(pre);
+    }
+
+    @Override
+    public void deleteAssetSubscriptionById(int id) {
+        dsInstanceAssetSubscriptionService.deleteById(id);
+    }
 
 }

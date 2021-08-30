@@ -12,4 +12,11 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
 public interface DsInstanceAssetSubscriptionFacade {
 
     DataTable<DsAssetSubscriptionVO.AssetSubscription> queryAssetSubscriptionPage(DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery);
+
+    void updateAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
+
+    void addAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
+
+    void deleteAssetSubscriptionById(int id);
+
 }

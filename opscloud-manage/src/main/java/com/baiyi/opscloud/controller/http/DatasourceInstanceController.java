@@ -71,4 +71,26 @@ public class DatasourceInstanceController {
     public HttpResult<DataTable<DsAssetSubscriptionVO.AssetSubscription>> queryAssetSubscriptionPage(@RequestBody @Valid DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
         return new HttpResult<>(dsInstanceAssetSubscriptionFacade.queryAssetSubscriptionPage(pageQuery));
     }
+
+    @ApiOperation(value = "新增数据源资产订阅")
+    @PostMapping(value = "/asset/subscription/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> addAssetSubscription(@RequestBody @Valid DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+        dsInstanceAssetSubscriptionFacade.addAssetSubscription(assetSubscription);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "更新数据源资产订阅")
+    @PutMapping(value = "/asset/subscription/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> updateAssetSubscription(@RequestBody @Valid DsAssetSubscriptionVO.AssetSubscription assetSubscription) {
+        dsInstanceAssetSubscriptionFacade.updateAssetSubscription(assetSubscription);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除指定的数据源资产订阅")
+    @DeleteMapping(value = "/asset/subscription/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteAssetSubscriptionById(@RequestParam @Valid int id) {
+        dsInstanceAssetSubscriptionFacade.deleteAssetSubscriptionById(id);
+        return HttpResult.SUCCESS;
+    }
+
 }

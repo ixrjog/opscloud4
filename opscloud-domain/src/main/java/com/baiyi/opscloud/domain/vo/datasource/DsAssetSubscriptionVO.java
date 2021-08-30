@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 /**
@@ -32,11 +33,10 @@ public class DsAssetSubscriptionVO {
 
         private Integer id;
 
+        @NotNull(message = "必须指定数据源实例uuid")
         private String instanceUuid;
 
-        /**
-         * 资产id
-         */
+        @NotNull(message = "必须指定资产id")
         private Integer datasourceInstanceAssetId;
 
         /**
