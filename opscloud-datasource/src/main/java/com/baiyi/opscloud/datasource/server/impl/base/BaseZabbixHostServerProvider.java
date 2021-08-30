@@ -160,7 +160,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
         if (CollectionUtils.isEmpty(zabbixTemplates)) {
             return CollectionUtils.isEmpty(property.getZabbix().getTemplates());
         } else {
-            if (CollectionUtils.isEmpty(property.getZabbix().getTemplates())) {
+            if (property.getZabbix() == null || CollectionUtils.isEmpty(property.getZabbix().getTemplates())) {
                 return false;
             } else {
                 Set<String> templateNamSet = Sets.newHashSet();
@@ -175,6 +175,13 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
                 return CollectionUtils.isEmpty(templateNamSet);
             }
         }
+    }
+
+    protected boolean isEnabled(ServerProperty.Server property) {
+        return Optional.ofNullable(property)
+                .map(ServerProperty.Server::getZabbix)
+                .map(ServerProperty.Zabbix::getEnable)
+                .orElse(false);
     }
 
     protected ZabbixHostParam.Tag buildTagsParams(Server server) {

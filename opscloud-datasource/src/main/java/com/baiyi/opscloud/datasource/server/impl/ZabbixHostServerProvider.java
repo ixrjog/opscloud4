@@ -14,8 +14,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import java.util.Optional;
-
 import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.HOST_IDS;
 import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RESULT;
 
@@ -31,11 +29,7 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
     @Override
     protected void doCreate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
-        boolean enable = Optional.ofNullable(property)
-                .map(ServerProperty.Server::getZabbix)
-                .map(ServerProperty.Zabbix::getEnable)
-                .orElse(false);
-        if (!enable) return;
+        if (!isEnabled(property)) return;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.CREATE)
                 .paramEntry("host", SimpleServerNameFacade.toServerName(server))
@@ -55,6 +49,7 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
     @Override
     protected void doUpdate(Server server) {
         ServerProperty.Server property = getBusinessProperty(server);
+        if (!isEnabled(property)) return;
         String manageIp = getManageIp(server, property);
         ZabbixHost zabbixHost = null;
         try {

@@ -25,7 +25,7 @@ public class ServerProperty {
 
     @Builder
     @Data
-    public static class Metadata implements Serializable{
+    public static class Metadata implements Serializable {
         @Builder.Default
         private Integer sshPort = 22;
         @Builder.Default
@@ -39,9 +39,9 @@ public class ServerProperty {
 
     @Builder
     @Data
-    public static class Zabbix implements Serializable{
+    public static class Zabbix implements Serializable {
         @Builder.Default
-        private Boolean enable = false;
+        private Boolean enabled = false;
         private List<String> templates;
         @Builder.Default
         private Boolean templateUniformity = false;
@@ -51,7 +51,7 @@ public class ServerProperty {
 
     @Data
     @Builder
-    public static class Ansible implements Serializable{
+    public static class Ansible implements Serializable {
         @Builder.Default
         private Integer subgroup = 2;
     }
