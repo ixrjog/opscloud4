@@ -82,7 +82,6 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
             int serverSize = serverService.countByServerGroupId(e.getId());
             if (serverSize > 0) {
                 Map<String, List<ServerPack>> serverSubgroup = serverGroupingAlgorithm.grouping(e);
-                // log.info(e.getName());
                 AnsibleHosts.Group group = AnsibleHosts.Group.builder()
                         .serverGroup(e)
                         .serverMap(serverSubgroup)

@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
@@ -22,6 +23,7 @@ import java.util.Set;
  * @Date 2021/5/28 1:28 下午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class ServerGroupingAlgorithm extends BaseAlgorithm {
 
@@ -36,17 +38,18 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
      */
     @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'server_grouping_algorithm_servergroupid_' + #serverGroup.id", unless = "#result == null")
     public Map<String, List<ServerPack>> grouping(ServerGroup serverGroup) {
+        log.info("服务器分组: serverGroupName = {}", serverGroup.getName());
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
         if (serverMap.isEmpty()) return serverMap;
         int subgroup = 2; // 分2组
         Set<String> keSet = Sets.newHashSet(serverMap.keySet());
-        keSet.forEach(k -> {
+        for (String k : keSet) {
             List<ServerPack> servers = serverMap.get(k);
             if (servers.size() >= 2) {
                 groupingSubgroup(serverMap, servers, k, subgroup);
                 serverMap.remove(k);
             }
-        });
+        }
         return serverMap;
     }
 
