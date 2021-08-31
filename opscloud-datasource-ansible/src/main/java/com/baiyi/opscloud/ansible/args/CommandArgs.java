@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.ansible.args;
 
+import com.baiyi.opscloud.ansible.args.base.IAnsbileArgs;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,7 +11,7 @@ import lombok.Data;
  */
 @Data
 @Builder
-public class CommandArgs {
+public class CommandArgs implements IAnsbileArgs {
 
     /**
      * host pattern

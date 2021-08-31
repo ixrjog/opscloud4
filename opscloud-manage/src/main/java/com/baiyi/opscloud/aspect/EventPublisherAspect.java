@@ -17,8 +17,10 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
+import java.util.Objects;
 
 /**
+ * 发布事件AOP
  * @Author baiyi
  * @Date 2021/8/17 6:07 下午
  * @Version 1.0
@@ -83,7 +85,7 @@ public class EventPublisherAspect {
             Object body = getBody(ib);
             if (body == null) return;
             SimpleEvent simpleEvent = SimpleEvent.builder()
-                    .eventType(BusinessTypeEnum.getByType(ib.getBusinessType()).name())
+                    .eventType(Objects.requireNonNull(BusinessTypeEnum.getByType(ib.getBusinessType())).name())
                     .action(action)
                     .body(body)
                     .build();

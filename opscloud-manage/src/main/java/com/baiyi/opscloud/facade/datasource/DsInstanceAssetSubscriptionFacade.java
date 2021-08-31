@@ -15,6 +15,8 @@ public interface DsInstanceAssetSubscriptionFacade {
 
     void updateAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
 
+    void publishAssetSubscriptionById(int id);
+
     void addAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
 
     void deleteAssetSubscriptionById(int id);

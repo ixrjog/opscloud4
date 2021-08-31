@@ -25,6 +25,11 @@ public abstract class SimpleDsInstanceProvider {
     @Resource
     private CredentialService credentialService;
 
+    protected DsInstanceContext buildDsInstanceContext(String dsInstanceUuid) {
+        DatasourceInstance dsInstance = dsInstanceService.getByUuid(dsInstanceUuid);
+        return buildDsInstanceContext(dsInstance);
+    }
+
     protected DsInstanceContext buildDsInstanceContext(int dsInstanceId) {
         DatasourceInstance dsInstance = dsInstanceService.getById(dsInstanceId);
         return buildDsInstanceContext(dsInstance);

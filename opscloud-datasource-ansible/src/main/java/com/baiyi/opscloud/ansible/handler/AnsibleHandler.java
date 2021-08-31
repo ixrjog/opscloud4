@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.ansible.handler;
 
-import com.baiyi.opscloud.ansible.model.ExecResult;
+import com.baiyi.opscloud.ansible.model.AnsibleExecuteResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.apache.commons.exec.ExecuteWatchdog;
 import org.apache.commons.exec.PumpStreamHandler;
-import org.springframework.stereotype.Component;
 
 import java.io.ByteArrayOutputStream;
 
@@ -16,7 +15,6 @@ import java.io.ByteArrayOutputStream;
  * @Version 1.0
  */
 @Slf4j
-@Component
 public class AnsibleHandler {
 
     // 100 分钟
@@ -29,7 +27,7 @@ public class AnsibleHandler {
      * @param timeout
      * @return
      */
-    public ExecResult execute(CommandLine commandLine, Long timeout) {
+    public static AnsibleExecuteResult execute(CommandLine commandLine, Long timeout) {
         if (timeout == 0)
             timeout = MAX_TIMEOUT;
         try {
@@ -42,16 +40,16 @@ public class AnsibleHandler {
             exec.setExitValues(null);
             PumpStreamHandler streamHandler = new PumpStreamHandler(outputStream, errorStream);
             exec.setStreamHandler(streamHandler);
-            int exitCode = exec.execute(commandLine);
-            return ExecResult.builder()
-                    .exitCode(exitCode)
-                    .outputStream(outputStream)
-                    .errorStream(errorStream)
+            int exitValue = exec.execute(commandLine);
+            return AnsibleExecuteResult.builder()
+                    .exitValue(exitValue)
+                    .output(outputStream)
+                    .error(errorStream)
                     .build();
         } catch (Exception e) {
-            ExecResult taskResult = ExecResult.FAILED;
-            taskResult.setExceptionMsg(e.getMessage());
-            return taskResult;
+            AnsibleExecuteResult result = AnsibleExecuteResult.FAILED;
+            result.setException(e);
+            return result;
         }
     }
 }

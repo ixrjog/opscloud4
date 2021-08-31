@@ -86,11 +86,19 @@ public class DatasourceInstanceController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "发布数据源资产订阅")
+    @PutMapping(value = "/asset/subscription/publish", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> publishAssetSubscription(@RequestParam @Valid int id) {
+        dsInstanceAssetSubscriptionFacade.publishAssetSubscriptionById(id);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "删除指定的数据源资产订阅")
     @DeleteMapping(value = "/asset/subscription/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteAssetSubscriptionById(@RequestParam @Valid int id) {
         dsInstanceAssetSubscriptionFacade.deleteAssetSubscriptionById(id);
         return HttpResult.SUCCESS;
     }
+
 
 }

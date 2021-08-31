@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
+import com.baiyi.opscloud.util.time.AgoUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,6 +28,7 @@ public class DsAssetSubscriptionPacker {
         if (iExtend.getExtend()) {
             dsInstancePacker.wrap(vo);
             dsAssetPacker.wrap(vo);
+            AgoUtil.wrap(vo);
         }
         return vo;
     }

@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.domain.vo.datasource;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -20,11 +21,17 @@ public class DsAssetSubscriptionVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class AssetSubscription extends BaseVO implements DsInstanceVO.IDsInstance, DsAssetVO.IDsAsset {
+    public static class AssetSubscription extends BaseVO implements DsInstanceVO.IDsInstance, DsAssetVO.IDsAsset, ShowTime.IAgo {
 
         private DsInstanceVO.Instance instance;
 
         private DsAssetVO.Asset asset;
+
+        public Date getAgoTime() {
+            return lastSubscriptionTime;
+        }
+
+        private String ago;
 
         @Override
         public Integer getAssetId() {

@@ -6,13 +6,13 @@ import com.baiyi.opscloud.ansible.builder.AnsibleCommandArgsBuilder;
 import com.baiyi.opscloud.ansible.builder.AnsiblePlaybookArgsBuilder;
 import com.baiyi.opscloud.ansible.convert.AnsibleAssetConvert;
 import com.baiyi.opscloud.ansible.handler.AnsibleHandler;
-import com.baiyi.opscloud.ansible.model.ExecResult;
+import com.baiyi.opscloud.ansible.model.AnsibleExecuteResult;
+import com.baiyi.opscloud.ansible.model.AnsibleVersion;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.ansible.model.AnsibleVersion;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
@@ -40,9 +40,6 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     
     @Resource
     private AnsibleVersionProvider ansibleVersionProvider;
-
-    @Resource
-    private AnsibleHandler ansibleHandler;
 
     private static final long EXEC_TIMEOUT = 2000L;
 
@@ -74,11 +71,11 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
                 .version(true)
                 .build();
         CommandLine commandLine = AnsibleCommandArgsBuilder.build(ansible, args);
-        ExecResult er = ansibleHandler.execute(commandLine, EXEC_TIMEOUT);
+        AnsibleExecuteResult er = AnsibleHandler.execute(commandLine, EXEC_TIMEOUT);
         try {
             return AnsibleVersion.Version.builder()
                     .executableLocation(ansible.getAnsible())
-                    .details(er.getOutputStream().toString("utf8"))
+                    .details(er.getOutput().toString("utf8"))
                     .type(AnsibleVersion.VersionType.ANSIBLE)
                     .build();
         } catch (UnsupportedEncodingException e) {
@@ -91,11 +88,11 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
                 .version(true)
                 .build();
         CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
-        ExecResult er = ansibleHandler.execute(commandLine, EXEC_TIMEOUT);
+        AnsibleExecuteResult er = AnsibleHandler.execute(commandLine, EXEC_TIMEOUT);
         try {
             return AnsibleVersion.Version.builder()
                     .executableLocation(ansible.getPlaybook())
-                    .details(er.getOutputStream().toString("utf8"))
+                    .details(er.getOutput().toString("utf8"))
                     .type(AnsibleVersion.VersionType.ANSIBLE_PLAYBOOK)
                     .build();
         } catch (UnsupportedEncodingException e) {

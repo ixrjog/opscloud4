@@ -24,8 +24,8 @@ public class ExecResult {
     @Builder.Default
     private int exitCode = -1;
 
-    private ByteArrayOutputStream outputStream;
-    private ByteArrayOutputStream errorStream;
+    private ByteArrayOutputStream output;
+    private ByteArrayOutputStream error;
 
     private String exceptionMsg;
 

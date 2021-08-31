@@ -12,7 +12,8 @@ import java.util.Date;
  */
 public class AgoUtil {
 
-    private AgoUtil(){}
+    private AgoUtil() {
+    }
 
     private static final long ONE_MINUTE = 60000L;
     private static final long ONE_HOUR = 3600000L;
@@ -38,7 +39,8 @@ public class AgoUtil {
 
     }
 
-    public static void wrap(ShowTime.IAgo iAgo){
+    public static void wrap(ShowTime.IAgo iAgo) {
+        if (iAgo.getAgoTime() == null) return;
         iAgo.setAgo(format(iAgo.getAgoTime()));
     }
 
