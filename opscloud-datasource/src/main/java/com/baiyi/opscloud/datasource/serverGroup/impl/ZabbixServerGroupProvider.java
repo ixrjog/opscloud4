@@ -57,7 +57,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
         ServerProperty.Server property = getBusinessProperty(serverGroup);
         boolean enable = Optional.ofNullable(property)
                 .map(ServerProperty.Server::getZabbix)
-                .map(ServerProperty.Zabbix::getEnable)
+                .map(ServerProperty.Zabbix::getEnabled)
                 .orElse(false);
         if (!enable) return;
         zabbixFacade.getOrCreateHostGroup(configContext.get(), serverGroup.getName());

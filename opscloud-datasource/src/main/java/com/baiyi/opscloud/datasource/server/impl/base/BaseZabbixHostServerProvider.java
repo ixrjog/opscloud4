@@ -180,7 +180,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     protected boolean isEnabled(ServerProperty.Server property) {
         return Optional.ofNullable(property)
                 .map(ServerProperty.Server::getZabbix)
-                .map(ServerProperty.Zabbix::getEnable)
+                .map(ServerProperty.Zabbix::getEnabled)
                 .orElse(false);
     }
 
