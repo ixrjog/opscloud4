@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.facade.user.impl;
 
+import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.PasswordUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.datasource.manager.DsAccountManager;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
@@ -21,6 +21,7 @@ import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserFacade;
+import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
@@ -58,7 +59,7 @@ public class UserFacadeImpl implements UserFacade {
     private ServerFacade serverFacade;
 
     @Resource
-    private DsAccountManager dsAccountManager;
+    private UserPermissionFacade userPermissionFacade;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -82,9 +83,22 @@ public class UserFacadeImpl implements UserFacade {
         user.setId(newUser.getId());
     }
 
+    /**
+     * 此处增强鉴权，只有管理员可以修改其他用户信息，否则只能修改本人信息
+     *
+     * @param user
+     */
     @Override
     public void updateUser(UserVO.User user) {
+        User checkUser = userService.getById(user.getId());
+        if (!checkUser.getUsername().equals(SessionUtil.getUsername())) {
+            int accessLevel = userPermissionFacade.getUserAccessLevel(SessionUtil.getUsername());
+            if (accessLevel < AccessLevel.OPS.getLevel()) {
+                throw new CommonRuntimeException("权限不足:需要管理员才能修改其他用户信息!");
+            }
+        }
         User updateUser = userPacker.toDO(user);
+        updateUser.setUsername(checkUser.getUsername());
         userService.updateBySelective(updateUser);
     }
 

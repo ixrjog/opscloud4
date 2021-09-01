@@ -25,13 +25,13 @@ import java.util.Map;
  */
 public class UserVO {
 
-    public interface IUser {
-
+    public interface IUsername {
         String getUsername();
-
-        void setUser(UserVO.User user);
     }
 
+    public interface IUser extends IUsername {
+        void setUser(UserVO.User user);
+    }
 
     public interface IUserPermission extends BaseBusiness.IBusiness {
 
@@ -47,7 +47,6 @@ public class UserVO {
     @ApiModel
     public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation // 资产与业务对象绑定关系
     {
-
         private final Integer businessType = BusinessTypeEnum.USER.getType();
 
         @Override
