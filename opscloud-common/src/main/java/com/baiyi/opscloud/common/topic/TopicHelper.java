@@ -33,7 +33,7 @@ public class TopicHelper {
      * @param message
      */
     public void send(String topic, Object message) {
-        redisUtil.set(Joiner.on("").join(TOPIC_PREFIX, topic), message, TOPIC_CACHE_MAX_TIME);
+        redisUtil.set(buildTopic(topic), message, TOPIC_CACHE_MAX_TIME);
     }
 
     /**
@@ -43,10 +43,15 @@ public class TopicHelper {
      * @return
      */
     public Object receive(String topic) {
-        if (!redisUtil.hasKey(topic)) return null;
-        Object message = redisUtil.get(topic);
-        redisUtil.del(Joiner.on("").join(TOPIC_PREFIX, topic));
+        String topicName = buildTopic(topic);
+        if (!redisUtil.hasKey(topicName)) return null;
+        Object message = redisUtil.get(topicName);
+        redisUtil.del(topicName);
         return message;
+    }
+
+    private String buildTopic(String topic) {
+        return Joiner.on("").join(TOPIC_PREFIX, topic);
     }
 
 
