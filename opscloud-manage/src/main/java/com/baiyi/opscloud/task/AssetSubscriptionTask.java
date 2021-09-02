@@ -5,8 +5,11 @@ import com.baiyi.opscloud.common.topic.TopicHelper;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.task.base.BaseTask;
 import lombok.extern.slf4j.Slf4j;
@@ -41,6 +44,12 @@ public class AssetSubscriptionTask extends BaseTask {
     @Resource
     private AnsibleHostsProvider ansibleHostsProvider;
 
+    @Resource
+    private DsInstanceAssetSubscriptionService dsInstanceAssetSubscriptionService;
+
+    @Resource
+    private DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
+
     /**
      * By setting lockAtMostFor we make sure that the lock is released even if the node dies and by setting
      * `lockAtLeastFor` we make sure it's not executed more than once in fifteen minutes. Please note that
@@ -49,8 +58,9 @@ public class AssetSubscriptionTask extends BaseTask {
      * it may be executed again and the results will be unpredictable (more processes will hold the lock).
      */
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
-    @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "2m", lockAtLeastFor = "2m")
+    @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void assetSubscriptionTask() {
+        log.info("资产订阅任务");
         if (!isHealth()) return;
         if (topicHelper.receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK) == null) return;
         log.info("定时任务开始: 资产订阅！");
@@ -65,7 +75,15 @@ public class AssetSubscriptionTask extends BaseTask {
             List<DatasourceInstanceAsset> assets = dsInstanceAssetService.listByInstanceAssetType(i.getUuid(), DsAssetTypeEnum.ANSIBLE_HOSTS.name());
             if (CollectionUtils.isEmpty(assets)) return;
             ansibleHostsProvider.pullAsset(i.getId());
+            publish(i.getId());
         });
-        ansibleHostsProvider.pullAsset(1);
+    }
+
+    private void publish(int assetId) {
+        List<DatasourceInstanceAssetSubscription> assetSubscriptions = dsInstanceAssetSubscriptionService.queryByAssetId(assetId);
+        if (CollectionUtils.isEmpty(assetSubscriptions)) return;
+        assetSubscriptions.forEach(e ->
+                dsInstanceAssetSubscriptionFacade.publishAssetSubscriptionById(e.getId())
+        );
     }
 }

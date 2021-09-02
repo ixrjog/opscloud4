@@ -45,6 +45,14 @@ public class DsInstanceAssetSubscriptionServiceImpl implements DsInstanceAssetSu
     }
 
     @Override
+    public List<DatasourceInstanceAssetSubscription> queryByAssetId(int assetId) {
+        Example example = new Example(DatasourceInstanceAssetSubscription.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("datasourceInstanceAssetId", assetId);
+        return dsInstanceAssetSubscriptionMapper.selectByExample(example);
+    }
+
+    @Override
     public DataTable<DatasourceInstanceAssetSubscription> queryPageByParam(DsAssetSubscriptionParam.AssetSubscriptionPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(DatasourceInstanceAssetSubscription.class);

@@ -22,6 +22,7 @@ import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.packer.datasource.DsAssetSubscriptionPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.google.common.base.Joiner;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
  * @Date 2021/8/27 4:05 下午
  * @Version 1.0
  */
+@Slf4j
 @Service
 public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvider implements DsInstanceAssetSubscriptionFacade {
 
@@ -90,7 +92,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
             datasourceInstanceAssetSubscription.setLastSubscriptionTime(new Date());
             dsInstanceAssetSubscriptionService.update(datasourceInstanceAssetSubscription);
         } catch (UnsupportedEncodingException e) {
-
+            log.error("发布订阅任务失败！ id = {}", id);
         }
     }
 
