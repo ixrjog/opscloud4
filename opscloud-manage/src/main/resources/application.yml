@@ -1,6 +1,6 @@
 #server:
 #  servlet:
-#    context-path: /cs
+#    context-path: /api
 
 knife4j:
   enable: true

@@ -37,6 +37,7 @@ public class ApplicationResourceVO {
 
         private String name;
 
+        @ApiModelProperty(value = "虚拟资源", example = "true")
         private Boolean virtualResource;
 
         @NotNull(message = "资源类型不能为空")

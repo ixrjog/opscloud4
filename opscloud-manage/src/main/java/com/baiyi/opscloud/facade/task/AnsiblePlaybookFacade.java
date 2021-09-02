@@ -12,4 +12,10 @@ import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 public interface AnsiblePlaybookFacade {
 
     DataTable<AnsiblePlaybookVO.Playbook> queryAnsiblePlaybookPage(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery);
+
+    void updateAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook);
+
+    void addAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook);
+
+    void deleteAnsiblePlaybookById(int id);
 }

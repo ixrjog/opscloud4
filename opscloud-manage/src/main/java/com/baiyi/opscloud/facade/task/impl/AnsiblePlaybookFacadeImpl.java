@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.facade.task.impl;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.param.ansible.AnsiblePlaybookParam;
@@ -24,13 +26,29 @@ public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
     private AnsiblePlaybookService ansiblePlaybookService;
 
     @Resource
-    private AnsiblePlaybookPacker ansiblePlaybookPakcer;
+    private AnsiblePlaybookPacker ansiblePlaybookPacker;
 
     @Override
     public DataTable<AnsiblePlaybookVO.Playbook> queryAnsiblePlaybookPage(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery) {
         DataTable<AnsiblePlaybook> table = ansiblePlaybookService.queryPageByParam(pageQuery);
         return new DataTable<>(
-                table.getData().stream().map(e -> ansiblePlaybookPakcer.toVO(e)).collect(Collectors.toList()),
+                table.getData().stream().map(e -> ansiblePlaybookPacker.toVO(e)).collect(Collectors.toList()),
                 table.getTotalNum());
+    }
+
+    @Override
+    public void updateAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook) {
+        ansiblePlaybookService.update(BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class));
+    }
+
+    @Override
+    public void addAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook) {
+        playbook.setPlaybookUuid(IdUtil.buildUUID());
+        ansiblePlaybookService.add(BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class));
+    }
+
+    @Override
+    public void deleteAnsiblePlaybookById(int id) {
+        ansiblePlaybookService.deleteById(id);
     }
 }

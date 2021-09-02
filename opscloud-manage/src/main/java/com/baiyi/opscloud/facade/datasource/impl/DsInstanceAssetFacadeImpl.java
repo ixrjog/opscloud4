@@ -51,7 +51,6 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
 
             result.addAll(sshKeyAssets.stream().map(a ->
                     dsAssetPacker.wrap(i, a)
-
             ).collect(Collectors.toList()));
 
         });
