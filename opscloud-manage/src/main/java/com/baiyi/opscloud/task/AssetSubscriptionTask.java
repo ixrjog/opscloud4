@@ -60,7 +60,6 @@ public class AssetSubscriptionTask extends BaseTask {
     @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
     @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "5m", lockAtLeastFor = "1m")
     public void assetSubscriptionTask() {
-        log.info("资产订阅任务");
         if (!isHealth()) return;
         if (topicHelper.receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK) == null) return;
         log.info("定时任务开始: 资产订阅！");
