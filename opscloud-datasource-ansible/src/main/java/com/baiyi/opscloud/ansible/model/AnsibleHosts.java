@@ -40,16 +40,16 @@ public class AnsibleHosts {
     public static class Group {
 
         private ServerGroup serverGroup;
+        
         private Map<String, List<ServerPack>> serverMap;
 
         private String sshUser;
 
         public String format() {
             StringBuilder result = new StringBuilder(Joiner.on(" ").skipNulls().join("#", serverGroup.getName(), serverGroup.getComment(), "\n"));
-            serverMap.keySet().forEach(k -> {
+            serverMap.forEach((k,v) -> {
                 result.append("[").append(k).append("]\n");
-                List<ServerPack> serverList = serverMap.get(k);
-                serverList.forEach(s -> result.append(toHostLine(s)));
+                v.forEach(s -> result.append(toHostLine(s)));
                 result.append("\n");
             });
             return result.toString();
