@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.business;
 
+import lombok.Builder;
 import lombok.Data;
 
 /**
@@ -7,6 +8,7 @@ import lombok.Data;
  * @Date 2021/8/27 11:24 上午
  * @Version 1.0
  */
+@Builder
 @Data
 public class SimpleBusiness implements BaseBusiness.IBusiness {
 

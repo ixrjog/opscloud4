@@ -77,6 +77,11 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     @Override
     public void publishAssetSubscriptionById(int id) {
         DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription = dsInstanceAssetSubscriptionService.getById(id);
+        publishAssetSubscription(datasourceInstanceAssetSubscription);
+    }
+
+    @Override
+    public void publishAssetSubscription(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription) {
         DsInstanceContext instanceContext = buildDsInstanceContext(datasourceInstanceAssetSubscription.getInstanceUuid());
         DsAnsibleConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
         PlaybookArgs args = PlaybookArgs.builder()
@@ -92,7 +97,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
             datasourceInstanceAssetSubscription.setLastSubscriptionTime(new Date());
             dsInstanceAssetSubscriptionService.update(datasourceInstanceAssetSubscription);
         } catch (UnsupportedEncodingException e) {
-            log.error("发布订阅任务失败！ id = {}", id);
+            log.error("发布订阅任务失败！id = {}", datasourceInstanceAssetSubscription.getId());
         }
     }
 

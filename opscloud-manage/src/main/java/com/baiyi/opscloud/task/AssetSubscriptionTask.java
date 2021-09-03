@@ -81,8 +81,10 @@ public class AssetSubscriptionTask extends BaseTask {
     private void publish(int assetId) {
         List<DatasourceInstanceAssetSubscription> assetSubscriptions = dsInstanceAssetSubscriptionService.queryByAssetId(assetId);
         if (CollectionUtils.isEmpty(assetSubscriptions)) return;
-        assetSubscriptions.forEach(e ->
-                dsInstanceAssetSubscriptionFacade.publishAssetSubscriptionById(e.getId())
+        assetSubscriptions.forEach(e -> {
+                    log.info("发布订阅配置: assetSubscriptionId = {}", e.getId());
+                    dsInstanceAssetSubscriptionFacade.publishAssetSubscription(e);
+                }
         );
     }
 }

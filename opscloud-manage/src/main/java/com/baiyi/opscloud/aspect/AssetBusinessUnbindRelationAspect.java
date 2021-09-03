@@ -2,7 +2,8 @@ package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.vo.business.SimpleBusiness;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -39,8 +40,12 @@ public class AssetBusinessUnbindRelationAspect {
         String[] params = methodSignature.getParameterNames();// 获取参数名称
         Object[] args = joinPoint.getArgs();// 获取参数值
         if (params != null && params.length != 0) {
-            Integer businessId = Integer.valueOf(args[0].toString());
-            unbindAsset(assetBusinessUnbindRelation.type(),businessId);
+            SimpleBusiness simpleBusiness = SimpleBusiness.builder()
+                    .businessType(assetBusinessUnbindRelation.type().getType())
+                    .businessId(Integer.valueOf(args[0].toString()))
+                    .build();
+
+            unbindAsset(simpleBusiness);
         }
         try {
             return joinPoint.proceed();
@@ -49,9 +54,9 @@ public class AssetBusinessUnbindRelationAspect {
         }
     }
 
-    private void unbindAsset(BusinessTypeEnum businessTypeEnum, Integer businessId){
-        log.info("解除业务对象与资产的绑定关系: businessType = {} , businessId = {}", businessTypeEnum.getType(), businessId);
-        businessAssetRelationFacade.unbindAsset(businessTypeEnum.getType(), businessId);
+    private void unbindAsset(BaseBusiness.IBusiness iBusiness) {
+        log.info("解除业务对象与资产的绑定关系: businessType = {} , businessId = {}", iBusiness.getBusinessType(), iBusiness.getBusinessId());
+        businessAssetRelationFacade.unbindAsset(iBusiness);
     }
 
 }

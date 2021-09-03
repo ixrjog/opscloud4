@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.ansible.handler;
 
 import com.baiyi.opscloud.ansible.model.AnsibleExecuteResult;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
@@ -18,7 +19,7 @@ import java.io.ByteArrayOutputStream;
 public class AnsibleHandler {
 
     // 100 分钟
-    public static final Long MAX_TIMEOUT = 6000000L;
+    public static final long MAX_TIMEOUT = TimeUtil.minuteTime * 100;
 
     /**
      * 阻塞方式运行
@@ -27,7 +28,7 @@ public class AnsibleHandler {
      * @param timeout
      * @return
      */
-    public static AnsibleExecuteResult execute(CommandLine commandLine, Long timeout) {
+    public static AnsibleExecuteResult execute(CommandLine commandLine, long timeout) {
         if (timeout == 0)
             timeout = MAX_TIMEOUT;
         try {

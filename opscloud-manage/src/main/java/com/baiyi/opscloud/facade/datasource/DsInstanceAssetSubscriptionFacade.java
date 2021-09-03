@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.datasource;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetSubscriptionParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
 
@@ -16,6 +17,8 @@ public interface DsInstanceAssetSubscriptionFacade {
     void updateAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
 
     void publishAssetSubscriptionById(int id);
+
+    void publishAssetSubscription(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription);
 
     void addAssetSubscription(DsAssetSubscriptionVO.AssetSubscription assetSubscription);
 

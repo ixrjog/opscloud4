@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.datasource;
 
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 
 /**
@@ -18,8 +19,8 @@ public interface BusinessAssetRelationFacade {
 
     /**
      * 解除业务对象与资产绑定
-     * @param businessType
-     * @param businessId
+     * @param iBusiness
      */
-    void unbindAsset(int businessType, Integer businessId);
+    void unbindAsset(BaseBusiness.IBusiness iBusiness);
+
 }

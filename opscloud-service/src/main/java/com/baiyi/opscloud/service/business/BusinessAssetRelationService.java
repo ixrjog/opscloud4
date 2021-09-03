@@ -2,6 +2,7 @@ package com.baiyi.opscloud.service.business;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 
 import java.util.List;
@@ -50,4 +51,10 @@ public interface BusinessAssetRelationService {
      * @return
      */
     List<BusinessAssetRelation> queryBusinessRelations(int businessType, int businessId);
+
+    default List<BusinessAssetRelation> queryBusinessRelations(BaseBusiness.IBusiness iBusiness) {
+        return queryAssetRelations(iBusiness.getBusinessType(), iBusiness.getBusinessId());
+    }
+
+
 }
