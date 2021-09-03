@@ -75,12 +75,16 @@ public class AssetSubscriptionTask extends BaseTask {
             if (CollectionUtils.isEmpty(assets)) return;
             log.info("构建Ansible主机清单文件！");
             ansibleHostsProvider.pullAsset(i.getId());
-            publish(i.getId());
+            assets.forEach(this::publish);
         });
     }
 
-    private void publish(int assetId) {
-        List<DatasourceInstanceAssetSubscription> assetSubscriptions = dsInstanceAssetSubscriptionService.queryByAssetId(assetId);
+    /**
+     * 发布
+     * @param asset
+     */
+    private void publish(DatasourceInstanceAsset asset) {
+        List<DatasourceInstanceAssetSubscription> assetSubscriptions = dsInstanceAssetSubscriptionService.queryByAssetId(asset.getId());
         if (CollectionUtils.isEmpty(assetSubscriptions)) return;
         assetSubscriptions.forEach(e -> {
                     log.info("发布订阅配置: assetSubscriptionId = {}", e.getId());
