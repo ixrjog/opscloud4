@@ -22,9 +22,9 @@ import javax.annotation.Resource;
  * @Date 2021/5/25 8:57 上午
  * @Version 1.0
  */
+@Slf4j
 @Aspect
 @Component
-@Slf4j
 public class TagClearAspect {
 
     @Resource

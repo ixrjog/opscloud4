@@ -1,8 +1,10 @@
 package com.baiyi.opscloud.task.base;
 
 
+import com.baiyi.opscloud.common.topic.TopicHelper;
 import lombok.extern.slf4j.Slf4j;
 
+import javax.annotation.Resource;
 
 
 /**
@@ -13,14 +15,11 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public abstract class BaseTask {
 
+    @Resource
+    private TopicHelper topicHelper;
 
-
-    /**
-     * 实例存活检查
-     * @return
-     */
-    protected boolean isHealth() {
-        return true;
+    protected Object receive(String topic) {
+        return topicHelper.receive(topic);
     }
-
+    
 }

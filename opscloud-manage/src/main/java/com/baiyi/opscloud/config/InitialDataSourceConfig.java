@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
-public class InitDataSourceConfig implements ApplicationContextAware {
+public class InitialDataSourceConfig implements ApplicationContextAware {
 
     private static ApplicationContext context;
 
@@ -30,11 +30,11 @@ public class InitDataSourceConfig implements ApplicationContextAware {
     public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
         try {
             context = applicationContext;
-            log.info("校验mysql连接");
             DataSource dataSource = context.getBean("opscloudDataSource", DataSource.class);
             dataSource.getConnection().close();
+            log.info("校验DataSource[Mysql]连接成功!");
         } catch (Exception e) {
-            log.error("初始化mysql连接失败" + e.getMessage());
+            log.error("校验DataSource[Mysql]连接失败:" + e.getMessage());
             // 当检测数据库连接失败时, 停止项目启动
             configurableApplicationContext.close();
         }

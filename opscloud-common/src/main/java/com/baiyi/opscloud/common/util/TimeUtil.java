@@ -28,7 +28,7 @@ public class TimeUtil {
     /**
      * 分钟时间戳
      */
-    public static long minuteTime = 60000;
+    public static long minuteTime = 60000L;
 
     /**
      * 秒时间戳

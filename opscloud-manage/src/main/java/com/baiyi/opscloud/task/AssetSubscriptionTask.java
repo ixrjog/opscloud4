@@ -3,6 +3,7 @@ package com.baiyi.opscloud.task;
 import com.baiyi.opscloud.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.common.topic.TopicHelper;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetSubscription;
@@ -32,8 +33,6 @@ import java.util.List;
 @Component
 public class AssetSubscriptionTask extends BaseTask {
 
-    @Resource
-    private TopicHelper topicHelper;
 
     @Resource
     private DsInstanceService dsInstanceService;
@@ -50,6 +49,8 @@ public class AssetSubscriptionTask extends BaseTask {
     @Resource
     private DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
 
+    @InstanceHealth // 实例健康检查，高优先级
+    @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
     /**
      * By setting lockAtMostFor we make sure that the lock is released even if the node dies and by setting
      * `lockAtLeastFor` we make sure it's not executed more than once in fifteen minutes. Please note that
@@ -57,11 +58,9 @@ public class AssetSubscriptionTask extends BaseTask {
      * that is significantly larger than maximum estimated execution time. If the task takes longer than lockAtMostFor,
      * it may be executed again and the results will be unpredictable (more processes will hold the lock).
      */
-    @Scheduled(initialDelay = 5000, fixedRate = 60 * 1000)
-    @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "5m", lockAtLeastFor = "1m")
+    @SchedulerLock(name = "asset_subscription_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     public void assetSubscriptionTask() {
-        if (!isHealth()) return;
-        if (topicHelper.receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK) == null) return;
+        if (receive(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK) == null) return;
         log.info("定时任务开始: 资产订阅！");
         doTask();
         log.info("定时任务结束: 资产订阅！");
@@ -81,6 +80,7 @@ public class AssetSubscriptionTask extends BaseTask {
 
     /**
      * 发布
+     *
      * @param asset
      */
     private void publish(DatasourceInstanceAsset asset) {
