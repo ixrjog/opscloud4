@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.service.sys;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
+import com.baiyi.opscloud.domain.param.sys.RegisteredInstanceParam;
 
 /**
  * @Author baiyi
@@ -15,9 +17,8 @@ public interface InstanceService {
 
     void deleteById(int id);
 
-
     Instance getByHostIp(String hostIp);
 
-
+    DataTable<Instance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);
 
 }

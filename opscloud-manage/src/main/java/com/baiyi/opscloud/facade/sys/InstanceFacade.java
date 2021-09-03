@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.facade.sys;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.sys.RegisteredInstanceParam;
 import com.baiyi.opscloud.domain.vo.sys.InstanceVO;
 
 /**
@@ -12,4 +14,6 @@ public interface InstanceFacade {
     boolean isHealth();
 
     InstanceVO.Health checkHealth();
+
+    DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage( RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);
 }

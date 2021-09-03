@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.facade.sys.impl;
 
 import com.baiyi.opscloud.common.util.HostUtil;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
+import com.baiyi.opscloud.domain.param.sys.RegisteredInstanceParam;
 import com.baiyi.opscloud.domain.vo.sys.InstanceVO;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
+import com.baiyi.opscloud.packer.sys.RegisteredInstancePacker;
 import com.baiyi.opscloud.service.sys.InstanceService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -12,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -22,14 +26,25 @@ import java.net.UnknownHostException;
 @Service
 public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
+    @Resource
+    private InstanceService instanceService;
+
+    @Resource
+    private RegisteredInstancePacker registeredInstancePacker;
+
     public interface healthStatus {
         String OK = "OK";
         String ERROR = "ERROR";
         String INACTIVE = "INACTIVE";
     }
 
-    @Resource
-    private InstanceService instanceService;
+    @Override
+    public DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery) {
+        DataTable<Instance> table = instanceService.queryRegisteredInstancePage(pageQuery);
+        return new DataTable<>(
+                table.getData().stream().map(e -> registeredInstancePacker.toVO(e)).collect(Collectors.toList()),
+                table.getTotalNum());
+    }
 
     @Override
     public boolean isHealth() {
@@ -41,7 +56,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     public InstanceVO.Health checkHealth() {
         try {
             InetAddress inetAddress = HostUtil.getInetAddress();
-            Instance instance =instanceService.getByHostIp(inetAddress.getHostAddress());
+            Instance instance = instanceService.getByHostIp(inetAddress.getHostAddress());
             if (instance == null)
                 return toHealth(healthStatus.ERROR);
             if (instance.getIsActive()) {
@@ -64,8 +79,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     /**
      * 注册Opscloud实例
      */
-    private void register() {
-        try {
+    private void register() throws UnknownHostException{
             InetAddress inetAddress = HostUtil.getInetAddress();
             // 已存在
             if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) return;
@@ -77,12 +91,10 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
                     .isActive(true)
                     .build();
             instanceService.add(instance);
-        } catch (UnknownHostException ignored) {
-        }
     }
 
     @Override
-    public void afterPropertiesSet() {
+    public void afterPropertiesSet() throws UnknownHostException {
         this.register();
     }
 
