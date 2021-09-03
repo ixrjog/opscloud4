@@ -7,13 +7,11 @@ package com.baiyi.opscloud.common.base;
  */
 public class Global {
 
-
     public static final String SUPER_ADMIN = "super_admin";
-
 
     public interface TaskPools {
         String EXECUTOR = "asyncExecutorTaskPool";
-        String COMMON = "asyncCommonTaskPool";
+        String DEFAULT = "asyncDefaultTaskPool";
     }
 
 

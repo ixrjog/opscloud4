@@ -34,10 +34,11 @@ public class ServerEventCustomer extends AbstractEventConsumer<Server> {
     }
 
     @Override
-    protected void preEventProcessing(NoticeEvent noticeEvent) {
+    protected void preEventHandle(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         serverGroupingAlgorithm.evictGrouping(eventData.getServerGroupId());
         serverTreeUtil.evictWrap(eventData.getServerGroupId());
+        // 发送Topic 定时任务延迟执行
         topicHelper.send(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK, 1);
     }
 

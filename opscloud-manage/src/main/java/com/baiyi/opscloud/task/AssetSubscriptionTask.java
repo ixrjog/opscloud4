@@ -73,6 +73,7 @@ public class AssetSubscriptionTask extends BaseTask {
         instances.forEach(i -> {
             List<DatasourceInstanceAsset> assets = dsInstanceAssetService.listByInstanceAssetType(i.getUuid(), DsAssetTypeEnum.ANSIBLE_HOSTS.name());
             if (CollectionUtils.isEmpty(assets)) return;
+            log.info("构建Ansible主机清单文件！");
             ansibleHostsProvider.pullAsset(i.getId());
             publish(i.getId());
         });

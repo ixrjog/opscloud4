@@ -23,12 +23,12 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
     protected TopicHelper topicHelper;
 
     @Override
-    @Async(value = Global.TaskPools.COMMON)
+    @Async(value = Global.TaskPools.DEFAULT)
     public void onMessage(NoticeEvent noticeEvent) {
-        preEventProcessing(noticeEvent); // 预处理
+        preEventHandle(noticeEvent); // 预处理
         String action = noticeEvent.getMessage().getAction();
         messageRoute(noticeEvent, action);
-        postEventProcessing(noticeEvent); // 后处理
+        postEventHandle(noticeEvent); // 后处理
     }
 
     private void messageRoute(NoticeEvent noticeEvent, String action) {
@@ -59,7 +59,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
      *
      * @param noticeEvent
      */
-    protected void preEventProcessing(NoticeEvent noticeEvent) {
+    protected void preEventHandle(NoticeEvent noticeEvent) {
     }
 
     /**
@@ -67,7 +67,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
      *
      * @param noticeEvent
      */
-    protected void postEventProcessing(NoticeEvent noticeEvent) {
+    protected void postEventHandle(NoticeEvent noticeEvent) {
     }
 
     protected T toEventData(IEvent<T> event) {

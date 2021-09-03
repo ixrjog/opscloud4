@@ -68,7 +68,7 @@ public class ThreadPoolTaskConfigurer {
         return executor;
     }
 
-    @Bean(name = Global.TaskPools.COMMON)
+    @Bean(name = Global.TaskPools.DEFAULT)
     public ThreadPoolTaskExecutor getCommonExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**

@@ -3,6 +3,7 @@ package com.baiyi.opscloud.common.topic;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.google.common.base.Joiner;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -12,6 +13,7 @@ import javax.annotation.Resource;
  * @Date 2021/8/27 10:10 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class TopicHelper {
 
@@ -33,7 +35,9 @@ public class TopicHelper {
      * @param message
      */
     public void send(String topic, Object message) {
-        redisUtil.set(buildTopic(topic), message, TOPIC_CACHE_MAX_TIME);
+        String topicName = buildTopic(topic);
+        log.info("收到消息: topic = {}", topicName);
+        redisUtil.set(topicName, message, TOPIC_CACHE_MAX_TIME);
     }
 
     /**
@@ -45,6 +49,7 @@ public class TopicHelper {
     public Object receive(String topic) {
         String topicName = buildTopic(topic);
         if (!redisUtil.hasKey(topicName)) return null;
+        log.info("接收消息: topic = {}", topicName);
         Object message = redisUtil.get(topicName);
         redisUtil.del(topicName);
         return message;

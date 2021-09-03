@@ -30,7 +30,7 @@ public class EventBusConfig {
 
     @Bean
     public AsyncEventBus asyncEventBus() {
-        ThreadPoolTaskExecutor executor = applicationContext.getBean(Global.TaskPools.COMMON, ThreadPoolTaskExecutor.class);
+        ThreadPoolTaskExecutor executor = applicationContext.getBean(Global.TaskPools.DEFAULT, ThreadPoolTaskExecutor.class);
         return new AsyncEventBus(executor);
     }
 }

@@ -34,7 +34,7 @@ public class ServerGroupEventCustomer extends AbstractEventConsumer<ServerGroup>
     }
 
     @Override
-    protected void preEventProcessing(NoticeEvent noticeEvent) {
+    protected void preEventHandle(NoticeEvent noticeEvent) {
         ServerGroup eventData = toEventData(noticeEvent.getMessage());
         serverGroupingAlgorithm.evictGrouping(eventData.getId());
         serverTreeUtil.evictWrap(eventData.getId());
