@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.aspect;
 
-import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
 import lombok.extern.slf4j.Slf4j;
@@ -38,7 +37,9 @@ public class InstanceHealthAspect implements Ordered {
             log.info("InstanceHealthAspect: passed !");
             return joinPoint.proceed();
         } else {
-            throw new CommonRuntimeException("InstanceHealthAspect: 当前实例不可用！");
+            // throw new CommonRuntimeException("InstanceHealthAspect: 当前实例不可用！");
+            log.error("InstanceHealthAspect: 当前实例不可用 !");
+            return joinPoint;
         }
     }
 

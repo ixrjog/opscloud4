@@ -21,5 +21,5 @@ public abstract class BaseTask {
     protected Object receive(String topic) {
         return topicHelper.receive(topic);
     }
-    
+
 }
