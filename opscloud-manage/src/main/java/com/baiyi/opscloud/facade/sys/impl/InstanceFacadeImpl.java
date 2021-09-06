@@ -52,6 +52,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
         if (instance == null) return;
         instance.setIsActive(!instance.getIsActive());
         instanceService.update(instance);
+        log.info("用户修改注册实例: isActive = {}", instance.getIsActive());
     }
 
     @Override
