@@ -47,5 +47,4 @@ public class EnvFacadeImpl implements EnvFacade {
         return new DataTable<>(EnvPacker.wrapVOList(table.getData()), table.getTotalNum());
     }
 
-
 }

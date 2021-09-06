@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
+import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.EnvService;
@@ -34,6 +35,10 @@ public abstract class BaseAlgorithm {
 
     @Resource
     private BusinessPropertyHelper businessPropertyHelper;
+
+    protected ServerProperty.Server getBusinessProperty(ServerGroup serverGroup) {
+        return businessPropertyHelper.getServerGroupProperty(serverGroup.getId());
+    }
 
     /**
      * 按环境分组
@@ -76,7 +81,6 @@ public abstract class BaseAlgorithm {
         FastDateFormat fastDateFormat = FastDateFormat.getInstance("yyyy-MM-dd HH:mm:ss");
         return Joiner.on(" ").join("#", Global.CREATED_BY, "on", fastDateFormat.format(new Date()), "\n\n");
     }
-
 
 
 }

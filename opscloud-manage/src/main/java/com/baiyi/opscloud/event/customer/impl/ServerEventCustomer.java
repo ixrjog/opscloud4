@@ -37,6 +37,8 @@ public class ServerEventCustomer extends AbstractEventConsumer<Server> {
     protected void preEventHandle(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         serverGroupingAlgorithm.evictGrouping(eventData.getServerGroupId());
+        serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(),true);
+        serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(),false);
         serverTreeUtil.evictWrap(eventData.getServerGroupId());
         // 发送Topic 定时任务延迟执行
         topicHelper.send(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK, 1);

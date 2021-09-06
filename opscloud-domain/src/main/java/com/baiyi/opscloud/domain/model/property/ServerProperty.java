@@ -21,6 +21,8 @@ public class ServerProperty {
         private Metadata metadata = Metadata.builder().build();
         @Builder.Default
         private Zabbix zabbix;
+        @Builder.Default
+        private Ansible ansible;
     }
 
     @Builder
