@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.task.base;
 
 
+import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.topic.TopicHelper;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,6 +15,9 @@ import javax.annotation.Resource;
  */
 @Slf4j
 public abstract class BaseTask {
+
+    @Resource
+    protected RedisUtil redisUtil;
 
     @Resource
     private TopicHelper topicHelper;

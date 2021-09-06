@@ -152,7 +152,14 @@
             <version>1.2.62</version>
         </dependency>
 
-        <!--  yaml工具-->
+        <!-- 系统信息 -->
+        <dependency>
+            <groupId>com.github.oshi</groupId>
+            <artifactId>oshi-core</artifactId>
+            <version>3.9.1</version>
+        </dependency>
+
+        <!--yaml工具-->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>

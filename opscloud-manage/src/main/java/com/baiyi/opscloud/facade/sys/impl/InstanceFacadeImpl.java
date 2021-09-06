@@ -42,7 +42,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     public DataTable<InstanceVO.RegisteredInstance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery) {
         DataTable<Instance> table = instanceService.queryRegisteredInstancePage(pageQuery);
         return new DataTable<>(
-                table.getData().stream().map(e -> registeredInstancePacker.toVO(e)).collect(Collectors.toList()),
+                table.getData().stream().map(e -> registeredInstancePacker.wrapToVO(e, pageQuery)).collect(Collectors.toList()),
                 table.getTotalNum());
     }
 
@@ -79,18 +79,29 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     /**
      * 注册Opscloud实例
      */
-    private void register() throws UnknownHostException{
-            InetAddress inetAddress = HostUtil.getInetAddress();
-            // 已存在
-            if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) return;
-            Instance instance = Instance.builder()
-                    .hostIp(inetAddress.getHostAddress())
-                    .hostname(inetAddress.getHostName())
-                    .name(inetAddress.getCanonicalHostName())
-                    .status(0)
-                    .isActive(true)
-                    .build();
-            instanceService.add(instance);
+    private void register() throws UnknownHostException {
+        InetAddress inetAddress = HostUtil.getInetAddress();
+        // 已存在
+        if (instanceService.getByHostIp(inetAddress.getHostAddress()) != null) return;
+        Instance instance = Instance.builder()
+                .hostIp(inetAddress.getHostAddress())
+                .hostname(inetAddress.getHostName())
+                .name(inetAddress.getCanonicalHostName())
+                .status(0)
+                .isActive(true)
+                .build();
+        instanceService.add(instance);
+    }
+
+    /**
+     * 查询自己
+     * @return
+     * @throws UnknownHostException
+     */
+    @Override
+    public Instance getInstance() throws UnknownHostException {
+        InetAddress inetAddress = HostUtil.getInetAddress();
+        return instanceService.getByHostIp(inetAddress.getHostAddress());
     }
 
     @Override

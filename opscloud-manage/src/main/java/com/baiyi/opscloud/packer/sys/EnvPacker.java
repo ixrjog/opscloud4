@@ -25,11 +25,9 @@ public class EnvPacker {
         return data.stream().map(e -> BeanCopierUtil.copyProperties(e, EnvVO.Env.class)).collect(Collectors.toList());
     }
 
-
     public void wrap(EnvVO.IEnv iEnv) {
         Env env = envService.getByEnvType(iEnv.getEnvType());
         iEnv.setEnv(BeanCopierUtil.copyProperties(env,EnvVO.Env.class));
     }
-
 
 }

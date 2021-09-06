@@ -33,6 +33,8 @@ public class InstanceVO {
     @ApiModel
     public static class RegisteredInstance extends BaseVO {
 
+        private SystemVO.Info systemInfo; // 系统信息
+
         private Integer id;
 
         /**
