@@ -20,6 +20,9 @@ Welcome to the opscloud wiki!
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-10.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-11.png"></img>
 
+#### <span style="color:green">平台演示视频1</span>
+<video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="800px" height="600px" controls="controls"></video>
+
 #### 4.0版本核心设计（前后端全部重构）
 + 事件驱动
 + 万物皆资产
