@@ -43,5 +43,4 @@ public class SystemInfoTask extends BaseTask {
         redisUtil.set(key, SystemInfoUtil.buildInfo(), TimeUtil.dayTime / 1000);
     }
 
-
 }

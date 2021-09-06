@@ -42,6 +42,11 @@ public class InstanceServiceImpl implements InstanceService {
     }
 
     @Override
+    public Instance getById(Integer id){
+        return instanceMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public Instance getByHostIp(String hostIp) {
         Example example = new Example(Instance.class);
         Example.Criteria criteria = example.createCriteria();

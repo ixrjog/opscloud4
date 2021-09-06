@@ -47,6 +47,14 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     }
 
     @Override
+    public void setRegisteredInstanceActive(int id) {
+        Instance instance = instanceService.getById(id);
+        if (instance == null) return;
+        instance.setIsActive(!instance.getIsActive());
+        instanceService.update(instance);
+    }
+
+    @Override
     public boolean isHealth() {
         InstanceVO.Health health = checkHealth();
         return healthStatus.OK.equals(health.getStatus());
@@ -95,6 +103,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
     /**
      * 查询自己
+     *
      * @return
      * @throws UnknownHostException
      */

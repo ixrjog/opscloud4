@@ -17,6 +17,8 @@ public interface InstanceService {
 
     void deleteById(int id);
 
+    Instance getById(Integer id);
+
     Instance getByHostIp(String hostIp);
 
     DataTable<Instance> queryRegisteredInstancePage(RegisteredInstanceParam.RegisteredInstancePageQuery pageQuery);

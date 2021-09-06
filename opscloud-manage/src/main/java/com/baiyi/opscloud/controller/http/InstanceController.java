@@ -33,6 +33,13 @@ public class InstanceController {
         return new HttpResult<>(instanceFacade.queryRegisteredInstancePage(pageQuery));
     }
 
+    @ApiOperation(value = "设置注册实例的有效/无效")
+    @PutMapping(value = "/registered/active/set", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setRegisteredInstanceActive(@RequestParam @Valid int id) {
+        instanceFacade.setRegisteredInstanceActive(id);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "负载均衡健康检查接口")
     @GetMapping(value = "/health/lb-check", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<InstanceVO.Health> checkHealth() {
