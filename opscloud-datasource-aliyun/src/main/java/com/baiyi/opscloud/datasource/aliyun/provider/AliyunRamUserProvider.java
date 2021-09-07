@@ -41,7 +41,7 @@ public class AliyunRamUserProvider extends BaseAssetProvider<ListUsersResponse.U
 
     @Override
     @EnablePullChild(type = DsAssetTypeEnum.RAM_USER)
-    @SingleTask(name = "PullAliyunRamUse", lockTime = "5m")
+    @SingleTask(name = "pull_aliyun_ram_user", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

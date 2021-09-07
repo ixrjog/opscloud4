@@ -40,7 +40,7 @@ public class AliyunRamPolicyProvider extends BaseAssetProvider<ListPoliciesRespo
     private AliyunRamPolicyProvider aliyunRamPolicyProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunRamPolicy", lockTime = "5m")
+    @SingleTask(name = "pull_aliyun_ram_policy", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

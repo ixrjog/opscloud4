@@ -41,7 +41,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     @EnablePullChild(type = DsAssetTypeEnum.VPC)
-    @SingleTask(name = "PullAliyunVpc", lockTime = "5m")
+    @SingleTask(name = "pull_aliyun_vpc", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

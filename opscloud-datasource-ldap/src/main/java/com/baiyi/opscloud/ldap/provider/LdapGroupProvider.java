@@ -58,7 +58,7 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
     }
 
     @Override
-    @SingleTask(name = "PullLdapGroup", lockTime = "5m")
+    @SingleTask(name = "pull_ldap_group", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

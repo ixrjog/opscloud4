@@ -57,7 +57,7 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<Person, Grou
     }
 
     @Override
-    @SingleTask(name = "PullLdapUser", lockTime = "5m")
+    @SingleTask(name = "pull_ldap_user", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

@@ -42,7 +42,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
     private AliyunSecurityGroupProvider aliyunSecurityGroupProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunSecurityGroup")
+    @SingleTask(name = "pull_aliyun_security_group")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

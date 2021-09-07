@@ -41,7 +41,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
     private AliyunRamAccessKeyProvider aliyunRamAccessKeyProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunRamAccessKey")
+    @SingleTask(name = "pull_aliyun_ram_access_key")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

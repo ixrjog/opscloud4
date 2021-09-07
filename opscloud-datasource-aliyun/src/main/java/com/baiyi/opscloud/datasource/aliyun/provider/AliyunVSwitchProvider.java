@@ -42,7 +42,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
     private AliyunVSwitchProvider aliyunVSwitchProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunVSwitch")
+    @SingleTask(name = "pull_aliyun_vswitch")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

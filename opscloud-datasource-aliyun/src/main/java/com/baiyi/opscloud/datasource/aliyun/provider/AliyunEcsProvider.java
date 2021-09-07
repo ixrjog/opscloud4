@@ -39,7 +39,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
     private AliyunEcsProvider aliyunEcsProvider;
 
     @Override
-    @SingleTask(name = "PullAliyunEcs", lockTime = "5m")
+    @SingleTask(name = "pull_aliyun_ecs", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
