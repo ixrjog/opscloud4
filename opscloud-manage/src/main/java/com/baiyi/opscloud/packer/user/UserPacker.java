@@ -1,20 +1,35 @@
 package com.baiyi.opscloud.packer.user;
 
+import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
+import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
+import com.baiyi.opscloud.packer.base.IPacker;
+import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
+import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.util.ExtendUtil;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
@@ -32,7 +47,7 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
-public class UserPacker {
+public class UserPacker implements IPacker<UserVO.User, User> {
 
     @Resource
     private AuthRolePacker authRolePacker;
@@ -48,6 +63,26 @@ public class UserPacker {
 
     @Resource
     private UserAccessTokenPacker userAccessTokenPacker;
+
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
+
+    @Resource
+    private DsInstanceService dsInstanceService;
+
+    @Resource
+    private DsAssetPacker dsAssetPacker;
+
+    @Resource
+    private DsConfigService dsConfigService;
+
+    @Resource
+    private DsConfigFactory dsFactory;
+
+    @Override
+    public UserVO.User toVO(User user) {
+        return BeanCopierUtil.copyProperties(user, UserVO.User.class);
+    }
 
     public List<UserVO.User> wrapVOList(List<User> data) {
         List<UserVO.User> userList = BeanCopierUtil.copyListProperties(data, UserVO.User.class);
@@ -86,6 +121,7 @@ public class UserPacker {
         userCredentialPacker.wrap(user);
         userAccessTokenPacker.wrap(user);
         wrapPermission(user);
+        wrapRamUser(user);
         return desensitizedPacker.desensitized(user);
     }
 
@@ -116,5 +152,43 @@ public class UserPacker {
         });
         user.setBusinessPermissions(businessPermissions);
     }
+
+
+    private void wrapRamUser(UserVO.User user) {
+        DatasourceInstanceAsset param = DatasourceInstanceAsset.builder()
+                .assetType(DsAssetTypeEnum.RAM_USER.name())
+                .assetKey(user.getUsername())
+                .isActive(true)
+                .build();
+
+        List<DatasourceInstanceAsset> data = dsInstanceAssetService.queryAssetByAssetParam(param);
+        if (CollectionUtils.isEmpty(data)) return;
+        List<DsAssetVO.Asset> assets = dsAssetPacker.wrapVOList(data, SimpleExtend.EXTEND, SimpleRelation.RELATION);
+        List<UserVO.RamUser> ramUsers = Lists.newArrayList();
+        for (DsAssetVO.Asset asset : assets) {
+            DatasourceInstance instance = dsInstanceService.getByUuid(asset.getInstanceUuid());
+
+            DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
+            AliyunDsInstanceConfig config = dsFactory.build(datasourceConfig, AliyunDsInstanceConfig.class);
+            config.getAliyun().getAccount().getRamLoginUrl();
+
+            List<DsAssetVO.Asset> accessKeys
+                    = asset.getTree().containsKey(DsAssetTypeEnum.RAM_ACCESS_KEY.name()) ? asset.getTree().get(DsAssetTypeEnum.RAM_ACCESS_KEY.name()) : Lists.newArrayList();
+            List<DsAssetVO.Asset> ramPolicies
+                    = asset.getChildren().containsKey(DsAssetTypeEnum.RAM_POLICY.name()) ? asset.getChildren().get(DsAssetTypeEnum.RAM_POLICY.name()) : Lists.newArrayList();
+            UserVO.RamUser ramUser = UserVO.RamUser.builder()
+                    .username(asset.getAssetKey())
+                    .loginUser(asset.getAssetKey() + config.getAliyun().getAccount().getDomain())
+                    .loginUrl(config.getAliyun().getAccount().getRamLoginUrl())
+                    .instanceName(instance.getInstanceName())
+                    .name(asset.getName())
+                    .accessKeys(accessKeys)
+                    .ramPolicies(ramPolicies)
+                    .build();
+            ramUsers.add(ramUser);
+        }
+        user.setRamUsers(ramUsers);
+    }
+
 
 }

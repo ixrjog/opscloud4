@@ -7,8 +7,6 @@ package com.baiyi.opscloud.packer.base;
  */
 public interface IPacker<V, D> {
 
-
     V toVO(D d);
-
 
 }

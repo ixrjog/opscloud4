@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -36,8 +37,38 @@ public class UserVO {
     public interface IUserPermission extends BaseBusiness.IBusiness {
 
         void setUserPermission(UserPermissionVO.UserPermission userPermission);
+
         Integer getUserId();
     }
+
+    @Builder
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class RamUser {
+
+        @ApiModelProperty(value = "实例名称")
+        private String instanceName;
+
+        private String name;
+
+        private String username;
+
+        @ApiModelProperty(value = "登录用户(username@company-alias): https://help.aliyun.com/document_detail/143060.html")
+        private String loginUser;
+
+        @ApiModelProperty(value = "登录地址")
+        private String loginUrl;
+
+        @ApiModelProperty(value = "AccessKey列表")
+        private List<DsAssetVO.Asset> accessKeys;
+        
+        @ApiModelProperty(value = "策略列表")
+        private List<DsAssetVO.Asset> ramPolicies;
+
+    }
+
 
     @EqualsAndHashCode(callSuper = true)
     @Builder
@@ -66,6 +97,9 @@ public class UserVO {
         private List<AccessTokenVO.AccessToken> accessTokens;
 
         private Map<String, List<IUserPermission>> businessPermissions;
+
+        @ApiModelProperty(value = "阿里云RAM用户列表")
+        private List<RamUser> ramUsers;
 
         @ApiModelProperty(value = "主键")
         @Builder.Default
