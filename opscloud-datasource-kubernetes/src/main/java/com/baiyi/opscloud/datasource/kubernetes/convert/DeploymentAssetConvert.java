@@ -24,19 +24,21 @@ public class DeploymentAssetConvert {
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entry) {
 
+        String namespace = entry.getMetadata().getNamespace();
+        String name =  entry.getMetadata().getName();
         /**
          * 为了兼容多集群中deployment名称相同导致无法拉取资产
          * 资产id使用联合键 namespace:deploymentName
          */
-        String assetId = Joiner.on(":").join(entry.getMetadata().getNamespace(),entry.getMetadata().getName());
+        String assetId = Joiner.on(":").join(namespace,name);
 
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(assetId)
-                .name(entry.getMetadata().getName())
-                .assetKey(entry.getMetadata().getName())
+                .name(name)
+                .assetKey(name)
                 // entry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
-                .assetKey2(entry.getMetadata().getNamespace()) // namespace
+                .assetKey2(namespace) // namespace
                 .kind(entry.getKind())
                 .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
                 .createdTime(toGmtDate(entry.getMetadata().getCreationTimestamp()))
