@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -47,29 +48,32 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
     protected DatasourceInstanceAsset enterEntry(DsInstanceContext dsInstanceContext, S source) {
         DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), source));
         List<T> targets = listTarget(dsInstanceContext, source);
-        targets.forEach(target -> {
-            AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
-            AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
-            DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
-            if (targetAsset == null) {
-                UniqueAssetParam param = UniqueAssetParam.builder()
-                        .assetId(assetContainer.getAsset().getAssetId())
-                        .build();
-                try {
-                    targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
-                } catch (Exception e) {
-                    log.info(e.getMessage(), e);
-                    return;
+        if (!CollectionUtils.isEmpty(targets)) {
+            for (T target : targets) {
+                // 目标关系生产者
+                AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
+                AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
+                DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
+                if (targetAsset == null) {
+                    UniqueAssetParam param = UniqueAssetParam.builder()
+                            .assetId(assetContainer.getAsset().getAssetId())
+                            .build();
+                    try {
+                        targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
+                    } catch (Exception e) {
+                        log.info(e.getMessage());
+                        continue;
+                    }
                 }
+                DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
+                        .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
+                        .sourceAssetId(asset.getId())
+                        .targetAssetId(targetAsset.getId())
+                        .relationType(getTargetAssetKey())
+                        .build();
+                enterRelation(relation);
             }
-            DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
-                    .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
-                    .sourceAssetId(asset.getId())
-                    .targetAssetId(targetAsset.getId())
-                    .relationType(getTargetAssetKey())
-                    .build();
-            enterRelation(relation);
-        });
+        }
         return asset;
     }
 

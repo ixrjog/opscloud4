@@ -73,4 +73,45 @@ public class AliyunRamHandler {
         }
         return Collections.emptyList();
     }
+
+
+    /**
+     * 查询RAM User 所有的策略
+     *
+     * @param regionId
+     * @param aliyun
+     * @param username
+     * @return
+     */
+    public List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(String regionId, DsAliyunConfig.Aliyun aliyun, String username) {
+        ListPoliciesForUserRequest request = new ListPoliciesForUserRequest();
+        request.setUserName(username);
+        try {
+            ListPoliciesForUserResponse response = aliyunHandler.getAcsResponse(regionId, aliyun, request);
+            return response == null ? Collections.emptyList() : response.getPolicies();
+        } catch (ClientException e) {
+            return Collections.emptyList();
+        }
+    }
+
+    /**
+     * 查询 策略授权的所有用户
+     *
+     * @param regionId
+     * @param aliyun
+     * @param policyType
+     * @param policyName
+     * @return
+     */
+    public List<ListEntitiesForPolicyResponse.User> listUsersForPolicy(String regionId, DsAliyunConfig.Aliyun aliyun, String policyType, String policyName) {
+        ListEntitiesForPolicyRequest request = new ListEntitiesForPolicyRequest();
+        request.setPolicyType(policyType);
+        request.setPolicyName(policyName);
+        try {
+            ListEntitiesForPolicyResponse response = aliyunHandler.getAcsResponse(regionId, aliyun, request);
+            return response == null ? Collections.emptyList() : response.getUsers();
+        } catch (ClientException e) {
+            return Collections.emptyList();
+        }
+    }
 }

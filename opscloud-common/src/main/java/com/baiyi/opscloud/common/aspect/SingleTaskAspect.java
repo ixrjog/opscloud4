@@ -63,6 +63,7 @@ public class SingleTaskAspect {
                 return new CommonRuntimeException(ErrorEnum.SINGLE_TASK_RUNNING);
             }
         } catch (Exception e) {
+            e.printStackTrace();
             unlocking(key);
         } finally {
             unlocking(key);

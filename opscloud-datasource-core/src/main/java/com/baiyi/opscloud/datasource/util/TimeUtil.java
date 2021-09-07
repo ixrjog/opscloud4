@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.datasource.util;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -15,7 +17,8 @@ public class TimeUtil {
         String UTC = "yyyy-MM-dd'T'HH:mm'Z'";
     }
 
-    public static Date toGmtDate(String time,String dateFormat) {
+    public static Date toGmtDate(String time, String dateFormat) {
+        if (StringUtils.isEmpty(time)) return new Date();
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         try {
             return format.parse(time);

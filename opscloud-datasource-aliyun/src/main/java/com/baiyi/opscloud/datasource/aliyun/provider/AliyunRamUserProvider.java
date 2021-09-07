@@ -1,22 +1,24 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
+import com.aliyuncs.ram.model.v20150501.ListEntitiesForPolicyResponse;
+import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.annotation.EnablePullChild;
-import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
+import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -31,7 +33,7 @@ import java.util.List;
  * @Since 1.0
  */
 @Component
-public class AliyunRamUserProvider extends BaseAssetProvider<ListUsersResponse.User> {
+public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUsersResponse.User, ListPoliciesResponse.Policy> {
 
     @Resource
     private AliyunRamHandler aliyunRamHandler;
@@ -91,4 +93,33 @@ public class AliyunRamUserProvider extends BaseAssetProvider<ListUsersResponse.U
         AssetProviderFactory.register(aliyunRamUserProvider);
     }
 
+    @Override
+    protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
+        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        List<ListEntitiesForPolicyResponse.User> users = aliyunRamHandler.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
+        List<ListUsersResponse.User> userList = Lists.newArrayList();
+        for (ListEntitiesForPolicyResponse.User user : users) {
+            /**
+             *    private String userId;
+             *         private String userName;
+             *         private String displayName;
+             *         private String mobilePhone;
+             *         private String email;
+             *         private String comments;
+             *         private String createDate;
+             *         private String updateDate;
+             */
+            ListUsersResponse.User u = new ListUsersResponse.User();
+            u.setUserName(user.getUserName());
+            u.setDisplayName(user.getDisplayName());
+            u.setUserId(user.getUserId());
+            userList.add(u);
+        }
+        return userList;
+    }
+
+    @Override
+    public String getTargetAssetKey() {
+        return DsAssetTypeEnum.RAM_POLICY.getType();
+    }
 }
