@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.datasource.util.TimeUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 
 import java.util.Date;
@@ -22,9 +23,16 @@ public class DeploymentAssetConvert {
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entry) {
+
+        /**
+         * 为了兼容多集群中deployment名称相同导致无法拉取资产
+         * 资产id使用联合键 namespace:deploymentName
+         */
+        String assetId = Joiner.on(":").join(entry.getMetadata().getNamespace(),entry.getMetadata().getName());
+
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getMetadata().getName())
+                .assetId(assetId)
                 .name(entry.getMetadata().getName())
                 .assetKey(entry.getMetadata().getName())
                 // entry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
