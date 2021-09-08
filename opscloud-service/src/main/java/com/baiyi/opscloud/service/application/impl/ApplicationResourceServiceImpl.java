@@ -36,7 +36,7 @@ public class ApplicationResourceServiceImpl implements ApplicationResourceServic
     }
 
     @Override
-    public ApplicationResource getByTypeAndId(Integer applicationId, Integer businessType, Integer businessId) {
+    public ApplicationResource getByUniqueKey(Integer applicationId, Integer businessType, Integer businessId) {
         Example example = new Example(ApplicationResource.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("applicationId", applicationId)
