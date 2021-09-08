@@ -2,6 +2,7 @@ package com.baiyi.opscloud.domain.vo.datasource;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -54,6 +55,7 @@ public class DsAssetSubscriptionVO {
         /**
          * 最后订阅时间
          */
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date lastSubscriptionTime;
 
         /**
