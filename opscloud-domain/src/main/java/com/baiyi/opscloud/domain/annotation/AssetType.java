@@ -1,19 +1,20 @@
 package com.baiyi.opscloud.domain.annotation;
 
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 
 import java.lang.annotation.*;
 
 /**
- * 业务类型
+ * 资产类型
+ *
  * @Author baiyi
- * @Date 2021/8/25 3:37 下午
+ * @Date 2021/9/8 3:12 下午
  * @Version 1.0
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target({ElementType.PACKAGE, ElementType.TYPE})
 @Documented
-public @interface BusinessType {
+public @interface AssetType {
 
-    BusinessTypeEnum value();
+    DsAssetTypeEnum value();
 }

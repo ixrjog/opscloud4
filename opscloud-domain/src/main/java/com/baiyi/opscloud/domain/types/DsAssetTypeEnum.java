@@ -1,12 +1,16 @@
 package com.baiyi.opscloud.domain.types;
 
+import lombok.Getter;
+
 /**
  * @Author baiyi
  * @Date 2021/6/21 11:18 上午
  * @Version 1.0
  */
+@Getter
 public enum DsAssetTypeEnum {
 
+    DEFAULT("DEFAULT"),
     GROUP("GROUP"),
     USER("USER"),
     ECS("ECS"),
@@ -33,8 +37,7 @@ public enum DsAssetTypeEnum {
     ZABBIX_TRIGGER("ZABBIX_TRIGGER"),
     ZABBIX_PROBLEM("ZABBIX_PROBLEM"),
     ANSIBLE_VERSION("ANSIBLE_VERSION"),
-    ANSIBLE_HOSTS("ANSIBLE_HOSTS")
-    ;
+    ANSIBLE_HOSTS("ANSIBLE_HOSTS");
 
     private String type;
 

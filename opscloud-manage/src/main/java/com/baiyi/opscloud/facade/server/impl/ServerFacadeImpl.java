@@ -3,13 +3,11 @@ package com.baiyi.opscloud.facade.server.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
-import com.baiyi.opscloud.domain.annotation.BusinessPropertyClear;
-import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.annotation.*;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.packer.server.ServerPacker;
@@ -23,6 +21,7 @@ import javax.annotation.Resource;
  * @Date 2021/5/24 5:45 下午
  * @Version 1.0
  */
+@AssetType(DsAssetTypeEnum.DEFAULT)
 @BusinessType(BusinessTypeEnum.SERVER)
 @Service
 public class ServerFacadeImpl implements ServerFacade {
