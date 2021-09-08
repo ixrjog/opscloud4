@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
  */
 @Data
 @Component
-@ConfigurationProperties(prefix = "opscloud", ignoreInvalidFields = true)
+@ConfigurationProperties(prefix = "opscloud3", ignoreInvalidFields = true)
 public class OcConfig {
 
     private String url;
