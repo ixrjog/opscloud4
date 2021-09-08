@@ -116,7 +116,7 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         if (!StringUtils.isEmpty(asset.getName()))
             criteria.andEqualTo("name", asset.getName());
         if (!StringUtils.isEmpty(asset.getAssetKey()))
-            criteria.andLike("assetKey", asset.getAssetKey());
+            criteria.andLike("assetKey", SQLUtil.toLike(asset.getAssetKey()));
         if (!StringUtils.isEmpty(asset.getAssetKey2()))
             criteria.andEqualTo("assetKey2", asset.getAssetKey2());
         example.setOrderByClause("create_time");
