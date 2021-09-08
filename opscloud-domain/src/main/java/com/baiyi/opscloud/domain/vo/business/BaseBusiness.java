@@ -7,12 +7,12 @@ package com.baiyi.opscloud.domain.vo.business;
  */
 public class BaseBusiness {
 
-    public interface IBusiness {
-
-        Integer getBusinessType();
-
+    public interface IBusiness extends IBusinessType {
         Integer getBusinessId();
     }
 
+    public interface IBusinessType {
+        Integer getBusinessType();
+    }
 
 }

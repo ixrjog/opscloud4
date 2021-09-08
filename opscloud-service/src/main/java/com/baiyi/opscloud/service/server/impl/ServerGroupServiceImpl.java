@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
 import com.baiyi.opscloud.mapper.opscloud.ServerGroupMapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.github.pagehelper.Page;
@@ -25,7 +26,7 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
-public class ServerGroupServiceImpl implements ServerGroupService {
+public class ServerGroupServiceImpl extends AbstractBusinessService<ServerGroup> implements ServerGroupService {
 
     @Resource
     private ServerGroupMapper serverGroupMapper;

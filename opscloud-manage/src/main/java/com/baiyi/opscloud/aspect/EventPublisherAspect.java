@@ -6,8 +6,8 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.event.SimpleEvent;
-import com.baiyi.opscloud.service.server.ServerGroupService;
-import com.baiyi.opscloud.service.server.ServerService;
+import com.baiyi.opscloud.factory.business.BusinessServiceFactory;
+import com.baiyi.opscloud.factory.business.base.IBusinessService;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
@@ -21,6 +21,7 @@ import java.util.Objects;
 
 /**
  * 发布事件AOP
+ *
  * @Author baiyi
  * @Date 2021/8/17 6:07 下午
  * @Version 1.0
@@ -31,12 +32,6 @@ public class EventPublisherAspect {
 
     @Resource
     private ApplicationEventPublisher applicationEventPublisher;
-
-    @Resource
-    private ServerService serverService;
-
-    @Resource
-    private ServerGroupService serverGroupService;
 
     @Pointcut(value = "@annotation(com.baiyi.opscloud.common.annotation.EventPublisher)")
     public void annotationPoint() {
@@ -94,13 +89,9 @@ public class EventPublisherAspect {
     }
 
     private Object getBody(BaseBusiness.IBusiness ib) {
-        if (ib.getBusinessType() == BusinessTypeEnum.SERVER.getType()) {
-            return serverService.getById(ib.getBusinessId());
-        }
-        if (ib.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
-            return serverGroupService.getById(ib.getBusinessId());
-        }
-        return null;
+        IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(ib.getBusinessType());
+        if (iBusinessService == null) return null;
+        return iBusinessService.getById(ib.getBusinessId());
     }
 
     private void publishEvent(SimpleEvent simpleEvent) {

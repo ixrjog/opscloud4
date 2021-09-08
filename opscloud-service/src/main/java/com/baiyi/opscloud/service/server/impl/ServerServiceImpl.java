@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.ServerMapper;
+import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -24,7 +25,7 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.SERVER)
 @Service
-public class ServerServiceImpl implements ServerService {
+public class ServerServiceImpl extends AbstractBusinessService<Server> implements ServerService {
 
     @Resource
     private ServerMapper serverMapper;
