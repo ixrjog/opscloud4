@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.task.impl;
 
+import com.baiyi.opscloud.common.config.OpscloudConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
@@ -9,6 +11,7 @@ import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.facade.task.AnsiblePlaybookFacade;
 import com.baiyi.opscloud.packer.task.AnsiblePlaybookPacker;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
+import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -21,6 +24,9 @@ import java.util.stream.Collectors;
  */
 @Component
 public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
+
+    @Resource
+    private OpscloudConfig opscloudConfig;
 
     @Resource
     private AnsiblePlaybookService ansiblePlaybookService;
@@ -38,13 +44,23 @@ public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
 
     @Override
     public void updateAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook) {
-        ansiblePlaybookService.update(BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class));
+        AnsiblePlaybook ansiblePlaybook = BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class);
+        ansiblePlaybookService.update(ansiblePlaybook);
+        writeFilePlaybook(ansiblePlaybook);
     }
 
     @Override
     public void addAnsiblePlaybook(AnsiblePlaybookVO.Playbook playbook) {
         playbook.setPlaybookUuid(IdUtil.buildUUID());
-        ansiblePlaybookService.add(BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class));
+        AnsiblePlaybook ansiblePlaybook = BeanCopierUtil.copyProperties(playbook, AnsiblePlaybook.class);
+        ansiblePlaybookService.add(ansiblePlaybook);
+        writeFilePlaybook(ansiblePlaybook);
+    }
+
+    private void writeFilePlaybook(AnsiblePlaybook ansiblePlaybook) {
+        String fileName = Joiner.on(".").join(ansiblePlaybook.getPlaybookUuid(), "yml");
+        String path = Joiner.on("/").join(opscloudConfig.getAnsiblePlaybookPath(), fileName);
+        IOUtil.writeFile(ansiblePlaybook.getPlaybook(), path);
     }
 
     @Override

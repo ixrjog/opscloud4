@@ -5,6 +5,10 @@
 knife4j:
   enable: true
 
+opscloud:
+  version: 4.0.0
+  dataPath: ${HOME}/opscloud-data
+
 spring:
   profiles:
     active: '@env@'
