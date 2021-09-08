@@ -25,6 +25,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -95,26 +96,17 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     @Override
     protected List<ListPoliciesResponse.Policy> listEntries(DsInstanceContext dsInstanceContext, ListUsersResponse.User target) {
         DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        List<ListPoliciesForUserResponse.Policy> policies = aliyunRamHandler.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName());
-//        return policies.stream().map(
-//                e -> {
-//                    ListPoliciesResponse.Policy policy = new ListPoliciesResponse.Policy();
-//                    policy.setPolicyName(e.getPolicyName());
-//                    policy.setPolicyType(e.getPolicyType());
-//                    policy.setDescription(e.getDescription());
-//                    return policy;
-//                }).collect(Collectors.toList());
-        List<ListPoliciesResponse.Policy> policyList = Lists.newArrayList();
+        return aliyunRamHandler.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName()).stream().map(this::toTargetEntry
+        ).collect(Collectors.toList());
+    }
 
-        for (ListPoliciesForUserResponse.Policy e : policies) {
-            ListPoliciesResponse.Policy policy = new ListPoliciesResponse.Policy();
-            policy.setPolicyName(e.getPolicyName());
-            policy.setPolicyType(e.getPolicyType());
-            policy.setDescription(e.getDescription());
-            policy.setDefaultVersion(e.getDefaultVersion());
-            policyList.add(policy);
-        }
-        return policyList;
+    private ListPoliciesResponse.Policy toTargetEntry(ListPoliciesForUserResponse.Policy policy) {
+        ListPoliciesResponse.Policy target = new ListPoliciesResponse.Policy();
+        target.setPolicyName(policy.getPolicyName());
+        target.setPolicyType(policy.getPolicyType());
+        target.setDescription(policy.getDescription());
+        target.setDefaultVersion(policy.getDefaultVersion());
+        return target;
     }
 
     @Override

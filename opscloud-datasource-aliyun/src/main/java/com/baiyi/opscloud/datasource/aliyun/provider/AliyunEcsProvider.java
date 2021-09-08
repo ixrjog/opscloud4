@@ -74,7 +74,9 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> instanceList.addAll(aliyunEcsHandler.listInstances(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId ->
+                instanceList.addAll(aliyunEcsHandler.listInstances(regionId, aliyun))
+        );
         return instanceList;
     }
 

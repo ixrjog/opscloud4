@@ -26,6 +26,7 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -96,26 +97,17 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     @Override
     protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
         DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        List<ListEntitiesForPolicyResponse.User> users = aliyunRamHandler.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
-        List<ListUsersResponse.User> userList = Lists.newArrayList();
-        for (ListEntitiesForPolicyResponse.User user : users) {
-            /**
-             *    private String userId;
-             *         private String userName;
-             *         private String displayName;
-             *         private String mobilePhone;
-             *         private String email;
-             *         private String comments;
-             *         private String createDate;
-             *         private String updateDate;
-             */
-            ListUsersResponse.User u = new ListUsersResponse.User();
-            u.setUserName(user.getUserName());
-            u.setDisplayName(user.getDisplayName());
-            u.setUserId(user.getUserId());
-            userList.add(u);
-        }
-        return userList;
+        return aliyunRamHandler.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName())
+                .stream().map(this::toTargetEntry)
+                .collect(Collectors.toList());
+    }
+
+    private ListUsersResponse.User toTargetEntry(ListEntitiesForPolicyResponse.User user) {
+        ListUsersResponse.User target = new ListUsersResponse.User();
+        target.setUserName(user.getUserName());
+        target.setDisplayName(user.getDisplayName());
+        target.setUserId(user.getUserId());
+        return target;
     }
 
     @Override

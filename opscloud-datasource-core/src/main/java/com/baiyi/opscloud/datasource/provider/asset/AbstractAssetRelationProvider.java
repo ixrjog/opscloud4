@@ -49,32 +49,36 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), source));
         List<T> targets = listTarget(dsInstanceContext, source);
         if (!CollectionUtils.isEmpty(targets)) {
-            for (T target : targets) {
-                // 目标关系生产者
-                AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
-                AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
-                DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
-                if (targetAsset == null) {
-                    UniqueAssetParam param = UniqueAssetParam.builder()
-                            .assetId(assetContainer.getAsset().getAssetId())
-                            .build();
-                    try {
-                        targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
-                    } catch (Exception e) {
-                        log.info(e.getMessage());
-                        continue;
-                    }
-                }
-                DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
-                        .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
-                        .sourceAssetId(asset.getId())
-                        .targetAssetId(targetAsset.getId())
-                        .relationType(getTargetAssetKey())
-                        .build();
-                enterRelation(relation);
-            }
+            targets.forEach(target->
+              enterEntry(dsInstanceContext,asset,target)
+            );
         }
         return asset;
+    }
+
+    private void enterEntry(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset ,T target){
+        // 目标关系生产者
+        AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
+        AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
+        DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
+        if (targetAsset == null) {
+            UniqueAssetParam param = UniqueAssetParam.builder()
+                    .assetId(assetContainer.getAsset().getAssetId())
+                    .build();
+            try {
+                targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
+            } catch (Exception e) {
+                log.info(e.getMessage());
+                return;
+            }
+        }
+        DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
+                .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
+                .sourceAssetId(asset.getId())
+                .targetAssetId(targetAsset.getId())
+                .relationType(getTargetAssetKey())
+                .build();
+        enterRelation(relation);
     }
 
     private void enterRelation(DatasourceInstanceAssetRelation relation) {
