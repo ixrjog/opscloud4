@@ -257,14 +257,14 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 podContext.getPodName(),
                 name,
                 lines, baos);
-        // SshContext sshContext = getSshContext();
+        SshContext sshContext = getSshContext();
         TerminalUtil.rawModeSupportVintr(terminal);
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
         SessionOutput sessionOutput = new SessionOutput(sessionId, instanceId);
-        // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
-        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.output());
+        WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
+        // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, terminal.output());
         Thread thread = new Thread(run);
         thread.start();
         while (true) {
