@@ -23,7 +23,7 @@ public abstract class AbstractAssetResourceQuery extends AbstractApplicationReso
     @Autowired
     private DsInstanceFacade dsInstanceFacade;
 
-    private static ThreadLocal<ApplicationResourceParam.ResourcePageQuery> resourceQuery = new ThreadLocal<>();
+    protected static ThreadLocal<ApplicationResourceParam.ResourcePageQuery> resourceQuery = new ThreadLocal<>();
 
     @Override
     public DataTable<ApplicationResourceVO.Resource> queryResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
