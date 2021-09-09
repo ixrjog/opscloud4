@@ -64,8 +64,7 @@ public class DsInstancePacker {
         if (!ExtendUtil.isExtend(iExtend))
             return voList;
 
-        return voList.stream().peek(e ->
-                wrap(e)
+        return voList.stream().peek(this::wrap
         ).collect(Collectors.toList());
     }
 }

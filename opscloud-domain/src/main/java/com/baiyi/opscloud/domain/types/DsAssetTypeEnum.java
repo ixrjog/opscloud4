@@ -10,7 +10,6 @@ import lombok.Getter;
 @Getter
 public enum DsAssetTypeEnum {
 
-    DEFAULT("DEFAULT"),
     GROUP("GROUP"),
     USER("USER"),
     ECS("ECS"),

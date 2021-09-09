@@ -8,17 +8,17 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
-import com.baiyi.opscloud.domain.annotation.BusinessPropertyClear;
-import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
-import com.baiyi.opscloud.domain.annotation.TagClear;
+import com.baiyi.opscloud.domain.annotation.*;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
+import com.baiyi.opscloud.domain.types.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
@@ -27,6 +27,7 @@ import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
+import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
 import com.baiyi.opscloud.packer.server.ServerGroupPacker;
 import com.baiyi.opscloud.packer.server.ServerGroupTypePacker;
 import com.baiyi.opscloud.packer.user.UserPermissionPacker;
@@ -50,9 +51,10 @@ import java.util.stream.Collectors;
  * @Date 2021/5/24 10:33 上午
  * @Version 1.0
  */
+@ApplicationResType(ApplicationResTypeEnum.SERVERGROUP)
 @BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
-public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
+public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
     @Resource
     private ServerGroupService serverGroupService;
@@ -82,14 +84,29 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
     private ServerTreeUtil serverTreeUtil;
 
     @Override
-    public int getBusinessType() {
-        return BusinessTypeEnum.SERVERGROUP.getType();
-    }
-
-    @Override
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {
         DataTable<ServerGroup> table = serverGroupService.queryPageByParam(pageQuery);
         return new DataTable<>(serverGroupPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
+    @Override
+    public DataTable<ApplicationResourceVO.Resource> queryResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
+        ServerGroupParam.ServerGroupPageQuery query = ServerGroupParam.ServerGroupPageQuery.builder()
+                .name(pageQuery.getQueryName())
+                .build();
+        query.setLength(pageQuery.getLength());
+        query.setPage(pageQuery.getPage());
+        DataTable<ServerGroupVO.ServerGroup> table = queryServerGroupPage(query);
+        return new DataTable<>(table.getData().stream().map(e ->
+                ApplicationResourceVO.Resource.builder()
+                        .name(e.getName())
+                        .applicationId(pageQuery.getApplicationId())
+                        .resourceType(getApplicationResType())
+                        .businessType(getBusinessType())
+                        .businessId(e.getBusinessId())
+                        .comment(e.getComment())
+                        .build()
+        ).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override
@@ -192,6 +209,7 @@ public class ServerGroupFacadeImpl implements ServerGroupFacade, IUserBusinessPe
      */
     @Override
     public void afterPropertiesSet() {
+        super.afterPropertiesSet();
         UserBusinessPermissionFactory.register(this);
     }
 }

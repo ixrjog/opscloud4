@@ -13,5 +13,5 @@ public interface IUserBusinessPermissionPageQuery {
 
     DataTable<UserVO.IUserPermission> queryUserBusinessPermissionPage(UserBusinessPermissionParam.UserBusinessPermissionPageQuery pageQuery);
 
-    int getBusinessType();
+    Integer getBusinessType();
 }

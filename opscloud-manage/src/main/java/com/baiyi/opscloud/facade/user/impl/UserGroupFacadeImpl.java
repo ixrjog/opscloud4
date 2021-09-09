@@ -49,7 +49,7 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     private UserPermissionService userPermissionService;
 
     @Override
-    public int getBusinessType() {
+    public Integer getBusinessType() {
         return BusinessTypeEnum.USERGROUP.getType();
     }
 

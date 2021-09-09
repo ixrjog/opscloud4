@@ -3,6 +3,7 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
@@ -72,6 +73,12 @@ public class ApplicationController {
     public HttpResult<Boolean> updateApplication(@RequestBody @Valid ApplicationVO.Application application) {
         applicationFacade.updateApplication(application);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "预览应用资源")
+    @PostMapping(value = "/res/preview/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ApplicationResourceVO.Resource>> previewApplicationResourcePage(@RequestBody @Valid ApplicationResourceParam.ResourcePageQuery pageQuery) {
+        return new HttpResult<>(applicationFacade.previewApplicationResourcePage(pageQuery));
     }
 
     @ApiOperation(value = "应用资源绑定")

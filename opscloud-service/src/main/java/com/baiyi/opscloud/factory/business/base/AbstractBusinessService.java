@@ -16,8 +16,8 @@ public abstract class AbstractBusinessService<T> implements IBusinessService<T>,
     @Override
     public Integer getBusinessType() {
         if (this.getClass().isAnnotationPresent(BusinessType.class)) {
-            BusinessType businessType = this.getClass().getAnnotation(BusinessType.class);
-            return businessType.value().getType();
+            BusinessType annotation = this.getClass().getAnnotation(BusinessType.class);
+            return annotation.value().getType();
         }
         throw new CommonRuntimeException("未找到@BusinessType注解,无法指定业务类型");
     }

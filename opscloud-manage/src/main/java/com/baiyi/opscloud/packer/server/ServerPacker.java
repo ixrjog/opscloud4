@@ -62,5 +62,6 @@ public class ServerPacker {
         envPacker.wrap(server);
         serverGroupPacker.wrap(server);
         businessPropertyPacker.wrap(server);
+        SimpleServerNameFacade.wrapDisplayName(server);
     }
 }

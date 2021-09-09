@@ -5,26 +5,30 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.*;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.domain.types.ApplicationResTypeEnum;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.facade.server.ServerFacade;
+import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
 import com.baiyi.opscloud.packer.server.ServerPacker;
 import com.baiyi.opscloud.service.server.ServerService;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
  * @Date 2021/5/24 5:45 下午
  * @Version 1.0
  */
-@AssetType(DsAssetTypeEnum.DEFAULT)
+@ApplicationResType(ApplicationResTypeEnum.SERVER)
 @BusinessType(BusinessTypeEnum.SERVER)
 @Service
-public class ServerFacadeImpl implements ServerFacade {
+public class ServerFacadeImpl extends AbstractApplicationResourceQuery implements ServerFacade {
 
     @Resource
     private ServerService serverService;
@@ -36,6 +40,26 @@ public class ServerFacadeImpl implements ServerFacade {
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {
         DataTable<Server> table = serverService.queryServerPage(pageQuery);
         return new DataTable<>(serverPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
+    @Override
+    public DataTable<ApplicationResourceVO.Resource> queryResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
+        ServerParam.ServerPageQuery query = ServerParam.ServerPageQuery.builder()
+                .queryName(pageQuery.getQueryName())
+                .build();
+        query.setLength(pageQuery.getLength());
+        query.setPage(pageQuery.getPage());
+        DataTable<ServerVO.Server> table = queryServerPage(query);
+        return new DataTable<>(table.getData().stream().map(e ->
+                ApplicationResourceVO.Resource.builder()
+                        .name(e.getDisplayName())
+                        .applicationId(pageQuery.getApplicationId())
+                        .businessId(e.getBusinessId())
+                        .resourceType(getApplicationResType())
+                        .businessType(getBusinessType())
+                        .comment(e.getPrivateIp())
+                        .build()
+        ).collect(Collectors.toList()), table.getTotalNum());
     }
 
     @Override

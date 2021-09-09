@@ -8,9 +8,12 @@ import com.baiyi.opscloud.domain.generator.opscloud.Application;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.application.ApplicationParam;
+import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.facade.application.ApplicationFacade;
+import com.baiyi.opscloud.factory.resource.ApplicationResourceQueryFactory;
+import com.baiyi.opscloud.factory.resource.IApplicationResourceQuery;
 import com.baiyi.opscloud.packer.application.ApplicationPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
@@ -46,6 +49,15 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
     public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.ApplicationPageQuery pageQuery) {
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         return new DataTable<>(applicationPacker.wrapVOListByKubernetes(table.getData()), table.getTotalNum());
+    }
+
+    @Override
+    public DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
+        IApplicationResourceQuery iApplicationResourceQuery
+                = ApplicationResourceQueryFactory.getIApplicationResourceQuery(pageQuery.getApplicationResType(), pageQuery.getBusinessType());
+        if (iApplicationResourceQuery == null)
+            throw new CommonRuntimeException("无法预览应用资源，未找到对应的方法！");
+        return iApplicationResourceQuery.queryResourcePage(pageQuery);
     }
 
     @Override
