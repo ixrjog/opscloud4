@@ -102,6 +102,12 @@ public class DsInstanceAssetServiceImpl implements DsInstanceAssetService {
         return new DataTable<>(data, page.getTotal());
     }
 
+    @Override
+    public DataTable<DatasourceInstanceAsset> queryPageByParam(DsAssetParam.UserPermissionAssetPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<DatasourceInstanceAsset> data = dsInstanceAssetMapper.queryUserPermissionAssetByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
 
     @Override
     public List<DatasourceInstanceAsset> queryAssetByAssetParam(DatasourceInstanceAsset asset) {

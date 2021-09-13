@@ -51,9 +51,38 @@ public class DsAssetParam {
     }
 
     @Data
+    @Builder
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class BaseAsset{
+    public static class UserPermissionAssetPageQuery extends PageParam {
+
+        private Integer businessType;
+
+        private Integer userId;
+
+        @ApiModelProperty(value = "实例id")
+        @NotNull(message = "实例id不能为空")
+        private Integer instanceId;
+
+        @ApiModelProperty(value = "实例uuid")
+        private String instanceUuid;
+
+        @ApiModelProperty(value = "资产类型")
+        @NotNull(message = "资产类型不能为空")
+        private String assetType;
+
+        @ApiModelProperty(value = "模糊查询")
+        private String queryName;
+
+    }
+
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class BaseAsset {
 
         @ApiModelProperty(value = "实例id")
         @NotNull
@@ -69,14 +98,14 @@ public class DsAssetParam {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class PullAsset extends BaseAsset{
+    public static class PullAsset extends BaseAsset {
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class ScanAssetBusiness extends BaseAsset{
+    public static class ScanAssetBusiness extends BaseAsset {
     }
 
     @Data

@@ -1,11 +1,16 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.audit.AuditPodCommandHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -60,6 +65,9 @@ import java.util.stream.Collectors;
 public class KubernetesPodCommand extends BaseKubernetesCommand {
 
     @Resource
+    private UserService userService;
+
+    @Resource
     private AuditPodCommandHandler auditPodCommandHandler;
 
     // ^C
@@ -109,11 +117,22 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     private void listPodByDeploymentName(String deploymentName) {
         Size size = terminal.getSize();
         final int maxSize = size.getRows() - 5;
-        DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
-                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType())
-                .assetKey(deploymentName)
+//        DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
+//                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType())
+//                .assetKey(deploymentName)
+//                .build();
+//        List<DatasourceInstanceAsset> deploymentAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
+
+        DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder()
+                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
+                .queryName(deploymentName)
+                .businessType(BusinessTypeEnum.APPLICATION.getType())
+                .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
                 .build();
-        List<DatasourceInstanceAsset> deploymentAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
+        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
+        pageQuery.setPage(1);
+        DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
+
         Map<String, KubernetesDsInstance> kubernetesDsInstanceMap = Maps.newHashMap();
         PrettyTable pt = PrettyTable
                 .fieldNames("ID",
@@ -125,7 +144,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                 );
         Map<Integer, PodContext> podMapper = Maps.newHashMap();
         int seq = 1;
-        for (DatasourceInstanceAsset datasourceAsset : deploymentAssets) {
+        for (DatasourceInstanceAsset datasourceAsset : table.getData()) {
             String instanceUuid = datasourceAsset.getInstanceUuid();
             if (!kubernetesDsInstanceMap.containsKey(instanceUuid)) {
                 KubernetesDsInstance kubernetesDsInstance = KubernetesDsInstance.builder()

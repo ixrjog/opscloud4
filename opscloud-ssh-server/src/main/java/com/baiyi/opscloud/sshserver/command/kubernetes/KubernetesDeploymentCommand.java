@@ -1,9 +1,12 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
@@ -20,6 +23,7 @@ import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
+import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -32,19 +36,32 @@ import java.util.Map;
 @ShellCommandGroup("Kubernetes")
 public class KubernetesDeploymentCommand extends BaseKubernetesCommand {
 
+    @Resource
+    private UserService userService;
+
     @CheckTerminalSize(cols = 116, rows = 10)
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询无状态列表信息", key = {"list-k8s-deployment"})
     public void listKubernetesDeployment(@ShellOption(help = "Name", defaultValue = "") String name) {
-        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
+        DsAssetParam.UserPermissionAssetPageQuery pageQuery = DsAssetParam.UserPermissionAssetPageQuery.builder()
                 .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
                 .queryName(name)
-                .isActive(true)
+                .businessType(BusinessTypeEnum.APPLICATION.getType())
+                .userId(userService.getByUsername(SessionUtil.getUsername()).getId())
                 .build();
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
         pageQuery.setPage(1);
         DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
+
+//        DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
+//                .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
+//                .queryName(name)
+//                .isActive(true)
+//                .build();
+//        pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
+//        pageQuery.setPage(1);
+        // DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
 
         PrettyTable pt = PrettyTable
                 .fieldNames("ID",

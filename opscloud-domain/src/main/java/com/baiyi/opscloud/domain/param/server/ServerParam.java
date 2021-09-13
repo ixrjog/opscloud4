@@ -45,7 +45,7 @@ public class ServerParam {
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
 
-        private final int businessType = BusinessTypeEnum.SERVER.getType();
+        private final Integer businessType = BusinessTypeEnum.SERVER.getType();
 
         private Boolean extend;
 
@@ -79,7 +79,7 @@ public class ServerParam {
         @ApiModelProperty(value = "标签id")
         private Integer tagId;
 
-        private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
+        private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
         private Boolean extend;
 
@@ -103,7 +103,7 @@ public class ServerParam {
         @ApiModelProperty(value = "查询ip")
         private String queryIp;
 
-        private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
+        private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
         private Boolean extend;
 
