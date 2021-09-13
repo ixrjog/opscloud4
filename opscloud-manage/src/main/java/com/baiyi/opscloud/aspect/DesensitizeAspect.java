@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.annotation.DesensitizedField;
 import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -54,6 +55,7 @@ public class DesensitizeAspect {
     private String setNewValueForField(String value, SensitiveTypeEnum type) {
         switch (type) {
             case MOBILE_PHONE:
+                if (StringUtils.isEmpty(value)) return value;
                 if (RegexUtil.isPhone(value)) {
                     StringBuilder sb = new StringBuilder(value);
                     return sb.replace(3, 7, "****").toString();
