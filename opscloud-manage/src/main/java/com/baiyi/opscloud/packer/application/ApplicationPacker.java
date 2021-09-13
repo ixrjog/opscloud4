@@ -14,6 +14,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.application.ApplicationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.packer.business.BusinessPermissionUserPacker;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
@@ -47,6 +48,9 @@ public class ApplicationPacker {
 
     @Resource
     private DsInstancePacker dsInstancePacker;
+
+    @Resource
+    private BusinessPermissionUserPacker businessPermissionUserPacker;
 
     public List<ApplicationVO.Application> wrapVOList(List<Application> data) {
         return BeanCopierUtil.copyListProperties(data, ApplicationVO.Application.class);
@@ -105,6 +109,7 @@ public class ApplicationPacker {
             Map<String, List<ApplicationResourceVO.Resource>> resourcesMap = resources.stream()
                     .collect(Collectors.groupingBy(ApplicationResourceVO.Resource::getResourceType));
             vo.setResourceMap(resourcesMap);
+            businessPermissionUserPacker.wrap(vo);
         }
         return vo;
     }

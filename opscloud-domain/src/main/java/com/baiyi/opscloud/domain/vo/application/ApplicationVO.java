@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.domain.vo.application;
 
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.business.IBusinessPermissionUser;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -22,7 +25,17 @@ public class ApplicationVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Application extends BaseVO {
+    public static class Application extends BaseVO implements IBusinessPermissionUser {
+
+        private final Integer businessType = BusinessTypeEnum.APPLICATION.getType();
+
+        @Override
+        public Integer getBusinessId() {
+            return id;
+        }
+
+        @ApiModelProperty(value = "授权用户")
+        private List<UserVO.User> users;
 
         private List<ApplicationResourceVO.Resource> resources;
 
