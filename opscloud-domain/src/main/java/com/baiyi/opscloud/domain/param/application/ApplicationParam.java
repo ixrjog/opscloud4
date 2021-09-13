@@ -4,9 +4,7 @@ import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.PageParam;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 
@@ -17,8 +15,10 @@ import javax.validation.constraints.NotNull;
  */
 public class ApplicationParam {
 
+    @Builder
     @Data
     @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
     public static class ApplicationPageQuery extends PageParam implements IExtend {
