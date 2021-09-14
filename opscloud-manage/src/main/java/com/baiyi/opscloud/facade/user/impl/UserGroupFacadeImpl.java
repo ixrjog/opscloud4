@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.TagClear;
@@ -60,6 +61,7 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     }
 
     @Override
+    @AssetBusinessRelation // 资产绑定业务对象
     public void addUserGroup(UserGroupVO.UserGroup userGroup) {
         userGroupService.add(BeanCopierUtil.copyProperties(userGroup, UserGroup.class));
     }
