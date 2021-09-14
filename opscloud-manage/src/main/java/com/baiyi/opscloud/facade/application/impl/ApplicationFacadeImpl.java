@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.application.impl;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Application;
@@ -17,6 +18,7 @@ import com.baiyi.opscloud.factory.resource.IApplicationResourceQuery;
 import com.baiyi.opscloud.packer.application.ApplicationPacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
+import com.baiyi.opscloud.service.user.UserService;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +41,9 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
     @Resource
     private ApplicationPacker applicationPacker;
 
+    @Resource
+    private UserService userService;
+
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
@@ -46,7 +51,8 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
     }
 
     @Override
-    public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.ApplicationPageQuery pageQuery) {
+    public DataTable<ApplicationVO.Application> queryApplicationPageByWebTerminal(ApplicationParam.UserPermissionApplicationPageQuery pageQuery) {
+        pageQuery.setUserId(userService.getByUsername(SessionUtil.getUsername()).getId());
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         return new DataTable<>(applicationPacker.wrapVOListByKubernetes(table.getData()), table.getTotalNum());
     }

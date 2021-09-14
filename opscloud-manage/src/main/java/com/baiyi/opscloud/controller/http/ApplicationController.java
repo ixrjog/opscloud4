@@ -38,7 +38,7 @@ public class ApplicationController {
 
     @ApiOperation(value = "分页查询容器应用列表")
     @PostMapping(value = "/kubernetes/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<DataTable<ApplicationVO.Application>> queryApplicationKubernetesPage(@RequestBody @Valid ApplicationParam.ApplicationPageQuery pageQuery) {
+    public HttpResult<DataTable<ApplicationVO.Application>> queryApplicationKubernetesPage(@RequestBody @Valid ApplicationParam.UserPermissionApplicationPageQuery pageQuery) {
         return new HttpResult<>(applicationFacade.queryApplicationPageByWebTerminal(pageQuery));
     }
 

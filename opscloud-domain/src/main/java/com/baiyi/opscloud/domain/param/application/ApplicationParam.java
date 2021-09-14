@@ -31,6 +31,25 @@ public class ApplicationParam {
 
     }
 
+    @Builder
+    @Data
+    @EqualsAndHashCode(callSuper = true)
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @ApiModel
+    public static class UserPermissionApplicationPageQuery extends PageParam implements IExtend {
+
+        @ApiModelProperty(value = "应用名称")
+        private String queryName;
+
+        @ApiModelProperty(value = "用户id", example = "1")
+        private Integer userId;
+
+        @ApiModelProperty(value = "展开")
+        private Boolean extend;
+
+    }
+
     @Data
     public static class Query {
 

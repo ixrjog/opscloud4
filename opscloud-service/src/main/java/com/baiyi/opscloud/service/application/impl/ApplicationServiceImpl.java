@@ -27,6 +27,13 @@ public class ApplicationServiceImpl implements ApplicationService {
     private ApplicationMapper applicationMapper;
 
     @Override
+    public DataTable<Application> queryPageByParam(ApplicationParam.UserPermissionApplicationPageQuery pageQuery) {
+        Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
+        List<Application> data = applicationMapper.queryUserPermissionApplicationByParam(pageQuery);
+        return new DataTable<>(data, page.getTotal());
+    }
+
+    @Override
     public DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(Application.class);

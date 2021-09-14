@@ -11,6 +11,13 @@ import com.baiyi.opscloud.domain.param.application.ApplicationParam;
  */
 public interface ApplicationService {
 
+    /**
+     * 按用户授权查询
+     * @param pageQuery
+     * @return
+     */
+    DataTable<Application> queryPageByParam(ApplicationParam.UserPermissionApplicationPageQuery pageQuery);
+
     DataTable<Application> queryPageByParam(ApplicationParam.ApplicationPageQuery pageQuery);
 
     Application getById(Integer id);

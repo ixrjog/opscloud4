@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.baiyi.opscloud.mapper.opscloud.ApplicationMapper">
-  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.Application">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="name" jdbcType="VARCHAR" property="name" />
-    <result column="application_key" jdbcType="VARCHAR" property="applicationKey" />
-    <result column="application_type" jdbcType="INTEGER" property="applicationType" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="comment" jdbcType="LONGVARCHAR" property="comment" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.Application">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="name" jdbcType="VARCHAR" property="name"/>
+        <result column="application_key" jdbcType="VARCHAR" property="applicationKey"/>
+        <result column="application_type" jdbcType="INTEGER" property="applicationType"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>
+    </resultMap>
+
+    <select id="queryUserPermissionApplicationByParam"
+            parameterType="com.baiyi.opscloud.domain.param.application.ApplicationParam$UserPermissionApplicationPageQuery"
+            resultMap="BaseResultMap">
+        select * from application
+        <where>
+            <if test="queryName != null and queryName != ''">
+                name like "%" #{queryName} "%"
+            </if>
+            <if test="userId != null">
+                and id in ( select business_id from user_permission where business_type = 8 and user_id = #{userId} )
+            </if>
+        </where>
+        order by create_time
+    </select>
+
 </mapper>
