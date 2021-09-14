@@ -1,6 +1,0 @@
-# auditPath 审计日志目录
-# openAudit :on 开启审计日志 off 关闭审计日志
-
-terminal:
-  auditPath: ${HOME}/opscloud-data/ssh/audit
-  openAudit: on

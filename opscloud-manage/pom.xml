@@ -86,9 +86,9 @@
             </properties>
         </profile>
         <profile>
-            <id>demo</id>
+            <id>iac</id>
             <properties>
-                <env>demo</env>
+                <env>iac</env>
             </properties>
         </profile>
         <profile>

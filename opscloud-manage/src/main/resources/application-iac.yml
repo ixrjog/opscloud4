@@ -30,9 +30,9 @@ spring:
   profiles:
     include:
       - common
-      - ssh-core-demo
+      - ssh-core
       - ssh-server
-      - opscloud-demo
+      - opscloud
   redis:
     host: redis.opscloud.local
     port: 6379
