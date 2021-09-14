@@ -44,7 +44,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     public void create(Server server) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).create(e, server));
@@ -54,7 +54,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     public void update(Server server) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).update(e, server));
@@ -65,7 +65,7 @@ public class DsServerManager extends BaseManager implements IManager<Server> {
     public void delete(Server server) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("{} 数据源服务器管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerProviderFactory.getIServerByInstanceType(e.getInstanceType()).delete(e, server));

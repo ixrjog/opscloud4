@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.event.customer.impl;
 
-import com.baiyi.opscloud.datasource.manager.DsAccountManager;
+import com.baiyi.opscloud.datasource.manager.DsAccountGroupManager;
 import com.baiyi.opscloud.datasource.manager.DsServerGroupManager;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
@@ -18,11 +18,14 @@ import javax.annotation.Resource;
 @Component
 public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermission> {
 
-    @Resource
-    private DsAccountManager dsAccountManager;
+//    @Resource
+//    private DsAccountManager dsAccountManager;
 
     @Resource
     private DsServerGroupManager dsServerGroupManager;
+
+    @Resource
+    private DsAccountGroupManager dsAccountGroupManager;
 
     @Resource
     private UserService userService;
@@ -36,7 +39,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     protected void onCreateMessage(NoticeEvent noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
-            dsAccountManager.grant(userService.getById(eventData.getUserId()), eventData);
+            dsAccountGroupManager.grant(userService.getById(eventData.getUserId()), eventData);
             return;
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
@@ -48,7 +51,7 @@ public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermi
     protected void onDeleteMessage(NoticeEvent noticeEvent) {
         UserPermission eventData = toEventData(noticeEvent.getMessage());
         if (eventData.getBusinessType() == BusinessTypeEnum.USERGROUP.getType()) {
-            dsAccountManager.revoke(userService.getById(eventData.getUserId()), eventData);
+            dsAccountGroupManager.revoke(userService.getById(eventData.getUserId()), eventData);
         }
         if (eventData.getBusinessType() == BusinessTypeEnum.SERVERGROUP.getType()) {
             dsServerGroupManager.revoke(userService.getById(eventData.getUserId()), eventData);

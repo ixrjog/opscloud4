@@ -62,7 +62,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     public void create(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         decrypt(user);
@@ -74,7 +74,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     public void update(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         decrypt(user);
@@ -86,7 +86,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     public void delete(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).delete(e, user));
@@ -96,7 +96,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     public void grant(User user, BaseBusiness.IBusiness businessResource) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
@@ -106,7 +106,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
     public void revoke(User user, BaseBusiness.IBusiness businessResource) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsAccountManager数据源账户管理: 无可用实例");
+            log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));

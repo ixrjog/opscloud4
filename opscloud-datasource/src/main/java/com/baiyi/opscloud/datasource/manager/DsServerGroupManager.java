@@ -44,7 +44,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     public void create(ServerGroup serverGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerGroupManager: 无可用实例");
+            log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).create(e, serverGroup));
@@ -54,7 +54,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     public void update(ServerGroup serverGroup) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerGroupManager: 无可用实例");
+            log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).update(e, serverGroup));
@@ -69,7 +69,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     public void grant(User user, BaseBusiness.IBusiness businessResource) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
@@ -79,7 +79,7 @@ public class DsServerGroupManager extends BaseManager implements IManager<Server
     public void revoke(User user, BaseBusiness.IBusiness businessResource) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
-            log.info("DsServerManager: 无可用实例");
+            log.info("{} 数据源服务器组管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
         instances.forEach(e -> ServerGroupProviderFactory.getIServerGroupByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));

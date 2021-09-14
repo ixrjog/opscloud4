@@ -1,41 +1,37 @@
-package com.baiyi.opscloud.datasource.account.impl.base;
+package com.baiyi.opscloud.datasource.accountGroup.impl.base;
 
-import com.baiyi.opscloud.datasource.account.AccountProviderFactory;
-import com.baiyi.opscloud.datasource.account.IAccount;
+import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
+import com.baiyi.opscloud.datasource.accountGroup.IAccountGroup;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
-import com.baiyi.opscloud.service.user.UserPermissionService;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
-import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2021/8/11 2:05 下午
+ * @Date 2021/9/14 5:42 下午
  * @Version 1.0
  */
-@Slf4j
-public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
+public abstract class AbstractAccountGroupProvider extends SimpleDsInstanceProvider implements IAccountGroup, InitializingBean {
 
     @Resource
     protected DsConfigFactory dsConfigFactory;
 
-    @Resource
-    private UserPermissionService userPermissionService;
+//    @Resource
+//    private UserPermissionService userPermissionService;
 
     protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
 
-    protected List<UserPermission> queryUserPermission(User user, Integer businessType) {
-        return userPermissionService.queryByUserPermission(user.getId(), businessType);
-    }
+//    protected List<UserPermission> queryUserPermission(User user, Integer businessType) {
+//        return userPermissionService.queryByUserPermission(user.getId(), businessType);
+//    }
 
     protected abstract void initialConfig(DatasourceConfig dsConfig);
 
@@ -45,21 +41,17 @@ public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider i
     }
 
     @Override
-    public void create(DatasourceInstance dsInstance, User user) {
+    public void create(DatasourceInstance dsInstance, UserGroup userGroup) {
         pre(dsInstance);
-        doCreate(user);
+        doCreate(userGroup);
     }
 
     @Override
-    public void update(DatasourceInstance dsInstance, User user) {
-        pre(dsInstance);
-        doUpdate(user);
+    public void update(DatasourceInstance dsInstance, UserGroup userGroup) {
     }
 
     @Override
-    public void delete(DatasourceInstance dsInstance, User user) {
-        pre(dsInstance);
-        doDelete(user);
+    public void delete(DatasourceInstance dsInstance, UserGroup userGroup) {
     }
 
     @Override
@@ -78,11 +70,11 @@ public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider i
         }
     }
 
-    protected abstract void doCreate(User user);
+    protected abstract void doCreate(UserGroup userGroup);
 
-    protected abstract void doUpdate(User user);
+    protected abstract void doUpdate(UserGroup userGroup);
 
-    protected abstract void doDelete(User user);
+    protected abstract void doDelete(UserGroup userGroup);
 
     public abstract void doGrant(User user, BaseBusiness.IBusiness businessResource);
 
@@ -92,6 +84,7 @@ public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider i
 
     @Override
     public void afterPropertiesSet() {
-        AccountProviderFactory.register(this);
+        AccountGroupProviderFactory.register(this);
     }
 }
+

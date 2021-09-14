@@ -1,7 +1,5 @@
 package com.baiyi.opscloud.datasource.accountGroup;
 
-import com.baiyi.opscloud.datasource.account.IAccount;
-
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -17,7 +15,7 @@ public class AccountGroupProviderFactory {
 
     private static Map<String, IAccountGroup> context = new ConcurrentHashMap<>();
 
-    public static IAccountGroup getIAccountByInstanceType(String instanceType) {
+    public static IAccountGroup getIAccountGroupByInstanceType(String instanceType) {
         return context.get(instanceType);
     }
 
