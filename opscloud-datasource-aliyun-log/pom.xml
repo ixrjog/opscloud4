@@ -9,22 +9,19 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-aliyun</artifactId>
+    <artifactId>opscloud-datasource-aliyun-log</artifactId>
 
     <dependencies>
-        <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aliyun-ecs</artifactId>
-        </dependency>
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aliyun-ram</artifactId>
+            <artifactId>opscloud-datasource-aliyun-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-aliyun-log</artifactId>
+            <groupId>com.aliyun.openservices</groupId>
+            <artifactId>aliyun-log</artifactId>
+            <version>0.6.6</version>
         </dependency>
 
         <dependency>
@@ -33,4 +30,5 @@
         </dependency>
 
     </dependencies>
+
 </project>
