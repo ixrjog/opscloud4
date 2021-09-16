@@ -34,7 +34,7 @@ public abstract class BaseManager {
     abstract protected String getTag();
 
     /**
-     * 查询所有可认证的实例
+     * 查询实例
      *
      * @return
      */
