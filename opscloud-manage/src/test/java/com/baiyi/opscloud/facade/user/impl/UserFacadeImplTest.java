@@ -6,8 +6,6 @@ import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 /**
  * @Author baiyi
  * @Date 2021/9/15 3:30 下午
@@ -19,8 +17,8 @@ class UserFacadeImplTest extends BaseUnit {
     private UserFacade userFacade;
 
     @Test
-    void dddTest(){
-        userFacade.syncUsers();
+    void syncUserPermissionGroupForAssetTest(){
+        userFacade.syncUserPermissionGroupForAsset();
     }
 
 }

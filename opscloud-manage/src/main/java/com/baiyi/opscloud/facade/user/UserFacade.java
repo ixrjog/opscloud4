@@ -25,7 +25,7 @@ public interface UserFacade {
      * 从数据源实例中同步用户与用户组关系
      * @return
      */
-    void syncUsers();
+    void syncUserPermissionGroupForAsset();
 
     void addUser(UserVO.User user);
 

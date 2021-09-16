@@ -83,6 +83,12 @@ public class UserController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "同步用户")
+    @PutMapping(value = "/sync", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> syncUserPermissionGroupForAsset() {
+        userFacade.syncUserPermissionGroupForAsset();
+        return HttpResult.SUCCESS;
+    }
 
     @ApiOperation(value = "新增用户组")
     @PostMapping(value = "/group/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

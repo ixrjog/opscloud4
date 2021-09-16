@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.PasswordUtil;
@@ -37,6 +38,7 @@ import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -97,8 +99,9 @@ public class UserFacadeImpl implements UserFacade {
         return userPacker.wrap(user);
     }
 
+    @Async(value = Global.TaskPools.EXECUTOR)
     @Override
-    public void syncUsers() {
+    public void syncUserPermissionGroupForAsset() {
         List<User> users = userService.queryAll();
         if (CollectionUtils.isEmpty(users)) return;
         users.forEach(u -> {
@@ -132,7 +135,7 @@ public class UserFacadeImpl implements UserFacade {
                 .build();
         try {
             userPermissionService.add(userPermission);
-        } catch (Exception e) {
+        } catch (Exception ignored) {
         }
     }
 
