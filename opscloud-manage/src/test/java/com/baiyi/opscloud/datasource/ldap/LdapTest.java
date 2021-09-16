@@ -73,6 +73,25 @@ public class LdapTest extends BaseUnit {
     }
 
     @Test
+    void queryGroupTest2() {
+        LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
+
+        ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=dev,ou=Groups");
+        ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=daily,ou=Groups");
+        ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=gray,ou=Groups");
+        ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=backend,ou=Groups");
+        ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=frontend,ou=Groups");
+        // dc=xincheng,dc=org
+//        List<Group> groups = ldapHandler.queryGroupList(ldapDsInstanceConfig.getLdap());
+//        groups.forEach(g -> {
+//            if (g.getGroupName().startsWith("bamboo-")) {
+//                System.out.println(g.getGroupName());
+//                ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=" + g.getGroupName() + ",ou=Groups");
+//            }
+//        });
+    }
+
+    @Test
     BaseDsInstanceConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(1);
         return dsFactory.build(datasourceConfig, LdapDsInstanceConfig.class);
