@@ -16,6 +16,8 @@ public interface UserService {
 
     User getById(Integer id);
 
+    List<User> queryAll();
+
     DataTable<User> queryPageByParam(UserParam.UserPageQuery pageQuery);
 
     DataTable<User> queryPageByParam(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);

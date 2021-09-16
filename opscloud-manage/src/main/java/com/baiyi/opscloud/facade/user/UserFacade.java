@@ -21,6 +21,12 @@ public interface UserFacade {
 
     UserVO.User getUserDetails();
 
+    /**
+     * 从数据源实例中同步用户与用户组关系
+     * @return
+     */
+    void syncUsers();
+
     void addUser(UserVO.User user);
 
     void updateUser(UserVO.User user);

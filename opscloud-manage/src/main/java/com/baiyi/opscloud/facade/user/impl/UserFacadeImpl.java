@@ -8,12 +8,16 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
-import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.param.SimpleExtend;
+import com.baiyi.opscloud.domain.param.SimpleRelation;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
@@ -24,19 +28,27 @@ import com.baiyi.opscloud.facade.user.UserFacade;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
+import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
+import com.baiyi.opscloud.service.user.UserGroupService;
+import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
  * @Date 2021/5/14 10:38 上午
  * @Version 1.0
  */
+@Slf4j
 @Service
 public class UserFacadeImpl implements UserFacade {
 
@@ -61,6 +73,18 @@ public class UserFacadeImpl implements UserFacade {
     @Resource
     private UserPermissionFacade userPermissionFacade;
 
+    @Resource
+    private DsInstanceAssetService dsInstanceAssetService;
+
+    @Resource
+    private DsAssetPacker dsAssetPacker;
+
+    @Resource
+    private UserGroupService userGroupService;
+
+    @Resource
+    private UserPermissionService userPermissionService;
+
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
@@ -71,6 +95,45 @@ public class UserFacadeImpl implements UserFacade {
     public UserVO.User getUserDetails() {
         User user = userService.getByUsername(SessionUtil.getUsername());
         return userPacker.wrap(user);
+    }
+
+    @Override
+    public void syncUsers() {
+        List<User> users = userService.queryAll();
+        if (CollectionUtils.isEmpty(users)) return;
+        users.forEach(u -> {
+            log.info("同步用户 {}", u.getUsername());
+            DatasourceInstanceAsset query = DatasourceInstanceAsset.builder()
+                    .assetId(u.getUsername())
+                    .assetType(DsAssetTypeEnum.USER.name())
+                    .isActive(true)
+                    .build();
+            List<DatasourceInstanceAsset> userAssets = dsInstanceAssetService.queryAssetByAssetParam(query);
+            if (CollectionUtils.isEmpty(userAssets)) return;
+            userAssets.forEach(a -> {
+                DsAssetVO.Asset asset = dsAssetPacker.wrapVO(a, SimpleExtend.EXTEND, SimpleRelation.RELATION);
+                if (asset.getChildren().containsKey(DsAssetTypeEnum.GROUP.getType())) {
+                    // GROUP存在
+                    asset.getChildren().get(DsAssetTypeEnum.GROUP.getType()).forEach(g ->
+                            userPermissionUserGroup(u, g.getAssetId()));
+                }
+            });
+        });
+    }
+
+    private void userPermissionUserGroup(User user, String userGroupName) {
+        UserGroup userGroup = userGroupService.getByName(userGroupName);
+        if (userGroup == null) return;
+
+        UserPermission userPermission = UserPermission.builder()
+                .userId(user.getId())
+                .businessType(BusinessTypeEnum.USERGROUP.getType())
+                .businessId(userGroup.getId())
+                .build();
+        try {
+            userPermissionService.add(userPermission);
+        } catch (Exception e) {
+        }
     }
 
     @Override

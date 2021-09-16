@@ -60,18 +60,22 @@ public class DsAssetPacker {
     }
 
     public List<DsAssetVO.Asset> wrapVOList(List<DatasourceInstanceAsset> data, IExtend iExtend, IRelation iRelation) {
-        return data.stream().map(e -> {
-            DsAssetVO.Asset asset = toVO(e);
-            if (ExtendUtil.isExtend(iExtend)) {
-                tagPacker.wrap(asset);
-                wrap(asset);
-                wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
-                if (RelationUtil.isRelation(iRelation))
-                    wrapRelation(asset);
-                asset.setTree(wrapTree(asset));
-            }
-            return asset;
-        }).collect(Collectors.toList());
+        return data.stream().map(e ->
+                wrapVO(e, iExtend, iRelation)
+        ).collect(Collectors.toList());
+    }
+
+    public DsAssetVO.Asset wrapVO(DatasourceInstanceAsset datasourceInstanceAsset, IExtend iExtend, IRelation iRelation) {
+        DsAssetVO.Asset asset = toVO(datasourceInstanceAsset);
+        if (ExtendUtil.isExtend(iExtend)) {
+            tagPacker.wrap(asset);
+            wrap(asset);
+            wrapConvertBusinessTypes(asset); // 资产可转换为业务对象
+            if (RelationUtil.isRelation(iRelation))
+                wrapRelation(asset);
+            asset.setTree(wrapTree(asset));
+        }
+        return asset;
     }
 
     //  to   AssetConvertFactory
