@@ -1,8 +1,9 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table(name = "aliyun_log")
@@ -12,10 +13,10 @@ public class AliyunLog {
     private Integer id;
 
     /**
-     * 数据源实例uuid
+     * 数据源实例id
      */
-    @Column(name = "instance_uuid")
-    private String instanceUuid;
+    @Column(name = "datasource_instance_id")
+    private Integer datasourceInstanceId;
 
     private String project;
 

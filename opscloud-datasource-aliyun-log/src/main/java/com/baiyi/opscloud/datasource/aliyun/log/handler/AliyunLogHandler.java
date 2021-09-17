@@ -49,7 +49,7 @@ public class AliyunLogHandler extends BaseAliyunLogHandler {
      * @param project
      * @return
      */
-    public List<String> listLogStore(DsAliyunConfig.Aliyun aliyun, String project) {
+    public List<String> listLogstore(DsAliyunConfig.Aliyun aliyun, String project) {
         int offset = 0;
         String logStoreSubName = "";
         ListLogStoresRequest req = new ListLogStoresRequest(project, offset, QUERY_SIZE, logStoreSubName);
