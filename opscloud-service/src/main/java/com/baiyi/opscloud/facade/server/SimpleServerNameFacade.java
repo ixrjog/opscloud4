@@ -45,7 +45,7 @@ public class SimpleServerNameFacade {
         }
     }
 
-    private static String toServerName(ServerVO.Server server) {
+    public static String toServerName(ServerVO.Server server) {
         if (server.getEnv() == null || server.getEnv().getEnvName().equals("prod")) {
             return Joiner.on("-").join(server.getName(), server.getSerialNumber());
         } else {
