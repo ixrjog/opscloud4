@@ -23,11 +23,10 @@ public class ExecutorEngineBuilder {
         executor.setStreamHandler(streamHandler);
         executor.setWatchdog(watchdog);
 
-        ExecutorEngine executorEngine = ExecutorEngine.builder()
+        return ExecutorEngine.builder()
                 .executor(executor)
                 .outputStream(outputStream)
                 .errorStream(errorStream)
                 .build();
-        return executorEngine;
     }
 }
