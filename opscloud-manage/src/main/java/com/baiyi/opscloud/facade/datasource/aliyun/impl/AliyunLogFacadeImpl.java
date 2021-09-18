@@ -2,6 +2,7 @@ package com.baiyi.opscloud.facade.datasource.aliyun.impl;
 
 import com.aliyun.openservices.log.common.MachineGroup;
 import com.aliyun.openservices.log.common.Project;
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -24,6 +25,7 @@ import com.baiyi.opscloud.service.datasource.AliyunLogService;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.server.ServerGroupService;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -115,6 +117,14 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     public List<String> queryConfig(AliyunLogParam.ConfigQuery query) {
         AliyunDsInstanceConfig aliyunDsInstanceConfig = (AliyunDsInstanceConfig) getConfig(query.getInstanceId());
         return aliyunLogHandler.listConfig(aliyunDsInstanceConfig.getAliyun(), query.getProjectName(), query.getLogstoreName());
+    }
+
+    @Async(value = Global.TaskPools.DEFAULT)
+    @Override
+    public void pushLogMemberByServerGroupId(Integer id) {
+        List<AliyunLogMember> aliyunLogMembers = aliyunLogMemberService.queryByServerGroupId(id);
+        if (CollectionUtils.isEmpty(aliyunLogMembers)) return;
+        aliyunLogMembers.forEach(e -> pushLogMemberById(e.getId()));
     }
 
     @Override

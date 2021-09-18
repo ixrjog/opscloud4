@@ -15,6 +15,8 @@ public interface AliyunLogMemberService {
 
     DataTable<AliyunLogMember> queryAliyunLogMemberByParam(AliyunLogMemberParam.LogMemberPageQuery pageQuery);
 
+    List<AliyunLogMember> queryByServerGroupId(Integer serverGroupId);
+
     int countByAliyunLogId(Integer aliyunLogId);
 
     List<AliyunLogMember> queryByAliyunLogId(Integer aliyunLogId);

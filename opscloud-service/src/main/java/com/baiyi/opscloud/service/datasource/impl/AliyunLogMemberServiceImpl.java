@@ -46,6 +46,14 @@ public class AliyunLogMemberServiceImpl implements AliyunLogMemberService {
     }
 
     @Override
+    public List<AliyunLogMember> queryByServerGroupId(Integer serverGroupId) {
+        Example example = new Example(AliyunLogMember.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverGroupId",serverGroupId);
+        return aliyunLogMemberMapper.selectByExample(example);
+    }
+
+    @Override
     public int countByAliyunLogId(Integer aliyunLogId) {
         Example example = new Example(AliyunLogMember.class);
         Example.Criteria criteria = example.createCriteria();

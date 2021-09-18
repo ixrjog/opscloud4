@@ -26,6 +26,8 @@ public interface AliyunLogFacade {
 
     void deleteLogById(Integer id);
 
+    void pushLogMemberByServerGroupId(Integer id);
+
     void pushLogMemberById(Integer id);
 
     void pushLogById(Integer id);
