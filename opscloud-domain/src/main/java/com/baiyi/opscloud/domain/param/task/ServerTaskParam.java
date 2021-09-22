@@ -20,6 +20,9 @@ public class ServerTaskParam {
     @ApiModel
     public static class SubmitServerTask {
 
+        @ApiModelProperty(value = "执行实例")
+        private String instanceUuid;
+
         @ApiModelProperty(value = "剧本id", example = "1")
         private Integer ansiblePlaybookId;
 

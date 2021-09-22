@@ -19,6 +19,12 @@ public class ServerTask {
     private Integer id;
 
     /**
+     * 数据源实例uuid
+     */
+    @Column(name = "instance_uuid")
+    private String instanceUuid;
+
+    /**
      * 任务uuid
      */
     @Column(name = "task_uuid")

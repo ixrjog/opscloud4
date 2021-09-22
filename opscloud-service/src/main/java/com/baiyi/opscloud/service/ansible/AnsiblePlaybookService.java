@@ -17,5 +17,7 @@ public interface AnsiblePlaybookService {
 
     void deleteById(int id);
 
+    AnsiblePlaybook getById(int id);
+
     DataTable<AnsiblePlaybook> queryPageByParam(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery);
 }

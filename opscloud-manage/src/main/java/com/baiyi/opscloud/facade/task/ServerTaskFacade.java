@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.task;
 
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
-import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 
 /**
  * @Author baiyi
@@ -10,5 +9,10 @@ import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
  */
 public interface ServerTaskFacade {
 
-    ServerTaskVO.ServerTask submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask);
+    /**
+     * 提交服务器任务
+     * @param submitServerTask
+     * @return
+     */
+    void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask);
 }

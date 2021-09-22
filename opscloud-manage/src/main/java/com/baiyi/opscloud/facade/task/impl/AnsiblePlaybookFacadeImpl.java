@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.task.impl;
 
-import com.baiyi.opscloud.common.config.OpscloudConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
@@ -11,7 +10,7 @@ import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.facade.task.AnsiblePlaybookFacade;
 import com.baiyi.opscloud.packer.task.AnsiblePlaybookPacker;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
-import com.google.common.base.Joiner;
+import com.baiyi.opscloud.util.PlaybookUtil;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -25,8 +24,8 @@ import java.util.stream.Collectors;
 @Component
 public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
 
-    @Resource
-    private OpscloudConfig opscloudConfig;
+//    @Resource
+//    private OpscloudConfig opscloudConfig;
 
     @Resource
     private AnsiblePlaybookService ansiblePlaybookService;
@@ -58,8 +57,7 @@ public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
     }
 
     private void writeFilePlaybook(AnsiblePlaybook ansiblePlaybook) {
-        String fileName = Joiner.on(".").join(ansiblePlaybook.getPlaybookUuid(), "yml");
-        String path = Joiner.on("/").join(opscloudConfig.getAnsiblePlaybookPath(), fileName);
+        String path = PlaybookUtil.toPath(ansiblePlaybook);
         IOUtil.writeFile(ansiblePlaybook.getPlaybook(), path);
     }
 

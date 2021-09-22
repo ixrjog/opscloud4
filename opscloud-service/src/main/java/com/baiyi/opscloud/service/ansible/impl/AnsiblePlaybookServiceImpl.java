@@ -42,6 +42,11 @@ public class AnsiblePlaybookServiceImpl implements AnsiblePlaybookService {
     }
 
     @Override
+    public AnsiblePlaybook getById(int id) {
+        return ansiblePlaybookMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public DataTable<AnsiblePlaybook> queryPageByParam(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery) {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(AnsiblePlaybook.class);

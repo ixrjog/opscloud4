@@ -6,6 +6,7 @@
       WARNING - @mbg.generated
     -->
     <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="instance_uuid" jdbcType="VARCHAR" property="instanceUuid" />
     <result column="task_uuid" jdbcType="VARCHAR" property="taskUuid" />
     <result column="username" jdbcType="VARCHAR" property="username" />
     <result column="member_size" jdbcType="INTEGER" property="memberSize" />
