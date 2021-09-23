@@ -2,10 +2,14 @@ package com.baiyi.opscloud.facade.task.impl;
 
 import com.baiyi.opscloud.ansible.args.PlaybookArgs;
 import com.baiyi.opscloud.ansible.builder.AnsiblePlaybookArgsBuilder;
+import com.baiyi.opscloud.ansible.recorder.TaskLogStorehouse;
+import com.baiyi.opscloud.ansible.task.AnsibleServerTask;
 import com.baiyi.opscloud.ansible.util.AnsibleUtil;
+import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
@@ -29,8 +33,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author baiyi
@@ -48,16 +55,22 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private ServerTaskMemberService serverTaskMemberService;
 
     @Resource
+    private TaskLogStorehouse taskLogStorehouse;
+
+    @Resource
     private AnsiblePlaybookService ansiblePlaybookService;
 
     @Resource
     private DsConfigFactory dsConfigFactory;
 
+    private static final int MAX_EXECUTION_QUEUE = 20;
+
+    @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask);
         serverTaskService.add(serverTask);
         List<ServerTaskMember> members = record(serverTask, submitServerTask.getServers());
-        execute(serverTask,members);
+        executeServerTask(serverTask, members);
     }
 
     /**
@@ -77,7 +90,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         return members;
     }
 
-    private void execute(ServerTask serverTask, List<ServerTaskMember> members){
+    private void executeServerTask(ServerTask serverTask, List<ServerTaskMember> members) {
+        // 构建上下文
         DsInstanceContext instanceContext = buildDsInstanceContext(serverTask.getInstanceUuid());
         DsAnsibleConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
@@ -85,19 +99,56 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         PlaybookArgs args = PlaybookArgs.builder()
                 .extraVars(AnsibleUtil.toVars(serverTask.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
-                .playbook( PlaybookUtil.toPath(ansiblePlaybook))
+                .playbook(PlaybookUtil.toPath(ansiblePlaybook))
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))
                 .build();
 
-
-        CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
-
-        // 使用迭代器
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MAX_EXECUTION_QUEUE);
+        // 使用迭代器遍历并执行所有服务器任务
         Iterator<ServerTaskMember> iter = members.iterator();
         while (iter.hasNext()) {
-//            if (priority > Integer.valueOf(iter.next().getPriority()))
-//                iter.remove();
+            // 查询当前执行中的任务是否达到最大并发
+            if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTION_QUEUE) {
+                ServerTaskMember serverTaskMember = iter.next();
+                iter.remove();
+                args.setHosts(serverTaskMember.getManageIp());
+                CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
+                AnsibleServerTask ansibleServerTask = new AnsibleServerTask(serverTask.getTaskUuid(),
+                        serverTaskMember,
+                        commandLine ,
+                        serverTaskMemberService,
+                        taskLogStorehouse);
+                fixedThreadPool.execute(ansibleServerTask); // 执行任务
+            } else {
+                try {
+                    Thread.sleep(TimeUtil.secondTime * 3); // 延迟
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
+        }
+        traceEndOfTask(serverTask);
+    }
 
+    /**
+     * 追踪任务直到完成
+     * @param serverTask
+     */
+    private void traceEndOfTask(ServerTask serverTask) {
+        while (true) {
+            if (serverTask.getMemberSize() == serverTaskMemberService.countByFinalized(serverTask.getId(), true)) {
+                serverTask.setFinalized(true);
+                serverTask.setEndTime(new Date());
+                serverTaskService.update(serverTask);
+                // 任务完成
+                return;
+            } else {
+                try {
+                    Thread.sleep(TimeUtil.secondTime); // 延迟
+                } catch (InterruptedException ie) {
+                    ie.printStackTrace();
+                }
+            }
         }
     }
 

@@ -4,6 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.baiyi.opscloud.mapper.opscloud.ServerTaskMemberMapper;
 import com.baiyi.opscloud.service.task.ServerTaskMemberService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
 
@@ -21,5 +22,28 @@ public class ServerTaskMemberServiceImpl implements ServerTaskMemberService {
     @Override
     public void add(ServerTaskMember serverTaskMember) {
         serverTaskMemberMapper.insert(serverTaskMember);
+    }
+
+    @Override
+    public int countByTaskStatus(Integer serverTaskId, String taskStatus) {
+        Example example = new Example(ServerTaskMember.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverTaskId", serverTaskId)
+                .andEqualTo("taskStatus", taskStatus);
+        return serverTaskMemberMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public int countByFinalized(Integer serverTaskId, boolean finalized) {
+        Example example = new Example(ServerTaskMember.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverTaskId", serverTaskId)
+                .andEqualTo("finalized", finalized);
+        return serverTaskMemberMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public void update(ServerTaskMember serverTaskMember) {
+        serverTaskMemberMapper.updateByPrimaryKey(serverTaskMember);
     }
 }

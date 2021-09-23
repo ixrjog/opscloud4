@@ -8,13 +8,13 @@ import java.io.ByteArrayOutputStream;
 
 /**
  * @Author baiyi
- * @Date 2020/4/19 3:13 下午
+ * @Date 2021/9/22 3:24 下午
  * @Version 1.0
  */
-public class ExecutorEngineBuilder {
+public class TaskExecutorBuilder {
 
-    public static ExecutorEngine build(long timeout) {
-        final ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
+    public static TaskExecutor build(long timeout) {
+        ExecuteWatchdog watchdog = new ExecuteWatchdog(timeout);
         // 缓冲区1024字节
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(1024);
         ByteArrayOutputStream errorStream = new ByteArrayOutputStream(1024);
@@ -22,11 +22,11 @@ public class ExecutorEngineBuilder {
         DefaultExecutor executor = new DefaultExecutor();
         executor.setStreamHandler(streamHandler);
         executor.setWatchdog(watchdog);
-
-        return ExecutorEngine.builder()
+        return TaskExecutor.builder()
                 .executor(executor)
                 .outputStream(outputStream)
                 .errorStream(errorStream)
+                .watchdog(watchdog)
                 .build();
     }
 }

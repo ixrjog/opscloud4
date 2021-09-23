@@ -10,4 +10,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 public interface ServerTaskMemberService {
 
     void add(ServerTaskMember serverTaskMember);
+
+    void update(ServerTaskMember serverTaskMember);
+
+    int countByTaskStatus(Integer serverTaskId, String taskStatus);
+
+    int countByFinalized(Integer serverTaskId, boolean finalized);
 }

@@ -11,6 +11,7 @@
     <result column="server_name" jdbcType="VARCHAR" property="serverName" />
     <result column="env_type" jdbcType="INTEGER" property="envType" />
     <result column="manage_ip" jdbcType="VARCHAR" property="manageIp" />
+    <result column="task_status" jdbcType="VARCHAR" property="taskStatus" />
     <result column="finalized" jdbcType="BIT" property="finalized" />
     <result column="stop_type" jdbcType="INTEGER" property="stopType" />
     <result column="exit_value" jdbcType="INTEGER" property="exitValue" />

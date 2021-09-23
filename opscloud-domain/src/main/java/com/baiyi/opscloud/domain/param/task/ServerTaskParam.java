@@ -23,6 +23,9 @@ public class ServerTaskParam {
         @ApiModelProperty(value = "执行实例")
         private String instanceUuid;
 
+        @ApiModelProperty(value = "任务uuid(幂等)")
+        private String taskUuid;
+
         @ApiModelProperty(value = "剧本id", example = "1")
         private Integer ansiblePlaybookId;
 

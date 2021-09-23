@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.task.builder;
 
+import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
@@ -12,14 +13,15 @@ import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
  */
 public class ServerTaskMemberBuilder {
 
-    public static ServerTaskMember newBuilder(ServerTask serverTask, ServerVO.Server server){
-       return ServerTaskMember.builder()
+    public static ServerTaskMember newBuilder(ServerTask serverTask, ServerVO.Server server) {
+        return ServerTaskMember.builder()
                 .serverTaskId(serverTask.getId())
                 .serverId(server.getId())
                 .serverName(SimpleServerNameFacade.toServerName(server))
                 .manageIp(server.getPrivateIp())
                 .envType(server.getEnvType())
                 .finalized(false)
+                .taskStatus(ServerTaskStatusEnum.QUEUE.name())
                 .stopType(0)
                 .build();
     }

@@ -17,6 +17,7 @@ public class OpscloudConfig {
 
     public interface Paths {
         String ANSIBLE_PLAYBOOK = "ansible/playbook";
+        String SERVER_TASK_LOG = "logs/serverTask";
     }
 
     private String version;
@@ -29,5 +30,13 @@ public class OpscloudConfig {
      */
     public String getAnsiblePlaybookPath() {
         return Joiner.on("/").join(dataPath, Paths.ANSIBLE_PLAYBOOK);
+    }
+
+    /**
+     * 获取服务器任务日志目录
+     * @return
+     */
+    public String getServerTaskLogPath() {
+        return Joiner.on("/").join(dataPath, Paths.SERVER_TASK_LOG);
     }
 }

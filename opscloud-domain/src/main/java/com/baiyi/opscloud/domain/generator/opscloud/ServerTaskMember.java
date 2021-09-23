@@ -49,6 +49,12 @@ public class ServerTaskMember {
     private String manageIp;
 
     /**
+     * 任务状态
+     */
+    @Column(name = "task_status")
+    private String taskStatus;
+
+    /**
      * 是否完成
      */
     private Boolean finalized;
