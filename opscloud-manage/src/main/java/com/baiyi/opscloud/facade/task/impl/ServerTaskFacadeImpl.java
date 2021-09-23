@@ -63,7 +63,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private DsConfigFactory dsConfigFactory;
 
-    private static final int MAX_EXECUTION_QUEUE = 20;
+    private static final int MAX_EXECUTING = 20;
 
     @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask) {
@@ -82,8 +82,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private List<ServerTaskMember> record(ServerTask serverTask, List<ServerVO.Server> servers) {
         if (CollectionUtils.isEmpty(servers)) throw new CommonRuntimeException("服务器列表为空！");
         List<ServerTaskMember> members = Lists.newArrayList();
-        servers.forEach(s -> {
-            ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, s);
+        servers.forEach(server -> {
+            ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, server);
             serverTaskMemberService.add(member);
             members.add(member);
         });
@@ -103,12 +103,12 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))
                 .build();
 
-        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MAX_EXECUTION_QUEUE);
+        ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MAX_EXECUTING);
         // 使用迭代器遍历并执行所有服务器任务
         Iterator<ServerTaskMember> iter = members.iterator();
         while (iter.hasNext()) {
             // 查询当前执行中的任务是否达到最大并发
-            if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTION_QUEUE) {
+            if (serverTaskMemberService.countByTaskStatus(serverTask.getId(), ServerTaskStatusEnum.EXECUTING.name()) < MAX_EXECUTING) {
                 ServerTaskMember serverTaskMember = iter.next();
                 iter.remove();
                 args.setHosts(serverTaskMember.getManageIp());
