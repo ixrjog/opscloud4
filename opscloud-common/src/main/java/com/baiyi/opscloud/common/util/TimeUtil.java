@@ -400,8 +400,8 @@ public class TimeUtil {
     }
 
     public static String dateToStr(Date date) {
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-        return format.format(date);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return formatter.format(date);
     }
 
     public static Date acqJenkinsDate(String time) {

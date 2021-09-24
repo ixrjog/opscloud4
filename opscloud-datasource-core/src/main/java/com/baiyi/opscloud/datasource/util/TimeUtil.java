@@ -5,6 +5,7 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
 
 /**
  * @Author baiyi
@@ -14,14 +15,15 @@ import java.util.Date;
 public class TimeUtil {
 
     public interface Format {
-        String UTC = "yyyy-MM-dd'T'HH:mm'Z'";
+        String UTC = "yyyy-MM-dd'T'HH:mm:ss'Z'";
     }
 
     public static Date toGmtDate(String time, String dateFormat) {
         if (StringUtils.isEmpty(time)) return new Date();
-        SimpleDateFormat format = new SimpleDateFormat(dateFormat);
+        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
+        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
         try {
-            return format.parse(time);
+            return formatter.parse(time);
         } catch (ParseException e) {
             return new Date();
         }

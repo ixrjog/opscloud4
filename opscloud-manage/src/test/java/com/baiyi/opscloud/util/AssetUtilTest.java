@@ -2,7 +2,10 @@ package com.baiyi.opscloud.util;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.datasource.util.TimeUtil;
 import org.junit.jupiter.api.Test;
+
+import java.util.Date;
 
 /**
  * @Author baiyi
@@ -17,5 +20,19 @@ public class AssetUtilTest extends BaseUnit {
         System.out.println(AssetUtil.equals("A", null));
 
         System.out.println(AssetUtil.equals("B", "B"));
+    }
+
+    @Test
+    void toDate() {
+        // 2021-08-27T03:14:04Z
+
+        String time = "2021-08-27T03:14:04Z";
+
+        //    String UTC = "yyyy-MM-dd'T'HH:mm'Z'";
+
+        Date date = TimeUtil.toGmtDate(time, TimeUtil.Format.UTC);
+
+        String d = com.baiyi.opscloud.common.util.TimeUtil.dateToStr(date);
+        System.err.println(d);
     }
 }
