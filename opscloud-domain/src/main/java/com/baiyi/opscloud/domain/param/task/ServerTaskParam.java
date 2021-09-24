@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Builder;
 import lombok.Data;
 
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 /**
@@ -21,12 +22,15 @@ public class ServerTaskParam {
     public static class SubmitServerTask {
 
         @ApiModelProperty(value = "执行实例")
+        @NotNull(message = "必须指定Ansible实例")
         private String instanceUuid;
 
         @ApiModelProperty(value = "任务uuid(幂等)")
+        @NotNull(message = "必须指定任务uuid")
         private String taskUuid;
 
         @ApiModelProperty(value = "剧本id", example = "1")
+        @NotNull(message = "必须指定任务剧本")
         private Integer ansiblePlaybookId;
 
         @ApiModelProperty(value = "任务类型")
@@ -36,7 +40,9 @@ public class ServerTaskParam {
 
         private String tags;
 
-        private List<ServerVO.Server> servers; // 执行任务的服务器
+        @ApiModelProperty(value = "执行任务的服务器列表")
+        @NotNull(message = "必须指定执行任务的服务器列表")
+        private List<ServerVO.Server> servers;
 
     }
 }
