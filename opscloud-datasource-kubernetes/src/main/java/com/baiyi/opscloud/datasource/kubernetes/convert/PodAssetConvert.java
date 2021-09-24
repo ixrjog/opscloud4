@@ -38,13 +38,13 @@ public class PodAssetConvert {
                 .build();
 
         Date startTime = toGmtDate(entry.getStatus().getStartTime());
-
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
                 .paramChildren(toChildren(entry))
                 .paramProperty("phase", entry.getStatus().getPhase())
                 .paramProperty("startTime", com.baiyi.opscloud.common.util.TimeUtil.dateToStr(startTime))
                 .paramProperty("nodeName", entry.getSpec().getNodeName())
+                .paramProperty("restartCount",entry.getStatus().getContainerStatuses().get(0).getRestartCount())
                 .paramProperty("hostIp", entry.getStatus().getHostIP())
                 .build();
     }
