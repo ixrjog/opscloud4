@@ -24,4 +24,16 @@ public class ShowTime {
         void setLater(String later);
     }
 
+    /**
+     * 持续时间
+     */
+    public interface IDuration {
+
+        Date getStartTime();
+
+        Date getEndTime();
+
+        void setDuration(String duration);
+    }
+
 }

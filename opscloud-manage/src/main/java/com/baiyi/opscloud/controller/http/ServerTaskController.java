@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
+import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.facade.task.ServerTaskFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -26,6 +28,12 @@ public class ServerTaskController {
 
     @Resource
     private ServerTaskFacade serverTaskFacade;
+
+    @ApiOperation(value = "分页查询服务器任务列表")
+    @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<DataTable<ServerTaskVO.ServerTask>> queryServerTaskPage(@RequestBody @Valid ServerTaskParam.ServerTaskPageQuery pageQuery) {
+        return new HttpResult<>(serverTaskFacade.queryServerTaskPage(pageQuery));
+    }
 
     @ApiOperation(value = "提交服务器任务")
     @PostMapping(value = "/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

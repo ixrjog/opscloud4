@@ -2,6 +2,8 @@ package com.baiyi.opscloud.service.task;
 
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/9/18 5:31 下午
@@ -16,4 +18,6 @@ public interface ServerTaskMemberService {
     int countByTaskStatus(Integer serverTaskId, String taskStatus);
 
     int countByFinalized(Integer serverTaskId, boolean finalized);
+
+    List<ServerTaskMember> queryByServerTaskId(Integer serverTaskId);
 }

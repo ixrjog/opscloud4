@@ -1,12 +1,11 @@
 package com.baiyi.opscloud.domain.vo.task;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
-import java.lang.reflect.Member;
 import java.util.Date;
 import java.util.List;
 
@@ -20,10 +19,17 @@ public class ServerTaskVO {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ApiModel
-    public static class ServerTask extends BaseVO {
+    public static class ServerTask extends BaseVO implements ServerTaskMemberVO.IServerTaskMembers, ShowTime.IAgo, ShowTime.IDuration {
 
-        private List<Member> members; // 任务成员
+        private List<ServerTaskMemberVO.Member> serverTaskMembers; // 任务成员
+
+        @Override
+        public Integer getServerTaskId() {
+            return id;
+        }
 
         private Integer id;
 
@@ -37,18 +43,31 @@ public class ServerTaskVO {
 
         private String taskType;
 
+        private String taskName; // 剧本名称
+
         private Boolean finalized;
 
         private Integer stopType;
 
         private String taskStatus;
 
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startTime;
 
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date endTime;
 
         private String vars;
 
         private String tags;
+
+        @Override
+        public Date getAgoTime() {
+            return startTime;
+        }
+
+        private String ago;
+
+        private String duration;
     }
 }

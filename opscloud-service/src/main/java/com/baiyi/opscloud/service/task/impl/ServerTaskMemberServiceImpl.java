@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -45,5 +46,13 @@ public class ServerTaskMemberServiceImpl implements ServerTaskMemberService {
     @Override
     public void update(ServerTaskMember serverTaskMember) {
         serverTaskMemberMapper.updateByPrimaryKey(serverTaskMember);
+    }
+
+    @Override
+    public List<ServerTaskMember> queryByServerTaskId(Integer serverTaskId){
+        Example example = new Example(ServerTaskMember.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("serverTaskId", serverTaskId);
+        return serverTaskMemberMapper.selectByExample(example);
     }
 }

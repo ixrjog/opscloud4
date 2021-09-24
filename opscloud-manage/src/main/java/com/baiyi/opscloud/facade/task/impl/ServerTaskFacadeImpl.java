@@ -14,14 +14,17 @@ import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.datasource.util.SystemEnvUtil;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.facade.task.ServerTaskFacade;
 import com.baiyi.opscloud.facade.task.builder.ServerTaskBuilder;
 import com.baiyi.opscloud.facade.task.builder.ServerTaskMemberBuilder;
+import com.baiyi.opscloud.packer.task.ServerTaskPacker;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
 import com.baiyi.opscloud.service.task.ServerTaskMemberService;
 import com.baiyi.opscloud.service.task.ServerTaskService;
@@ -38,6 +41,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -63,7 +67,17 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Resource
     private DsConfigFactory dsConfigFactory;
 
+    @Resource
+    private ServerTaskPacker serverTaskPacker;
+
     private static final int MAX_EXECUTING = 20;
+
+    @Override
+    public DataTable<ServerTaskVO.ServerTask> queryServerTaskPage(ServerTaskParam.ServerTaskPageQuery pageQuery) {
+        DataTable<ServerTask> table = serverTaskService.queryServerTaskPage(pageQuery);
+        return new DataTable<>(table.getData().stream().map(e -> serverTaskPacker.wrapToVO(e, pageQuery)).collect(Collectors.toList())
+                , table.getTotalNum());
+    }
 
     @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask) {
@@ -115,7 +129,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
                 AnsibleServerTask ansibleServerTask = new AnsibleServerTask(serverTask.getTaskUuid(),
                         serverTaskMember,
-                        commandLine ,
+                        commandLine,
                         serverTaskMemberService,
                         taskLogStorehouse);
                 fixedThreadPool.execute(ansibleServerTask); // 执行任务
@@ -132,6 +146,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
 
     /**
      * 追踪任务直到完成
+     *
      * @param serverTask
      */
     private void traceEndOfTask(ServerTask serverTask) {

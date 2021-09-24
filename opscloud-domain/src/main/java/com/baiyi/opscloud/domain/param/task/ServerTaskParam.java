@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.domain.param.task;
 
+import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import javax.validation.constraints.NotNull;
 import java.util.List;
@@ -15,6 +16,25 @@ import java.util.List;
  * @Version 1.0
  */
 public class ServerTaskParam {
+
+    @Data
+    @Builder
+    @EqualsAndHashCode(callSuper = true)
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class ServerTaskPageQuery extends PageParam implements IExtend {
+
+        @ApiModelProperty(value = "关键字查询")
+        private String queryName;
+
+        @ApiModelProperty(value = "任务是否完成")
+        private Boolean finalized;
+
+        private Boolean extend;
+
+    }
+
 
     @Data
     @Builder

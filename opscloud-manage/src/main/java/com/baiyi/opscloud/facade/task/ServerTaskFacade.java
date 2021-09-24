@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.facade.task;
 
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
+import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 
 /**
  * @Author baiyi
@@ -8,6 +10,8 @@ import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
  * @Version 1.0
  */
 public interface ServerTaskFacade {
+
+    DataTable<ServerTaskVO.ServerTask> queryServerTaskPage(ServerTaskParam.ServerTaskPageQuery pageQuery);
 
     /**
      * 提交服务器任务

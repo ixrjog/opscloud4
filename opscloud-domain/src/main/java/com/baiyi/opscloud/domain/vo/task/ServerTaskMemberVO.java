@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.domain.vo.task;
 
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
-import lombok.Builder;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -15,11 +16,21 @@ import java.util.Date;
  */
 public class ServerTaskMemberVO {
 
+    public interface IServerTaskMembers {
+        Integer getServerTaskId();
+
+        void setServerTaskMembers(List<Member> serverTaskMembers);
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @ApiModel
-    public static class Member extends BaseVO {
+    public static class Member extends BaseVO implements EnvVO.IEnv {
+
+        private EnvVO.Env env;
 
         private Integer id;
 
@@ -35,18 +46,23 @@ public class ServerTaskMemberVO {
 
         private Boolean finalized;
 
+        private String taskStatus;
+
         private Integer stopType;
 
         private Integer exitValue;
 
         private String taskResult;
 
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date startTime;
 
+        @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date endTime;
 
         private String outputMsg;
 
         private String errorMsg;
+
     }
 }
