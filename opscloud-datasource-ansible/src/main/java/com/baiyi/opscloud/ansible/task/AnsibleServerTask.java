@@ -92,6 +92,7 @@ public class AnsibleServerTask implements Runnable {
             resultHandler.waitFor(TimeUtil.secondTime * 5);
             // 修改任务状态
             if (serverTaskMember.getTaskStatus().equals(ServerTaskStatusEnum.QUEUE.name())) {
+                serverTaskMember.setStartTime(new Date());
                 serverTaskMember.setTaskStatus(ServerTaskStatusEnum.EXECUTING.name());
                 serverTaskMemberService.update(serverTaskMember);
                 log.info("任务启动信息! taskUuid = {} , serverTaskMemberId = {} , taskStatus = {}", taskUuid, serverTaskMember.getId(), serverTaskMember.getTaskStatus());
