@@ -7,6 +7,9 @@ package com.baiyi.opscloud.datasource.util;
  */
 public class SystemEnvUtil {
 
+    private SystemEnvUtil() {
+    }
+
     public static String renderEnvHome(String str) {
         return str.replace("${HOME}", System.getenv("HOME"));
     }

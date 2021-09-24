@@ -16,7 +16,8 @@ public enum ServerTaskStopType {
     MEMBER_TASK_STOP(3),
     // 主任务强制停止
     SERVER_TASK_STOP(4),
-    LOG_EXCEEDED_LIMIT(5);
+    LOG_EXCEEDED_LIMIT(5),
+    ERROR_STOP(6);
 
     private int type;
 
