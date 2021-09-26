@@ -46,6 +46,9 @@ public class PodAssetConvert {
                 .paramProperty("nodeName", entry.getSpec().getNodeName())
                 .paramProperty("restartCount",entry.getStatus().getContainerStatuses().get(0).getRestartCount())
                 .paramProperty("hostIp", entry.getStatus().getHostIP())
+                .paramProperty("image", entry.getStatus().getContainerStatuses().get(0).getImage())
+                .paramProperty("imageId", entry.getStatus().getContainerStatuses().get(0).getImageID())
+                .paramProperty("containerId",entry.getStatus().getContainerStatuses().get(0).getContainerID())
                 .build();
     }
 
