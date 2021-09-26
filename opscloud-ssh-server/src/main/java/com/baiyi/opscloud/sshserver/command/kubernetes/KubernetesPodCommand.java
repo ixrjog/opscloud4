@@ -2,14 +2,15 @@ package com.baiyi.opscloud.sshserver.command.kubernetes;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.common.util.SessionUtil;
-import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.sshcore.audit.AuditPodCommandHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
@@ -94,6 +95,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                         "Namespace",
                         "Pod Name",
                         "Pod IP",
+                        "Start Time",
+                        "Restart Count",
                         "Container Name"
                 );
         int seq = 1;
@@ -105,6 +108,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                     pod.getMetadata().getNamespace(),
                     pod.getMetadata().getName(),
                     pod.getStatus().getPodIP(),
+                    com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConvert.toGmtDate(pod.getStatus().getStartTime())),
+                    pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
                     Joiner.on(",").join(names)
             );
             seq++;
@@ -140,6 +145,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                         "Namespace",
                         "Pod Name",
                         "Pod IP",
+                        "Start Time",
+                        "Restart Count",
                         "Container Name"
                 );
         Map<Integer, PodContext> podMapper = Maps.newHashMap();
@@ -175,6 +182,8 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
                             pod.getMetadata().getNamespace(),
                             podName,
                             pod.getStatus().getPodIP(),
+                            com.baiyi.opscloud.common.util.TimeUtil.dateToStr(PodAssetConvert.toGmtDate(pod.getStatus().getStartTime())),
+                            pod.getStatus().getContainerStatuses().get(0).getRestartCount(), // Restart Count
                             Joiner.on(",").join(names)
                     );
                     seq++;
