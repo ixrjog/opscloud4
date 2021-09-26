@@ -22,15 +22,15 @@ import java.io.UnsupportedEncodingException;
 @Builder
 public class TaskExecutor {
 
+    private final static String CHARSET_NAME = "utf8";
+
     private DefaultExecutor executor;
 
     private ExecuteWatchdog watchdog;
 
-    private ByteArrayOutputStream outputStream;
+    private final ByteArrayOutputStream outputStream;
 
-    private ByteArrayOutputStream errorStream;
-
-    //  private ExecuteWatchdog watchdog;
+    private final ByteArrayOutputStream errorStream;
 
     public void execute(CommandLine commandLine, DefaultExecuteResultHandler resultHandler) throws IOException {
         this.executor.execute(commandLine, resultHandler);
@@ -51,7 +51,7 @@ public class TaskExecutor {
      */
     public String getOutputMsg() {
         try {
-            String outStr = this.outputStream.toString("utf8");
+            String outStr = this.outputStream.toString(CHARSET_NAME);
             this.outputStream.reset();
             return outStr;
         } catch (UnsupportedEncodingException e) {
@@ -67,7 +67,7 @@ public class TaskExecutor {
      */
     public String getErrorMsg() {
         try {
-            String errStr = this.errorStream.toString("utf8");
+            String errStr = this.errorStream.toString(CHARSET_NAME);
             this.errorStream.reset();
             return errStr;
         } catch (UnsupportedEncodingException e) {
