@@ -41,7 +41,7 @@ public class ServerTaskServiceImpl implements ServerTaskService {
             criteria2.andEqualTo("finalized", pageQuery.getFinalized());
             example.and(criteria2);
         }
-        example.setOrderByClause("create_time");
+        example.setOrderByClause("create_time desc");
         List<ServerTask> data = serverTaskMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
