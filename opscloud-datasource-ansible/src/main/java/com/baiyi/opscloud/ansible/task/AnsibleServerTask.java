@@ -136,8 +136,8 @@ public class AnsibleServerTask implements Runnable {
         serverTaskMember.setStopType(taskStatus.getStopType());
         serverTaskMember.setTaskStatus(taskStatus.getTaskStatus());
         serverTaskMember.setEndTime(new Date());
-        serverTaskMember.setOutputMsg(taskLogStorehouse.buildOutputLogPath(taskUuid, serverTaskMember.getId()));
-        serverTaskMember.setErrorMsg(taskLogStorehouse.buildErrorLogPath(taskUuid, serverTaskMember.getId()));
+//        serverTaskMember.setOutputMsg(taskLogStorehouse.buildOutputLogPath(taskUuid, serverTaskMember.getId()));
+//        serverTaskMember.setErrorMsg(taskLogStorehouse.buildErrorLogPath(taskUuid, serverTaskMember.getId()));
         if (!StringUtils.isEmpty(taskStatus.getTaskResult()))
             serverTaskMember.setTaskResult(taskStatus.getTaskResult());
         serverTaskMemberService.update(serverTaskMember);
