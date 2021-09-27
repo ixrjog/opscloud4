@@ -45,7 +45,7 @@ public class ServerTaskPlayProcess extends AbstractTaskPlayProcess<ServerTaskPla
     }
 
     private void doTask(Session session, Integer serverTaskMemberId) {
-        ServerTaskMember serverTaskMember = serverTaskMemberService.getById(null);
+        ServerTaskMember serverTaskMember = serverTaskMemberService.getById(serverTaskMemberId);
         if (serverTaskMember == null) {
             log.error("serverTaskMember不存在！ serverTaskMemberId = {}", serverTaskMemberId);
             return;

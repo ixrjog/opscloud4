@@ -39,7 +39,7 @@ public class ServerTaskPlayController extends SimpleAuthentication {
     public void onOpen(Session session) {
         sessionSet.add(session);
         int cnt = onlineCount.incrementAndGet(); // 在线数加1
-        log.info("终端会话审计有连接加入，当前连接数为：{}", cnt);
+        log.info("剧本任务日志有连接加入，当前连接数为：{}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
     }
