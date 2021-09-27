@@ -98,8 +98,6 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         List<ServerTaskMember> members = Lists.newArrayList();
         servers.forEach(server -> {
             ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, server);
-            member.setOutputMsg(taskLogStorehouse.buildOutputLogPath(serverTask.getTaskUuid(), member.getId()));
-            member.setErrorMsg(taskLogStorehouse.buildErrorLogPath(serverTask.getTaskUuid(), member.getId()));
             serverTaskMemberService.add(member);
             members.add(member);
         });

@@ -94,6 +94,8 @@ public class AnsibleServerTask implements Runnable {
             if (serverTaskMember.getTaskStatus().equals(ServerTaskStatusEnum.QUEUE.name())) {
                 serverTaskMember.setStartTime(new Date());
                 serverTaskMember.setTaskStatus(ServerTaskStatusEnum.EXECUTING.name());
+                serverTaskMember.setOutputMsg(taskLogStorehouse.buildOutputLogPath(taskUuid,serverTaskMember.getId()));
+                serverTaskMember.setErrorMsg(taskLogStorehouse.buildErrorLogPath(taskUuid, serverTaskMember.getId()));
                 serverTaskMemberService.update(serverTaskMember);
                 log.info("任务启动信息! taskUuid = {} , serverTaskMemberId = {} , taskStatus = {}", taskUuid, serverTaskMember.getId(), serverTaskMember.getTaskStatus());
             }
