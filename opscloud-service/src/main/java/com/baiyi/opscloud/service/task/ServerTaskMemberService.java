@@ -11,6 +11,8 @@ import java.util.List;
  */
 public interface ServerTaskMemberService {
 
+    ServerTaskMember getById(Integer id);
+
     void add(ServerTaskMember serverTaskMember);
 
     void update(ServerTaskMember serverTaskMember);

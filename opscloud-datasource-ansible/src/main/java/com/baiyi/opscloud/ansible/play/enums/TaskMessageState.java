@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.ansible.enums;
+package com.baiyi.opscloud.ansible.play.enums;
 
 import lombok.Getter;
 

@@ -7,6 +7,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintWriter;
 
 /**
  * @Author baiyi
@@ -18,6 +19,14 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
     private OutputStream channelOutput;
 
+    private PrintWriter printWriter;
+
+    public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, PrintWriter printWriter) {
+        setSessionOutput(sessionOutput);
+        setBaos(baos);
+        this.printWriter = printWriter;
+    }
+
     public WatchKubernetesSshOutputTask(SessionOutput sessionOutput, ByteArrayOutputStream baos, OutputStream channelOutput) {
         setSessionOutput(sessionOutput);
         setBaos(baos);
@@ -26,10 +35,17 @@ public class WatchKubernetesSshOutputTask extends AbstractSshChannelOutputTask {
 
     @Override
     public void write(char[] buf, int off, int len) throws IOException {
+        if(printWriter != null){
+            this.printWriter.write(buf, off, len);
+            // System.out.write(toBytes(buf),off,len);
+            this.printWriter.flush();
+            return;
+        }
         this.channelOutput.write(toBytes(buf), off, len);
-       // System.out.write(toBytes(buf),off,len);
+        // System.out.write(toBytes(buf),off,len);
         this.channelOutput.flush();
     }
+
 
 }
 

@@ -8,7 +8,7 @@ package com.baiyi.opscloud.common.base;
 public enum AnsibleResult {
 
     SUCCESSFUL(0, "SUCCESSFUL"),
-    ERROR(1, "ERROR");
+    FAILED(1, "FAILED");
 
     private int type;
     private String name;

@@ -16,6 +16,14 @@ import javax.validation.constraints.NotNull;
  */
 public class AnsiblePlaybookVO {
 
+    public interface IPlaybook {
+        Integer getAnsiblePlaybookId();
+
+        void setPlaybook(Playbook playbook);
+
+        void setTaskName(String taskName);
+    }
+
 
     @EqualsAndHashCode(callSuper = true)
     @Data

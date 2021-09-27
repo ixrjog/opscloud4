@@ -32,8 +32,7 @@ public class TerminalAuditPlayProcess extends AbstractTerminalAuditProcess<Termi
 
     @Override
     public void process(String message, Session session) {
-         TerminalAuditPlayMessage playMessage = getMessage(message);
-
+        TerminalAuditPlayMessage playMessage = getMessage(message);
         SessionOutput sessionOutput = new SessionOutput(playMessage.getSessionId(), playMessage.getInstanceId());
         // 启动线程处理会话
         Runnable run = new TerminalAuditOutputTask(session, sessionOutput);

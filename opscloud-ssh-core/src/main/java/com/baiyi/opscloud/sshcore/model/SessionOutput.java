@@ -61,7 +61,6 @@ public class SessionOutput extends HostSystem {
     public SessionOutput(String sessionId, String instanceId) {
         this.sessionId = sessionId;
         this.setInstanceId(instanceId);
-
     }
 
 }

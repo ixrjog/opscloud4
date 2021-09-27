@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.controller.ws;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONObject;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.terminal.audit.ITerminalAuditProcess;
 import com.baiyi.opscloud.terminal.audit.TerminalAuditProcessFactory;
@@ -31,7 +30,7 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
 
     private Session session = null;
     // 超时时间1H
-    public static final Long WEBSOCKET_TIMEOUT = 60 * 60 * 1000L;
+    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
 
     /**
      * 连接建立成功调用的方法
@@ -43,10 +42,6 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
         log.info("终端会话审计有连接加入，当前连接数为：{}", cnt);
         session.setMaxIdleTimeout(WEBSOCKET_TIMEOUT);
         this.session = session;
-        // 线程启动
-//        Runnable run = new SentOutputTask(sessionId, session);
-//        Thread thread = new Thread(run);
-//        thread.start();
     }
 
     /**
@@ -54,17 +49,9 @@ public class TerminalSessionAuditController extends SimpleAuthentication {
      */
     @OnClose
     public void onClose() {
-
-
-        // KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process("", session, terminalSession);
         sessionSet.remove(session);
         int cnt = onlineCount.decrementAndGet();
         log.info("有连接关闭，当前连接数为：{}", cnt);
-    }
-
-    protected String getState(String message) {
-        JSONObject jsonObject = JSON.parseObject(message);
-        return jsonObject.getString(MESSAGE_STATE);
     }
 
     /**

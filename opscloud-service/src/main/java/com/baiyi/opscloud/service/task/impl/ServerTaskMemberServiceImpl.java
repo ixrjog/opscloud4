@@ -21,6 +21,11 @@ public class ServerTaskMemberServiceImpl implements ServerTaskMemberService {
     private ServerTaskMemberMapper serverTaskMemberMapper;
 
     @Override
+    public ServerTaskMember getById(Integer id) {
+        return serverTaskMemberMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
     public void add(ServerTaskMember serverTaskMember) {
         serverTaskMemberMapper.insert(serverTaskMember);
     }
@@ -49,7 +54,7 @@ public class ServerTaskMemberServiceImpl implements ServerTaskMemberService {
     }
 
     @Override
-    public List<ServerTaskMember> queryByServerTaskId(Integer serverTaskId){
+    public List<ServerTaskMember> queryByServerTaskId(Integer serverTaskId) {
         Example example = new Example(ServerTaskMember.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("serverTaskId", serverTaskId);

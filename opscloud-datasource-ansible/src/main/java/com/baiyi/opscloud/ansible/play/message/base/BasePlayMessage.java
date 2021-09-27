@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.ansible.play.base;
+package com.baiyi.opscloud.ansible.play.message.base;
 
 import com.baiyi.opscloud.domain.model.message.IState;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -11,13 +11,11 @@ import lombok.Data;
  */
 @Data
 @JsonIgnoreProperties
-public class BasePlayMessage  implements IState {
+public class BasePlayMessage implements IState {
 
     private String state;
 
     private String sessionId;
-
-    private String instanceId;
 
 }
 

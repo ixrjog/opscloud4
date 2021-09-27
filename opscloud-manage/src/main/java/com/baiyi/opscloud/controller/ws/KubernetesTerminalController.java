@@ -2,6 +2,7 @@ package com.baiyi.opscloud.controller.ws;
 
 import com.baiyi.opscloud.common.model.HostInfo;
 import com.baiyi.opscloud.common.util.SessionUtil;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
@@ -42,7 +43,7 @@ public class KubernetesTerminalController extends SimpleAuthentication {
 
     private Session session = null;
     // 超时时间1H
-    public static final Long WEBSOCKET_TIMEOUT = 60 * 60 * 1000L;
+    public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
 
     private final static HostInfo serverInfo = HostInfo.build();
 

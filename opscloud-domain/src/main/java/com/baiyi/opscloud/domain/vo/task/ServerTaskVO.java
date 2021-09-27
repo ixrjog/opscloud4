@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.domain.vo.task;
 
+import com.baiyi.opscloud.domain.vo.ansible.AnsiblePlaybookVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.ShowTime;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
@@ -22,7 +24,7 @@ public class ServerTaskVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class ServerTask extends BaseVO implements ServerTaskMemberVO.IServerTaskMembers, ShowTime.IAgo, ShowTime.IDuration {
+    public static class ServerTask extends BaseVO implements ServerTaskMemberVO.IServerTaskMembers, AnsiblePlaybookVO.IPlaybook, UserVO.IUser, ShowTime.IAgo, ShowTime.IDuration {
 
         private List<ServerTaskMemberVO.Member> serverTaskMembers; // 任务成员
 
@@ -30,6 +32,10 @@ public class ServerTaskVO {
         public Integer getServerTaskId() {
             return id;
         }
+
+        private AnsiblePlaybookVO.Playbook playbook;
+
+        private UserVO.User user;
 
         private Integer id;
 
@@ -69,5 +75,6 @@ public class ServerTaskVO {
         private String ago;
 
         private String duration;
+
     }
 }

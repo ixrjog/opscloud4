@@ -110,7 +110,7 @@ public class AnsibleServerTask implements Runnable {
             TaskStatus taskStatus = TaskStatus.builder()
                     .stopType(ServerTaskStopType.ERROR_STOP.getType())
                     .exitValue(e.getExitValue())
-                    .taskResult(AnsibleResult.ERROR.getName())
+                    .taskResult(AnsibleResult.FAILED.getName())
                     .build();
             save(taskStatus);
         } catch (InterruptedException | IOException e) {

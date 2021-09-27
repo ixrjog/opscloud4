@@ -25,6 +25,7 @@ white:
     - /api/ws/terminal
     - /api/ws/kubernetes/terminal
     - /api/ws/terminal/session/audit
+    - /api/ws/server/task/play
 
 spring:
   profiles:

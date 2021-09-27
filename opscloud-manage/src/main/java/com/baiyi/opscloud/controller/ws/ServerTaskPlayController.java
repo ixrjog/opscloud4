@@ -20,9 +20,9 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @Version 1.0
  */
 @Slf4j
-@ServerEndpoint(value = "/api/ws/server/task")
+@ServerEndpoint(value = "/api/ws/server/task/play")
 @Component
-public class ServerTaskController extends SimpleAuthentication {
+public class ServerTaskPlayController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包是线程安全Set，用来存放每个客户端对应的Session对象。
