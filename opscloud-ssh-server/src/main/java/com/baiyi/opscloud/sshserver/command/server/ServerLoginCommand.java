@@ -111,7 +111,7 @@ public class ServerLoginCommand {
                     printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                // e.printStackTrace();
                 sessionClosed("服务端连接已断开! 耗时:%s/s", inst1);
             } finally {
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSessionInstance);
