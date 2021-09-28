@@ -7,7 +7,9 @@ Welcome to the opscloud wiki!
 <img src="https://img.shields.io/badge/mysql-8-brightgreen.svg"></img> 
 
 <br>
-
+#### 4.0.3版本主要功能
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/opscloud4.png"></img>
+<br>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-1.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-2.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-3.png"></img>
@@ -26,9 +28,10 @@ Welcome to the opscloud wiki!
 #### 4.0版本核心设计（前后端全部重构）
 + 事件驱动
 + 万物皆资产
-  + 多云多实例支持
+  + 多实例支持
+  + 多云支持（暂无其他云账户，目前只支持阿里云，有计划接入腾讯云，AWS，vSphere7）
   + 抽象数据源实例资产
-+ 远程控制集成
++ 堡垒机
   + 远程桌面RDP,VNC(需安装apache-guacamole)
   + Web终端（支持多开，会话复制，命令同步）
   + Ssh服务器
@@ -37,7 +40,9 @@ Welcome to the opscloud wiki!
     + 支持Kubernetes容器登录（容器堡垒机）
     + 支持查看Kubernetes容器日志
     + 以事件驱动的主动式堡垒机技术（通过事件ID登录服务器）
-+ 批量配置
++ 剧本任务
++ RBAC
++ 集群架构
 
 ### 帮助文档
 
