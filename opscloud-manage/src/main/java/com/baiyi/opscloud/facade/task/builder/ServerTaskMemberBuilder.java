@@ -13,7 +13,8 @@ import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
  */
 public class ServerTaskMemberBuilder {
 
-    public static ServerTaskMember newBuilder(ServerTask serverTask, ServerVO.Server server) {
+    public static ServerTaskMember newBuilder(ServerTask serverTask,
+                                              ServerVO.Server server) {
         return ServerTaskMember.builder()
                 .serverTaskId(serverTask.getId())
                 .serverId(server.getId())

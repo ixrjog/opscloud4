@@ -62,7 +62,7 @@ public class AnsibleServerTask implements Runnable {
         while (true) {
             resultHandler.waitFor(TimeUtil.secondTime); // 等待执行
             // 执行日志
-            taskLogStorehouse.recorderLog(taskUuid, serverTaskMember.getId(), taskExecutor);
+            taskLogStorehouse.recorderLog(taskUuid, serverTaskMember, taskExecutor);
             // 任务结束
             if (resultHandler.hasResult()) {
                 TaskStatus taskStatus = TaskStatus.builder()
@@ -76,7 +76,7 @@ public class AnsibleServerTask implements Runnable {
                 // 判断任务是否需要终止或超时
                 if (TimeUtil.checkTimeout(startTaskTime, MAX_TIMEOUT)) {
                     taskExecutor.killedProcess(); // kill
-                    taskLogStorehouse.recorderLog(taskUuid, serverTaskMember.getId(), taskExecutor);
+                    taskLogStorehouse.recorderLog(taskUuid, serverTaskMember, taskExecutor);
                     throw new TaskTimeoutException();
                 }
             }
@@ -94,8 +94,6 @@ public class AnsibleServerTask implements Runnable {
             if (serverTaskMember.getTaskStatus().equals(ServerTaskStatusEnum.QUEUE.name())) {
                 serverTaskMember.setStartTime(new Date());
                 serverTaskMember.setTaskStatus(ServerTaskStatusEnum.EXECUTING.name());
-                serverTaskMember.setOutputMsg(taskLogStorehouse.buildOutputLogPath(taskUuid,serverTaskMember.getId()));
-                serverTaskMember.setErrorMsg(taskLogStorehouse.buildErrorLogPath(taskUuid, serverTaskMember.getId()));
                 serverTaskMemberService.update(serverTaskMember);
                 log.info("任务启动信息! taskUuid = {} , serverTaskMemberId = {} , taskStatus = {}", taskUuid, serverTaskMember.getId(), serverTaskMember.getTaskStatus());
             }
@@ -128,7 +126,7 @@ public class AnsibleServerTask implements Runnable {
      * @param taskStatus
      */
     private void save(TaskExecutor taskExecutor, TaskStatus taskStatus) {
-        taskLogStorehouse.recorderLog(taskUuid, serverTaskMember.getId(), taskExecutor);
+        taskLogStorehouse.recorderLog(taskUuid, serverTaskMember, taskExecutor);
         save(taskStatus);
     }
 
@@ -138,8 +136,6 @@ public class AnsibleServerTask implements Runnable {
         serverTaskMember.setStopType(taskStatus.getStopType());
         serverTaskMember.setTaskStatus(taskStatus.getTaskStatus());
         serverTaskMember.setEndTime(new Date());
-//        serverTaskMember.setOutputMsg(taskLogStorehouse.buildOutputLogPath(taskUuid, serverTaskMember.getId()));
-//        serverTaskMember.setErrorMsg(taskLogStorehouse.buildErrorLogPath(taskUuid, serverTaskMember.getId()));
         if (!StringUtils.isEmpty(taskStatus.getTaskResult()))
             serverTaskMember.setTaskResult(taskStatus.getTaskResult());
         serverTaskMemberService.update(serverTaskMember);

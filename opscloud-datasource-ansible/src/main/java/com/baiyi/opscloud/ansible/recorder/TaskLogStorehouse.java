@@ -3,6 +3,7 @@ package com.baiyi.opscloud.ansible.recorder;
 import com.baiyi.opscloud.ansible.executor.TaskExecutor;
 import com.baiyi.opscloud.common.config.OpscloudConfig;
 import com.baiyi.opscloud.common.util.IOUtil;
+import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.google.common.base.Joiner;
 import org.springframework.stereotype.Component;
 
@@ -29,26 +30,26 @@ public class TaskLogStorehouse {
     /**
      * 记录日志(追加写入)
      *
-     * @param serverTaskMemberId
+     * @param serverTaskMember
      * @param taskExecutor
      */
-    public void recorderLog(String taskUuid, int serverTaskMemberId, TaskExecutor taskExecutor) {
+    public void recorderLog(String taskUuid, ServerTaskMember serverTaskMember, TaskExecutor taskExecutor) {
         // 追加写入output日志
-        IOUtil.appendFile(taskExecutor.getOutputMsg(), buildOutputLogPath(taskUuid, serverTaskMemberId));
+        IOUtil.appendFile(taskExecutor.getOutputMsg(), buildOutputLogPath(taskUuid, serverTaskMember));
         // 追加写入error日志
-        IOUtil.appendFile(taskExecutor.getErrorMsg(), buildErrorLogPath(taskUuid, serverTaskMemberId));
+        IOUtil.appendFile(taskExecutor.getErrorMsg(), buildErrorLogPath(taskUuid, serverTaskMember));
     }
 
-    public String buildOutputLogPath(String taskUuid, int serverTaskMemberId) {
-        return Joiner.on("/").join(buildBaseLogPath(taskUuid, serverTaskMemberId), Logs.OUTPUT_LOG);
+    public String buildOutputLogPath(String taskUuid, ServerTaskMember serverTaskMember) {
+        return Joiner.on("/").join(buildBaseLogPath(taskUuid, serverTaskMember), Logs.OUTPUT_LOG);
     }
 
-    public String buildErrorLogPath(String taskUuid, int serverTaskMemberId) {
-        return Joiner.on("/").join(buildBaseLogPath(taskUuid, serverTaskMemberId), Logs.ERROR_LOG);
+    public String buildErrorLogPath(String taskUuid, ServerTaskMember serverTaskMember) {
+        return Joiner.on("/").join(buildBaseLogPath(taskUuid, serverTaskMember), Logs.ERROR_LOG);
     }
 
-    private String buildBaseLogPath(String taskUuid, int serverTaskMemberId) {
-        return Joiner.on("/").join(opscloudConfig.getServerTaskLogPath(), taskUuid, serverTaskMemberId);
+    private String buildBaseLogPath(String taskUuid, ServerTaskMember serverTaskMember) {
+        return Joiner.on("/").join(opscloudConfig.getServerTaskLogPath(), taskUuid, serverTaskMember.getServerName());
     }
 
 
