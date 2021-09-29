@@ -1,0 +1,87 @@
+package com.baiyi.opscloud.datasource.aliyun.rds.mysql.handler;
+
+import com.aliyuncs.exceptions.ClientException;
+import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesRequest;
+import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
+import com.aliyuncs.rds.model.v20140815.DescribeDatabasesRequest;
+import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
+import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
+import com.google.common.collect.Lists;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
+
+import static com.baiyi.opscloud.datasource.aliyun.core.common.BaseAliyunHandler.Query.PAGE_SIZE;
+
+/**
+ * @Author baiyi
+ * @Date 2021/9/29 5:45 下午
+ * @Version 1.0
+ */
+@Component
+public class AliyunRdsMysqlHandler {
+
+    @Resource
+    private AliyunHandler aliyunHandler;
+
+    /**
+     * 查询所有数据库实例
+     * @param regionId
+     * @param aliyun
+     * @return
+     */
+    public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, DsAliyunConfig.Aliyun aliyun) {
+        List<DescribeDBInstancesResponse.DBInstance> instances = Lists.newArrayList();
+        DescribeDBInstancesRequest describe = new DescribeDBInstancesRequest();
+        describe.setPageSize(PAGE_SIZE);
+        int size = PAGE_SIZE;
+        int pageNumber = 1;
+        try {
+            while (PAGE_SIZE <= size) {
+                describe.setPageNumber(pageNumber);
+                DescribeDBInstancesResponse response = aliyunHandler.getAcsResponse(regionId, aliyun,   describe);
+                instances.addAll(response.getItems());
+                size = response.getTotalRecordCount();
+                pageNumber++;
+            }
+            return instances;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+    /**
+     * 查询数据库实例中的所有数据
+     * @param regionId
+     * @param aliyun
+     * @param dbInstanceId
+     * @return
+     */
+    public List<DescribeDatabasesResponse.Database> listDatabase(String regionId, DsAliyunConfig.Aliyun aliyun, String dbInstanceId) {
+        DescribeDatabasesRequest describe = new DescribeDatabasesRequest();
+        describe.setDBInstanceId(dbInstanceId);
+        describe.setPageSize(PAGE_SIZE);
+        int size = PAGE_SIZE;
+        List<DescribeDatabasesResponse.Database> databases = Lists.newArrayList();
+        int pageNumber = 1;
+        // 返回值无总数，使用其它算法取所有数据库
+        try {
+            while (PAGE_SIZE <= size) {
+                describe.setPageNumber(pageNumber);
+                DescribeDatabasesResponse response = aliyunHandler.getAcsResponse(regionId, aliyun, describe);
+                databases.addAll(response.getDatabases());
+                size = response.getDatabases().size();
+                pageNumber++;
+            }
+            return databases;
+        } catch (ClientException e) {
+            e.printStackTrace();
+            return Collections.EMPTY_LIST;
+        }
+    }
+
+}
