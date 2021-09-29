@@ -49,3 +49,11 @@ Welcome to the opscloud wiki!
 ### 帮助文档
 
 <a style="color:#2b669a" href="https://www.kancloud.cn/ixrjog/opscloud4/2361886" target="_blank">传送门:https://www.kancloud.cn/ixrjog/opscloud4/2361886</a>
+
+
+### Thanks to JetBrains
+<a href="https://www.jetbrains.com" target="_blank">
+  <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/jetbrains-logos/jetbrains-variant-2.svg"></img>
+</a>
+
+> Thanks JetBrains to support the project providing such great IDE.
