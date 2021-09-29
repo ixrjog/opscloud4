@@ -29,6 +29,7 @@
         <module>opscloud-terminal-audit</module>
         <module>opscloud-event</module>
         <module>opscloud-datasource-aliyun-log</module>
+        <module>opscloud-datasource-aliyun-rds</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -279,6 +280,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-log</artifactId>
+                <version>0.0.1-SNAPSHOT</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-rds</artifactId>
                 <version>0.0.1-SNAPSHOT</version>
             </dependency>
 
