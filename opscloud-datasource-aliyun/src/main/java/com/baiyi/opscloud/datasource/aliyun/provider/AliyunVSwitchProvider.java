@@ -80,7 +80,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.V_SWITCH.getType();
+        return DsAssetTypeEnum.V_SWITCH.name();
     }
 
     @Override

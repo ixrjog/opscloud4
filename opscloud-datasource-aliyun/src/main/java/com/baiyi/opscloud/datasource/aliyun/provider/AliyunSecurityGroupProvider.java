@@ -80,7 +80,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ECS_SG.getType();
+        return DsAssetTypeEnum.ECS_SG.name();
     }
 
     @Override

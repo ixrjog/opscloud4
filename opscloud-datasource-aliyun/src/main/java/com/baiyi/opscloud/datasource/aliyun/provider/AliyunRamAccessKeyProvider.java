@@ -77,7 +77,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RAM_ACCESS_KEY.getType();
+        return DsAssetTypeEnum.RAM_ACCESS_KEY.name();
     }
 
     @Override

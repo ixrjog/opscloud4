@@ -1,14 +1,14 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ram.model.v20150501.ListEntitiesForPolicyResponse;
-import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
+import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
+import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
+import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
+import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler.AliyunOnsRocketMqInstanceHandler;
+import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler.AliyunOnsRocketMqTopicHandler;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.annotation.EnablePullChild;
@@ -26,25 +26,27 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/7/2 7:46 下午
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2021/9/30 3:09 下午
+ * @Version 1.0
  */
 @Component
-public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUsersResponse.User, ListPoliciesResponse.Policy> {
+public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvider<OnsTopicListResponse.PublishInfoDo, OnsInstanceInServiceListResponse.InstanceVO> {
 
     @Resource
-    private AliyunRamHandler aliyunRamHandler;
+    private AliyunOnsRocketMqInstanceHandler aliyunOnsRocketMqInstanceHandler;
 
     @Resource
-    private AliyunRamUserProvider aliyunRamUserProvider;
+    private AliyunOnsRocketMqTopicHandler aliyunOnsRocketMqTopicHandler;
+
+    @Resource
+    private AliyunOnsRocketMqTopicProvider aliyunOnsRocketMqTopicProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.RAM_USER)
-    @SingleTask(name = "pull_aliyun_ram_user", lockTime = "5m")
+    @EnablePullChild(type = DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC)
+    @SingleTask(name = "pull_aliyun_ons_rocketmq_topic", lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -54,8 +56,8 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entry) {
-        return RamAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsTopicListResponse.PublishInfoDo entry) {
+        return OnsRocketMqConvert.toAssetContainer(dsInstance, entry);
     }
 
     @Override
@@ -70,13 +72,19 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<OnsTopicListResponse.PublishInfoDo> listEntries(DsInstanceContext dsInstanceContext) {
         DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<ListUsersResponse.User> userList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> userList.addAll(aliyunRamHandler.listUsers(regionId, aliyun)));
-        return userList;
+        List<OnsTopicListResponse.PublishInfoDo> entries = Lists.newArrayList();
+        aliyun.getRegionIds().forEach(regionId -> {
+            List<OnsInstanceInServiceListResponse.InstanceVO> instances = aliyunOnsRocketMqInstanceHandler.listInstance(regionId, aliyun);
+            if (!CollectionUtils.isEmpty(instances)) {
+                instances.forEach(instance ->
+                        entries.addAll(aliyunOnsRocketMqTopicHandler.listTopic(regionId, aliyun, instance.getInstanceId())));
+            }
+        });
+        return entries;
     }
 
     @Override
@@ -86,32 +94,24 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RAM_USER.name();
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunRamUserProvider);
-    }
-
-    @Override
-    protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRamHandler.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName())
-                .stream().map(this::toTargetEntry)
-                .collect(Collectors.toList());
-    }
-
-    private ListUsersResponse.User toTargetEntry(ListEntitiesForPolicyResponse.User user) {
-        ListUsersResponse.User target = new ListUsersResponse.User();
-        target.setUserName(user.getUserName());
-        target.setDisplayName(user.getDisplayName());
-        target.setUserId(user.getUserId());
-        return target;
+        return DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC.name();
     }
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.RAM_POLICY.name();
+        return DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE.name();
     }
+
+    @Override
+    protected List<OnsTopicListResponse.PublishInfoDo> listEntries(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
+        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        return aliyunOnsRocketMqTopicHandler.listTopic(aliyun.getRegionId(), aliyun, target.getInstanceId());
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        AssetProviderFactory.register(aliyunOnsRocketMqTopicProvider);
+    }
+
 }
+

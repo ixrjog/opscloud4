@@ -85,7 +85,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.RAM_POLICY.getType();
+        return DsAssetTypeEnum.RAM_POLICY.name();
     }
 
     @Override
@@ -111,6 +111,6 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
 
     @Override
     public String getTargetAssetKey() {
-        return DsAssetTypeEnum.RAM_USER.getType();
+        return DsAssetTypeEnum.RAM_USER.name();
     }
 }

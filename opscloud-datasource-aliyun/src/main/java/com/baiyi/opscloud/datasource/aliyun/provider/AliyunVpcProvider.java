@@ -79,7 +79,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.VPC.getType();
+        return DsAssetTypeEnum.VPC.name();
     }
 
     @Override

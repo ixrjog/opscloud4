@@ -12,6 +12,12 @@
     <artifactId>opscloud-datasource-aliyun</artifactId>
 
     <dependencies>
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-core</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-datasource-aliyun-ecs</artifactId>
@@ -34,7 +40,7 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-core</artifactId>
+            <artifactId>opscloud-datasource-aliyun-ons</artifactId>
         </dependency>
 
     </dependencies>

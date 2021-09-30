@@ -87,7 +87,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ECS.getType();
+        return DsAssetTypeEnum.ECS.name();
     }
 
     @Override
