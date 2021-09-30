@@ -67,7 +67,15 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
         businessTypeEnums.forEach(t -> bind(t, asset));
     }
 
+    /**
+     * TODO 此处代码需要优化
+     * @param businessTypeEnum
+     * @param asset
+     */
     private void bind(BusinessTypeEnum businessTypeEnum, DsAssetVO.Asset asset) {
+//        IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(businessTypeEnum.getType());
+//        BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation = iBusinessService.getByKey(asset.getAssetKey());
+
         if (businessTypeEnum.equals(BusinessTypeEnum.SERVER)) {
             bindServer(asset);
             return;

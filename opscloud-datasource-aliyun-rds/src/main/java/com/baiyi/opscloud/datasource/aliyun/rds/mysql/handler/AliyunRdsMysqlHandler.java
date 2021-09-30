@@ -8,6 +8,7 @@ import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.google.common.collect.Lists;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,22 +28,39 @@ public class AliyunRdsMysqlHandler {
     @Resource
     private AliyunHandler aliyunHandler;
 
+    public static final String QUERY_ALL_INSTANCE = null;
+
     /**
      * 查询所有数据库实例
+     *
      * @param regionId
      * @param aliyun
      * @return
      */
     public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, DsAliyunConfig.Aliyun aliyun) {
+        return listDbInstance(regionId, aliyun, QUERY_ALL_INSTANCE);
+    }
+
+    /**
+     * 查询数据库实例
+     *
+     * @param regionId
+     * @param aliyun
+     * @param dbInstanceId
+     * @return
+     */
+    public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, DsAliyunConfig.Aliyun aliyun, String dbInstanceId) {
         List<DescribeDBInstancesResponse.DBInstance> instances = Lists.newArrayList();
         DescribeDBInstancesRequest describe = new DescribeDBInstancesRequest();
+        if (!StringUtils.isEmpty(dbInstanceId))
+            describe.setDBInstanceId(dbInstanceId);
         describe.setPageSize(PAGE_SIZE);
         int size = PAGE_SIZE;
         int pageNumber = 1;
         try {
             while (PAGE_SIZE <= size) {
                 describe.setPageNumber(pageNumber);
-                DescribeDBInstancesResponse response = aliyunHandler.getAcsResponse(regionId, aliyun,   describe);
+                DescribeDBInstancesResponse response = aliyunHandler.getAcsResponse(regionId, aliyun, describe);
                 instances.addAll(response.getItems());
                 size = response.getTotalRecordCount();
                 pageNumber++;
@@ -56,6 +74,7 @@ public class AliyunRdsMysqlHandler {
 
     /**
      * 查询数据库实例中的所有数据
+     * https://help.aliyun.com/document_detail/26260.html
      * @param regionId
      * @param aliyun
      * @param dbInstanceId

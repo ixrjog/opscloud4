@@ -13,6 +13,7 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
+import org.springframework.core.Ordered;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -27,7 +28,7 @@ import java.time.Instant;
 @Aspect
 @Component
 @Slf4j
-public class SingleTaskAspect {
+public class SingleTaskAspect  implements Ordered {
 
     private static final int RUNNING = 1;
 
@@ -82,6 +83,11 @@ public class SingleTaskAspect {
 
     private boolean isLocked(String lockKey) {
         return redisUtil.get(lockKey) != null;
+    }
+
+    @Override
+    public int getOrder() {
+        return 1;
     }
 
 }

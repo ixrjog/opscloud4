@@ -46,7 +46,6 @@ public class InstanceHealthAspect implements Ordered {
     @Override
     public int getOrder() {
         return 1;
-
     }
 
 }

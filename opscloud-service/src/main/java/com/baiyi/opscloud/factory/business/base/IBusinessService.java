@@ -10,4 +10,5 @@ import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 public interface IBusinessService<T> extends BaseBusiness.IBusinessType {
 
     T getById(Integer id);
+
 }
