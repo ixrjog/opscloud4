@@ -22,7 +22,7 @@ public class AssetProviderFactory {
     }
 
     /**
-     * Map<String instanceType, ArrayListMultimap<String key, SimpleAssetProvider>>
+     * Map<String instanceType, ArrayListMultimap<String assetType, SimpleAssetProvider>>
      */
     private static Map<String, ArrayListMultimap<String, SimpleAssetProvider>> context = new ConcurrentHashMap<>();
 
