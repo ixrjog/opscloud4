@@ -31,9 +31,6 @@ public class ServerTreeUtil {
     @Resource
     private ServerPacker serverPacker;
 
-    @Resource
-    private BusinessPropertyHelper businessPropertyHelper;
-
     @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'server_tree_severgroupid_' + #serverGroup.id", unless = "#result == null")
     public ServerTreeVO.Tree wrap(ServerGroup serverGroup, Map<String, List<ServerPack>> serverGroupMap) {
         List<ServerTreeVO.Tree> children = serverGroupMap.keySet().stream()
@@ -67,10 +64,9 @@ public class ServerTreeUtil {
                 .id(serverName)
                 .disabled(isDisabled(serverPack.getServer()))
                 .server(vo)
-                .label(Joiner.on(":").join(serverName, businessPropertyHelper.getManageIp(serverPack)))
+                .label(Joiner.on(":").join(serverName, BusinessPropertyHelper.getManageIp(serverPack)))
                 .build();
     }
-
 
     private boolean isDisabled(Server server) {
         if (!server.getIsActive()) return true;

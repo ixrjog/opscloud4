@@ -22,7 +22,6 @@ public class SystemInfoUtil {
 
     private static final int OSHI_WAIT_SECOND = 1000;
 
-
     public static String buildKey(InstanceVO.RegisteredInstance registeredInstance) {
         return toKey(registeredInstance.getHostIp());
     }

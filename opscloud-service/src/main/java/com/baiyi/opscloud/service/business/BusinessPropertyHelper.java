@@ -24,7 +24,6 @@ public class BusinessPropertyHelper {
     @Resource
     private BusinessPropertyService businessPropertyService;
 
-
     public static Integer getSshPort(ServerPack serverPack){
         return Optional.ofNullable(serverPack.getProperty())
                 .map(ServerProperty.Server::getMetadata)
