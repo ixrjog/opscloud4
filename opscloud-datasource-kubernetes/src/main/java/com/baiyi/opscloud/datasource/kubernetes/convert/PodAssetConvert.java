@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.convert;
 
+import com.baiyi.opscloud.datasource.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.datasource.util.TimeUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -22,7 +23,7 @@ import java.util.stream.Collectors;
 public class PodAssetConvert {
 
     public static Date toGmtDate(String time) {
-        return TimeUtil.toGmtDate(time, TimeUtil.Format.UTC);
+        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entry) {

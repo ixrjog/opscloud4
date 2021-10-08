@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.convert;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
+import com.baiyi.opscloud.datasource.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -25,7 +26,7 @@ public class ComputeAssetConvert {
     private static final String PRE_PAID = "PrePaid";
 
     public static Date toGmtDate(String time) {
-        return TimeUtil.toGmtDate(time, TimeUtil.Format.UTC);
+        return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
     }
 
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entry) {

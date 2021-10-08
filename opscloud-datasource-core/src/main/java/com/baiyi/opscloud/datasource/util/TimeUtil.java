@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.util;
 
+import com.baiyi.opscloud.datasource.util.enums.TimeZoneEnum;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
@@ -14,18 +15,15 @@ import java.util.TimeZone;
  */
 public class TimeUtil {
 
-    public interface Format {
-        String UTC = "yyyy-MM-dd'T'HH:mm:ss'Z'";
-    }
-
-    public static Date toGmtDate(String time, String dateFormat) {
+    public static Date toGmtDate(String time, TimeZoneEnum timeZoneEnum) {
         if (StringUtils.isEmpty(time)) return new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat(dateFormat);
-        formatter.setTimeZone(TimeZone.getTimeZone("UTC"));
+        SimpleDateFormat formatter = new SimpleDateFormat(timeZoneEnum.getFormat());
+        formatter.setTimeZone(TimeZone.getTimeZone(timeZoneEnum.name()));
         try {
             return formatter.parse(time);
         } catch (ParseException e) {
             return new Date();
         }
     }
+
 }

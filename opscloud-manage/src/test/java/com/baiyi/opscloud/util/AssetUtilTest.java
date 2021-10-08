@@ -3,6 +3,7 @@ package com.baiyi.opscloud.util;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
 import com.baiyi.opscloud.datasource.util.TimeUtil;
+import com.baiyi.opscloud.datasource.util.enums.TimeZoneEnum;
 import org.junit.jupiter.api.Test;
 
 import java.util.Date;
@@ -30,7 +31,7 @@ public class AssetUtilTest extends BaseUnit {
 
         //    String UTC = "yyyy-MM-dd'T'HH:mm'Z'";
 
-        Date date = TimeUtil.toGmtDate(time, TimeUtil.Format.UTC);
+        Date date = TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
 
         String d = com.baiyi.opscloud.common.util.TimeUtil.dateToStr(date);
         System.err.println(d);
