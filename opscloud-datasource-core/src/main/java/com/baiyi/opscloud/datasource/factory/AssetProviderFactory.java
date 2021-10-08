@@ -21,7 +21,9 @@ public class AssetProviderFactory {
     private AssetProviderFactory() {
     }
 
-    //         instanceType & key
+    /**
+     * Map<String instanceType, ArrayListMultimap<String key, SimpleAssetProvider>>
+     */
     private static Map<String, ArrayListMultimap<String, SimpleAssetProvider>> context = new ConcurrentHashMap<>();
 
     public static <T extends SimpleAssetProvider> T getProvider(String instanceType, String assetType) {
