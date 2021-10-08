@@ -23,14 +23,23 @@ public class TemplateUtil {
     @Resource
     private StringEncryptor stringEncryptor;
 
+    private static final String CREDENTIAL = "credential";
+
     public interface Names {
-        String USERNAME = "credentialUsername";
-        String PASSWORD = "credentialPassword";
-        String TOKEN = "credentialToken";
-        String ACCESS_KEY = "credentialAccessKey";
-        String SECRET = "credentialSecret";
+        String USERNAME = CREDENTIAL + "Username";
+        String PASSWORD = CREDENTIAL + "Password";
+        String TOKEN = CREDENTIAL + "Token";
+        String ACCESS_KEY = CREDENTIAL + "AccessKey";
+        String SECRET = CREDENTIAL + "Secret";
     }
 
+    /**
+     * 渲染模版
+     *
+     * @param propsYml  YAML
+     * @param credential
+     * @return
+     */
     public String renderTemplate(String propsYml, Credential credential) {
         String credential1 = decrypt(credential.getCredential());
         SimpleDict dict = CredentialTemplateDictBuilder.newBuilder()
