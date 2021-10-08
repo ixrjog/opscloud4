@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.StandardPBEByteEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 
 /**
@@ -13,10 +13,10 @@ import org.springframework.stereotype.Service;
  * @Version 1.0
  */
 @Slf4j
-@Service
-public class JasyptUtils {
+@Component
+public class JasyptUtil {
 
-    private JasyptUtils() {
+    private JasyptUtil() {
     }
 
     /**
@@ -29,8 +29,7 @@ public class JasyptUtils {
     public static String encrypt(String password, String value) {
         PooledPBEStringEncryptor encryptOr = new PooledPBEStringEncryptor();
         encryptOr.setConfig(cryptOr(password));
-        String result = encryptOr.encrypt(value);
-        return result;
+        return encryptOr.encrypt(value);
     }
 
     /**
@@ -40,7 +39,7 @@ public class JasyptUtils {
      * @param value    待解密密文
      * @return
      */
-    public static String decypt(String password, String value) {
+    public static String decrypt(String password, String value) {
         PooledPBEStringEncryptor encryptOr = new PooledPBEStringEncryptor();
         encryptOr.setConfig(cryptOr(password));
         String result = encryptOr.decrypt(value);
