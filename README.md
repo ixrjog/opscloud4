@@ -27,7 +27,14 @@ Welcome to the opscloud wiki!
 #### <span style="color:green">平台演示视频1</span>
 <video src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/video/opscloud4-1.mov" width="800px" height="600px" controls="controls"></video>
 
-#### 4.0版本核心设计（前后端全部重构）
+#### OpsCloud 优势
++ 代码质量大于功能实现,充分抽象与继承实现
++ 约定大于配置
++ 代码即文档
++ 部署简单（jar+sql）,跨平台
++ 支持集群架构
+
+#### 4.0版本核心设计
 + 事件驱动
 + 万物皆资产
   + 多实例支持
