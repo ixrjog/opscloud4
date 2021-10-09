@@ -17,10 +17,10 @@ import javax.annotation.Resource;
 public abstract class SimpleDsInstanceProvider {
 
     @Resource
-    private DsInstanceService dsInstanceService;
+    protected DsInstanceService dsInstanceService;
 
     @Resource
-    private DsConfigService dsConfigService;
+    protected DsConfigService dsConfigService;
 
     @Resource
     private CredentialService credentialService;

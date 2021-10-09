@@ -7,6 +7,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
 
+import java.util.Date;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/2 3:44 下午
@@ -21,7 +23,7 @@ public class ZabbixTriggerAssetConvert {
                 .name(entry.getDescription())
                 .assetKey(entry.getTriggerid())
                 .kind(String.valueOf(entry.getPriority()))
-                .createdTime(entry.getLastchange())
+                .createdTime(new Date(entry.getLastchange() * 1000))
                 .assetType(DsAssetTypeEnum.ZABBIX_TRIGGER.name())
                 .build();
         return AssetContainerBuilder.newBuilder()

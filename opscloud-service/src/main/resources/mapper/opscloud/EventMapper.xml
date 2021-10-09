@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.baiyi.opscloud.mapper.opscloud.EventMapper">
+  <resultMap id="BaseResultMap" type="com.baiyi.opscloud.domain.generator.opscloud.Event">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="instance_uuid" jdbcType="VARCHAR" property="instanceUuid" />
+    <result column="event_id" jdbcType="VARCHAR" property="eventId" />
+    <result column="event_id_desc" jdbcType="VARCHAR" property="eventIdDesc" />
+    <result column="priority" jdbcType="INTEGER" property="priority" />
+    <result column="lastchange_time" jdbcType="TIMESTAMP" property="lastchangeTime" />
+    <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="event_message" jdbcType="LONGVARCHAR" property="eventMessage" />
+  </resultMap>
+</mapper>

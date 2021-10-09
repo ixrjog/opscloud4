@@ -47,6 +47,12 @@
             <artifactId>opscloud-datasource</artifactId>
         </dependency>
 
+
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-event</artifactId>
+        </dependency>
+
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-opscloud3</artifactId>

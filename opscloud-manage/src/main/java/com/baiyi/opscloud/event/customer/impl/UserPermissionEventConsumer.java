@@ -18,9 +18,6 @@ import javax.annotation.Resource;
 @Component
 public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermission> {
 
-//    @Resource
-//    private DsAccountManager dsAccountManager;
-
     @Resource
     private DsServerGroupManager dsServerGroupManager;
 

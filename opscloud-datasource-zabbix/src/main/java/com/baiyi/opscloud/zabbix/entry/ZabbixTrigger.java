@@ -5,7 +5,6 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -32,7 +31,7 @@ public class ZabbixTrigger implements Serializable {
     private Integer priority;
     //触发器最后更改其状态的时间
     @JsonProperty("lastchange")
-    private Date lastchange;
+    private Long lastchange;
     /**
      * 触发器是否处于启用状态或禁用状态。
      * 0 - (默认) 启用；
