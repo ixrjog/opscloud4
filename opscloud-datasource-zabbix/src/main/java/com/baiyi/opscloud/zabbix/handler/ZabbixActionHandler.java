@@ -48,7 +48,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
         String DELETE = "action.delete";
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + 'action_name_' + #actionName")
+    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName")
     public void evictActionByName(DsZabbixConfig.Zabbix zabbix, String actionName) {
         log.info("清除ZabbixAction缓存 : name = {}", actionName);
     }
@@ -57,7 +57,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
      * @param actionName Report problems to users_{name}
      * @return
      */
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + 'action_name_' + #actionName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName", unless = "#result == null")
     public ZabbixAction getActionByName(DsZabbixConfig.Zabbix zabbix, String actionName) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", actionName)
