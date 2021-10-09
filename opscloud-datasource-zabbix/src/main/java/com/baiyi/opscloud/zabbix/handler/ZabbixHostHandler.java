@@ -111,16 +111,6 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperListGetOne(data.get(RESULT), ZabbixHost.class);
     }
 
-
-    private JsonNode queryHostByFilter(DsZabbixConfig.Zabbix zabbix, ZabbixFilter filter) {
-        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
-                .method(HostAPIMethod.GET)
-                .paramEntry("selectInterfaces", "extend")
-                .filter(filter)
-                .build();
-        return call(zabbix, request);
-    }
-
     public void updateHostName(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, String hostName) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.UPDATE)

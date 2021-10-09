@@ -100,5 +100,4 @@ public class ZabbixUserGroupHandler extends BaseZabbixHandler<ZabbixUserGroup> {
         return getById(zabbix, usrgrpid);
     }
 
-
 }
