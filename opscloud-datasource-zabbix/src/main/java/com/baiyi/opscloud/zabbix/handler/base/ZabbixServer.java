@@ -26,15 +26,15 @@ import java.time.Duration;
 @Component
 public class ZabbixServer {
 
-    public static final String AUTH_CACHE_KAY_PREFIX = "opscloud:v4:zabbix:auth";
+    public static final String AUTH_CACHE_KAY_PREFIX = "opscloud_v4_zabbix_auth";
 
     public interface ApiConstant {
         String RESULT = "result";
-        String USER_IDS = "userids";
-        String USER_GROUP_IDS = "usrgrpids";
+        // String USER_IDS = "userids";
+        // String USER_GROUP_IDS = "usrgrpids";
         String HOST_GROUP_IDS = "groupids";
         String HOST_IDS = "hostids";
-        String HOST_ID = "hostid";
+        // String HOST_ID = "hostid";
         String EVENT_IDS = "eventids";
         String TEMPLATE_IDS = "templateids";
         String TRIGGER_IDS = "triggerids";
@@ -60,12 +60,12 @@ public class ZabbixServer {
     }
 
     private void cacheAuth(DsZabbixConfig.Zabbix zabbix, ZabbixUser loginUser, String auth) {
-        String key = Joiner.on(":").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
+        String key = Joiner.on("_").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
         redisUtil.set(key, auth, getAuthCacheTime(loginUser));
     }
 
     private String getAuth(DsZabbixConfig.Zabbix zabbix) {
-        String key = Joiner.on(":").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
+        String key = Joiner.on("_").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
         if (redisUtil.hasKey(key)) {
             redisUtil.get(key);
         }
