@@ -15,12 +15,11 @@ import javax.annotation.Resource;
  */
 public class BaseZabbixTest extends BaseUnit {
 
-
     @Resource
     private DsConfigService dsConfigService;
 
     @Resource
-    private   DsConfigFactory dsFactory;
+    private DsConfigFactory dsFactory;
 
     protected ZabbixDsInstanceConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(4);

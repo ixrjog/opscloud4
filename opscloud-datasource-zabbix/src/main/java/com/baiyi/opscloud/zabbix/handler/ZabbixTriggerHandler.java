@@ -66,6 +66,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 .paramEntry("output", TRIGGER_OUTPUT)
+                .paramEntry("selectFunctions", "extend")
                 .filter(filter)
                 .paramEntry("active", 1) // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
                 .paramEntry("sortfield", "priority") // 排序

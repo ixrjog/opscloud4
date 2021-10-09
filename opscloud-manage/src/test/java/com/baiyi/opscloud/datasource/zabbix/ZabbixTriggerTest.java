@@ -24,9 +24,11 @@ public class ZabbixTriggerTest extends BaseZabbixTest {
 
     @Test
     void getTriggersBySeverityTypeTest() {
-        List<ZabbixTrigger> zabbixTriggers = zabbixTriggerHandler.getTriggersBySeverityType(getConfig().getZabbix(), SeverityType.WARNING);
+        List<ZabbixTrigger> zabbixTriggers = zabbixTriggerHandler.getTriggersBySeverityType(getConfig().getZabbix(), SeverityType.AVERAGE);
+        System.out.println("severityType = " + SeverityType.AVERAGE);
+        System.out.println("size = " + zabbixTriggers.size());
         for (ZabbixTrigger zabbixTrigger : zabbixTriggers) {
-            System.err.print(JSON.toJSONString(zabbixTrigger));
+            System.err.println(JSON.toJSONString(zabbixTrigger));
         }
     }
 }

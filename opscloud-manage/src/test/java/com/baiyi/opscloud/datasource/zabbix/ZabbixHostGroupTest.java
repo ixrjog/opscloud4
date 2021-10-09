@@ -40,8 +40,8 @@ public class ZabbixHostGroupTest extends BaseUnit {
     }
 
     @Test
-    void t2(){
-        ZabbixUserGroup zabbixUserGroup = zabbixFacade.getOrCreateUserGroup(getConfig().getZabbix(),"users_test1111");
+    void t2() {
+        ZabbixUserGroup zabbixUserGroup = zabbixFacade.getOrCreateUserGroup(getConfig().getZabbix(), "users_test1111");
         System.err.println(JSON.toJSONString(zabbixUserGroup));
     }
 

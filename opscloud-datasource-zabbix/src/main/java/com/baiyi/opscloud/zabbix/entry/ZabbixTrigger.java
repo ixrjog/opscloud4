@@ -29,7 +29,7 @@ public class ZabbixTrigger implements Serializable {
      * 4 - 严重；
      * 5 - 灾难。
      */
-    private String priority;
+    private Integer priority;
     //触发器最后更改其状态的时间
     @JsonProperty("lastchange")
     private Date lastchange;
@@ -39,6 +39,11 @@ public class ZabbixTrigger implements Serializable {
      * 1 - 禁用。
      */
     private Integer value;
+
     private List<ZabbixHost> hosts;
+
+    private Integer templateid;
+
+    private String url;
 
 }
