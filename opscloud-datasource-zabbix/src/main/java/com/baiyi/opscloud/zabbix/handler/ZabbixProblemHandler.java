@@ -7,12 +7,15 @@ import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
+import com.baiyi.opscloud.zabbix.param.base.SeverityType;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
 
@@ -28,33 +31,57 @@ public class ZabbixProblemHandler {
     @Resource
     private ZabbixServer zabbixHandler;
 
-    private interface Method {
-        String QUERY_PROBLEM = "problem.get";
+    private interface ProblemAPIMethod {
+        String GET = "problem.get";
     }
 
-    private SimpleZabbixRequestBuilder queryRequestBuilder() {
-        return SimpleZabbixRequestBuilder.builder()
-                .method(Method.QUERY_PROBLEM);
-    }
-
-    public List<ZabbixProblem> listProblems(DsZabbixConfig.Zabbix zabbix) {
-        SimpleZabbixRequest request = queryRequestBuilder()
+    public List<ZabbixProblem> list(DsZabbixConfig.Zabbix zabbix, List<SeverityType> severityTypes) {
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(ProblemAPIMethod.GET)
+                /**
+                 * true - 仅返回被抑制问题;
+                 * false - 返回问题在正常状态。
+                 */
+                // .paramEntry("suppressed", "false")
+                /**
+                 * 只返回给定事件严重程度的问题。仅当对象是触发器时才应用。
+                 */
+                .paramEntry("severities", severityTypes.stream().map(SeverityType::getType).collect(Collectors.toList()))
+                .paramEntry("recent", "true")
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
-    public List<ZabbixProblem> listProblemsByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
-        SimpleZabbixRequest request = queryRequestBuilder()
+    public List<ZabbixProblem> listByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(ProblemAPIMethod.GET)
                 .paramEntry(HOST_IDS, host.getHostid())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
-    public ZabbixProblem getProblemById(DsZabbixConfig.Zabbix zabbix, String eventId) {
-        SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(EVENT_IDS, eventId)
+    public ZabbixProblem getByEventId(DsZabbixConfig.Zabbix zabbix, String eventId) {
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(ProblemAPIMethod.GET)
+                .paramEntry("eventids", eventId)
+                .build();
+        JsonNode data = zabbixHandler.call(zabbix, request);
+        List<ZabbixProblem> hosts = ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
+        if (CollectionUtils.isEmpty(hosts))
+            throw new RuntimeException("ZabbixProblem不存在");
+        return hosts.get(0);
+    }
+
+    public ZabbixProblem getByTriggerId(DsZabbixConfig.Zabbix zabbix, String triggerId) {
+        SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
+                .method(ProblemAPIMethod.GET)
+                .paramEntry("selectAcknowledges", "extend")
+                .paramEntry("objectids", triggerId)
+                .paramEntry("recent", "true")
+                .paramEntry("sortfield", Lists.newArrayList("eventid"))
+                .paramEntry("sortorder", "DESC")
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         List<ZabbixProblem> hosts = ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);

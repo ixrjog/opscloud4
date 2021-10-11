@@ -95,6 +95,11 @@
             <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
         </table>
 
+        <table tableName="event_business">
+            <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
+            <!--            <domainObjectRenamingRule searchString="^Sys" replaceString=""/>-->
+        </table>
+
     </context>
 
 </generatorConfiguration>

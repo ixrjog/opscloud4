@@ -11,6 +11,7 @@
     <result column="event_id_desc" jdbcType="VARCHAR" property="eventIdDesc" />
     <result column="priority" jdbcType="INTEGER" property="priority" />
     <result column="lastchange_time" jdbcType="TIMESTAMP" property="lastchangeTime" />
+    <result column="is_active" jdbcType="BIT" property="isActive" />
     <result column="expired_time" jdbcType="TIMESTAMP" property="expiredTime" />
     <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />

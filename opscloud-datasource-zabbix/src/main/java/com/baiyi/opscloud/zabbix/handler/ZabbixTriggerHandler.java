@@ -51,7 +51,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
      *
      * @param severityType
      */
-    public List<ZabbixTrigger> getTriggersBySeverityType(DsZabbixConfig.Zabbix zabbix, SeverityType severityType) {
+    public List<ZabbixTrigger> getBySeverityType(DsZabbixConfig.Zabbix zabbix, SeverityType severityType) {
 
         /**
          * (readonly 只读) Whether the trigger is in OK or problem state. 触发器是否处于正常或故障状态。
@@ -83,7 +83,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
-    public List<ZabbixTrigger> listTriggers(DsZabbixConfig.Zabbix zabbix) {
+    public List<ZabbixTrigger> list(DsZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
@@ -101,7 +101,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
-    public List<ZabbixTrigger> listTriggerByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
+    public List<ZabbixTrigger> listByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
@@ -120,7 +120,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
-    public ZabbixTrigger getTriggerById(DsZabbixConfig.Zabbix zabbix, String triggerId) {
+    public ZabbixTrigger getById(DsZabbixConfig.Zabbix zabbix, String triggerId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
@@ -133,7 +133,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
                 .paramEntry("only_true", 1)
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
                 .paramEntry("expandDescription", 1)
-                .paramEntry(TRIGGER_IDS, triggerId)
+                .paramEntry("triggerids", triggerId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixTrigger.class);

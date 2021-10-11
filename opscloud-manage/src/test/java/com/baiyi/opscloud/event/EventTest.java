@@ -14,7 +14,7 @@ public class EventTest extends BaseUnit {
 
     @Test
     void zabbixEventProcessListenerTest() {
-        IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_TRIGGER);
+        IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess == null) return;
         iEventProcess.listener();
     }

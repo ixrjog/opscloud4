@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.zabbix.entry;
 
+import com.baiyi.opscloud.domain.base.IRecover;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
@@ -15,8 +16,8 @@ import java.util.List;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ZabbixTrigger implements Serializable {
-   //@JsonProperty("triggerid")
+public class ZabbixTrigger implements IRecover, Serializable {
+
     private String triggerid;
     private String description;
     /**
@@ -33,9 +34,9 @@ public class ZabbixTrigger implements Serializable {
     @JsonProperty("lastchange")
     private Long lastchange;
     /**
-     * 触发器是否处于启用状态或禁用状态。
-     * 0 - (默认) 启用；
-     * 1 - 禁用。
+     * 触发器是否处于正常或故障状态。
+     * 0 - (默认) OK; 正常；
+     * 1 - 故障。
      */
     private Integer value;
 
@@ -45,4 +46,8 @@ public class ZabbixTrigger implements Serializable {
 
     private String url;
 
+    @Override
+    public boolean isRecover() {
+        return value == 0;
+    }
 }

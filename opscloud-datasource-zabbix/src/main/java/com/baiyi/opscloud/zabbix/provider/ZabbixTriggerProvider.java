@@ -50,17 +50,17 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     @Override
     protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixTriggerHandler.listTriggerByHost(zabbix, target);
+        return zabbixTriggerHandler.listByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixTriggerHandler.listTriggers(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixTriggerHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixTrigger getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixTriggerHandler.getTriggerById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixTriggerHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

@@ -1,10 +1,11 @@
 package com.baiyi.opscloud.zabbix.entry;
 
+import com.baiyi.opscloud.domain.base.IRecover;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 
 import java.io.Serializable;
-import java.util.Date;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -14,21 +15,19 @@ import java.util.Date;
 
 @Data
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class ZabbixProblem implements Serializable {
+public class ZabbixProblem implements IRecover, Serializable {
 
-
-    //@JsonProperty("eventid")
+    private static final long serialVersionUID = -7945069465875128322L;
     private String eventid;
 
     private String name;
 
     private Integer object;
 
-    //@JsonProperty("objectid")
     private String objectid;
 
     // 问题事件创建的时间
-    private Date clock;
+    private Long clock;
 
     /**
      * 问题当前级别
@@ -40,4 +39,15 @@ public class ZabbixProblem implements Serializable {
      * 5-灾难
      */
     private Integer severity;
+
+    /**
+     * 事件恢复的UNIT时间戳
+     */
+    @JsonProperty("r_clock")
+    private Long rClock;
+
+    @Override
+    public boolean isRecover() {
+        return rClock != 0L;
+    }
 }

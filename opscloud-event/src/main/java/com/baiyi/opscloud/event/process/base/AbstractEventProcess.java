@@ -1,8 +1,9 @@
-package com.baiyi.opscloud.event.process;
+package com.baiyi.opscloud.event.process.base;
 
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
+import com.baiyi.opscloud.domain.base.IRecover;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
@@ -16,7 +17,9 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -24,9 +27,9 @@ import java.util.stream.Collectors;
  * @Date 2021/10/9 3:14 下午
  * @Version 1.0
  */
-public abstract class AbstractEventProcess<E> extends SimpleDsInstanceProvider implements IEventProcess, InitializingBean {
+public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsInstanceProvider implements IEventProcess, InitializingBean {
 
-    protected static final int DsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
+    protected static final int dsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
 
     protected static final String EVENT_TAG = "Event";
 
@@ -60,15 +63,66 @@ public abstract class AbstractEventProcess<E> extends SimpleDsInstanceProvider i
         if (CollectionUtils.isEmpty(instances)) return;
         instances.forEach(i -> {
             List<E> events = listeningEvents(i);
-            if (!CollectionUtils.isEmpty(instances)) {
-                events.forEach(e -> recordEvent(i, e));
+            recordEvents(i, events);
+        });
+    }
+
+    /**
+     * 记录事件
+     * @param dsInstance
+     * @param events
+     */
+    private void recordEvents(DatasourceInstance dsInstance, List<E> events) {
+        // 新事件
+        Map<String, Event> newEventMap = events.stream().map(e ->
+                recordEvent(dsInstance, e)
+        ).collect(Collectors.toMap(Event::getEventId, a -> a, (k1, k2) -> k1));
+        // 活跃事件
+        List<Event> activeEvents = eventService.queryEventByInstance(dsInstance.getUuid());
+        retrospectiveEvents(newEventMap, activeEvents);
+    }
+
+    /**
+     * 回顾事件
+     * @param newEventMap
+     * @param activeEvents
+     */
+    protected void retrospectiveEvents(Map<String, Event> newEventMap, List<Event> activeEvents) {
+        if (CollectionUtils.isEmpty(activeEvents)) return; // 无活跃事件
+        activeEvents.forEach(e -> {
+            if (!newEventMap.containsKey(e.getEventId())) {
+                E eventMessage = getByEventId(e.getInstanceUuid(), e.getEventId());
+                if (eventMessage != null && eventMessage.isRecover()) {
+                    e.setIsActive(false);
+                    e.setExpiredTime(new Date());
+                    eventService.update(e); // 恢复事件
+                }
             }
         });
     }
 
-    private void recordEvent(DatasourceInstance dsInstance, E e) {
-        Event event = toEvent(dsInstance, e);
-        eventService.add(event);
+    /**
+     * 数据源查询事件
+     * @param instanceUuid
+     * @param eventId
+     * @return
+     */
+    abstract protected E getByEventId(String instanceUuid, String eventId);
+
+    /**
+     * 记录事件
+     * @param dsInstance
+     * @param e
+     * @return
+     */
+    private Event recordEvent(DatasourceInstance dsInstance, E e) {
+        Event pre = toEvent(dsInstance, e);
+        Event event = eventService.getByUniqueKey(dsInstance.getUuid(), pre.getEventId());
+        if (event == null) {
+            eventService.add(pre);
+            return pre;
+        }
+        return event;
     }
 
     /**
@@ -84,13 +138,13 @@ public abstract class AbstractEventProcess<E> extends SimpleDsInstanceProvider i
         // 过滤掉没有标签的实例
         instances.addAll(
                 dsInstanceService.queryByParam(query).stream().filter(e ->
-                        baseTagService.hasBusinessTag(EVENT_TAG, DsInstanceBusinessType, e.getId())
+                        baseTagService.hasBusinessTag(EVENT_TAG, dsInstanceBusinessType, e.getId())
                 ).collect(Collectors.toList())
         );
         return instances;
     }
 
-    abstract Event toEvent(DatasourceInstance dsInstance, E e);
+    abstract protected Event toEvent(DatasourceInstance dsInstance, E e);
 
     @Override
     public void afterPropertiesSet() {

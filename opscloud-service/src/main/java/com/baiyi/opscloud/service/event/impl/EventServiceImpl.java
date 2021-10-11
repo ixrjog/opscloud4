@@ -4,8 +4,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.mapper.opscloud.EventMapper;
 import com.baiyi.opscloud.service.event.EventService;
 import org.springframework.stereotype.Service;
+import tk.mybatis.mapper.entity.Example;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -19,13 +21,31 @@ public class EventServiceImpl implements EventService {
     private EventMapper eventMapper;
 
     @Override
-    public void add(Event event){
+    public void add(Event event) {
         eventMapper.insert(event);
     }
 
     @Override
-    public void update(Event event){
+    public void update(Event event) {
         eventMapper.updateByPrimaryKey(event);
+    }
+
+    @Override
+    public List<Event> queryEventByInstance(String instanceUuid) {
+        Example example = new Example(Event.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid)
+                .andEqualTo("isActive", true);
+        return eventMapper.selectByExample(example);
+    }
+
+    @Override
+    public Event getByUniqueKey(String instanceUuid, String eventId) {
+        Example example = new Example(Event.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid)
+                .andEqualTo("eventId", eventId);
+        return eventMapper.selectOneByExample(example);
     }
 
 }

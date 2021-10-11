@@ -27,13 +27,13 @@ public class Event {
     private String instanceUuid;
 
     /**
-     * 事件id
+     * 数据源事件id
      */
     @Column(name = "event_id")
     private String eventId;
 
     /**
-     * 事件id描述
+     * 数据源事件id描述
      */
     @Column(name = "event_id_desc")
     private String eventIdDesc;
@@ -48,6 +48,12 @@ public class Event {
      */
     @Column(name = "lastchange_time")
     private Date lastchangeTime;
+
+    /**
+     * 有效事件
+     */
+    @Column(name = "is_active")
+    private Boolean isActive;
 
     /**
      * 过期时间
@@ -68,7 +74,7 @@ public class Event {
     private Date updateTime;
 
     /**
-     * 事件信息
+     * 数据源事件信息
      */
     @Column(name = "event_message")
     private String eventMessage;
