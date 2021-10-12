@@ -24,6 +24,7 @@ public enum DsTypeEnum {
     PROMETHEUS(8, "PROMETHEUS"),
     GUACAMOLE(9, "GUACAMOLE"),
     NEXUS(10, "NEXUS"),
+    TENCENT_EXMAIL(11, "TENCENT_EXMAIL"),
     ALIYUN(50, "ALIYUN"),
     AWS(51, "AWS");
 

@@ -48,6 +48,11 @@
             <artifactId>opscloud-datasource-ansible</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-tencent-exmail</artifactId>
+        </dependency>
+
     </dependencies>
 
 
