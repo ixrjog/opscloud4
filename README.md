@@ -8,13 +8,22 @@ Welcome to the opscloud wiki!
 
 <br>
 
+### Tag: 4.0.4(开发中) 新功能
++ 数据源实例增加腾讯企业邮箱
++ 事件驱动增加Zabbix问题，SSH-Server实现事件列表/事件登录
+
 ### Tag:4.0.3版本主要功能(黄框功能未实现)
 
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/opscloud4.png"></img>
 <br>
 
-### 环境管理
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-2.png"></img>
+### 系统
+#### 环境管理
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/env.png"></img>
+#### 标签管理
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/tag.png"></img>
+#### 集群管理
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/sys/instance.png"></img>
 
 ### 服务器管理
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/oc4-6.png"></img>
@@ -49,6 +58,7 @@ Welcome to the opscloud wiki!
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook-2.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook-3.png"></img>
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/playbook/playbook_log.png"></img>
 
 ### 用户
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/user/user.png"></img>
