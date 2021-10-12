@@ -131,6 +131,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
                 .paramEntry("monitored", 1)
                 // 只返回最近处于问题状态的触发器（处于告警状态的主机）
                 .paramEntry("only_true", 1)
+                .paramEntry("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
                 .paramEntry("expandDescription", 1)
                 .paramEntry("triggerids", triggerId)

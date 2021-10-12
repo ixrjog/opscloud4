@@ -48,6 +48,6 @@ public class ZabbixProblem implements IRecover, Serializable {
 
     @Override
     public boolean isRecover() {
-        return rClock != 0L;
+        return rClock != 0;
     }
 }

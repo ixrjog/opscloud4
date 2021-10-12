@@ -31,4 +31,10 @@ public class ZabbixTriggerTest extends BaseZabbixTest {
             System.err.println(JSON.toJSONString(zabbixTrigger));
         }
     }
+
+    @Test
+    void getTriggerTest() {
+        ZabbixTrigger zabbixTrigger = zabbixTriggerHandler.getById(getConfig().getZabbix(), "44750");
+        System.err.println(JSON.toJSONString(zabbixTrigger));
+    }
 }

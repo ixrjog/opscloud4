@@ -33,7 +33,7 @@ public class EventConvert {
                 .priority(problem.getSeverity())
                 .createTime(new Date(problem.getClock() * 1000)) // UNIT时间戳转换
                 .lastchangeTime(new Date(trigger.getLastchange() * 1000)) // UNIT时间戳转换
-                .isActive(true) // 有效事件
+                .isActive(!problem.isRecover()) // 有效事件
                 .build();
     }
 

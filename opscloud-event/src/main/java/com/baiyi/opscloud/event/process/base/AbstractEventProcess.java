@@ -6,14 +6,19 @@ import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvid
 import com.baiyi.opscloud.domain.base.IRecover;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
+import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.event.IEventProcess;
 import com.baiyi.opscloud.event.factory.EventFactory;
+import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.service.event.EventService;
+import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.tag.BaseTagService;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
@@ -27,6 +32,7 @@ import java.util.stream.Collectors;
  * @Date 2021/10/9 3:14 下午
  * @Version 1.0
  */
+@Slf4j
 public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsInstanceProvider implements IEventProcess, InitializingBean {
 
     protected static final int dsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
@@ -37,10 +43,16 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
     private EventService eventService;
 
     @Resource
+    private EventBusinessService eventBusinessService;
+
+    @Resource
     protected DsConfigFactory dsFactory;
 
     @Resource
     private BaseTagService baseTagService;
+
+    @Resource
+    protected ServerService serverService;
 
     /**
      * 获取实例类型
@@ -69,6 +81,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
 
     /**
      * 记录事件
+     *
      * @param dsInstance
      * @param events
      */
@@ -84,6 +97,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
 
     /**
      * 回顾事件
+     *
      * @param newEventMap
      * @param activeEvents
      */
@@ -91,7 +105,12 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
         if (CollectionUtils.isEmpty(activeEvents)) return; // 无活跃事件
         activeEvents.forEach(e -> {
             if (!newEventMap.containsKey(e.getEventId())) {
-                E eventMessage = getByEventId(e.getInstanceUuid(), e.getEventId());
+                E eventMessage = null;
+                try {
+                    eventMessage = getByEventId(e.getInstanceUuid(), e.getEventId());
+                } catch (Exception ex) {
+                    log.error("回顾事件错误，查询事件失败; eventId = {}", e.getEventId());
+                }
                 if (eventMessage != null && eventMessage.isRecover()) {
                     e.setIsActive(false);
                     e.setExpiredTime(new Date());
@@ -103,14 +122,16 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
 
     /**
      * 数据源查询事件
+     *
      * @param instanceUuid
      * @param eventId
      * @return
      */
-    abstract protected E getByEventId(String instanceUuid, String eventId);
+    abstract protected E getByEventId(String instanceUuid, String eventId) throws Exception;
 
     /**
      * 记录事件
+     *
      * @param dsInstance
      * @param e
      * @return
@@ -120,10 +141,30 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
         Event event = eventService.getByUniqueKey(dsInstance.getUuid(), pre.getEventId());
         if (event == null) {
             eventService.add(pre);
+            recordEventBusiness(dsInstance, pre);
             return pre;
         }
         return event;
     }
+
+    protected void recordEventBusiness(Event event, BaseBusiness.IBusiness iBusiness, String name) {
+        EventBusiness eventBusiness = EventBusiness.builder()
+                .eventId(event.getId())
+                .businessType(iBusiness.getBusinessType())
+                .businessId(iBusiness.getBusinessId())
+                .name(name)
+                .build();
+        eventBusinessService.add(eventBusiness);
+    }
+
+
+    /**
+     * 记录事件关联的业务对象
+     *
+     * @param dsInstance
+     * @param event
+     */
+    abstract protected void recordEventBusiness(DatasourceInstance dsInstance, Event event);
 
     /**
      * 查询有效实例（包含标签）

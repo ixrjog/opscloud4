@@ -67,18 +67,18 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
             InetAddress inetAddress = HostUtil.getInetAddress();
             Instance instance = instanceService.getByHostIp(inetAddress.getHostAddress());
             if (instance == null)
-                return toHealth(healthStatus.ERROR);
+                return buildHealth(healthStatus.ERROR);
             if (instance.getIsActive()) {
-                return toHealth(healthStatus.OK);
+                return buildHealth(healthStatus.OK);
             } else {
-                return toHealth(healthStatus.INACTIVE);
+                return buildHealth(healthStatus.INACTIVE);
             }
         } catch (UnknownHostException ignored) {
-            return toHealth(healthStatus.ERROR);
+            return buildHealth(healthStatus.ERROR);
         }
     }
 
-    private InstanceVO.Health toHealth(String status) {
+    private InstanceVO.Health buildHealth(String status) {
         return InstanceVO.Health.builder()
                 .status(status)
                 .isHealth(status.equals(healthStatus.OK))

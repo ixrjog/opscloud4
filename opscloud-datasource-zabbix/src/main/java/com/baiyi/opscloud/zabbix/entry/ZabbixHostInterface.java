@@ -45,6 +45,12 @@ public class ZabbixHostInterface implements Serializable {
     private Integer type;
 
 
-   // @JsonProperty("useip")
+    /**
+     * 是否应通过IP进行连接。
+     *
+     * 可能的值：
+     * 0 - 使用主机DNS名称连接；
+     * 1 - 使用该主机接口的主机IP地址进行连接。
+     */
     private Integer useip;
 }
