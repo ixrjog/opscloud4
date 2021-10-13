@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.tencent.exmail.http;
 
+import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
 import com.baiyi.opscloud.common.util.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.google.common.base.Joiner;
 import org.apache.http.client.config.RequestConfig;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +11,6 @@ import java.io.IOException;
 import java.util.Collections;
 
 
-/**
- * Http工具类
- */
 @Component
 public class TencentExmailHttpUtil {
 
@@ -47,13 +46,14 @@ public class TencentExmailHttpUtil {
         return HttpUtil.httpDeleteExecutor(url, getRequestConfig(), Collections.emptyMap());
     }
 
-
     public Boolean checkResponse(JsonNode data) {
         return "0".equals(data.get("errcode").asText());
     }
 
-//    public String getWebHook(String url, String token) {
-//        return Joiner.on("").join(tencentExmailConfig.getApiUrl(), url, "?", ACCESS_TOKEN, "=", token);
-//    }
+    public String getWebHook(DsTencentExmailConfig.Tencent config, String url, String token) {
+        DsTencentExmailConfig.Exmail exmail = config.getExmail();
+        return Joiner.on("").join(exmail.getApiUrl(), url, "?", ACCESS_TOKEN, "=", token);
+    }
+
 
 }

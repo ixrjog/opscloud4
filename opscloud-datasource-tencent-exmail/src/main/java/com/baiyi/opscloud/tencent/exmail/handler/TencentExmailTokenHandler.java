@@ -26,16 +26,16 @@ public class TencentExmailTokenHandler {
     @Resource
     private TencentExmailHttpUtil tencentExmailHttpUtil;
 
-    public interface TokenAPI {
+    private interface TokenApi {
         String GET = "/cgi-bin/gettoken";
     }
 
     @Retryable(value = RuntimeException.class, backoff = @Backoff(delay = 1000))
-    @Cacheable(cacheNames = CachingConfig.Repositories.DEFAULT, key = "'tencentExmailTokenHandler'")
+    @Cacheable(cacheNames = CachingConfig.Repositories.API_TOKEN, key = "'tencentExmailTokenHandler'", unless = "#result == null")
     public String getToken(DsTencentExmailConfig.Tencent config) {
         DsTencentExmailConfig.Exmail exmail = config.getExmail();
         String url = Joiner.on("").join(exmail.getApiUrl()
-                , TokenAPI.GET
+                , TokenApi.GET
                 , "?corpid="
                 , exmail.getCorpId()
                 , "&corpsecret="
@@ -45,8 +45,8 @@ public class TencentExmailTokenHandler {
             return tencentExmailHttpUtil.checkResponse(data) ? data.get("access_token").asText() : null;
         } catch (IOException e) {
             log.error("获取 TencentExmail token失败！", e);
-            return null;
         }
+        return null;
     }
 
 

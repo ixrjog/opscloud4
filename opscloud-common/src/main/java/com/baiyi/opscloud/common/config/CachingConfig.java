@@ -36,6 +36,7 @@ public class CachingConfig extends CachingConfigurerSupport {
         String DEFAULT = "opscloud:v4:default";
         String SERVER = "opscloud:v4:server";
         String ZABBIX = "opscloud:v4:zabbix";
+        String API_TOKEN = "opscloud:v4:apiToken";
     }
 
     @Bean
@@ -44,7 +45,8 @@ public class CachingConfig extends CachingConfigurerSupport {
         Set<String> cacheNames = Sets.newHashSet(
                 Repositories.DEFAULT,
                 Repositories.SERVER,
-                Repositories.ZABBIX);
+                Repositories.ZABBIX,
+                Repositories.API_TOKEN);
         // 使用自定义的缓存配置初始化一个cacheManager
         return RedisCacheManager.builder(factory)
                 // 注意这两句的调用顺序，一定要先调用该方法设置初始化的缓存名，
@@ -64,6 +66,7 @@ public class CachingConfig extends CachingConfigurerSupport {
         configMap.put(Repositories.DEFAULT, config.entryTtl(Duration.ofDays(30)));
         configMap.put(Repositories.SERVER, config.entryTtl(Duration.ofDays(14)));
         configMap.put(Repositories.ZABBIX, config.entryTtl(Duration.ofDays(1)));
+        configMap.put(Repositories.API_TOKEN, config.entryTtl(Duration.ofHours(2)));
         return configMap;
     }
 
