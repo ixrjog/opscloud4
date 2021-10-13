@@ -16,7 +16,7 @@ public class EventFactory {
     private EventFactory() {
     }
 
-    private static Map<String, IEventProcess> context = new ConcurrentHashMap<>();
+    private static final Map<String, IEventProcess> context = new ConcurrentHashMap<>();
 
     public static IEventProcess getIEventProcessByEventType(EventTypeEnum eventType) {
         return context.get(eventType.name());

@@ -46,6 +46,10 @@ Welcome to the opscloud wiki!
 #### 帮助命令`help`,命令参数提示
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help-2.png"></img>
+
+#### 事件列表(Tag:4.0.4功能)，基于事件驱动实现
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-event.png"></img>
+
 #### 服务器列表命令`list`
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-list.png"></img>
 #### 容器组列表命令`list-k8s-pod`

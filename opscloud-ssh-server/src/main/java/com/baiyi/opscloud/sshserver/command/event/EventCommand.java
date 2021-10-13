@@ -4,13 +4,16 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
+import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.event.EventParam;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.event.IEventProcess;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
+import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
-import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.CheckTerminalSize;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.annotation.ScreenClear;
@@ -18,6 +21,8 @@ import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
 import com.baiyi.opscloud.sshserver.command.event.util.SeverityUtil;
+import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
+import com.baiyi.opscloud.sshserver.command.util.ServerUtil;
 import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +34,7 @@ import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.Resource;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -39,7 +45,10 @@ import java.util.Map;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Event")
-public class EventCommand {
+public class EventCommand extends BaseServerCommand {
+
+    @Resource
+    private EventBusinessService eventBusinessService;
 
     private Terminal terminal;
 
@@ -48,9 +57,6 @@ public class EventCommand {
     public void setTerminal(Terminal terminal) {
         this.terminal = terminal;
     }
-
-    @Resource
-    protected SshShellHelper helper;
 
     protected static final int PAGE_FOOTER_SIZE = 6;
 
@@ -68,7 +74,9 @@ public class EventCommand {
                         "Severity",
                         "Event Name",
                         "Lastchange Time",
-                        "Servers"
+                        "Server Name",
+                        "IP",
+                        "Accounts"
                 );
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
         pageQuery.setLength(terminal.getSize().getRows() - PAGE_FOOTER_SIZE);
@@ -79,12 +87,22 @@ public class EventCommand {
         int id = 1;
         for (Event event : table.getData()) {
             EventContext eventContext = BeanCopierUtil.copyProperties(event, EventContext.class);
+
+            List<EventBusiness> eventBusinesses = eventBusinessService.queryByEventId(eventContext.getId());
+
+            Server server = serverService.getById(eventBusinesses.get(0).getBusinessId());
+
+            ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
+
+
             eventMapper.put(id, eventContext);
             pt.addRow(id,
                     SeverityUtil.toTerminalStr(eventContext.getPriority()),
                     eventContext.getEventName(),
                     TimeUtil.toGmtDate(eventContext.getLastchangeTime()),
-                    ""
+                    serverVO.getDisplayName(),
+                    ServerUtil.toDisplayIp(serverVO),
+                    toDisplayAccount(serverVO, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
             );
             id++;
         }

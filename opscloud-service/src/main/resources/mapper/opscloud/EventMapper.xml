@@ -24,11 +24,16 @@
           resultMap="BaseResultMap">
     select * from event
     <where>
-        id in (
+      <if test="name != null and name != ''">
+        event_name like "%" #{name} "%"
+      </if>
+      <if test="userId != null">
+      and id in (
         select event_id from event_business where business_type = #{businessType} and business_id in (
            select business_id from user_permission where business_type = #{businessType} and user_id = #{userId}
            )
         )
+      </if>
       <if test="isActive != null">
         and is_active = #{isActive}
       </if>
