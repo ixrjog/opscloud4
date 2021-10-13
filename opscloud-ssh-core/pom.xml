@@ -35,6 +35,11 @@
         </dependency>
 
         <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-event</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>org.apache.sshd</groupId>
             <artifactId>sshd-core</artifactId>
             <version>2.6.0</version>

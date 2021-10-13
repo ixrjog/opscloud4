@@ -1,5 +1,8 @@
 package com.baiyi.opscloud.event;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.Event;
+import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 
 /**
@@ -8,6 +11,8 @@ import com.baiyi.opscloud.event.enums.EventTypeEnum;
  * @Version 1.0
  */
 public interface IEventProcess {
+
+    DataTable<Event> listEvent(EventParam.UserPermissionEventPageQuery pageQuery);
 
     /**
      * 监听

@@ -4,9 +4,11 @@ import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.event.convert.EventConvert;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
@@ -53,6 +55,11 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem> {
     protected ZabbixDsInstanceConfig getConfig(String instanceUuid) {
         DsInstanceContext context = buildDsInstanceContext(instanceUuid);
         return dsFactory.build(context.getDsConfig(), ZabbixDsInstanceConfig.class);
+    }
+
+    @Override
+    public DataTable<Event> listEvent(EventParam.UserPermissionEventPageQuery pageQuery) {
+        return eventService.queryUserPermissionServerEventByParam(pageQuery);
     }
 
     @Override

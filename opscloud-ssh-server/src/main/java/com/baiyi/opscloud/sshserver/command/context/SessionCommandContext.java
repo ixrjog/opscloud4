@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.sshserver.command.context;
 
 import com.baiyi.opscloud.domain.param.server.ServerParam;
+import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.PodContext;
 
 import java.util.Map;
@@ -15,6 +16,8 @@ public class SessionCommandContext {
     private static ThreadLocal<Map<Integer, Integer>> idMapper = new ThreadLocal<>();
 
     private static ThreadLocal<Map<Integer, PodContext>> podMapper = new ThreadLocal<>();
+
+    private static ThreadLocal<Map<Integer, EventContext>> eventMapper = new ThreadLocal<>();
 
     private static ThreadLocal<ServerParam.UserPermissionServerPageQuery> serverQuery = new ThreadLocal<>();
 
@@ -33,6 +36,12 @@ public class SessionCommandContext {
         return podMapper.get();
     }
 
+    public static void setEventMapper(Map<Integer, EventContext> param) { eventMapper.set(param);
+    }
+
+    public static Map<Integer, EventContext> getEventMapper() {
+        return eventMapper.get();
+    }
 
     public static void setServerQuery(ServerParam.UserPermissionServerPageQuery param) {
         serverQuery.set(param);

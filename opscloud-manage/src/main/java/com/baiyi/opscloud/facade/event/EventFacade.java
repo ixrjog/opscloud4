@@ -6,4 +6,5 @@ package com.baiyi.opscloud.facade.event;
  * @Version 1.0
  */
 public interface EventFacade {
+
 }

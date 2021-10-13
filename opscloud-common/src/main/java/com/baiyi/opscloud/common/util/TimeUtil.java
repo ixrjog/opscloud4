@@ -251,6 +251,11 @@ public class TimeUtil {
         }
     }
 
+    public static String toGmtDate(Date date){
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(date);
+    }
+
     /**
      * 将时间戳(秒)转换为时间
      */
