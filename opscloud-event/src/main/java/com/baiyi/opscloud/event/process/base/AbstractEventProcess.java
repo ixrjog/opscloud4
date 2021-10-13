@@ -111,11 +111,12 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
                 } catch (Exception ex) {
                     log.error("回顾事件错误，查询事件失败; eventId = {}", e.getEventId());
                 }
-                if (eventMessage != null && eventMessage.isRecover()) {
-                    e.setIsActive(false);
-                    e.setExpiredTime(new Date());
-                    eventService.update(e); // 恢复事件
+                if (eventMessage != null && !eventMessage.isRecover()) {
+                    return; // 没有恢复
                 }
+                e.setIsActive(false);
+                e.setExpiredTime(new Date());
+                eventService.update(e); // 恢复事件
             }
         });
     }
