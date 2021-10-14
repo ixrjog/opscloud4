@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.tencent.exmail.bo;
+package com.baiyi.opscloud.tencent.exmail.entry;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
@@ -16,13 +16,14 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TencentExmailUserBO {
+public class ExmailUser {
     /**
      * 企业邮帐号名，邮箱格式
      */
     @JSONField(name = "userid")
     private String userId;
     private String name;
+
     private List<Long> department;
     /**
      * 职位信息

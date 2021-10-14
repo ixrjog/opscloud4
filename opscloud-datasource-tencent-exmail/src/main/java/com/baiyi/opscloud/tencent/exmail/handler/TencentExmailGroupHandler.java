@@ -2,7 +2,7 @@ package com.baiyi.opscloud.tencent.exmail.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
-import com.baiyi.opscloud.tencent.exmail.bo.TencentExmailGroupBO;
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailGroup;
 import com.baiyi.opscloud.tencent.exmail.http.TencentExmailHttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Joiner;
@@ -33,7 +33,7 @@ public class TencentExmailGroupHandler {
         String UPDATE = "/cgi-bin/group/update";
     }
 
-    public TencentExmailGroupBO getGroup(DsTencentExmailConfig.Tencent config, String groupId) {
+    public ExmailGroup getGroup(DsTencentExmailConfig.Tencent config, String groupId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, GroupApi.GET, token)
                 , "&groupid="
@@ -41,7 +41,7 @@ public class TencentExmailGroupHandler {
         try {
             JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
             if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSON.parseObject(data.toString(), TencentExmailGroupBO.class);
+                return JSON.parseObject(data.toString(), ExmailGroup.class);
             }
             log.error(data.get("errmsg").asText());
         } catch (IOException e) {

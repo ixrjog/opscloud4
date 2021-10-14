@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
-import com.baiyi.opscloud.tencent.exmail.bo.TencentExmailUserBO;
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
 import com.baiyi.opscloud.tencent.exmail.handler.TencentExmailUserHandler;
 import org.junit.jupiter.api.Test;
 
@@ -29,7 +29,6 @@ public class ExmailTest extends BaseUnit {
     @Resource
     private TencentExmailUserHandler tencentExmailUserHandler;
 
-
     private TencentExmailDsInstanceConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(11);
         return dsFactory.build(datasourceConfig, TencentExmailDsInstanceConfig.class);
@@ -38,14 +37,14 @@ public class ExmailTest extends BaseUnit {
     @Test
     void getUser() {
         DsTencentExmailConfig.Tencent config = getConfig().getTencent();
-        TencentExmailUserBO bo = tencentExmailUserHandler.getUser(config, "baiyi@xinc818.group");
+        ExmailUser bo = tencentExmailUserHandler.getUser(config, "baiyi@xinc818.group");
         System.err.println(bo);
     }
 
     @Test
     void listUser() {
         DsTencentExmailConfig.Tencent config = getConfig().getTencent();
-        List<TencentExmailUserBO> list = tencentExmailUserHandler.listUser(config, 1L);
+        List<ExmailUser> list = tencentExmailUserHandler.listUser(config, 1L);
         System.err.println(list);
     }
 }

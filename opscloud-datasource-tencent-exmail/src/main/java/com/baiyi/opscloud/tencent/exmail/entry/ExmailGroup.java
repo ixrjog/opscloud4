@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.tencent.exmail.bo;
+package com.baiyi.opscloud.tencent.exmail.entry;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.AllArgsConstructor;
@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class TencentExmailGroupBO {
+public class ExmailGroup {
 
     @JSONField(name = "groupid")
     private String groupId;

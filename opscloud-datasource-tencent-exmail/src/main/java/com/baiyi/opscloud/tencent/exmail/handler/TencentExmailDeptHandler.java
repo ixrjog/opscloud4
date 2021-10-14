@@ -2,7 +2,8 @@ package com.baiyi.opscloud.tencent.exmail.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
-import com.baiyi.opscloud.tencent.exmail.bo.TencentExmailDeptBO;
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailDeptList;
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailDept;
 import com.baiyi.opscloud.tencent.exmail.http.TencentExmailHttpUtil;
 import com.baiyi.opscloud.tencent.exmail.param.ExmailParam;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -36,7 +37,7 @@ public class TencentExmailDeptHandler {
         String LIST = "/cgi-bin/department/list";
     }
 
-    public List<TencentExmailDeptBO.dept> getDept(DsTencentExmailConfig.Tencent config, String name) {
+    public List<ExmailDept> getDept(DsTencentExmailConfig.Tencent config, String name) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = tencentExmailHttpUtil.getWebHook(config, DeptApi.GET, token);
         try {
@@ -45,7 +46,7 @@ public class TencentExmailDeptHandler {
                     .build();
             JsonNode data = tencentExmailHttpUtil.httpPostExecutor(url, param);
             if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSON.parseObject(data.toString(), TencentExmailDeptBO.deptList.class).getDepartment();
+                return JSON.parseObject(data.toString(), ExmailDeptList.class).getDepartment();
             }
             log.error(data.get("errmsg").asText());
         } catch (IOException e) {
@@ -54,7 +55,7 @@ public class TencentExmailDeptHandler {
         return Collections.emptyList();
     }
 
-    public List<TencentExmailDeptBO.dept> listDept(DsTencentExmailConfig.Tencent config, Long deptId) {
+    public List<ExmailDept> listDept(DsTencentExmailConfig.Tencent config, Long deptId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, DeptApi.LIST, token)
                 , "&id="
@@ -62,7 +63,7 @@ public class TencentExmailDeptHandler {
         try {
             JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
             if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSON.parseObject(data.toString(), TencentExmailDeptBO.deptList.class).getDepartment();
+                return JSON.parseObject(data.toString(), ExmailDeptList.class).getDepartment();
             }
             log.error(data.get("errmsg").asText());
         } catch (IOException e) {

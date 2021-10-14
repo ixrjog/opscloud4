@@ -3,7 +3,7 @@ package com.baiyi.opscloud.tencent.exmail.handler;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
-import com.baiyi.opscloud.tencent.exmail.bo.TencentExmailUserBO;
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
 import com.baiyi.opscloud.tencent.exmail.http.TencentExmailHttpUtil;
 import com.baiyi.opscloud.tencent.exmail.param.ExmailParam;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -51,7 +51,7 @@ public class TencentExmailUserHandler {
         return false;
     }
 
-    public TencentExmailUserBO getUser(DsTencentExmailConfig.Tencent config, String userId) {
+    public ExmailUser getUser(DsTencentExmailConfig.Tencent config, String userId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.GET, token)
                 , "&userid="
@@ -59,7 +59,7 @@ public class TencentExmailUserHandler {
         try {
             JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
             if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSON.parseObject(data.toString(), TencentExmailUserBO.class);
+                return JSON.parseObject(data.toString(), ExmailUser.class);
             }
             log.error(data.get("errmsg").asText());
         } catch (IOException e) {
@@ -68,7 +68,7 @@ public class TencentExmailUserHandler {
         return null;
     }
 
-    public List<TencentExmailUserBO> listUser(DsTencentExmailConfig.Tencent config, Long departmentId) {
+    public List<ExmailUser> listUser(DsTencentExmailConfig.Tencent config, Long departmentId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.LIST, token)
                 , "&department_id="
@@ -77,7 +77,7 @@ public class TencentExmailUserHandler {
         try {
             JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
             if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSONArray.parseArray(data.get("userlist").toString(), TencentExmailUserBO.class);
+                return JSONArray.parseArray(data.get("userlist").toString(), ExmailUser.class);
             }
             log.error(data.get("errmsg").asText());
         } catch (IOException e) {
