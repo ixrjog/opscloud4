@@ -2,6 +2,7 @@ package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.type.ProtocolEnum;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccoutUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
@@ -12,6 +13,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.model.SshCredential;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
@@ -73,6 +75,10 @@ public class HostSystemHandler {
             isAdmin = "admin".equalsIgnoreCase(userPermission.getPermissionRole());
         }
         return isAdmin;
+    }
+
+    public HostSystem buildHostSystem(ServerVO.Server serverVO, String account) throws SshRuntimeException {
+        return buildHostSystem(BeanCopierUtil.copyProperties(serverVO, Server.class), account);
     }
 
     public HostSystem buildHostSystem(Server server, String account) throws SshRuntimeException {

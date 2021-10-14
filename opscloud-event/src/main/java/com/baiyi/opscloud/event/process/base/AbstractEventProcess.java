@@ -93,7 +93,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
      * @param events
      */
     private void recordEvents(DatasourceInstance dsInstance, List<E> events) {
-        // 新事件
+        // 新事件(转Map)
         Map<String, Event> newEventMap = events.stream().map(e ->
                 recordEvent(dsInstance, e)
         ).collect(Collectors.toMap(Event::getEventId, a -> a, (k1, k2) -> k1));

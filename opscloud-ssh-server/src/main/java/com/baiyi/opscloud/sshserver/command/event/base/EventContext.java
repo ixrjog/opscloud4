@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.event.base;
 
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -17,6 +18,8 @@ import java.util.Date;
 @Data
 @Builder
 public class EventContext {
+
+    private ServerVO.Server serverVO;
 
     private Integer id;
 

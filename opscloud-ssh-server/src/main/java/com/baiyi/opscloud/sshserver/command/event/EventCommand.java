@@ -87,14 +87,10 @@ public class EventCommand extends BaseServerCommand {
         int id = 1;
         for (Event event : table.getData()) {
             EventContext eventContext = BeanCopierUtil.copyProperties(event, EventContext.class);
-
             List<EventBusiness> eventBusinesses = eventBusinessService.queryByEventId(eventContext.getId());
-
             Server server = serverService.getById(eventBusinesses.get(0).getBusinessId());
-
             ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
-
-
+            eventContext.setServerVO(serverVO);
             eventMapper.put(id, eventContext);
             pt.addRow(id,
                     SeverityUtil.toTerminalStr(eventContext.getPriority()),
