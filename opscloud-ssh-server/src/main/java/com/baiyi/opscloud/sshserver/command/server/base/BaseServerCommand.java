@@ -44,13 +44,13 @@ public class BaseServerCommand {
     protected SshShellHelper helper;
 
     @Resource
-    private ServerService serverService;
+    protected ServerService serverService;
 
     @Resource
     private SshAccount sshAccount;
 
     @Resource
-    private SshServerPacker sshServerPacker;
+    protected SshServerPacker sshServerPacker;
 
     private Terminal terminal;
 
@@ -113,7 +113,7 @@ public class BaseServerCommand {
         return comment;
     }
 
-    private String toDisplayAccount(ServerVO.Server server, boolean isAdmin) {
+    protected String toDisplayAccount(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
         if (accountCatMap.containsKey(LoginType.LOW_AUTHORITY)) {

@@ -28,6 +28,7 @@ public class EventConvert {
         return Event.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .eventId(problem.getEventid())
+                .eventName(problem.getName())
                 .eventIdDesc(EventTypeEnum.ZABBIX_PROBLEM.name())
                 .eventMessage(JSON.toJSONString(problem))
                 .priority(problem.getSeverity())
@@ -40,6 +41,7 @@ public class EventConvert {
     public static Event toEvent(DatasourceInstance dsInstance, ZabbixProblem problem) {
         return Event.builder()
                 .instanceUuid(dsInstance.getUuid())
+                .eventName(problem.getName())
                 .eventId(problem.getEventid())
                 .eventIdDesc(EventTypeEnum.ZABBIX_PROBLEM.name())
                 .eventMessage(JSON.toJSONString(problem))
@@ -48,6 +50,5 @@ public class EventConvert {
                 .isActive(false) // 有效事件
                 .build();
     }
-
 
 }

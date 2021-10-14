@@ -26,6 +26,9 @@ public class Event {
     @Column(name = "instance_uuid")
     private String instanceUuid;
 
+    @Column(name = "event_name")
+    private String eventName;
+
     /**
      * 数据源事件id
      */

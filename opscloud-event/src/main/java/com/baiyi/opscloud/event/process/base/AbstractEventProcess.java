@@ -3,11 +3,13 @@ package com.baiyi.opscloud.event.process.base;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
+import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.base.IRecover;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
+import com.baiyi.opscloud.domain.param.event.EventParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.event.IEventProcess;
@@ -40,7 +42,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
     protected static final String EVENT_TAG = "Event";
 
     @Resource
-    private EventService eventService;
+    protected EventService eventService;
 
     @Resource
     private EventBusinessService eventBusinessService;
@@ -68,6 +70,11 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
      * @return
      */
     abstract protected List<E> listeningEvents(DatasourceInstance dsInstance);
+
+    @Override
+    public DataTable<Event> listEvent(EventParam.UserPermissionEventPageQuery pageQuery) {
+        return eventService.queryUserPermissionEventByParam(pageQuery);
+    }
 
     @Override
     public void listener() {
@@ -111,7 +118,9 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
                 } catch (Exception ex) {
                     log.error("回顾事件错误，查询事件失败; eventId = {}", e.getEventId());
                 }
-                if (eventMessage != null && eventMessage.isRecover()) {
+                if (eventMessage != null && !eventMessage.isRecover()) {
+                    return; // 没有恢复
+                } else {
                     e.setIsActive(false);
                     e.setExpiredTime(new Date());
                     eventService.update(e); // 恢复事件
