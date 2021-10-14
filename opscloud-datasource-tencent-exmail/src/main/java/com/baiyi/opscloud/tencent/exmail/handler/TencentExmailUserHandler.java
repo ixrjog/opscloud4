@@ -1,19 +1,18 @@
 package com.baiyi.opscloud.tencent.exmail.handler;
 
-import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailToken;
 import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
-import com.baiyi.opscloud.tencent.exmail.http.TencentExmailHttpUtil;
+import com.baiyi.opscloud.tencent.exmail.entry.base.BaseExmailModel;
+import com.baiyi.opscloud.tencent.exmail.feign.TencentExmailUserFeign;
 import com.baiyi.opscloud.tencent.exmail.param.ExmailParam;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.google.common.base.Joiner;
+import feign.Feign;
+import feign.jackson.JacksonDecoder;
+import feign.jackson.JacksonEncoder;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.io.IOException;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -24,94 +23,62 @@ import java.util.List;
 @Slf4j
 @Component
 public class TencentExmailUserHandler {
-
-    @Resource
-    private TencentExmailHttpUtil tencentExmailHttpUtil;
-
+    
     @Resource
     private TencentExmailTokenHandler tencentExmailTokenHandler;
 
     public static final long ALL_DEPARTMENT = 1L;
 
-    private interface UserApi {
-        String CREATE = "/cgi-bin/user/create";
-        String GET = "/cgi-bin/user/get";
-        String UPDATE = "/cgi-bin/user/update";
-        String DELETE = "/cgi-bin/user/delete";
-        String LIST = "/cgi-bin/user/list";
-        String SIMPLELIST = "/cgi-bin/user/simplelist";
-    }
+    public void create(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
+        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
 
-    public Boolean create(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
-        String token = tencentExmailTokenHandler.getToken(config);
-        String url = tencentExmailHttpUtil.getWebHook(config, UserApi.CREATE, token);
-        try {
-            JsonNode data = tencentExmailHttpUtil.httpPostExecutor(url, param);
-            return tencentExmailHttpUtil.checkResponse(data);
-        } catch (IOException e) {
-            log.error("TencentExmail用户创建失败", e);
-        }
-        return false;
+        DsTencentExmailConfig.Exmail exmail = config.getExmail();
+        TencentExmailUserFeign exmailAPI = Feign.builder()
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        BaseExmailModel result = exmailAPI.createUser(exmailToken.getAccessToken(), param);
     }
 
     public ExmailUser get(DsTencentExmailConfig.Tencent config, String userId) {
-        String token = tencentExmailTokenHandler.getToken(config);
-        String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.GET, token)
-                , "&userid="
-                , userId);
-        try {
-            JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
-            if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSON.parseObject(data.toString(), ExmailUser.class);
-            }
-            log.error(data.get("errmsg").asText());
-        } catch (IOException e) {
-            log.error("TencentExmail用户获取失败", e);
-        }
-        return null;
+        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        DsTencentExmailConfig.Exmail exmail = config.getExmail();
+        TencentExmailUserFeign exmailAPI = Feign.builder()
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        return exmailAPI.getUser(exmailToken.getAccessToken(), userId);
     }
 
     public List<ExmailUser> list(DsTencentExmailConfig.Tencent config, Long departmentId) {
-        String token = tencentExmailTokenHandler.getToken(config);
-        String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.LIST, token)
-                , "&department_id="
-                , departmentId
-                , "&fetch_child=1");
-        try {
-            JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
-            if (tencentExmailHttpUtil.checkResponse(data)) {
-                return JSONArray.parseArray(data.get("userlist").toString(), ExmailUser.class);
-            }
-            log.error(data.get("errmsg").asText());
-        } catch (IOException e) {
-            log.error("TencentExmail用户获取失败", e);
-        }
-        return Collections.emptyList();
+        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+
+        DsTencentExmailConfig.Exmail exmail = config.getExmail();
+        TencentExmailUserFeign exmailAPI = Feign.builder()
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        return exmailAPI.listUser(exmailToken.getAccessToken(), departmentId);
     }
 
-    public Boolean update(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
-        String token = tencentExmailTokenHandler.getToken(config);
-        String url = tencentExmailHttpUtil.getWebHook(config, UserApi.UPDATE, token);
-        try {
-            JsonNode data = tencentExmailHttpUtil.httpPostExecutor(url, param);
-            return tencentExmailHttpUtil.checkResponse(data);
-        } catch (IOException e) {
-            log.error("TencentExmail用户更新失败", e);
-        }
-        return false;
+    public void update(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
+        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+
+        DsTencentExmailConfig.Exmail exmail = config.getExmail();
+        TencentExmailUserFeign exmailAPI = Feign.builder()
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        BaseExmailModel result = exmailAPI.updateUser(exmailToken.getAccessToken(), param);
     }
 
-    public Boolean delete(DsTencentExmailConfig.Tencent config, String userId) {
-        String token = tencentExmailTokenHandler.getToken(config);
-        String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.DELETE, token)
-                , "&userid="
-                , userId);
-        try {
-            JsonNode data = tencentExmailHttpUtil.httpGetExecutor(url);
-            return tencentExmailHttpUtil.checkResponse(data);
-        } catch (IOException e) {
-            log.error("TencentExmail用户删除失败", e);
-        }
-        return false;
+    public void delete(DsTencentExmailConfig.Tencent config, String userId) {
+        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        DsTencentExmailConfig.Exmail exmail = config.getExmail();
+        TencentExmailUserFeign exmailAPI = Feign.builder()
+                .encoder(new JacksonEncoder())
+                .decoder(new JacksonDecoder())
+                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        BaseExmailModel result = exmailAPI.deleteUser(exmailToken.getAccessToken(), userId);
     }
 }

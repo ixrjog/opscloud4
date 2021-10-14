@@ -1,0 +1,47 @@
+package com.baiyi.opscloud.tencent.exmail.feign;
+
+import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
+import com.baiyi.opscloud.tencent.exmail.entry.base.BaseExmailModel;
+import com.baiyi.opscloud.tencent.exmail.param.ExmailParam;
+import feign.Param;
+import feign.RequestLine;
+
+import java.util.List;
+
+/**
+ * @Author baiyi
+ * @Date 2021/10/14 5:04 下午
+ * @Version 1.0
+ */
+public interface TencentExmailUserFeign {
+
+
+    // https://exmail.qq.com/qy_mng_logic/doc#10017
+
+    interface UserApi {
+        String CREATE = "/cgi-bin/user/create";
+        String GET = "/cgi-bin/user/get";
+        String UPDATE = "/cgi-bin/user/update";
+        String DELETE = "/cgi-bin/user/delete";
+        String LIST = "/cgi-bin/user/list";
+        String SIMPLELIST = "/cgi-bin/user/simplelist";
+    }
+
+
+    @RequestLine("POST /cgi-bin/user/create?access_token={token}")
+    BaseExmailModel createUser(@Param("token") String token, ExmailParam.User user);
+
+    @RequestLine("GET /cgi-bin/user/get?access_token={token}&userid={userId}")
+    ExmailUser getUser(@Param("token") String token, @Param("userId") String userId);
+
+    @RequestLine("GET /cgi-bin/user/list?access_token={token}&department_id={departmentId}&fetch_child=1")
+    List<ExmailUser> listUser(@Param("token") String token, @Param("departmentId") Long departmentId);
+
+    @RequestLine("POST /cgi-bin/user/update?access_token={token}")
+    BaseExmailModel updateUser(@Param("token") String token, ExmailParam.User user);
+
+    @RequestLine("GET /cgi-bin/user/delete?access_token={token}&userid={userId}")
+    BaseExmailModel deleteUser(@Param("token") String token, @Param("userId") String userId);
+
+
+}

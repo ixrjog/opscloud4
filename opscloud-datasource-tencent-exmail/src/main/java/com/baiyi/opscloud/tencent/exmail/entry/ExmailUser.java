@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.tencent.exmail.entry;
 
-import com.alibaba.fastjson.annotation.JSONField;
+import com.baiyi.opscloud.tencent.exmail.entry.base.BaseExmailModel;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -16,11 +17,12 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExmailUser {
+public class ExmailUser extends BaseExmailModel {
+
     /**
      * 企业邮帐号名，邮箱格式
      */
-    @JSONField(name = "userid")
+    @JsonProperty("userid")
     private String userId;
     private String name;
 

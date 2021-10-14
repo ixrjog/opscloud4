@@ -23,7 +23,7 @@ public class ExmailParam {
     @ApiModel
     public static class User {
 
-        @ApiModelProperty(value = "成员UserID。企业邮帐号名，邮箱格式", example = "xiuyuan@xinc818.group")
+        @ApiModelProperty(value = "成员UserID。企业邮帐号名，邮箱格式", example = "bob@example.com")
         private String userid;
         @ApiModelProperty(value = "成员名称")
         private String name;
