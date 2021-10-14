@@ -28,6 +28,10 @@ public class SshServerConfig {
     @Resource
     private SshShellHelper helper;
 
+//    @Resource
+//    @Lazy
+//    private EventCommand eventCommand;
+
     private final static HostInfo serverInfo = HostInfo.build();
 
     @Resource
@@ -53,6 +57,8 @@ public class SshServerConfig {
                 recordTerminalSession(event);
                 String welcome = String.format(WELCOME, event.getSession().getServerSession().getUsername());
                 helper.print(welcome, PromptColor.RED);
+                // 展示事件
+                // eventCommand.listEvent("");
                 return;
             }
             // 关闭事件

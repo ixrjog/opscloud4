@@ -1,11 +1,9 @@
-package com.baiyi.opscloud.sshserver.command.server;
+package com.baiyi.opscloud.sshserver.command.event;
 
 import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
-import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -23,7 +21,8 @@ import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
-import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
+import com.baiyi.opscloud.sshserver.command.event.base.EventContext;
+import com.baiyi.opscloud.sshserver.command.server.base.BaseServerCommand;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
@@ -41,13 +40,13 @@ import java.util.Map;
 
 /**
  * @Author baiyi
- * @Date 2021/5/31 4:58 下午
+ * @Date 2021/10/14 10:00 上午
  * @Version 1.0
  */
 @Slf4j
 @SshShellComponent
-@ShellCommandGroup("Server")
-public class ServerLoginCommand {
+@ShellCommandGroup("Event")
+public class EventLoginCommand extends BaseServerCommand {
 
     @Resource
     private AuditServerCommandHandler auditCommandHandler;
@@ -56,25 +55,18 @@ public class ServerLoginCommand {
     private SshShellHelper helper;
 
     @Resource
-    private ServerService serverService;
-
-    @Resource
     private HostSystemHandler hostSystemHandler;
-
-    @Resource
-    private SshServerPacker sshServerPacker;
 
     @Resource
     private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
-    private String toInstanceId(Server server) {
-        ServerVO.Server serverVO = sshServerPacker.wrapToVO(server);
-        return Joiner.on("#").join(serverVO.getDisplayName(), server.getPrivateIp(), IdUtil.buildUUID());
+    private String toInstanceId(ServerVO.Server serverVO) {
+        return Joiner.on("#").join(serverVO.getDisplayName(), serverVO.getPrivateIp(), IdUtil.buildUUID());
     }
 
     @InvokeSessionUser(invokeAdmin = true)
-    @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
-    public void login(@ShellOption(help = "Server Id") int id,
+    @ShellMethod(value = "事件ID登录服务器", key = { "login-event"})
+    public void loginEvent(@ShellOption(help = "Event Id") int id,
                       @ShellOption(help = "Account Name", defaultValue = "") String account,
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = helper.getSshSession();
@@ -83,11 +75,12 @@ public class ServerLoginCommand {
 
         SshContext sshContext = getSshContext();
 
-        Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
-        Server server = serverService.getById(idMapper.get(id));
-        String instanceId = toInstanceId(server);
+        Map<Integer, EventContext> eventMapper = SessionCommandContext.getEventMapper();
+        EventContext eventContext = eventMapper.get(id);
+        ServerVO.Server serverVO = eventContext.getServerVO();
+        String instanceId = toInstanceId(serverVO);
         try {
-            HostSystem hostSystem = hostSystemHandler.buildHostSystem(server, account);
+            HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverVO, account);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
@@ -162,8 +155,7 @@ public class ServerLoginCommand {
         if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
-        // jSchSession.getCommander().write(String.valueOf((char) ch).getBytes(StandardCharsets.UTF_8 ));
         jSchSession.getCommander().print((char) ch);
-    }
 
+    }
 }
