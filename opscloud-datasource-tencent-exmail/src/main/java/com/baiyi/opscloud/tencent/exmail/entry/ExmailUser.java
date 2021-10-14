@@ -37,4 +37,10 @@ public class ExmailUser {
      * 2、Slaves为邮箱格式
      */
     private List<String> slaves;
+
+    /**
+     * 1 true
+     * 0 false
+     */
+    private String enable;
 }

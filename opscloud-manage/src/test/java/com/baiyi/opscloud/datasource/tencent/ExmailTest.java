@@ -37,14 +37,14 @@ public class ExmailTest extends BaseUnit {
     @Test
     void getUser() {
         DsTencentExmailConfig.Tencent config = getConfig().getTencent();
-        ExmailUser bo = tencentExmailUserHandler.getUser(config, "baiyi@xinc818.group");
+        ExmailUser bo = tencentExmailUserHandler.get(config, "baiyi@xinc818.group");
         System.err.println(bo);
     }
 
     @Test
     void listUser() {
         DsTencentExmailConfig.Tencent config = getConfig().getTencent();
-        List<ExmailUser> list = tencentExmailUserHandler.listUser(config, 1L);
+        List<ExmailUser> list = tencentExmailUserHandler.list(config, 1L);
         System.err.println(list);
     }
 }

@@ -31,15 +31,18 @@ public class TencentExmailUserHandler {
     @Resource
     private TencentExmailTokenHandler tencentExmailTokenHandler;
 
+    public static final long ALL_DEPARTMENT = 1L;
+
     private interface UserApi {
         String CREATE = "/cgi-bin/user/create";
         String GET = "/cgi-bin/user/get";
         String UPDATE = "/cgi-bin/user/update";
         String DELETE = "/cgi-bin/user/delete";
-        String LIST = "/cgi-bin/user/simplelist";
+        String LIST = "/cgi-bin/user/list";
+        String SIMPLELIST = "/cgi-bin/user/simplelist";
     }
 
-    public Boolean createUser(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
+    public Boolean create(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = tencentExmailHttpUtil.getWebHook(config, UserApi.CREATE, token);
         try {
@@ -51,7 +54,7 @@ public class TencentExmailUserHandler {
         return false;
     }
 
-    public ExmailUser getUser(DsTencentExmailConfig.Tencent config, String userId) {
+    public ExmailUser get(DsTencentExmailConfig.Tencent config, String userId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.GET, token)
                 , "&userid="
@@ -68,7 +71,7 @@ public class TencentExmailUserHandler {
         return null;
     }
 
-    public List<ExmailUser> listUser(DsTencentExmailConfig.Tencent config, Long departmentId) {
+    public List<ExmailUser> list(DsTencentExmailConfig.Tencent config, Long departmentId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.LIST, token)
                 , "&department_id="
@@ -86,7 +89,7 @@ public class TencentExmailUserHandler {
         return Collections.emptyList();
     }
 
-    public Boolean updateUser(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
+    public Boolean update(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = tencentExmailHttpUtil.getWebHook(config, UserApi.UPDATE, token);
         try {
@@ -98,7 +101,7 @@ public class TencentExmailUserHandler {
         return false;
     }
 
-    public Boolean deleteUser(DsTencentExmailConfig.Tencent config, String userId) {
+    public Boolean delete(DsTencentExmailConfig.Tencent config, String userId) {
         String token = tencentExmailTokenHandler.getToken(config);
         String url = Joiner.on("").join(tencentExmailHttpUtil.getWebHook(config, UserApi.DELETE, token)
                 , "&userid="
