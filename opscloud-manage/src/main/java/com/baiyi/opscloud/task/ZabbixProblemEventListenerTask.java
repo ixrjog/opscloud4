@@ -4,14 +4,11 @@ import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.event.IEventProcess;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.factory.EventFactory;
-import com.baiyi.opscloud.facade.sys.InstanceFacade;
 import com.baiyi.opscloud.task.base.BaseTask;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -22,12 +19,9 @@ import javax.annotation.Resource;
 @Component
 public class ZabbixProblemEventListenerTask extends BaseTask {
 
-    @Resource
-    private InstanceFacade instanceFacade;
-
     @InstanceHealth // 实例健康检查，高优先级
+    @Scheduled(initialDelay = 15000, fixedRate = 80 * 1000)
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
-    @Scheduled(initialDelay = 10000, fixedRate = 60 * 1000)
     public void listenerTask() {
         IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess == null) return;
@@ -35,6 +29,5 @@ public class ZabbixProblemEventListenerTask extends BaseTask {
         iEventProcess.listener();
         log.info("定时任务开始: 监听zabbix问题！");
     }
-
 
 }
