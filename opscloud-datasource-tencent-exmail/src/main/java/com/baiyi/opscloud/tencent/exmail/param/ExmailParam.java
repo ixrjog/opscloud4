@@ -34,6 +34,7 @@ public class ExmailParam {
         @ApiModelProperty(value = "启用/禁用成员。1表示启用成员，0表示禁用成员")
         @Builder.Default
         private Integer enable = 1;
+
     }
 
     @Data
@@ -41,8 +42,10 @@ public class ExmailParam {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class searchDept {
+
         private String name;
         @Builder.Default
         private Integer fuzzy = 0;
+
     }
 }

@@ -29,7 +29,7 @@ public class ExmailAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("mobile", entry.getMobile()) // 查询所有邮箱用户不会返回手机号
+                .paramProperty("mobile", entry.getMobile())
                 .build();
     }
 }

@@ -23,62 +23,47 @@ import java.util.List;
 @Slf4j
 @Component
 public class TencentExmailUserHandler {
-    
+
     @Resource
     private TencentExmailTokenHandler tencentExmailTokenHandler;
 
     public static final long ALL_DEPARTMENT = 1L;
 
-    public void create(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
-        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
-
+    private TencentExmailUserFeign buildFeign(DsTencentExmailConfig.Tencent config) {
         DsTencentExmailConfig.Exmail exmail = config.getExmail();
-        TencentExmailUserFeign exmailAPI = Feign.builder()
+        return Feign.builder()
                 .encoder(new JacksonEncoder())
                 .decoder(new JacksonDecoder())
                 .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+    }
+
+    public void create(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
+        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailModel result = exmailAPI.createUser(exmailToken.getAccessToken(), param);
     }
 
     public ExmailUser get(DsTencentExmailConfig.Tencent config, String userId) {
         ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
-        DsTencentExmailConfig.Exmail exmail = config.getExmail();
-        TencentExmailUserFeign exmailAPI = Feign.builder()
-                .encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder())
-                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        TencentExmailUserFeign exmailAPI = buildFeign(config);
         return exmailAPI.getUser(exmailToken.getAccessToken(), userId);
     }
 
     public List<ExmailUser> list(DsTencentExmailConfig.Tencent config, Long departmentId) {
         ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
-
-        DsTencentExmailConfig.Exmail exmail = config.getExmail();
-        TencentExmailUserFeign exmailAPI = Feign.builder()
-                .encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder())
-                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        TencentExmailUserFeign exmailAPI = buildFeign(config);
         return exmailAPI.listUser(exmailToken.getAccessToken(), departmentId);
     }
 
     public void update(DsTencentExmailConfig.Tencent config, ExmailParam.User param) {
         ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
-
-        DsTencentExmailConfig.Exmail exmail = config.getExmail();
-        TencentExmailUserFeign exmailAPI = Feign.builder()
-                .encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder())
-                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailModel result = exmailAPI.updateUser(exmailToken.getAccessToken(), param);
     }
 
     public void delete(DsTencentExmailConfig.Tencent config, String userId) {
         ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
-        DsTencentExmailConfig.Exmail exmail = config.getExmail();
-        TencentExmailUserFeign exmailAPI = Feign.builder()
-                .encoder(new JacksonEncoder())
-                .decoder(new JacksonDecoder())
-                .target(TencentExmailUserFeign.class, exmail.getApiUrl());
+        TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailModel result = exmailAPI.deleteUser(exmailToken.getAccessToken(), userId);
     }
 }

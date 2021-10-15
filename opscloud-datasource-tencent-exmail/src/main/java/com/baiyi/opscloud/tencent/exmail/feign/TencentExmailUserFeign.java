@@ -9,24 +9,13 @@ import feign.RequestLine;
 import java.util.List;
 
 /**
+ * Doc:
+ * https://exmail.qq.com/qy_mng_logic/doc#10017
  * @Author baiyi
  * @Date 2021/10/14 5:04 下午
  * @Version 1.0
  */
 public interface TencentExmailUserFeign {
-
-
-    // https://exmail.qq.com/qy_mng_logic/doc#10017
-
-    interface UserApi {
-        String CREATE = "/cgi-bin/user/create";
-        String GET = "/cgi-bin/user/get";
-        String UPDATE = "/cgi-bin/user/update";
-        String DELETE = "/cgi-bin/user/delete";
-        String LIST = "/cgi-bin/user/list";
-        String SIMPLELIST = "/cgi-bin/user/simplelist";
-    }
-
 
     @RequestLine("POST /cgi-bin/user/create?access_token={token}")
     BaseExmailModel createUser(@Param("token") String token, ExmailParam.User user);
@@ -42,6 +31,5 @@ public interface TencentExmailUserFeign {
 
     @RequestLine("GET /cgi-bin/user/delete?access_token={token}&userid={userId}")
     BaseExmailModel deleteUser(@Param("token") String token, @Param("userId") String userId);
-
 
 }
