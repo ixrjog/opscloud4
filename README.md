@@ -8,13 +8,12 @@ Welcome to the opscloud wiki!
 
 <br>
 
-### Tag: 4.0.4(开发中) 新功能
-+ 数据源实例增加腾讯企业邮箱
-+ 事件驱动增加Zabbix问题，SSH-Server实现事件列表/事件登录
+### 项目语言&仓库
+#### 服务端Java, github.com/ixrjog/opscloud4
+#### 前端Vue, github.com/ixrjog/opscloud4-web
 
-### Tag:4.0.3版本主要功能(黄框功能未实现)
-
-<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/opscloud4.png"></img>
+### Tag:4.0.4版本主要功能(黄色块功能未实现)
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/opscloud4_4.0.4.png"></img>
 <br>
 
 ### 系统
@@ -47,7 +46,7 @@ Welcome to the opscloud wiki!
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help.png"></img>
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-help-2.png"></img>
 
-#### 事件列表(Tag:4.0.4功能)，基于事件驱动实现
+#### 事件列表基于事件驱动实现
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-event.png"></img>
 
 #### 服务器列表命令`list`
