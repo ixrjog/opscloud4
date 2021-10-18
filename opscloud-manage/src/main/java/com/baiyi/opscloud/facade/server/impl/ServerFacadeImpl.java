@@ -82,6 +82,10 @@ public class ServerFacadeImpl extends AbstractApplicationResourceQuery implement
             Server maxSerialNumberServer = serverService.getMaxSerialNumberServer(pre.getServerGroupId(), pre.getEnvType());
             pre.setSerialNumber(null == maxSerialNumberServer ? 1 : maxSerialNumberServer.getSerialNumber() + 1);
         }
+        if (pre.getMonitorStatus() == null)
+            pre.setMonitorStatus(-1);
+        if (pre.getServerStatus() == null)
+            pre.setServerStatus(1);
         return pre;
     }
 
