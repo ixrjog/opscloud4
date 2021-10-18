@@ -99,8 +99,8 @@ public class BaseServerCommand {
         SessionCommandContext.setIdMapper(idMapper);
         helper.print(pt.toString());
         helper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
-                pageQuery.getPage(),
-                pageQuery.getLength()),
+                        pageQuery.getPage(),
+                        pageQuery.getLength()),
                 PromptColor.GREEN);
     }
 
@@ -116,6 +116,7 @@ public class BaseServerCommand {
     protected String toDisplayAccount(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
+        if (accountCatMap == null) return helper.getBackgroundColored("No authorized account", PromptColor.YELLOW);
         if (accountCatMap.containsKey(LoginType.LOW_AUTHORITY)) {
             displayAccount = Joiner.on(" ").skipNulls().join(accountCatMap.get(LoginType.LOW_AUTHORITY).stream().map(a ->
                     "[" + SshShellHelper.getColoredMessage(a.getUsername(), PromptColor.GREEN) + "]"
