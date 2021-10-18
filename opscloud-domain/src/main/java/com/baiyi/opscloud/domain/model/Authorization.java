@@ -1,10 +1,14 @@
 package com.baiyi.opscloud.domain.model;
 
+import com.google.common.base.Joiner;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.util.StringUtils;
+
+import java.nio.charset.StandardCharsets;
 
 /**
  * @Author baiyi
@@ -24,6 +28,12 @@ public class Authorization {
 
         public boolean isEmpty() {
             return (StringUtils.isEmpty(username) || StringUtils.isEmpty(password));
+        }
+
+        public String toBasic() {
+            String authString = Joiner.on(":").join(username, password);
+            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8));
+            return new String(authEncBytes);
         }
 
     }

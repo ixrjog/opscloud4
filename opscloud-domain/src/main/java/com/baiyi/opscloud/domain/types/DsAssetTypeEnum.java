@@ -55,7 +55,7 @@ public enum DsAssetTypeEnum {
 
     TENCENT_EXMAIL_USER("TENCENT_EXMAIL_USER"),
 
-    ;
+    NEXUS_ASSET("NEXUS_ASSET");
 
     private String type;
 

@@ -32,6 +32,7 @@
         <module>opscloud-datasource-aliyun-rds</module>
         <module>opscloud-datasource-aliyun-ons</module>
         <module>opscloud-datasource-tencent-exmail</module>
+        <module>opscloud-datasource-nexus</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -308,6 +309,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-tencent-exmail</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-nexus</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

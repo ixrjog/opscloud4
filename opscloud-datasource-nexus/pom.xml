@@ -9,7 +9,7 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-tencent-exmail</artifactId>
+    <artifactId>opscloud-datasource-nexus</artifactId>
 
     <properties>
         <maven.compiler.source>8</maven.compiler.source>
