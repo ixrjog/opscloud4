@@ -73,9 +73,9 @@ public class EventCommand extends BaseServerCommand {
                 .fieldNames("ID",
                         "Severity",
                         "Event Name",
-                        "Lastchange Time",
                         "Server Name",
                         "IP",
+                        "Lastchange Time",
                         "Accounts"
                 );
         pageQuery.setUserId(com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin() ? null : com.baiyi.opscloud.common.util.SessionUtil.getUserId());
@@ -95,9 +95,9 @@ public class EventCommand extends BaseServerCommand {
             pt.addRow(id,
                     SeverityUtil.toTerminalStr(eventContext.getPriority()),
                     eventContext.getEventName(),
-                    TimeUtil.toGmtDate(eventContext.getLastchangeTime()),
                     serverVO.getDisplayName(),
                     ServerUtil.toDisplayIp(serverVO),
+                    TimeUtil.toGmtDate(eventContext.getLastchangeTime()),
                     toDisplayAccount(serverVO, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
             );
             id++;
