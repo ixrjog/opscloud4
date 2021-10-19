@@ -64,11 +64,11 @@ public class EventCommand extends BaseServerCommand {
     @ScreenClear
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "查询事件", key = {"event", "list-event"})
-    public void listEvent(@ShellOption(help = "Event Name", defaultValue = "") String name) {
+    public void listEvent(@ShellOption(help = "Event Name", defaultValue = "") String name, @ShellOption(help = "Page", defaultValue = "1") Integer page) {
         EventParam.UserPermissionEventPageQuery pageQuery = EventParam.UserPermissionEventPageQuery.builder()
                 .name(name)
                 .build();
-        pageQuery.setPage(1);
+        pageQuery.setPage(page);
         PrettyTable pt = PrettyTable
                 .fieldNames("ID",
                         "Severity",
@@ -104,7 +104,7 @@ public class EventCommand extends BaseServerCommand {
         }
         SessionCommandContext.setEventMapper(eventMapper);
         helper.print(pt.toString());
-        helper.print(ServerTableUtil.buildPagination(table.getTotalNum(),
+        helper.print(ServerTableUtil.buildFooter(table.getTotalNum(),
                         pageQuery.getPage(),
                         pageQuery.getLength()),
                 PromptColor.GREEN);
