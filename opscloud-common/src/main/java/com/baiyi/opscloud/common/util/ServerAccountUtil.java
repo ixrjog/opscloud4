@@ -12,7 +12,10 @@ import java.util.Map;
  * @Date 2021/5/31 10:48 上午
  * @Version 1.0
  */
-public class ServerAccoutUtil {
+public class ServerAccountUtil {
+
+    private ServerAccountUtil() {
+    }
 
     public static Map<Integer, List<ServerAccount>> catByType(List<ServerAccount> accounts) {
         Map<Integer, List<ServerAccount>> accountTypeMap = Maps.newHashMap();
