@@ -20,14 +20,14 @@ import org.springframework.stereotype.Component;
 public class ZabbixProblemEventListenerTask extends BaseTask {
 
     @InstanceHealth // 实例健康检查，高优先级
-    @Scheduled(initialDelay = 15000, fixedRate = 80 * 1000)
+    @Scheduled(initialDelay = 8000, fixedRate = 60 * 1000)
     @SchedulerLock(name = "zabbix_problem_event_listener_task", lockAtMostFor = "1m", lockAtLeastFor = "1m")
     public void listenerTask() {
         IEventProcess iEventProcess = EventFactory.getIEventProcessByEventType(EventTypeEnum.ZABBIX_PROBLEM);
         if (iEventProcess == null) return;
         log.info("定时任务开始: 监听zabbix问题！");
         iEventProcess.listener();
-        log.info("定时任务开始: 监听zabbix问题！");
+        log.info("定时任务结束: 监听zabbix问题！");
     }
 
 }
