@@ -12,6 +12,21 @@ Welcome to the opscloud wiki!
 #### 服务端Java, github.com/ixrjog/opscloud4
 #### 前端Vue, github.com/ixrjog/opscloud4-web
 
+### Tag:4.0.5版本
++ 部分代码优化
++ 服务端4.0.5版本兼容4.0.4前端和SQL
++ SSH-Server增加Arthas(Alibaba开源的Java诊断工具，深受开发者喜爱)支持
+```
+# https://arthas.aliyun.com/doc/
+# 登录服务器指定参数 --arthas | -R 快速启动arthas
+login 1 --arthas 
+# 登录容器指定参数 --arthas | -R 快速启动arthas
+login-k8s-pod 1 --arthas
+```
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-arthas-1.png"></img>
+<img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/ssh-server/ssh-server-arthas-2.png"></img>
+
+
 ### Tag:4.0.4版本主要功能(黄色块功能未实现)
 <img src="https://opscloud-res.oss-cn-hangzhou.aliyuncs.com/opscloud4/github/opscloud4_4.0.4.png"></img>
 <br>
