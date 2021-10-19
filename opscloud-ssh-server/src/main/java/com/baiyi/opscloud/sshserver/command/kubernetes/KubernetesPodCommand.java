@@ -31,6 +31,7 @@ import com.baiyi.opscloud.sshserver.command.context.KubernetesDsInstance;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.BaseKubernetesCommand;
 import com.baiyi.opscloud.sshserver.command.kubernetes.base.PodContext;
+import com.baiyi.opscloud.sshserver.config.SshServerArthasConfig;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.google.common.base.Joiner;
@@ -42,15 +43,21 @@ import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.output.ByteArrayOutputStream;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
 import javax.annotation.Resource;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.CharBuffer;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -63,7 +70,12 @@ import java.util.stream.Collectors;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Kubernetes")
-public class KubernetesPodCommand extends BaseKubernetesCommand {
+public class KubernetesPodCommand extends BaseKubernetesCommand implements InitializingBean {
+
+    @Resource
+    private SshServerArthasConfig arthasConfig;
+
+    private static byte[] KUBERNETES_EXECUTE_ARTHAS = "curl -O https://arthas.aliyun.com/arthas-boot.jar && java -jar arthas-boot.jar \n".getBytes(StandardCharsets.UTF_8);
 
     @Resource
     private UserService userService;
@@ -212,7 +224,9 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
     @ScreenClear
     @InvokeSessionUser
     @ShellMethod(value = "登录容器组,通过参数可指定容器 [ 输入 ctrl+d 退出会话 ]", key = {"login-k8s-pod"})
-    public void loginPod(@ShellOption(help = "Pod ID", defaultValue = "") int id, @ShellOption(help = "Container Name", defaultValue = "") String name) {
+    public void loginPod(@ShellOption(help = "Pod ID", defaultValue = "") int id,
+                         @ShellOption(help = "Container Name", defaultValue = "") String name,
+                         @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
@@ -240,13 +254,31 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
 
         SshContext sshContext = getSshContext();
         WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getSshShellRunnable().getOs());
-       // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getTerminal().writer());
+        // WatchKubernetesSshOutputTask run = new WatchKubernetesSshOutputTask(sessionOutput, baos, sshContext.getTerminal().writer());
         Thread thread = new Thread(run);
         thread.start();
         // ExecutorService executorService = Executors.newSingleThreadExecutor();
         // NonBlockingInputStreamPumper pump = new NonBlockingInputStreamPumper(sshIO.getIs(), new OutCallback());
         // executorService.submit(pump); // run
+        // 执行arthas
         try {
+            if (!listener.isClosed() && arthas) {
+                terminal.flush();
+                Thread.sleep(200L);
+                execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
+                Thread.sleep(1000L);
+                // 清除输入缓冲区数据
+                while (!listener.isClosed()) {
+                    int ch = terminal.reader().read(1L);
+                    if (ch < 0)
+                        break;
+                }
+            }
+        } catch (IOException | InterruptedException ie) {
+            log.error("执行Arthas错误！");
+        }
+        try {
+            terminal.reader().clear();
             while (!listener.isClosed()) {
                 int ch = terminal.reader().read(25L);
                 if (ch >= 0) {
@@ -344,5 +376,22 @@ public class KubernetesPodCommand extends BaseKubernetesCommand {
         return Joiner.on(" ").join("容器组数量:", podSize);
     }
 
+
+    private byte[] getBytes(char[] chars) {
+        Charset cs = Charset.forName("UTF-8");
+        CharBuffer cb = CharBuffer.allocate(chars.length);
+        cb.put(chars);
+        cb.flip();
+        ByteBuffer bb = cs.encode(cb);
+        return bb.array();
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (!StringUtils.isEmpty(arthasConfig.getKubernetes())) {
+            KUBERNETES_EXECUTE_ARTHAS = arthasConfig.getKubernetes().getBytes(StandardCharsets.UTF_8);
+            log.info("从配置文件加载KubernetesArthas命令: {}", arthasConfig.getKubernetes());
+        }
+    }
 }
 

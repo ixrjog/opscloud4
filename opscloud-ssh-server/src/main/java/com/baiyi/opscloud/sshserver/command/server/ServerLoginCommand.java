@@ -23,13 +23,16 @@ import com.baiyi.opscloud.sshserver.SshShellHelper;
 import com.baiyi.opscloud.sshserver.annotation.InvokeSessionUser;
 import com.baiyi.opscloud.sshserver.command.component.SshShellComponent;
 import com.baiyi.opscloud.sshserver.command.context.SessionCommandContext;
+import com.baiyi.opscloud.sshserver.config.SshServerArthasConfig;
 import com.baiyi.opscloud.sshserver.packer.SshServerPacker;
 import com.baiyi.opscloud.sshserver.util.TerminalUtil;
 import com.google.common.base.Joiner;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.sshd.server.session.ServerSession;
 import org.jline.terminal.Size;
 import org.jline.terminal.Terminal;
+import org.springframework.beans.factory.InitializingBean;
 import org.springframework.shell.standard.ShellCommandGroup;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
@@ -47,7 +50,12 @@ import java.util.Map;
 @Slf4j
 @SshShellComponent
 @ShellCommandGroup("Server")
-public class ServerLoginCommand {
+public class ServerLoginCommand implements InitializingBean {
+
+    @Resource
+    private SshServerArthasConfig arthasConfig;
+
+    private static String SERVER_EXECUTE_ARTHAS = "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n";
 
     @Resource
     private AuditServerCommandHandler auditCommandHandler;
@@ -76,6 +84,7 @@ public class ServerLoginCommand {
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
     public void login(@ShellOption(help = "Server Id") int id,
                       @ShellOption(help = "Account Name", defaultValue = "") String account,
+                      @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas,
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
@@ -100,6 +109,18 @@ public class ServerLoginCommand {
             TerminalUtil.rawModeSupportVintr(terminal);
             Instant inst1 = Instant.now(); // 计时
             Size size = terminal.getSize();
+            if (!isClosed(sessionId, instanceId) && arthas) {
+                try {
+                    jSchSessionPrint(sessionId, instanceId, SERVER_EXECUTE_ARTHAS);
+                    while (isClosed(sessionId, instanceId)) {
+                        int ch = terminal.reader().read(1L);
+                        if (ch < 0)
+                            break;
+                    }
+                } catch (Exception e) {
+                    log.error("执行Arthas错误！");
+                }
+            }
             try {
                 while (true) {
                     if (isClosed(sessionId, instanceId)) {
@@ -108,7 +129,7 @@ public class ServerLoginCommand {
                         break;
                     }
                     tryResize(size, terminal, sessionId, instanceId);
-                    printJSchSession(sessionId, instanceId, terminal.reader().read(5L));
+                    jSchSessionPrint(sessionId, instanceId, terminal.reader().read(5L));
                 }
             } catch (Exception e) {
                 // e.printStackTrace();
@@ -158,12 +179,27 @@ public class ServerLoginCommand {
         return jSchSession.getChannel().isClosed();
     }
 
-    private void printJSchSession(String sessionId, String instanceId, int ch) throws Exception {
+    private void jSchSessionPrint(String sessionId, String instanceId, int ch) throws Exception {
         if (ch < 0) return;
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
         if (jSchSession == null) throw new Exception();
         // jSchSession.getCommander().write(String.valueOf((char) ch).getBytes(StandardCharsets.UTF_8 ));
         jSchSession.getCommander().print((char) ch);
+    }
+
+    private void jSchSessionPrint(String sessionId, String instanceId, String cmd) throws Exception {
+        if (StringUtils.isEmpty(cmd)) return;
+        JSchSession jSchSession = JSchSessionContainer.getBySessionId(sessionId, instanceId);
+        if (jSchSession == null) throw new Exception();
+        jSchSession.getCommander().print(cmd);
+    }
+
+    @Override
+    public void afterPropertiesSet() throws Exception {
+        if (!StringUtils.isEmpty(arthasConfig.getServer())) {
+            SERVER_EXECUTE_ARTHAS = arthasConfig.getServer();
+            log.info("从配置文件加载ServerArthas命令: {}", arthasConfig.getServer());
+        }
     }
 
 }

@@ -18,6 +18,7 @@ import com.baiyi.opscloud.sshserver.util.ServerTableUtil;
 import com.baiyi.opscloud.sshserver.util.SessionUtil;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.jline.terminal.Terminal;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
  * @Date 2021/7/1 11:07 上午
  * @Version 1.0
  */
+@Slf4j
 public class BaseServerCommand {
 
     protected static final int PAGE_FOOTER_SIZE = 6;
@@ -139,5 +141,6 @@ public class BaseServerCommand {
     protected String buildSessionId() {
         return SessionUtil.buildSessionId(helper.getSshSession().getIoSession());
     }
+
 
 }
