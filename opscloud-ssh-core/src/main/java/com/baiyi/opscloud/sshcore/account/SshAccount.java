@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.sshcore.account;
 
 import com.baiyi.opscloud.common.type.ProtocolEnum;
-import com.baiyi.opscloud.common.util.ServerAccoutUtil;
+import com.baiyi.opscloud.common.util.ServerAccountUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.service.server.ServerAccountService;
+import com.google.common.collect.Maps;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -24,7 +25,7 @@ public class SshAccount {
 
     public Map<Integer, List<ServerAccount>> getServerAccountCatMap(Integer serverId) {
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(serverId, null, ProtocolEnum.SSH.getType());
-        if (CollectionUtils.isEmpty(accounts)) return null;
-        return ServerAccoutUtil.catByType(accounts);
+        if (CollectionUtils.isEmpty(accounts)) return Maps.newHashMap();
+        return ServerAccountUtil.catByType(accounts);
     }
 }

@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.type.ProtocolEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
-import com.baiyi.opscloud.common.util.ServerAccoutUtil;
+import com.baiyi.opscloud.common.util.ServerAccountUtil;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
@@ -136,7 +136,7 @@ public class HostSystemHandler {
             return getSshCredentialByAdmin(server.getId(), loginType);
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(server.getId(), loginType, ProtocolEnum.SSH.getType());
         if (CollectionUtils.isEmpty(accounts)) return null;
-        Map<Integer, List<ServerAccount>> accountCatMap = ServerAccoutUtil.catByType(accounts);
+        Map<Integer, List<ServerAccount>> accountCatMap = ServerAccountUtil.catByType(accounts);
         if (accountCatMap.containsKey(loginType)) {
             return buildSshCredential(accountCatMap.get(loginType).get(0));
         }

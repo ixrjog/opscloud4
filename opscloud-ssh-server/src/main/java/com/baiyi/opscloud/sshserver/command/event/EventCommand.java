@@ -98,7 +98,7 @@ public class EventCommand extends BaseServerCommand {
                     serverVO.getDisplayName(),
                     ServerUtil.toDisplayIp(serverVO),
                     TimeUtil.toGmtDate(eventContext.getLastchangeTime()),
-                    toDisplayAccount(serverVO, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
+                    toAccountField(serverVO, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin())
             );
             id++;
         }

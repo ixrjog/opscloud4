@@ -60,6 +60,8 @@ public class BaseServerCommand {
         this.terminal = terminal;
     }
 
+    private final static String NO_AUTHORIZED_ACCOUNT = SshShellHelper.getBackgroundColoredMessage("No authorized account", PromptColor.YELLOW);
+
     public interface LoginType {
         int LOW_AUTHORITY = 0;
         int HIGH_AUTHORITY = 1;
@@ -91,8 +93,8 @@ public class BaseServerCommand {
                     ServerUtil.toDisplayEnv(s.getEnv()),
                     ServerUtil.toDisplayIp(s),
                     ServerUtil.toDisplayTag(s),
-                    toDisplayAccount(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin()),
-                    toDisplayComment(s.getComment())
+                    toAccountField(s, com.baiyi.opscloud.common.util.SessionUtil.getIsAdmin()),
+                    toCommentField(s.getComment())
             );
             id++;
         }
@@ -104,7 +106,7 @@ public class BaseServerCommand {
                 PromptColor.GREEN);
     }
 
-    private String toDisplayComment(String comment) {
+    private String toCommentField(String comment) {
         if (StringUtils.isEmpty(comment))
             return "";
         if (comment.length() >= COMMENT_MAX_SIZE) {
@@ -113,15 +115,18 @@ public class BaseServerCommand {
         return comment;
     }
 
-    protected String toDisplayAccount(ServerVO.Server server, boolean isAdmin) {
+    protected String toAccountField(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
         Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
-        if (accountCatMap == null) return helper.getBackgroundColored("No authorized account", PromptColor.YELLOW);
+        // 没有授权账户
+        if (accountCatMap.isEmpty()) return NO_AUTHORIZED_ACCOUNT;
+        // 低权限账户
         if (accountCatMap.containsKey(LoginType.LOW_AUTHORITY)) {
             displayAccount = Joiner.on(" ").skipNulls().join(accountCatMap.get(LoginType.LOW_AUTHORITY).stream().map(a ->
                     "[" + SshShellHelper.getColoredMessage(a.getUsername(), PromptColor.GREEN) + "]"
             ).collect(Collectors.toList()));
         }
+        // 高权限账户
         if (isAdmin || "admin".equalsIgnoreCase(server.getServerGroup().getUserPermission().getPermissionRole()))
             if (accountCatMap.containsKey(LoginType.HIGH_AUTHORITY)) {
                 displayAccount = Joiner.on(" ").skipNulls().join(displayAccount, accountCatMap.get(LoginType.HIGH_AUTHORITY).stream().map(a ->
