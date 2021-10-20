@@ -8,6 +8,7 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -76,8 +77,12 @@ public class UserVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation // 资产与业务对象绑定关系
+    public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
+            TagVO.ITags
     {
+
+        private List<TagVO.Tag> tags;
+
         private final Integer businessType = BusinessTypeEnum.USER.getType();
 
         @Override

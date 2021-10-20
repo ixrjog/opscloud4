@@ -14,6 +14,7 @@ import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.base.IPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
+import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.packer.user.child.RamUserPacker;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.util.ExtendUtil;
@@ -53,6 +54,9 @@ public class UserPacker implements IPacker<UserVO.User, User> {
 
     @Resource
     private RamUserPacker ramUserPacker;
+
+    @Resource
+    private TagPacker tagPacker;
 
     @Override
     public UserVO.User toVO(User user) {
@@ -97,6 +101,7 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         userAccessTokenPacker.wrap(user);
         wrapPermission(user);
         ramUserPacker.wrap(user);
+        tagPacker.wrap(user);
         return desensitizedPacker.desensitized(user);
     }
 

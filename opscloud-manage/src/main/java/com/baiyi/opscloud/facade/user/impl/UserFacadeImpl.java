@@ -9,6 +9,8 @@ import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
+import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.SimpleRelation;
@@ -50,6 +52,7 @@ import java.util.List;
  * @Date 2021/5/14 10:38 上午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.USER)
 @Slf4j
 @Service
 public class UserFacadeImpl implements UserFacade {
@@ -168,6 +171,7 @@ public class UserFacadeImpl implements UserFacade {
         userService.updateBySelective(updateUser);
     }
 
+    @TagClear
     @Override
     public void deleteUser(Integer id) {
         User user = userService.getById(id);
