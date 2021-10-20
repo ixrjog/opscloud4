@@ -262,11 +262,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         // executorService.submit(pump); // run
         // 执行arthas
         try {
-            if (!listener.isClosed() && arthas) {
-                terminal.flush();
-                Thread.sleep(200L);
-                execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
-                Thread.sleep(1000L);
+            if (!listener.isClosed()) {
                 // 清除输入缓冲区数据
                 while (!listener.isClosed()) {
                     int ch = terminal.reader().read(1L);
@@ -274,11 +270,15 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                         break;
                 }
             }
+            if (arthas) {
+                Thread.sleep(200L);
+                execWatch.getInput().write(KUBERNETES_EXECUTE_ARTHAS);
+                Thread.sleep(1000L);
+            }
         } catch (IOException | InterruptedException ie) {
             log.error("执行Arthas错误！");
         }
         try {
-            terminal.reader().clear();
             while (!listener.isClosed()) {
                 int ch = terminal.reader().read(25L);
                 if (ch >= 0) {
