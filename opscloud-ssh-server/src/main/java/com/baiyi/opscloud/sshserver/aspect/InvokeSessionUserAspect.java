@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.sshserver.aspect;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
+import com.baiyi.opscloud.common.type.SessionSource;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserService;
@@ -55,15 +57,24 @@ public class InvokeSessionUserAspect {
 
     @Around("@annotation(invokeSessionUser)")
     public Object around(ProceedingJoinPoint joinPoint, InvokeSessionUser invokeSessionUser) throws Throwable {
-        User user = userService.getByUsername(helper.getSshSession().getUsername());
-        if (user == null || !user.getIsActive()) {
-            helper.print("未经授权的访问！", PromptColor.RED);
-            throw new ExitRequest();
+        if (invokeSessionUser.source() == SessionSource.SSH_SHELL) {
+            User user = userService.getByUsername(helper.getSshSession().getUsername());
+            if (user == null || !user.getIsActive()) {
+                helper.print("未经授权的访问！", PromptColor.RED);
+                throw new ExitRequest();
+            }
+            com.baiyi.opscloud.common.util.SessionUtil.setUserId(user.getId());
+            com.baiyi.opscloud.common.util.SessionUtil.setUsername(user.getUsername());
+            if (invokeSessionUser.invokeAdmin())
+                com.baiyi.opscloud.common.util.SessionUtil.setIsAdmin(isAdmin(user.getUsername()));
         }
-        com.baiyi.opscloud.common.util.SessionUtil.setUserId(user.getId());
-        com.baiyi.opscloud.common.util.SessionUtil.setUsername(user.getUsername());
-        if (invokeSessionUser.invokeAdmin())
-            com.baiyi.opscloud.common.util.SessionUtil.setIsAdmin(isAdmin(user.getUsername()));
+        if (invokeSessionUser.source() == SessionSource.TOKEN) {
+            if (invokeSessionUser.invokeAdmin()) {
+                User user = userService.getByUsername(SessionUtil.getUsername());
+                com.baiyi.opscloud.common.util.SessionUtil.setUserId(user.getId());
+                com.baiyi.opscloud.common.util.SessionUtil.setIsAdmin(isAdmin(SessionUtil.getUsername()));
+            }
+        }
         joinPoint.proceed();
         return joinPoint;
     }

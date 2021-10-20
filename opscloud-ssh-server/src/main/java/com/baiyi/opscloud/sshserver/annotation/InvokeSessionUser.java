@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.sshserver.annotation;
 
+import com.baiyi.opscloud.common.type.SessionSource;
+
 import java.lang.annotation.*;
 
 /**
@@ -14,5 +16,8 @@ public @interface InvokeSessionUser {
 
     String name() default "";
 
+    SessionSource source() default SessionSource.SSH_SHELL;
+
     boolean invokeAdmin() default false;
+
 }
