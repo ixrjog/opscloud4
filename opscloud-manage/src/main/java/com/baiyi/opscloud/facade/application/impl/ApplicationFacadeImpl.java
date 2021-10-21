@@ -60,7 +60,6 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
         pageQuery.setUserId(isAdmin(SessionUtil.getUsername()) ? null : userService.getByUsername(SessionUtil.getUsername()).getId());
         DataTable<Application> table = applicationService.queryPageByParam(pageQuery);
         return new DataTable<>(applicationPacker.wrapVOListByKubernetes(table.getData()), table.getTotalNum());
-
     }
 
     /**
@@ -72,7 +71,6 @@ public class ApplicationFacadeImpl implements ApplicationFacade {
         int accessLevel = authRoleService.getRoleAccessLevelByUsername(username);
         return accessLevel >= AccessLevel.OPS.getLevel();
     }
-
 
     @Override
     public DataTable<ApplicationResourceVO.Resource> previewApplicationResourcePage(ApplicationResourceParam.ResourcePageQuery pageQuery) {
