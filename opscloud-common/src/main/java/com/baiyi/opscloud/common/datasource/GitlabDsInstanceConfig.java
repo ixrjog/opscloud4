@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsGitlabConfig;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -14,7 +15,23 @@ import lombok.EqualsAndHashCode;
 @Data
 public class GitlabDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private DsGitlabConfig.Gitlab gitlab;
+    private Gitlab gitlab;
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Gitlab {
+
+        private String url;
+        private String token;
+        private SystemHooks systemHooks;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class SystemHooks {
+        private String token;  // 回调token
+    }
 }
 

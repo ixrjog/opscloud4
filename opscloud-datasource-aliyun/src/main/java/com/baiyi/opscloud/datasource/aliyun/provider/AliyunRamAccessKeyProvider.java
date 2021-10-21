@@ -3,19 +3,18 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetChildProvider;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -46,7 +45,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -62,7 +61,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
 
     @Override
     protected List<ListAccessKeysResponse.AccessKey> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<ListAccessKeysResponse.AccessKey> accessKeyList = Lists.newArrayList();

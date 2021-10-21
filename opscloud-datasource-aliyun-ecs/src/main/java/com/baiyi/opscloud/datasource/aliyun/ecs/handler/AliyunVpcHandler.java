@@ -5,7 +5,7 @@ import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsRequest;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.aliyuncs.exceptions.ClientException;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
@@ -27,7 +27,7 @@ public class AliyunVpcHandler {
     @Resource
     private AliyunHandler aliyunHandler;
 
-    public List<DescribeVpcsResponse.Vpc> listVpcs(String regionId, DsAliyunConfig.Aliyun aliyun) {
+    public List<DescribeVpcsResponse.Vpc> listVpcs(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
         List<DescribeVpcsResponse.Vpc> vpcs = Lists.newArrayList();
         try {
             DescribeVpcsRequest describe = new DescribeVpcsRequest();
@@ -48,7 +48,7 @@ public class AliyunVpcHandler {
         return vpcs;
     }
 
-    public List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, DsAliyunConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
+    public List<DescribeVSwitchesResponse.VSwitch> listVSwitches(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
         List<DescribeVSwitchesResponse.VSwitch> vSwitches = Lists.newArrayList();
         try {
             DescribeVSwitchesRequest describe = new DescribeVSwitchesRequest();

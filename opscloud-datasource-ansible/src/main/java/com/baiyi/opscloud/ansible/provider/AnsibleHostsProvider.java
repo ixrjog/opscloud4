@@ -6,7 +6,6 @@ import com.baiyi.opscloud.ansible.convert.AnsibleAssetConvert;
 import com.baiyi.opscloud.ansible.model.AnsibleHosts;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
@@ -58,13 +57,13 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
         return DsAssetTypeEnum.ANSIBLE_HOSTS.getType();
     }
 
-    private DsAnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
+    private AnsibleDsInstanceConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AnsibleDsInstanceConfig.class).getAnsible();
     }
 
     @Override
     protected List<AnsibleHosts.Hosts> listEntries(DsInstanceContext dsInstanceContext) {
-        DsAnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
+        AnsibleDsInstanceConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         List<AnsibleHosts.Hosts> hosts = Lists.newArrayList();
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         hosts.add(buildHosts(credential.getUsername(), ansible.getInventoryHost()));

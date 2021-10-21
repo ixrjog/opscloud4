@@ -6,7 +6,6 @@ import com.baiyi.opscloud.ansible.handler.AnsibleHandler;
 import com.baiyi.opscloud.ansible.model.AnsibleExecuteResult;
 import com.baiyi.opscloud.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
@@ -83,7 +82,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
     @Override
     public void publishAssetSubscription(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription) {
         DsInstanceContext instanceContext = buildDsInstanceContext(datasourceInstanceAssetSubscription.getInstanceUuid());
-        DsAnsibleConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
+        AnsibleDsInstanceConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
         PlaybookArgs args = PlaybookArgs.builder()
                 .extraVars(AnsibleUtil.toVars(datasourceInstanceAssetSubscription.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
@@ -122,11 +121,11 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
      */
     public String toSubscriptionPlaybookFile(DatasourceInstanceAssetSubscription subscription) {
         DsInstanceContext instanceContext = buildDsInstanceContext(subscription.getInstanceUuid());
-        DsAnsibleConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
+        AnsibleDsInstanceConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
         return toSubscriptionPlaybookFile(ansible, subscription);
     }
 
-    private String toSubscriptionPlaybookFile(DsAnsibleConfig.Ansible ansible, DatasourceInstanceAssetSubscription subscription) {
+    private String toSubscriptionPlaybookFile(AnsibleDsInstanceConfig.Ansible ansible, DatasourceInstanceAssetSubscription subscription) {
         String fileName = Joiner.on("_").join(subscription.getInstanceUuid(), subscription.getDatasourceInstanceAssetId(), subscription.getId()) + ".yml";
         String path = Joiner.on("/").join(ansible.getData(), "subscription", fileName);
         return SystemEnvUtil.renderEnvHome(path);

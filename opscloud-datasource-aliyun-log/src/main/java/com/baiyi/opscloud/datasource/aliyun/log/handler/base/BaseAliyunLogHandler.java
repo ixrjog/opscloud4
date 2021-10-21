@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.log.handler.base;
 
 import com.aliyun.openservices.log.Client;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import org.apache.commons.lang3.StringUtils;
 
 /**
@@ -20,7 +20,7 @@ public abstract class BaseAliyunLogHandler {
      * @param aliyun
      * @return
      */
-    protected Client buildClient(DsAliyunConfig.Aliyun aliyun) {
+    protected Client buildClient(AliyunDsInstanceConfig.Aliyun aliyun) {
         String regionId = aliyun.getRegionId();
         if (StringUtils.isEmpty(regionId))
             regionId = "cn-hangzhou";

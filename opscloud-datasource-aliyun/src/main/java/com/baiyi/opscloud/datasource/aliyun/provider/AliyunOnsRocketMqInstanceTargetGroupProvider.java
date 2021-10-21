@@ -4,7 +4,6 @@ import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler.AliyunOnsRocketMqInstanceHandler;
@@ -46,7 +45,7 @@ public class AliyunOnsRocketMqInstanceTargetGroupProvider extends AbstractAssetR
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -70,7 +69,7 @@ public class AliyunOnsRocketMqInstanceTargetGroupProvider extends AbstractAssetR
 
     @Override
     protected List<OnsInstanceInServiceListResponse.InstanceVO> listEntries(DsInstanceContext dsInstanceContext) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<OnsInstanceInServiceListResponse.InstanceVO> entries = Lists.newArrayList();
@@ -97,7 +96,7 @@ public class AliyunOnsRocketMqInstanceTargetGroupProvider extends AbstractAssetR
 
     @Override
     protected List<OnsInstanceInServiceListResponse.InstanceVO> listEntries(DsInstanceContext dsInstanceContext, OnsGroupListResponse.SubscribeInfoDo target) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunOnsRocketMqInstanceHandler.listInstance(aliyun.getRegionId(), aliyun).stream().filter(e ->
                 e.getInstanceId().equals(target.getInstanceId())
         ).collect(Collectors.toList());

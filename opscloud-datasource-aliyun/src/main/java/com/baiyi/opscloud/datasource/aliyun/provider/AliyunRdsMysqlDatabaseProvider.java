@@ -4,7 +4,6 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsMysqlAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.rds.mysql.handler.AliyunRdsMysqlHandler;
@@ -47,7 +46,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -65,7 +64,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeDatabasesResponse.Database> entries = Lists.newArrayList();
@@ -102,7 +101,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext, DescribeDBInstancesResponse.DBInstance target) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRdsMysqlHandler.listDatabase(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
     }
 

@@ -2,17 +2,16 @@ package com.baiyi.opscloud.gitlab.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsGitlabConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.gitlab.convert.GitlabAssetConvert;
 import com.baiyi.opscloud.gitlab.handler.GitlabUserHandler;
 import com.google.common.collect.Lists;
@@ -50,13 +49,13 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
         return DsAssetTypeEnum.GITLAB_SSHKEY.getType();
     }
 
-    private DsGitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+    private GitlabDsInstanceConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 
     @Override
     protected List<GitlabUser> listEntries(DsInstanceContext dsInstanceContext, GitlabSSHKey target) {
-        DsGitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
+        GitlabDsInstanceConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         List<GitlabUser> users = Lists.newArrayList();
         try {
             users.add(GitlabUserHandler.getUser(gitlab, target.getUser().getId()));

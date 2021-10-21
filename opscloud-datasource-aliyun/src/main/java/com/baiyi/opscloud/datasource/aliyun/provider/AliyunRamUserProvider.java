@@ -5,7 +5,6 @@ import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
@@ -49,7 +48,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -71,7 +70,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
 
     @Override
     protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<ListUsersResponse.User> userList = Lists.newArrayList();
@@ -96,7 +95,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
 
     @Override
     protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRamHandler.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName())
                 .stream().map(this::toTargetEntry)
                 .collect(Collectors.toList());

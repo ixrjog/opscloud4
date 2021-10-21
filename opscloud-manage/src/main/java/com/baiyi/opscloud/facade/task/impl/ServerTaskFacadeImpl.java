@@ -7,7 +7,6 @@ import com.baiyi.opscloud.ansible.task.AnsibleServerTask;
 import com.baiyi.opscloud.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
@@ -109,7 +108,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private void executeServerTask(ServerTask serverTask, List<ServerTaskMember> members) {
         // 构建上下文
         DsInstanceContext instanceContext = buildDsInstanceContext(serverTask.getInstanceUuid());
-        DsAnsibleConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
+        AnsibleDsInstanceConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
         PlaybookArgs args = PlaybookArgs.builder()

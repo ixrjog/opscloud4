@@ -4,7 +4,6 @@ import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
 import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler.AliyunOnsRocketMqInstanceHandler;
@@ -51,7 +50,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -73,7 +72,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<OnsTopicListResponse.PublishInfoDo> listEntries(DsInstanceContext dsInstanceContext) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<OnsTopicListResponse.PublishInfoDo> entries = Lists.newArrayList();
@@ -104,7 +103,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<OnsTopicListResponse.PublishInfoDo> listEntries(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunOnsRocketMqTopicHandler.listTopic(aliyun.getRegionId(), aliyun, target.getInstanceId());
     }
 

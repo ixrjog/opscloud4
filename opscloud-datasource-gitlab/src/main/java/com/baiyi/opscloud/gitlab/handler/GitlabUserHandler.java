@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.gitlab.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsGitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
 import com.baiyi.opscloud.gitlab.factory.GitlabFactory;
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.models.GitlabSSHKey;
@@ -16,23 +16,23 @@ import java.util.List;
  */
 public class GitlabUserHandler {
 
-    public static GitlabUser getUser(DsGitlabConfig.Gitlab gitlab, Integer userId) throws IOException {
+    public static GitlabUser getUser(GitlabDsInstanceConfig.Gitlab gitlab, Integer userId) throws IOException {
         return buildAPI(gitlab).getUser(userId);
     }
 
-    public static List<GitlabUser> queryUsers(DsGitlabConfig.Gitlab gitlab) {
+    public static List<GitlabUser> queryUsers(GitlabDsInstanceConfig.Gitlab gitlab) {
         return buildAPI(gitlab).getUsers();
     }
 
-    public static List<GitlabSSHKey> getUserSSHKeys(DsGitlabConfig.Gitlab gitlab, Integer targetUserId) throws IOException {
+    public static List<GitlabSSHKey> getUserSSHKeys(GitlabDsInstanceConfig.Gitlab gitlab, Integer targetUserId) throws IOException {
         return buildAPI(gitlab).getSSHKeys(targetUserId);
     }
 
-    public static GitlabSSHKey getSSHKeys(DsGitlabConfig.Gitlab gitlab, Integer keyId) throws IOException {
+    public static GitlabSSHKey getSSHKeys(GitlabDsInstanceConfig.Gitlab gitlab, Integer keyId) throws IOException {
         return buildAPI(gitlab).getSSHKey(keyId);
     }
 
-    private static GitlabAPI buildAPI(DsGitlabConfig.Gitlab gitlab) {
+    private static GitlabAPI buildAPI(GitlabDsInstanceConfig.Gitlab gitlab) {
         return GitlabFactory.buildGitlabAPI(gitlab);
     }
 }

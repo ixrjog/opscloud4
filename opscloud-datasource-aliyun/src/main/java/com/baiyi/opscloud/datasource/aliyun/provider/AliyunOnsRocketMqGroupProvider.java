@@ -4,7 +4,6 @@ import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler.AliyunOnsRocketMqGroupHandler;
@@ -51,7 +50,7 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -71,7 +70,7 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<OnsGroupListResponse.SubscribeInfoDo> listEntries(DsInstanceContext dsInstanceContext) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<OnsGroupListResponse.SubscribeInfoDo> entries = Lists.newArrayList();
@@ -102,7 +101,7 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<OnsGroupListResponse.SubscribeInfoDo> listEntries(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunOnsRocketMqGroupHandler.listGroup(aliyun.getRegionId(), aliyun, target.getInstanceId());
     }
 

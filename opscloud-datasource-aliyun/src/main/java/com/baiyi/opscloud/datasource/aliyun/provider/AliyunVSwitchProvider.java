@@ -3,20 +3,19 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.aliyuncs.ecs.model.v20140526.DescribeVSwitchesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunVpcHandler;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -47,7 +46,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
         doPull(dsInstanceId);
     }
 
-    private DsAliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
@@ -65,7 +64,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
 
     @Override
     protected List<DescribeVSwitchesResponse.VSwitch> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
-        DsAliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeVSwitchesResponse.VSwitch> vSwitchList = Lists.newArrayList();

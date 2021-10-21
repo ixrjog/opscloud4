@@ -5,7 +5,7 @@ import com.aliyuncs.ons.model.v20190214.OnsInstanceBaseInfoRequest;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceBaseInfoResponse;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListRequest;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -26,7 +26,7 @@ public class AliyunOnsRocketMqInstanceHandler {
     @Resource
     private AliyunHandler aliyunHandler;
 
-    public List<OnsInstanceInServiceListResponse.InstanceVO> listInstance(String regionId, DsAliyunConfig.Aliyun aliyun) {
+    public List<OnsInstanceInServiceListResponse.InstanceVO> listInstance(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
         OnsInstanceInServiceListRequest request = new OnsInstanceInServiceListRequest();
         try {
             OnsInstanceInServiceListResponse response = aliyunHandler.getAcsResponse(regionId, aliyun, request);
@@ -37,7 +37,7 @@ public class AliyunOnsRocketMqInstanceHandler {
         }
     }
 
-    public OnsInstanceBaseInfoResponse.InstanceBaseInfo getInstanceInfo(String regionId, DsAliyunConfig.Aliyun aliyun,String instanceId) {
+    public OnsInstanceBaseInfoResponse.InstanceBaseInfo getInstanceInfo(String regionId, AliyunDsInstanceConfig.Aliyun aliyun,String instanceId) {
         OnsInstanceBaseInfoRequest request = new OnsInstanceBaseInfoRequest();
         request.setInstanceId(instanceId);
         try {

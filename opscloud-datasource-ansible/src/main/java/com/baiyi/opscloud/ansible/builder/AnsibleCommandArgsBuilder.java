@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.ansible.builder;
 
-import com.baiyi.opscloud.common.datasource.config.DsAnsibleConfig;
 import com.baiyi.opscloud.ansible.args.CommandArgs;
+import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang3.StringUtils;
 
@@ -17,7 +17,7 @@ public class AnsibleCommandArgsBuilder {
      * @param args
      * @return
      */
-    public static CommandLine build(DsAnsibleConfig.Ansible ansible, CommandArgs args) {
+    public static CommandLine build(AnsibleDsInstanceConfig.Ansible ansible, CommandArgs args) {
         CommandLine commandLine = AnsibleArgsBuilder.build(ansible, args);
 
         if (args.isVersion())

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.gitlab.factory;
 
-import com.baiyi.opscloud.common.datasource.config.DsGitlabConfig;
+import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
 import org.gitlab.api.GitlabAPI;
 
 /**
@@ -10,7 +10,7 @@ import org.gitlab.api.GitlabAPI;
  */
 public class GitlabFactory {
 
-    public static GitlabAPI buildGitlabAPI(DsGitlabConfig.Gitlab gitlab) {
+    public static GitlabAPI buildGitlabAPI(GitlabDsInstanceConfig.Gitlab gitlab) {
         return GitlabAPI.connect(gitlab.getUrl(), gitlab.getToken());
     }
 

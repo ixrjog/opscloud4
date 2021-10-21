@@ -5,7 +5,7 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesRequest;
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesRequest;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
@@ -37,7 +37,7 @@ public class AliyunRdsMysqlHandler {
      * @param aliyun
      * @return
      */
-    public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, DsAliyunConfig.Aliyun aliyun) {
+    public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
         return listDbInstance(regionId, aliyun, QUERY_ALL_INSTANCE);
     }
 
@@ -49,7 +49,7 @@ public class AliyunRdsMysqlHandler {
      * @param dbInstanceId
      * @return
      */
-    public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, DsAliyunConfig.Aliyun aliyun, String dbInstanceId) {
+    public List<DescribeDBInstancesResponse.DBInstance> listDbInstance(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String dbInstanceId) {
         List<DescribeDBInstancesResponse.DBInstance> instances = Lists.newArrayList();
         DescribeDBInstancesRequest describe = new DescribeDBInstancesRequest();
         if (!StringUtils.isEmpty(dbInstanceId))
@@ -80,7 +80,7 @@ public class AliyunRdsMysqlHandler {
      * @param dbInstanceId
      * @return
      */
-    public List<DescribeDatabasesResponse.Database> listDatabase(String regionId, DsAliyunConfig.Aliyun aliyun, String dbInstanceId) {
+    public List<DescribeDatabasesResponse.Database> listDatabase(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String dbInstanceId) {
         DescribeDatabasesRequest describe = new DescribeDatabasesRequest();
         describe.setDBInstanceId(dbInstanceId);
         describe.setPageSize(PAGE_SIZE);

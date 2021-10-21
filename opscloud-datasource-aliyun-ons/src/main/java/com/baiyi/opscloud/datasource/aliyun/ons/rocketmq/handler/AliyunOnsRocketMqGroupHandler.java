@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ons.model.v20190214.OnsGroupListRequest;
 import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
-import com.baiyi.opscloud.common.datasource.config.DsAliyunConfig;
+import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -35,7 +35,7 @@ public class AliyunOnsRocketMqGroupHandler {
      * @param instanceId 必选参数
      * @return
      */
-    public List<OnsGroupListResponse.SubscribeInfoDo> listGroup(String regionId, DsAliyunConfig.Aliyun aliyun, String instanceId) {
+    public List<OnsGroupListResponse.SubscribeInfoDo> listGroup(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String instanceId) {
         return listGroup(regionId, aliyun, instanceId, QUERY_ALL, QUERY_ALL);
     }
 
@@ -49,7 +49,7 @@ public class AliyunOnsRocketMqGroupHandler {
      * @param groupType
      * @return
      */
-    public List<OnsGroupListResponse.SubscribeInfoDo> listGroup(String regionId, DsAliyunConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) {
+    public List<OnsGroupListResponse.SubscribeInfoDo> listGroup(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) {
         OnsGroupListRequest request = new OnsGroupListRequest();
         request.setInstanceId(instanceId);
         if (StringUtils.isBlank(groupId)) {
