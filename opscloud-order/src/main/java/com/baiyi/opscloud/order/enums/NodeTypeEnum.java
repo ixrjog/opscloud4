@@ -9,7 +9,11 @@ import lombok.Getter;
  */
 public enum NodeTypeEnum {
 
-    TODO;
+    USER_SELECTION(0);
+
+    NodeTypeEnum(int code) {
+        this.code = code;
+    }
 
     @Getter
     private int code;

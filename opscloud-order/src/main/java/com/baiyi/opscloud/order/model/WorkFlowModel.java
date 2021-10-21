@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.order.model;
 
+import io.swagger.annotations.ApiModelProperty;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -29,13 +30,14 @@ public class WorkFlowModel {
     @Data
     public static class Node {
 
+        @ApiModelProperty(value = "节点名称")
         private String nodeName;
+        @ApiModelProperty(value = "节点类型，参考NodeTypeEnum")
         private Integer nodeType;
+        @ApiModelProperty(value = "筛选用户的标签")
         private String tag;
         private String comment;
 
     }
-
-
 
 }
