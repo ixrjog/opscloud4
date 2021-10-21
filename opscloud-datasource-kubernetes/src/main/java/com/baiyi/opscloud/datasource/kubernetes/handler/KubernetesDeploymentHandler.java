@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.apps.Deployment;
 import io.fabric8.kubernetes.api.model.apps.DeploymentList;
@@ -16,13 +16,13 @@ import java.util.List;
  */
 public class KubernetesDeploymentHandler {
 
-    public static List<Deployment> listDeployment(DsKubernetesConfig.Kubernetes kubernetes) {
+    public static List<Deployment> listDeployment(KubernetesDsInstanceConfig.Kubernetes kubernetes) {
         DeploymentList deploymenList = KubeClient.build(kubernetes)
                 .apps().deployments().list();
         return deploymenList.getItems();
     }
 
-    public static List<Deployment> listDeployment(DsKubernetesConfig.Kubernetes kubernetes, String namespace) {
+    public static List<Deployment> listDeployment(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace) {
         DeploymentList deploymenList = KubeClient.build(kubernetes)
                 .apps()
                 .deployments()
@@ -39,7 +39,7 @@ public class KubernetesDeploymentHandler {
      * @param name       podName
      * @return
      */
-    public static Deployment getDeployment(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+    public static Deployment getDeployment(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String name) {
         return KubeClient.build(kubernetes)
                 .apps()
                 .deployments()

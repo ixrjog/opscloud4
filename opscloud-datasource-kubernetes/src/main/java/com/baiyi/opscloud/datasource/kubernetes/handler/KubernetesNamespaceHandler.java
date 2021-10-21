@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.NamespaceList;
@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
  */
 public class KubernetesNamespaceHandler {
 
-    public static List<Namespace> listNamespace(DsKubernetesConfig.Kubernetes kubernetes) {
+    public static List<Namespace> listNamespace(KubernetesDsInstanceConfig.Kubernetes kubernetes) {
         NamespaceList namespaceList = KubeClient.build(kubernetes)
                 .namespaces()
                 .list();
@@ -23,7 +23,7 @@ public class KubernetesNamespaceHandler {
         ).collect(Collectors.toList());
     }
 
-    private static boolean filter(DsKubernetesConfig.Kubernetes kubernetes, Namespace namespace) {
+    private static boolean filter(KubernetesDsInstanceConfig.Kubernetes kubernetes, Namespace namespace) {
         for (String s : kubernetes.getNamespace().getIgnore()) {
             if (namespace.getMetadata().getName().equalsIgnoreCase(s))
                 return false;

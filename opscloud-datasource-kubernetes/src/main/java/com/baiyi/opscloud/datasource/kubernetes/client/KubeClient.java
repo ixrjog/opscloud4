@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.client;
 
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.datasource.util.SystemEnvUtil;
 import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.client.ConfigBuilder;
@@ -19,9 +19,9 @@ public class KubeClient {
     private static final int CONNECTION_TIMEOUT = 30 * 1000;
     private static final int REQUEST_TIMEOUT = 30 * 1000;
 
-    public static KubernetesClient build(DsKubernetesConfig.Kubernetes kubernetes) {
+    public static KubernetesClient build(KubernetesDsInstanceConfig.Kubernetes kubernetes) {
         System.setProperty(io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE,
-                buildKubeconfPath(kubernetes));
+                buildKubeconfigPath(kubernetes));
         io.fabric8.kubernetes.client.Config config = new ConfigBuilder()
                 //.withMasterUrl kubeconfg中获取
                 .withTrustCerts(true)
@@ -31,7 +31,7 @@ public class KubeClient {
         return new DefaultKubernetesClient(config);
     }
 
-    private static String buildKubeconfPath(DsKubernetesConfig.Kubernetes kubernetes) {
+    private static String buildKubeconfigPath(KubernetesDsInstanceConfig.Kubernetes kubernetes) {
         String path = Joiner.on("/").join(kubernetes.getKubeconfig().getPath(), io.fabric8.kubernetes.client.Config.KUBERNETES_KUBECONFIG_FILE);
         return SystemEnvUtil.renderEnvHome(path);
     }

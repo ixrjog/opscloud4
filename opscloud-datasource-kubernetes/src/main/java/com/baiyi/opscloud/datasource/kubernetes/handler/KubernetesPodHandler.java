@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.api.model.PodList;
@@ -24,14 +24,14 @@ import java.util.Map;
  */
 public class KubernetesPodHandler {
 
-    public static List<Pod> listPod(DsKubernetesConfig.Kubernetes kubernetes) {
+    public static List<Pod> listPod(KubernetesDsInstanceConfig.Kubernetes kubernetes) {
         PodList podList = KubeClient.build(kubernetes)
                 .pods()
                 .list();
         return podList.getItems();
     }
 
-    public static List<Pod> listPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace) {
+    public static List<Pod> listPod(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace) {
         PodList podList = KubeClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
@@ -41,7 +41,7 @@ public class KubernetesPodHandler {
         return podList.getItems();
     }
 
-    public static List<Pod> listPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
+    public static List<Pod> listPod(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String deploymentName) {
         KubernetesClient client = KubeClient.build(kubernetes);
         Map<String, String> matchLabels = client.apps()
                 .deployments()
@@ -58,7 +58,7 @@ public class KubernetesPodHandler {
         return items;
     }
 
-    public static List<Pod> listPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
+    public static List<Pod> listPod(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, Map<String, String> labels) {
         PodList podList = KubeClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
@@ -75,7 +75,7 @@ public class KubernetesPodHandler {
      * @param name       podName
      * @return
      */
-    public static Pod getPod(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
+    public static Pod getPod(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String name) {
         return KubeClient.build(kubernetes)
                 .pods()
                 .inNamespace(namespace)
@@ -83,14 +83,14 @@ public class KubernetesPodHandler {
                 .get();
     }
 
-    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName) {
+    public static LogWatch getPodLogWatch(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String podName) {
         return KubeClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
                 .watchLog();
     }
 
-    public static LogWatch getPodLogWatch(DsKubernetesConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
+    public static LogWatch getPodLogWatch(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String podName, String containerName, Integer lines, OutputStream outputStream) {
         return KubeClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(podName)
@@ -104,7 +104,7 @@ public class KubernetesPodHandler {
      * @param namespace
      * @return
      */
-    public static ExecWatch loginPodContainer(DsKubernetesConfig.Kubernetes kubernetes,
+    public static ExecWatch loginPodContainer(KubernetesDsInstanceConfig.Kubernetes kubernetes,
                                               String namespace,
                                               String podName,
                                               String containerName,

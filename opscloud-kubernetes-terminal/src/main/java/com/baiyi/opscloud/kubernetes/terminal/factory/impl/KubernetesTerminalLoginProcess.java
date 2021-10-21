@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.kubernetes.terminal.factory.impl;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
@@ -68,7 +67,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
     }
 
     // 日志
-    private void processLog(DsKubernetesConfig.Kubernetes kubernetes, TerminalSession terminalSession,
+    private void processLog(KubernetesDsInstanceConfig.Kubernetes kubernetes, TerminalSession terminalSession,
                             KubernetesResource kubernetesResource, KubernetesResource.Pod pod, KubernetesResource.Container container) {
         RemoteInvokeHandler.openKubernetesLog(
                 terminalSession.getSessionId(),
@@ -83,7 +82,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
     }
 
     // 终端
-    private void processTerminal(DsKubernetesConfig.Kubernetes kubernetes, TerminalSession terminalSession, KubernetesResource.Pod pod, KubernetesResource.Container container) {
+    private void processTerminal(KubernetesDsInstanceConfig.Kubernetes kubernetes, TerminalSession terminalSession, KubernetesResource.Pod pod, KubernetesResource.Container container) {
         RemoteInvokeHandler.openKubernetesTerminal(
                 terminalSession.getSessionId(),
                 toInstanceId(pod, container),

@@ -2,19 +2,18 @@ package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.NamespaceAssetConvert;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesNamespaceHandler;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import io.fabric8.kubernetes.api.model.Namespace;
 import org.springframework.stereotype.Component;
 
@@ -42,7 +41,7 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
         return DsAssetTypeEnum.KUBERNETES_NAMESPACE.getType();
     }
 
-    private DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+    private KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
     }
 

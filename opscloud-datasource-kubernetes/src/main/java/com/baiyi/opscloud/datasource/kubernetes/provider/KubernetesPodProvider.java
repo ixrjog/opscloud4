@@ -2,10 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesNamespaceHandler;
@@ -13,9 +10,11 @@ import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Namespace;
 import io.fabric8.kubernetes.api.model.Pod;
@@ -47,14 +46,14 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
         return DsAssetTypeEnum.KUBERNETES_POD.getType();
     }
 
-    private DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+    private KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
     }
 
     @Override
     public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        DsKubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        KubernetesDsInstanceConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Pod> pods = KubernetesPodHandler.listPod(kubernetes, params.get("namespace"), params.get("deploymentName"));
         return pods.stream().map(e->
             toAssetContainer(dsInstanceContext.getDsInstance(),e)
@@ -63,7 +62,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     @Override
     protected List<Pod> listEntries(DsInstanceContext dsInstanceContext) {
-        DsKubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        KubernetesDsInstanceConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Namespace> namespaces = KubernetesNamespaceHandler.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Pod> pods = Lists.newArrayList();
         namespaces.forEach(e ->

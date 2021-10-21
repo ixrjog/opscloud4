@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsKubernetesConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
@@ -18,7 +17,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProvider<DsKubernetesConfig.Kubernetes> {
+public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProvider<KubernetesDsInstanceConfig.Kubernetes> {
 
     @Override
     public String getInstanceType() {
@@ -26,13 +25,13 @@ public class KubernetesSetConfigProvider extends AbstractSetDsInstanceConfigProv
     }
 
     @Override
-    protected DsKubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+    protected KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
         return dsFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
     }
 
     @Override
     protected void doSet(DsInstanceContext dsInstanceContext) {
-        DsKubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        KubernetesDsInstanceConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         // 取配置文件路径
         String kubeconfigPath = SystemEnvUtil.renderEnvHome(kubernetes.getKubeconfig().getPath());
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
