@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.ldap.repo;
 
-import com.baiyi.opscloud.common.datasource.config.DsLdapConfig;
+import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.ldap.entry.Group;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
  */
 public interface GroupRepo {
 
-    List<Group> getGroupList(DsLdapConfig.Ldap ldapConfig);
+    List<Group> getGroupList(LdapDsInstanceConfig.Ldap ldapConfig);
 
     /**
      * 查询用户组成员名列表
@@ -20,9 +20,9 @@ public interface GroupRepo {
      * @param groupName
      * @return
      */
-    List<String> queryGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName);
+    List<String> queryGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName);
 
-    List<Group> searchGroupByUsername(DsLdapConfig.Ldap ldapConfig, String username);
+    List<Group> searchGroupByUsername(LdapDsInstanceConfig.Ldap ldapConfig, String username);
 
     /**
      * 移除group中的用户
@@ -31,11 +31,11 @@ public interface GroupRepo {
      * @param username
      * @return
      */
-    void removeGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName, String username);
+    void removeGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName, String username);
 
-    void addGroupMember(DsLdapConfig.Ldap ldapConfig, String groupName, String username);
+    void addGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName, String username);
 
-    void create(DsLdapConfig.Ldap ldapConfig, String groupName);
+    void create(LdapDsInstanceConfig.Ldap ldapConfig, String groupName);
 
-    void delete(DsLdapConfig.Ldap ldapConfig, String groupName);
+    void delete(LdapDsInstanceConfig.Ldap ldapConfig, String groupName);
 }
