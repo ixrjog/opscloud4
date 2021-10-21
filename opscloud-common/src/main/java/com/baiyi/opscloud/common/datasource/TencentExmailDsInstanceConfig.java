@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -14,7 +15,24 @@ import lombok.EqualsAndHashCode;
 @Data
 public class TencentExmailDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private DsTencentExmailConfig.Tencent tencent;
+    private Tencent tencent;
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Tencent {
+        private Exmail exmail;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Exmail {
+        private String apiUrl;
+        private String corpId;
+        private String name;
+        private String corpSecret;
+    }
 
 }
 

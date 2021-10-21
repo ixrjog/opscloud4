@@ -2,7 +2,6 @@ package com.baiyi.opscloud.tencent.exmail.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.TencentExmailDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsTencentExmailConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
@@ -49,13 +48,13 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
         return DsAssetTypeEnum.TENCENT_EXMAIL_USER.getType();
     }
 
-    private DsTencentExmailConfig.Tencent buildConfig(DatasourceConfig dsConfig) {
+    private TencentExmailDsInstanceConfig.Tencent buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, TencentExmailDsInstanceConfig.class).getTencent();
     }
 
     @Override
     protected List<ExmailUser> listEntries(DsInstanceContext dsInstanceContext) {
-        DsTencentExmailConfig.Tencent tencent = buildConfig(dsInstanceContext.getDsConfig());
+        TencentExmailDsInstanceConfig.Tencent tencent = buildConfig(dsInstanceContext.getDsConfig());
         return tencentExmailUserHandler.list(tencent, ALL_DEPARTMENT);
     }
 
