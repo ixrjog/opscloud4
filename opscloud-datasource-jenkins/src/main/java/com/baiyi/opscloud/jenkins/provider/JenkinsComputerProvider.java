@@ -2,17 +2,16 @@ package com.baiyi.opscloud.jenkins.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsJenkinsConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.jenkins.convert.ComputerAssetConvert;
 import com.baiyi.opscloud.jenkins.handler.JenkinsServerHandler;
 import com.google.common.collect.Lists;
@@ -45,7 +44,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
         return DsAssetTypeEnum.JENKINS_COMPUTER.getType();
     }
 
-    private DsJenkinsConfig.Jenkins buildConfig(DatasourceConfig dsConfig) {
+    private JenkinsDsInstanceConfig.Jenkins buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, JenkinsDsInstanceConfig.class).getJenkins();
     }
 

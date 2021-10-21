@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.jenkins.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsJenkinsConfig;
+import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
 import com.baiyi.opscloud.jenkins.server.JenkinsServerBuilder;
 import com.offbytwo.jenkins.JenkinsServer;
 import com.offbytwo.jenkins.model.Computer;
@@ -16,7 +16,7 @@ import java.util.Map;
  */
 public class JenkinsServerHandler {
 
-    public static Map<String, Computer> getComputers(DsJenkinsConfig.Jenkins jenkins) throws URISyntaxException,IOException {
+    public static Map<String, Computer> getComputers(JenkinsDsInstanceConfig.Jenkins jenkins) throws URISyntaxException,IOException {
         JenkinsServer jenkinsServer = JenkinsServerBuilder.build(jenkins);
         return jenkinsServer.getComputers();
     }

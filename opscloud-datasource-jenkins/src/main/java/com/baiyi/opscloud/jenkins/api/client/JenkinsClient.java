@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.jenkins.api.client;
 
-import com.baiyi.opscloud.common.datasource.config.DsJenkinsConfig;
+import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
 import com.baiyi.opscloud.datasource.model.Authentication;
 import com.baiyi.opscloud.jenkins.api.http.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -28,7 +28,7 @@ public class JenkinsClient {
      * @throws IOException
      */
 
-    public static JsonNode get(DsJenkinsConfig.Jenkins jenkins, String api) throws IOException {
+    public static JsonNode get(JenkinsDsInstanceConfig.Jenkins jenkins, String api) throws IOException {
         Authentication authentication = Authentication.builder()
                 .token(Joiner.on(" ").join("Basic", buildAuth(jenkins)))
                 .build();
@@ -36,7 +36,7 @@ public class JenkinsClient {
         return HttpUtil.httpGetExecutor(url, Maps.newHashMap(), authentication);
     }
 
-    public static String getString(DsJenkinsConfig.Jenkins jenkins, String api) throws IOException {
+    public static String getString(JenkinsDsInstanceConfig.Jenkins jenkins, String api) throws IOException {
         Authentication authentication = Authentication.builder()
                 .token(Joiner.on(" ").join("Basic", buildAuth(jenkins)))
                 .build();
@@ -44,7 +44,7 @@ public class JenkinsClient {
         return HttpUtil.httpGetExecutorCommon(url, Maps.newHashMap(), authentication);
     }
 
-    private static String buildAuth(DsJenkinsConfig.Jenkins jenkins) {
+    private static String buildAuth(JenkinsDsInstanceConfig.Jenkins jenkins) {
         return new String(Base64.getEncoder().encode(String.format("%s:%s", jenkins.getUsername(),
                 jenkins.getToken()).getBytes(StandardCharsets.UTF_8)), StandardCharsets.UTF_8);
     }

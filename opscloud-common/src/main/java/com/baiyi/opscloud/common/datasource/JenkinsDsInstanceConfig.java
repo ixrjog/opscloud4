@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsJenkinsConfig;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -14,6 +15,18 @@ import lombok.EqualsAndHashCode;
 @Data
 public class JenkinsDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private DsJenkinsConfig.Jenkins jenkins;
+    private Jenkins jenkins;
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Jenkins {
+
+        private String version;
+        private String url;
+        private String username;
+        private String token;
+
+    }
 
 }
