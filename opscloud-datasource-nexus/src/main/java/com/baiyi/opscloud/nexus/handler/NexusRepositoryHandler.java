@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.nexus.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsNexusConfig;
+import com.baiyi.opscloud.common.datasource.NexusDsInstanceConfig;
 import com.baiyi.opscloud.nexus.entry.NexusRepository;
 import com.baiyi.opscloud.nexus.feign.NexusRepositoriesV1Feign;
 import feign.Feign;
@@ -21,7 +21,7 @@ import java.util.List;
 @Component
 public class NexusRepositoryHandler {
 
-    private NexusRepositoriesV1Feign buildFeign(DsNexusConfig.Nexus config) {
+    private NexusRepositoriesV1Feign buildFeign(NexusDsInstanceConfig.Nexus config) {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
@@ -29,7 +29,7 @@ public class NexusRepositoryHandler {
                 .target(NexusRepositoriesV1Feign.class, config.getUrl());
     }
 
-    public List<NexusRepository.Repository> list(DsNexusConfig.Nexus config) {
+    public List<NexusRepository.Repository> list(NexusDsInstanceConfig.Nexus config) {
         NexusRepositoriesV1Feign nexusAPI = buildFeign(config);
         return nexusAPI.listRepositories();
     }
