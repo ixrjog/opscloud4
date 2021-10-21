@@ -2,18 +2,17 @@ package com.baiyi.opscloud.zabbix.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.datasource.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.datasource.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
@@ -43,13 +42,13 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
         return DsTypeEnum.ZABBIX.name();
     }
 
-    private DsZabbixConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
+    private ZabbixDsInstanceConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
         return dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
     }
 
     @Override
     protected List<ZabbixUserGroup> listEntries(DsInstanceContext dsInstanceContext, ZabbixUser target) {
-        DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
+        ZabbixDsInstanceConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixUserGroupHandler.listByUser(zabbix, target);
     }
 

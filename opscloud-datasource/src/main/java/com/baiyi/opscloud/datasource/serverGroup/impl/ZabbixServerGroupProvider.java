@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.serverGroup.impl;
 
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.datasource.account.impl.ZabbixAccountProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -41,7 +40,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
     @Resource
     private ZabbixAccountProvider zabbixAccountProvider;
 
-    protected static ThreadLocal<DsZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
+    protected static ThreadLocal<ZabbixDsInstanceConfig.Zabbix> configContext = new ThreadLocal<>();
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {

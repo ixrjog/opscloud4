@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.account.impl.base;
 
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -35,21 +34,21 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider 
     @Resource
     private ZabbixFacade zabbixFacade;
 
-    protected static ThreadLocal<DsZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
+    protected static ThreadLocal<ZabbixDsInstanceConfig.Zabbix> configContext = new ThreadLocal<>();
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
         configContext.set(dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
     }
 
-    protected List<Map<String, String>> getUsrgrps(DsZabbixConfig.Zabbix zabbix, User user) {
+    protected List<Map<String, String>> getUsrgrps(ZabbixDsInstanceConfig.Zabbix zabbix, User user) {
         List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
         if (CollectionUtils.isEmpty(userGroups))
             userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
         return userGroups;
     }
 
-    protected List<Map<String, String>> toUsrgrps(DsZabbixConfig.Zabbix zabbix, List<UserPermission> userPermissions) {
+    protected List<Map<String, String>> toUsrgrps(ZabbixDsInstanceConfig.Zabbix zabbix, List<UserPermission> userPermissions) {
         return userPermissions.stream().map(e -> {
             ServerGroup serverGroup = serverGroupService.getById(e.getBusinessId());
             String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());

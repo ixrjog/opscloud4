@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.facade.impl;
 
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
@@ -33,7 +33,7 @@ public class ZabbixFacadeImpl implements ZabbixFacade {
      * @return
      */
     @Override
-    public ZabbixUserGroup getOrCreateUserGroup(DsZabbixConfig.Zabbix zabbix, String usergroup) {
+    public ZabbixUserGroup getOrCreateUserGroup(ZabbixDsInstanceConfig.Zabbix zabbix, String usergroup) {
         ZabbixUserGroup zabbixUserGroup = zabbixUserGroupHandler.getByName(zabbix, usergroup);
         if (zabbixUserGroup != null) return zabbixUserGroup;
         // 用户组不存在
@@ -43,7 +43,7 @@ public class ZabbixFacadeImpl implements ZabbixFacade {
     }
 
     @Override
-    public ZabbixHostGroup getOrCreateHostGroup(DsZabbixConfig.Zabbix zabbix, String hostgroup) {
+    public ZabbixHostGroup getOrCreateHostGroup(ZabbixDsInstanceConfig.Zabbix zabbix, String hostgroup) {
         ZabbixHostGroup zabbixHostGroup = zabbixHostGroupHandler.getByName(zabbix, hostgroup);
         if (zabbixHostGroup != null) return zabbixHostGroup;
         zabbixHostGroupHandler.create(zabbix, hostgroup);

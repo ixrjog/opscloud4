@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.http;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.JSONMapper;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
@@ -49,7 +49,7 @@ public class DefaultZabbixClient implements IZabbixClient {
             .setSocketTimeout(5 * 1000)
             .build();
 
-    public DefaultZabbixClient(DsZabbixConfig.Zabbix zabbix) {
+    public DefaultZabbixClient(ZabbixDsInstanceConfig.Zabbix zabbix) {
         try {
             this.uri = new URI(zabbix.getUrl().trim());
             this.httpClient = buildHttpClient();
@@ -59,7 +59,7 @@ public class DefaultZabbixClient implements IZabbixClient {
         }
     }
 
-    public DefaultZabbixClient(DsZabbixConfig.Zabbix zabbix, String auth) {
+    public DefaultZabbixClient(ZabbixDsInstanceConfig.Zabbix zabbix, String auth) {
         try {
             this.uri = new URI(zabbix.getUrl().trim());
             this.httpClient = buildHttpClient();
@@ -104,7 +104,7 @@ public class DefaultZabbixClient implements IZabbixClient {
         return mapper.readTree(new String(data));
     }
 
-    private void login(DsZabbixConfig.Zabbix zabbix) {
+    private void login(ZabbixDsInstanceConfig.Zabbix zabbix) {
         this.auth = null;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .paramEntry("user", zabbix.getUser())

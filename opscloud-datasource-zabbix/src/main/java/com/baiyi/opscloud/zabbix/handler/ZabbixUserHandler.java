@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.baiyi.opscloud.common.config.CachingConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
@@ -38,12 +38,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username")
-    public void evictByUsername(DsZabbixConfig.Zabbix zabbix, String username) {
+    public void evictByUsername(ZabbixDsInstanceConfig.Zabbix zabbix, String username) {
         log.info("清除ZabbixUser缓存 : alias = {}", username);
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username", unless = "#result == null")
-    public ZabbixUser getByUsername(DsZabbixConfig.Zabbix zabbix, String username) {
+    public ZabbixUser getByUsername(ZabbixDsInstanceConfig.Zabbix zabbix, String username) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("alias", username)
                 .build();
@@ -56,7 +56,7 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         return mapperListGetOne(data.get(RESULT), ZabbixUser.class);
     }
 
-    public List<ZabbixUser> list(DsZabbixConfig.Zabbix zabbix) {
+    public List<ZabbixUser> list(ZabbixDsInstanceConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
                 .paramEntry("selectMedias", "extend")
@@ -65,7 +65,7 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         return mapperList(data.get(RESULT), ZabbixUser.class);
     }
 
-    public List<ZabbixUser> listByGroup(DsZabbixConfig.Zabbix zabbix, ZabbixUserGroup userGroup) {
+    public List<ZabbixUser> listByGroup(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixUserGroup userGroup) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
                 .paramEntry("selectMedias", "extend")
@@ -75,7 +75,7 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         return mapperList(data.get(RESULT), ZabbixUser.class);
     }
 
-    public void create(DsZabbixConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<ZabbixMedia> medias, List<Map<String, String>> usrgrps) {
+    public void create(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<ZabbixMedia> medias, List<Map<String, String>> usrgrps) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.CREATE)
                 .paramEntry("alias", zabbixUser.getAlias())
@@ -100,7 +100,7 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
      * @param mediaList
      * @param usrgrps
      */
-    public void update(DsZabbixConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<Map<String, String>> usrgrps, List<ZabbixMedia> mediaList) {
+    public void update(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<Map<String, String>> usrgrps, List<ZabbixMedia> mediaList) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.UPDATE)
                 .paramEntry("userid", zabbixUser.getUserid())
@@ -123,11 +123,11 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
      * @param user
      * @param usrgrps
      */
-    public void update(DsZabbixConfig.Zabbix zabbix, ZabbixUser user, List<Map<String, String>> usrgrps) {
+    public void update(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixUser user, List<Map<String, String>> usrgrps) {
         update(zabbix, user, usrgrps, Lists.newArrayList());
     }
 
-    public void delete(DsZabbixConfig.Zabbix zabbix, String username) {
+    public void delete(ZabbixDsInstanceConfig.Zabbix zabbix, String username) {
         ZabbixUser zabbixUser = getByUsername(zabbix, username);
         if (zabbixUser == null) return;
         // 数组形参数 https://www.zabbix.com/documentation/2.2/manual/api/reference/user/delete
@@ -145,12 +145,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid")
-    public void evictById(DsZabbixConfig.Zabbix zabbix, String userid) {
+    public void evictById(ZabbixDsInstanceConfig.Zabbix zabbix, String userid) {
         log.info("清除ZabbixUser缓存 : userid = {}", userid);
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid", unless = "#result == null")
-    public ZabbixUser getById(DsZabbixConfig.Zabbix zabbix, String userid) {
+    public ZabbixUser getById(ZabbixDsInstanceConfig.Zabbix zabbix, String userid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
                 .paramEntry("selectMedias", "extend")

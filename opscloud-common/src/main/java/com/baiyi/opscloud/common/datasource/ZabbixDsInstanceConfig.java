@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.common.datasource;
 
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -14,7 +15,27 @@ import lombok.EqualsAndHashCode;
 @Data
 public class ZabbixDsInstanceConfig extends BaseDsInstanceConfig {
 
-    private DsZabbixConfig.Zabbix zabbix;
+    private Zabbix zabbix;
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Zabbix {
+        private String version;
+        private String url;
+        private String user;
+        private String password;
+        private String zone;
+        private Operation operation;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Operation {
+        private String subject;
+        private String message;
+    }
 
 }
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.facade;
 
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
 
@@ -17,7 +17,7 @@ public interface ZabbixFacade {
      * @param usergroup
      * @return
      */
-    ZabbixUserGroup getOrCreateUserGroup(DsZabbixConfig.Zabbix zabbix, String usergroup);
+    ZabbixUserGroup getOrCreateUserGroup(ZabbixDsInstanceConfig.Zabbix zabbix, String usergroup);
 
     /**
      * 查询并创建主机组
@@ -25,5 +25,5 @@ public interface ZabbixFacade {
      * @param hostgroup
      * @return
      */
-    ZabbixHostGroup getOrCreateHostGroup(DsZabbixConfig.Zabbix zabbix, String hostgroup);
+    ZabbixHostGroup getOrCreateHostGroup(ZabbixDsInstanceConfig.Zabbix zabbix, String hostgroup);
 }

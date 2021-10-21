@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.baiyi.opscloud.common.config.CachingConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostTag;
 import com.baiyi.opscloud.zabbix.handler.base.BaseZabbixHandler;
@@ -29,12 +29,12 @@ import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RE
 public class ZabbixHostTagHandler extends BaseZabbixHandler<ZabbixHostTag> {
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid")
-    public void evictHostTag(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
+    public void evictHostTag(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         log.info("清除ZabbixHostTag缓存 : hostid = {}", zabbixHost.getHostid());
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid", unless = "#result == null")
-    public ZabbixHostTag getHostTag(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
+    public ZabbixHostTag getHostTag(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.GET)
                 .paramEntry("output", new String[]{"name"})
@@ -45,7 +45,7 @@ public class ZabbixHostTagHandler extends BaseZabbixHandler<ZabbixHostTag> {
         return mapperListGetOne(data.get(RESULT), ZabbixHostTag.class);
     }
 
-    public void updateHostTags(DsZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixHostParam.Tag> tags) {
+    public void updateHostTags(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixHostParam.Tag> tags) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.UPDATE)
                 .paramEntry("hostid", zabbixHost.getHostid())

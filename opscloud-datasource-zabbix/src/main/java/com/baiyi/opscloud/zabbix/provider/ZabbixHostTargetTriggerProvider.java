@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.provider;
 
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -28,7 +28,7 @@ public class ZabbixHostTargetTriggerProvider extends BaseZabbixHostProvider<Zabb
 
     @Override
     protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTrigger target) {
-        DsZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
+        ZabbixDsInstanceConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixHostHandler.listByTrigger(zabbix, target);
     }
 

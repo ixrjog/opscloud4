@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 public class AwsDsInstanceConfig extends BaseDsInstanceConfig {
 
     private Aws aws;
-    
+
     @Data
     @NoArgsConstructor
     @ApiModel

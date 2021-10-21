@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.datasource.server.impl.base;
 
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -38,7 +37,7 @@ import java.util.stream.Collectors;
  * @Date 2021/8/23 9:48 上午
  * @Version 1.0
  */
-public abstract class BaseZabbixHostServerProvider extends AbstractServerProvider<DsZabbixConfig.Zabbix> {
+public abstract class BaseZabbixHostServerProvider extends AbstractServerProvider<ZabbixDsInstanceConfig.Zabbix> {
 
     @Resource
     private ZabbixFacade zabbixFacade;
@@ -55,7 +54,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     @Resource
     private ZabbixServer zabbixServer;
 
-    protected static ThreadLocal<DsZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
+    protected static ThreadLocal<ZabbixDsInstanceConfig.Zabbix> configContext = new ThreadLocal<>();
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
@@ -70,7 +69,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     protected void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
     }
 
-    protected JsonNode call(DsZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
+    protected JsonNode call(ZabbixDsInstanceConfig.Zabbix zabbix, IZabbixRequest request) {
         return zabbixServer.call(zabbix, request);
     }
 
@@ -191,7 +190,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
                 .build();
     }
 
-    protected List<ZabbixHostParam.Template> buildTemplatesParams(DsZabbixConfig.Zabbix zabbix, ServerProperty.Server property) {
+    protected List<ZabbixHostParam.Template> buildTemplatesParams(ZabbixDsInstanceConfig.Zabbix zabbix, ServerProperty.Server property) {
         return zabbixTemplateHandler.listByNames(zabbix, property.getZabbix().getTemplates()).stream().map(e ->
                 ZabbixHostParam.Template.builder()
                         .templateid(e.getTemplateid())
@@ -199,7 +198,7 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
         ).collect(Collectors.toList());
     }
 
-    protected ZabbixHostParam.Group buildHostGroupParams(DsZabbixConfig.Zabbix zabbix, Server server) {
+    protected ZabbixHostParam.Group buildHostGroupParams(ZabbixDsInstanceConfig.Zabbix zabbix, Server server) {
         ZabbixHostGroup zabbixHostGroup = zabbixFacade.getOrCreateHostGroup(zabbix, getServerGroup(server).getName());
         return ZabbixHostParam.Group.builder()
                 .groupid(zabbixHostGroup.getGroupid())

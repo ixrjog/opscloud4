@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.datasource.config.DsZabbixConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
@@ -17,7 +17,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.*;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.HOST_IDS;
+import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RESULT;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -35,7 +36,7 @@ public class ZabbixProblemHandler {
         String GET = "problem.get";
     }
 
-    public List<ZabbixProblem> list(DsZabbixConfig.Zabbix zabbix, List<SeverityType> severityTypes) {
+    public List<ZabbixProblem> list(ZabbixDsInstanceConfig.Zabbix zabbix, List<SeverityType> severityTypes) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 /**
@@ -53,7 +54,7 @@ public class ZabbixProblemHandler {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
-    public List<ZabbixProblem> listByHost(DsZabbixConfig.Zabbix zabbix, ZabbixHost host) {
+    public List<ZabbixProblem> listByHost(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 .paramEntry(HOST_IDS, host.getHostid())
@@ -62,7 +63,7 @@ public class ZabbixProblemHandler {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
-    public ZabbixProblem getByEventId(DsZabbixConfig.Zabbix zabbix, String eventId) {
+    public ZabbixProblem getByEventId(ZabbixDsInstanceConfig.Zabbix zabbix, String eventId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 .paramEntry("eventids", eventId)
@@ -74,7 +75,7 @@ public class ZabbixProblemHandler {
         return hosts.get(0);
     }
 
-    public ZabbixProblem getByTriggerId(DsZabbixConfig.Zabbix zabbix, String triggerId) {
+    public ZabbixProblem getByTriggerId(ZabbixDsInstanceConfig.Zabbix zabbix, String triggerId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 .paramEntry("selectAcknowledges", "extend")
