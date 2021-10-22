@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.controller.ws;
 
-import com.baiyi.opscloud.ansible.play.ITaskPlayProcess;
-import com.baiyi.opscloud.ansible.play.ServerTaskPlayFactory;
+import com.baiyi.opscloud.datasource.ansible.play.ITaskPlayProcess;
+import com.baiyi.opscloud.datasource.ansible.play.ServerTaskPlayFactory;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.controller.ws.base.SimpleAuthentication;
 import lombok.extern.slf4j.Slf4j;

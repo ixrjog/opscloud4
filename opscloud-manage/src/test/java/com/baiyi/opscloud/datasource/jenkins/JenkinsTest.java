@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.jenkins.handler.JenkinsServerHandler;
+import com.baiyi.opscloud.datasource.jenkins.handler.JenkinsServerHandler;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.offbytwo.jenkins.model.Computer;
 import com.offbytwo.jenkins.model.ComputerWithDetails;

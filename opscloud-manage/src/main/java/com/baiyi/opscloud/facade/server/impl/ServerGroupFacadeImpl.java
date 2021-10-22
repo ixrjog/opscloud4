@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.algorithm.ServerPack;
-import com.baiyi.opscloud.ansible.ServerGroupingAlgorithm;
+import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;

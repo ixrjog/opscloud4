@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
-import com.baiyi.opscloud.ansible.args.PlaybookArgs;
-import com.baiyi.opscloud.ansible.builder.AnsiblePlaybookArgsBuilder;
-import com.baiyi.opscloud.ansible.handler.AnsibleHandler;
-import com.baiyi.opscloud.ansible.model.AnsibleExecuteResult;
-import com.baiyi.opscloud.ansible.util.AnsibleUtil;
+import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
+import com.baiyi.opscloud.datasource.ansible.handler.AnsibleHandler;
+import com.baiyi.opscloud.datasource.ansible.model.AnsibleExecuteResult;
+import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IOUtil;

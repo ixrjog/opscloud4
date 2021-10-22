@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.gitlab.handler.GitlabUserHandler;
+import com.baiyi.opscloud.datasource.gitlab.handler.GitlabUserHandler;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;

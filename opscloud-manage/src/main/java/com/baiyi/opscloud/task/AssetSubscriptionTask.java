@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.task;
 
-import com.baiyi.opscloud.ansible.provider.AnsibleHostsProvider;
+import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.common.topic.TopicHelper;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;

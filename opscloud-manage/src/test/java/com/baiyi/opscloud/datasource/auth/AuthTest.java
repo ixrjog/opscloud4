@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.auth;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.ldap.provider.LdapAuthProvider;
+import com.baiyi.opscloud.datasource.ldap.provider.LdapAuthProvider;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 

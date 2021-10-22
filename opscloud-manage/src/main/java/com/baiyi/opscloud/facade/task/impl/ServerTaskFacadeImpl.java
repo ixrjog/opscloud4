@@ -1,10 +1,10 @@
 package com.baiyi.opscloud.facade.task.impl;
 
-import com.baiyi.opscloud.ansible.args.PlaybookArgs;
-import com.baiyi.opscloud.ansible.builder.AnsiblePlaybookArgsBuilder;
-import com.baiyi.opscloud.ansible.recorder.TaskLogStorehouse;
-import com.baiyi.opscloud.ansible.task.AnsibleServerTask;
-import com.baiyi.opscloud.ansible.util.AnsibleUtil;
+import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
+import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
+import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
+import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
