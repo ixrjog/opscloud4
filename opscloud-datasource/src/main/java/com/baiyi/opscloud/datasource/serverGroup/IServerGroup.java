@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.serverGroup;
 
 import com.baiyi.opscloud.datasource.IManagerProvider;
-import com.baiyi.opscloud.datasource.provider.base.common.IInstanceType;
+import com.baiyi.opscloud.core.provider.base.common.IInstanceType;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 
 /**

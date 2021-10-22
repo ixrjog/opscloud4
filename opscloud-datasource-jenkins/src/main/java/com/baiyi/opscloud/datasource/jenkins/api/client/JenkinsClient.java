@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.api.client;
 
 import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
-import com.baiyi.opscloud.datasource.model.Authentication;
+import com.baiyi.opscloud.core.model.Authentication;
 import com.baiyi.opscloud.datasource.jenkins.api.http.HttpUtil;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Joiner;

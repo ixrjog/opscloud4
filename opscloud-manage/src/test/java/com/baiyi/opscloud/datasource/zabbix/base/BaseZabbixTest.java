@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.zabbix.base;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 

@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.base.Global;
-import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.factory.SetDsInstanceConfigFactory;
-import com.baiyi.opscloud.datasource.provider.base.asset.IAssetBusinessRelation;
-import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
-import com.baiyi.opscloud.datasource.provider.base.common.AbstractSetDsInstanceConfigProvider;
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
+import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
+import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
+import com.baiyi.opscloud.core.provider.base.common.AbstractSetDsInstanceConfigProvider;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;

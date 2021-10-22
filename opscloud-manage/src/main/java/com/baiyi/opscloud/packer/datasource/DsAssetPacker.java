@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.datasource;
 
-import com.baiyi.opscloud.datasource.asset.IAssetConvert;
-import com.baiyi.opscloud.datasource.asset.factory.AssetConvertFactory;
+import com.baiyi.opscloud.core.asset.IAssetConvert;
+import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;

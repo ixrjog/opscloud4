@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.ansible.convert;
 import com.baiyi.opscloud.datasource.ansible.model.AnsibleHosts;
 import com.baiyi.opscloud.datasource.ansible.model.AnsibleVersion;
 import com.baiyi.opscloud.common.util.IOUtil;
-import com.baiyi.opscloud.datasource.util.SystemEnvUtil;
+import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;

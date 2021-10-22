@@ -3,8 +3,8 @@ package com.baiyi.opscloud.datasource.zabbix;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.provider.base.asset.SimpleAssetProvider;
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import org.junit.jupiter.api.Test;
 
 /**

@@ -2,9 +2,9 @@ package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.factory.AuthProviderFactory;
+import com.baiyi.opscloud.core.factory.AuthProviderFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
-import com.baiyi.opscloud.datasource.provider.auth.BaseAuthProvider;
+import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.Authorization;

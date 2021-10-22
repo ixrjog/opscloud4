@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.client;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.datasource.util.SystemEnvUtil;
+import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.google.common.base.Joiner;
 import io.fabric8.kubernetes.client.ConfigBuilder;
 import io.fabric8.kubernetes.client.DefaultKubernetesClient;

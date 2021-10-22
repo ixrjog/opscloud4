@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.business.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.util.AssetUtil;
+import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessPropertyFacade;

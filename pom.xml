@@ -34,6 +34,7 @@
         <module>opscloud-datasource-tencent-exmail</module>
         <module>opscloud-datasource-nexus</module>
         <module>opscloud-order</module>
+        <module>opscloud-datasource-sonar</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -310,6 +311,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-tencent-exmail</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-sonar</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

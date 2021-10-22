@@ -3,7 +3,7 @@ package com.baiyi.opscloud.event.process;
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;

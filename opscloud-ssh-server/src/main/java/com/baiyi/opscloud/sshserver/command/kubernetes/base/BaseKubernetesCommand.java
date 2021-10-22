@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes.base;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.service.datasource.DsConfigService;

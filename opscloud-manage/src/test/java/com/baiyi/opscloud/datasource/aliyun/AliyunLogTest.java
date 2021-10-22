@@ -5,7 +5,7 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogHandler;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import org.junit.jupiter.api.Test;

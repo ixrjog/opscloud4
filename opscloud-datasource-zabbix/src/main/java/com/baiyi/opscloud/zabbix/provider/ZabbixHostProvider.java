@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.zabbix.provider;
 
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.datasource.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.model.DsInstanceContext;
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;

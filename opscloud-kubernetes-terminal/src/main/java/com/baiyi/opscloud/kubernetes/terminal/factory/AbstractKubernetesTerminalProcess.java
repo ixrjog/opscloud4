@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;

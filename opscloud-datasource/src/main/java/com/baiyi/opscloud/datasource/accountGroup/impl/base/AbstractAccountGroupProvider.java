@@ -2,9 +2,9 @@ package com.baiyi.opscloud.datasource.accountGroup.impl.base;
 
 import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.accountGroup.IAccountGroup;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
-import com.baiyi.opscloud.datasource.model.DsInstanceContext;
-import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
+import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.model.DsInstanceContext;
+import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;

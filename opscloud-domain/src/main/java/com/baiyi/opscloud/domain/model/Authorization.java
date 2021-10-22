@@ -37,4 +37,24 @@ public class Authorization {
         }
 
     }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class Token {
+
+        private String token;
+
+        public boolean isEmpty() {
+            return (StringUtils.isEmpty(token));
+        }
+
+        public String toBasic() {
+            String authString = token + ":";
+            byte[] authEncBytes = Base64.encodeBase64(authString.getBytes(StandardCharsets.UTF_8));
+            return new String(authEncBytes);
+        }
+
+    }
 }

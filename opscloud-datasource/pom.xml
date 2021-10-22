@@ -58,6 +58,11 @@
             <artifactId>opscloud-datasource-nexus</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-sonar</artifactId>
+        </dependency>
+
     </dependencies>
 
 

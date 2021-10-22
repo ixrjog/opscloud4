@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.event.process.base;
 
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.factory.DsConfigFactory;
-import com.baiyi.opscloud.datasource.provider.base.common.SimpleDsInstanceProvider;
+import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.base.IRecover;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;

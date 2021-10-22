@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.ldap.provider;
 
 import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.datasource.model.DsInstanceContext;
-import com.baiyi.opscloud.datasource.provider.auth.BaseAuthProvider;
+import com.baiyi.opscloud.core.model.DsInstanceContext;
+import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.model.Authorization;
 import com.baiyi.opscloud.datasource.ldap.handler.LdapHandler;

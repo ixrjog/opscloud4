@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.api.http;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.util.JSONMapper;
-import com.baiyi.opscloud.datasource.model.Authentication;
+import com.baiyi.opscloud.core.model.Authentication;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.base.Joiner;
