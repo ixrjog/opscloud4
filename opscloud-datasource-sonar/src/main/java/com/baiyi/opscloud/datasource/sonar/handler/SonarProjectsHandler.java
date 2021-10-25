@@ -25,7 +25,7 @@ import java.util.Map;
 @Component
 public class SonarProjectsHandler {
 
-    private static final QualifierEnum[] QUALIFIERS = {QualifierEnum.TRK,QualifierEnum.APP, QualifierEnum.VW};
+    private static final QualifierEnum[] QUALIFIERS = {QualifierEnum.TRK, QualifierEnum.APP, QualifierEnum.VW};
 
     private Map<String, String> buildSearchProjectsParam(PagingParam pagingParam) {
         return SonarQubeRequestBuilder.newBuilder()

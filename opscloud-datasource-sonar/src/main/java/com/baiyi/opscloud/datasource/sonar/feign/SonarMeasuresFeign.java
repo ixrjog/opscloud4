@@ -16,7 +16,8 @@ import java.util.Map;
 public interface SonarMeasuresFeign {
 
     @RequestLine("GET api/measures/component")
-    @Headers({"Content-Type: application/json;charset=utf-8", "Authorization: Basic {authBasic}"})
+    @Headers({"Content-Type: application/json;charset=utf-8",
+            "Authorization: Basic {authBasic}"})
     SonarMeasures queryMeasuresComponent(@Param("authBasic") String authBasic, @QueryMap Map<String, String> paramMap);
 
 }

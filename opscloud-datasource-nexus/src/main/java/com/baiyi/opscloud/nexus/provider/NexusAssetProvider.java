@@ -85,7 +85,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     }
 
     @Override
-    @SingleTask(name = "pull_nexus_asset_v1", lockTime = "1m")
+    @SingleTask(name = "pull_nexus_asset", lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

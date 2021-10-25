@@ -16,6 +16,8 @@ import java.util.Map;
 public interface SonarProjectsFeign {
 
     /**
+     * https://docs.sonarqube.org/7.9/extend/web-api/
+     *
      * User Token
      * This is the recommended way. Benefits are described in the page User Token. The token is sent via the login field of HTTP basic authentication, without any password.
      *
@@ -32,12 +34,9 @@ public interface SonarProjectsFeign {
      * @param paramMap
      * @return
      */
-
-
     @RequestLine("GET api/projects/search")
-   // @Headers({"Content-Type: application/json;charset=utf-8", "X-Api-Key: {token}"})
-    // "Authorization: Basic {authBasic}"
-    @Headers({"Content-Type: application/json;charset=utf-8", "Authorization: Basic {authBasic}"})
+    @Headers({"Content-Type: application/json;charset=utf-8",
+            "Authorization: Basic {authBasic}"})
     SonarProjects searchProjects(@Param("authBasic") String authBasic, @QueryMap Map<String, String> paramMap);
 
 }
