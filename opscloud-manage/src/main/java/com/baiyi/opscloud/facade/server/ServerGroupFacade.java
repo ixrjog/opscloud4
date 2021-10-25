@@ -1,12 +1,16 @@
 package com.baiyi.opscloud.facade.server;
 
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
+
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -32,5 +36,7 @@ public interface ServerGroupFacade {
     void deleteServerGroupTypeById(int id);
 
     ServerTreeVO.ServerTree queryServerTree(ServerGroupParam.UserServerTreeQuery queryParam, User user);
+
+    Map<String, List<Server>> queryServerGroupHostPatternByEnv(ServerGroupParam.ServerGroupEnvHostPatternQuery query);
 
 }

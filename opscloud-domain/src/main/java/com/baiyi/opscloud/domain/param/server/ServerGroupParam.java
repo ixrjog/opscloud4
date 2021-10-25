@@ -7,6 +7,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -75,5 +76,22 @@ public class ServerGroupParam {
         private final int businessType = BusinessTypeEnum.SERVERGROUP.getType();
 
     }
+
+    @Builder
+    @Data
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class ServerGroupEnvHostPatternQuery {
+
+        @ApiModelProperty(value = "环境类型")
+        private Integer envType;
+
+        @ApiModelProperty(value = "服务器组名称")
+        @NotBlank
+        private String serverGroupName;
+
+    }
+
 
 }

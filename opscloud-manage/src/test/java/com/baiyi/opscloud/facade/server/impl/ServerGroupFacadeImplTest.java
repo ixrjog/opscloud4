@@ -1,10 +1,15 @@
 package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.util.JSONUtil;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
+import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -17,8 +22,18 @@ class ServerGroupFacadeImplTest extends BaseUnit {
     private ServerGroupFacade serverGroupFacade;
 
     @Test
-    void ddd() {
+    void deleteServerGroupByIdTest() {
         serverGroupFacade.deleteServerGroupById(1);
+    }
+
+    @Test
+    void queryServerGroupHostPatternByEnvTest(){
+        ServerGroupParam.ServerGroupEnvHostPatternQuery query = ServerGroupParam.ServerGroupEnvHostPatternQuery.builder()
+                .serverGroupName("group_account")
+                .envType(4)
+                .build();
+        Map<String, List<Server>> map= serverGroupFacade.queryServerGroupHostPatternByEnv(query);
+        System.out.printf(JSONUtil.writeValueAsString(map));
     }
 
 }

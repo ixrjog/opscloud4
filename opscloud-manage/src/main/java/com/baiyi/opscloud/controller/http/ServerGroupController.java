@@ -2,6 +2,7 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.server.ServerGroupTypeParam;
 import com.baiyi.opscloud.domain.vo.server.ServerGroupTypeVO;
@@ -14,6 +15,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import javax.validation.Valid;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @Author baiyi
@@ -80,6 +83,12 @@ public class ServerGroupController {
     public HttpResult<Boolean> deleteServerGroupTypeById(@RequestParam int id) {
         serverGroupFacade.deleteServerGroupTypeById(id);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "查询服务器组环境分组信息(发布平台专用)")
+    @PostMapping(value = "/env/pattern/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Map<String, List<Server>>> queryServerGroupHostPatternByEnv(@RequestBody @Valid ServerGroupParam.ServerGroupEnvHostPatternQuery query)  {
+        return new HttpResult<>(serverGroupFacade.queryServerGroupHostPatternByEnv(query));
     }
 
 //    @ApiOperation(value = "分页查询用户许可的服务器组列表")

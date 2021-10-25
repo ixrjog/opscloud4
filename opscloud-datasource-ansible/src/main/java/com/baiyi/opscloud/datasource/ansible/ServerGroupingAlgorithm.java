@@ -42,6 +42,13 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
         return serverMap;
     }
 
+    public Map<String, List<ServerPack>> groupingByEnv(ServerGroup serverGroup, boolean isSubgroup, int envType) {
+        Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup, envType);
+        if (isSubgroup)
+            groupingSubgroup(serverMap, getSubgroup(serverGroup));
+        return serverMap;
+    }
+
     private int getSubgroup(ServerGroup serverGroup) {
         ServerProperty.Server serverGroupProperty = getBusinessProperty(serverGroup);
         return Optional.ofNullable(serverGroupProperty)

@@ -9,6 +9,7 @@ import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.*;
+import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroupType;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -36,6 +37,7 @@ import com.baiyi.opscloud.service.server.ServerGroupTypeService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.util.ServerTreeUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
@@ -202,6 +204,17 @@ public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery impl
                 .tree(treeList)
                 .size(treeSize.get())
                 .build();
+    }
+
+    @Override
+    public Map<String, List<Server>> queryServerGroupHostPatternByEnv(ServerGroupParam.ServerGroupEnvHostPatternQuery query) {
+        ServerGroup serverGroup = serverGroupService.getByName(query.getServerGroupName());
+        Map<String, List<ServerPack>> serverMap = serverAlgorithm.groupingByEnv(serverGroup, true, query.getEnvType());
+        Map<String, List<Server>> resultMap = Maps.newHashMap();
+        serverMap.keySet().forEach(k ->
+                resultMap.put(k, serverMap.get(k).stream().map(ServerPack::getServer).collect(Collectors.toList()))
+        );
+        return resultMap;
     }
 
     /**

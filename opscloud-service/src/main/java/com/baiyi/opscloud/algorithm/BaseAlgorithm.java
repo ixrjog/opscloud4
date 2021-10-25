@@ -48,6 +48,15 @@ public abstract class BaseAlgorithm {
      */
     protected Map<String, List<ServerPack>> groupingByEnv(ServerGroup serverGroup) {
         List<Server> serverList = serverService.queryByServerGroupId(serverGroup.getId());
+        return groupingByEnv(serverGroup, serverList);
+    }
+
+    protected Map<String, List<ServerPack>> groupingByEnv(ServerGroup serverGroup, int envType) {
+        List<Server> serverList = serverService.queryByGroupIdAndEnvType(serverGroup.getId(), envType);
+        return groupingByEnv(serverGroup, serverList);
+    }
+
+    private Map<String, List<ServerPack>> groupingByEnv(ServerGroup serverGroup, List<Server> serverList) {
         Map<String, List<ServerPack>> map = Maps.newHashMap();
         if (CollectionUtils.isEmpty(serverList)) return map;
         List<ServerPack> serverPacks = serverList.stream().map(this::toServerPack).collect(Collectors.toList());
