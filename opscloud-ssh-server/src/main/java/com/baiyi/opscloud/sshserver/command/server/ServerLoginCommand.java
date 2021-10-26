@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
+import com.baiyi.opscloud.sshcore.account.SshAccount;
 import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
@@ -73,6 +74,9 @@ public class ServerLoginCommand implements InitializingBean {
     private SshServerPacker sshServerPacker;
 
     @Resource
+    private SshAccount sshAccount;
+
+    @Resource
     private SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     private String toInstanceId(Server server) {
@@ -95,8 +99,9 @@ public class ServerLoginCommand implements InitializingBean {
         Map<Integer, Integer> idMapper = SessionCommandContext.getIdMapper();
         Server server = serverService.getById(idMapper.get(id));
         String instanceId = toInstanceId(server);
+
         try {
-            HostSystem hostSystem = hostSystemHandler.buildHostSystem(server, account);
+            HostSystem hostSystem = hostSystemHandler.buildHostSystem(server, account, admin);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);

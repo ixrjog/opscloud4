@@ -77,19 +77,23 @@ public class HostSystemHandler {
         return isAdmin;
     }
 
-    public HostSystem buildHostSystem(ServerVO.Server serverVO, String account) throws SshRuntimeException {
-        return buildHostSystem(BeanCopierUtil.copyProperties(serverVO, Server.class), account);
+    public HostSystem buildHostSystem(ServerVO.Server serverVO, String account, boolean admin) throws SshRuntimeException {
+        return buildHostSystem(BeanCopierUtil.copyProperties(serverVO, Server.class), account, admin);
     }
 
-    public HostSystem buildHostSystem(Server server, String account) throws SshRuntimeException {
+    public HostSystem buildHostSystem(Server server, String account, boolean admin) throws SshRuntimeException {
         boolean isAdmin = checkAdmin(server);
-
         SshCredential sshCredential;
+        // 未指定账户
         if (StringUtils.isEmpty(account)) {
-            sshCredential = getSshCredential(server, LoginType.LOW_AUTHORITY);
-            if (sshCredential == null && isAdmin)
+            if(admin && isAdmin){
                 sshCredential = getSshCredential(server, LoginType.HIGH_AUTHORITY);
-        } else {
+            }else{
+                sshCredential = getSshCredential(server, LoginType.LOW_AUTHORITY);
+                if (sshCredential == null && isAdmin)
+                    sshCredential = getSshCredential(server, LoginType.HIGH_AUTHORITY);
+            }
+        } else { // 指定账户
             ServerAccount serverAccount = serverAccountService.getPermissionServerAccountByUsernameAndProtocol(server.getId(), account, ProtocolEnum.SSH.getType());
             if (serverAccount == null)
                 throw new SshRuntimeException(ErrorEnum.SSH_SERVER_ACCOUNT_NOT_EXIST);

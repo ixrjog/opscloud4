@@ -80,7 +80,7 @@ public class EventLoginCommand extends BaseServerCommand {
         ServerVO.Server serverVO = eventContext.getServerVO();
         String instanceId = toInstanceId(serverVO);
         try {
-            HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverVO, account);
+            HostSystem hostSystem = hostSystemHandler.buildHostSystem(serverVO, account,admin);
             hostSystem.setInstanceId(instanceId);
             hostSystem.setTerminalSize(helper.terminalSize());
             TerminalSessionInstance terminalSessionInstance = TerminalSessionInstanceBuilder.build(sessionId, hostSystem, InstanceSessionTypeEnum.SERVER);
