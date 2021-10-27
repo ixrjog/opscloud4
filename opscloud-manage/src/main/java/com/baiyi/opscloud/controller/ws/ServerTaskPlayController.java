@@ -26,7 +26,7 @@ public class ServerTaskPlayController extends SimpleAuthentication {
 
     private static final AtomicInteger onlineCount = new AtomicInteger(0);
     // concurrent包是线程安全Set，用来存放每个客户端对应的Session对象。
-    private static CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
+    private static final CopyOnWriteArraySet<Session> sessionSet = new CopyOnWriteArraySet<>();
 
     private Session session = null;
     // 超时时间1H
