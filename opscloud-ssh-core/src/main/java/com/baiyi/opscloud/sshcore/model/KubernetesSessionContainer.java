@@ -71,8 +71,8 @@ public class KubernetesSessionContainer {
             kubernetesSession.setInputToChannel(null);
             kubernetesSession.setSessionOutput(null);
             kubernetesSession.setInstanceId(null);
-            kubernetesSession = null;
         }
         removeSession(sessionId, instanceId);
+        kubernetesSession = null;
     }
 }

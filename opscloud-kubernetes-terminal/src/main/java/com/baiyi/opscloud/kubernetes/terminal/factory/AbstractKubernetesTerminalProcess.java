@@ -2,21 +2,18 @@ package com.baiyi.opscloud.kubernetes.terminal.factory;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigFactory;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
-import com.baiyi.opscloud.sshcore.config.TerminalConfig;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.message.kubernetes.BaseKubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -36,15 +33,6 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
 
     @Resource
     protected TerminalSessionService terminalSessionService;
-
-    @Resource
-    protected TerminalSessionInstanceService terminalSessionInstanceService;
-
-    @Resource
-    protected RedisUtil redisUtil;
-
-    @Resource
-    private TerminalConfig terminalConfig;
 
     @Resource
     protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;

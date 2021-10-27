@@ -34,7 +34,6 @@ public class KubernetesTerminalCloseProcess extends AbstractKubernetesTerminalPr
         for (String instanceId : sessionMap.keySet())
             try {
                 KubernetesSession kubernetesSession = sessionMap.get(instanceId);
-                //  kubernetesSession.getLogWatch().close();
                 // recordAuditLog(terminalSession, instanceId); // 写审计日志
                 //  writeCommanderLog(jSchSession.getCommanderLog(),ocTerminalSession, instanceId); // 写命令日志
                 simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, instanceId);  // 设置关闭会话
