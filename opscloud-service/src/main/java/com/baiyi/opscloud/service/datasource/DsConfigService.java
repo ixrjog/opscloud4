@@ -23,13 +23,6 @@ public interface DsConfigService extends ICredentialCustomer {
 
     void update(DatasourceConfig datasourceConfig);
 
-    // int countByCredentialId(int credentialId);
-
     List<DatasourceConfig> queryByDsType(Integer dsType);
-
-    @Override
-    default boolean isUsedCredential(int credentialId) {
-        return countByCredentialId(credentialId) != 0;
-    }
 
 }

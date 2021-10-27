@@ -28,12 +28,4 @@ public interface ServerAccountService extends ICredentialCustomer {
                                                                   String username,
                                                                   String protocol);
 
-    // int countByCredentialId(int credentialId);
-
-    @Override
-    default boolean isUsedCredential(int credentialId) {
-        return countByCredentialId(credentialId) != 0;
-    }
-
-
 }
