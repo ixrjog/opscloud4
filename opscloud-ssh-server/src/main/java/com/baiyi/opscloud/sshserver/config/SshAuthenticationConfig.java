@@ -43,7 +43,7 @@ public class SshAuthenticationConfig {
     private UserCredentialService userCredentialService;
 
     @Resource
-    private DsInstanceService dsInstancService;
+    private DsInstanceService dsInstanceService;
 
     @Resource
     private DsInstanceAssetService dsInstanceAssetService;
@@ -101,7 +101,7 @@ public class SshAuthenticationConfig {
                 .instanceType(DsTypeEnum.GITLAB.getName())
                 .build();
 
-        List<DatasourceInstance> instances = dsInstancService.queryByParam(instanceQuery);
+        List<DatasourceInstance> instances = dsInstanceService.queryByParam(instanceQuery);
         List<DatasourceInstanceAsset> result = Lists.newArrayList();
         instances.forEach(i -> {
             DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()

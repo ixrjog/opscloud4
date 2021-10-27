@@ -41,6 +41,8 @@ public class CredentialVO {
         // ISecret
         private String plaintext;
 
+        private Integer quantityUsed;
+
         @Override
         public String getSecret() {
             return credential;

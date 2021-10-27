@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.datasource;
 
+import com.baiyi.opscloud.factory.credential.ICredentialCustomer;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;
@@ -12,7 +13,7 @@ import java.util.List;
  * @Date 2021/5/15 1:45 下午
  * @Version 1.0
  */
-public interface DsConfigService {
+public interface DsConfigService extends ICredentialCustomer {
 
     DatasourceConfig getById(Integer id);
 
@@ -22,5 +23,13 @@ public interface DsConfigService {
 
     void update(DatasourceConfig datasourceConfig);
 
+    // int countByCredentialId(int credentialId);
+
     List<DatasourceConfig> queryByDsType(Integer dsType);
+
+    @Override
+    default boolean isUsedCredential(int credentialId) {
+        return countByCredentialId(credentialId) != 0;
+    }
+
 }

@@ -18,4 +18,6 @@ public interface CredentialFacade {
     void addCredential(CredentialVO.Credential credential);
 
     void updateCredential(CredentialVO.Credential credential);
+
+    void deleteCredentialById(Integer id);
 }

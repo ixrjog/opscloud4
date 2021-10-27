@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.datasource.impl;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;
+import com.baiyi.opscloud.factory.credential.AbstractCredentialCustomer;
 import com.baiyi.opscloud.mapper.opscloud.DatasourceConfigMapper;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.github.pagehelper.Page;
@@ -19,10 +20,15 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
-public class DsConfigServiceImpl implements DsConfigService {
+public class DsConfigServiceImpl extends AbstractCredentialCustomer implements DsConfigService {
 
     @Resource
     private DatasourceConfigMapper dsConfigMapper;
+
+    @Override
+    public String getBeanName() {
+        return "DsConfigService";
+    }
 
     @Override
     public DatasourceConfig getById(Integer id) {
@@ -54,6 +60,14 @@ public class DsConfigServiceImpl implements DsConfigService {
                 .andEqualTo("isActive", true);
         example.setOrderByClause("create_time");
         return dsConfigMapper.selectByExample(example);
+    }
+
+    @Override
+    public int countByCredentialId(int credentialId) {
+        Example example = new Example(DatasourceConfig.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("credentialId", credentialId);
+        return dsConfigMapper.selectCountByExample(example);
     }
 
 }

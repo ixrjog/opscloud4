@@ -22,7 +22,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping("/api/sys/credential")
-@Api(tags = "系统管理")
+@Api(tags = "凭据管理")
 public class CredentialController {
 
     @Resource
@@ -51,6 +51,13 @@ public class CredentialController {
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> updateDsConfig(@RequestBody @Valid CredentialVO.Credential credential) {
         credentialFacade.updateCredential(credential);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除指定的系统凭据配置")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteCredentialById(@RequestParam @Valid int id) {
+        credentialFacade.deleteCredentialById(id);
         return HttpResult.SUCCESS;
     }
 

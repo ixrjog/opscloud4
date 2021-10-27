@@ -28,23 +28,28 @@ public class CredentialServiceImpl implements CredentialService {
     private CredentialMapper credentialMapper;
 
     @Override
-    public void add(Credential credential){
+    public void add(Credential credential) {
         credentialMapper.insert(credential);
     }
 
     @Override
-    public void update(Credential credential){
+    public void update(Credential credential) {
         credentialMapper.updateByPrimaryKey(credential);
     }
 
     @Override
-    public void updateBySelective(Credential credential){
+    public void updateBySelective(Credential credential) {
         credentialMapper.updateByPrimaryKeySelective(credential);
     }
 
     @Override
     public Credential getById(Integer id) {
         return credentialMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        credentialMapper.deleteByPrimaryKey(id);
     }
 
     @Override
@@ -59,10 +64,9 @@ public class CredentialServiceImpl implements CredentialService {
             criteria.andEqualTo("kind", pageQuery.getKind());
         }
         example.setOrderByClause("create_time");
-        List<Credential> data =  credentialMapper.selectByExample(example);
+        List<Credential> data = credentialMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
-
 
 
 }

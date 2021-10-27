@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.server.ServerAccountParam;
+import com.baiyi.opscloud.factory.credential.AbstractCredentialCustomer;
 import com.baiyi.opscloud.mapper.opscloud.ServerAccountMapper;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -22,10 +23,15 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
-public class ServerAccountServiceImpl implements ServerAccountService {
+public class ServerAccountServiceImpl  extends AbstractCredentialCustomer implements ServerAccountService {
 
     @Resource
     private ServerAccountMapper accountMapper;
+
+    @Override
+    public String getBeanName() {
+        return "ServerAccountService";
+    }
 
     @Override
     public ServerAccount getById(Integer id) {
@@ -70,5 +76,12 @@ public class ServerAccountServiceImpl implements ServerAccountService {
         return accountMapper.getPermissionServerAccountByUsernameAndProtocol(serverId, username, protocol);
     }
 
+    @Override
+    public int countByCredentialId(int credentialId) {
+        Example example = new Example(ServerAccount.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("credentialId", credentialId);
+        return accountMapper.selectCountByExample(example);
+    }
 
 }

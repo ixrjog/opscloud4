@@ -6,6 +6,7 @@ import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
+import com.baiyi.opscloud.factory.credential.CredentialCustomerFactory;
 import com.baiyi.opscloud.packer.base.SecretPacker;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import org.springframework.stereotype.Component;
@@ -38,6 +39,7 @@ public class CredentialPacker extends SecretPacker {
         vo.setCredential("");
         vo.setCredential2("");
         vo.setPassphrase("");
+        vo.setQuantityUsed(CredentialCustomerFactory.countByCredentialId(vo.getId()));
         return vo;
     }
 

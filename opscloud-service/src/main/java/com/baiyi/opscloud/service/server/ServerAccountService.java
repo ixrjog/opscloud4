@@ -3,6 +3,7 @@ package com.baiyi.opscloud.service.server;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.server.ServerAccountParam;
+import com.baiyi.opscloud.factory.credential.ICredentialCustomer;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
  * @Date 2021/5/25 11:15 上午
  * @Version 1.0
  */
-public interface ServerAccountService {
+public interface ServerAccountService extends ICredentialCustomer {
 
     ServerAccount getById(Integer id);
 
@@ -26,4 +27,13 @@ public interface ServerAccountService {
     ServerAccount getPermissionServerAccountByUsernameAndProtocol(Integer serverId,
                                                                   String username,
                                                                   String protocol);
+
+    // int countByCredentialId(int credentialId);
+
+    @Override
+    default boolean isUsedCredential(int credentialId) {
+        return countByCredentialId(credentialId) != 0;
+    }
+
+
 }
