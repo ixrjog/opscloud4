@@ -68,4 +68,11 @@ public class TagController {
         tagFacade.updateTag(tag);
         return HttpResult.SUCCESS;
     }
+
+    @ApiOperation(value = "删除指定的标签信息")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteTagById(@RequestParam @Valid int id) {
+        tagFacade.deleteTagById(id);
+        return HttpResult.SUCCESS;
+    }
 }

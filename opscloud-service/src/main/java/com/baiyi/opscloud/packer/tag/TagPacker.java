@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
+import com.baiyi.opscloud.service.tag.BusinessTagService;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -23,6 +24,9 @@ public class TagPacker {
     @Resource
     private SimpleTagFacade tagFacade;
 
+    @Resource
+    private BusinessTagService businessTagService;
+
     public void wrap(TagVO.ITags iTags) {
         TagParam.BusinessQuery queryParam = TagParam.BusinessQuery.builder()
                 .businessType(iTags.getBusinessType())
@@ -32,11 +36,13 @@ public class TagPacker {
         iTags.setTags(wrapVOList(tags));
     }
 
-    public static List<TagVO.Tag> wrapVOList(List<Tag> data) {
+    public List<TagVO.Tag> wrapVOList(List<Tag> data) {
         return data.stream().map(e -> {
             TagVO.Tag tag = BeanCopierUtil.copyProperties(e, TagVO.Tag.class);
             tag.setBusinessTypeEnum(BusinessTypeEnum.getByType(e.getBusinessType()));
+            tag.setQuantityUsed(businessTagService.countByTagId(tag.getId()));
             return tag;
         }).collect(Collectors.toList());
     }
+
 }

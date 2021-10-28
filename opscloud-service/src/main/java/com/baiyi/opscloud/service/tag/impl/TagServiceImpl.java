@@ -58,6 +58,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public void deleteById(Integer id) {
+        tagMapper.deleteByPrimaryKey(id);
+    }
+
+    @Override
     public Tag getByTagKey(String tagKey) {
         Example example = new Example(Tag.class);
         Example.Criteria criteria = example.createCriteria();

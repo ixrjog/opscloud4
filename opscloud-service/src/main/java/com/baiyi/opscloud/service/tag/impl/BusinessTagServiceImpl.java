@@ -50,12 +50,20 @@ public class BusinessTagServiceImpl implements BusinessTagService {
     }
 
     @Override
-    public int countByParam(BusinessTag businessTag){
+    public int countByBusinessTag(BusinessTag businessTag) {
         Example example = new Example(BusinessTag.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType",  businessTag.getBusinessType());
-        criteria.andEqualTo("businessId", businessTag.getBusinessId());
-        criteria.andEqualTo("tagId", businessTag.getTagId());
+        criteria.andEqualTo("businessType", businessTag.getBusinessType())
+                .andEqualTo("businessId", businessTag.getBusinessId())
+                .andEqualTo("tagId", businessTag.getTagId());
+        return businessTagMapper.selectCountByExample(example);
+    }
+
+    @Override
+    public int countByTagId(Integer tagId) {
+        Example example = new Example(BusinessTag.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("tagId", tagId);
         return businessTagMapper.selectCountByExample(example);
     }
 }

@@ -34,6 +34,8 @@ public class TagVO {
 
         private static final long serialVersionUID = 1445359231777384339L;
 
+        private Integer quantityUsed;
+
         @ApiModelProperty(value = "主键", example = "1")
         private Integer id;
 

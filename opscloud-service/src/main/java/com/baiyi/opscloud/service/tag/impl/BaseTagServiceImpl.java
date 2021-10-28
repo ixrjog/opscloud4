@@ -35,7 +35,7 @@ public class BaseTagServiceImpl implements BaseTagService {
                 .businessType(businessType)
                 .tagId(tag.getId())
                 .build();
-        return businessTagService.countByParam(businessTag) > 0;
+        return businessTagService.countByBusinessTag(businessTag) > 0;
     }
 
 }

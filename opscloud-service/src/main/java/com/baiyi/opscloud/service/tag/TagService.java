@@ -23,6 +23,8 @@ public interface TagService {
 
     void update(Tag tag);
 
+    void deleteById(Integer id);
+
     Tag getByTagKey(String tagKey);
 
     DataTable<Tag> queryPageByParam(TagParam.TagPageQuery pageQuery);

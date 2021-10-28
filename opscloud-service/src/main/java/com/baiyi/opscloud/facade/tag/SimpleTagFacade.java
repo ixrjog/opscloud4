@@ -26,4 +26,6 @@ public interface SimpleTagFacade {
     void updateTag(TagVO.Tag tag);
 
     void updateBusinessTags(BusinessTagParam.UpdateBusinessTags updateBusinessTags);
+
+    void deleteTagById(int id);
 }

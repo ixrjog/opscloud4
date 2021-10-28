@@ -33,6 +33,9 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     @Resource
     private BusinessTagService businessTagService;
 
+    @Resource
+    private TagPacker tagPacker;
+
     @Override
     public List<Tag> queryBusinessTagByParam(TagParam.BusinessQuery queryParam) {
         return tagService.queryBusinessTagByParam(queryParam);
@@ -41,13 +44,13 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     @Override
     public List<TagVO.Tag> queryTagByBusinessType(Integer businessType) {
         List<Tag> tags = tagService.queryTagByBusinessType(businessType);
-        return TagPacker.wrapVOList(tags);
+        return tagPacker.wrapVOList(tags);
     }
 
     @Override
     public DataTable<TagVO.Tag> queryTagPage(TagParam.TagPageQuery pageQuery) {
         DataTable<Tag> table = tagService.queryPageByParam(pageQuery);
-        return new DataTable<>(TagPacker.wrapVOList(table.getData()), table.getTotalNum());
+        return new DataTable<>(tagPacker.wrapVOList(table.getData()), table.getTotalNum());
     }
 
     @Override
@@ -98,5 +101,12 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
             }
         }
         return true;
+    }
+
+    @Override
+    public void deleteTagById(int id) {
+        if (businessTagService.countByTagId(id) > 0)
+            throw new CommonRuntimeException("标签使用中！");
+        tagService.deleteById(id);
     }
 }
