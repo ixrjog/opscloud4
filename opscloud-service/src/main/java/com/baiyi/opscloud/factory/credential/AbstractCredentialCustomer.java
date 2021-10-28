@@ -13,4 +13,5 @@ public abstract class AbstractCredentialCustomer implements ICredentialCustomer,
     public void afterPropertiesSet() throws Exception {
         CredentialCustomerFactory.register(this);
     }
+
 }
