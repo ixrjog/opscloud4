@@ -5,10 +5,10 @@ import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessPropertyFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -19,10 +19,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/business")
 @Api(tags = "业务对象管理")
+@RequiredArgsConstructor
 public class BusinessController {
 
-    @Resource
-    private BusinessPropertyFacade businessPropertyFacade;
+    private final BusinessPropertyFacade businessPropertyFacade;
 
     @ApiOperation(value = "新增业务对象属性配置")
     @PostMapping(value = "/property/add", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

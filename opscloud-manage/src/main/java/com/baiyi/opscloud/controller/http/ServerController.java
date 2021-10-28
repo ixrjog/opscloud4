@@ -3,16 +3,16 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
-import com.baiyi.opscloud.facade.server.ServerFacade;
-import com.baiyi.opscloud.util.OptionsUtil;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
+import com.baiyi.opscloud.facade.server.ServerFacade;
+import com.baiyi.opscloud.util.OptionsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -23,10 +23,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/server")
 @Api(tags = "服务器管理")
+@RequiredArgsConstructor
 public class ServerController {
 
-    @Resource
-    private ServerFacade serverFacade;
+    private final ServerFacade serverFacade;
 
     @ApiOperation(value = "查询服务器协议选项")
     @GetMapping(value = "/protocol/options/get", produces = MediaType.APPLICATION_JSON_VALUE)

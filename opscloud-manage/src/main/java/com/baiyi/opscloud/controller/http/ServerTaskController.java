@@ -7,13 +7,13 @@ import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
 import com.baiyi.opscloud.facade.task.ServerTaskFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -24,10 +24,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/server/task")
 @Api(tags = "服务器任务管理")
+@RequiredArgsConstructor
 public class ServerTaskController {
 
-    @Resource
-    private ServerTaskFacade serverTaskFacade;
+    private final ServerTaskFacade serverTaskFacade;
 
     @ApiOperation(value = "分页查询服务器任务列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

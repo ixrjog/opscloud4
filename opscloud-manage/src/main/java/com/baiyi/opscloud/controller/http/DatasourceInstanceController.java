@@ -10,10 +10,10 @@ import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -24,13 +24,12 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/datasource/instance")
 @Api(tags = "数据源实例")
+@RequiredArgsConstructor
 public class DatasourceInstanceController {
 
-    @Resource
-    private DsInstanceFacade dsInstanceFacade;
+    private final DsInstanceFacade dsInstanceFacade;
 
-    @Resource
-    private DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
+    private final DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
 
     @ApiOperation(value = "分页查询数据源资产列表")
     @PostMapping(value = "/asset/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

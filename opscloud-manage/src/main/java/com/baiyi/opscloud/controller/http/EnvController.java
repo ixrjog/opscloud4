@@ -3,14 +3,14 @@ package com.baiyi.opscloud.controller.http;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.sys.EnvParam;
-import com.baiyi.opscloud.facade.sys.EnvFacade;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import com.baiyi.opscloud.facade.sys.EnvFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -21,10 +21,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/sys/env")
 @Api(tags = "环境管理")
+@RequiredArgsConstructor
 public class EnvController {
 
-    @Resource
-    private EnvFacade envFacade;
+    private final EnvFacade envFacade;
 
     @ApiOperation(value = "分页查询环境列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

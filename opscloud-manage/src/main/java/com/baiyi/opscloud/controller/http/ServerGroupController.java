@@ -10,10 +10,10 @@ import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.facade.server.ServerGroupFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 import java.util.Map;
@@ -26,10 +26,10 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/server/group")
 @Api(tags = "系统管理")
+@RequiredArgsConstructor
 public class ServerGroupController {
 
-    @Resource
-    private ServerGroupFacade serverGroupFacade;
+    private final ServerGroupFacade serverGroupFacade;
 
     @ApiOperation(value = "分页查询服务器组列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

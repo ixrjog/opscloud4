@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -25,10 +26,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/tag")
 @Api(tags = "标签管理")
+@RequiredArgsConstructor
 public class TagController {
 
-    @Resource
-    private SimpleTagFacade tagFacade;
+    private final SimpleTagFacade tagFacade;
 
     @ApiOperation(value = "查询业务类型选项")
     @GetMapping(value = "/business/options/get", produces = MediaType.APPLICATION_JSON_VALUE)

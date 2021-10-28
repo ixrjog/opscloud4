@@ -2,14 +2,13 @@ package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.domain.param.auth.LoginParam;
-import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import com.baiyi.opscloud.domain.vo.auth.LogVO;
+import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -19,10 +18,10 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/api/log")
 @Api(tags = "用户登录")
+@RequiredArgsConstructor
 public class LogController {
 
-    @Resource
-    private UserAuthFacade userAuthFacade;
+    private final UserAuthFacade userAuthFacade;
 
     /**
      * 用户登录接口

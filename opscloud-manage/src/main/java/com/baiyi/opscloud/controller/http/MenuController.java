@@ -8,10 +8,10 @@ import com.baiyi.opscloud.domain.vo.sys.MenuVO;
 import com.baiyi.opscloud.facade.sys.MenuFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -24,10 +24,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/sys/menu")
 @Api(tags = "菜单管理")
+@RequiredArgsConstructor
 public class MenuController {
 
-    @Resource
-    private MenuFacade menuFacade;
+    private final MenuFacade menuFacade;
 
     @ApiOperation(value = "保存菜单")
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

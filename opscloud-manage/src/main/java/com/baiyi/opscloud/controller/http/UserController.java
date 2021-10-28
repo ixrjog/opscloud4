@@ -13,10 +13,10 @@ import com.baiyi.opscloud.domain.vo.user.*;
 import com.baiyi.opscloud.facade.user.*;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -27,22 +27,18 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/user")
 @Api(tags = "用户管理")
+@RequiredArgsConstructor
 public class UserController {
 
-    @Resource
-    private UserFacade userFacade;
+    private final UserFacade userFacade;
 
-    @Resource
-    private UserGroupFacade userGroupFacade;
+    private final UserGroupFacade userGroupFacade;
 
-    @Resource
-    private UserCredentialFacade userCredentialFacade;
+    private final UserCredentialFacade userCredentialFacade;
 
-    @Resource
-    private UserUIFacade uiFacade;
+    private final UserUIFacade uiFacade;
 
-    @Resource
-    private UserPermissionFacade permissionFacade;
+    private final UserPermissionFacade permissionFacade;
 
     @ApiOperation(value = "查询用户前端界面信息(菜单&UI鉴权)")
     @GetMapping(value = "/ui/info/get", produces = MediaType.APPLICATION_JSON_VALUE)

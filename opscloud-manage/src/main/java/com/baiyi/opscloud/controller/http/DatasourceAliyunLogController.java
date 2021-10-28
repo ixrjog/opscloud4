@@ -10,10 +10,10 @@ import com.baiyi.opscloud.domain.vo.datasource.aliyun.AliyunLogVO;
 import com.baiyi.opscloud.facade.datasource.aliyun.AliyunLogFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -25,10 +25,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/datasource/aliyun/log")
 @Api(tags = "数据源实例")
+@RequiredArgsConstructor
 public class DatasourceAliyunLogController {
 
-    @Resource
-    private AliyunLogFacade aliyunLogFacade;
+    private final AliyunLogFacade aliyunLogFacade;
 
     @ApiOperation(value = "分页查询阿里云日志服务列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -9,10 +9,10 @@ import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
 import com.baiyi.opscloud.facade.sys.CredentialFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -23,10 +23,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/sys/credential")
 @Api(tags = "凭据管理")
+@RequiredArgsConstructor
 public class CredentialController {
 
-    @Resource
-    private CredentialFacade credentialFacade;
+    private final CredentialFacade credentialFacade;
 
     @ApiOperation(value = "分页查询系统凭据列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

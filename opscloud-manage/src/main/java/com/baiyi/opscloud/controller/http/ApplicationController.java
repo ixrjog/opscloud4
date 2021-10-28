@@ -11,10 +11,10 @@ import com.baiyi.opscloud.facade.application.ApplicationFacade;
 import com.baiyi.opscloud.util.OptionsUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -25,10 +25,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("/api/application")
 @Api(tags = "应用管理")
+@RequiredArgsConstructor
 public class ApplicationController {
 
-    @Resource
-    private ApplicationFacade applicationFacade;
+    private final ApplicationFacade applicationFacade;
 
     @ApiOperation(value = "查询应用业务类型选项")
     @GetMapping(value = "/business/options/get", produces = MediaType.APPLICATION_JSON_VALUE)

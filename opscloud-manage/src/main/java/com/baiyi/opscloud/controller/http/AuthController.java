@@ -13,10 +13,10 @@ import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.facade.auth.AuthFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 
 /**
@@ -27,10 +27,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping( "/api/auth")
 @Api(tags = "权限配置")
+@RequiredArgsConstructor
 public class AuthController {
 
-    @Resource
-    private AuthFacade authFacade;
+    private final AuthFacade authFacade;
 
     @ApiOperation(value = "分页查询role列表")
     @PostMapping(value = "/role/page/query", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)

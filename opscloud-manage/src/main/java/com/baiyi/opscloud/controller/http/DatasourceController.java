@@ -1,20 +1,20 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.facade.datasource.DsFacade;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsConfigVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
+import com.baiyi.opscloud.facade.datasource.DsFacade;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import javax.validation.Valid;
 import java.util.List;
 
@@ -26,10 +26,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/datasource")
 @Api(tags = "数据源")
+@RequiredArgsConstructor
 public class DatasourceController {
 
-    @Resource
-    private DsFacade datasourceFacade;
+    private final DsFacade datasourceFacade;
 
     @ApiOperation(value = "查询数据源配置类型选项")
     @GetMapping(value = "/config/type/options/get", produces = MediaType.APPLICATION_JSON_VALUE)

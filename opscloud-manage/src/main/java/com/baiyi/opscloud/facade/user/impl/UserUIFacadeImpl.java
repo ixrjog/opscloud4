@@ -5,9 +5,9 @@ import com.baiyi.opscloud.domain.vo.user.UserUIVO;
 import com.baiyi.opscloud.facade.sys.MenuFacade;
 import com.baiyi.opscloud.facade.user.UserUIFacade;
 import com.baiyi.opscloud.service.auth.AuthResourceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,13 +16,12 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class UserUIFacadeImpl implements UserUIFacade {
 
-    @Resource
-    private MenuFacade menuFacade;
+    private final MenuFacade menuFacade;
 
-    @Resource
-    private AuthResourceService authResourceService;
+    private final AuthResourceService authResourceService;
 
     @Override
     public UserUIVO.UIInfo buildUIInfo() {
