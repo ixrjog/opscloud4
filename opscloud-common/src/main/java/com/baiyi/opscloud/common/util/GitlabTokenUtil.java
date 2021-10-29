@@ -7,7 +7,7 @@ package com.baiyi.opscloud.common.util;
  */
 public class GitlabTokenUtil {
 
-    private static ThreadLocal<String> token = new ThreadLocal<>();
+    private static final ThreadLocal<String> token = new ThreadLocal<>();
 
     public static String getToken() {
         return token.get();
@@ -16,4 +16,5 @@ public class GitlabTokenUtil {
     public static void setToken(String param) {
         token.set(param);
     }
+
 }

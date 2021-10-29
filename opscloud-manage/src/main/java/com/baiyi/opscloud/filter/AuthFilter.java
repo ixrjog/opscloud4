@@ -2,6 +2,7 @@ package com.baiyi.opscloud.filter;
 
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
+import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.config.WhiteConfig;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import org.springframework.stereotype.Component;
@@ -39,7 +40,7 @@ public class AuthFilter extends OncePerRequestFilter {
     public static final String ACCESS_TOKEN = "AccessToken";
 
 
-    // public static final String GITLAB_TOKEN = "X-Gitlab-Token";
+    public static final String GITLAB_TOKEN = "X-Gitlab-Token";
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
@@ -71,6 +72,13 @@ public class AuthFilter extends OncePerRequestFilter {
                     || resourceName.endsWith(".html")) {
                 filterChain.doFilter(request, response);
                 return;
+            }
+            // GitlabSystemHooks鉴权
+            try {
+                String gitlabToken = request.getHeader(GITLAB_TOKEN);
+                if (!StringUtils.isEmpty(gitlabToken))
+                    GitlabTokenUtil.setToken(gitlabToken);
+            } catch (Exception ignored) {
             }
             try {
                 final String token = request.getHeader(AUTHORIZATION);
