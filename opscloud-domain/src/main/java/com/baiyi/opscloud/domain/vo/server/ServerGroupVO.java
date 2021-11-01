@@ -3,6 +3,7 @@ package com.baiyi.opscloud.domain.vo.server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import com.baiyi.opscloud.domain.vo.base.IWorkorder;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
@@ -42,10 +43,16 @@ public class ServerGroupVO {
             UserVO.IUserPermission,
             IWorkorder,
             BusinessPropertyVO.IBusinessProperty,
+            BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
             Serializable {
 
         private static final long serialVersionUID = 5059407999240740609L;
         private final Integer businessType = BusinessTypeEnum.SERVERGROUP.getType();
+
+        @Override
+        public String getBusinessUniqueKey() {
+            return name;
+        }
 
         @ApiModelProperty(value = "组类型")
         private ServerGroupTypeVO.ServerGroupType serverGroupType;
@@ -86,6 +93,8 @@ public class ServerGroupVO {
 
         private Boolean isAdmin;
 
+        @ApiModelProperty(value = "资产id")
+        private Integer assetId;
 
     }
 

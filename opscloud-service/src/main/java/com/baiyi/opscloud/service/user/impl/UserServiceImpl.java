@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.user.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.annotation.Encrypt;
@@ -9,6 +10,10 @@ import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
 import com.baiyi.opscloud.mapper.opscloud.UserMapper;
 import com.baiyi.opscloud.service.user.UserService;
 import com.github.pagehelper.Page;
@@ -27,7 +32,7 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.USER)
 @Service
-public class UserServiceImpl implements UserService {
+public class UserServiceImpl extends AbstractBusinessService<User> implements UserService {
 
     @Resource
     private UserMapper userMapper;
@@ -52,6 +57,12 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
+        User user = getByKey(asset.getAssetKey());
+        return BeanCopierUtil.copyProperties(user, UserVO.User.class);
+    }
+
+    @Override
     public List<User> queryAll(){
         return userMapper.selectAll();
     }
@@ -62,6 +73,11 @@ public class UserServiceImpl implements UserService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("username", username);
         return userMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public User getByKey(String key){
+        return getByUsername(key);
     }
 
     @Override

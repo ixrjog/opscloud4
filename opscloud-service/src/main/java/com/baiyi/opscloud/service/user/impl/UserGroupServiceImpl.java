@@ -1,9 +1,16 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
+import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
 import com.baiyi.opscloud.mapper.opscloud.UserGroupMapper;
 import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.util.SQLUtil;
@@ -21,8 +28,9 @@ import java.util.List;
  * @Date 2021/6/16 3:16 下午
  * @Version 1.0
  */
+@BusinessType(BusinessTypeEnum.USERGROUP)
 @Service
-public class UserGroupServiceImpl implements UserGroupService {
+public class UserGroupServiceImpl extends AbstractBusinessService<UserGroup> implements UserGroupService {
 
     @Resource
     private UserGroupMapper userGroupMapper;
@@ -48,6 +56,17 @@ public class UserGroupServiceImpl implements UserGroupService {
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", name);
         return userGroupMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public UserGroup getByKey(String key) {
+        return getByName(key);
+    }
+
+    @Override
+    public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
+        UserGroup userGroup = getByKey(asset.getAssetKey());
+        return BeanCopierUtil.copyProperties(userGroup, UserGroupVO.UserGroup.class);
     }
 
     @Override

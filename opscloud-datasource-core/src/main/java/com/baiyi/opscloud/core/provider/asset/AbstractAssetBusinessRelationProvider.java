@@ -6,18 +6,15 @@ import com.baiyi.opscloud.core.asset.IAssetConvert;
 import com.baiyi.opscloud.core.asset.factory.AssetConvertFactory;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.*;
+import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
-import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
-import com.baiyi.opscloud.domain.vo.user.UserVO;
+import com.baiyi.opscloud.factory.business.BusinessServiceFactory;
+import com.baiyi.opscloud.factory.business.base.IBusinessService;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
-import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.service.user.UserGroupService;
-import com.baiyi.opscloud.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
@@ -32,15 +29,6 @@ import java.util.List;
  */
 @Slf4j
 public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAssetProvider<T> implements IAssetBusinessRelation {
-
-    @Resource
-    private ServerService serverService;
-
-    @Resource
-    private UserService userService;
-
-    @Resource
-    private UserGroupService userGroupService;
 
     @Resource
     private BusinessAssetRelationService businessAssetRelationService;
@@ -68,48 +56,16 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     }
 
     /**
-     * TODO 此处代码需要优化
+     * 资产于业务对象绑定
+     *
      * @param businessTypeEnum
      * @param asset
      */
     private void bind(BusinessTypeEnum businessTypeEnum, DsAssetVO.Asset asset) {
-//        IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(businessTypeEnum.getType());
-//        BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation = iBusinessService.getByKey(asset.getAssetKey());
-
-        if (businessTypeEnum.equals(BusinessTypeEnum.SERVER)) {
-            bindServer(asset);
-            return;
-        }
-        if (businessTypeEnum.equals(BusinessTypeEnum.USER)) {
-            bindUser(asset);
-            return;
-        }
-        if (businessTypeEnum.equals(BusinessTypeEnum.USERGROUP)) {
-            bindUserGroup(asset);
-        }
-    }
-
-    private void bindServer(DsAssetVO.Asset asset) {
-        Server server = serverService.getByPrivateIp(asset.getAssetKey());
-        if (server != null) {
-            ServerVO.Server business = BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
-            bind(asset, business);
-        }
-    }
-
-    private void bindUser(DsAssetVO.Asset asset) {
-        User user = userService.getByUsername(asset.getAssetKey());
-        if (user != null) {
-            UserVO.User business = BeanCopierUtil.copyProperties(user, UserVO.User.class);
-            bind(asset, business);
-        }
-    }
-
-    private void bindUserGroup(DsAssetVO.Asset asset) {
-        UserGroup userGroup = userGroupService.getByName(asset.getAssetKey());
-        if (userGroup != null) {
-            UserGroupVO.UserGroup business = BeanCopierUtil.copyProperties(userGroup, UserGroupVO.UserGroup.class);
-            bind(asset, business);
+        IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(businessTypeEnum.getType());
+        if (iBusinessService != null) {
+            iBusinessService.toBusinessAssetRelation(asset);
+            bind(asset, iBusinessService.toBusinessAssetRelation(asset));
         }
     }
 

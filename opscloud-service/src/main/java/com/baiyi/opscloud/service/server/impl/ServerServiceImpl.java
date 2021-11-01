@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
@@ -8,8 +9,10 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
-import com.baiyi.opscloud.mapper.opscloud.ServerMapper;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
+import com.baiyi.opscloud.mapper.opscloud.ServerMapper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
@@ -42,6 +45,17 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("privateIp", privateIp);
         return serverMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public Server getByKey(String key){
+        return getByPrivateIp(key);
+    }
+
+    @Override
+    public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
+        Server server = getByKey(asset.getAssetKey());
+        return BeanCopierUtil.copyProperties(server, ServerVO.Server.class);
     }
 
     @Override

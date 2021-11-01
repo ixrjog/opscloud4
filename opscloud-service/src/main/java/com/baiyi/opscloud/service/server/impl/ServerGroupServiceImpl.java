@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.service.server.impl;
 
 import com.baiyi.opscloud.common.annotation.EventPublisher;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -8,6 +9,9 @@ import com.baiyi.opscloud.domain.param.server.ServerGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.domain.vo.server.ServerGroupVO;
 import com.baiyi.opscloud.factory.business.base.AbstractBusinessService;
 import com.baiyi.opscloud.mapper.opscloud.ServerGroupMapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
@@ -42,6 +46,17 @@ public class ServerGroupServiceImpl extends AbstractBusinessService<ServerGroup>
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("name", name);
         return serverGroupMapper.selectOneByExample(example);
+    }
+
+    @Override
+    public ServerGroup getByKey(String key) {
+        return getByName(key);
+    }
+
+    @Override
+    public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
+        ServerGroup serverGroup = getByKey(asset.getAssetKey());
+        return BeanCopierUtil.copyProperties(serverGroup, ServerGroupVO.ServerGroup.class);
     }
 
     @Override
