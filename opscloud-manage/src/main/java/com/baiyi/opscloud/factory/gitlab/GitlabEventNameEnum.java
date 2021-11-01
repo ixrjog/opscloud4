@@ -7,15 +7,11 @@ package com.baiyi.opscloud.factory.gitlab;
  */
 public enum GitlabEventNameEnum {
 
-
-
     PROJECT_CREATE,
+    PROJECT_DESTROY,
+    PROJECT_RENAME,
     KEY_CREATE,
     KEY_DESTROY
     ;
-
-
-
-
 
 }

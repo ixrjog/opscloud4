@@ -1,8 +1,13 @@
 package com.baiyi.opscloud.factory.gitlab.impl;
 
+import com.baiyi.opscloud.common.util.SSHUtil;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 /**
@@ -11,12 +16,48 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-@RequiredArgsConstructor
 public class GitlabKeyEventConsume extends AbstractGitlabEventConsume {
 
     private final static GitlabEventNameEnum[] eventNameEnums = {
             GitlabEventNameEnum.KEY_CREATE,
             GitlabEventNameEnum.KEY_DESTROY};
+
+    /**
+     * 重写处理方法
+     */
+    @Override
+    protected void proceed() {
+        // 用户删除Key
+        if (eventContext.get().getSystemHook().getEvent_name().equals(GitlabEventNameEnum.KEY_DESTROY.name())) {
+            AssetContainer assetContainer = toAssetContainer();
+            DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
+            if (asset != null) // 删除资产
+                dsInstanceFacade.deleteAssetById(asset.getId());
+        } else {
+            super.proceed(); // 用户创建新Key
+        }
+    }
+
+    protected AssetContainer toAssetContainer() {
+        DatasourceInstance dsInstance = eventContext.get().getInstance();
+        GitlabNotifyParam.SystemHook systemHook = eventContext.get().getSystemHook();
+
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(String.valueOf(systemHook.getId()))
+                .name(systemHook.getUsername())
+                .assetKey(SSHUtil.getFingerprint(systemHook.getKey()))
+                .assetKey2(systemHook.getKey())
+                .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
+                .kind("gitlabSshKey")
+                //.description(entry.getTitle())
+                .build();
+
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                //.paramProperty("userId", gitlabUser.getId())
+                .build();
+    }
 
     @Override
     protected GitlabEventNameEnum[] getEventNameEnums() {
@@ -24,7 +65,7 @@ public class GitlabKeyEventConsume extends AbstractGitlabEventConsume {
     }
 
     @Override
-    protected  String getAssetType(){
+    protected String getAssetType() {
         return DsAssetTypeEnum.GITLAB_SSHKEY.name();
     }
 

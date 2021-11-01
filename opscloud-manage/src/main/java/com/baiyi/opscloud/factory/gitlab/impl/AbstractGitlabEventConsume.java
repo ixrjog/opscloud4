@@ -6,12 +6,14 @@ import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
+import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumeFactory;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
 import com.baiyi.opscloud.factory.gitlab.IGitlabEventConsume;
 import com.baiyi.opscloud.factory.gitlab.context.GitlabEventContext;
 import com.baiyi.opscloud.factory.gitlab.convert.SystemHookConvert;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
@@ -31,6 +33,12 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
 
     @Resource
     private EventFacade eventFacade;
+
+    @Resource
+    protected DsInstanceAssetService dsInstanceAssetService;
+
+    @Resource
+    protected DsInstanceFacade dsInstanceFacade;
 
     protected abstract GitlabEventNameEnum[] getEventNameEnums();
 
@@ -54,7 +62,7 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
     /**
      * TODO 这只是偷懒写法(全量同步)，最好重写
      */
-    protected void proceed(){
+    protected void proceed() {
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(eventContext.get().getInstance().getInstanceType(), getAssetType());
         assert providers != null;
         providers.forEach(x -> x.pullAsset(eventContext.get().getInstance().getId()));
@@ -74,11 +82,11 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
     /**
      * 后处理，这只是通用写法
      */
-    protected void postHandle(){
+    protected void postHandle() {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception{
+    public void afterPropertiesSet() throws Exception {
         GitlabEventConsumeFactory.register(this);
     }
 
