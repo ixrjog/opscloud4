@@ -1,15 +1,14 @@
 package com.baiyi.opscloud.event.customer.impl;
 
-import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.common.topic.TopicHelper;
+import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.manager.DsServerGroupManager;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.util.ServerTreeUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -17,16 +16,14 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class ServerGroupEventCustomer extends AbstractEventConsumer<ServerGroup> {
 
-    @Resource
-    private ServerTreeUtil serverTreeUtil;
+    private final ServerTreeUtil serverTreeUtil;
 
-    @Resource
-    private ServerGroupingAlgorithm serverGroupingAlgorithm;
+    private final ServerGroupingAlgorithm serverGroupingAlgorithm;
 
-    @Resource
-    private DsServerGroupManager dsServerGroupManager;
+    private final DsServerGroupManager dsServerGroupManager;
 
     @Override
     public String getEventType() {

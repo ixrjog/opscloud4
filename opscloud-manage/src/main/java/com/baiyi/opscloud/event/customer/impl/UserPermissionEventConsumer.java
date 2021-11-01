@@ -6,9 +6,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -16,16 +15,14 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class UserPermissionEventConsumer extends AbstractEventConsumer<UserPermission> {
 
-    @Resource
-    private DsServerGroupManager dsServerGroupManager;
+    private final DsServerGroupManager dsServerGroupManager;
 
-    @Resource
-    private DsAccountGroupManager dsAccountGroupManager;
+    private final DsAccountGroupManager dsAccountGroupManager;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public String getEventType() {

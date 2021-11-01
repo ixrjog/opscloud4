@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.user.impl;
 
+import com.baiyi.opscloud.common.annotation.EventPublisher;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
@@ -7,6 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.user.UserGroupVO;
@@ -36,16 +38,19 @@ public class UserGroupServiceImpl extends AbstractBusinessService<UserGroup> imp
     private UserGroupMapper userGroupMapper;
 
     @Override
+    @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(UserGroup userGroup) {
         userGroupMapper.insert(userGroup);
     }
 
     @Override
+    @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void update(UserGroup userGroup) {
         userGroupMapper.updateByPrimaryKey(userGroup);
     }
 
     @Override
+    @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
     public void deleteById(Integer id) {
         userGroupMapper.deleteByPrimaryKey(id);
     }

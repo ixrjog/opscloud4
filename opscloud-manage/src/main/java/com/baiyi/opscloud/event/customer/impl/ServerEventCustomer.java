@@ -1,16 +1,15 @@
 package com.baiyi.opscloud.event.customer.impl;
 
-import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.common.topic.TopicHelper;
+import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.manager.DsServerManager;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.event.NoticeEvent;
 import com.baiyi.opscloud.facade.datasource.aliyun.AliyunLogFacade;
 import com.baiyi.opscloud.util.ServerTreeUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -18,19 +17,16 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class ServerEventCustomer extends AbstractEventConsumer<Server> {
 
-    @Resource
-    private ServerTreeUtil serverTreeUtil;
+    private final ServerTreeUtil serverTreeUtil;
 
-    @Resource
-    private ServerGroupingAlgorithm serverGroupingAlgorithm;
+    private final ServerGroupingAlgorithm serverGroupingAlgorithm;
 
-    @Resource
-    private DsServerManager dsServerManager;
+    private final DsServerManager dsServerManager;
 
-    @Resource
-    private AliyunLogFacade aliyunLogFacade;
+    private final AliyunLogFacade aliyunLogFacade;
 
     @Override
     public String getEventType() {
@@ -41,8 +37,8 @@ public class ServerEventCustomer extends AbstractEventConsumer<Server> {
     protected void preHandle(NoticeEvent noticeEvent) {
         Server eventData = toEventData(noticeEvent.getMessage());
         serverGroupingAlgorithm.evictGrouping(eventData.getServerGroupId());
-        serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(),true);
-        serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(),false);
+        serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(), true);
+        serverGroupingAlgorithm.evictIntactGrouping(eventData.getServerGroupId(), false);
         serverTreeUtil.evictWrap(eventData.getServerGroupId());
         // 发送Topic 定时任务延迟执行
         topicHelper.send(TopicHelper.Topics.ASSET_SUBSCRIPTION_TASK, 1);

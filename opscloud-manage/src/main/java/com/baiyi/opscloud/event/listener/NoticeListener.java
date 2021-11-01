@@ -29,4 +29,5 @@ public class NoticeListener implements ApplicationListener<NoticeEvent> {
         }
         iEventConsumer.onMessage(noticeEvent);
     }
+
 }
