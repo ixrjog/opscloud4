@@ -4,14 +4,25 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.type.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigFactory;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.datasource.account.impl.LdapAccountProvider;
+import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
+import com.baiyi.opscloud.datasource.accountGroup.IAccountGroup;
+import com.baiyi.opscloud.datasource.accountGroup.impl.LdapAccountGroupProvider;
 import com.baiyi.opscloud.datasource.ldap.entry.Group;
 import com.baiyi.opscloud.datasource.ldap.entry.Person;
 import com.baiyi.opscloud.datasource.ldap.handler.LdapHandler;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.vo.business.SimpleBusiness;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -40,7 +51,13 @@ public class LdapTest extends BaseUnit {
     private UserService userService;
 
     @Resource
+    private UserGroupService userGroupService;
+
+    @Resource
     private PersonRepo PersonRepo;
+
+    @Resource
+    private DsInstanceService dsInstanceService;
 
     //
 //    @Test
@@ -56,10 +73,39 @@ public class LdapTest extends BaseUnit {
 //
 //
 
+    @Resource
+    private LdapAccountProvider ldapAccountProvider;
+
+    @Resource
+    private LdapAccountGroupProvider ldapAccountGroupProvider;
+
+    @Test
+    void createUserTest() {
+        User user = userService.getByUsername("baiyi");
+        user.setPassword("");
+        DatasourceInstance dsInstance = dsInstanceService.getById(2);
+        ldapAccountProvider.create(dsInstance, user);
+    }
+
+    @Test
+    void createUserTest2() {
+        User user = userService.getByUsername("baiyi");
+        UserGroup userGroup = userGroupService.getByName("vpn-users");
+        DatasourceInstance dsInstance = dsInstanceService.getById(2);
+        // ldapAccountGroupProvider.create(dsInstance, userGroup);
+        SimpleBusiness businessResource = SimpleBusiness.builder()
+                .businessId(userGroup.getId())
+                .businessType(BusinessTypeEnum.USERGROUP.getType())
+                .build();
+        IAccountGroup iAccountGroup = AccountGroupProviderFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
+        // iAccountGroup.create(dsInstance,userGroup);
+        iAccountGroup.grant(dsInstance, user, businessResource);
+    }
+
     @Test
     void queryPersonTest() {
         LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
-        Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=Users");
+        Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
         log.info(JSON.toJSONString(person));
     }
 
@@ -67,8 +113,8 @@ public class LdapTest extends BaseUnit {
     @Test
     void queryGroupTest() {
         LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
-        // dc=xincheng,dc=org
-        Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=confluence-users,ou=Groups");
+        // "cn=confluence-users,ou=Groups"
+        Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
         log.info(JSON.toJSONString(group));
     }
 
@@ -93,7 +139,7 @@ public class LdapTest extends BaseUnit {
 
     @Test
     BaseDsInstanceConfig getConfig() {
-        DatasourceConfig datasourceConfig = dsConfigService.getById(1);
+        DatasourceConfig datasourceConfig = dsConfigService.getById(2);
         return dsFactory.build(datasourceConfig, LdapDsInstanceConfig.class);
     }
 

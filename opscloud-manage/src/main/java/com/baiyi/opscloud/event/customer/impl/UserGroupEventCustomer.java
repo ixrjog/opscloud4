@@ -20,7 +20,7 @@ public class UserGroupEventCustomer extends AbstractEventConsumer<UserGroup> {
 
     @Override
     public String getEventType() {
-        return BusinessTypeEnum.USER.name();
+        return BusinessTypeEnum.USERGROUP.name();
     }
 
     @Override

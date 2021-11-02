@@ -11,6 +11,7 @@ import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -63,6 +64,7 @@ public abstract class BaseAssetToBO implements IAssetConvert, InitializingBean {
      * @return
      */
     protected String captureName(String str) {
+        if (StringUtils.isEmpty(str)) return str;
         char[] cs = str.toCharArray();
         cs[0] -= 32;
         return String.valueOf(cs);

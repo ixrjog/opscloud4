@@ -53,7 +53,10 @@ public class GroupRepoImpl implements GroupRepo {
 
     @Override
     public void create(LdapDsInstanceConfig.Ldap ldapConfig, String groupName) {
-
+        com.baiyi.opscloud.datasource.ldap.entry.Group group = Group.builder()
+                .groupName(groupName)
+                .build();
+        ldapHandler.bindGroup(ldapConfig, group);
     }
 
     @Override

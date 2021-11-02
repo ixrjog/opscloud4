@@ -33,6 +33,8 @@ import static org.springframework.ldap.query.LdapQueryBuilder.query;
 @Component
 public class LdapHandler {
 
+    public static final String GROUP_MEMBER = "groupMember";
+
     public interface SEARCH_KEY {
         String OBJECTCLASS = "objectclass";
     }
@@ -124,13 +126,13 @@ public class LdapHandler {
      * @return
      */
     public void bindPerson(LdapDsInstanceConfig.Ldap ldapConfig, Person person) {
-        String userId = ldapConfig.getUser().getId();
-        String userBaseDN = ldapConfig.getUser().getDn();
-        String userObjectClass = ldapConfig.getUser().getObjectClass();
+        final String userId = ldapConfig.getUser().getId();
+        final String userBaseDN = ldapConfig.getUser().getDn();
+        final String userObjectClass = ldapConfig.getUser().getObjectClass();
 
         try {
-            String rdn = toUserRdn(ldapConfig, person);
-            String dn = Joiner.on(",").skipNulls().join(rdn, userBaseDN);
+            final String rdn = toUserRdn(ldapConfig, person);
+            final String dn = Joiner.on(",").skipNulls().join(rdn, userBaseDN);
             // 基类设置
             BasicAttribute ocattr = new BasicAttribute("objectClass");
             ocattr.add("top");
@@ -151,11 +153,45 @@ public class LdapHandler {
         } catch (Exception ex) {
             ex.printStackTrace();
         }
-
     }
+
+    /**
+     * 绑定用户组
+     *
+     * @param group
+     * @return
+     */
+    public void bindGroup(LdapDsInstanceConfig.Ldap ldapConfig, Group group) {
+        final String groupId = ldapConfig.getGroup().getId();
+        final String groupBaseDN = ldapConfig.getGroup().getDn();
+        final String groupObjectClass = ldapConfig.getGroup().getObjectClass();
+
+        final String rdn = toGroupRdn(ldapConfig, group);
+        final String dn = Joiner.on(",").skipNulls().join(rdn, groupBaseDN);
+        // 基类设置
+        BasicAttribute ocattr = new BasicAttribute("objectClass");
+        ocattr.add("top");
+        ocattr.add(groupObjectClass);
+        // 用户属性
+        Attributes attrs = new BasicAttributes();
+        attrs.put(ocattr);
+        attrs.put(groupId, group.getGroupName()); // cn={groupName}
+        // 添加一个空成员
+       // attrs.put(GROUP_MEMBER, "");
+        try {
+            bind(ldapConfig, dn, null, attrs);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
+
 
     private String toUserRdn(LdapDsInstanceConfig.Ldap ldapConfig, Person person) {
         return Joiner.on("=").join(ldapConfig.getUser().getId(), person.getUsername());
+    }
+
+    private String toGroupRdn(LdapDsInstanceConfig.Ldap ldapConfig, Group group) {
+        return Joiner.on("=").join(ldapConfig.getUser().getId(), group.getGroupName());
     }
 
     private String toUserDn(LdapDsInstanceConfig.Ldap ldapConfig, Person person) {

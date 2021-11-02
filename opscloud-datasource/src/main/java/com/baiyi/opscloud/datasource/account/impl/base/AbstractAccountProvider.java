@@ -39,33 +39,33 @@ public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider i
 
     protected abstract void initialConfig(DatasourceConfig dsConfig);
 
-    private void pre(DatasourceInstance dsInstance) {
+    private void preHandle(DatasourceInstance dsInstance) {
         dsInstanceContext.set(buildDsInstanceContext(dsInstance.getId()));
         initialConfig(dsInstanceContext.get().getDsConfig());
     }
 
     @Override
     public void create(DatasourceInstance dsInstance, User user) {
-        pre(dsInstance);
+        preHandle(dsInstance);
         doCreate(user);
     }
 
     @Override
     public void update(DatasourceInstance dsInstance, User user) {
-        pre(dsInstance);
+        preHandle(dsInstance);
         doUpdate(user);
     }
 
     @Override
     public void delete(DatasourceInstance dsInstance, User user) {
-        pre(dsInstance);
+        preHandle(dsInstance);
         doDelete(user);
     }
 
     @Override
     public void grant(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
         if (getBusinessResourceType() == businessResource.getBusinessType()) {
-            pre(dsInstance);
+            preHandle(dsInstance);
             doGrant(user, businessResource);
         }
     }
@@ -73,7 +73,7 @@ public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider i
     @Override
     public void revoke(DatasourceInstance dsInstance, User user, BaseBusiness.IBusiness businessResource) {
         if (getBusinessResourceType() == businessResource.getBusinessType()) {
-            pre(dsInstance);
+            preHandle(dsInstance);
             doRevoke(user, businessResource);
         }
     }
