@@ -93,12 +93,6 @@
             </properties>
         </profile>
         <profile>
-            <id>iac</id>
-            <properties>
-                <env>iac</env>
-            </properties>
-        </profile>
-        <profile>
             <id>prod</id>
             <properties>
                 <env>prod</env>

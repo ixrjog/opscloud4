@@ -20,8 +20,12 @@ import org.springframework.test.context.ActiveProfiles;
 @Retryable
 public class BaseUnit {
 
-   public void print(Object t){
-        System.err.print(JSON.toJSONString(t));
+    public void print(Object t) {
+        if (t instanceof String) {
+            System.err.println((String) t);
+        } else {
+            System.err.println(JSON.toJSONString(t));
+        }
     }
 
 }

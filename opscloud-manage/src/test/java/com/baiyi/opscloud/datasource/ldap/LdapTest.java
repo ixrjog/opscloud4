@@ -9,7 +9,6 @@ import com.baiyi.opscloud.core.factory.DsConfigFactory;
 import com.baiyi.opscloud.datasource.account.impl.LdapAccountProvider;
 import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.accountGroup.IAccountGroup;
-import com.baiyi.opscloud.datasource.accountGroup.impl.LdapAccountGroupProvider;
 import com.baiyi.opscloud.datasource.ldap.entry.Group;
 import com.baiyi.opscloud.datasource.ldap.entry.Person;
 import com.baiyi.opscloud.datasource.ldap.handler.LdapHandler;
@@ -76,12 +75,10 @@ public class LdapTest extends BaseUnit {
     @Resource
     private LdapAccountProvider ldapAccountProvider;
 
-    @Resource
-    private LdapAccountGroupProvider ldapAccountGroupProvider;
 
     @Test
     void createUserTest() {
-        User user = userService.getByUsername("baiyi");
+        User user = userService.getByUsername("xiuyuan");
         user.setPassword("");
         DatasourceInstance dsInstance = dsInstanceService.getById(2);
         ldapAccountProvider.create(dsInstance, user);
@@ -100,6 +97,16 @@ public class LdapTest extends BaseUnit {
         IAccountGroup iAccountGroup = AccountGroupProviderFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
         // iAccountGroup.create(dsInstance,userGroup);
         iAccountGroup.grant(dsInstance, user, businessResource);
+    }
+
+    @Test
+    void createUserGroupTest() {
+        // nexus-admin nexus-developer nexus-users
+        UserGroup userGroup = userGroupService.getByName("nexus-users");
+        DatasourceInstance dsInstance = dsInstanceService.getById(2);
+        IAccountGroup iAccountGroup = AccountGroupProviderFactory.getIAccountGroupByInstanceType(DsTypeEnum.LDAP.name());
+        iAccountGroup.create(dsInstance,userGroup);
+
     }
 
     @Test
