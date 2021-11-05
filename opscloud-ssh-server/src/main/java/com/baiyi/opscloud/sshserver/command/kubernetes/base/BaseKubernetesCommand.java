@@ -54,7 +54,7 @@ public class BaseKubernetesCommand {
 
     protected KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
         DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
-        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getId());
+        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
         return dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
     }
 

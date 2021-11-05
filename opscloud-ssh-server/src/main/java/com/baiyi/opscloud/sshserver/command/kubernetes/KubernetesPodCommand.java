@@ -38,7 +38,6 @@ import com.google.common.base.Joiner;
 import com.google.common.collect.Maps;
 import io.fabric8.kubernetes.api.model.Container;
 import io.fabric8.kubernetes.api.model.Pod;
-import io.fabric8.kubernetes.client.Callback;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
 import lombok.extern.slf4j.Slf4j;
@@ -358,12 +357,12 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         }
     }
 
-    private static class OutCallback implements Callback<byte[]> {
-        @Override
-        public void call(byte[] data) {
-            // System.out.print(new String(data));
-        }
-    }
+//    private static class OutCallback implements Callback<byte[]> {
+//        @Override
+//        public void call(byte[] data) {
+//            // System.out.print(new String(data));
+//        }
+//    }
 
     private void tryResize(Size size, Terminal terminal, ExecWatch execWatch) {
         if (terminal.getSize().equals(size)) return;
