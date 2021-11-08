@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.serverGroup.impl;
 
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.datasource.serverGroup.IServerGroup;
@@ -22,7 +22,7 @@ import javax.annotation.Resource;
 public abstract class AbstractServerGroupProvider extends SimpleDsInstanceProvider implements IServerGroup, InitializingBean {
 
     @Resource
-    protected DsConfigFactory dsConfigFactory;
+    protected DsConfigHelper dsConfigHelper;
 
     protected static ThreadLocal<DsInstanceContext> dsInstanceContext = new ThreadLocal<>();
 

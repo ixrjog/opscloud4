@@ -41,7 +41,7 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     private GitlabDsInstanceConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
+        return dsConfigHelper.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 
     @Override

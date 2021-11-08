@@ -51,7 +51,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     }
 
     private NexusDsInstanceConfig.Nexus buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, NexusDsInstanceConfig.class).getNexus();
+        return dsConfigHelper.build(dsConfig, NexusDsInstanceConfig.class).getNexus();
     }
 
     @Override

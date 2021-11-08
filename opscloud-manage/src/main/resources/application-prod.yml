@@ -31,9 +31,9 @@ spring:
       - ssh-server
       - opscloud
   redis:
-    host: r-d7obmf3lmgs0hpph5n.redis.eu-west-1.rds.aliyuncs.com
+    host: r-bp11vlmf4cijpn4s1d.redis.rds.aliyuncs.com
     port: 6379
-    password: ENC(o6UKSKlETx2g13HH0nsWttoQSvW0+OF/7/DcHo2lc0FOlf03x8jzTgB1khTUODtXRMzG2/PK8uQ=)
+    password: ENC(dfsfmmYcMcuCEYWQb2Uxi2Q6osIwVHeSjX8SMywWfgVOg47NKT8ckQ==)
     jedis:
       pool:
         max-wait: 5000
@@ -45,9 +45,9 @@ spring:
   datasource:
     druid:
       opscloud:
-        url: jdbc:mysql://rm-d7oczvp3c5k2su19b.mysql.eu-west-1.rds.aliyuncs.com:3306/opscloud4-prod?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
+        url: jdbc:mysql://rm-bp14453fwr49f19cu90130.mysql.rds.aliyuncs.com:3306/opscloud4?useUnicode=true&characterEncoding=utf8&autoReconnect=true&failOverReadOnly=false&useInformationSchema=true&tinyInt1isBit=true&nullCatalogMeansCurrent=true&serverTimezone=Asia/Shanghai&allowMultiQueries=true
         username: opscloud4
-        password: ENC(SyIQuAkShjZknkJ2d8FDKSSFNKmjd2lC2KLejtb1Xdeb4SyusueO+1NPGLXem1ug)
+        password: ENC(RGHKySCNTxkxJ3UTuinFc1eUqguuVOxLB6bCePqLFho=)
         initial-size: 5
         min-idle: 5
         max-active: 20

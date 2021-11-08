@@ -2,16 +2,12 @@ package com.baiyi.opscloud.kubernetes.terminal.factory;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
@@ -38,16 +34,10 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
     protected SimpleTerminalSessionFacade simpleTerminalSessionFacade;
 
     @Resource
-    protected DsInstanceService dsInstanceService;
-
-    @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
 
     @Resource
-    private DsConfigService dsConfigService;
-
-    @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsConfigHelper;
 
     abstract protected T getMessage(String message);
 
@@ -57,9 +47,7 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
     }
 
     private KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
-        DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
-        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
-        return dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+        return dsConfigHelper.buildConfig(instanceUuid);
     }
 
     private DatasourceInstanceAsset getAssetByResource(KubernetesResource kubernetesResource) {
@@ -73,7 +61,7 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
 
     protected Boolean isBatch(TerminalSession terminalSession) {
         Boolean isBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
-        return isBatch == null ? false : isBatch;
+        return isBatch != null && isBatch;
     }
 
 //    protected void closeSessionInstance(TerminalSession terminalSession, String instanceId) {
@@ -89,7 +77,7 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
 //    }
 
     protected void heartbeat(String sessionId) {
-       // redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
+        // redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);
     }
 
     /**

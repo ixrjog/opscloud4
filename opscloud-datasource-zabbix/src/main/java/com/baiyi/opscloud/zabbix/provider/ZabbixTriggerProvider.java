@@ -43,7 +43,7 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     }
 
     private ZabbixDsInstanceConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
+        return dsConfigHelper.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
     }
 
     @Override

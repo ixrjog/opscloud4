@@ -51,7 +51,7 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
     }
 
     private SonarDsInstanceConfig.Sonar buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, SonarDsInstanceConfig.class).getSonar();
+        return dsConfigHelper.build(dsConfig, SonarDsInstanceConfig.class).getSonar();
     }
 
     @Override

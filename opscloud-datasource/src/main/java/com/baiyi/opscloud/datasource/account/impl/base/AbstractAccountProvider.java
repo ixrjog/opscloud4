@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.account.impl.base;
 
 import com.baiyi.opscloud.datasource.account.AccountProviderFactory;
 import com.baiyi.opscloud.datasource.account.IAccount;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -26,7 +26,7 @@ import java.util.List;
 public abstract class AbstractAccountProvider extends SimpleDsInstanceProvider implements IAccount, InitializingBean {
 
     @Resource
-    protected DsConfigFactory dsConfigFactory;
+    protected DsConfigHelper dsConfigHelper;
 
     @Resource
     private UserPermissionService userPermissionService;

@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import org.junit.jupiter.api.Test;
 
@@ -23,7 +23,7 @@ public class DsUtilTest extends BaseUnit {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsFactory;
 
     @Test
     void toConfig() {

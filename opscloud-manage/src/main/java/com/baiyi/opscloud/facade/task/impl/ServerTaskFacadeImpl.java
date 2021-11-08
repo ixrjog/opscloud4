@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.TimeUtil;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
@@ -64,7 +64,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private AnsiblePlaybookService ansiblePlaybookService;
 
     @Resource
-    private DsConfigFactory dsConfigFactory;
+    private DsConfigHelper dsConfigHelper;
 
     @Resource
     private ServerTaskPacker serverTaskPacker;
@@ -108,7 +108,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private void executeServerTask(ServerTask serverTask, List<ServerTaskMember> members) {
         // 构建上下文
         DsInstanceContext instanceContext = buildDsInstanceContext(serverTask.getInstanceUuid());
-        AnsibleDsInstanceConfig.Ansible ansible = dsConfigFactory.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
+        AnsibleDsInstanceConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
         PlaybookArgs args = PlaybookArgs.builder()

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.process.base;
 
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.base.IRecover;
@@ -48,7 +48,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
     private EventBusinessService eventBusinessService;
 
     @Resource
-    protected DsConfigFactory dsFactory;
+    protected DsConfigHelper dsFactory;
 
     @Resource
     private BaseTagService baseTagService;

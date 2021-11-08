@@ -49,7 +49,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     }
 
     private TencentExmailDsInstanceConfig.Tencent buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, TencentExmailDsInstanceConfig.class).getTencent();
+        return dsConfigHelper.build(dsConfig, TencentExmailDsInstanceConfig.class).getTencent();
     }
 
     @Override

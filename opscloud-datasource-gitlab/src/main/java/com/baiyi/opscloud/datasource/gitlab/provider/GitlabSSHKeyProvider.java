@@ -42,7 +42,7 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
     }
 
     private GitlabDsInstanceConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
+        return dsConfigHelper.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
     }
 
     @Override

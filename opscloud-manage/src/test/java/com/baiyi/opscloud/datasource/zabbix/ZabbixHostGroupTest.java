@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.zabbix;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
@@ -25,7 +25,7 @@ public class ZabbixHostGroupTest extends BaseUnit {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsFactory;
 
     @Resource
     private ZabbixHostGroupHandler zabbixHostGroupHandler;

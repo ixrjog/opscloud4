@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.user.child;
 
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -43,7 +43,7 @@ public class RamUserPacker {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsFactory;
 
     public void wrap(UserVO.User user) {
         DatasourceInstanceAsset param = DatasourceInstanceAsset.builder()

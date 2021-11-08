@@ -5,7 +5,7 @@ import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.account.impl.LdapAccountProvider;
 import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.accountGroup.IAccountGroup;
@@ -41,7 +41,7 @@ public class LdapTest extends BaseUnit {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsFactory;
 
     @Resource
     private LdapHandler ldapHandler;

@@ -38,7 +38,7 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider 
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
+        configContext.set(dsConfigHelper.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
     }
 
     protected List<Map<String, String>> getUsrgrps(ZabbixDsInstanceConfig.Zabbix zabbix, User user) {

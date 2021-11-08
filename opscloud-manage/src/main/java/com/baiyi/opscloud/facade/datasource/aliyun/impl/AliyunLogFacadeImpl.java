@@ -9,7 +9,7 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogHandler;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogMachineGroupHandler;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -67,7 +67,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsFactory;
 
     @Resource
     private DsInstanceService dsInstanceService;

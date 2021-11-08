@@ -1,15 +1,18 @@
 package com.baiyi.opscloud.core.factory;
 
+import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.core.util.TemplateUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.sys.CredentialService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -17,13 +20,16 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class DsConfigFactory {
+@RequiredArgsConstructor
+public class DsConfigHelper {
 
-    @Resource
-    private TemplateUtil templateUtil;
+    private final TemplateUtil templateUtil;
 
-    @Resource
-    private CredentialService credentialService;
+    private final CredentialService credentialService;
+
+    private final DsInstanceService dsInstanceService;
+
+    private final DsConfigService dsConfigService;
 
     public <T extends BaseDsInstanceConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {
         String propsYml = datasourceConfig.getPropsYml();
@@ -35,5 +41,10 @@ public class DsConfigFactory {
         return DsUtil.toDatasourceConfig(propsYml, targetClass);
     }
 
+    public KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
+        DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
+        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
+        return build(datasourceConfig, KubernetesDsInstanceConfig.class);
+    }
 
 }

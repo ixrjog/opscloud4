@@ -43,7 +43,7 @@ public class ZabbixHostGroupProvider extends AbstractAssetRelationProvider<Zabbi
     }
 
     private ZabbixDsInstanceConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
+        return dsConfigHelper.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
     }
 
     @Override

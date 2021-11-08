@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.jenkins;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.datasource.jenkins.handler.JenkinsServerHandler;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -25,7 +25,7 @@ public class JenkinsTest extends BaseUnit {
     private DsConfigService dsConfigService;
 
     @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsFactory;
 
     @Test
     void logTest() {

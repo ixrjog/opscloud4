@@ -40,7 +40,7 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
     }
 
     private LdapDsInstanceConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
+        return dsConfigHelper.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
     }
 
 

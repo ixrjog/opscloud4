@@ -45,7 +45,7 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     private KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
+        return dsConfigHelper.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
     }
 
     @Override

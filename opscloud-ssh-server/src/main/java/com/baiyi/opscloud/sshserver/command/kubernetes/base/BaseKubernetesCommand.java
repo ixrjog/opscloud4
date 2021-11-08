@@ -1,10 +1,7 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes.base;
 
 import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.service.datasource.DsConfigService;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
@@ -36,10 +33,7 @@ public class BaseKubernetesCommand {
     protected DsInstanceAssetService dsInstanceAssetService;
 
     @Resource
-    private DsConfigService dsConfigService;
-
-    @Resource
-    private DsConfigFactory dsFactory;
+    private DsConfigHelper dsConfigHelper;
 
     protected Terminal terminal;
 
@@ -53,9 +47,7 @@ public class BaseKubernetesCommand {
     }
 
     protected KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
-        DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
-        DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
-        return dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+       return dsConfigHelper.buildConfig(instanceUuid);
     }
 
 }

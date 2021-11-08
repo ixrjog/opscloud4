@@ -41,7 +41,7 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<Person, Grou
     }
 
     private LdapDsInstanceConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
+        return dsConfigHelper.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
     }
 
     @Override

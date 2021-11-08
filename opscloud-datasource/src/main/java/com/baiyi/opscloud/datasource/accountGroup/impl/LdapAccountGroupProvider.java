@@ -32,7 +32,7 @@ public class LdapAccountGroupProvider extends AbstractAccountGroupProvider {
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap());
+        configContext.set(dsConfigHelper.build(dsConfig, LdapDsInstanceConfig.class).getLdap());
     }
 
     @Override

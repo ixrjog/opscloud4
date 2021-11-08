@@ -3,7 +3,7 @@ package com.baiyi.opscloud.core.provider.auth;
 import com.baiyi.opscloud.core.provider.base.auth.SimpleAuthenticationProvider;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
-import com.baiyi.opscloud.core.factory.DsConfigFactory;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.model.Authorization;
@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 public abstract class BaseAuthProvider extends SimpleDsInstanceProvider implements SimpleAuthenticationProvider, InitializingBean {
 
     @Resource
-    protected DsConfigFactory dsFactory;
+    protected DsConfigHelper dsFactory;
 
     @Override
     public boolean login(DatasourceInstance instance, Authorization.Credential credential) {

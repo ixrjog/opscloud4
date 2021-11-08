@@ -48,7 +48,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     }
 
     private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
     @Override

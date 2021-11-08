@@ -47,7 +47,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
     }
 
     private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigFactory.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
     }
 
     @Override
