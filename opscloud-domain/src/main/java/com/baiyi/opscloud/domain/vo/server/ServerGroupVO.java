@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.domain.vo.server;
 
+import com.baiyi.opscloud.domain.base.IAllowOrder;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.base.IWorkorder;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -41,7 +41,7 @@ public class ServerGroupVO {
             ServerGroupTypeVO.IServerGroupType,
             TagVO.ITags,
             UserVO.IUserPermission,
-            IWorkorder,
+            IAllowOrder,
             BusinessPropertyVO.IBusinessProperty,
             BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
             Serializable {
@@ -86,7 +86,7 @@ public class ServerGroupVO {
 
         @ApiModelProperty(value = "是否支持工单")
         @NotNull(message = "是否支持工单不能为空")
-        private Boolean allowWorkorder;
+        private Boolean allowOrder;
 
         @ApiModelProperty(value = "资源描述")
         private String comment;

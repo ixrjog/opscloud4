@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.vo.user;
 
+import com.baiyi.opscloud.domain.base.IAllowOrder;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.vo.base.IWorkorder;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -30,7 +30,7 @@ public class UserGroupVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class UserGroup implements UserVO.IUserPermission, IWorkorder, BusinessAssetRelationVO.IBusinessAssetRelation {
+    public static class UserGroup implements UserVO.IUserPermission, IAllowOrder, BusinessAssetRelationVO.IBusinessAssetRelation {
 
         private final Integer businessType = BusinessTypeEnum.USERGROUP.getType();
 
@@ -42,7 +42,6 @@ public class UserGroupVO {
             return id;
         }
 
-        // UserVO.IUserPermission
         private UserPermissionVO.UserPermission userPermission;
 
         private Integer userId;
@@ -65,7 +64,7 @@ public class UserGroupVO {
         private Integer groupType = 0;
 
         @ApiModelProperty(value = "允许工单申请")
-        private Boolean allowWorkorder;
+        private Boolean allowOrder;
 
         @ApiModelProperty(value = "数据源")
         private String source;

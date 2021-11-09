@@ -26,8 +26,8 @@ public class AuthRoleVO {
         @ApiModelProperty(value = "角色描述")
         private String comment;
 
-        @ApiModelProperty(value = "是否支持工单", example = "1")
-        private Boolean allowWorkorder;
+        @ApiModelProperty(value = "是否支持工单", example = "true")
+        private Boolean allowOrder;
 
     }
 

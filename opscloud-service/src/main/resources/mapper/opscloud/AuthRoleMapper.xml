@@ -9,7 +9,7 @@
         <result column="role_name" jdbcType="VARCHAR" property="roleName"/>
         <result column="access_level" jdbcType="INTEGER" property="accessLevel"/>
         <result column="comment" jdbcType="VARCHAR" property="comment"/>
-        <result column="allow_workorder" jdbcType="BIT" property="allowWorkorder"/>
+        <result column="allow_order" jdbcType="BIT" property="allowOrder"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
     </resultMap>

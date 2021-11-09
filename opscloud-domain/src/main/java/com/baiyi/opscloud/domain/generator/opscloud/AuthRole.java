@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.IAllowOrder;
 import lombok.Data;
 
 import javax.persistence.*;
@@ -7,7 +8,7 @@ import java.util.Date;
 
 @Data
 @Table(name = "auth_role")
-public class AuthRole {
+public class AuthRole implements IAllowOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -32,8 +33,8 @@ public class AuthRole {
     /**
      * 允许工作流申请
      */
-    @Column(name = "allow_workorder")
-    private Boolean allowWorkorder;
+    @Column(name = "allow_order")
+    private Boolean allowOrder;
 
     @Column(name = "create_time", insertable = false, updatable = false)
     private Date createTime;

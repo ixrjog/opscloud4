@@ -9,7 +9,7 @@
         <result column="name" jdbcType="VARCHAR" property="name"/>
         <result column="group_type" jdbcType="INTEGER" property="groupType"/>
         <result column="source" jdbcType="VARCHAR" property="source"/>
-        <result column="allow_workorder" jdbcType="BIT" property="allowWorkorder"/>
+        <result column="allow_order" jdbcType="BIT" property="allowOrder"/>
         <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
         <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
         <result column="comment" jdbcType="LONGVARCHAR" property="comment"/>

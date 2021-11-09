@@ -70,7 +70,7 @@ public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermis
     public void updateUserGroup(UserGroupVO.UserGroup userGroup) {
         UserGroup pre = userGroupService.getById(userGroup.getId());
         if (pre == null) return;
-        pre.setAllowWorkorder(userGroup.getAllowWorkorder());
+        pre.setAllowOrder(userGroup.getAllowOrder());
         pre.setComment(userGroup.getComment());
         pre.setSource(userGroup.getSource());
         userGroupService.update(pre);

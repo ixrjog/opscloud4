@@ -56,7 +56,7 @@ public class OcServerGroupTest extends BaseUnit {
                 ServerGroupType type = serverGroupTypeService.getByName(datum.getServerGroupType().getName());
                 ServerGroup serverGroup = ServerGroup.builder()
                         .name(datum.getName())
-                        .allowWorkorder(datum.getInWorkorder() == 1)
+                        .allowOrder(datum.getInWorkorder() == 1)
                         .comment(datum.getComment())
                         .serverGroupTypeId(type.getId())
                         .build();

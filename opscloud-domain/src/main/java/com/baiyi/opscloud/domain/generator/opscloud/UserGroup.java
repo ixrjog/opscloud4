@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.IAllowOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "user_group")
-public class UserGroup {
+public class UserGroup implements IAllowOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -37,8 +38,8 @@ public class UserGroup {
     /**
      * 允许工单申请
      */
-    @Column(name = "allow_workorder")
-    private Boolean allowWorkorder;
+    @Column(name = "allow_order")
+    private Boolean allowOrder;
 
     /**
      * 创建时间
