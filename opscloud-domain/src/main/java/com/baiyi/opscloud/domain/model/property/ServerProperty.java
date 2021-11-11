@@ -12,8 +12,8 @@ import java.util.List;
  */
 public class ServerProperty {
 
-    @Data
     @Builder
+    @Data
     public static class Server implements Serializable {
 
         private static final long serialVersionUID = -4846682649445122975L;
@@ -55,8 +55,8 @@ public class ServerProperty {
 
     }
 
-    @Data
     @Builder
+    @Data
     public static class Ansible implements Serializable {
         private static final long serialVersionUID = -8106749818500817348L;
         @Builder.Default
