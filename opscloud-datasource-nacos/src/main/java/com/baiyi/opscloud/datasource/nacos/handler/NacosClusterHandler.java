@@ -33,14 +33,13 @@ public class NacosClusterHandler {
                 .target(NacosClusterV1Feign.class, config.getUrl());
     }
 
-    public NacosCluster.NodesResponse listNode(NacosDsInstanceConfig.Nacos config) {
+    public NacosCluster.NodesResponse listNodes(NacosDsInstanceConfig.Nacos config) {
         NacosLogin.AccessToken accessToken = nacosAuthHandler.login(config);
         NacosClusterV1Feign nacosAPI = buildFeign(config);
         NacosClusterParam.NodesQuery queryParam = NacosClusterParam.NodesQuery.builder()
-                .keyword("1")
                 .accessToken(accessToken.getAccessToken())
                 .build();
-        return nacosAPI.listNode(
+        return nacosAPI.listNodes(
                 queryParam.getWithInstances(),
                 queryParam.getPageNo(),
                 queryParam.getPageSize(),

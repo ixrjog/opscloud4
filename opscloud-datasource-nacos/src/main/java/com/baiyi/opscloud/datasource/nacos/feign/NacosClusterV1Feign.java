@@ -20,12 +20,12 @@ public interface NacosClusterV1Feign {
             "&namespaceId={namespaceId}" +
             "&accessToken={accessToken}")
     @Headers({"Content-Type: application/json;charset=UTF-8"})
-    NacosCluster.NodesResponse listNode(@Param("withInstances") Boolean withInstances,
-                                        @Param("pageNo") Integer pageNo,
-                                        @Param("pageSize") Integer pageSize,
-                                        @Param("keyword") String keyword,
-                                        @Param("namespaceId") String namespaceId,
-                                        @Param("accessToken") String accessToken
+    NacosCluster.NodesResponse listNodes(@Param("withInstances") Boolean withInstances,
+                                         @Param("pageNo") Integer pageNo,
+                                         @Param("pageSize") Integer pageSize,
+                                         @Param("keyword") String keyword,
+                                         @Param("namespaceId") String namespaceId,
+                                         @Param("accessToken") String accessToken
     );
 
 }
