@@ -43,7 +43,7 @@ public class NacosAuthHandler {
         }
         NacosAuthV1Feign nacosAPI = buildFeign(config);
         NacosLogin.AccessToken accessToken = nacosAPI.login(config.getLoginParam());
-        redisUtil.set(key, accessToken, accessToken.getTokenTtl() / 1000);
+        redisUtil.set(key, accessToken, accessToken.getTokenTtl());
         return accessToken;
     }
 

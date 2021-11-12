@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -20,7 +21,6 @@ public class NacosDsInstanceConfig extends BaseDsInstanceConfig {
 
     private Nacos nacos;
 
-
     @Data
     @NoArgsConstructor
     @ApiModel
@@ -28,15 +28,25 @@ public class NacosDsInstanceConfig extends BaseDsInstanceConfig {
 
         private String version;
         private String url;
-        private String username;
-        private String password;
+        private Account account;
+        private List<String> roles;
 
         public Map<String, String> getLoginParam() {
             Map<String, String> loginParam = Maps.newHashMap();
-            loginParam.put("username", this.username);
-            loginParam.put("password", this.password);
+            loginParam.put("username", this.account.getUsername());
+            loginParam.put("password", this.account.getPassword());
             return loginParam;
         }
+
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Account {
+        private String prefix;
+        private String username;
+        private String password;
 
     }
 

@@ -15,8 +15,13 @@ import java.io.Serializable;
  */
 public class NacosLogin {
 
-    // {"accessToken":"eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJuYWNvcyIsImV4cCI6MTYwNTYyOTE2Nn0.2TogGhhr11_vLEjqKko1HJHUJEmsPuCxkur-CfNojDo","tokenTtl":18000,"globalAdmin":true}
-
+    /**
+     * {
+     *   "accessToken":"XXXXXXXX",
+     *   "tokenTtl":18000,
+     *   "globalAdmin":true
+     * }
+     */
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
@@ -27,7 +32,7 @@ public class NacosLogin {
 
         private String accessToken;
 
-        private Integer tokenTtl;
+        private Integer tokenTtl; //秒
 
         private Boolean globalAdmin;
 
