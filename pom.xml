@@ -35,6 +35,7 @@
         <module>opscloud-datasource-nexus</module>
         <module>opscloud-order</module>
         <module>opscloud-datasource-sonar</module>
+        <module>opscloud-datasource-nacos</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
@@ -359,6 +360,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-event</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-nacos</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

@@ -1,0 +1,28 @@
+package com.baiyi.opscloud.datasource.nacos.base;
+
+import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.common.datasource.NacosDsInstanceConfig;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.service.datasource.DsConfigService;
+
+import javax.annotation.Resource;
+
+/**
+ * @Author baiyi
+ * @Date 2021/11/11 5:19 下午
+ * @Version 1.0
+ */
+public class BaseNacosTest extends BaseUnit {
+
+    @Resource
+    private DsConfigService dsConfigService;
+
+    @Resource
+    private DsConfigHelper dsFactory;
+
+    protected NacosDsInstanceConfig getConfig() {
+        DatasourceConfig datasourceConfig = dsConfigService.getById(5);
+        return dsFactory.build(datasourceConfig, NacosDsInstanceConfig.class);
+    }
+}

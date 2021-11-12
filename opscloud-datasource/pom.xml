@@ -63,6 +63,11 @@
             <artifactId>opscloud-datasource-sonar</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-nacos</artifactId>
+        </dependency>
+
     </dependencies>
 
 

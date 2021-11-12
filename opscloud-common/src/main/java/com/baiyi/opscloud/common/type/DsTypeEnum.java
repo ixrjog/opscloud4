@@ -25,6 +25,7 @@ public enum DsTypeEnum {
     GUACAMOLE(9, "GUACAMOLE"),
     NEXUS(10, "NEXUS"),
     TENCENT_EXMAIL(11, "TENCENT_EXMAIL"),
+    NACOS(12,"NACOS"),
     ALIYUN(50, "ALIYUN"),
     AWS(51, "AWS");
 
