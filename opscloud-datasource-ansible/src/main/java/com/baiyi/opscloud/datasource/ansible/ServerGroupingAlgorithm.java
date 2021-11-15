@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.ansible;
 
 import com.baiyi.opscloud.algorithm.BaseAlgorithm;
 import com.baiyi.opscloud.algorithm.ServerPack;
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.google.common.base.Joiner;
@@ -29,12 +29,12 @@ import java.util.Set;
 @Component
 public class ServerGroupingAlgorithm extends BaseAlgorithm {
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'server_intactgrouping_algorithm_servergroupid_' + #serverGroupId + 'is_subgroup_' + #isSubgroup")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.SERVER, key = "'server_intactgrouping_algorithm_servergroupid_' + #serverGroupId + 'is_subgroup_' + #isSubgroup")
     public void evictIntactGrouping(Integer serverGroupId, boolean isSubgroup) {
         log.info("清除缓存: evictIntactGrouping");
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'server_intactgrouping_algorithm_servergroupid_' + #serverGroup.id + 'is_subgroup_' + #isSubgroup", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.SERVER, key = "'server_intactgrouping_algorithm_servergroupid_' + #serverGroup.id + 'is_subgroup_' + #isSubgroup", unless = "#result == null")
     public Map<String, List<ServerPack>> intactGrouping(ServerGroup serverGroup, boolean isSubgroup) {
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
         if (isSubgroup)
@@ -76,7 +76,7 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
      * @param serverGroup
      * @return
      */
-    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'server_grouping_algorithm_servergroupid_' + #serverGroup.id", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.SERVER, key = "'server_grouping_algorithm_servergroupid_' + #serverGroup.id", unless = "#result == null")
     public Map<String, List<ServerPack>> grouping(ServerGroup serverGroup) {
         log.info("服务器分组: serverGroupName = {}", serverGroup.getName());
         Map<String, List<ServerPack>> serverMap = groupingByEnv(serverGroup);
@@ -93,7 +93,7 @@ public class ServerGroupingAlgorithm extends BaseAlgorithm {
         return serverMap;
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'server_grouping_algorithm_servergroupid_' + #serverGroupId")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.SERVER, key = "'server_grouping_algorithm_servergroupid_' + #serverGroupId")
     public void evictGrouping(Integer serverGroupId) {
     }
 

@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 
 @Slf4j
 @Configuration
-public class InitialRedisConfig implements ApplicationContextAware {
+public class InitialRedisConfiguration implements ApplicationContextAware {
 
     private static ApplicationContext context;
 
@@ -33,7 +33,7 @@ public class InitialRedisConfig implements ApplicationContextAware {
             redisTemplate.hasKey("initCheck");
             log.info("校验Redis连接成功!");
         } catch (Exception e) {
-            log.error("初始化Redis连接失败:" + e.getMessage());
+            log.error("初始化Redis连接失败: {}", e.getMessage());
             // 当检测redis连接失败时, 停止项目启动
             configurableApplicationContext.close();
         }

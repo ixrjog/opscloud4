@@ -14,7 +14,7 @@ import javax.servlet.MultipartConfigElement;
  * @Version 1.0
  */
 @Configuration
-public class MvcConfigurer implements WebMvcConfigurer {
+public class MvcConfiguration implements WebMvcConfigurer {
 
     /**
      * 首页

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.config;
+package com.baiyi.opscloud.common.config.properties;
 
 import com.google.common.base.Joiner;
 import lombok.Data;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "opscloud", ignoreInvalidFields = true)
-public class OpscloudConfig {
+public class OpscloudConfigurationProperties {
 
     public interface Paths {
         String ANSIBLE_PLAYBOOK = "ansible/playbook";

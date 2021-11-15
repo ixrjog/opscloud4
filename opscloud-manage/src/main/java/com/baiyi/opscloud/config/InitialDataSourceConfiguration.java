@@ -19,7 +19,7 @@ import javax.sql.DataSource;
 
 @Slf4j
 @Configuration
-public class InitialDataSourceConfig implements ApplicationContextAware {
+public class InitialDataSourceConfiguration implements ApplicationContextAware {
 
     private static ApplicationContext context;
 
@@ -34,7 +34,7 @@ public class InitialDataSourceConfig implements ApplicationContextAware {
             dataSource.getConnection().close();
             log.info("校验DataSource[Mysql]连接成功!");
         } catch (Exception e) {
-            log.error("校验DataSource[Mysql]连接失败:" + e.getMessage());
+            log.error("校验DataSource[Mysql]连接失败: {}", e.getMessage());
             // 当检测数据库连接失败时, 停止项目启动
             configurableApplicationContext.close();
         }

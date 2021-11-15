@@ -19,7 +19,7 @@ import javax.servlet.ServletException;
 @Configuration
 @ComponentScan
 @EnableAutoConfiguration
-public class WebSocketConfigurer implements ServletContextInitializer {
+public class WebSocketConfiguration implements ServletContextInitializer {
 
     /**
      * 给spring容器注入这个ServerEndpointExporter对象

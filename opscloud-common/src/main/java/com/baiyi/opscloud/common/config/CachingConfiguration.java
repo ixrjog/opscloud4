@@ -30,7 +30,7 @@ import java.util.Set;
  */
 @Configuration
 @EnableCaching
-public class CachingConfig extends CachingConfigurerSupport {
+public class CachingConfiguration extends CachingConfigurerSupport {
 
     public interface Repositories {
         String DEFAULT = "opscloud:v4:default";

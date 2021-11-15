@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.recorder;
 
 import com.baiyi.opscloud.datasource.ansible.executor.TaskExecutor;
-import com.baiyi.opscloud.common.config.OpscloudConfig;
+import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.google.common.base.Joiner;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
 public class TaskLogStorehouse {
 
     @Resource
-    private OpscloudConfig opscloudConfig;
+    private OpscloudConfigurationProperties opscloudConfig;
 
     public interface Logs {
         String OUTPUT_LOG = "task_output.log";

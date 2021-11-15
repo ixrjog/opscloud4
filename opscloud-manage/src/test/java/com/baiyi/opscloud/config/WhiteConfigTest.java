@@ -2,6 +2,7 @@ package com.baiyi.opscloud.config;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
+import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -14,7 +15,7 @@ import javax.annotation.Resource;
 class WhiteConfigTest extends BaseUnit {
 
     @Resource
-    private  WhiteConfig whiteConfig;
+    private WhiteConfigurationProperties whiteConfig;
 
     @Test
     void d(){

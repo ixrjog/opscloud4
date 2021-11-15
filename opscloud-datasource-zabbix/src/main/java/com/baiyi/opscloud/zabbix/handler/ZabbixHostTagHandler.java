@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostTag;
@@ -28,12 +28,12 @@ import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RE
 @Component
 public class ZabbixHostTagHandler extends BaseZabbixHandler<ZabbixHostTag> {
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid")
     public void evictHostTag(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         log.info("清除ZabbixHostTag缓存 : hostid = {}", zabbixHost.getHostid());
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_host_tag_hostid' + #zabbixHost.hostid", unless = "#result == null")
     public ZabbixHostTag getHostTag(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostHandler.HostAPIMethod.GET)

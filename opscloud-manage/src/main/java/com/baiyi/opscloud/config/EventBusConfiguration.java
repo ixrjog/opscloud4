@@ -18,7 +18,7 @@ import javax.annotation.Resource;
  */
 
 @Configuration
-public class EventBusConfig {
+public class EventBusConfiguration {
 
     @Resource
     private ApplicationContext applicationContext;

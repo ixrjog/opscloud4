@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
@@ -77,12 +77,12 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid")
     public void evictHostById(ZabbixConfig.Zabbix zabbix, String hostid) {
         log.info("清除ZabbixHost缓存 : hostid = {}", hostid);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid", unless = "#result == null")
     public ZabbixHost getById(ZabbixConfig.Zabbix zabbix, String hostid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
@@ -93,12 +93,12 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperListGetOne(data.get(RESULT), ZabbixHost.class);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip")
     public void evictHostByIp(ZabbixConfig.Zabbix zabbix, String ip) {
         log.info("清除ZabbixHost缓存 : ip = {}", ip);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip", unless = "#result == null")
     public ZabbixHost getByIp(ZabbixConfig.Zabbix zabbix, String ip) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("ip", ip)

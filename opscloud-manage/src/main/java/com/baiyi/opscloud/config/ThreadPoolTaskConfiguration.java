@@ -13,7 +13,7 @@ import java.util.concurrent.ThreadPoolExecutor;
  * @Version 1.0
  */
 @Configuration
-public class ThreadPoolTaskConfigurer {
+public class ThreadPoolTaskConfiguration {
     // https://blog.csdn.net/CJ_66/article/details/82503665
     // https://blog.csdn.net/xie19900123/article/details/81771793
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixAction;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
@@ -48,7 +48,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
         String DELETE = "action.delete";
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName")
     public void evictActionByName(ZabbixConfig.Zabbix zabbix, String actionName) {
         log.info("清除ZabbixAction缓存 : name = {}", actionName);
     }
@@ -57,7 +57,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
      * @param actionName Report problems to users_{name}
      * @return
      */
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName", unless = "#result == null")
     public ZabbixAction getActionByName(ZabbixConfig.Zabbix zabbix, String actionName) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", actionName)

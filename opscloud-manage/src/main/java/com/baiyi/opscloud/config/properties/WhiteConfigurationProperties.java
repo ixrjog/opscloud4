@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.config;
+package com.baiyi.opscloud.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -15,7 +15,7 @@ import java.util.List;
 @Data
 @Component
 @ConfigurationProperties(prefix = "white", ignoreInvalidFields = true)
-public class WhiteConfig {
+public class WhiteConfigurationProperties {
 
      private List<String> urls;
 }

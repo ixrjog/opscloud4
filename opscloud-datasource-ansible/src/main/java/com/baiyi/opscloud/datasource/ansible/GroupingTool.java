@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ansible;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.service.server.ServerService;
@@ -38,12 +38,12 @@ public class GroupingTool {
     /**
      * 清空缓存
      */
-    @CacheEvict(cacheNames = CachingConfig.Repositories.SERVER, key = "'grouping_' + #serverGroupId", beforeInvocation = true)
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.SERVER, key = "'grouping_' + #serverGroupId", beforeInvocation = true)
     public void evictGrouping1(Integer serverGroupId) {
         log.info("evictBuild 清除缓存，serverGroupId = {}", serverGroupId);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.SERVER, key = "'grouping_' + #serverGroup.id")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.SERVER, key = "'grouping_' + #serverGroup.id")
     public Map<String, List<Server>> grouping1(ServerGroup serverGroup){
         return grouping(serverGroup,true);
     }

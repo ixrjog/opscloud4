@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.util;
 
-import com.baiyi.opscloud.common.config.OpscloudConfig;
+import com.baiyi.opscloud.common.config.properties.OpscloudConfigurationProperties;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.google.common.base.Joiner;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,10 +17,10 @@ public class PlaybookUtil {
     private PlaybookUtil() {
     }
 
-    private static OpscloudConfig opscloudConfig;
+    private static OpscloudConfigurationProperties opscloudConfig;
 
     @Autowired
-    public void setOpscloudConfig(OpscloudConfig opscloudConfig) {
+    public void setOpscloudConfig(OpscloudConfigurationProperties opscloudConfig) {
         PlaybookUtil.opscloudConfig = opscloudConfig;
     }
 

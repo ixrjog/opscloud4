@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.config;
+package com.baiyi.opscloud.common.config.properties;
 
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "host", ignoreInvalidFields = true)
-public class HostConfig {
+public class HostConfigurationProperties {
 
     private String url;
 

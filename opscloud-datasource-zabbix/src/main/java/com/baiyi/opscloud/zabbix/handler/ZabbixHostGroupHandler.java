@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
@@ -50,7 +50,7 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         return mapperList(data.get(RESULT), ZabbixHostGroup.class);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_groupid_' + #groupid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_groupid_' + #groupid", unless = "#result == null")
     public ZabbixHostGroup getById(ZabbixConfig.Zabbix zabbix, String groupid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
@@ -60,12 +60,12 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         return mapperListGetOne(data.get(RESULT), ZabbixHostGroup.class);
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #zabbixHostGroup.name")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #zabbixHostGroup.name")
     public void evictHostGroup(ZabbixConfig.Zabbix zabbix, ZabbixHostGroup zabbixHostGroup) {
         log.info("清除ZabbixHostGroup缓存 : name = {}", zabbixHostGroup.getName());
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #name", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #name", unless = "#result == null")
     public ZabbixHostGroup getByName(ZabbixConfig.Zabbix zabbix, String name) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", name)

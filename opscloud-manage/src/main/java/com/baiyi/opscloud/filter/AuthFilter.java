@@ -3,7 +3,7 @@ package com.baiyi.opscloud.filter;
 import com.baiyi.opscloud.common.HttpResult;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
-import com.baiyi.opscloud.config.WhiteConfig;
+import com.baiyi.opscloud.config.properties.WhiteConfigurationProperties;
 import com.baiyi.opscloud.facade.auth.UserAuthFacade;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
@@ -27,7 +27,7 @@ public class AuthFilter extends OncePerRequestFilter {
     private UserAuthFacade userAuthFacade;
 
     @Resource
-    private WhiteConfig whiteConfig;
+    private WhiteConfigurationProperties whiteConfig;
 
     /**
      * 前端框架 token 名称

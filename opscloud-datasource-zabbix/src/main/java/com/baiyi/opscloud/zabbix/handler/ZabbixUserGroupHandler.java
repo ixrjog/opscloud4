@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
@@ -53,7 +53,7 @@ public class ZabbixUserGroupHandler extends BaseZabbixHandler<ZabbixUserGroup> {
         return mapperList(data.get(RESULT), ZabbixUserGroup.class);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_usergroup_usrgrpid_' + #usrgrpid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_usergroup_usrgrpid_' + #usrgrpid", unless = "#result == null")
     public ZabbixUserGroup getById(ZabbixConfig.Zabbix zabbix, String usrgrpid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserGroupAPIMethod.GET)
@@ -63,7 +63,7 @@ public class ZabbixUserGroupHandler extends BaseZabbixHandler<ZabbixUserGroup> {
         return mapperListGetOne(data.get(RESULT), ZabbixUserGroup.class);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_usergroup_name_' + #usergroup", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_usergroup_name_' + #usergroup", unless = "#result == null")
     public ZabbixUserGroup getByName(ZabbixConfig.Zabbix zabbix, String usergroup) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", usergroup)

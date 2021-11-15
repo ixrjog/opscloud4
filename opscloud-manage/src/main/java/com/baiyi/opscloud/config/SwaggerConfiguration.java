@@ -14,7 +14,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
 @EnableSwagger2
-public class SwaggerConfigurer {
+public class SwaggerConfiguration {
 
     /**
      * https://doc.xiaominfo.com/knife4j/documentation/

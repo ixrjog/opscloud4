@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.config.CachingConfig;
+import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
@@ -37,12 +37,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         String DELETE = "user.delete";
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username")
     public void evictByUsername(ZabbixConfig.Zabbix zabbix, String username) {
         log.info("清除ZabbixUser缓存 : alias = {}", username);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_user_name_' + #username", unless = "#result == null")
     public ZabbixUser getByUsername(ZabbixConfig.Zabbix zabbix, String username) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("alias", username)
@@ -144,12 +144,12 @@ public class ZabbixUserHandler extends BaseZabbixHandler<ZabbixUser> {
         }
     }
 
-    @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid")
+    @CacheEvict(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid")
     public void evictById(ZabbixConfig.Zabbix zabbix, String userid) {
         log.info("清除ZabbixUser缓存 : userid = {}", userid);
     }
 
-    @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid", unless = "#result == null")
+    @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_user_userid_' + #userid", unless = "#result == null")
     public ZabbixUser getById(ZabbixConfig.Zabbix zabbix, String userid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
