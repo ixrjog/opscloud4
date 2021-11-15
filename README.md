@@ -9,8 +9,13 @@ Welcome to the opscloud wiki!
 <br>
 
 ### 项目语言&仓库
-#### 服务端Java, github.com/ixrjog/opscloud4
-#### 前端Vue, github.com/ixrjog/opscloud4-web
++ 服务端Java, github.com/ixrjog/opscloud4
++ 前端Vue, github.com/ixrjog/opscloud4-web
+
+### 开发环境
++ MacBook M1PRO(8C/14C) / macOS Monterey
++ IntelliJ IDEA 2021.2.3 (Ultimate Edition)
++ WebStorm 2021.2.3
 
 ### Tag:4.0.5版本
 + 部分代码优化
