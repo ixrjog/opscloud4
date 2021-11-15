@@ -15,7 +15,7 @@ import com.google.common.base.Joiner;
  */
 public class NacosPermissionConvert {
 
-    private static String buildKey(NacosPermission.Permission entry){
+    private static String buildAssetKey(NacosPermission.Permission entry){
         return Joiner.on("#").join(entry.getRole(),entry.getResource(),entry.getAction());
     }
 
@@ -24,7 +24,7 @@ public class NacosPermissionConvert {
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entry.getRole())
                 .name(entry.getRole())
-                .assetKey(buildKey(entry))
+                .assetKey(buildAssetKey(entry))
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.NACOS_PERMISSION.name())
                 .kind("permission")
@@ -36,4 +36,5 @@ public class NacosPermissionConvert {
                 .paramProperty("resource", entry.getResource())
                 .build();
     }
+
 }

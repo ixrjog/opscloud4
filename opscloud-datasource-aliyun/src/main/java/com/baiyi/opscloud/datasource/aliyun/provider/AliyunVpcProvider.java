@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunVpcHandler;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;

@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.ansible.convert.AnsibleAssetConvert;
 import com.baiyi.opscloud.datasource.ansible.model.AnsibleHosts;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;

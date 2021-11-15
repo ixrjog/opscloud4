@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.jenkins.convert.ComputerAssetConvert;
 import com.baiyi.opscloud.datasource.jenkins.handler.JenkinsServerHandler;

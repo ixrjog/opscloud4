@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.common.type.UserCredentialTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;

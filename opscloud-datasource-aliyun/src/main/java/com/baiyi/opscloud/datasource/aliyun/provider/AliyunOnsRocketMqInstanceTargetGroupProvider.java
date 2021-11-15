@@ -4,7 +4,7 @@ import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler.AliyunOnsRocketMqInstanceHandler;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;

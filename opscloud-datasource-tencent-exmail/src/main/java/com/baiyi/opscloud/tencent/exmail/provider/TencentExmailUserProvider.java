@@ -2,7 +2,7 @@ package com.baiyi.opscloud.tencent.exmail.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.TencentExmailDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;

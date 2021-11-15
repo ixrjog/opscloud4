@@ -2,7 +2,7 @@ package com.baiyi.opscloud.core.util;
 
 import com.baiyi.opscloud.common.builder.CredentialTemplateDictBuilder;
 import com.baiyi.opscloud.common.builder.SimpleDict;
-import com.baiyi.opscloud.common.type.CredentialKindEnum;
+import com.baiyi.opscloud.common.constant.enums.CredentialKindEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import org.apache.commons.text.StringSubstitutor;
 import org.jasypt.encryption.StringEncryptor;

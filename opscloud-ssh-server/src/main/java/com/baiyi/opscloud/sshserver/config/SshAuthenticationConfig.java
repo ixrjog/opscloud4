@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.sshserver.config;
 
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
-import com.baiyi.opscloud.common.type.UserCredentialTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.User;

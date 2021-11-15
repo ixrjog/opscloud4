@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.manager;
 
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
 import com.baiyi.opscloud.datasource.serverGroup.factory.ServerGroupProviderFactory;

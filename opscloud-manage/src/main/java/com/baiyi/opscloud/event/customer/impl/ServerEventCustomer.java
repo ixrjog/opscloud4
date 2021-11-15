@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.event.customer.impl;
 
-import com.baiyi.opscloud.common.topic.TopicHelper;
+import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.manager.DsServerManager;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;

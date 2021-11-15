@@ -39,7 +39,7 @@ public class Global {
 
 
     // Jenkins Build
-    public static final String SERVER_GRUOP = "serverGroup";
+    public static final String SERVER_GROUP = "serverGroup";
 
     public static final String HOST_PATTERN = "hostPattern";
 

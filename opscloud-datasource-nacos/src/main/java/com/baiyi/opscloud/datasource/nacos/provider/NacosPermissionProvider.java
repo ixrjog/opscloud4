@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.datasource.nacos.provider;
 
+import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.NacosDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.SingleTaskConstants;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -59,7 +61,7 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
     }
 
     @Override
-    //@SingleTask(name = "pull_nacos_permission", lockTime = "1m")
+    @SingleTask(name = SingleTaskConstants.PULL_NACOS_PERMISSION, lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -82,4 +84,5 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
     public void afterPropertiesSet() {
         AssetProviderFactory.register(nacosPermissionProvider);
     }
+
 }

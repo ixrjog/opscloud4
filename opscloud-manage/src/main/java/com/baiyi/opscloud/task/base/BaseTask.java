@@ -2,7 +2,7 @@ package com.baiyi.opscloud.task.base;
 
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.common.topic.TopicHelper;
+import com.baiyi.opscloud.common.helper.TopicHelper;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;

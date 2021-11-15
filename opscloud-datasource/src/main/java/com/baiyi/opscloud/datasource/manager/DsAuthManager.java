@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.manager;
 
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;

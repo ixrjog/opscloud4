@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.user.impl;
 
-import com.baiyi.opscloud.common.type.UserCredentialTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;

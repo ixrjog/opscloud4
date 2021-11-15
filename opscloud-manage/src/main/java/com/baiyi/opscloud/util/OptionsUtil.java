@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.util;
 
-import com.baiyi.opscloud.common.type.ProtocolEnum;
+import com.baiyi.opscloud.common.constant.enums.ProtocolEnum;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.google.common.collect.Lists;

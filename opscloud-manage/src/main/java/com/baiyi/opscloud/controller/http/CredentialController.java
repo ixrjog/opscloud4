@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
-import com.baiyi.opscloud.common.type.CredentialKindEnum;
+import com.baiyi.opscloud.common.constant.enums.CredentialKindEnum;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.sys.CredentialParam;
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;

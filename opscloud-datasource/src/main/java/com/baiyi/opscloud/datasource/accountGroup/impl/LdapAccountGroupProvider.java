@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.accountGroup.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.accountGroup.impl.base.AbstractAccountGroupProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;

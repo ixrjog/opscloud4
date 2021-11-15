@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
 import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.datasource.InstanceConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;

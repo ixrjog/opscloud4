@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.type;
+package com.baiyi.opscloud.common.constant.enums;
 
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import com.google.common.collect.Lists;

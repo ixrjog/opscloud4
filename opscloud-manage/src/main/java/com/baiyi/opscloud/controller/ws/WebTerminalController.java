@@ -45,7 +45,7 @@ public class WebTerminalController extends SimpleAuthentication {
     // 超时时间1H
     public static final Long WEBSOCKET_TIMEOUT = TimeUtil.hourTime;
 
-    private final static HostInfo serverInfo = HostInfo.build();
+    private static final HostInfo serverInfo = HostInfo.build();
 
     private static TerminalSessionService terminalSessionService;
 

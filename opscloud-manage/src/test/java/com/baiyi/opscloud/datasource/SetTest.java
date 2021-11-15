@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
 import com.baiyi.opscloud.core.provider.base.common.AbstractSetDsInstanceConfigProvider;
 import org.junit.jupiter.api.Test;

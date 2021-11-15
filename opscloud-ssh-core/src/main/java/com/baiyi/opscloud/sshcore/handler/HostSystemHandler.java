@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
-import com.baiyi.opscloud.common.type.ProtocolEnum;
+import com.baiyi.opscloud.common.constant.enums.ProtocolEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;

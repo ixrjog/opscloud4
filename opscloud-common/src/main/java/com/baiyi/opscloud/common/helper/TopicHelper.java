@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.topic;
+package com.baiyi.opscloud.common.helper;
 
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;

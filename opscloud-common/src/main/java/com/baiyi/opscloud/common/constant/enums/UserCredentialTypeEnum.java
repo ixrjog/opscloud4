@@ -1,27 +1,29 @@
-package com.baiyi.opscloud.common.type;
+package com.baiyi.opscloud.common.constant.enums;
 
 import lombok.Getter;
 
 /**
  * @Author baiyi
- * @Date 2021/6/15 1:32 下午
+ * @Date 2021/6/9 10:32 上午
  * @Version 1.0
  */
 @Getter
-public enum AccountRelationTypeEnum {
+public enum UserCredentialTypeEnum {
 
-    ACCOUNT_GROUP(0, "ACCOUNT_GROUP");
+    PUB_KEY(0, "PUB_KEY"),
+    API_TOKEN(1, "API_TOKEN");
 
     private int type;
     private String name;
 
-    AccountRelationTypeEnum(int type, String name) {
+
+    UserCredentialTypeEnum(int type, String name) {
         this.type = type;
         this.name = name;
     }
 
     public static String getName(int type) {
-        for (AccountRelationTypeEnum typeEnum : AccountRelationTypeEnum.values()) {
+        for (UserCredentialTypeEnum typeEnum : UserCredentialTypeEnum.values()) {
             if (typeEnum.getType() == type) {
                 return typeEnum.getName();
             }

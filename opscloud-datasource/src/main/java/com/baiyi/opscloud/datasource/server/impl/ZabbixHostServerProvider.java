@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.server.impl;
 
-import com.baiyi.opscloud.common.type.DsTypeEnum;
+import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.server.impl.base.BaseZabbixHostServerProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
