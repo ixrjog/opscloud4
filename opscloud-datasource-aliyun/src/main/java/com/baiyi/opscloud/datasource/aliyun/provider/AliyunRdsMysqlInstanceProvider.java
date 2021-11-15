@@ -25,6 +25,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_RDS_MYSQL_INSTANCE;
+
 /**
  * @Author baiyi
  * @Date 2021/9/29 6:09 下午
@@ -41,7 +43,7 @@ public class AliyunRdsMysqlInstanceProvider extends AbstractAssetRelationProvide
 
     @Override
     @EnablePullChild(type = DsAssetTypeEnum.RDS_MYSQL_INSTANCE)
-    @SingleTask(name = "pull_aliyun_rds_mysql_instance", lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_RDS_MYSQL_INSTANCE, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

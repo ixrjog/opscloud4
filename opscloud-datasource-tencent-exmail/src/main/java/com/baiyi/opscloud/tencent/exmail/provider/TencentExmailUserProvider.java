@@ -21,6 +21,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_TENCENT_EXMAIL_USER;
 import static com.baiyi.opscloud.tencent.exmail.handler.TencentExmailUserHandler.ALL_DEPARTMENT;
 
 /**
@@ -59,7 +60,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     }
 
     @Override
-    @SingleTask(name = "pull_tencent_exmail_user", lockTime = "2m")
+    @SingleTask(name = PULL_TENCENT_EXMAIL_USER, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

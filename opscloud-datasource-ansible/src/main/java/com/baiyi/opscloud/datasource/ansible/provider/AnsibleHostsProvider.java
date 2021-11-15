@@ -26,6 +26,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ANSIBLE_HOSTS;
+
 /**
  * @Author baiyi
  * @Date 2021/8/16 5:57 下午
@@ -96,7 +98,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     }
 
     @Override
-    @SingleTask(name = "PullAnsibleHosts", lockTime = "1m")
+    @SingleTask(name = PULL_ANSIBLE_HOSTS, lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

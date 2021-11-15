@@ -29,6 +29,8 @@ import javax.annotation.Resource;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ANSIBLE_VERSION;
+
 /**
  * @Author baiyi
  * @Date 2021/8/16 11:21 上午
@@ -36,7 +38,7 @@ import java.util.List;
  */
 @Component
 public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Version> {
-    
+
     @Resource
     private AnsibleVersionProvider ansibleVersionProvider;
 
@@ -100,7 +102,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     @Override
-    @SingleTask(name = "PullAnsibleVersion", lockTime = "1m")
+    @SingleTask(name = PULL_ANSIBLE_VERSION, lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

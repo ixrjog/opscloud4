@@ -23,6 +23,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_ECS;
+
 /**
  * @Author baiyi
  * @Date 2021/6/17 4:47 下午
@@ -38,7 +40,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
     private AliyunEcsProvider aliyunEcsProvider;
 
     @Override
-    @SingleTask(name = "pull_aliyun_ecs", lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_ECS, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

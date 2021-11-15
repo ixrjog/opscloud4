@@ -24,6 +24,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_VPC;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/6/23 1:21 下午
@@ -40,7 +42,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     @EnablePullChild(type = DsAssetTypeEnum.VPC)
-    @SingleTask(name = "pull_aliyun_vpc", lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_VPC, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

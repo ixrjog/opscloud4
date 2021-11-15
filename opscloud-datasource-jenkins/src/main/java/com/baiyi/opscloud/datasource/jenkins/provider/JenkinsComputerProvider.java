@@ -23,6 +23,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_JENKINS_COMPUTER;
+
 /**
  * @Author baiyi
  * @Date 2021/7/2 9:59 上午
@@ -63,7 +65,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     }
 
     @Override
-    @SingleTask(name = "PullJenkinsComputer", lockTime = "5m")
+    @SingleTask(name = PULL_JENKINS_COMPUTER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

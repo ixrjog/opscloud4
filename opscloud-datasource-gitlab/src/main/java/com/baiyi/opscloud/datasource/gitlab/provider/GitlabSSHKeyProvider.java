@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_GITLAB_SSH_KEY;
+
 /**
  * @Author baiyi
  * @Date 2021/7/2 3:01 下午
@@ -76,7 +78,7 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
     }
 
     @Override
-    @SingleTask(name = "PullGitlabSSHKey", lockTime = "5m")
+    @SingleTask(name = PULL_GITLAB_SSH_KEY)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

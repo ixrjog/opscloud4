@@ -26,6 +26,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_RAM_POLICY;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/2 8:15 下午
@@ -42,7 +44,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     private AliyunRamPolicyProvider aliyunRamPolicyProvider;
 
     @Override
-    @SingleTask(name = "pull_aliyun_ram_policy", lockTime = "2m")
+    @SingleTask(name = PULL_ALIYUN_RAM_POLICY, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

@@ -25,6 +25,8 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_SONAR_PROJECT;
+
 /**
  * @Author baiyi
  * @Date 2021/10/25 9:50 上午
@@ -77,7 +79,7 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
     }
 
     @Override
-    @SingleTask(name = "pull_sonar_project", lockTime = "1m")
+    @SingleTask(name = PULL_SONAR_PROJECT, lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

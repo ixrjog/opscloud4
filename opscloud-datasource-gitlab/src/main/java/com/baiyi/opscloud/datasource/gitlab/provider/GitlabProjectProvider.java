@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_GITLAB_PROJECT;
+
 /**
  * @Author baiyi
  * @Date 2021/6/21 6:40 下午
@@ -52,7 +54,7 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
     }
 
     @Override
-    @SingleTask(name = "PullGitlabProject", lockTime = "5m")
+    @SingleTask(name = PULL_GITLAB_PROJECT, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

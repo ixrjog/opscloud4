@@ -23,6 +23,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_ECS_IMAGE;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/6/23 3:42 下午
@@ -39,7 +41,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     private AliyunEcsImageProvider aliyunEcsImageProvider;
 
     @Override
-    @SingleTask(name = "pull_aliyun_ecs_image", lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_ECS_IMAGE, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -65,7 +67,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     }
 
     @Override
-    protected List<DescribeImagesResponse.Image> listEntries( DsInstanceContext dsInstanceContext) {
+    protected List<DescribeImagesResponse.Image> listEntries(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

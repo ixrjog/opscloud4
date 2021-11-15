@@ -24,6 +24,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_VSWITCH;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/6/23 2:00 下午
@@ -41,7 +43,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
     private AliyunVSwitchProvider aliyunVSwitchProvider;
 
     @Override
-    @SingleTask(name = "pull_aliyun_vswitch")
+    @SingleTask(name = PULL_ALIYUN_VSWITCH)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

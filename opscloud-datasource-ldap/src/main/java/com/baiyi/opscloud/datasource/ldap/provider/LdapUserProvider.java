@@ -21,6 +21,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_LDAP_USER;
+
 /**
  * @Author baiyi
  * @Date 2021/6/19 3:58 下午
@@ -56,7 +58,7 @@ public class LdapUserProvider extends AbstractAssetRelationProvider<Person, Grou
     }
 
     @Override
-    @SingleTask(name = "pull_ldap_user", lockTime = "5m")
+    @SingleTask(name = PULL_LDAP_USER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

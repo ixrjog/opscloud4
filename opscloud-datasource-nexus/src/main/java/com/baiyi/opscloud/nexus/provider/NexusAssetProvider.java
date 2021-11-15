@@ -25,6 +25,8 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_NEXUS_ASSET;
+
 /**
  * @Author baiyi
  * @Date 2021/10/18 10:43 上午
@@ -85,7 +87,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     }
 
     @Override
-    @SingleTask(name = "pull_nexus_asset", lockTime = "1m")
+    @SingleTask(name = PULL_NEXUS_ASSET , lockTime = "1m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

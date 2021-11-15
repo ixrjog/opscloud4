@@ -27,6 +27,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_RAM_USER;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/2 7:46 下午
@@ -43,7 +45,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
 
     @Override
     @EnablePullChild(type = DsAssetTypeEnum.RAM_USER)
-    @SingleTask(name = "pull_aliyun_ram_user", lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_RAM_USER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

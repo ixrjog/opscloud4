@@ -26,6 +26,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_TOPIC;
+
 /**
  * @Author baiyi
  * @Date 2021/9/30 3:09 下午
@@ -45,7 +47,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
 
     @Override
     @EnablePullChild(type = DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC)
-    @SingleTask(name = "pull_aliyun_ons_rocketmq_topic", lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_ONS_ROCKETMQ_TOPIC, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

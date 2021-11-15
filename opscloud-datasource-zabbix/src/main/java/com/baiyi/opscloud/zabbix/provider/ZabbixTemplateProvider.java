@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_TEMPLATE;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/1 3:06 下午
@@ -63,7 +65,7 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
     }
 
     @Override
-    @SingleTask(name = "PullZabbixTemplate", lockTime = "5m")
+    @SingleTask(name = PULL_ZABBIX_TEMPLATE , lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

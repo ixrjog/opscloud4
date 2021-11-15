@@ -24,6 +24,8 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_GITLAB_GROUP;
+
 /**
  * @Author baiyi
  * @Date 2021/6/21 6:48 下午
@@ -60,7 +62,7 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    @SingleTask(name = "PullGitlabGroup", lockTime = "5m")
+    @SingleTask(name = PULL_GITLAB_GROUP, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

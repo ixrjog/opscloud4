@@ -22,6 +22,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_USER_GROUP;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/6/28 3:03 下午
@@ -63,7 +65,7 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
     }
 
     @Override
-    @SingleTask(name = "PullZabbixUserGroup", lockTime = "5m")
+    @SingleTask(name = PULL_ZABBIX_USER_GROUP, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

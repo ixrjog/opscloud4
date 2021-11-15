@@ -20,6 +20,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_KUBERNETES_NAMESPACE;
+
 /**
  * @Author baiyi
  * @Date 2021/6/24 9:25 下午
@@ -51,7 +53,7 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
     }
 
     @Override
-    @SingleTask(name = "PullKubernetesNamespace")
+    @SingleTask(name = PULL_KUBERNETES_NAMESPACE)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

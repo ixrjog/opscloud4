@@ -23,6 +23,8 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_KUBERNETES_DEPLOYMENT;
+
 /**
  * @Author baiyi
  * @Date 2021/6/25 4:20 下午
@@ -60,7 +62,7 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     @Override
-    @SingleTask(name = "PullKubernetesDeployment", lockTime = "5m")
+    @SingleTask(name = PULL_KUBERNETES_DEPLOYMENT , lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

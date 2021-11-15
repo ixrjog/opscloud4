@@ -23,6 +23,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_RAM_ACCESS_KEY;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/7/8 2:46 下午
@@ -40,7 +42,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
     private AliyunRamAccessKeyProvider aliyunRamAccessKeyProvider;
 
     @Override
-    @SingleTask(name = "pull_aliyun_ram_access_key")
+    @SingleTask(name = PULL_ALIYUN_RAM_ACCESS_KEY)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

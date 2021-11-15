@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.provider;
+package com.baiyi.opscloud.zabbix.provider.base;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
@@ -16,6 +16,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
+import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
 
 import javax.annotation.Resource;
 import java.util.List;

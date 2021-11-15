@@ -23,6 +23,8 @@ import javax.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_GITLAB_USER;
+
 /**
  * @Author baiyi
  * @Date 2021/6/21 4:38 下午
@@ -71,7 +73,7 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
     }
 
     @Override
-    @SingleTask(name = "PullGitlabUser", lockTime = "5m")
+    @SingleTask(name = PULL_GITLAB_USER, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

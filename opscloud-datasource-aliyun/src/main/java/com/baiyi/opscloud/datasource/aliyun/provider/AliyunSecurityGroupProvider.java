@@ -24,6 +24,8 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_SECURITY_GROUP;
+
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
  * @Date 2021/6/23 4:39 下午
@@ -41,7 +43,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
     private AliyunSecurityGroupProvider aliyunSecurityGroupProvider;
 
     @Override
-    @SingleTask(name = "pull_aliyun_security_group")
+    @SingleTask(name = PULL_ALIYUN_SECURITY_GROUP)
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

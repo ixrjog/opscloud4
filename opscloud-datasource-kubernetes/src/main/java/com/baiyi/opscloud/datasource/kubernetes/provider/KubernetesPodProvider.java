@@ -25,6 +25,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_KUBERNETES_POD;
+
 /**
  * @Author baiyi
  * @Date 2021/6/24 6:47 下午
@@ -72,7 +74,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     }
 
     @Override
-    @SingleTask(name = "PullKubernetesPod", lockTime = "5m")
+    @SingleTask(name = PULL_KUBERNETES_POD, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
