@@ -18,6 +18,7 @@ import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
@@ -29,6 +30,7 @@ import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
  * @Date 2021/5/14 4:07 下午
  * @Version 1.0
  */
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class UserAuthFacadeImpl implements UserAuthFacade {
@@ -127,6 +129,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Override
     public void logout() {
+        log.info("用户登出: username = {}", SessionUtil.getUsername());
         userTokenFacade.revokeUserToken(SessionUtil.getUsername());
     }
 
