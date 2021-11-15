@@ -19,12 +19,12 @@ import com.baiyi.opscloud.packer.auth.AuthGroupPacker;
 import com.baiyi.opscloud.packer.auth.AuthResourcePacker;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.service.auth.*;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.List;
 
@@ -36,31 +36,24 @@ import java.util.List;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class AuthFacadeImpl implements AuthFacade {
 
-    @Resource
-    private AuthRoleService authRoleService;
+    private final AuthRoleService authRoleService;
 
-    @Resource
-    private AuthRolePacker authRolePacker;
+    private final AuthRolePacker authRolePacker;
 
-    @Resource
-    private AuthGroupService authGroupService;
+    private final AuthGroupService authGroupService;
 
-    @Resource
-    private AuthResourceService authResourceService;
+    private final AuthResourceService authResourceService;
 
-    @Resource
-    private AuthResourcePacker authResourcePacker;
+    private final AuthResourcePacker authResourcePacker;
 
-    @Resource
-    private AuthRoleResourceService authRoleResourceService;
+    private final AuthRoleResourceService authRoleResourceService;
 
-    @Resource
-    private AuthGroupPacker authGroupPacker;
+    private final AuthGroupPacker authGroupPacker;
 
-    @Resource
-    private AuthUserRoleService authUserRoleService;
+    private final AuthUserRoleService authUserRoleService;
 
     @Override
     public DataTable<AuthRoleVO.Role> queryRolePage(AuthRoleParam.AuthRolePageQuery pageQuery) {

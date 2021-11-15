@@ -8,11 +8,11 @@ import com.baiyi.opscloud.domain.vo.sys.InstanceVO;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
 import com.baiyi.opscloud.packer.sys.RegisteredInstancePacker;
 import com.baiyi.opscloud.service.sys.InstanceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.stream.Collectors;
@@ -24,15 +24,14 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
 
-    @Resource
-    private InstanceService instanceService;
+    private final InstanceService instanceService;
 
-    @Resource
-    private RegisteredInstancePacker registeredInstancePacker;
+    private final RegisteredInstancePacker registeredInstancePacker;
 
-    public interface healthStatus {
+    public interface HealthStatus {
         String OK = "OK";
         String ERROR = "ERROR";
         String INACTIVE = "INACTIVE";
@@ -58,7 +57,7 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
     @Override
     public boolean isHealth() {
         InstanceVO.Health health = checkHealth();
-        return healthStatus.OK.equals(health.getStatus());
+        return HealthStatus.OK.equals(health.getStatus());
     }
 
     @Override
@@ -67,21 +66,21 @@ public class InstanceFacadeImpl implements InstanceFacade, InitializingBean {
             InetAddress inetAddress = HostUtil.getInetAddress();
             Instance instance = instanceService.getByHostIp(inetAddress.getHostAddress());
             if (instance == null)
-                return buildHealth(healthStatus.ERROR);
+                return buildHealth(HealthStatus.ERROR);
             if (instance.getIsActive()) {
-                return buildHealth(healthStatus.OK);
+                return buildHealth(HealthStatus.OK);
             } else {
-                return buildHealth(healthStatus.INACTIVE);
+                return buildHealth(HealthStatus.INACTIVE);
             }
         } catch (UnknownHostException ignored) {
-            return buildHealth(healthStatus.ERROR);
+            return buildHealth(HealthStatus.ERROR);
         }
     }
 
     private InstanceVO.Health buildHealth(String status) {
         return InstanceVO.Health.builder()
                 .status(status)
-                .isHealth(status.equals(healthStatus.OK))
+                .isHealth(status.equals(HealthStatus.OK))
                 .build();
     }
 

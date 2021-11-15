@@ -21,10 +21,9 @@ import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.application.ApplicationService;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -32,22 +31,18 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class ApplicationFacadeImpl implements ApplicationFacade {
 
-    @Resource
-    private ApplicationService applicationService;
+    private final ApplicationService applicationService;
 
-    @Resource
-    private ApplicationResourceService applicationResourceService;
+    private final ApplicationResourceService applicationResourceService;
 
-    @Resource
-    private ApplicationPacker applicationPacker;
+    private final ApplicationPacker applicationPacker;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
-    @Resource
-    private AuthRoleService authRoleService;
+    private final AuthRoleService authRoleService;
 
     @Override
     public DataTable<ApplicationVO.Application> queryApplicationPage(ApplicationParam.ApplicationPageQuery pageQuery) {

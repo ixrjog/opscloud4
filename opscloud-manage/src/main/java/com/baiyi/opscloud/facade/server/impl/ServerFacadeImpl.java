@@ -15,9 +15,9 @@ import com.baiyi.opscloud.facade.server.ServerFacade;
 import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
 import com.baiyi.opscloud.packer.server.ServerPacker;
 import com.baiyi.opscloud.service.server.ServerService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.stream.Collectors;
 
 /**
@@ -28,13 +28,12 @@ import java.util.stream.Collectors;
 @ApplicationResType(ApplicationResTypeEnum.SERVER)
 @BusinessType(BusinessTypeEnum.SERVER)
 @Service
+@RequiredArgsConstructor
 public class ServerFacadeImpl extends AbstractApplicationResourceQuery implements ServerFacade {
 
-    @Resource
-    private ServerService serverService;
+    private final ServerService serverService;
 
-    @Resource
-    private ServerPacker serverPacker;
+    private final ServerPacker serverPacker;
 
     @Override
     public DataTable<ServerVO.Server> queryServerPage(ServerParam.ServerPageQuery pageQuery) {

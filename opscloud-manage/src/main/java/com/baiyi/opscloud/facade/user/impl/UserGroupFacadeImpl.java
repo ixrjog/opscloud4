@@ -21,11 +21,11 @@ import com.baiyi.opscloud.packer.user.UserPermissionPacker;
 import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -33,21 +33,18 @@ import java.util.List;
  * @Date 2021/6/16 3:20 下午
  * @Version 1.0
  */
-@Service
 @BusinessType(BusinessTypeEnum.USERGROUP)
+@Service
+@RequiredArgsConstructor
 public class UserGroupFacadeImpl implements UserGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
-    @Resource
-    private UserGroupService userGroupService;
+    private final UserGroupService userGroupService;
 
-    @Resource
-    private UserGroupPacker userGroupPacker;
+    private final UserGroupPacker userGroupPacker;
 
-    @Resource
-    private UserPermissionPacker userPermissionPacker;
+    private final UserPermissionPacker userPermissionPacker;
 
-    @Resource
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
     @Override
     public Integer getBusinessType() {

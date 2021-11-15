@@ -4,13 +4,12 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.param.sys.EnvParam;
+import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import com.baiyi.opscloud.facade.sys.EnvFacade;
 import com.baiyi.opscloud.packer.sys.EnvPacker;
 import com.baiyi.opscloud.service.sys.EnvService;
-import com.baiyi.opscloud.domain.vo.env.EnvVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -18,10 +17,10 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class EnvFacadeImpl implements EnvFacade {
 
-    @Resource
-    private EnvService envService;
+    private final EnvService envService;
 
     private Env toDO(EnvVO.Env env) {
         return BeanCopierUtil.copyProperties(env, Env.class);

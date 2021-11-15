@@ -9,9 +9,9 @@ import com.baiyi.opscloud.domain.param.sys.DocumentParam;
 import com.baiyi.opscloud.domain.vo.sys.DocumentVO;
 import com.baiyi.opscloud.facade.sys.DocumentFacade;
 import com.baiyi.opscloud.service.sys.DocumentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -20,10 +20,10 @@ import java.util.Map;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DocumentFacadeImpl implements DocumentFacade {
 
-    @Resource
-    private DocumentService documentService;
+    private final DocumentService documentService;
 
     @Override
     public DocumentVO.Doc previewDocument(DocumentParam.DocumentQuery query) {

@@ -6,9 +6,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.vo.business.BusinessPropertyVO;
 import com.baiyi.opscloud.facade.business.BusinessPropertyFacade;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -16,10 +15,10 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class BusinessPropertyFacadeImpl implements BusinessPropertyFacade {
 
-    @Resource
-    private BusinessPropertyService businessPropertyService;
+    private final BusinessPropertyService businessPropertyService;
 
     @Override
     public void add(BusinessPropertyVO.Property property) {

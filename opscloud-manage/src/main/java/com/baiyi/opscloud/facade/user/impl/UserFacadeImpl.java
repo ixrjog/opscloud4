@@ -39,12 +39,12 @@ import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.service.user.UserService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -55,40 +55,30 @@ import java.util.List;
 @BusinessType(BusinessTypeEnum.USER)
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class UserFacadeImpl implements UserFacade {
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
-    @Resource
-    private AccessTokenService accessTokenService;
+    private final AccessTokenService accessTokenService;
 
-    @Resource
-    private UserAccessTokenPacker userAccessTokenPacker;
+    private final UserAccessTokenPacker userAccessTokenPacker;
 
-    @Resource
-    private UserPacker userPacker;
+    private final UserPacker userPacker;
 
-    @Resource
-    private ServerGroupFacade serverGroupFacade;
+    private final ServerGroupFacade serverGroupFacade;
 
-    @Resource
-    private ServerFacade serverFacade;
+    private final ServerFacade serverFacade;
 
-    @Resource
-    private UserPermissionFacade userPermissionFacade;
+    private final UserPermissionFacade userPermissionFacade;
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsAssetPacker dsAssetPacker;
+    private final DsAssetPacker dsAssetPacker;
 
-    @Resource
-    private UserGroupService userGroupService;
+    private final UserGroupService userGroupService;
 
-    @Resource
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {

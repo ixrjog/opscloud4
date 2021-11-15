@@ -14,9 +14,9 @@ import com.baiyi.opscloud.packer.datasource.DsConfigPacker;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -25,23 +25,19 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsFacadeImpl implements DsFacade {
 
-    @Resource
-    private DsConfigService dsConfigService;
+    private final DsConfigService dsConfigService;
 
-    @Resource
-    private DsInstanceService dsInstancService;
+    private final DsInstanceService dsInstanceService;
 
-    @Resource
-    private DsConfigPacker dsConfigPacker;
+    private final DsConfigPacker dsConfigPacker;
 
-    @Resource
-    private DsInstancePacker dsInstancePacker;
+    private final DsInstancePacker dsInstancePacker;
 
     @Override
     public void setDsInstanceConfig(int instanceId) {
-
     }
 
     @Override
@@ -64,7 +60,7 @@ public class DsFacadeImpl implements DsFacade {
 
     @Override
     public List<DsInstanceVO.Instance> queryDsInstance(DsInstanceParam.DsInstanceQuery query) {
-        List<DatasourceInstance> instanceList = dsInstancService.queryByParam(query);
+        List<DatasourceInstance> instanceList = dsInstanceService.queryByParam(query);
         return dsInstancePacker.wrapVOList(instanceList, query);
     }
 
@@ -72,6 +68,7 @@ public class DsFacadeImpl implements DsFacade {
     public void registerDsInstance(DsInstanceParam.RegisterDsInstance registerDsInstance) {
         DatasourceInstance datasourceInstance = BeanCopierUtil.copyProperties(registerDsInstance, DatasourceInstance.class);
         datasourceInstance.setUuid(IdUtil.buildUUID());
-        dsInstancService.add(datasourceInstance);
+        dsInstanceService.add(datasourceInstance);
     }
+
 }

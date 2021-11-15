@@ -6,16 +6,16 @@ import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccountPermission;
 import com.baiyi.opscloud.domain.param.server.ServerAccountParam;
+import com.baiyi.opscloud.domain.vo.server.ServerAccountVO;
 import com.baiyi.opscloud.facade.server.ServerAccountFacade;
 import com.baiyi.opscloud.packer.server.ServerAccountPacker;
 import com.baiyi.opscloud.service.server.ServerAccountPermissionService;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.sys.CredentialService;
-import com.baiyi.opscloud.domain.vo.server.ServerAccountVO;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,19 +25,16 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class ServerAccountFacadeImpl implements ServerAccountFacade {
 
-    @Resource
-    private ServerAccountService accountService;
+    private final ServerAccountService accountService;
 
-    @Resource
-    private ServerAccountPermissionService accountPermissionService;
+    private final ServerAccountPermissionService accountPermissionService;
 
-    @Resource
-    private ServerAccountPacker accountPacker;
+    private final ServerAccountPacker accountPacker;
 
-    @Resource
-    private CredentialService credentialService;
+    private final CredentialService credentialService;
 
     @Override
     public DataTable<ServerAccountVO.Account> queryServerAccountPage(ServerAccountParam.ServerAccountPageQuery pageQuery) {

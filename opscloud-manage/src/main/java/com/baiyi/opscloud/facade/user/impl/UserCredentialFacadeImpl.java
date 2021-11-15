@@ -13,6 +13,7 @@ import com.baiyi.opscloud.service.user.UserCredentialService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -24,23 +25,22 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class UserCredentialFacadeImpl implements UserCredentialFacade {
 
-    @Resource
-    private UserCredentialService userCredentialService;
+    private final UserCredentialService userCredentialService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public void saveUserCredential(UserCredentialVO.Credential credential) {
         User user = userService.getByUsername(SessionUtil.getUsername());
         if (user == null) return;
-       saveUserCredential(credential,user);
+        saveUserCredential(credential, user);
     }
 
     @Override
-    public void saveUserCredential(UserCredentialVO.Credential credential,User user) {
+    public void saveUserCredential(UserCredentialVO.Credential credential, User user) {
         credential.setUserId(user.getId());
         if (credential.getCredentialType() == UserCredentialTypeEnum.PUB_KEY.getType()) {
             savePubKey(credential);

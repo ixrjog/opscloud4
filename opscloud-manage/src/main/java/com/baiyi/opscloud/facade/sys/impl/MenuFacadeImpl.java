@@ -14,12 +14,12 @@ import com.baiyi.opscloud.packer.sys.MenuPacker;
 import com.baiyi.opscloud.service.auth.AuthRoleMenuService;
 import com.baiyi.opscloud.service.sys.MenuChildService;
 import com.baiyi.opscloud.service.sys.MenuService;
+import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -30,19 +30,16 @@ import java.util.stream.Collectors;
  */
 
 @Service
+@RequiredArgsConstructor
 public class MenuFacadeImpl implements MenuFacade {
 
-    @Resource
-    private MenuService menuService;
+    private final MenuService menuService;
 
-    @Resource
-    private MenuChildService menuChildService;
+    private final MenuChildService menuChildService;
 
-    @Resource
-    private MenuPacker menuPacker;
+    private final MenuPacker menuPacker;
 
-    @Resource
-    private AuthRoleMenuService authRoleMenuService;
+    private final AuthRoleMenuService authRoleMenuService;
 
     @Override
     public void saveMenu(MenuParam.MenuSave param) {

@@ -2,15 +2,15 @@ package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
+import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
 import com.baiyi.opscloud.facade.user.UserPermissionFacade;
 import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
-import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,13 +19,12 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class UserPermissionFacadeImpl implements UserPermissionFacade {
 
-    @Resource
-    private UserPermissionService permissionService;
+    private final UserPermissionService permissionService;
 
-    @Resource
-    private AuthRoleService authRoleService;
+    private final AuthRoleService authRoleService;
 
     @Override
     public void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission) {

@@ -11,9 +11,9 @@ import com.baiyi.opscloud.facade.task.AnsiblePlaybookFacade;
 import com.baiyi.opscloud.packer.task.AnsiblePlaybookPacker;
 import com.baiyi.opscloud.service.ansible.AnsiblePlaybookService;
 import com.baiyi.opscloud.util.PlaybookUtil;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.stream.Collectors;
 
 /**
@@ -22,22 +22,18 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class AnsiblePlaybookFacadeImpl implements AnsiblePlaybookFacade {
 
-//    @Resource
-//    private OpscloudConfig opscloudConfig;
+    private final AnsiblePlaybookService ansiblePlaybookService;
 
-    @Resource
-    private AnsiblePlaybookService ansiblePlaybookService;
-
-    @Resource
-    private AnsiblePlaybookPacker ansiblePlaybookPacker;
+    private final AnsiblePlaybookPacker ansiblePlaybookPacker;
 
     @Override
     public DataTable<AnsiblePlaybookVO.Playbook> queryAnsiblePlaybookPage(AnsiblePlaybookParam.AnsiblePlaybookPageQuery pageQuery) {
         DataTable<AnsiblePlaybook> table = ansiblePlaybookService.queryPageByParam(pageQuery);
         return new DataTable<>(
-                table.getData().stream().map(e -> ansiblePlaybookPacker.toVO(e)).collect(Collectors.toList()),
+                table.getData().stream().map(ansiblePlaybookPacker::toVO).collect(Collectors.toList()),
                 table.getTotalNum());
     }
 

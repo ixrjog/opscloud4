@@ -7,10 +7,10 @@ import com.baiyi.opscloud.domain.vo.auth.LogVO;
 import com.baiyi.opscloud.facade.auth.UserTokenFacade;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -18,15 +18,14 @@ import java.util.Date;
  * @Date 2021/5/15 9:59 上午
  * @Version 1.0
  */
-@Service
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class UserTokenFacadeImpl implements UserTokenFacade {
 
-    @Resource
-    private UserTokenService userTokenService;
+    private final UserTokenService userTokenService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
     @Override
     public LogVO.Login userLogin(User user) {

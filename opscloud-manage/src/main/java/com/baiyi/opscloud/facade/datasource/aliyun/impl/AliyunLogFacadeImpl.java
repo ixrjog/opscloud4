@@ -7,9 +7,9 @@ import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogHandler;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogMachineGroupHandler;
-import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -25,11 +25,11 @@ import com.baiyi.opscloud.service.datasource.AliyunLogService;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.server.ServerGroupService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -39,38 +39,29 @@ import java.util.stream.Collectors;
  * @Date 2021/9/16 5:32 下午
  * @Version 1.0
  */
-@Component
+@Service
+@RequiredArgsConstructor
 public class AliyunLogFacadeImpl implements AliyunLogFacade {
 
-    @Resource
-    private AliyunLogService aliyunLogService;
+    private final AliyunLogService aliyunLogService;
 
-    @Resource
-    private AliyunLogMemberService aliyunLogMemberService;
+    private final AliyunLogMemberService aliyunLogMemberService;
 
-    @Resource
-    private AliyunLogHandler aliyunLogHandler;
+    private final AliyunLogHandler aliyunLogHandler;
 
-    @Resource
-    private ServerGroupService serverGroupService;
+    private final ServerGroupService serverGroupService;
 
-    @Resource
-    private AliyunLogPacker aliyunLogPacker;
+    private final AliyunLogPacker aliyunLogPacker;
 
-    @Resource
-    private AliyunLogMemberPacker aliyunLogMemberPacker;
+    private final AliyunLogMemberPacker aliyunLogMemberPacker;
 
-    @Resource
-    private AliyunLogMachineGroupHandler aliyunLogMachineGroupHandler;
+    private final AliyunLogMachineGroupHandler aliyunLogMachineGroupHandler;
 
-    @Resource
-    private DsConfigService dsConfigService;
+    private final DsConfigService dsConfigService;
 
-    @Resource
-    private DsConfigHelper dsFactory;
+    private final DsConfigHelper dsFactory;
 
-    @Resource
-    private DsInstanceService dsInstanceService;
+    private final DsInstanceService dsInstanceService;
 
     @Override
     public DataTable<AliyunLogVO.Log> queryLogPage(AliyunLogParam.AliyunLogPageQuery pageQuery) {

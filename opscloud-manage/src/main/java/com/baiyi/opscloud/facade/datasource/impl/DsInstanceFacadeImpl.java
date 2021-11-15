@@ -18,11 +18,11 @@ import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -30,24 +30,20 @@ import java.util.List;
  * @Date 2021/6/11 10:19 上午
  * @Version 1.0
  */
-@Service
 @Slf4j
+@Service
+@RequiredArgsConstructor
 public class DsInstanceFacadeImpl implements DsInstanceFacade {
 
-    @Resource
-    private DsInstanceService dsInstanceService;
+    private final DsInstanceService dsInstanceService;
 
-    @Resource
-    private DsInstancePacker dsInstancePacker;
+    private final DsInstancePacker dsInstancePacker;
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsAssetPacker dsAssetPacker;
+    private final DsAssetPacker dsAssetPacker;
 
-    @Resource
-    private SimpleDsAssetFacade baseDsAssetFacade;
+    private final SimpleDsAssetFacade baseDsAssetFacade;
 
     @Override
     public DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery) {

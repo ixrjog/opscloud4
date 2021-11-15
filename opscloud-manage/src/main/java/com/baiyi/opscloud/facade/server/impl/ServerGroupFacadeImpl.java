@@ -1,11 +1,11 @@
 package com.baiyi.opscloud.facade.server.impl;
 
 import com.baiyi.opscloud.algorithm.ServerPack;
-import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.common.base.AccessLevel;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
+import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.*;
@@ -38,10 +38,10 @@ import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.util.ServerTreeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -56,34 +56,26 @@ import java.util.stream.Collectors;
 @ApplicationResType(ApplicationResTypeEnum.SERVERGROUP)
 @BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
+@RequiredArgsConstructor
 public class ServerGroupFacadeImpl extends AbstractApplicationResourceQuery implements ServerGroupFacade, IUserBusinessPermissionPageQuery, InitializingBean {
 
-    @Resource
-    private ServerGroupService serverGroupService;
+    private final ServerGroupService serverGroupService;
 
-    @Resource
-    private ServerGroupTypeService serverGroupTypeService;
+    private final ServerGroupTypeService serverGroupTypeService;
 
-    @Resource
-    private ServerGroupPacker serverGroupPacker;
+    private final ServerGroupPacker serverGroupPacker;
 
-    @Resource
-    private UserPermissionPacker userPermissionPacker;
+    private final UserPermissionPacker userPermissionPacker;
 
-    @Resource
-    private ServerGroupTypePacker serverGroupTypePacker;
+    private final ServerGroupTypePacker serverGroupTypePacker;
 
-    @Resource
-    private UserPermissionFacade userPermissionFacade;
+    private final UserPermissionFacade userPermissionFacade;
 
-    @Resource
-    private ServerService serverService;
+    private final ServerService serverService;
 
-    @Resource
-    private ServerGroupingAlgorithm serverAlgorithm;
+    private final ServerGroupingAlgorithm serverAlgorithm;
 
-    @Resource
-    private ServerTreeUtil serverTreeUtil;
+    private final ServerTreeUtil serverTreeUtil;
 
     @Override
     public DataTable<ServerGroupVO.ServerGroup> queryServerGroupPage(ServerGroupParam.ServerGroupPageQuery pageQuery) {

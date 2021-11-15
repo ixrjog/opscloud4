@@ -12,9 +12,8 @@ import com.baiyi.opscloud.packer.sys.TerminalSessionInstanceCommandPacker;
 import com.baiyi.opscloud.packer.sys.TerminalSessionPacker;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -22,19 +21,16 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class TerminalSessionFacadeImpl implements TerminalSessionFacade {
 
-    @Resource
-    private TerminalSessionService terminalSessionService;
+    private final TerminalSessionService terminalSessionService;
 
-    @Resource
-    private TerminalSessionInstanceCommandPacker terminalSessionInstanceCommandPacker;
+    private final TerminalSessionInstanceCommandPacker terminalSessionInstanceCommandPacker;
 
-    @Resource
-    private TerminalSessionInstanceCommandService terminalSessionInstanceCommandService;
+    private final TerminalSessionInstanceCommandService terminalSessionInstanceCommandService;
 
-    @Resource
-    private TerminalSessionPacker terminalSessionPacker;
+    private final TerminalSessionPacker terminalSessionPacker;
 
     @Override
     public DataTable<TerminalSessionVO.Session> queryTerminalSessionPage(TerminalSessionParam.TerminalSessionPageQuery pageQuery) {

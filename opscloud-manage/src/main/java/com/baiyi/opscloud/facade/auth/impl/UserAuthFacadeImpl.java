@@ -17,11 +17,10 @@ import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.service.user.UserTokenService;
+import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import javax.annotation.Resource;
 
 import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
 
@@ -31,34 +30,26 @@ import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class UserAuthFacadeImpl implements UserAuthFacade {
 
-    @Resource
-    private UserTokenService userTokenService;
+    private final UserTokenService userTokenService;
 
-    @Resource
-    private AccessTokenService accessTokenService;
+    private final AccessTokenService accessTokenService;
 
-    @Resource
-    private AuthResourceService authResourceService;
+    private final AuthResourceService authResourceService;
 
-    @Resource
-    private AuthFacade authFacade;
+    private final AuthFacade authFacade;
 
-    @Resource
-    private AuthRoleService authRoleService;
+    private final AuthRoleService authRoleService;
 
-    @Resource
-    private UserService userService;
+    private final UserService userService;
 
-    @Resource
-    private UserTokenFacade userTokenFacade;
+    private final UserTokenFacade userTokenFacade;
 
-    @Resource
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
-    @Resource
-    private DsAuthManager authProviderManager;
+    private final DsAuthManager authProviderManager;
 
     @Override
     public void tryUserHasResourceAuthorize(String token, String resourceName) {
