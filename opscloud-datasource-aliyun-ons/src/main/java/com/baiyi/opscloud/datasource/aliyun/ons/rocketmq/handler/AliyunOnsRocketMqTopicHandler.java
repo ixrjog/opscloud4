@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.handler;
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ons.model.v20190214.OnsTopicListRequest;
 import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ public class AliyunOnsRocketMqTopicHandler {
 
     public static final String QUERY_ALL_TOPIC = null;
 
-    public List<OnsTopicListResponse.PublishInfoDo> listTopic(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String instanceId) {
+    public List<OnsTopicListResponse.PublishInfoDo> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) {
         return listTopic(regionId, aliyun, instanceId, QUERY_ALL_TOPIC);
     }
 
@@ -39,7 +39,7 @@ public class AliyunOnsRocketMqTopicHandler {
      * @param topic
      * @return
      */
-    public List<OnsTopicListResponse.PublishInfoDo> listTopic(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String instanceId, String topic) {
+    public List<OnsTopicListResponse.PublishInfoDo> listTopic(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String topic) {
         OnsTopicListRequest request = new OnsTopicListRequest();
         request.setInstanceId(instanceId);
         if (StringUtils.isNotBlank(topic)) {

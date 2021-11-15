@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.NamespaceAssetConvert;
@@ -41,8 +41,8 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
         return DsAssetTypeEnum.KUBERNETES_NAMESPACE.getType();
     }
 
-    private KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
+    private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
     @Override

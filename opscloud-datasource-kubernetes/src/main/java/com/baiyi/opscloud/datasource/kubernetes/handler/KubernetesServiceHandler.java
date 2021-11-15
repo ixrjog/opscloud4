@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.handler;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
@@ -16,14 +16,14 @@ import java.util.List;
  */
 public class KubernetesServiceHandler {
 
-    public static List<Service> listService(KubernetesDsInstanceConfig.Kubernetes kubernetes) {
+    public static List<Service> listService(KubernetesConfig.Kubernetes kubernetes) {
         ServiceList serviceList = KubeClient.build(kubernetes)
                 .services()
                 .list();
         return serviceList.getItems();
     }
 
-    public static List<Service> listService(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace) {
+    public static List<Service> listService(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         ServiceList serviceList = KubeClient.build(kubernetes)
                 .services()
                 .inNamespace(namespace)
@@ -39,7 +39,7 @@ public class KubernetesServiceHandler {
      * @param name       podName
      * @return
      */
-    public static Service getService(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String name) {
+    public static Service getService(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         return KubeClient.build(kubernetes)
                 .services()
                 .inNamespace(namespace)

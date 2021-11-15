@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
@@ -36,7 +36,7 @@ public class ZabbixProblemHandler {
         String GET = "problem.get";
     }
 
-    public List<ZabbixProblem> list(ZabbixDsInstanceConfig.Zabbix zabbix, List<SeverityType> severityTypes) {
+    public List<ZabbixProblem> list(ZabbixConfig.Zabbix zabbix, List<SeverityType> severityTypes) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 /**
@@ -54,7 +54,7 @@ public class ZabbixProblemHandler {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
-    public List<ZabbixProblem> listByHost(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost host) {
+    public List<ZabbixProblem> listByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 .paramEntry(HOST_IDS, host.getHostid())
@@ -63,7 +63,7 @@ public class ZabbixProblemHandler {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
     }
 
-    public ZabbixProblem getByEventId(ZabbixDsInstanceConfig.Zabbix zabbix, String eventId) {
+    public ZabbixProblem getByEventId(ZabbixConfig.Zabbix zabbix, String eventId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 .paramEntry("eventids", eventId)
@@ -75,7 +75,7 @@ public class ZabbixProblemHandler {
         return hosts.get(0);
     }
 
-    public ZabbixProblem getByTriggerId(ZabbixDsInstanceConfig.Zabbix zabbix, String triggerId) {
+    public ZabbixProblem getByTriggerId(ZabbixConfig.Zabbix zabbix, String triggerId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
                 .paramEntry("selectAcknowledges", "extend")

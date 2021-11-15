@@ -3,8 +3,8 @@ package com.baiyi.opscloud.facade.datasource.aliyun.impl;
 import com.aliyun.openservices.log.common.MachineGroup;
 import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.common.base.Global;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogHandler;
@@ -103,19 +103,19 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
 
     @Override
     public List<Project> queryProject(AliyunLogParam.ProjectQuery query) {
-        AliyunDsInstanceConfig aliyunDsInstanceConfig = (AliyunDsInstanceConfig) getConfig(query.getInstanceId());
+        AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig(query.getInstanceId());
         return aliyunLogHandler.listProject(aliyunDsInstanceConfig.getAliyun(), query.getQueryName());
     }
 
     @Override
     public List<String> queryLogstore(AliyunLogParam.LogStoreQuery query) {
-        AliyunDsInstanceConfig aliyunDsInstanceConfig = (AliyunDsInstanceConfig) getConfig(query.getInstanceId());
+        AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig(query.getInstanceId());
         return aliyunLogHandler.listLogstore(aliyunDsInstanceConfig.getAliyun(), query.getProjectName());
     }
 
     @Override
     public List<String> queryConfig(AliyunLogParam.ConfigQuery query) {
-        AliyunDsInstanceConfig aliyunDsInstanceConfig = (AliyunDsInstanceConfig) getConfig(query.getInstanceId());
+        AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig(query.getInstanceId());
         return aliyunLogHandler.listConfig(aliyunDsInstanceConfig.getAliyun(), query.getProjectName(), query.getLogstoreName());
     }
 
@@ -132,7 +132,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         AliyunLogMember aliyunLogMember = aliyunLogMemberService.getById(id);
         if (aliyunLogMember == null) return;
         AliyunLogMemberVO.LogMember logMember = aliyunLogMemberPacker.wrap(aliyunLogMember, SimpleExtend.EXTEND);
-        AliyunDsInstanceConfig aliyunDsInstanceConfig = (AliyunDsInstanceConfig) getConfig(logMember.getLog().getDatasourceInstanceId());
+        AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig(logMember.getLog().getDatasourceInstanceId());
         MachineGroup machineGroup = aliyunLogMachineGroupHandler.getMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember.getLog().getProject(), logMember.getServerGroupName());
         if (machineGroup == null) {
             aliyunLogMachineGroupHandler.createMachineGroup(aliyunDsInstanceConfig.getAliyun(), logMember); // 创建
@@ -174,10 +174,10 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         aliyunLogMemberService.deleteById(id);
     }
 
-    private BaseDsInstanceConfig getConfig(Integer datasourceInstanceId) {
+    private BaseConfig getConfig(Integer datasourceInstanceId) {
         DatasourceInstance dsInstance = dsInstanceService.getById(datasourceInstanceId);
         DatasourceConfig datasourceConfig = dsConfigService.getById(dsInstance.getConfigId());
-        return dsFactory.build(datasourceConfig, AliyunDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, AliyunConfig.class);
     }
 
 

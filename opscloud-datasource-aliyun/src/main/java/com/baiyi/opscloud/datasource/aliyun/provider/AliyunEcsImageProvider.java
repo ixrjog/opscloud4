@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.EcsImageAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
@@ -44,8 +44,8 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
         doPull(dsInstanceId);
     }
 
-    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override
@@ -66,7 +66,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
 
     @Override
     protected List<DescribeImagesResponse.Image> listEntries( DsInstanceContext dsInstanceContext) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeImagesResponse.Image> imageList = Lists.newArrayList();

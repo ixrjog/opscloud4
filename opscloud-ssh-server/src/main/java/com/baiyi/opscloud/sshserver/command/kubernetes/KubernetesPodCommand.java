@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
 import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
@@ -93,7 +93,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
             helper.print("资产类型不符", PromptColor.RED);
             return;
         }
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(asset.getInstanceUuid());
+        KubernetesConfig kubernetesDsInstanceConfig = buildConfig(asset.getInstanceUuid());
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
         List<Pod> pods = KubernetesPodHandler.listPod(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getAssetKey());
         if (CollectionUtils.isEmpty(pods)) {
@@ -228,7 +228,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                          @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
+        KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
         KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
@@ -310,7 +310,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                            @ShellOption(help = "Tailing Lines", defaultValue = "100") int lines) {
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
+        KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
                 podContext.getNamespace(),

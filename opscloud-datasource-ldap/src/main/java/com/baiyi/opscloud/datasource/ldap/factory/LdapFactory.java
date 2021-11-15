@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ldap.factory;
 
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import org.springframework.ldap.core.LdapTemplate;
 import org.springframework.ldap.core.support.LdapContextSource;
 import org.springframework.ldap.transaction.compensating.manager.TransactionAwareContextSourceProxy;
@@ -12,13 +12,13 @@ import org.springframework.ldap.transaction.compensating.manager.TransactionAwar
  */
 public class LdapFactory {
 
-    public static LdapTemplate buildLdapTemplate(LdapDsInstanceConfig.Ldap ldapConfig) {
+    public static LdapTemplate buildLdapTemplate(LdapConfig.Ldap ldapConfig) {
         LdapContextSource contextSource = buildLdapContextSource(ldapConfig);
         TransactionAwareContextSourceProxy sourceProxy = buildTransactionAwareContextSourceProxy(contextSource);
         return new LdapTemplate(sourceProxy);
     }
 
-    private static LdapContextSource buildLdapContextSource(LdapDsInstanceConfig.Ldap config) {
+    private static LdapContextSource buildLdapContextSource(LdapConfig.Ldap config) {
         LdapContextSource contextSource = new LdapContextSource();
         contextSource.setUrl(config.getUrl());
         contextSource.setBase(config.getBase());

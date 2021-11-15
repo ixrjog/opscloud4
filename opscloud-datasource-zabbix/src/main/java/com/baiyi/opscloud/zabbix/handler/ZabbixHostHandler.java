@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.handler;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.config.CachingConfig;
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
@@ -38,7 +38,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         String DELETE = "host.delete";
     }
 
-    public List<ZabbixHost> list(ZabbixDsInstanceConfig.Zabbix zabbix) {
+    public List<ZabbixHost> list(ZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
                 .paramEntry("selectInterfaces", "extend")
@@ -47,7 +47,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> getByGroup(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHostGroup group) {
+    public List<ZabbixHost> getByGroup(ZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
                 .paramEntry("selectInterfaces", "extend")
@@ -57,7 +57,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> listByTemplate(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixTemplate template) {
+    public List<ZabbixHost> listByTemplate(ZabbixConfig.Zabbix zabbix, ZabbixTemplate template) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
                 .paramEntry("selectInterfaces", "extend")
@@ -67,7 +67,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperList(data.get(RESULT), ZabbixHost.class);
     }
 
-    public List<ZabbixHost> listByTrigger(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixTrigger trigger) {
+    public List<ZabbixHost> listByTrigger(ZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
                 .paramEntry("selectInterfaces", "extend")
@@ -78,12 +78,12 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid")
-    public void evictHostById(ZabbixDsInstanceConfig.Zabbix zabbix, String hostid) {
+    public void evictHostById(ZabbixConfig.Zabbix zabbix, String hostid) {
         log.info("清除ZabbixHost缓存 : hostid = {}", hostid);
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_hostid_' + #hostid", unless = "#result == null")
-    public ZabbixHost getById(ZabbixDsInstanceConfig.Zabbix zabbix, String hostid) {
+    public ZabbixHost getById(ZabbixConfig.Zabbix zabbix, String hostid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
                 .paramEntry("selectInterfaces", "extend")
@@ -94,12 +94,12 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip")
-    public void evictHostByIp(ZabbixDsInstanceConfig.Zabbix zabbix, String ip) {
+    public void evictHostByIp(ZabbixConfig.Zabbix zabbix, String ip) {
         log.info("清除ZabbixHost缓存 : ip = {}", ip);
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_host_ip_' + #ip", unless = "#result == null")
-    public ZabbixHost getByIp(ZabbixDsInstanceConfig.Zabbix zabbix, String ip) {
+    public ZabbixHost getByIp(ZabbixConfig.Zabbix zabbix, String ip) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("ip", ip)
                 .build();
@@ -111,7 +111,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         return mapperListGetOne(data.get(RESULT), ZabbixHost.class);
     }
 
-    public void updateHostName(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost, String hostName) {
+    public void updateHostName(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, String hostName) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.UPDATE)
                 .paramEntry("hostid", zabbixHost.getHostid())
@@ -125,7 +125,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         }
     }
 
-    public void updateHostTemplates(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixTemplate> zabbixTemplates) {
+    public void updateHostTemplates(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixTemplate> zabbixTemplates) {
         if (CollectionUtils.isEmpty(zabbixTemplates)) return;
         List<ZabbixHostParam.Template> templatesParams = toTemplateParams(zabbixTemplates);
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
@@ -146,7 +146,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
                 .collect(Collectors.toList());
     }
 
-    public void clearHostTemplates(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixTemplate> zabbixTemplates) {
+    public void clearHostTemplates(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixTemplate> zabbixTemplates) {
         if (CollectionUtils.isEmpty(zabbixTemplates)) return;
         List<ZabbixHostParam.Template> templatesParams = toTemplateParams(zabbixTemplates);
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
@@ -162,7 +162,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         }
     }
 
-    public void deleteById(ZabbixDsInstanceConfig.Zabbix zabbix, String hostId) {
+    public void deleteById(ZabbixConfig.Zabbix zabbix, String hostId) {
         ZabbixHost host = getById(zabbix, hostId);
         if (host == null) {
             return;
@@ -170,7 +170,7 @@ public class ZabbixHostHandler extends BaseZabbixHandler<ZabbixHost> {
         delete(zabbix, host);
     }
 
-    private void delete(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
+    private void delete(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
                 .method(HostAPIMethod.DELETE)
                 .params(new String[]{zabbixHost.getHostid()})

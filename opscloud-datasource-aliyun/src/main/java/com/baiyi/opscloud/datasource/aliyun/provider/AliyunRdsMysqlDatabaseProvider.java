@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsMysqlAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.rds.mysql.handler.AliyunRdsMysqlHandler;
@@ -46,8 +46,8 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
         doPull(dsInstanceId);
     }
 
-    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeDatabasesResponse.Database> entries = Lists.newArrayList();
@@ -101,7 +101,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
 
     @Override
     protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext, DescribeDBInstancesResponse.DBInstance target) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRdsMysqlHandler.listDatabase(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
     }
 

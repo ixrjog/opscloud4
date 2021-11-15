@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.baiyi.opscloud.common.config.CachingConfig;
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.handler.base.BaseZabbixHandler;
@@ -33,7 +33,7 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         String CREATE = "hostgroup.create";
     }
 
-    public List<ZabbixHostGroup> list(ZabbixDsInstanceConfig.Zabbix zabbix) {
+    public List<ZabbixHostGroup> list(ZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
                 .build();
@@ -41,7 +41,7 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         return mapperList(data.get(RESULT), ZabbixHostGroup.class);
     }
 
-    public List<ZabbixHostGroup> listByHost(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost host) {
+    public List<ZabbixHostGroup> listByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
                 .paramEntry("hostids", host.getHostid())
@@ -51,7 +51,7 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_groupid_' + #groupid", unless = "#result == null")
-    public ZabbixHostGroup getById(ZabbixDsInstanceConfig.Zabbix zabbix, String groupid) {
+    public ZabbixHostGroup getById(ZabbixConfig.Zabbix zabbix, String groupid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
                 .paramEntry("groupids", groupid)
@@ -61,12 +61,12 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #zabbixHostGroup.name")
-    public void evictHostGroup(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHostGroup zabbixHostGroup) {
+    public void evictHostGroup(ZabbixConfig.Zabbix zabbix, ZabbixHostGroup zabbixHostGroup) {
         log.info("清除ZabbixHostGroup缓存 : name = {}", zabbixHostGroup.getName());
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_hostgroup_name_' + #name", unless = "#result == null")
-    public ZabbixHostGroup getByName(ZabbixDsInstanceConfig.Zabbix zabbix, String name) {
+    public ZabbixHostGroup getByName(ZabbixConfig.Zabbix zabbix, String name) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", name)
                 .build();
@@ -78,7 +78,7 @@ public class ZabbixHostGroupHandler extends BaseZabbixHandler<ZabbixHostGroup> {
         return mapperListGetOne(data.get(RESULT), ZabbixHostGroup.class);
     }
 
-    public void create(ZabbixDsInstanceConfig.Zabbix zabbix, String name) {
+    public void create(ZabbixConfig.Zabbix zabbix, String name) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.CREATE)
                 .paramEntry("name", name)

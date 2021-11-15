@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.context;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -20,5 +20,5 @@ public class KubernetesDsInstance {
 
     private DatasourceInstance dsInstance;
 
-    private KubernetesDsInstanceConfig kubernetesDsInstanceConfig;
+    private KubernetesConfig kubernetesDsInstanceConfig;
 }

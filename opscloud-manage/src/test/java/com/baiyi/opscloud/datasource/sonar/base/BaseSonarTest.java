@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.sonar.base;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.SonarDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.SonarConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -21,8 +21,8 @@ public class BaseSonarTest extends BaseUnit {
         @Resource
         private DsConfigHelper dsFactory;
 
-        protected SonarDsInstanceConfig getConfig() {
+        protected SonarConfig getConfig() {
             DatasourceConfig datasourceConfig = dsConfigService.getById(15);
-            return dsFactory.build(datasourceConfig, SonarDsInstanceConfig.class);
+            return dsFactory.build(datasourceConfig, SonarConfig.class);
         }
 }

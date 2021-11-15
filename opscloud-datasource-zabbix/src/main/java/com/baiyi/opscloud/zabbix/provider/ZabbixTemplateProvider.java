@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -42,13 +42,13 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
         return DsTypeEnum.ZABBIX.name();
     }
 
-    private ZabbixDsInstanceConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix();
+    private ZabbixConfig.Zabbix buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, ZabbixConfig.class).getZabbix();
     }
 
     @Override
     protected List<ZabbixTemplate> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
-        ZabbixDsInstanceConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
+        ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixTemplateHandler.getByHost(zabbix, target);
     }
 

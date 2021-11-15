@@ -14,7 +14,7 @@ import java.util.Map;
 @Data
 public class SimpleDict {
 
-    private Map<String, String> dict = Maps.newHashMap();
+    private final Map<String, String> dict = Maps.newHashMap();
 
     public void put(String name, String value) {
         this.dict.put(name, value);

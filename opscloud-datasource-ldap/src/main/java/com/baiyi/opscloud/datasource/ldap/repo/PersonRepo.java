@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ldap.repo;
 
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.datasource.ldap.entry.Person;
 
 import java.util.List;
@@ -19,22 +19,22 @@ public interface PersonRepo {
      * @param groupName
      * @return
      */
-    List<Person> queryGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName);
+    List<Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName);
 
-    List<String> getAllPersonNames(LdapDsInstanceConfig.Ldap ldapConfig);
+    List<String> getAllPersonNames(LdapConfig.Ldap ldapConfig);
 
-    List<Person> getPersonList(LdapDsInstanceConfig.Ldap ldapConfig);
+    List<Person> getPersonList(LdapConfig.Ldap ldapConfig);
 
-    Person findPersonWithDn(LdapDsInstanceConfig.Ldap ldapConfig, String dn);
+    Person findPersonWithDn(LdapConfig.Ldap ldapConfig, String dn);
 
-    void create(LdapDsInstanceConfig.Ldap ldapConfig, Person person);
+    void create(LdapConfig.Ldap ldapConfig, Person person);
 
-    void update(LdapDsInstanceConfig.Ldap ldapConfig, Person person);
+    void update(LdapConfig.Ldap ldapConfig, Person person);
 
-    void delete(LdapDsInstanceConfig.Ldap ldapConfig, String username);
+    void delete(LdapConfig.Ldap ldapConfig, String username);
 
-    Boolean checkPersonInLdap(LdapDsInstanceConfig.Ldap ldapConfig, String username);
+    Boolean checkPersonInLdap(LdapConfig.Ldap ldapConfig, String username);
 
-    List<String> searchUserGroupByUsername(LdapDsInstanceConfig.Ldap ldapConfig, String username);
+    List<String> searchUserGroupByUsername(LdapConfig.Ldap ldapConfig, String username);
 
 }

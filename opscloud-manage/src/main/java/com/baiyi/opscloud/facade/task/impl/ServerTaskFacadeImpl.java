@@ -6,7 +6,7 @@ import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
 import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
 import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
-import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -108,7 +108,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private void executeServerTask(ServerTask serverTask, List<ServerTaskMember> members) {
         // 构建上下文
         DsInstanceContext instanceContext = buildDsInstanceContext(serverTask.getInstanceUuid());
-        AnsibleDsInstanceConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleDsInstanceConfig.class).getAnsible();
+        AnsibleConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
         PlaybookArgs args = PlaybookArgs.builder()

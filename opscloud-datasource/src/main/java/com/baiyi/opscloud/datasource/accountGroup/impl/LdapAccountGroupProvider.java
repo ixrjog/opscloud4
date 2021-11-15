@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.accountGroup.impl;
 
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.accountGroup.impl.base.AbstractAccountGroupProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -28,11 +28,11 @@ public class LdapAccountGroupProvider extends AbstractAccountGroupProvider {
     @Resource
     private UserGroupService userGroupService;
 
-    protected static ThreadLocal<LdapDsInstanceConfig.Ldap> configContext = new ThreadLocal<>();
+    protected static ThreadLocal<LdapConfig.Ldap> configContext = new ThreadLocal<>();
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, LdapDsInstanceConfig.class).getLdap());
+        configContext.set(dsConfigHelper.build(dsConfig, LdapConfig.class).getLdap());
     }
 
     @Override

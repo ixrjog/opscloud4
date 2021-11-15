@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.tencent;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.TencentExmailDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -32,28 +32,28 @@ public class ExmailTest extends BaseUnit {
     @Resource
     private TencentExmailTokenHandler tencentExmailTokenHandler;
 
-    private TencentExmailDsInstanceConfig getConfig() {
+    private TencentExmailConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(11);
-        return dsFactory.build(datasourceConfig, TencentExmailDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, TencentExmailConfig.class);
     }
 
     @Test
     void getUser() {
-        TencentExmailDsInstanceConfig.Tencent config = getConfig().getTencent();
+        TencentExmailConfig.Tencent config = getConfig().getTencent();
         ExmailUser bo = tencentExmailUserHandler.get(config, "baiyi@xinc818.group");
         System.err.println(bo);
     }
 
     @Test
     void listUser() {
-        TencentExmailDsInstanceConfig.Tencent config = getConfig().getTencent();
+        TencentExmailConfig.Tencent config = getConfig().getTencent();
         List<ExmailUser> list = tencentExmailUserHandler.list(config, 1L);
         System.err.println(list);
     }
 
     @Test
     void getTokenTest() {
-        TencentExmailDsInstanceConfig.Tencent config = getConfig().getTencent();
+        TencentExmailConfig.Tencent config = getConfig().getTencent();
         ExmailToken token = tencentExmailTokenHandler.getToken(config);
         System.out.println(token);
     }

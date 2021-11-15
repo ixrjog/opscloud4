@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.handler;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
@@ -19,7 +19,7 @@ public class KubernetesTestHandler {
      * @param name       podName
      * @return
      */
-    public static Pod getPod(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String name, String cmd) {
+    public static Pod getPod(KubernetesConfig.Kubernetes kubernetes, String namespace, String name, String cmd) {
         String containerName ="";
         Pod pod = KubernetesPodHandler.getPod(kubernetes, namespace, name);
         ExecWatch watch = KubeClient.build(kubernetes).pods()
@@ -35,7 +35,7 @@ public class KubernetesTestHandler {
 
     // LogWatch handle = client.load('/workspace/pod.yml').watchLog(System.out);
 
-    public static LogWatch getPodLogWatch(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace, String name) {
+    public static LogWatch getPodLogWatch(KubernetesConfig.Kubernetes kubernetes, String namespace, String name) {
         return KubeClient.build(kubernetes).pods()
                 .inNamespace(namespace)
                 .withName(name).watchLog(System.out);

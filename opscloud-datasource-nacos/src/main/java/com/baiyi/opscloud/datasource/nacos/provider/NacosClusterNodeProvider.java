@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.nacos.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.NacosDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.constant.SingleTaskConstants;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -46,8 +46,8 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
         return DsAssetTypeEnum.NACOS_CLUSTER_NODE.name();
     }
 
-    private NacosDsInstanceConfig.Nacos buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, NacosDsInstanceConfig.class).getNacos();
+    private NacosConfig.Nacos buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, NacosConfig.class).getNacos();
     }
 
     @Override

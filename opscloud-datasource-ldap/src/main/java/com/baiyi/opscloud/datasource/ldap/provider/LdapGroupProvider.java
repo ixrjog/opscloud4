@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.ldap.entry.Group;
@@ -39,14 +39,14 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
         return DsTypeEnum.LDAP.name();
     }
 
-    private LdapDsInstanceConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
+    private LdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, LdapConfig.class).getLdap();
     }
 
 
     @Override
     protected List<Group> listEntries(DsInstanceContext dsInstanceContext, Person target) {
-        LdapDsInstanceConfig.Ldap ldap = buildConfig(dsInstanceContext.getDsConfig());
+        LdapConfig.Ldap ldap = buildConfig(dsInstanceContext.getDsConfig());
         return groupRepo.searchGroupByUsername(ldap, target.getUsername());
     }
 

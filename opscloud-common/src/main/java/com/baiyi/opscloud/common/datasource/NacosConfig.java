@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.datasource;
 
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.google.common.collect.Maps;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.util.Map;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class NacosDsInstanceConfig extends BaseDsInstanceConfig {
+public class NacosConfig extends BaseConfig {
 
     private Nacos nacos;
 

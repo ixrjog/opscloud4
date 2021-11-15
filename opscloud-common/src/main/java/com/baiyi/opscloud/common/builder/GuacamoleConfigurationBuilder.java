@@ -7,7 +7,7 @@ package com.baiyi.opscloud.common.builder;
  */
 public class GuacamoleConfigurationBuilder {
 
-    private SimpleDict guacamoleConfigurationDict = new SimpleDict();
+    private final SimpleDict guacamoleConfigurationDict = new SimpleDict();
 
     private GuacamoleConfigurationBuilder() {
     }

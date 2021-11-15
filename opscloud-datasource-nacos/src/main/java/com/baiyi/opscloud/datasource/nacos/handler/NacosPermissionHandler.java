@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.handler;
 
-import com.baiyi.opscloud.common.datasource.NacosDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosPermission;
 import com.baiyi.opscloud.datasource.nacos.feign.NacosAuthV1Feign;
@@ -25,7 +25,7 @@ public class NacosPermissionHandler {
 
     private final NacosAuthHandler nacosAuthHandler;
 
-    private NacosAuthV1Feign buildFeign(NacosDsInstanceConfig.Nacos config) {
+    private NacosAuthV1Feign buildFeign(NacosConfig.Nacos config) {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
@@ -33,7 +33,7 @@ public class NacosPermissionHandler {
                 .target(NacosAuthV1Feign.class, config.getUrl());
     }
 
-    public NacosPermission.PermissionsResponse listPermissions(NacosDsInstanceConfig.Nacos config) {
+    public NacosPermission.PermissionsResponse listPermissions(NacosConfig.Nacos config) {
         NacosLogin.AccessToken accessToken = nacosAuthHandler.login(config);
         NacosAuthV1Feign nacosAPI = buildFeign(config);
         NacosPageParam.PageQuery pageQuery = NacosPageParam.PageQuery.builder()

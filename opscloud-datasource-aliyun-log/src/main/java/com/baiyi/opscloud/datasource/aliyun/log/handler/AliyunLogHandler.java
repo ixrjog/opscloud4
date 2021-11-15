@@ -6,7 +6,7 @@ import com.aliyun.openservices.log.exception.LogException;
 import com.aliyun.openservices.log.request.ListConfigRequest;
 import com.aliyun.openservices.log.request.ListLogStoresRequest;
 import com.aliyun.openservices.log.request.ListProjectRequest;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.base.BaseAliyunLogHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -30,7 +30,7 @@ public class AliyunLogHandler extends BaseAliyunLogHandler {
      * @param project
      * @return
      */
-    public List<Project> listProject(AliyunDsInstanceConfig.Aliyun aliyun, String project) {
+    public List<Project> listProject(AliyunConfig.Aliyun aliyun, String project) {
         int offset = 0;
         ListProjectRequest req = new ListProjectRequest(project, offset, QUERY_SIZE);
         try {
@@ -49,7 +49,7 @@ public class AliyunLogHandler extends BaseAliyunLogHandler {
      * @param project
      * @return
      */
-    public List<String> listLogstore(AliyunDsInstanceConfig.Aliyun aliyun, String project) {
+    public List<String> listLogstore(AliyunConfig.Aliyun aliyun, String project) {
         int offset = 0;
         String logStoreSubName = "";
         ListLogStoresRequest req = new ListLogStoresRequest(project, offset, QUERY_SIZE, logStoreSubName);
@@ -62,7 +62,7 @@ public class AliyunLogHandler extends BaseAliyunLogHandler {
         return Collections.emptyList();
     }
 
-    public List<String> listConfig(AliyunDsInstanceConfig.Aliyun aliyun, String project, String logstore) {
+    public List<String> listConfig(AliyunConfig.Aliyun aliyun, String project, String logstore) {
         int offset = 0;
         ListConfigRequest req = new ListConfigRequest(project, offset, QUERY_SIZE);
         req.SetLogstoreName(logstore);

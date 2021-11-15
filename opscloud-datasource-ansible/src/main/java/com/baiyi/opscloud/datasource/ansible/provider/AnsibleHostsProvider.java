@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.ansible.convert.AnsibleAssetConvert;
 import com.baiyi.opscloud.datasource.ansible.model.AnsibleHosts;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -57,13 +57,13 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
         return DsAssetTypeEnum.ANSIBLE_HOSTS.getType();
     }
 
-    private AnsibleDsInstanceConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AnsibleDsInstanceConfig.class).getAnsible();
+    private AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AnsibleConfig.class).getAnsible();
     }
 
     @Override
     protected List<AnsibleHosts.Hosts> listEntries(DsInstanceContext dsInstanceContext) {
-        AnsibleDsInstanceConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
+        AnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         List<AnsibleHosts.Hosts> hosts = Lists.newArrayList();
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
         hosts.add(buildHosts(credential.getUsername(), ansible.getInventoryHost()));

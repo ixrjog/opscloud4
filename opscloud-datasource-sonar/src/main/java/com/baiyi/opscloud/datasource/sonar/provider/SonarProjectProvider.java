@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.sonar.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.SonarDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.SonarConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -50,13 +50,13 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
         return DsAssetTypeEnum.SONAR_PROJECT.getType();
     }
 
-    private SonarDsInstanceConfig.Sonar buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, SonarDsInstanceConfig.class).getSonar();
+    private SonarConfig.Sonar buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, SonarConfig.class).getSonar();
     }
 
     @Override
     protected List<BaseSonarElement.Project> listEntries(DsInstanceContext dsInstanceContext) {
-        SonarDsInstanceConfig.Sonar sonar = buildConfig(dsInstanceContext.getDsConfig());
+        SonarConfig.Sonar sonar = buildConfig(dsInstanceContext.getDsConfig());
         List<BaseSonarElement.Project> entries = Lists.newArrayList();
         PagingParam pagingParam = PagingParam.builder().build();
         sonarProjectsHandler.searchProjects(sonar, pagingParam);

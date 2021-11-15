@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.event.process;
 
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -52,9 +52,9 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem> {
 
     private static final List<SeverityType> severityTypes = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
 
-    protected ZabbixDsInstanceConfig getConfig(String instanceUuid) {
+    protected ZabbixConfig getConfig(String instanceUuid) {
         DsInstanceContext context = buildDsInstanceContext(instanceUuid);
-        return dsFactory.build(context.getDsConfig(), ZabbixDsInstanceConfig.class);
+        return dsFactory.build(context.getDsConfig(), ZabbixConfig.class);
     }
 
     @Override
@@ -86,7 +86,7 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem> {
     @Override
     protected void recordEventBusiness(DatasourceInstance dsInstance, Event event) {
         ZabbixProblem problem = new GsonBuilder().create().fromJson(event.getEventMessage(), ZabbixProblem.class);
-        ZabbixDsInstanceConfig config = getConfig(dsInstance.getUuid());
+        ZabbixConfig config = getConfig(dsInstance.getUuid());
         ZabbixTrigger trigger = zabbixTriggerHandler.getById(config.getZabbix(), problem.getObjectid());
         if (trigger == null) {
             log.info("Zabbix Trigger 不存在: problemId = {}, triggerId = {}", problem.getEventid(), problem.getObjectid());

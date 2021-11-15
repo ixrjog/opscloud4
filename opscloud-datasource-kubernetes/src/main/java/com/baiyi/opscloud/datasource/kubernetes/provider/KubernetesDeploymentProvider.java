@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.DeploymentAssetConvert;
@@ -44,13 +44,13 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
         return DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType();
     }
 
-    private KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
+    private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
     @Override
     protected List<Deployment> listEntries(DsInstanceContext dsInstanceContext) {
-        KubernetesDsInstanceConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Namespace> namespaces = KubernetesNamespaceHandler.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Deployment> deployments = Lists.newArrayList();
         namespaces.forEach(e ->

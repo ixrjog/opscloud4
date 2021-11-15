@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.sonar.handler;
 
-import com.baiyi.opscloud.common.datasource.SonarDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.SonarConfig;
 import com.baiyi.opscloud.datasource.sonar.entry.SonarProjects;
 import com.baiyi.opscloud.datasource.sonar.enums.QualifierEnum;
 import com.baiyi.opscloud.datasource.sonar.feign.SonarProjectsFeign;
@@ -35,7 +35,7 @@ public class SonarProjectsHandler {
                 .getParams();
     }
 
-    public SonarProjects searchProjects(SonarDsInstanceConfig.Sonar config, PagingParam pagingParam) {
+    public SonarProjects searchProjects(SonarConfig.Sonar config, PagingParam pagingParam) {
         SonarProjectsFeign sonarAPI = Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())

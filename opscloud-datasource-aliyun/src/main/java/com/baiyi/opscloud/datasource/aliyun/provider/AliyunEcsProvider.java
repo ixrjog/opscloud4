@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
@@ -43,8 +43,8 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
         doPull(dsInstanceId);
     }
 
-    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
 
     @Override
     protected List<DescribeInstancesResponse.Instance> listEntries(DsInstanceContext dsInstanceContext) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();

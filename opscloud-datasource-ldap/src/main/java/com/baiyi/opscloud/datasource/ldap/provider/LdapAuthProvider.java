@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ldap.provider;
 
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.auth.BaseAuthProvider;
@@ -27,8 +27,8 @@ public class LdapAuthProvider extends BaseAuthProvider {
         return ldapHandler.loginCheck(buildConfig(dsInstanceContext.getDsConfig()), credential);
     }
 
-    private LdapDsInstanceConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, LdapDsInstanceConfig.class).getLdap();
+    private LdapConfig.Ldap buildConfig(DatasourceConfig dsConfig) {
+        return dsFactory.build(dsConfig, LdapConfig.class).getLdap();
     }
 
     @Override

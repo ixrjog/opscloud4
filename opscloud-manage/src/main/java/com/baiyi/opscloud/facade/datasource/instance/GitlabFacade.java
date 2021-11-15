@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
-import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.datasource.InstanceConfigHelper;
@@ -57,10 +57,10 @@ public class GitlabFacade extends BaseManager {
         List<DatasourceInstance> instances = super.listInstance();
         if (CollectionUtils.isEmpty(instances)) return null;
         Optional<DatasourceInstance> optional = instances.stream().filter(i -> {
-            GitlabDsInstanceConfig gitlabDsInstanceConfig = (GitlabDsInstanceConfig) instanceConfigHelper.getConfig(i);
+            GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) instanceConfigHelper.getConfig(i);
             String secretToken = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
-                    .map(GitlabDsInstanceConfig.Gitlab::getSystemHooks)
-                    .map(GitlabDsInstanceConfig.SystemHooks::getToken)
+                    .map(GitlabConfig.Gitlab::getSystemHooks)
+                    .map(GitlabConfig.SystemHooks::getToken)
                     .get();
             return GitlabTokenUtil.getToken().equals(secretToken);
 

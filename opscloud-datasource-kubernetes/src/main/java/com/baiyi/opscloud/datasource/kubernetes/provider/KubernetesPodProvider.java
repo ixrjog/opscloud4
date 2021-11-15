@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
@@ -46,14 +46,14 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
         return DsAssetTypeEnum.KUBERNETES_POD.getType();
     }
 
-    private KubernetesDsInstanceConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, KubernetesDsInstanceConfig.class).getKubernetes();
+    private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
     @Override
     public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        KubernetesDsInstanceConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Pod> pods = KubernetesPodHandler.listPod(kubernetes, params.get("namespace"), params.get("deploymentName"));
         return pods.stream().map(e->
             toAssetContainer(dsInstanceContext.getDsInstance(),e)
@@ -62,7 +62,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
 
     @Override
     protected List<Pod> listEntries(DsInstanceContext dsInstanceContext) {
-        KubernetesDsInstanceConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
+        KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Namespace> namespaces = KubernetesNamespaceHandler.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Pod> pods = Lists.newArrayList();
         namespaces.forEach(e ->

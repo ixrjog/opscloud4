@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.jenkins.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.jenkins.convert.ComputerAssetConvert;
@@ -44,8 +44,8 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
         return DsAssetTypeEnum.JENKINS_COMPUTER.getType();
     }
 
-    private JenkinsDsInstanceConfig.Jenkins buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, JenkinsDsInstanceConfig.class).getJenkins();
+    private JenkinsConfig.Jenkins buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, JenkinsConfig.class).getJenkins();
     }
 
     @Override

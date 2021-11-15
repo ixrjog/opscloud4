@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ansible.provider;
 
-import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.constant.enums.CredentialKindEnum;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
@@ -27,7 +27,7 @@ import java.util.Set;
  * @Version 1.0
  */
 @Component
-public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvider<AnsibleDsInstanceConfig.Ansible> {
+public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvider<AnsibleConfig.Ansible> {
 
     @Override
     public String getInstanceType() {
@@ -35,13 +35,13 @@ public class AnsibleSetConfigProvider extends AbstractSetDsInstanceConfigProvide
     }
 
     @Override
-    protected AnsibleDsInstanceConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
-        return dsFactory.build(dsConfig, AnsibleDsInstanceConfig.class).getAnsible();
+    protected AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
+        return dsFactory.build(dsConfig, AnsibleConfig.class).getAnsible();
     }
 
     @Override
     protected void doSet(DsInstanceContext dsInstanceContext) {
-        AnsibleDsInstanceConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
+        AnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         // 取配置文件路径
         ansible.getPrivateKey();
         String privateKeyPath = SystemEnvUtil.renderEnvHome(ansible.getPrivateKey());

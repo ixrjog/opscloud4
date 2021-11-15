@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
@@ -45,8 +45,8 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
         doPull(dsInstanceId);
     }
 
-    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override
@@ -61,7 +61,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
 
     @Override
     protected List<ListAccessKeysResponse.AccessKey> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<ListAccessKeysResponse.AccessKey> accessKeyList = Lists.newArrayList();

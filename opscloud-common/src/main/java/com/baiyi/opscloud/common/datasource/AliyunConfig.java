@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.datasource;
 
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.google.common.base.Joiner;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -17,7 +17,7 @@ import java.util.Set;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AliyunDsInstanceConfig extends BaseDsInstanceConfig {
+public class AliyunConfig extends BaseConfig {
 
     private static final String RAM_LOGIN_URL = "https://signin.aliyun.com/${COMPANY}.onaliyun.com/login.htm";
 

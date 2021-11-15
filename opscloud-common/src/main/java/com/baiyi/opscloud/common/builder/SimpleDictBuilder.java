@@ -9,7 +9,7 @@ import org.springframework.util.StringUtils;
  */
 public class SimpleDictBuilder {
 
-    private SimpleDict simpleDict = new SimpleDict();
+    private final SimpleDict simpleDict = new SimpleDict();
 
     private SimpleDictBuilder() {
     }

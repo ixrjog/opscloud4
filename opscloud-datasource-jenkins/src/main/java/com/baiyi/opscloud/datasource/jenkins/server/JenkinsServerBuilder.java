@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.jenkins.server;
 
-import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.offbytwo.jenkins.JenkinsServer;
 
 import java.net.URI;
@@ -16,7 +16,7 @@ public final class JenkinsServerBuilder {
     private JenkinsServerBuilder() {
     }
 
-    public static JenkinsServer build(JenkinsDsInstanceConfig.Jenkins jenkins) throws URISyntaxException {
+    public static JenkinsServer build(JenkinsConfig.Jenkins jenkins) throws URISyntaxException {
         return new JenkinsServer(new URI(jenkins.getUrl()),
                 jenkins.getUsername(), jenkins.getToken());
     }

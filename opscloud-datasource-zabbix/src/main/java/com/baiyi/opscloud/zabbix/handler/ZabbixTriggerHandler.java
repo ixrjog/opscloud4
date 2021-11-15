@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler;
 
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.handler.base.BaseZabbixHandler;
@@ -52,7 +52,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
      *
      * @param severityType
      */
-    public List<ZabbixTrigger> getBySeverityType(ZabbixDsInstanceConfig.Zabbix zabbix, SeverityType severityType) {
+    public List<ZabbixTrigger> getBySeverityType(ZabbixConfig.Zabbix zabbix, SeverityType severityType) {
 
         /**
          * (readonly 只读) Whether the trigger is in OK or problem state. 触发器是否处于正常或故障状态。
@@ -84,7 +84,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
-    public List<ZabbixTrigger> list(ZabbixDsInstanceConfig.Zabbix zabbix) {
+    public List<ZabbixTrigger> list(ZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
@@ -102,7 +102,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
-    public List<ZabbixTrigger> listByHost(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost host) {
+    public List<ZabbixTrigger> listByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
@@ -121,7 +121,7 @@ public class ZabbixTriggerHandler extends BaseZabbixHandler<ZabbixTrigger> {
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
     }
 
-    public ZabbixTrigger getById(ZabbixDsInstanceConfig.Zabbix zabbix, String triggerId) {
+    public ZabbixTrigger getById(ZabbixConfig.Zabbix zabbix, String triggerId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.ansible.builder;
 
 
 import com.baiyi.opscloud.datasource.ansible.args.CommandArgs;
-import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.google.common.base.Joiner;
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.lang3.StringUtils;
@@ -27,7 +27,7 @@ public class AnsibleArgsBuilder {
      * @param args
      * @return
      */
-    public static CommandLine build(AnsibleDsInstanceConfig.Ansible ansible, CommandArgs args) {
+    public static CommandLine build(AnsibleConfig.Ansible ansible, CommandArgs args) {
         CommandLine commandLine = new CommandLine(ansible.getAnsible());
         return getCommandLine(commandLine, ansible, args);
     }
@@ -39,12 +39,12 @@ public class AnsibleArgsBuilder {
      * @param args
      * @return
      */
-    public static CommandLine buildPlaybook(AnsibleDsInstanceConfig.Ansible ansible, CommandArgs args) {
+    public static CommandLine buildPlaybook(AnsibleConfig.Ansible ansible, CommandArgs args) {
         CommandLine commandLine = new CommandLine(ansible.getPlaybook());
         return getCommandLine(commandLine, ansible, args);
     }
 
-    public static CommandLine getCommandLine(CommandLine commandLine, AnsibleDsInstanceConfig.Ansible ansible, CommandArgs args) {
+    public static CommandLine getCommandLine(CommandLine commandLine, AnsibleConfig.Ansible ansible, CommandArgs args) {
         if (args.isVersion()) {
             commandLine.addArgument("--version");
             return commandLine;

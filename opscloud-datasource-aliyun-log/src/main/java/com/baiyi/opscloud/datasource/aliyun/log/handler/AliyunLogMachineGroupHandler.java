@@ -4,7 +4,7 @@ import com.aliyun.openservices.log.Client;
 import com.aliyun.openservices.log.common.MachineGroup;
 import com.aliyun.openservices.log.exception.LogException;
 import com.aliyun.openservices.log.request.*;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.base.BaseAliyunLogHandler;
 import com.baiyi.opscloud.domain.vo.datasource.aliyun.AliyunLogMemberVO;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ public class AliyunLogMachineGroupHandler extends BaseAliyunLogHandler {
 
     public static final String MACHINE_IDENTIFY_TYPE = "ip";
 
-    public MachineGroup getMachineGroup(AliyunDsInstanceConfig.Aliyun aliyun, String project, String groupName) {
+    public MachineGroup getMachineGroup(AliyunConfig.Aliyun aliyun, String project, String groupName) {
         GetMachineGroupRequest req = new GetMachineGroupRequest(project, groupName);
         try {
             Client client = buildClient(aliyun);
@@ -36,7 +36,7 @@ public class AliyunLogMachineGroupHandler extends BaseAliyunLogHandler {
         return null;
     }
 
-    public List<String> getMachineGroups(AliyunDsInstanceConfig.Aliyun aliyun, String project, String groupName) {
+    public List<String> getMachineGroups(AliyunConfig.Aliyun aliyun, String project, String groupName) {
         int offset = 0;
         ListMachineGroupRequest req = new ListMachineGroupRequest(project, groupName, offset, QUERY_SIZE);
         List<String> machineGroups = new ArrayList<>();
@@ -49,7 +49,7 @@ public class AliyunLogMachineGroupHandler extends BaseAliyunLogHandler {
         return machineGroups;
     }
 
-    public void updateMachineGroup(AliyunDsInstanceConfig.Aliyun aliyun,AliyunLogMemberVO.LogMember logMember) {
+    public void updateMachineGroup(AliyunConfig.Aliyun aliyun, AliyunLogMemberVO.LogMember logMember) {
         MachineGroup machineGroup = new MachineGroup(logMember.getServerGroupName(), MACHINE_IDENTIFY_TYPE, logMember.getMachineList());
         machineGroup.SetGroupTopic(StringUtils.isEmpty(logMember.getTopic()) ? logMember.getServerGroupName() : logMember.getTopic());
         try {
@@ -61,7 +61,7 @@ public class AliyunLogMachineGroupHandler extends BaseAliyunLogHandler {
         }
     }
 
-    public void createMachineGroup(AliyunDsInstanceConfig.Aliyun aliyun, AliyunLogMemberVO.LogMember logMember) {
+    public void createMachineGroup(AliyunConfig.Aliyun aliyun, AliyunLogMemberVO.LogMember logMember) {
         MachineGroup machineGroup = new MachineGroup(logMember.getServerGroupName(), MACHINE_IDENTIFY_TYPE, logMember.getMachineList());
         machineGroup.SetGroupTopic(StringUtils.isEmpty(logMember.getTopic()) ? logMember.getServerGroupName() : logMember.getTopic());
         try {
@@ -79,7 +79,7 @@ public class AliyunLogMachineGroupHandler extends BaseAliyunLogHandler {
      * @param logMember
      * @return
      */
-    private void applyConfigToMachineGroup(AliyunDsInstanceConfig.Aliyun aliyun, AliyunLogMemberVO.LogMember logMember) {
+    private void applyConfigToMachineGroup(AliyunConfig.Aliyun aliyun, AliyunLogMemberVO.LogMember logMember) {
         ApplyConfigToMachineGroupRequest req = new ApplyConfigToMachineGroupRequest(logMember.getLog().getProject(), logMember.getServerGroup().getName(), logMember.getLog().getConfig());
         try {
             Client client = buildClient(aliyun);

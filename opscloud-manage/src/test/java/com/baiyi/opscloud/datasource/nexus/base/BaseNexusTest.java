@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.nexus.base;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.NexusDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NexusConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -21,8 +21,8 @@ public class BaseNexusTest extends BaseUnit {
     @Resource
     private DsConfigHelper dsFactory;
 
-    protected NexusDsInstanceConfig getConfig() {
+    protected NexusConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(12);
-        return dsFactory.build(datasourceConfig, NexusDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, NexusConfig.class);
     }
 }

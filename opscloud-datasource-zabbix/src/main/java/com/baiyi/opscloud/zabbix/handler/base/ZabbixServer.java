@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.zabbix.handler.base;
 
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
@@ -44,12 +44,12 @@ public class ZabbixServer {
     private RedisUtil redisUtil;
 
     @Retryable(value = RuntimeException.class, maxAttempts = 2, backoff = @Backoff(delay = 1000, multiplier = 1.5))
-    public JsonNode call(ZabbixDsInstanceConfig.Zabbix zabbix, IZabbixRequest request) {
+    public JsonNode call(ZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
         DefaultZabbixClient zabbixClient = buildZabbixClient(zabbix);
         return zabbixClient.call(request);
     }
 
-    private DefaultZabbixClient buildZabbixClient(ZabbixDsInstanceConfig.Zabbix zabbix) {
+    private DefaultZabbixClient buildZabbixClient(ZabbixConfig.Zabbix zabbix) {
         String auth = getAuth(zabbix);
         if (!StringUtils.isEmpty(auth))
             return new DefaultZabbixClient(zabbix, auth);
@@ -59,12 +59,12 @@ public class ZabbixServer {
         return zabbixClient;
     }
 
-    private void cacheAuth(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixUser loginUser, String auth) {
+    private void cacheAuth(ZabbixConfig.Zabbix zabbix, ZabbixUser loginUser, String auth) {
         String key = Joiner.on("_").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
         redisUtil.set(key, auth, getAuthCacheTime(loginUser));
     }
 
-    private String getAuth(ZabbixDsInstanceConfig.Zabbix zabbix) {
+    private String getAuth(ZabbixConfig.Zabbix zabbix) {
         String key = Joiner.on("_").join(AUTH_CACHE_KAY_PREFIX, zabbix.getUrl());
         if (redisUtil.hasKey(key)) {
             redisUtil.get(key);

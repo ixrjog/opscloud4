@@ -4,7 +4,7 @@ import com.aliyuncs.ram.model.v20150501.ListPoliciesForUserResponse;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
 import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ram.handler.AliyunRamHandler;
@@ -47,8 +47,8 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
         doPull(dsInstanceId);
     }
 
-    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override
@@ -69,7 +69,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
 
     @Override
     protected List<ListPoliciesResponse.Policy> listEntries(DsInstanceContext dsInstanceContext) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<ListPoliciesResponse.Policy> policyList = Lists.newArrayList();
@@ -94,7 +94,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
 
     @Override
     protected List<ListPoliciesResponse.Policy> listEntries(DsInstanceContext dsInstanceContext, ListUsersResponse.User target) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRamHandler.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName()).stream().map(this::toTargetEntry
         ).collect(Collectors.toList());
     }

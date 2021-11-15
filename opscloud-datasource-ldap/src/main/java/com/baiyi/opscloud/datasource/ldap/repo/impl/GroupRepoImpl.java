@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.datasource.ldap.entry.Group;
 import com.baiyi.opscloud.datasource.ldap.handler.LdapHandler;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
@@ -24,17 +24,17 @@ public class GroupRepoImpl implements GroupRepo {
     private LdapHandler ldapHandler;
 
     @Override
-    public List<Group> getGroupList(LdapDsInstanceConfig.Ldap ldapConfig) {
+    public List<Group> getGroupList(LdapConfig.Ldap ldapConfig) {
         return ldapHandler.queryGroupList(ldapConfig);
     }
 
     @Override
-    public List<String> queryGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName) {
+    public List<String> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {
         return ldapHandler.queryGroupMember(ldapConfig, groupName);
     }
 
     @Override
-    public List<Group> searchGroupByUsername(LdapDsInstanceConfig.Ldap ldapConfig, String username) {
+    public List<Group> searchGroupByUsername(LdapConfig.Ldap ldapConfig, String username) {
         List<String> groupNames = ldapHandler.searchLdapGroup(ldapConfig, username);
         return groupNames.stream().map(e ->
                 ldapHandler.getGroupWithDn(ldapConfig, ldapConfig.buildGroupDn(e))
@@ -42,17 +42,17 @@ public class GroupRepoImpl implements GroupRepo {
     }
 
     @Override
-    public void removeGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName, String username) {
+    public void removeGroupMember(LdapConfig.Ldap ldapConfig, String groupName, String username) {
         ldapHandler.removeGroupMember(ldapConfig, groupName, username);
     }
 
     @Override
-    public void addGroupMember(LdapDsInstanceConfig.Ldap ldapConfig, String groupName, String username) {
+    public void addGroupMember(LdapConfig.Ldap ldapConfig, String groupName, String username) {
         ldapHandler.addGroupMember(ldapConfig, groupName, username);
     }
 
     @Override
-    public void create(LdapDsInstanceConfig.Ldap ldapConfig, String groupName) {
+    public void create(LdapConfig.Ldap ldapConfig, String groupName) {
         com.baiyi.opscloud.datasource.ldap.entry.Group group = Group.builder()
                 .groupName(groupName)
                 .build();
@@ -60,7 +60,7 @@ public class GroupRepoImpl implements GroupRepo {
     }
 
     @Override
-    public void delete(LdapDsInstanceConfig.Ldap ldapConfig, String groupName) {
+    public void delete(LdapConfig.Ldap ldapConfig, String groupName) {
     }
 
 }

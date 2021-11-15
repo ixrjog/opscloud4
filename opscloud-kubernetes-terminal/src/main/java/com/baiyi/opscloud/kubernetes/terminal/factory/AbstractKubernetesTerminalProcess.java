@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.kubernetes.terminal.factory;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -41,12 +41,12 @@ public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetes
 
     abstract protected T getMessage(String message);
 
-    protected KubernetesDsInstanceConfig buildConfig(KubernetesResource kubernetesResource) {
+    protected KubernetesConfig buildConfig(KubernetesResource kubernetesResource) {
         DatasourceInstanceAsset asset = getAssetByResource(kubernetesResource);
         return buildConfig(asset.getInstanceUuid());
     }
 
-    private KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
+    private KubernetesConfig buildConfig(String instanceUuid) {
         return dsConfigHelper.buildConfig(instanceUuid);
     }
 

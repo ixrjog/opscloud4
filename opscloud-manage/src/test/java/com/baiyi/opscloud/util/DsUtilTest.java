@@ -2,8 +2,8 @@ package com.baiyi.opscloud.util;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
@@ -29,7 +29,7 @@ public class DsUtilTest extends BaseUnit {
     void toConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(1);
         System.err.println(JSON.toJSON(datasourceConfig));
-        LdapDsInstanceConfig ldapDsInstanceConfig = DsUtil.toDatasourceConfig(datasourceConfig.getPropsYml(), LdapDsInstanceConfig.class);
+        LdapConfig ldapDsInstanceConfig = DsUtil.toDatasourceConfig(datasourceConfig.getPropsYml(), LdapConfig.class);
         System.err.println(JSON.toJSON(ldapDsInstanceConfig));
     }
 
@@ -37,7 +37,7 @@ public class DsUtilTest extends BaseUnit {
     void toConfig2() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(1);
         System.err.println(JSON.toJSON(datasourceConfig));
-        BaseDsInstanceConfig base = dsFactory.build(datasourceConfig, LdapDsInstanceConfig.class);
+        BaseConfig base = dsFactory.build(datasourceConfig, LdapConfig.class);
         System.err.println(JSON.toJSON(base));
     }
 }

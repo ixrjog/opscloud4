@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.kubernetes;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -64,7 +64,7 @@ public class KubernetesTest extends BaseUnit {
 
     @Test
     void namespaceTest() {
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         // KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
 
         List<Namespace> namespaces = KubernetesNamespaceHandler.listNamespace(kubernetesDsInstanceConfig.getKubernetes());
@@ -77,7 +77,7 @@ public class KubernetesTest extends BaseUnit {
 
     @Test
     void podTest() {
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
         PodList podList = kubernetesClient.pods().inNamespace("dev").list();
 
@@ -109,7 +109,7 @@ public class KubernetesTest extends BaseUnit {
 //        }
         //  System.err.print(JSON.toJSONString(matchLabels));
 
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         List<Pod> pods = KubernetesPodHandler.listPod(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment");
         for (Pod item : pods) {
             System.err.print(item.getSpec());
@@ -119,7 +119,7 @@ public class KubernetesTest extends BaseUnit {
 
     @Test
     void logTest() {
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         LogWatch logWatch = KubernetesTestHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment-5db56d8d8c-54svd");
 
 
@@ -135,13 +135,13 @@ public class KubernetesTest extends BaseUnit {
 
     @Test
     void watchEventTest() {
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         KubernetesWatchEvent.watch(kubernetesDsInstanceConfig.getKubernetes(),"dev");
     }
 
     @Test
     void watchEvent2Test() {
-        KubernetesDsInstanceConfig kubernetesDsInstanceConfig = (KubernetesDsInstanceConfig) getConfig();
+        KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         KubernetesPodWatch.watch(kubernetesDsInstanceConfig.getKubernetes(),"dev");
     }
 
@@ -182,8 +182,8 @@ public class KubernetesTest extends BaseUnit {
     }
 
     @Test
-    BaseDsInstanceConfig getConfig() {
+    BaseConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(5);
-        return dsFactory.build(datasourceConfig, KubernetesDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, KubernetesConfig.class);
     }
 }

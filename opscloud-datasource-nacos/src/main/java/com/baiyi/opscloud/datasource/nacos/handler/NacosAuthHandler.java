@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.handler;
 
-import com.baiyi.opscloud.common.datasource.NacosDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.feign.NacosAuthV1Feign;
@@ -28,7 +28,7 @@ public class NacosAuthHandler {
         return String.format("Opscloud.V4.Nacos.AccessToken.%s", url);
     }
 
-    private NacosAuthV1Feign buildFeign(NacosDsInstanceConfig.Nacos config) {
+    private NacosAuthV1Feign buildFeign(NacosConfig.Nacos config) {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
@@ -36,7 +36,7 @@ public class NacosAuthHandler {
                 .target(NacosAuthV1Feign.class, config.getUrl());
     }
 
-    public NacosLogin.AccessToken login(NacosDsInstanceConfig.Nacos config) {
+    public NacosLogin.AccessToken login(NacosConfig.Nacos config) {
         String key = buildKey(config.getUrl());
         if (redisUtil.hasKey(key)) {
             return (NacosLogin.AccessToken) redisUtil.get(key);

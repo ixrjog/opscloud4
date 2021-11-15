@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.command.kubernetes.base;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
@@ -46,7 +46,7 @@ public class BaseKubernetesCommand {
         this.terminal = terminal;
     }
 
-    protected KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
+    protected KubernetesConfig buildConfig(String instanceUuid) {
        return dsConfigHelper.buildConfig(instanceUuid);
     }
 

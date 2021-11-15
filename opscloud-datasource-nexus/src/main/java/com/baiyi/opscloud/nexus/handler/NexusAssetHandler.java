@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.nexus.handler;
 
-import com.baiyi.opscloud.common.datasource.NexusDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NexusConfig;
 import com.baiyi.opscloud.domain.model.Authorization;
 import com.baiyi.opscloud.nexus.entry.NexusAsset;
 import com.baiyi.opscloud.nexus.feign.NexusAssetsV1Feign;
@@ -21,14 +21,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class NexusAssetHandler {
 
-    protected Authorization.Credential buildCredential(NexusDsInstanceConfig.Nexus config) {
+    protected Authorization.Credential buildCredential(NexusConfig.Nexus config) {
         return Authorization.Credential.builder()
                 .username(config.getUser())
                 .password(config.getPassword())
                 .build();
     }
 
-    private NexusAssetsV1Feign buildFeign(NexusDsInstanceConfig.Nexus config) {
+    private NexusAssetsV1Feign buildFeign(NexusConfig.Nexus config) {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
@@ -36,7 +36,7 @@ public class NexusAssetHandler {
                 .target(NexusAssetsV1Feign.class, config.getUrl());
     }
 
-    public NexusAsset.Assets list(NexusDsInstanceConfig.Nexus config, String repository, String continuationToken) {
+    public NexusAsset.Assets list(NexusConfig.Nexus config, String repository, String continuationToken) {
         NexusAssetsV1Feign nexusAPI = buildFeign(config);
         if (StringUtils.isBlank(continuationToken)) {
             return nexusAPI.listAssets(buildCredential(config).toBasic(), repository);

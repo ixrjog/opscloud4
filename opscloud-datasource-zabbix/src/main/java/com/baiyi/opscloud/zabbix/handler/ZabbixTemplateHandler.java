@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.baiyi.opscloud.common.config.CachingConfig;
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
@@ -44,7 +44,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
                 .method(Method.QUERY_TEMPLATE);
     }
 
-    public List<ZabbixTemplate> listAll(ZabbixDsInstanceConfig.Zabbix zabbix) {
+    public List<ZabbixTemplate> listAll(ZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = queryRequestBuilder()
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
@@ -52,12 +52,12 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_hostid_' + #zabbixHost.hostid")
-    public void evictHostTemplate(ZabbixDsInstanceConfig.Zabbix zabbix,ZabbixHost zabbixHost) {
+    public void evictHostTemplate(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         log.info("清除ZabbixHost模版缓存 : hostid = {}", zabbixHost.getHostid());
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_hostid_' + #host.hostid", unless = "#result == null")
-    public List<ZabbixTemplate> getByHost(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHost host) {
+    public List<ZabbixTemplate> getByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_IDS, host.getHostid())
                 .build();
@@ -65,7 +65,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
     }
 
-    public List<ZabbixTemplate> listTemplatesByGroup(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixHostGroup group) {
+    public List<ZabbixTemplate> listTemplatesByGroup(ZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
         SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(HOST_GROUP_IDS, group.getGroupid())
                 .build();
@@ -75,7 +75,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
 
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_id_' + #templateId", unless = "#result == null")
-    public ZabbixTemplate getById(ZabbixDsInstanceConfig.Zabbix zabbix, String templateId) {
+    public ZabbixTemplate getById(ZabbixConfig.Zabbix zabbix, String templateId) {
         SimpleZabbixRequest request = queryRequestBuilder()
                 .paramEntry(TEMPLATE_IDS, templateId)
                 .build();
@@ -83,7 +83,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
         return mapperListGetOne(data.get(RESULT), ZabbixTemplate.class);
     }
 
-    public List<ZabbixTemplate> listByNames(ZabbixDsInstanceConfig.Zabbix zabbix, List<String> names) {
+    public List<ZabbixTemplate> listByNames(ZabbixConfig.Zabbix zabbix, List<String> names) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", names)
                 .build();
@@ -95,7 +95,7 @@ public class ZabbixTemplateHandler  extends BaseZabbixHandler<ZabbixTemplate> {
     }
 
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_template_name_' + #templateName", unless = "#result == null")
-    public ZabbixTemplate getByName(ZabbixDsInstanceConfig.Zabbix zabbix,String templateName) {
+    public ZabbixTemplate getByName(ZabbixConfig.Zabbix zabbix, String templateName) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("host", templateName)
                 .build();

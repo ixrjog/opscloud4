@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.ecs.handler;
 
 import com.aliyuncs.ecs.model.v20140526.*;
 import com.aliyuncs.exceptions.ClientException;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.google.common.collect.Lists;
@@ -25,7 +25,7 @@ public class AliyunEcsHandler {
     @Resource
     private AliyunHandler aliyunHandler;
 
-    public List<DescribeInstancesResponse.Instance> listInstances(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
+    public List<DescribeInstancesResponse.Instance> listInstances(String regionId, AliyunConfig.Aliyun aliyun) {
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         String nextToken;
         try {
@@ -42,7 +42,7 @@ public class AliyunEcsHandler {
         return instanceList;
     }
 
-    public List<DescribeImagesResponse.Image> listImages(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
+    public List<DescribeImagesResponse.Image> listImages(String regionId, AliyunConfig.Aliyun aliyun) {
         List<DescribeImagesResponse.Image> images = Lists.newArrayList();
         try {
             DescribeImagesRequest describe = new DescribeImagesRequest();
@@ -71,7 +71,7 @@ public class AliyunEcsHandler {
         return images;
     }
 
-    public List<DescribeSecurityGroupsResponse.SecurityGroup> listSecurityGroups(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
+    public List<DescribeSecurityGroupsResponse.SecurityGroup> listSecurityGroups(String regionId, AliyunConfig.Aliyun aliyun, DatasourceInstanceAsset asset) {
         List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroups = Lists.newArrayList();
         try {
             DescribeSecurityGroupsRequest describe = new DescribeSecurityGroupsRequest();

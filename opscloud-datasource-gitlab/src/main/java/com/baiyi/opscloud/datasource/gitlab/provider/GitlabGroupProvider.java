@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.gitlab.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
@@ -40,8 +40,8 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
         return DsTypeEnum.GITLAB.name();
     }
 
-    private GitlabDsInstanceConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, GitlabDsInstanceConfig.class).getGitlab();
+    private GitlabConfig.Gitlab buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, GitlabConfig.class).getGitlab();
     }
 
     @Override

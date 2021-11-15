@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.ldap;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.LdapDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.LdapConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.account.impl.LdapAccountProvider;
@@ -111,7 +111,7 @@ public class LdapTest extends BaseUnit {
 
     @Test
     void queryPersonTest() {
-        LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
+        LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
         Person person = ldapHandler.getPersonWithDn(ldapDsInstanceConfig.getLdap(), "cn=baiyi,ou=People");
         log.info(JSON.toJSONString(person));
     }
@@ -119,7 +119,7 @@ public class LdapTest extends BaseUnit {
 
     @Test
     void queryGroupTest() {
-        LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
+        LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
         // "cn=confluence-users,ou=Groups"
         Group group = ldapHandler.getGroupWithDn(ldapDsInstanceConfig.getLdap(), "cn=vpn-users,ou=Groups");
         log.info(JSON.toJSONString(group));
@@ -127,7 +127,7 @@ public class LdapTest extends BaseUnit {
 
     @Test
     void queryGroupTest2() {
-        LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
+        LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
 
         ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=dev,ou=Groups");
         ldapHandler.unbind(ldapDsInstanceConfig.getLdap(), "cn=daily,ou=Groups");
@@ -145,15 +145,15 @@ public class LdapTest extends BaseUnit {
     }
 
     @Test
-    BaseDsInstanceConfig getConfig() {
+    BaseConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(2);
-        return dsFactory.build(datasourceConfig, LdapDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, LdapConfig.class);
     }
 
     @Test
     void xxx() {
         List<User> userList = userService.listInactive();
-        LdapDsInstanceConfig ldapDsInstanceConfig = (LdapDsInstanceConfig) getConfig();
+        LdapConfig ldapDsInstanceConfig = (LdapConfig) getConfig();
 
         userList.forEach(user -> {
             // ,dc=xincheng,dc=org

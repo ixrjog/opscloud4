@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.jenkins;
 
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.JenkinsDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.JenkinsConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.datasource.jenkins.handler.JenkinsServerHandler;
@@ -29,7 +29,7 @@ public class JenkinsTest extends BaseUnit {
 
     @Test
     void logTest() {
-        JenkinsDsInstanceConfig jenkinsDsInstanceConfig = (JenkinsDsInstanceConfig) getConfig();
+        JenkinsConfig jenkinsDsInstanceConfig = (JenkinsConfig) getConfig();
         try {
             Map<String, Computer> computerMap = JenkinsServerHandler.getComputers(jenkinsDsInstanceConfig.getJenkins());
 
@@ -50,8 +50,8 @@ public class JenkinsTest extends BaseUnit {
 
 
     @Test
-    BaseDsInstanceConfig getConfig() {
+    BaseConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(6);
-        return dsFactory.build(datasourceConfig, JenkinsDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, JenkinsConfig.class);
     }
 }

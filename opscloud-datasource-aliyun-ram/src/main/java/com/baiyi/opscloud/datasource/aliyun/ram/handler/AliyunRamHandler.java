@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.ram.handler;
 
 import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ram.model.v20150501.*;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.datasource.aliyun.core.handler.AliyunHandler;
 import com.google.common.collect.Lists;
 import org.apache.logging.log4j.util.Strings;
@@ -26,7 +26,7 @@ public class AliyunRamHandler {
     @Resource
     private AliyunHandler aliyunHandler;
 
-    public List<ListUsersResponse.User> listUsers(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
+    public List<ListUsersResponse.User> listUsers(String regionId, AliyunConfig.Aliyun aliyun) {
         List<ListUsersResponse.User> userList = Lists.newArrayList();
         String marker;
         try {
@@ -44,7 +44,7 @@ public class AliyunRamHandler {
         return userList;
     }
 
-    public List<ListPoliciesResponse.Policy> listPolicies(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
+    public List<ListPoliciesResponse.Policy> listPolicies(String regionId, AliyunConfig.Aliyun aliyun) {
         List<ListPoliciesResponse.Policy> policyList = Lists.newArrayList();
         String marker;
         try {
@@ -62,7 +62,7 @@ public class AliyunRamHandler {
         return policyList;
     }
 
-    public List<ListAccessKeysResponse.AccessKey> listAccessKeys(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String username) {
+    public List<ListAccessKeysResponse.AccessKey> listAccessKeys(String regionId, AliyunConfig.Aliyun aliyun, String username) {
         try {
             ListAccessKeysRequest request = new ListAccessKeysRequest();
             request.setUserName(username);
@@ -83,7 +83,7 @@ public class AliyunRamHandler {
      * @param username
      * @return
      */
-    public List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String username) {
+    public List<ListPoliciesForUserResponse.Policy> listPoliciesForUser(String regionId, AliyunConfig.Aliyun aliyun, String username) {
         ListPoliciesForUserRequest request = new ListPoliciesForUserRequest();
         request.setUserName(username);
         try {
@@ -103,7 +103,7 @@ public class AliyunRamHandler {
      * @param policyName
      * @return
      */
-    public List<ListEntitiesForPolicyResponse.User> listUsersForPolicy(String regionId, AliyunDsInstanceConfig.Aliyun aliyun, String policyType, String policyName) {
+    public List<ListEntitiesForPolicyResponse.User> listUsersForPolicy(String regionId, AliyunConfig.Aliyun aliyun, String policyType, String policyName) {
         ListEntitiesForPolicyRequest request = new ListEntitiesForPolicyRequest();
         request.setPolicyType(policyType);
         request.setPolicyName(policyName);

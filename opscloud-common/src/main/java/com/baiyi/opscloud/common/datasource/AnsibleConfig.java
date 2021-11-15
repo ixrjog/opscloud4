@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.common.datasource;
 
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.google.common.base.Joiner;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class AnsibleDsInstanceConfig extends BaseDsInstanceConfig {
+public class AnsibleConfig extends BaseConfig {
 
     private Ansible ansible;
 

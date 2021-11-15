@@ -9,7 +9,7 @@ import com.baiyi.opscloud.datasource.ansible.handler.AnsibleHandler;
 import com.baiyi.opscloud.datasource.ansible.model.AnsibleExecuteResult;
 import com.baiyi.opscloud.datasource.ansible.model.AnsibleVersion;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AnsibleDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -52,20 +52,20 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
         return DsAssetTypeEnum.ANSIBLE_VERSION.getType();
     }
 
-    private AnsibleDsInstanceConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AnsibleDsInstanceConfig.class).getAnsible();
+    private AnsibleConfig.Ansible buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AnsibleConfig.class).getAnsible();
     }
 
     @Override
     protected List<AnsibleVersion.Version> listEntries(DsInstanceContext dsInstanceContext) {
-        AnsibleDsInstanceConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
+        AnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         List<AnsibleVersion.Version> versions = Lists.newArrayList();
         versions.add(getAnsibleVersion(ansible));
         versions.add(getAnsiblePlaybookVersion(ansible));
         return versions;
     }
 
-    private AnsibleVersion.Version getAnsibleVersion(AnsibleDsInstanceConfig.Ansible ansible) {
+    private AnsibleVersion.Version getAnsibleVersion(AnsibleConfig.Ansible ansible) {
         CommandArgs args = CommandArgs.builder()
                 .version(true)
                 .build();
@@ -82,7 +82,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
         }
     }
 
-    private AnsibleVersion.Version getAnsiblePlaybookVersion(AnsibleDsInstanceConfig.Ansible ansible) {
+    private AnsibleVersion.Version getAnsiblePlaybookVersion(AnsibleConfig.Ansible ansible) {
         PlaybookArgs args = PlaybookArgs.builder()
                 .version(true)
                 .build();

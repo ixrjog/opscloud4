@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 
 import com.aliyuncs.ecs.model.v20140526.DescribeSecurityGroupsResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
@@ -46,8 +46,8 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
         doPull(dsInstanceId);
     }
 
-    private AliyunDsInstanceConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, AliyunDsInstanceConfig.class).getAliyun();
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
 
     @Override
     protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntries(DsInstanceContext dsInstanceContext,DatasourceInstanceAsset asset) {
-        AliyunDsInstanceConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroupList = Lists.newArrayList();

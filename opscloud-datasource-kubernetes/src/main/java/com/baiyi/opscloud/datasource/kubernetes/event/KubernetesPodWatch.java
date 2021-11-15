@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.event;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.model.Pod;
 import io.fabric8.kubernetes.client.KubernetesClient;
@@ -19,7 +19,7 @@ import java.util.concurrent.CountDownLatch;
 public class KubernetesPodWatch {
 
 
-    public static void watch(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace) {
+    public static void watch(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         // Latch for Watch termination
         final CountDownLatch isWatchClosed = new CountDownLatch(1);
         try (final KubernetesClient k8s = KubeClient.build(kubernetes)) {

@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.aliyun;
 
 import com.aliyun.openservices.log.common.Project;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.datasource.aliyun.log.handler.AliyunLogHandler;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -31,14 +31,14 @@ public class AliyunLogTest extends BaseUnit {
 
     @Test
     void listProjectTest() {
-        AliyunDsInstanceConfig aliyunDsInstanceConfig = (AliyunDsInstanceConfig) getConfig();
+        AliyunConfig aliyunDsInstanceConfig = (AliyunConfig) getConfig();
         List<Project> projects = aliyunLogHandler.listProject(aliyunDsInstanceConfig.getAliyun(), "");
         System.out.println(projects);
     }
 
     @Test
-    BaseDsInstanceConfig getConfig() {
+    BaseConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(3);
-        return dsFactory.build(datasourceConfig, AliyunDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, AliyunConfig.class);
     }
 }

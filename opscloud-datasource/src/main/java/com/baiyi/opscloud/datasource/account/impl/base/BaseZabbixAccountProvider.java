@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.account.impl.base;
 
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -34,21 +34,21 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider 
     @Resource
     private ZabbixFacade zabbixFacade;
 
-    protected static ThreadLocal<ZabbixDsInstanceConfig.Zabbix> configContext = new ThreadLocal<>();
+    protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 
     @Override
     protected void initialConfig(DatasourceConfig dsConfig) {
-        configContext.set(dsConfigHelper.build(dsConfig, ZabbixDsInstanceConfig.class).getZabbix());
+        configContext.set(dsConfigHelper.build(dsConfig, ZabbixConfig.class).getZabbix());
     }
 
-    protected List<Map<String, String>> getUsrgrps(ZabbixDsInstanceConfig.Zabbix zabbix, User user) {
+    protected List<Map<String, String>> getUsrgrps(ZabbixConfig.Zabbix zabbix, User user) {
         List<Map<String, String>> userGroups = toUsrgrps(zabbix, queryUserPermission(user, BusinessTypeEnum.SERVERGROUP.getType()));
         if (CollectionUtils.isEmpty(userGroups))
             userGroups.add(buildUsrgrp(zabbixFacade.getOrCreateUserGroup(zabbix, ZABBIX_DEFAULT_USERGROUP).getUsrgrpid()));
         return userGroups;
     }
 
-    protected List<Map<String, String>> toUsrgrps(ZabbixDsInstanceConfig.Zabbix zabbix, List<UserPermission> userPermissions) {
+    protected List<Map<String, String>> toUsrgrps(ZabbixConfig.Zabbix zabbix, List<UserPermission> userPermissions) {
         return userPermissions.stream().map(e -> {
             ServerGroup serverGroup = serverGroupService.getById(e.getBusinessId());
             String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());

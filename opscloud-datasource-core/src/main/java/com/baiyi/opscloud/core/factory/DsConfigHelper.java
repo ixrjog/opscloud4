@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.factory;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.common.util.DsUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.core.util.TemplateUtil;
@@ -31,7 +31,7 @@ public class DsConfigHelper {
 
     private final DsConfigService dsConfigService;
 
-    public <T extends BaseDsInstanceConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {
+    public <T extends BaseConfig> T build(DatasourceConfig datasourceConfig, Class<T> targetClass) {
         String propsYml = datasourceConfig.getPropsYml();
         if (!IdUtil.isEmpty(datasourceConfig.getCredentialId())) {
             Credential credential = credentialService.getById(datasourceConfig.getCredentialId());
@@ -41,10 +41,10 @@ public class DsConfigHelper {
         return DsUtil.toDatasourceConfig(propsYml, targetClass);
     }
 
-    public KubernetesDsInstanceConfig buildConfig(String instanceUuid) {
+    public KubernetesConfig buildConfig(String instanceUuid) {
         DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
-        return build(datasourceConfig, KubernetesDsInstanceConfig.class);
+        return build(datasourceConfig, KubernetesConfig.class);
     }
 
 }

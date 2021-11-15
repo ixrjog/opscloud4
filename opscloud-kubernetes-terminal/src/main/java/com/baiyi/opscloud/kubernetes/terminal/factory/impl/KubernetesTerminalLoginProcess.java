@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.kubernetes.terminal.factory.impl;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.kubernetes.terminal.factory.KubernetesTerminalProcessFactory;
@@ -47,7 +47,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
         KubernetesResource kubernetesResource = loginMessage.getData();
         kubernetesResource.getPods().forEach(pod ->
                 pod.getContainers().forEach(container -> {
-                    KubernetesDsInstanceConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
+                    KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
                     if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
                         processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
                         return;
@@ -67,7 +67,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
     }
 
     // 日志
-    private void processLog(KubernetesDsInstanceConfig.Kubernetes kubernetes, TerminalSession terminalSession,
+    private void processLog(KubernetesConfig.Kubernetes kubernetes, TerminalSession terminalSession,
                             KubernetesResource kubernetesResource, KubernetesResource.Pod pod, KubernetesResource.Container container) {
         RemoteInvokeHandler.openKubernetesLog(
                 terminalSession.getSessionId(),
@@ -82,7 +82,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
     }
 
     // 终端
-    private void processTerminal(KubernetesDsInstanceConfig.Kubernetes kubernetes, TerminalSession terminalSession, KubernetesResource.Pod pod, KubernetesResource.Container container) {
+    private void processTerminal(KubernetesConfig.Kubernetes kubernetes, TerminalSession terminalSession, KubernetesResource.Pod pod, KubernetesResource.Container container) {
         RemoteInvokeHandler.openKubernetesTerminal(
                 terminalSession.getSessionId(),
                 toInstanceId(pod, container),

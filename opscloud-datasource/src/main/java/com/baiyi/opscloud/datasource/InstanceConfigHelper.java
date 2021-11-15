@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource;
 
-import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
-import com.baiyi.opscloud.common.datasource.base.BaseDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -22,8 +22,8 @@ public class InstanceConfigHelper {
 
     private final DsConfigHelper dsFactory;
 
-    public BaseDsInstanceConfig getConfig(DatasourceInstance datasourceInstance) {
+    public BaseConfig getConfig(DatasourceInstance datasourceInstance) {
         DatasourceConfig datasourceConfig = dsConfigService.getById(datasourceInstance.getConfigId());
-        return dsFactory.build(datasourceConfig, GitlabDsInstanceConfig.class);
+        return dsFactory.build(datasourceConfig, GitlabConfig.class);
     }
 }

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.gitlab.handler;
 
-import com.baiyi.opscloud.common.datasource.GitlabDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.datasource.gitlab.factory.GitlabFactory;
 import org.gitlab.api.GitlabAPI;
 import org.gitlab.api.models.GitlabGroup;
@@ -15,7 +15,7 @@ import java.util.List;
  */
 public class GitlabGroupHandler {
 
-    public static List<GitlabGroup> queryGroups(GitlabDsInstanceConfig.Gitlab gitlab) throws IOException {
+    public static List<GitlabGroup> queryGroups(GitlabConfig.Gitlab gitlab) throws IOException {
         return buildAPI(gitlab).getGroups();
     }
 
@@ -24,7 +24,7 @@ public class GitlabGroupHandler {
 //        gitlabProject.
 //    }
 
-    private static GitlabAPI buildAPI(GitlabDsInstanceConfig.Gitlab gitlab) {
+    private static GitlabAPI buildAPI(GitlabConfig.Gitlab gitlab) {
         return GitlabFactory.buildGitlabAPI(gitlab);
     }
 }

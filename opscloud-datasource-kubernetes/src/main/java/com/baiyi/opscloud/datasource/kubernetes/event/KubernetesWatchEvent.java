@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.kubernetes.event;
 
-import com.baiyi.opscloud.common.datasource.KubernetesDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import io.fabric8.kubernetes.api.builder.Visitor;
 import io.fabric8.kubernetes.api.model.ConfigMap;
@@ -22,7 +22,7 @@ import java.util.UUID;
 @Slf4j
 public class KubernetesWatchEvent {
 
-    public static void watch(KubernetesDsInstanceConfig.Kubernetes kubernetes, String namespace) {
+    public static void watch(KubernetesConfig.Kubernetes kubernetes, String namespace) {
         try (
                 KubernetesClient client = KubeClient.build(kubernetes);
                 Watch ignored = newConfigMapWatch(client)

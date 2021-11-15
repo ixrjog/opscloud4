@@ -2,7 +2,7 @@ package com.baiyi.opscloud.nexus.provider;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.NexusDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NexusConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -50,13 +50,13 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
         return DsAssetTypeEnum.NEXUS_ASSET.getType();
     }
 
-    private NexusDsInstanceConfig.Nexus buildConfig(DatasourceConfig dsConfig) {
-        return dsConfigHelper.build(dsConfig, NexusDsInstanceConfig.class).getNexus();
+    private NexusConfig.Nexus buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, NexusConfig.class).getNexus();
     }
 
     @Override
     protected List<NexusAsset.Item> listEntries(DsInstanceContext dsInstanceContext) {
-        NexusDsInstanceConfig.Nexus nexus = buildConfig(dsInstanceContext.getDsConfig());
+        NexusConfig.Nexus nexus = buildConfig(dsInstanceContext.getDsConfig());
         List<NexusAsset.Item> entries = Lists.newArrayList();
         nexus.getRepositories().forEach(r -> {
             String continuationToken = "";
@@ -73,7 +73,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
         return entries;
     }
 
-    private List<NexusAsset.Item> filter(NexusDsInstanceConfig.Nexus nexus, List<NexusAsset.Item> items) {
+    private List<NexusAsset.Item> filter(NexusConfig.Nexus nexus, List<NexusAsset.Item> items) {
         return items.stream().filter(i -> {
             for (String s : nexus.getFilter()) {
                 if (i.getPath().endsWith(s)) {

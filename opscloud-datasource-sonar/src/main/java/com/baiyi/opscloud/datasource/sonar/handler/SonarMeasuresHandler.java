@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.sonar.handler;
 
-import com.baiyi.opscloud.common.datasource.SonarDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.SonarConfig;
 import com.baiyi.opscloud.datasource.sonar.entry.SonarMeasures;
 import com.baiyi.opscloud.datasource.sonar.feign.SonarMeasuresFeign;
 import com.baiyi.opscloud.datasource.sonar.param.SonarQubeRequestBuilder;
@@ -46,7 +46,7 @@ public class SonarMeasuresHandler {
         return Joiner.on(",").join(keys);
     }
 
-    public SonarMeasures queryMeasuresComponent(SonarDsInstanceConfig.Sonar config, String component) {
+    public SonarMeasures queryMeasuresComponent(SonarConfig.Sonar config, String component) {
         SonarMeasuresFeign sonarAPI = Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())

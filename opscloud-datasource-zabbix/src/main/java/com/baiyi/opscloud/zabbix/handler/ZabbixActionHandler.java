@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.handler;
 
 import com.baiyi.opscloud.common.config.CachingConfig;
-import com.baiyi.opscloud.common.datasource.ZabbixDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixAction;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
@@ -49,7 +49,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
     }
 
     @CacheEvict(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName")
-    public void evictActionByName(ZabbixDsInstanceConfig.Zabbix zabbix, String actionName) {
+    public void evictActionByName(ZabbixConfig.Zabbix zabbix, String actionName) {
         log.info("清除ZabbixAction缓存 : name = {}", actionName);
     }
 
@@ -58,7 +58,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
      * @return
      */
     @Cacheable(cacheNames = CachingConfig.Repositories.ZABBIX, key = "#zabbix.url + '_action_name_' + #actionName", unless = "#result == null")
-    public ZabbixAction getActionByName(ZabbixDsInstanceConfig.Zabbix zabbix, String actionName) {
+    public ZabbixAction getActionByName(ZabbixConfig.Zabbix zabbix, String actionName) {
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("name", actionName)
                 .build();
@@ -73,7 +73,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
         return mapperListGetOne(data.get(RESULT), ZabbixAction.class);
     }
 
-    public void create(ZabbixDsInstanceConfig.Zabbix zabbix, String actionName, String usergrpName) {
+    public void create(ZabbixConfig.Zabbix zabbix, String actionName, String usergrpName) {
         ZabbixHostGroup zabbixHostGroup = zabbixHostGroupHandler.getByName(zabbix, ZabbixUtil.toHostgroupName(usergrpName));
         ZabbixFilter filter = ZabbixFilterBuilder.builder()
                 .putEntry("evaltype", 1)
@@ -97,7 +97,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
         }
     }
 
-    private List<ZabbixActionParam.Operation> buildOperations(ZabbixDsInstanceConfig.Zabbix zabbix, String usergrpName) {
+    private List<ZabbixActionParam.Operation> buildOperations(ZabbixConfig.Zabbix zabbix, String usergrpName) {
         ZabbixUserGroup zabbixUserGroup = zabbixUserGroupHandler.getByName(zabbix, usergrpName);
         ZabbixActionParam.Opmessage opmessage = ZabbixActionParam.Opmessage.builder()
                 .subject(zabbix.getOperation().getSubject())
@@ -118,7 +118,7 @@ public class ZabbixActionHandler extends BaseZabbixHandler<ZabbixAction> {
     }
 
 
-    public void delete(ZabbixDsInstanceConfig.Zabbix zabbix, ZabbixAction zabbixAction) {
+    public void delete(ZabbixConfig.Zabbix zabbix, ZabbixAction zabbixAction) {
         if (zabbixAction == null) return;
         ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
                 .method(ActionAPIMethod.DELETE)

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.handler;
 
-import com.baiyi.opscloud.common.datasource.NacosDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosCluster;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.feign.NacosClusterV1Feign;
@@ -25,7 +25,7 @@ public class NacosClusterHandler {
 
     private final NacosAuthHandler nacosAuthHandler;
 
-    private NacosClusterV1Feign buildFeign(NacosDsInstanceConfig.Nacos config) {
+    private NacosClusterV1Feign buildFeign(NacosConfig.Nacos config) {
         return Feign.builder()
                 .retryer(new Retryer.Default(3000, 3000, 3))
                 .encoder(new JacksonEncoder())
@@ -33,7 +33,7 @@ public class NacosClusterHandler {
                 .target(NacosClusterV1Feign.class, config.getUrl());
     }
 
-    public NacosCluster.NodesResponse listNodes(NacosDsInstanceConfig.Nacos config) {
+    public NacosCluster.NodesResponse listNodes(NacosConfig.Nacos config) {
         NacosLogin.AccessToken accessToken = nacosAuthHandler.login(config);
         NacosClusterV1Feign nacosAPI = buildFeign(config);
         NacosClusterParam.NodesQuery queryParam = NacosClusterParam.NodesQuery.builder()

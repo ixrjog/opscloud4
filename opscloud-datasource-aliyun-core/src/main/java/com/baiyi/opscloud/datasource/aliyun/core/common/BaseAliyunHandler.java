@@ -4,7 +4,7 @@ import com.aliyuncs.DefaultAcsClient;
 import com.aliyuncs.IAcsClient;
 import com.aliyuncs.profile.DefaultProfile;
 import com.aliyuncs.profile.IClientProfile;
-import com.baiyi.opscloud.common.datasource.AliyunDsInstanceConfig;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import org.springframework.util.StringUtils;
 
 /**
@@ -18,7 +18,7 @@ public class BaseAliyunHandler {
         int PAGE_SIZE = 50;
     }
 
-    protected IAcsClient buildAcsClient(String regionId, AliyunDsInstanceConfig.Aliyun aliyun) {
+    protected IAcsClient buildAcsClient(String regionId, AliyunConfig.Aliyun aliyun) {
         String defRegionId = StringUtils.isEmpty(aliyun.getRegionId()) ? aliyun.getRegionId() : regionId;
         IClientProfile profile = DefaultProfile.getProfile(defRegionId, aliyun.getAccount().getAccessKeyId(), aliyun.getAccount().getSecret());
         return new DefaultAcsClient(profile);
