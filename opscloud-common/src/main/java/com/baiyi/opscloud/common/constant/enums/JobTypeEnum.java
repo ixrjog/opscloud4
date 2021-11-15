@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.common.constant.enums;
 
+import lombok.Getter;
+
 /**
  * @Author baiyi
  * @Date 2020/7/23 11:12 上午
@@ -16,13 +18,11 @@ public enum JobTypeEnum {
     JAVA_DEPLOYMENT("JAVA_DEPLOYMENT"),
     ANDROID_REINFORCE("ANDROID_REINFORCE");
 
-    private String type;
+    @Getter
+    private final String type;
 
     JobTypeEnum(String type) {
         this.type = type;
     }
 
-    public String getType() {
-        return this.type;
-    }
 }

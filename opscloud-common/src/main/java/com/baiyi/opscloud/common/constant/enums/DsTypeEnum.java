@@ -2,15 +2,18 @@ package com.baiyi.opscloud.common.constant.enums;
 
 
 import com.baiyi.opscloud.domain.vo.common.OptionsVO;
-import com.google.common.collect.Lists;
+import lombok.Getter;
 
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
  * @Date 2021/5/15 1:22 下午
  * @Version 1.0
  */
+@Getter
 public enum DsTypeEnum {
 
     LOCAL(0, "LOCAL"),
@@ -29,8 +32,10 @@ public enum DsTypeEnum {
     ALIYUN(50, "ALIYUN"),
     AWS(51, "AWS");
 
-    private int type;
-    private String name;
+
+    private final int type;
+
+    private final String name;
 
     DsTypeEnum(int type, String name) {
         this.type = type;
@@ -38,29 +43,14 @@ public enum DsTypeEnum {
     }
 
     public static String getName(int type) {
-        for (DsTypeEnum typeEnum : DsTypeEnum.values())
-            if (typeEnum.type == type)
-                return typeEnum.getName();
-        return "Null";
-    }
-
-    public int getType() {
-        return type;
-    }
-
-    public String getName() {
-        return name;
+        return Arrays.stream(DsTypeEnum.values()).filter(typeEnum -> typeEnum.type == type).findFirst().map(DsTypeEnum::getName).orElse("Null");
     }
 
     public static OptionsVO.Options toOptions() {
-        List<OptionsVO.Option> optionList = Lists.newArrayList();
-        for (DsTypeEnum e : DsTypeEnum.values()) {
-            OptionsVO.Option o = OptionsVO.Option.builder()
-                    .label(e.getName())
-                    .value(e.getType())
-                    .build();
-            optionList.add(o);
-        }
+        List<OptionsVO.Option> optionList = Arrays.stream(DsTypeEnum.values()).map(e -> OptionsVO.Option.builder()
+                .label(e.getName())
+                .value(e.getType())
+                .build()).collect(Collectors.toList());
         return OptionsVO.Options.builder()
                 .options(optionList)
                 .build();

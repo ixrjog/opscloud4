@@ -2,6 +2,8 @@ package com.baiyi.opscloud.common.constant.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * @Author baiyi
  * @Date 2021/6/9 10:32 上午
@@ -13,8 +15,8 @@ public enum UserCredentialTypeEnum {
     PUB_KEY(0, "PUB_KEY"),
     API_TOKEN(1, "API_TOKEN");
 
-    private int type;
-    private String name;
+    private final int type;
+    private final String name;
 
 
     UserCredentialTypeEnum(int type, String name) {
@@ -23,11 +25,6 @@ public enum UserCredentialTypeEnum {
     }
 
     public static String getName(int type) {
-        for (UserCredentialTypeEnum typeEnum : UserCredentialTypeEnum.values()) {
-            if (typeEnum.getType() == type) {
-                return typeEnum.getName();
-            }
-        }
-        return "undefined";
+        return Arrays.stream(UserCredentialTypeEnum.values()).filter(typeEnum -> typeEnum.getType() == type).findFirst().map(UserCredentialTypeEnum::getName).orElse("undefined");
     }
 }

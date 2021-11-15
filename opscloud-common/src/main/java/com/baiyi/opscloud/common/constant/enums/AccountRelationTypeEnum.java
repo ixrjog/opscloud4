@@ -2,6 +2,8 @@ package com.baiyi.opscloud.common.constant.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * @Author baiyi
  * @Date 2021/6/15 1:32 下午
@@ -12,8 +14,8 @@ public enum AccountRelationTypeEnum {
 
     ACCOUNT_GROUP(0, "ACCOUNT_GROUP");
 
-    private int type;
-    private String name;
+    private final int type;
+    private final String name;
 
     AccountRelationTypeEnum(int type, String name) {
         this.type = type;
@@ -21,11 +23,6 @@ public enum AccountRelationTypeEnum {
     }
 
     public static String getName(int type) {
-        for (AccountRelationTypeEnum typeEnum : AccountRelationTypeEnum.values()) {
-            if (typeEnum.getType() == type) {
-                return typeEnum.getName();
-            }
-        }
-        return "undefined";
+        return Arrays.stream(AccountRelationTypeEnum.values()).filter(typeEnum -> typeEnum.getType() == type).findFirst().map(AccountRelationTypeEnum::getName).orElse("undefined");
     }
 }
