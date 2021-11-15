@@ -412,12 +412,12 @@
         <snapshotRepository>
             <id>nexus-snapshots</id>
             <name>Internal Snapshot</name>
-            <url>http://maven.xinc818.com/repository/maven-snapshots/</url>
+            <url>https://nexus.chuanyinet.com/repository/maven-snapshots/</url>
         </snapshotRepository>
         <repository>
             <id>nexus-releases</id>
             <name>Releases</name>
-            <url>http://maven.xinc818.com/repository/maven-releases/</url>
+            <url>https://nexus.chuanyinet.com/repository/maven-releases/</url>
         </repository>
     </distributionManagement>
 

@@ -35,15 +35,11 @@ public class LogController {
         return new HttpResult<>(userAuthFacade.login(loginParam));
     }
 
-    /**
-     * 用户登出接口
-     *
-     * @return
-     */
     @ApiOperation(value = "用户登出接口")
-    @PutMapping(value = "/logout", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/logout", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> logout() {
         userAuthFacade.logout();
         return HttpResult.SUCCESS;
     }
+
 }

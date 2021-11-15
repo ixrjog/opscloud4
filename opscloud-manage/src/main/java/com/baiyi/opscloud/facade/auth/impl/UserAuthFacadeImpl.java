@@ -127,7 +127,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
 
     @Override
     public void logout() {
+        userTokenFacade.revokeUserToken(SessionUtil.getUsername());
     }
-
 
 }

@@ -30,4 +30,19 @@ public class LoginParam {
             return StringUtils.isEmpty(password);
         }
     }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Logout {
+
+        @Valid
+        @ApiParam(required = true)
+        @ApiModelProperty(value = "用户名")
+        private String username;
+
+        @Valid
+        @ApiModelProperty(value = "令牌")
+        private String token;
+    }
 }
