@@ -20,6 +20,8 @@ import lombok.extern.slf4j.Slf4j;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.SCAN_ASSET_BUSINESS;
+
 /**
  * 资产与业务对象绑定
  *
@@ -34,7 +36,7 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     private BusinessAssetRelationService businessAssetRelationService;
 
     @Override
-    @SingleTask(name = "ScanAssetBusiness", lockTime = "5m")
+    @SingleTask(name = SCAN_ASSET_BUSINESS, lockTime = "5m")
     public void scan(int dsInstanceId) {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceId(dsInstanceId)

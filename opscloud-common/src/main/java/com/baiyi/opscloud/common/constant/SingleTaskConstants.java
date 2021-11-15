@@ -55,4 +55,6 @@ public interface SingleTaskConstants {
     String PULL_ZABBIX_USER_GROUP = "PULL_ZABBIX_USER_GROUP";
     String PULL_ZABBIX_USER = "PULL_ZABBIX_USER";
 
+    String SCAN_ASSET_BUSINESS = "SCAN_ASSET_BUSINESS";
+
 }

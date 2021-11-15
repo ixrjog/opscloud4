@@ -17,7 +17,7 @@ public class AuthProviderFactory {
     private AuthProviderFactory() {
     }
 
-    static private Map<String, BaseAuthProvider> context = new ConcurrentHashMap<>();
+    private static final Map<String, BaseAuthProvider> context = new ConcurrentHashMap<>();
 
     public static BaseAuthProvider getProvider(String instanceType) {
         return context.get(instanceType);

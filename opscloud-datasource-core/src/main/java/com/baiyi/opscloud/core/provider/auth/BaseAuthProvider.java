@@ -19,7 +19,7 @@ import javax.annotation.Resource;
 public abstract class BaseAuthProvider extends SimpleDsInstanceProvider implements SimpleAuthenticationProvider, InitializingBean {
 
     @Resource
-    protected DsConfigHelper dsFactory;
+    protected DsConfigHelper dsConfigHelper;
 
     @Override
     public boolean login(DatasourceInstance instance, Authorization.Credential credential) {

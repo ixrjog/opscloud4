@@ -10,6 +10,6 @@ import com.baiyi.opscloud.domain.model.Authorization;
  */
 public interface IAuthenticationProvider {
 
-    boolean login(DatasourceInstance instance,Authorization.Credential credential);
+    boolean login(DatasourceInstance instance, Authorization.Credential credential);
 
 }

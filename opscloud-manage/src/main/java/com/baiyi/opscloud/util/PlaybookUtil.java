@@ -17,15 +17,15 @@ public class PlaybookUtil {
     private PlaybookUtil() {
     }
 
-    private static OpscloudConfigurationProperties opscloudConfig;
+    private static OpscloudConfigurationProperties opscloudConfigurationProperties;
 
     @Autowired
     public void setOpscloudConfig(OpscloudConfigurationProperties opscloudConfig) {
-        PlaybookUtil.opscloudConfig = opscloudConfig;
+        PlaybookUtil.opscloudConfigurationProperties = opscloudConfig;
     }
 
     public static String toPath(AnsiblePlaybook ansiblePlaybook) {
         String fileName = Joiner.on(".").join(ansiblePlaybook.getPlaybookUuid(), "yml");
-        return Joiner.on("/").join(opscloudConfig.getAnsiblePlaybookPath(), fileName);
+        return Joiner.on("/").join(opscloudConfigurationProperties.getAnsiblePlaybookPath(), fileName);
     }
 }

@@ -7,5 +7,4 @@ package com.baiyi.opscloud.core.provider.base.asset;
  */
 public interface SimpleAssetProvider extends IAssetProvider, BaseAssetRegisterProvider {
 
-
 }

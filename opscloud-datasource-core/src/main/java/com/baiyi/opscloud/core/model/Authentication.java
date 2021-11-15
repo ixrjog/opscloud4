@@ -13,10 +13,10 @@ import lombok.Data;
 public class Authentication {
 
     public interface Header {
-        String AUTHENTICATION ="Authentication";
+        String AUTHENTICATION = "Authentication";
     }
 
-    public final static Authentication FREE = Authentication.builder().isFree(true).build();
+    public static final Authentication FREE = Authentication.builder().isFree(true).build();
 
     @Builder.Default
     private String header = Header.AUTHENTICATION;
