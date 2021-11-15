@@ -13,20 +13,20 @@ import java.util.List;
 
 /**
  * @Author baiyi
- * @Date 2021/11/12 3:33 下午
+ * @Date 2021/11/15 3:11 下午
  * @Version 1.0
  */
-public class NacosPermission {
+public class NacosRole {
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class PermissionsResponse extends BasePage.PageResponse implements Serializable {
+    public static class RolesResponse extends BasePage.PageResponse implements Serializable {
 
-        private static final long serialVersionUID = 5679634631994334473L;
-        private List<Permission> pageItems;
+        private static final long serialVersionUID = -1855804540035445313L;
+        private List<Role> pageItems;
 
     }
 
@@ -34,11 +34,11 @@ public class NacosPermission {
     @NoArgsConstructor
     @AllArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Permission implements Serializable {
+    public static class Role implements Serializable {
 
-        private static final long serialVersionUID = -2841569536441847893L;
-        private String action;
-        private String resource;
+        private static final long serialVersionUID = -83954783773211983L;
+        private String username;
+
         private String role;
 
         @Override
@@ -47,6 +47,4 @@ public class NacosPermission {
         }
 
     }
-
-
 }

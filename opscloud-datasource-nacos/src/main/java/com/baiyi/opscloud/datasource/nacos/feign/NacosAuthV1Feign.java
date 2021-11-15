@@ -2,6 +2,8 @@ package com.baiyi.opscloud.datasource.nacos.feign;
 
 import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosPermission;
+import com.baiyi.opscloud.datasource.nacos.entry.NacosRole;
+import com.baiyi.opscloud.datasource.nacos.entry.NacosUser;
 import feign.Headers;
 import feign.Param;
 import feign.QueryMap;
@@ -27,7 +29,23 @@ public interface NacosAuthV1Feign {
     @Headers({"Content-Type: application/json;charset=UTF-8"})
     NacosPermission.PermissionsResponse listPermissions(@Param("pageNo") Integer pageNo,
                                                         @Param("pageSize") Integer pageSize,
-                                                        @Param("accessToken") String accessToken
-    );
+                                                        @Param("accessToken") String accessToken);
 
+    @RequestLine("GET /nacos/v1/auth/users?" +
+            "pageNo={pageNo}" +
+            "&pageSize={pageSize}" +
+            "&accessToken={accessToken}")
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    NacosUser.UsersResponse listUsers(@Param("pageNo") Integer pageNo,
+                        @Param("pageSize") Integer pageSize,
+                        @Param("accessToken") String accessToken);
+
+    @RequestLine("GET /nacos/v1/auth/roles?" +
+            "pageNo={pageNo}" +
+            "&pageSize={pageSize}" +
+            "&accessToken={accessToken}")
+    @Headers({"Content-Type: application/json;charset=UTF-8"})
+    NacosRole.RolesResponse listRoles(@Param("pageNo") Integer pageNo,
+                                      @Param("pageSize") Integer pageSize,
+                                      @Param("accessToken") String accessToken);
 }

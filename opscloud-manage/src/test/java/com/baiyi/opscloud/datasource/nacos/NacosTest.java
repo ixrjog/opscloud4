@@ -1,12 +1,10 @@
 package com.baiyi.opscloud.datasource.nacos;
 
 import com.baiyi.opscloud.datasource.nacos.base.BaseNacosTest;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosCluster;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosPermission;
+import com.baiyi.opscloud.datasource.nacos.entry.*;
 import com.baiyi.opscloud.datasource.nacos.handler.NacosAuthHandler;
 import com.baiyi.opscloud.datasource.nacos.handler.NacosClusterHandler;
-import com.baiyi.opscloud.datasource.nacos.handler.NacosPermissionHandler;
+import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -24,9 +22,6 @@ public class NacosTest extends BaseNacosTest {
     @Resource
     private NacosClusterHandler nacosClusterHandler;
 
-    @Resource
-    private NacosPermissionHandler nacosPermissionHandler;
-
     @Test
     void authLoginTest() {
         NacosLogin.AccessToken accessToken = nacosAuthHandler.login(getConfig().getNacos());
@@ -41,8 +36,19 @@ public class NacosTest extends BaseNacosTest {
 
     @Test
     void listPermissionsTest() {
-        NacosPermission.PermissionsResponse pr = nacosPermissionHandler.listPermissions(getConfig().getNacos());
+        NacosPermission.PermissionsResponse pr = nacosAuthHandler.listPermissions(getConfig().getNacos(), NacosPageParam.PageQuery.builder().build());
         System.err.println(pr.getPageItems());
     }
 
+    @Test
+    void listUserTest() {
+        NacosUser.UsersResponse usersResponse = nacosAuthHandler.listUsers(getConfig().getNacos(), NacosPageParam.PageQuery.builder().build());
+        System.err.println(usersResponse.getPageItems());
+    }
+
+   @Test
+    void listRolesTest() {
+        NacosRole.RolesResponse rolesResponse = nacosAuthHandler.listRoles(getConfig().getNacos(), NacosPageParam.PageQuery.builder().build());
+        System.err.println(rolesResponse.getPageItems());
+    }
 }
