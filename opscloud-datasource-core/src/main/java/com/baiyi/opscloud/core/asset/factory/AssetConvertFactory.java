@@ -19,7 +19,7 @@ public class AssetConvertFactory {
     private AssetConvertFactory() {
     }
 
-    private static Map<String, IAssetConvert> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAssetConvert> context = new ConcurrentHashMap<>();
 
     public static IAssetConvert getIAssetConvertByAssetType(String assetType) {
         return context.get(assetType);

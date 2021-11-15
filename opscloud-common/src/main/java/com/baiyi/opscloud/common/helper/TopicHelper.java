@@ -3,10 +3,9 @@ package com.baiyi.opscloud.common.helper;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.google.common.base.Joiner;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -15,14 +14,14 @@ import javax.annotation.Resource;
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TopicHelper {
 
     private static final long TOPIC_CACHE_MAX_TIME = TimeUtil.dayTime / 1000;
 
     private static final String TOPIC_PREFIX = "TOPIC_";
 
-    @Resource
-    private RedisUtil redisUtil;
+    private final RedisUtil redisUtil;
 
     public interface Topics {
         String ASSET_SUBSCRIPTION_TASK = "ASSET_SUBSCRIPTION_TASK";
