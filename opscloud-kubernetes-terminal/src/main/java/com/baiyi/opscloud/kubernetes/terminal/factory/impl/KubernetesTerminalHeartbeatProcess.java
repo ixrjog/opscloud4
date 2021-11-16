@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.kubernetes.BaseKubernetesMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
@@ -15,7 +15,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalHeartbeatProcess extends AbstractKubernetesTerminalProcess<BaseKubernetesMessage> implements ITerminalProcess {
+public class KubernetesTerminalHeartbeatProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.BaseMessage> implements ITerminalProcess {
 
     /**
      * 登录
@@ -32,8 +32,8 @@ public class KubernetesTerminalHeartbeatProcess extends AbstractKubernetesTermin
     }
 
     @Override
-    protected BaseKubernetesMessage getMessage(String message) {
-        return BaseKubernetesMessage.HEARTBEAT;
+    protected KubernetesMessage.BaseMessage getMessage(String message) {
+        return KubernetesMessage.BaseMessage.HEARTBEAT;
     }
 
 }

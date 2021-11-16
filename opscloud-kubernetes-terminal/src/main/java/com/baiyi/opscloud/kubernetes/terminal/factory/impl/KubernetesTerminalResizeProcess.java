@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.kubernetes.KubernetesResizeMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import com.google.gson.GsonBuilder;
@@ -18,7 +18,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalResizeProcess extends AbstractKubernetesTerminalProcess<KubernetesResizeMessage> implements ITerminalProcess {
+public class KubernetesTerminalResizeProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.Resize> implements ITerminalProcess {
 
     /**
      * 调整终端
@@ -32,7 +32,7 @@ public class KubernetesTerminalResizeProcess extends AbstractKubernetesTerminalP
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesResizeMessage resizeMessage = getMessage(message);
+        KubernetesMessage.Resize resizeMessage = getMessage(message);
         try {
             KubernetesSession kubernetesSession = KubernetesSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
             if (kubernetesSession == null) return;
@@ -42,8 +42,8 @@ public class KubernetesTerminalResizeProcess extends AbstractKubernetesTerminalP
     }
 
     @Override
-    protected KubernetesResizeMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, KubernetesResizeMessage.class);
+    protected KubernetesMessage.Resize getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, KubernetesMessage.Resize.class);
     }
 
 }

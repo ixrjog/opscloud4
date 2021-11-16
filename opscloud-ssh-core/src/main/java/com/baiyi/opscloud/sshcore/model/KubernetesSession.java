@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshcore.model;
 
-import com.baiyi.opscloud.sshcore.message.kubernetes.KubernetesResizeMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
 import io.fabric8.kubernetes.client.dsl.ExecWatch;
 import io.fabric8.kubernetes.client.dsl.LogWatch;
@@ -41,7 +41,7 @@ public class KubernetesSession {
 
     private static SessionOutput sessionOutput;
 
-    public void resize(KubernetesResizeMessage resizeMessage) {
+    public void resize(KubernetesMessage.Resize resizeMessage) {
         if (this.execWatch == null) return;
         execWatch.resize(resizeMessage.getTerminal().getWidth(), resizeMessage.getTerminal().getHeight());
     }

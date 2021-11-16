@@ -2,7 +2,7 @@ package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
+import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
@@ -17,7 +17,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class CloseProcess extends AbstractServerTerminalProcess<ServerMessage.Close> {
+public class CloseProcess extends AbstractServerTerminalProcess<ServerMessage.BaseMessage> {
 
     /**
      * 关闭会话
@@ -53,7 +53,7 @@ public class CloseProcess extends AbstractServerTerminalProcess<ServerMessage.Cl
     }
 
     @Override
-    protected ServerMessage.Close getMessage(String message) {
-        return null;
+    protected ServerMessage.BaseMessage getMessage(String message) {
+        return ServerMessage.BaseMessage.CLOSE;
     }
 }

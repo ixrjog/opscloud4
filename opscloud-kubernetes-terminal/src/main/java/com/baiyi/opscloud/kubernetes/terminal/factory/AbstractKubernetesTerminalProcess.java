@@ -11,7 +11,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
-import com.baiyi.opscloud.sshcore.message.kubernetes.BaseKubernetesMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +25,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractKubernetesTerminalProcess<T extends BaseKubernetesMessage> implements ITerminalProcess, InitializingBean {
+public abstract class AbstractKubernetesTerminalProcess<T extends KubernetesMessage.BaseMessage> implements ITerminalProcess, InitializingBean {
 
     @Resource
     protected TerminalSessionService terminalSessionService;

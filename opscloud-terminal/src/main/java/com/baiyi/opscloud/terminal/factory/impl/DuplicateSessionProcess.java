@@ -5,7 +5,7 @@ import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
+import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;

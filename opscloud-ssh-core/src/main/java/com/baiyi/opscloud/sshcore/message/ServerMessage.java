@@ -1,10 +1,10 @@
-package com.baiyi.opscloud.sshcore.message.server;
+package com.baiyi.opscloud.sshcore.message;
 
 import com.baiyi.opscloud.domain.model.message.ILoginMessage;
+import com.baiyi.opscloud.domain.model.message.IState;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import lombok.*;
 
 import java.util.Set;
 
@@ -15,23 +15,34 @@ import java.util.Set;
  */
 public class ServerMessage {
 
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    @Data
+    @JsonIgnoreProperties
+    public static class BaseMessage implements IState {
+
+        public static final BaseMessage CLOSE = BaseMessage.builder().build();
+
+        private String id;
+        private String state;
+        // 0 普通账户 1 管理员账户
+        private Integer loginType;
+        private boolean isAdmin;
+        private com.baiyi.opscloud.sshcore.message.base.BaseMessage.Terminal terminal;
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class BatchCommand extends BaseServerMessage {
+    public static class BatchCommand extends BaseMessage {
         private Boolean isBatch; // 会话批量指令
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class Close extends BaseServerMessage {
-    }
-
-    @EqualsAndHashCode(callSuper = true)
-    @Data
-    @JsonIgnoreProperties
-    public static class Command extends BaseServerMessage {
+    public static class Command extends BaseMessage {
         private String instanceId;
         private String data;
     }
@@ -39,7 +50,7 @@ public class ServerMessage {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class DuplicateSession extends BaseServerMessage {
+    public static class DuplicateSession extends BaseMessage {
         // 源会话
         private ServerNode duplicateServerNode;
         // 目标会话
@@ -50,7 +61,7 @@ public class ServerMessage {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class Login extends BaseServerMessage implements ILoginMessage {
+    public static class Login extends BaseMessage implements ILoginMessage {
         private Set<ServerNode> serverNodes;
         private String token;
     }
@@ -58,14 +69,14 @@ public class ServerMessage {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class Logout extends BaseServerMessage {
+    public static class Logout extends BaseMessage {
         private String instanceId;
     }
 
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties
-    public static class Resize extends BaseServerMessage {
+    public static class Resize extends BaseMessage {
         private String instanceId;
     }
 }

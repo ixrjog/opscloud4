@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.kubernetes.BaseKubernetesMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import org.springframework.stereotype.Component;
@@ -19,7 +19,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalCloseProcess extends AbstractKubernetesTerminalProcess<BaseKubernetesMessage> implements ITerminalProcess {
+public class KubernetesTerminalCloseProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.BaseMessage> implements ITerminalProcess {
 
     @Override
     public String getState() {
@@ -54,7 +54,7 @@ public class KubernetesTerminalCloseProcess extends AbstractKubernetesTerminalPr
     }
 
     @Override
-    protected BaseKubernetesMessage getMessage(String message) {
-        return BaseKubernetesMessage.CLOSE;
+    protected KubernetesMessage.BaseMessage getMessage(String message) {
+        return KubernetesMessage.BaseMessage.CLOSE;
     }
 }

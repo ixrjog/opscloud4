@@ -19,7 +19,7 @@ import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
 import com.baiyi.opscloud.sshcore.account.SshAccount;
-import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
+import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
 import lombok.RequiredArgsConstructor;
@@ -104,7 +104,7 @@ public class HostSystemHandler {
                 .build();
     }
 
-    public HostSystem buildHostSystem(ServerNode serverNode, BaseServerMessage message) {
+    public HostSystem buildHostSystem(ServerNode serverNode, ServerMessage.BaseMessage message) {
         message.setAdmin(SessionUtil.getIsAdmin());
         Server server = serverService.getById(serverNode.getId());
         SshCredential sshCredential = buildSshCredential(message, server);
@@ -115,7 +115,7 @@ public class HostSystemHandler {
                 .build();
     }
 
-    private SshCredential buildSshCredential(BaseServerMessage baseMessage, Server server) {
+    private SshCredential buildSshCredential(ServerMessage.BaseMessage baseMessage, Server server) {
         if (baseMessage.isAdmin()) {
             return getSshCredentialByAdmin(server.getId(), baseMessage.getLoginType());
         } else {

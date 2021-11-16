@@ -19,9 +19,9 @@ import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -32,25 +32,20 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class ApplicationPacker {
 
-    @Resource
-    private KubernetesPodProvider kubernetesPodProvider;
+    private final KubernetesPodProvider kubernetesPodProvider;
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsInstanceService dsInstanceService;
+    private final DsInstanceService dsInstanceService;
 
-    @Resource
-    private ApplicationResourceService applicationResourceService;
+    private final ApplicationResourceService applicationResourceService;
 
-    @Resource
-    private DsInstancePacker dsInstancePacker;
+    private final DsInstancePacker dsInstancePacker;
 
-    @Resource
-    private BusinessPermissionUserPacker businessPermissionUserPacker;
+    private final BusinessPermissionUserPacker businessPermissionUserPacker;
 
     public List<ApplicationVO.Application> wrapVOList(List<Application> data) {
         return BeanCopierUtil.copyListProperties(data, ApplicationVO.Application.class);

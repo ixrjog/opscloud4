@@ -6,7 +6,7 @@ import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
-import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
+import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.InitializingBean;
@@ -20,7 +20,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage> implements ITerminalProcess, InitializingBean {
+public abstract class AbstractServerTerminalProcess<T extends ServerMessage.BaseMessage> implements ITerminalProcess, InitializingBean {
 
     @Resource
     protected AuditServerCommandAudit auditCommandHandler;

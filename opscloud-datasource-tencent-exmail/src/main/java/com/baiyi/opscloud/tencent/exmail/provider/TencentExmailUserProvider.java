@@ -19,6 +19,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_TENCENT_EXMAIL_USER;
@@ -34,7 +35,8 @@ import static com.baiyi.opscloud.tencent.exmail.datasource.TencentExmailUserData
 @RequiredArgsConstructor
 public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
 
-    private final TencentExmailUserProvider tencentExmailUserProvider;
+    @Resource
+    private TencentExmailUserProvider tencentExmailUserProvider;
 
     private final TencentExmailUserDatasource tencentExmailUserDatasource;
 

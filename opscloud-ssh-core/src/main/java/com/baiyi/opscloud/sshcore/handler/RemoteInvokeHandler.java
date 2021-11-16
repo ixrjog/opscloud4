@@ -3,7 +3,7 @@ package com.baiyi.opscloud.sshcore.handler;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesPodDatasource;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
-import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
+import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.*;
 import com.baiyi.opscloud.sshcore.task.kubernetes.WatchKubernetesTerminalOutputTask;
 import com.baiyi.opscloud.sshcore.task.ssh.WatchSshServerOutputTask;
@@ -227,7 +227,7 @@ public class RemoteInvokeHandler {
         KubernetesSessionContainer.addSession(kubernetesSession);
     }
 
-    public static void setChannelPtySize(ChannelShell channel, BaseServerMessage message) {
+    public static void setChannelPtySize(ChannelShell channel, ServerMessage.BaseMessage message) {
         int width = message.getTerminal().getWidth();
         int height = message.getTerminal().getHeight();
         // int cols = (int) Math.floor(width / 7.2981);

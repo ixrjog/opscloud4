@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.kubernetes.KubernetesCommandMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSession;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import com.google.gson.GsonBuilder;
@@ -21,7 +21,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalCommandProcess extends AbstractKubernetesTerminalProcess<KubernetesCommandMessage> implements ITerminalProcess {
+public class KubernetesTerminalCommandProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.Command> implements ITerminalProcess {
 
     /**
      * 登录
@@ -35,7 +35,7 @@ public class KubernetesTerminalCommandProcess extends AbstractKubernetesTerminal
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesCommandMessage commandMessage = getMessage(message);
+        KubernetesMessage.Command commandMessage = getMessage(message);
         if (StringUtils.isEmpty(commandMessage.getCommand()))
             return;
         if (!isBatch(terminalSession)) {
@@ -57,8 +57,8 @@ public class KubernetesTerminalCommandProcess extends AbstractKubernetesTerminal
     }
 
     @Override
-    protected KubernetesCommandMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, KubernetesCommandMessage.class);
+    protected KubernetesMessage.Command getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, KubernetesMessage.Command.class);
     }
 
 }

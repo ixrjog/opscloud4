@@ -35,11 +35,6 @@ public class SimpleTagFacadeImpl implements SimpleTagFacade {
     private final TagPacker tagPacker;
 
     @Override
-    public List<Tag> queryBusinessTagByParam(TagParam.BusinessQuery queryParam) {
-        return tagService.queryBusinessTagByParam(queryParam);
-    }
-
-    @Override
     public List<TagVO.Tag> queryTagByBusinessType(Integer businessType) {
         List<Tag> tags = tagService.queryTagByBusinessType(businessType);
         return tagPacker.wrapVOList(tags);

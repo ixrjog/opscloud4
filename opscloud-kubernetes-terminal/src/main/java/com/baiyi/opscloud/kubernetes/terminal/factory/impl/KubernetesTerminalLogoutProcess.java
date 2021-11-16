@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.kubernetes.KubernetesLogoutMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesSessionContainer;
 import com.google.gson.GsonBuilder;
 import org.springframework.stereotype.Component;
@@ -17,7 +17,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalLogoutProcess  extends AbstractKubernetesTerminalProcess<KubernetesLogoutMessage> implements ITerminalProcess {
+public class KubernetesTerminalLogoutProcess  extends AbstractKubernetesTerminalProcess<KubernetesMessage.Logout> implements ITerminalProcess {
 
     /**
      * 单个关闭
@@ -31,14 +31,14 @@ public class KubernetesTerminalLogoutProcess  extends AbstractKubernetesTerminal
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesLogoutMessage baseMessage = getMessage(message);
+        KubernetesMessage.Logout baseMessage = getMessage(message);
         //recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId());  // 设置关闭会话
         KubernetesSessionContainer.closeSession(terminalSession.getSessionId(), baseMessage.getInstanceId());
     }
 
     @Override
-    protected KubernetesLogoutMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, KubernetesLogoutMessage.class);
+    protected KubernetesMessage.Logout getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, KubernetesMessage.Logout.class);
     }
 }

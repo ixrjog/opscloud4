@@ -9,7 +9,7 @@ import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.sshcore.message.kubernetes.KubernetesLoginMessage;
+import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import com.google.common.base.Joiner;
 import com.google.gson.GsonBuilder;
@@ -23,7 +23,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalProcess<KubernetesLoginMessage> implements ITerminalProcess {
+public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.Login> implements ITerminalProcess {
 
     public interface SessionType {
         String CONTAINER_LOG = "CONTAINER_LOG";
@@ -42,7 +42,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        KubernetesLoginMessage loginMessage = getMessage(message);
+        KubernetesMessage.Login loginMessage = getMessage(message);
         heartbeat(terminalSession.getSessionId());
         KubernetesResource kubernetesResource = loginMessage.getData();
         kubernetesResource.getPods().forEach(pod ->
@@ -96,8 +96,8 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
 
 
     @Override
-    protected KubernetesLoginMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, KubernetesLoginMessage.class);
+    protected KubernetesMessage.Login getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, KubernetesMessage.Login.class);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.tag;
 
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -15,8 +14,6 @@ import java.util.List;
  */
 public interface SimpleTagFacade {
 
-    List<Tag> queryBusinessTagByParam(TagParam.BusinessQuery queryParam);
-
     List<TagVO.Tag> queryTagByBusinessType(Integer businessType);
 
     DataTable<TagVO.Tag> queryTagPage(TagParam.TagPageQuery pageQuery);
@@ -28,4 +25,5 @@ public interface SimpleTagFacade {
     void updateBusinessTags(BusinessTagParam.UpdateBusinessTags updateBusinessTags);
 
     void deleteTagById(int id);
+
 }
