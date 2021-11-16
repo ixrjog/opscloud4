@@ -3,7 +3,7 @@ package com.baiyi.opscloud.sshserver.command.kubernetes;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
-import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
+import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesPodDatasource;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
@@ -95,7 +95,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         }
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(asset.getInstanceUuid());
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
-        List<Pod> pods = KubernetesPodHandler.listPod(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getAssetKey());
+        List<Pod> pods = KubernetesPodDatasource.listPod(kubernetesDsInstanceConfig.getKubernetes(), asset.getAssetKey2(), asset.getAssetKey());
         if (CollectionUtils.isEmpty(pods)) {
             helper.print(buildPagination(0));
             return;
@@ -172,7 +172,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 kubernetesDsInstanceMap.put(instanceUuid, kubernetesDsInstance);
             }
             try {
-                List<Pod> pods = KubernetesPodHandler.listPod(kubernetesDsInstanceMap
+                List<Pod> pods = KubernetesPodDatasource.listPod(kubernetesDsInstanceMap
                         .get(instanceUuid).getKubernetesDsInstanceConfig().getKubernetes(), datasourceAsset.getAssetKey2(), datasourceAsset.getAssetKey());
                 if (CollectionUtils.isEmpty(pods))
                     continue;
@@ -229,7 +229,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         Map<Integer, PodContext> podMapper = SessionCommandContext.getPodMapper();
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
-        KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
+        KubernetesPodDatasource.SimpleListener listener = new KubernetesPodDatasource.SimpleListener();
         ServerSession serverSession = helper.getSshSession();
         String sessionId = SessionIdMapper.getSessionId(serverSession.getIoSession());
         String instanceId = TerminalSessionUtil.toInstanceId(podContext.getPodName(), name);
@@ -239,7 +239,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
                 terminalSessionInstance
         );
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
+        ExecWatch execWatch = KubernetesPodDatasource.loginPodContainer(
                 kubernetesDsInstanceConfig.getKubernetes(),
                 podContext.getNamespace(),
                 podContext.getPodName(),
@@ -312,7 +312,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
         PodContext podContext = podMapper.get(id);
         KubernetesConfig kubernetesDsInstanceConfig = buildConfig(podContext.getInstanceUuid());
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
+        LogWatch logWatch = KubernetesPodDatasource.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(),
                 podContext.getNamespace(),
                 podContext.getPodName(),
                 name,

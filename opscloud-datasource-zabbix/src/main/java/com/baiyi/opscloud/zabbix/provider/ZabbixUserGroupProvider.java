@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
-import com.baiyi.opscloud.zabbix.handler.ZabbixUserGroupHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixUserGroupDatasource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<ZabbixUserGroup, ZabbixUser> {
 
     @Resource
-    private ZabbixUserGroupHandler zabbixUserGroupHandler;
+    private ZabbixUserGroupDatasource zabbixUserGroupDatasource;
 
     @Resource
     private ZabbixUserGroupProvider zabbixUserGroupProvider;
@@ -51,17 +51,17 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
     @Override
     protected List<ZabbixUserGroup> listEntries(DsInstanceContext dsInstanceContext, ZabbixUser target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixUserGroupHandler.listByUser(zabbix, target);
+        return zabbixUserGroupDatasource.listByUser(zabbix, target);
     }
 
     @Override
     protected List<ZabbixUserGroup> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixUserGroupHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixUserGroupDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixUserGroup getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixUserGroupHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixUserGroupDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

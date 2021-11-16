@@ -7,15 +7,15 @@ import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.HOST_IDS;
-import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RESULT;
+import static com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer.ApiConstant.HOST_IDS;
+import static com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer.ApiConstant.RESULT;
 
 /**
  * @Author baiyi
@@ -31,7 +31,7 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
         ServerProperty.Server property = getBusinessProperty(server);
         if (!isEnabled(property)) return;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
-                .method(ZabbixHostHandler.HostAPIMethod.CREATE)
+                .method(ZabbixHostDatasource.HostAPIMethod.CREATE)
                 .paramEntry("host", SimpleServerNameFacade.toServerName(server))
                 .paramEntry("interfaces", buildHostInterfaceParams(server, property))
                 .paramEntry("groups", buildHostGroupParams(configContext.get(), server))

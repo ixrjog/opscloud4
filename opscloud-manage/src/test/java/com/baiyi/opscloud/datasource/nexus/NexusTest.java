@@ -3,8 +3,8 @@ package com.baiyi.opscloud.datasource.nexus;
 import com.baiyi.opscloud.datasource.nexus.base.BaseNexusTest;
 import com.baiyi.opscloud.nexus.entry.NexusAsset;
 import com.baiyi.opscloud.nexus.entry.NexusRepository;
-import com.baiyi.opscloud.nexus.handler.NexusAssetHandler;
-import com.baiyi.opscloud.nexus.handler.NexusRepositoryHandler;
+import com.baiyi.opscloud.nexus.datasource.NexusAssetDatasource;
+import com.baiyi.opscloud.nexus.datasource.NexusRepositoryDatasource;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -18,10 +18,10 @@ import java.util.List;
 public class NexusTest extends BaseNexusTest {
 
     @Resource
-    private NexusRepositoryHandler nexusRepositoryHandler;
+    private NexusRepositoryDatasource nexusRepositoryHandler;
 
     @Resource
-    private NexusAssetHandler nexusAssetHandler;
+    private NexusAssetDatasource nexusAssetHandler;
 
     @Test
     void listRepositoriesTest() {

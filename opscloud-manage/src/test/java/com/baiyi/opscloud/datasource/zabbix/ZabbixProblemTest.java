@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
 import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
-import com.baiyi.opscloud.zabbix.handler.ZabbixProblemHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixTriggerHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixProblemDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import com.baiyi.opscloud.zabbix.param.base.SeverityType;
 import org.assertj.core.util.Lists;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,10 @@ import java.util.List;
 public class ZabbixProblemTest extends BaseZabbixTest {
 
     @Resource
-    private ZabbixProblemHandler zabbixProblemHandler;
+    private ZabbixProblemDatasource zabbixProblemHandler;
 
     @Resource
-    private ZabbixTriggerHandler zabbixTriggerHandler;
+    private ZabbixTriggerDatasource zabbixTriggerHandler;
 
     @Test
     void listProblemTest() {

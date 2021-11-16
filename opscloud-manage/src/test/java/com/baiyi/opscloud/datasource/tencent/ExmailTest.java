@@ -6,8 +6,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.tencent.exmail.entry.ExmailToken;
 import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
-import com.baiyi.opscloud.tencent.exmail.handler.TencentExmailTokenHandler;
-import com.baiyi.opscloud.tencent.exmail.handler.TencentExmailUserHandler;
+import com.baiyi.opscloud.tencent.exmail.datasource.TencentExmailTokenDatasource;
+import com.baiyi.opscloud.tencent.exmail.datasource.TencentExmailUserDatasource;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -27,10 +27,10 @@ public class ExmailTest extends BaseUnit {
     private DsConfigHelper dsFactory;
 
     @Resource
-    private TencentExmailUserHandler tencentExmailUserHandler;
+    private TencentExmailUserDatasource tencentExmailUserHandler;
 
     @Resource
-    private TencentExmailTokenHandler tencentExmailTokenHandler;
+    private TencentExmailTokenDatasource tencentExmailTokenHandler;
 
     private TencentExmailConfig getConfig() {
         DatasourceConfig datasourceConfig = dsConfigService.getById(11);

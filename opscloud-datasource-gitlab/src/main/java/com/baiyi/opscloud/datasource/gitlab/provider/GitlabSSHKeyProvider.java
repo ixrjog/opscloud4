@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.datasource.gitlab.handler.GitlabUserHandler;
+import com.baiyi.opscloud.datasource.gitlab.datasource.GitlabUserDatasource;
 import com.google.common.collect.Lists;
 import org.gitlab.api.models.GitlabSSHKey;
 import org.gitlab.api.models.GitlabUser;
@@ -51,7 +51,7 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
     protected List<GitlabSSHKey> listEntries(DsInstanceContext dsInstanceContext, GitlabUser target) {
         GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         try {
-            return GitlabUserHandler.getUserSSHKeys(gitlab, target.getId()).stream().peek(e ->
+            return GitlabUserDatasource.getUserSSHKeys(gitlab, target.getId()).stream().peek(e ->
                     e.setUser(target)
             ).collect(Collectors.toList());
         } catch (IOException ignored) {
@@ -62,13 +62,13 @@ public class GitlabSSHKeyProvider extends AbstractAssetRelationProvider<GitlabSS
     @Override
     protected List<GitlabSSHKey> listEntries(DsInstanceContext dsInstanceContext) {
         GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
-        List<GitlabUser> users = GitlabUserHandler.queryUsers(gitlab);
+        List<GitlabUser> users = GitlabUserDatasource.queryUsers(gitlab);
         List<GitlabSSHKey> keys = Lists.newArrayList();
         if (CollectionUtils.isEmpty(users))
             return keys;
         users.forEach(u -> {
             try {
-                keys.addAll(GitlabUserHandler.getUserSSHKeys(gitlab, u.getId()).stream().peek(e ->
+                keys.addAll(GitlabUserDatasource.getUserSSHKeys(gitlab, u.getId()).stream().peek(e ->
                         e.setUser(u)
                 ).collect(Collectors.toList()));
             } catch (IOException ignored) {

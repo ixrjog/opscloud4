@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.nacos;
 
 import com.baiyi.opscloud.datasource.nacos.base.BaseNacosTest;
 import com.baiyi.opscloud.datasource.nacos.entry.*;
-import com.baiyi.opscloud.datasource.nacos.handler.NacosAuthHandler;
-import com.baiyi.opscloud.datasource.nacos.handler.NacosClusterHandler;
+import com.baiyi.opscloud.datasource.nacos.datasource.NacosAuthDatasource;
+import com.baiyi.opscloud.datasource.nacos.datasource.NacosClusterDatasource;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import org.junit.jupiter.api.Test;
 
@@ -17,10 +17,10 @@ import javax.annotation.Resource;
 public class NacosTest extends BaseNacosTest {
 
     @Resource
-    private NacosAuthHandler nacosAuthHandler;
+    private NacosAuthDatasource nacosAuthHandler;
 
     @Resource
-    private NacosClusterHandler nacosClusterHandler;
+    private NacosClusterDatasource nacosClusterHandler;
 
     @Test
     void authLoginTest() {

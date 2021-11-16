@@ -2,11 +2,14 @@ package com.baiyi.opscloud.datasource.aliyun.convert.enums;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * @Author baiyi
  * @Date 2021/9/30 3:46 下午
  * @Version 1.0
  */
+@Getter
 public enum OnsMessageTypeEnum {
 
     TYPE_0(0, "普通消息"),
@@ -15,10 +18,8 @@ public enum OnsMessageTypeEnum {
     TYPE_4(4, "事务消息"),
     TYPE_5(5, "定时/延时消息");
 
-    @Getter
-    private int type;
-    @Getter
-    private String desc;
+    private final int type;
+    private final String desc;
 
     OnsMessageTypeEnum(int type, String desc) {
         this.type = type;
@@ -26,12 +27,7 @@ public enum OnsMessageTypeEnum {
     }
 
     public static String getDesc(int type) {
-        for (OnsMessageTypeEnum typeEnum : OnsMessageTypeEnum.values()) {
-            if (typeEnum.getType() == type) {
-                return typeEnum.getDesc();
-            }
-        }
-        return "undefined";
+        return Arrays.stream(OnsMessageTypeEnum.values()).filter(typeEnum -> typeEnum.getType() == type).findFirst().map(OnsMessageTypeEnum::getDesc).orElse("undefined");
     }
 
 }

@@ -7,7 +7,7 @@ package com.baiyi.opscloud.core.provider.base.param;
  */
 public class AssetFilterParamBuilder {
 
-    private AssetFilterParam param = new AssetFilterParam();
+    private final AssetFilterParam param = new AssetFilterParam();
 
     private AssetFilterParamBuilder() {
     }

@@ -13,7 +13,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.datasource.gitlab.handler.GitlabProjectHandler;
+import com.baiyi.opscloud.datasource.gitlab.datasource.GitlabProjectDatasource;
 import org.gitlab.api.models.GitlabGroup;
 import org.gitlab.api.models.GitlabProject;
 import org.springframework.stereotype.Component;
@@ -45,12 +45,12 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
 
     @Override
     protected List<GitlabProject> listEntries(DsInstanceContext dsInstanceContext, GitlabGroup target) {
-        return GitlabProjectHandler.queryGroupProjects(buildConfig(dsInstanceContext.getDsConfig()), target.getId());
+        return GitlabProjectDatasource.queryGroupProjects(buildConfig(dsInstanceContext.getDsConfig()), target.getId());
     }
 
     @Override
     protected List<GitlabProject> listEntries(DsInstanceContext dsInstanceContext) {
-        return GitlabProjectHandler.queryProjects(buildConfig(dsInstanceContext.getDsConfig()));
+        return GitlabProjectDatasource.queryProjects(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override

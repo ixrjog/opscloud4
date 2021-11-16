@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsMysqlAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.rds.mysql.handler.AliyunRdsMysqlHandler;
+import com.baiyi.opscloud.datasource.aliyun.rds.mysql.AliyunRdsMysqlDatasource;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
@@ -36,7 +36,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunRdsMysqlInstanceProvider extends AbstractAssetRelationProvider<DescribeDBInstancesResponse.DBInstance, DescribeDatabasesResponse.Database> {
 
     @Resource
-    private AliyunRdsMysqlHandler aliyunRdsMysqlHandler;
+    private AliyunRdsMysqlDatasource aliyunRdsMysqlDatasource;
 
     @Resource
     private AliyunRdsMysqlInstanceProvider aliyunRdsMysqlInstanceProvider;
@@ -70,7 +70,7 @@ public class AliyunRdsMysqlInstanceProvider extends AbstractAssetRelationProvide
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeDBInstancesResponse.DBInstance> entries = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> entries.addAll(aliyunRdsMysqlHandler.listDbInstance(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> entries.addAll(aliyunRdsMysqlDatasource.listDbInstance(regionId, aliyun)));
         return entries;
     }
 
@@ -97,7 +97,7 @@ public class AliyunRdsMysqlInstanceProvider extends AbstractAssetRelationProvide
     @Override
     protected List<DescribeDBInstancesResponse.DBInstance> listEntries(DsInstanceContext dsInstanceContext, DescribeDatabasesResponse.Database target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRdsMysqlHandler.listDbInstance(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
+        return aliyunRdsMysqlDatasource.listDbInstance(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
     }
 
 }

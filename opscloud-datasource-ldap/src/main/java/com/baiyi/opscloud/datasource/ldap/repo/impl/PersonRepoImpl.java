@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.datasource.ldap.entry.Person;
-import com.baiyi.opscloud.datasource.ldap.handler.LdapHandler;
+import com.baiyi.opscloud.datasource.ldap.datasource.LdapDatasource;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +22,7 @@ import java.util.List;
 public class PersonRepoImpl implements PersonRepo {
 
     @Resource
-    private LdapHandler ldapHandler;
+    private LdapDatasource ldapHandler;
 
     @Override
     public List<Person> queryGroupMember(LdapConfig.Ldap ldapConfig, String groupName) {

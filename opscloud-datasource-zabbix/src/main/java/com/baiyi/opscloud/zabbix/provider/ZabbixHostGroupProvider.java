@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostGroupHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostGroupDatasource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixHostGroupProvider extends AbstractAssetRelationProvider<ZabbixHostGroup, ZabbixHost> {
 
     @Resource
-    private ZabbixHostGroupHandler zabbixHostGroupHandler;
+    private ZabbixHostGroupDatasource zabbixHostGroupDatasource;
 
     @Resource
     private ZabbixHostGroupProvider zabbixHostGroupProvider;
@@ -51,17 +51,17 @@ public class ZabbixHostGroupProvider extends AbstractAssetRelationProvider<Zabbi
     @Override
     protected List<ZabbixHostGroup> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostGroupHandler.listByHost(zabbix, target);
+        return zabbixHostGroupDatasource.listByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixHostGroup> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixHostGroupHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixHostGroupDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixHostGroup getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixHostGroupHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixHostGroupDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

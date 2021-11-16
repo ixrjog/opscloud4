@@ -16,7 +16,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixTriggerAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
-import com.baiyi.opscloud.zabbix.handler.ZabbixTriggerHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixTrigger, ZabbixHost> {
 
     @Resource
-    private ZabbixTriggerHandler zabbixTriggerHandler;
+    private ZabbixTriggerDatasource zabbixTriggerDatasource;
 
     @Resource
     private ZabbixTriggerProvider zabbixTriggerProvider;
@@ -51,17 +51,17 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     @Override
     protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixTriggerHandler.listByHost(zabbix, target);
+        return zabbixTriggerDatasource.listByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext) {
-        return zabbixTriggerHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixTriggerDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixTrigger getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixTriggerHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixTriggerDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

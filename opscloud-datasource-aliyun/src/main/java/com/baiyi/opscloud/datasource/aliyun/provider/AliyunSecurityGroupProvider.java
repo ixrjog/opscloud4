@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
+import com.baiyi.opscloud.datasource.aliyun.ecs.AliyunEcsDatasource;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
@@ -37,7 +37,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<DescribeSecurityGroupsResponse.SecurityGroup> {
 
     @Resource
-    private AliyunEcsHandler aliyunEcsHandler;
+    private AliyunEcsDatasource aliyunEcsDatasource;
 
     @Resource
     private AliyunSecurityGroupProvider aliyunSecurityGroupProvider;
@@ -70,7 +70,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeSecurityGroupsResponse.SecurityGroup> securityGroupList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> securityGroupList.addAll(aliyunEcsHandler.listSecurityGroups(regionId, aliyun,asset)));
+        aliyun.getRegionIds().forEach(regionId -> securityGroupList.addAll(aliyunEcsDatasource.listSecurityGroups(regionId, aliyun,asset)));
         return securityGroupList;
     }
 

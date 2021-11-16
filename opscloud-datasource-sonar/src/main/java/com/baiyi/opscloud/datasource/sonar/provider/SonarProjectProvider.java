@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.sonar.convert.SonarAssetConvert;
 import com.baiyi.opscloud.datasource.sonar.entry.SonarProjects;
 import com.baiyi.opscloud.datasource.sonar.entry.base.BaseSonarElement;
-import com.baiyi.opscloud.datasource.sonar.handler.SonarProjectsHandler;
+import com.baiyi.opscloud.datasource.sonar.datasource.SonarProjectsDatasource;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -37,7 +37,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_SONAR_
 public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Project> {
 
     @Resource
-    private SonarProjectsHandler sonarProjectsHandler;
+    private SonarProjectsDatasource sonarProjectsDatasource;
 
     @Resource
     private SonarProjectProvider sonarProjectProvider;
@@ -61,9 +61,9 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
         SonarConfig.Sonar sonar = buildConfig(dsInstanceContext.getDsConfig());
         List<BaseSonarElement.Project> entries = Lists.newArrayList();
         PagingParam pagingParam = PagingParam.builder().build();
-        sonarProjectsHandler.searchProjects(sonar, pagingParam);
+        sonarProjectsDatasource.searchProjects(sonar, pagingParam);
         while (true) {
-            SonarProjects sonarProjects = sonarProjectsHandler.searchProjects(sonar, pagingParam);
+            SonarProjects sonarProjects = sonarProjectsDatasource.searchProjects(sonar, pagingParam);
             List<BaseSonarElement.Project> components = sonarProjects.getComponents();
             if (CollectionUtils.isEmpty(components)) {
                 break;

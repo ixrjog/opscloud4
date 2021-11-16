@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunVpcHandler;
+import com.baiyi.opscloud.datasource.aliyun.ecs.AliyunVpcDatasource;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
@@ -35,7 +35,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vpc> {
 
     @Resource
-    private AliyunVpcHandler aliyunVpcHandler;
+    private AliyunVpcDatasource aliyunVpcDatasource;
 
     @Resource
     private AliyunVpcProvider aliyunVpcProvider;
@@ -69,7 +69,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeVpcsResponse.Vpc> vpcList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> vpcList.addAll(aliyunVpcHandler.listVpcs(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> vpcList.addAll(aliyunVpcDatasource.listVpcs(regionId, aliyun)));
         return vpcList;
     }
 

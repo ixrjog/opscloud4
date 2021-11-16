@@ -6,7 +6,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsMysqlAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.rds.mysql.handler.AliyunRdsMysqlHandler;
+import com.baiyi.opscloud.datasource.aliyun.rds.mysql.AliyunRdsMysqlDatasource;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
@@ -36,7 +36,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvider<DescribeDatabasesResponse.Database, DescribeDBInstancesResponse.DBInstance> {
 
     @Resource
-    private AliyunRdsMysqlHandler aliyunRdsMysqlHandler;
+    private AliyunRdsMysqlDatasource aliyunRdsMysqlDatasource;
 
     @Resource
     private AliyunRdsMysqlDatabaseProvider aliyunRdsMysqlDatabaseProvider;
@@ -71,10 +71,10 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
             return Collections.emptyList();
         List<DescribeDatabasesResponse.Database> entries = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
-            List<DescribeDBInstancesResponse.DBInstance> instances = aliyunRdsMysqlHandler.listDbInstance(regionId, aliyun);
+            List<DescribeDBInstancesResponse.DBInstance> instances = aliyunRdsMysqlDatasource.listDbInstance(regionId, aliyun);
             if (!CollectionUtils.isEmpty(instances)) {
                 instances.forEach(instance -> {
-                    entries.addAll(aliyunRdsMysqlHandler.listDatabase(regionId, aliyun, instance.getDBInstanceId()));
+                    entries.addAll(aliyunRdsMysqlDatasource.listDatabase(regionId, aliyun, instance.getDBInstanceId()));
                 });
             }
         });
@@ -104,7 +104,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
     @Override
     protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext, DescribeDBInstancesResponse.DBInstance target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRdsMysqlHandler.listDatabase(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
+        return aliyunRdsMysqlDatasource.listDatabase(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
     }
 
 }

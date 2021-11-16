@@ -22,7 +22,7 @@ import java.util.List;
 public class ZabbixHostProvider extends BaseZabbixHostProvider<ZabbixHostGroup> {
 
     @Resource
-    private ZabbixHostProvider zabbixHostTargetGroupProvider;
+    private ZabbixHostProvider zabbixHostProvider;
 
     @Override
     protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixHostGroup target) {
@@ -37,6 +37,6 @@ public class ZabbixHostProvider extends BaseZabbixHostProvider<ZabbixHostGroup> 
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(zabbixHostTargetGroupProvider);
+        AssetProviderFactory.register(zabbixHostProvider);
     }
 }

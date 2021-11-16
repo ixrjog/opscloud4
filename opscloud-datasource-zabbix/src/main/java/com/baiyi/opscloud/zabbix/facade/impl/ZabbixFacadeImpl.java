@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostGroupHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixUserGroupHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostGroupDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixUserGroupDatasource;
 import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
 import org.springframework.stereotype.Component;
 
@@ -20,10 +20,10 @@ import javax.annotation.Resource;
 public class ZabbixFacadeImpl implements ZabbixFacade {
 
     @Resource
-    private ZabbixUserGroupHandler zabbixUserGroupHandler;
+    private ZabbixUserGroupDatasource zabbixUserGroupHandler;
 
     @Resource
-    private ZabbixHostGroupHandler zabbixHostGroupHandler;
+    private ZabbixHostGroupDatasource zabbixHostGroupHandler;
 
     /**
      * 查询并创建用户组

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunVpcHandler;
+import com.baiyi.opscloud.datasource.aliyun.ecs.AliyunVpcDatasource;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
@@ -37,7 +37,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVSwitchesResponse.VSwitch> {
 
     @Resource
-    private AliyunVpcHandler aliyunVpcHandler;
+    private AliyunVpcDatasource aliyunVpcDatasource;
 
     @Resource
     private AliyunVSwitchProvider aliyunVSwitchProvider;
@@ -70,7 +70,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeVSwitchesResponse.VSwitch> vSwitchList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> vSwitchList.addAll(aliyunVpcHandler.listVSwitches(regionId, aliyun, asset)));
+        aliyun.getRegionIds().forEach(regionId -> vSwitchList.addAll(aliyunVpcDatasource.listVSwitches(regionId, aliyun, asset)));
         return vSwitchList;
     }
 

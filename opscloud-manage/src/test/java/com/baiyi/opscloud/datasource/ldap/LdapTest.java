@@ -11,7 +11,7 @@ import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.accountGroup.IAccountGroup;
 import com.baiyi.opscloud.datasource.ldap.entry.Group;
 import com.baiyi.opscloud.datasource.ldap.entry.Person;
-import com.baiyi.opscloud.datasource.ldap.handler.LdapHandler;
+import com.baiyi.opscloud.datasource.ldap.datasource.LdapDatasource;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -44,7 +44,7 @@ public class LdapTest extends BaseUnit {
     private DsConfigHelper dsFactory;
 
     @Resource
-    private LdapHandler ldapHandler;
+    private LdapDatasource ldapHandler;
 
     @Resource
     private UserService userService;

@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.tencent.exmail.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -13,16 +13,16 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.tencent.exmail.convert.ExmailAssetConvert;
+import com.baiyi.opscloud.tencent.exmail.datasource.TencentExmailUserDatasource;
 import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
-import com.baiyi.opscloud.tencent.exmail.handler.TencentExmailUserHandler;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_TENCENT_EXMAIL_USER;
-import static com.baiyi.opscloud.tencent.exmail.handler.TencentExmailUserHandler.ALL_DEPARTMENT;
+import static com.baiyi.opscloud.tencent.exmail.datasource.TencentExmailUserDatasource.ALL_DEPARTMENT;
 
 /**
  * @Author baiyi
@@ -31,13 +31,12 @@ import static com.baiyi.opscloud.tencent.exmail.handler.TencentExmailUserHandler
  */
 @Slf4j
 @Component
+@RequiredArgsConstructor
 public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
 
-    @Resource
-    private TencentExmailUserProvider tencentExmailUserProvider;
+    private final TencentExmailUserProvider tencentExmailUserProvider;
 
-    @Resource
-    private TencentExmailUserHandler tencentExmailUserHandler;
+    private final TencentExmailUserDatasource tencentExmailUserDatasource;
 
     @Override
     public String getInstanceType() {
@@ -56,7 +55,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     @Override
     protected List<ExmailUser> listEntries(DsInstanceContext dsInstanceContext) {
         TencentExmailConfig.Tencent tencent = buildConfig(dsInstanceContext.getDsConfig());
-        return tencentExmailUserHandler.list(tencent, ALL_DEPARTMENT);
+        return tencentExmailUserDatasource.list(tencent, ALL_DEPARTMENT);
     }
 
     @Override

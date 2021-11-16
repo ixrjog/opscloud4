@@ -27,7 +27,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import static com.baiyi.opscloud.zabbix.handler.base.ZabbixServer.ApiConstant.RESULT;
+import static com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer.ApiConstant.RESULT;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>

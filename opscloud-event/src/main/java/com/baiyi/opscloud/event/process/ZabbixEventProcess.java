@@ -18,9 +18,9 @@ import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostInterface;
 import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixProblemHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixTriggerHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixProblemDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import com.baiyi.opscloud.zabbix.param.base.SeverityType;
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
@@ -42,13 +42,13 @@ import java.util.Optional;
 public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem> {
 
     @Resource
-    private ZabbixTriggerHandler zabbixTriggerHandler;
+    private ZabbixTriggerDatasource zabbixTriggerHandler;
 
     @Resource
-    private ZabbixProblemHandler zabbixProblemHandler;
+    private ZabbixProblemDatasource zabbixProblemHandler;
 
     @Resource
-    private ZabbixHostHandler zabbixHostHandler;
+    private ZabbixHostDatasource zabbixHostHandler;
 
     private static final List<SeverityType> severityTypes = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
 

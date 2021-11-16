@@ -9,7 +9,7 @@ import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostGroupHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostGroupDatasource;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -28,7 +28,7 @@ public class ZabbixHostGroupTest extends BaseUnit {
     private DsConfigHelper dsFactory;
 
     @Resource
-    private ZabbixHostGroupHandler zabbixHostGroupHandler;
+    private ZabbixHostGroupDatasource zabbixHostGroupHandler;
 
     @Resource
     private ZabbixFacade zabbixFacade;

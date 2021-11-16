@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHostTag;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostTagHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostTagDatasource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -20,10 +20,10 @@ import javax.annotation.Resource;
 public class ZabbixHostTest extends BaseZabbixTest {
 
     @Resource
-    private ZabbixHostHandler zabbixHostHandler;
+    private ZabbixHostDatasource zabbixHostHandler;
 
     @Resource
-    private ZabbixHostTagHandler zabbixHostTagHandler;
+    private ZabbixHostTagDatasource zabbixHostTagHandler;
 
     @Test
     void getHostByIp() {

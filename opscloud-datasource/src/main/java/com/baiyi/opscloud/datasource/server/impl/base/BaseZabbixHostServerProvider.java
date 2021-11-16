@@ -14,10 +14,10 @@ import com.baiyi.opscloud.zabbix.entry.ZabbixHostTag;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.entry.base.ZabbixTag;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostTagHandler;
-import com.baiyi.opscloud.zabbix.handler.ZabbixTemplateHandler;
-import com.baiyi.opscloud.zabbix.handler.base.ZabbixServer;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostTagDatasource;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixTemplateDatasource;
+import com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.http.IZabbixRequest;
 import com.baiyi.opscloud.zabbix.param.ZabbixHostParam;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -43,13 +43,13 @@ public abstract class BaseZabbixHostServerProvider extends AbstractServerProvide
     private ZabbixFacade zabbixFacade;
 
     @Resource
-    protected ZabbixHostHandler zabbixHostHandler;
+    protected ZabbixHostDatasource zabbixHostHandler;
 
     @Resource
-    protected ZabbixHostTagHandler zabbixHostTagHandler;
+    protected ZabbixHostTagDatasource zabbixHostTagHandler;
 
     @Resource
-    private ZabbixTemplateHandler zabbixTemplateHandler;
+    private ZabbixTemplateDatasource zabbixTemplateHandler;
 
     @Resource
     private ZabbixServer zabbixServer;

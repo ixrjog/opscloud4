@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.datasource.kubernetes.handler.KubernetesPodHandler;
+import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesPodDatasource;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.*;
@@ -180,7 +180,7 @@ public class RemoteInvokeHandler {
     public static void openKubernetesLog(String sessionId, String instanceId, KubernetesConfig.Kubernetes kubernetes,
                                          KubernetesResource.Pod pod, KubernetesResource.Container container, Integer lines) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        LogWatch logWatch = KubernetesPodHandler.getPodLogWatch(kubernetes,
+        LogWatch logWatch = KubernetesPodDatasource.getPodLogWatch(kubernetes,
                 pod.getNamespace(),
                 pod.getName(),
                 container.getName(),
@@ -204,8 +204,8 @@ public class RemoteInvokeHandler {
     public static void openKubernetesTerminal(String sessionId, String instanceId, KubernetesConfig.Kubernetes kubernetes,
                                               KubernetesResource.Pod pod, KubernetesResource.Container container) {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        KubernetesPodHandler.SimpleListener listener = new KubernetesPodHandler.SimpleListener();
-        ExecWatch execWatch = KubernetesPodHandler.loginPodContainer(
+        KubernetesPodDatasource.SimpleListener listener = new KubernetesPodDatasource.SimpleListener();
+        ExecWatch execWatch = KubernetesPodDatasource.loginPodContainer(
                 kubernetes,
                 pod.getNamespace(),
                 pod.getName(),

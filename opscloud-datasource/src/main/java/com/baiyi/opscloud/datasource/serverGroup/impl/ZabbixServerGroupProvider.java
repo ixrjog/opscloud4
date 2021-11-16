@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.handler.ZabbixActionHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixActionDatasource;
 import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -32,7 +32,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
     private ZabbixFacade zabbixFacade;
 
     @Resource
-    private ZabbixActionHandler zabbixActionHandler;
+    private ZabbixActionDatasource zabbixActionHandler;
 
     @Resource
     private BusinessPropertyHelper businessPropertyHelper;

@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.zabbix;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
 import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
-import com.baiyi.opscloud.zabbix.handler.ZabbixTemplateHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixTemplateDatasource;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +18,7 @@ import javax.annotation.Resource;
 public class ZabbixTemplateTest extends BaseZabbixTest {
 
     @Resource
-    private ZabbixTemplateHandler zabbixTemplateHandler;
+    private ZabbixTemplateDatasource zabbixTemplateHandler;
 
     @Test
     void getTemplateByName(){

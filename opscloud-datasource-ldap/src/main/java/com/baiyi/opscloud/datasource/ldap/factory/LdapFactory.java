@@ -30,7 +30,6 @@ public class LdapFactory {
     }
 
     private static TransactionAwareContextSourceProxy buildTransactionAwareContextSourceProxy(LdapContextSource contextSource) {
-        TransactionAwareContextSourceProxy sourceProxy = new TransactionAwareContextSourceProxy(contextSource);
-        return sourceProxy;
+        return new TransactionAwareContextSourceProxy(contextSource);
     }
 }

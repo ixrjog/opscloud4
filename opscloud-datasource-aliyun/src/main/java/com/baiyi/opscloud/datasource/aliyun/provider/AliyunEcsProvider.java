@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.handler.AliyunEcsHandler;
+import com.baiyi.opscloud.datasource.aliyun.ecs.AliyunEcsDatasource;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<DescribeInstancesResponse.Instance> {
 
     @Resource
-    private AliyunEcsHandler aliyunEcsHandler;
+    private AliyunEcsDatasource aliyunEcsDatasource;
 
     @Resource
     private AliyunEcsProvider aliyunEcsProvider;
@@ -76,7 +76,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
             return Collections.emptyList();
         List<DescribeInstancesResponse.Instance> instanceList = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId ->
-                instanceList.addAll(aliyunEcsHandler.listInstances(regionId, aliyun))
+                instanceList.addAll(aliyunEcsDatasource.listInstances(regionId, aliyun))
         );
         return instanceList;
     }

@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.nexus.convert.NexusAssetConvert;
 import com.baiyi.opscloud.nexus.entry.NexusAsset;
-import com.baiyi.opscloud.nexus.handler.NexusAssetHandler;
+import com.baiyi.opscloud.nexus.datasource.NexusAssetDatasource;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -40,7 +40,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     private NexusAssetProvider nexusAssetProvider;
 
     @Resource
-    private NexusAssetHandler nexusAssetHandler;
+    private NexusAssetDatasource nexusAssetDatasource;
 
     @Override
     public String getInstanceType() {
@@ -63,7 +63,7 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
         nexus.getRepositories().forEach(r -> {
             String continuationToken = "";
             while (true) {
-                NexusAsset.Assets assets = nexusAssetHandler.list(nexus, r.getName(), continuationToken);
+                NexusAsset.Assets assets = nexusAssetDatasource.list(nexus, r.getName(), continuationToken);
                 if (assets == null || CollectionUtils.isEmpty(assets.getItems()))
                     return;
                 System.out.println(JSON.toJSONString(assets ));

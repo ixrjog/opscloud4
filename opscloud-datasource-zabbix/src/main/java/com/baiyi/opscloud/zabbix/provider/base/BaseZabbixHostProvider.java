@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
 import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.handler.ZabbixHostHandler;
+import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
 import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
 
 import javax.annotation.Resource;
@@ -29,7 +29,7 @@ import java.util.List;
 public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationProvider<ZabbixHost,T> {
 
     @Resource
-    protected ZabbixHostHandler zabbixHostHandler;
+    protected ZabbixHostDatasource zabbixHostHandler;
 
     @Resource
     private ZabbixHostProvider zabbixHostTargetGroupProvider;

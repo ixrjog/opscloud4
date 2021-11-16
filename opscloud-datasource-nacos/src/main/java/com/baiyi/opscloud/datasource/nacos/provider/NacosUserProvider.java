@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.nacos.convert.NacosRoleConvert;
 import com.baiyi.opscloud.datasource.nacos.entry.NacosRole;
-import com.baiyi.opscloud.datasource.nacos.handler.NacosAuthHandler;
+import com.baiyi.opscloud.datasource.nacos.datasource.NacosAuthDatasource;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -35,7 +35,7 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
     private NacosUserProvider nacosUserProvider;
 
     @Resource
-    private NacosAuthHandler nacosAuthHandler;
+    private NacosAuthDatasource nacosAuthDatasource;
 
     @Override
     public String getInstanceType() {
@@ -59,7 +59,7 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
                     .build();
             List<NacosRole.Role> entries = Lists.newArrayList();
             while (true) {
-                NacosRole.RolesResponse rolesResponse = nacosAuthHandler.listRoles(buildConfig(dsInstanceContext.getDsConfig()), pageQuery);
+                NacosRole.RolesResponse rolesResponse = nacosAuthDatasource.listRoles(buildConfig(dsInstanceContext.getDsConfig()), pageQuery);
                 entries.addAll(rolesResponse.getPageItems());
                 if (rolesResponse.getPagesAvailable() >= rolesResponse.getPageNumber())
                     break;
