@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.generator.opscloud.Instance;
 import com.baiyi.opscloud.facade.sys.InstanceFacade;
-import com.baiyi.opscloud.task.base.BaseTask;
+import com.baiyi.opscloud.task.base.AbstractTask;
 import com.baiyi.opscloud.util.SystemInfoUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -20,7 +20,7 @@ import java.net.UnknownHostException;
  */
 @Slf4j
 @Component
-public class SystemInfoTask extends BaseTask {
+public class SystemInfoTask extends AbstractTask {
 
     @Resource
     private InstanceFacade instanceFacade;

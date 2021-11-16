@@ -13,7 +13,7 @@ public class EventConsumerFactory {
     private EventConsumerFactory() {
     }
 
-    static private Map<String, IEventConsumer> context = new ConcurrentHashMap<>();
+    static private final Map<String, IEventConsumer> context = new ConcurrentHashMap<>();
 
     public static IEventConsumer getConsumer(String eventType) {
         return context.get(eventType);

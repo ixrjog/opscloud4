@@ -12,7 +12,7 @@ import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.task.base.BaseTask;
+import com.baiyi.opscloud.task.base.AbstractTask;
 import lombok.extern.slf4j.Slf4j;
 import net.javacrumbs.shedlock.spring.annotation.SchedulerLock;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -31,8 +31,7 @@ import java.util.List;
  */
 @Slf4j
 @Component
-public class AssetSubscriptionTask extends BaseTask {
-
+public class AssetSubscriptionTask extends AbstractTask {
 
     @Resource
     private DsInstanceService dsInstanceService;

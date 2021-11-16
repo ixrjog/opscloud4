@@ -17,7 +17,7 @@ public class RequestExceptionHandler {
 
     @ResponseStatus(HttpStatus.OK)
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public HttpResult handlerMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
+    public HttpResult handleMethodArgumentNotValidException(MethodArgumentNotValidException exception) {
         return new HttpResult(ErrorEnum.SYSTEM_ERROR.getCode(), exception.getBindingResult().getAllErrors().get(0).getDefaultMessage());
     }
 }

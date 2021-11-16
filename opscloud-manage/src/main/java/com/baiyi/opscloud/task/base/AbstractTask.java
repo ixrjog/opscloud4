@@ -14,7 +14,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseTask {
+public abstract class AbstractTask {
 
     @Resource
     protected RedisUtil redisUtil;

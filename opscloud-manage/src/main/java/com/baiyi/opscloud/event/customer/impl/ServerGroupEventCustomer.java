@@ -52,5 +52,4 @@ public class ServerGroupEventCustomer extends AbstractEventConsumer<ServerGroup>
         dsServerGroupManager.update(eventData);
     }
 
-
 }
