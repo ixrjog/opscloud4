@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshcore.handler;
+package com.baiyi.opscloud.sshcore;
 
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
@@ -14,32 +14,25 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Component
-public class AuditRecordHandler {
+public class AuditRecordHelper {
 
-    // private static RedisUtil redisUtil;
-
-    private static TerminalConfigurationProperties terminalConfig;
-
-//    @Autowired
-//    private void setRedisUtil(RedisUtil redisUtil) {
-//        AuditRecordHandler.redisUtil = redisUtil;
-//    }
+    private static TerminalConfigurationProperties terminalConfigurationProperties;
 
     @Autowired
-    private void setTerminalConfig(TerminalConfigurationProperties terminalConfig) {
-        AuditRecordHandler.terminalConfig = terminalConfig;
+    private void setTerminalConfig(TerminalConfigurationProperties terminalConfigurationProperties) {
+        AuditRecordHelper.terminalConfigurationProperties = terminalConfigurationProperties;
     }
 
     public static void recordAuditLog(String sessionId, String instanceId, char[] buf, int off, int len) {
         try {
-            IOUtil.appendFile(new String(buf).substring(off, len), terminalConfig.buildAuditLogPath(sessionId, instanceId));
+            IOUtil.appendFile(new String(buf).substring(off, len), terminalConfigurationProperties.buildAuditLogPath(sessionId, instanceId));
         } catch (Exception e) {
             log.error("Web终端会话日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
         }
     }
 
     public static String getAuditLogPath(String sessionId, String instanceId) {
-        return terminalConfig.buildAuditLogPath(sessionId, instanceId);
+        return terminalConfigurationProperties.buildAuditLogPath(sessionId, instanceId);
     }
 
     /**
@@ -56,7 +49,7 @@ public class AuditRecordHandler {
             while (log.contains("\b")) {
                 log = log.replaceFirst(".\b", ""); // 退格处理
             }
-            IOUtil.appendFile(log, terminalConfig.buildCommanderLogPath(sessionId, instanceId));
+            IOUtil.appendFile(log, terminalConfigurationProperties.buildCommanderLogPath(sessionId, instanceId));
         } catch (Exception e) {
             log.error("Web终端命令日志写入失败! sessionId = {}, instanceId = {}", sessionId, instanceId);
         }

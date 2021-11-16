@@ -3,7 +3,7 @@ package com.baiyi.opscloud.terminal.factory;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
-import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;

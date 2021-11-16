@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshcore.base;
+package com.baiyi.opscloud.sshcore;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 

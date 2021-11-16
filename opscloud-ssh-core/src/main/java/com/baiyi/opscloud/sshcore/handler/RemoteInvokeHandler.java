@@ -34,7 +34,7 @@ public class RemoteInvokeHandler {
 
     private static final int SSH_PORT = 22;
 
-    private static String appId = UUID.randomUUID().toString();
+    private static final String appId = UUID.randomUUID().toString();
 
 //    private static final int SERVER_ALIVE_INTERVAL = 60 * 1000;
 //    public static final int SESSION_TIMEOUT = 60000;

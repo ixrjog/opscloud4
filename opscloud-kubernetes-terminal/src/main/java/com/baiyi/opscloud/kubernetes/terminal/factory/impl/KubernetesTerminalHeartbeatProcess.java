@@ -2,7 +2,7 @@ package com.baiyi.opscloud.kubernetes.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.kubernetes.terminal.factory.AbstractKubernetesTerminalProcess;
-import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import org.springframework.stereotype.Component;

@@ -18,7 +18,7 @@ import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import com.baiyi.opscloud.service.user.UserPermissionService;
-import com.baiyi.opscloud.sshcore.account.SshAccount;
+import com.baiyi.opscloud.sshcore.SshAccountHelper;
 import com.baiyi.opscloud.sshcore.message.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
@@ -49,7 +49,7 @@ public class HostSystemHandler {
 
     private final CredentialUtil credentialUtil;
 
-    private final SshAccount sshAccount;
+    private final SshAccountHelper sshAccountHelper;
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;
@@ -144,7 +144,7 @@ public class HostSystemHandler {
 
     // 管理员
     private SshCredential getSshCredentialByAdmin(Integer serverId, int loginType) {
-        Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(serverId);
+        Map<Integer, List<ServerAccount>> accountCatMap = sshAccountHelper.getServerAccountCatMap(serverId);
         if (accountCatMap == null) return null;
         if (accountCatMap.containsKey(loginType)) {
             return buildSshCredential(accountCatMap.get(loginType).get(0));

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.sshcore.account;
+package com.baiyi.opscloud.sshcore;
 
 import com.baiyi.opscloud.common.constant.enums.ProtocolEnum;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;
@@ -19,7 +19,7 @@ import java.util.Map;
  */
 @Component
 @RequiredArgsConstructor
-public class SshAccount {
+public class SshAccountHelper {
 
     private final ServerAccountService serverAccountService;
 

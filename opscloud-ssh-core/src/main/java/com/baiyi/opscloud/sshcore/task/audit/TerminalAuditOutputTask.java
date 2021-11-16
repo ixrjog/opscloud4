@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshcore.task.audit;
 
-import com.baiyi.opscloud.sshcore.handler.AuditRecordHandler;
+import com.baiyi.opscloud.sshcore.AuditRecordHelper;
 import com.baiyi.opscloud.sshcore.model.SessionOutput;
 import com.baiyi.opscloud.sshcore.task.audit.output.OutputMessage;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +28,7 @@ public class TerminalAuditOutputTask implements Runnable {
 
     @Override
     public void run() {
-        String auditLogPath = AuditRecordHandler.getAuditLogPath(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
+        String auditLogPath = AuditRecordHelper.getAuditLogPath(sessionOutput.getSessionId(), sessionOutput.getInstanceId());
         String str;
         try {
             LineNumberReader reader = new LineNumberReader(new FileReader(auditLogPath));

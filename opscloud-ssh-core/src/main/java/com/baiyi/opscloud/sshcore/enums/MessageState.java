@@ -32,14 +32,6 @@ public enum MessageState {
         this.desc = desc;
     }
 
-    public String getState() {
-        return state;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
     public String getDescByState(String state) {
         return Arrays.stream(MessageState.values()).filter(typeEnum -> typeEnum.getState().equals(state)).findFirst().map(MessageState::getDesc).orElse("undefined");
     }

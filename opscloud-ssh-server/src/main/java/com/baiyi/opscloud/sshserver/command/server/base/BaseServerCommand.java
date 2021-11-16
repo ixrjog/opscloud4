@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.sshcore.account.SshAccount;
+import com.baiyi.opscloud.sshcore.SshAccountHelper;
 import com.baiyi.opscloud.sshcore.table.PrettyTable;
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
@@ -49,7 +49,7 @@ public class BaseServerCommand {
     protected ServerService serverService;
 
     @Resource
-    private SshAccount sshAccount;
+    private SshAccountHelper sshAccountHelper;
 
     @Resource
     protected SshServerPacker sshServerPacker;
@@ -119,7 +119,7 @@ public class BaseServerCommand {
 
     protected String toAccountField(ServerVO.Server server, boolean isAdmin) {
         String displayAccount = "";
-        Map<Integer, List<ServerAccount>> accountCatMap = sshAccount.getServerAccountCatMap(server.getId());
+        Map<Integer, List<ServerAccount>> accountCatMap = sshAccountHelper.getServerAccountCatMap(server.getId());
         // 没有授权账户
         if (accountCatMap.isEmpty()) return NO_AUTHORIZED_ACCOUNT;
         // 低权限账户

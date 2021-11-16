@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.kubernetes.terminal.factory;
 
-import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
+import com.baiyi.opscloud.sshcore.ITerminalProcess;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
