@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.datasource.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
 import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetRelationMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelationService {
 
-    @Resource
-    private DatasourceInstanceAssetRelationMapper dsInstanceAssetRelationMapper;
+    private final DatasourceInstanceAssetRelationMapper dsInstanceAssetRelationMapper;
 
     @Override
     public void deleteById(Integer id) {

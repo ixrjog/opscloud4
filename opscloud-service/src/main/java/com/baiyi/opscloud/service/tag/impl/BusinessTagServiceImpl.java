@@ -4,10 +4,10 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.mapper.opscloud.BusinessTagMapper;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,10 +16,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class BusinessTagServiceImpl implements BusinessTagService {
 
-    @Resource
-    private BusinessTagMapper businessTagMapper;
+    private final BusinessTagMapper businessTagMapper;
 
     @Override
     public List<BusinessTag> queryByParam(BusinessTagParam.UpdateBusinessTags queryParam) {

@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 @Data
 @Component
 @ConfigurationProperties(prefix = "terminal", ignoreInvalidFields = true)
-public class TerminalConfig {
+public class TerminalConfigurationProperties {
 
     private String auditPath;
     private Boolean openAudit;
@@ -22,7 +22,6 @@ public class TerminalConfig {
         String AUDIT_LOG = ".log";
         String COMMAND_LOG = "_commander.log";
         String FMT_COMMAND_LOG = "_commander_fmt.log";   // formatted
-
     }
 
     public String buildAuditLogPath(String sessionId, String instanceId) {

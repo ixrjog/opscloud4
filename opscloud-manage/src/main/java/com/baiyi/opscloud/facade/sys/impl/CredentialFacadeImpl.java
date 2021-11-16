@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.param.sys.CredentialParam;
 import com.baiyi.opscloud.domain.vo.sys.CredentialVO;
 import com.baiyi.opscloud.facade.sys.CredentialFacade;
 import com.baiyi.opscloud.factory.credential.CredentialCustomerFactory;
-import com.baiyi.opscloud.factory.credential.ICredentialCustomer;
+import com.baiyi.opscloud.factory.credential.base.ICredentialCustomer;
 import com.baiyi.opscloud.packer.sys.CredentialPacker;
 import com.baiyi.opscloud.service.sys.CredentialService;
 import lombok.RequiredArgsConstructor;
@@ -60,7 +60,7 @@ public class CredentialFacadeImpl implements CredentialFacade {
         Map<String, ICredentialCustomer> context = CredentialCustomerFactory.getContext();
         for (String key : context.keySet()) {
             ICredentialCustomer iCredentialCustomer = context.get(key);
-            if (iCredentialCustomer.isUsedCredential(id))
+            if (iCredentialCustomer.hasUsedCredential(id))
                 throw new CommonRuntimeException("该凭据正在使用中！");
         }
         credentialService.deleteById(id);

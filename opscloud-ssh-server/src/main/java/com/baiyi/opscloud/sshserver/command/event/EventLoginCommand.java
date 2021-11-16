@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
-import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
+import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
@@ -49,7 +49,7 @@ import java.util.Map;
 public class EventLoginCommand extends BaseServerCommand {
 
     @Resource
-    private AuditServerCommandHandler auditCommandHandler;
+    private AuditServerCommandAudit auditCommandHandler;
 
     @Resource
     private SshShellHelper helper;

@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.datasource.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetPropertyMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -16,10 +16,10 @@ import java.util.Map;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsInstanceAssetPropertyServiceImpl implements DsInstanceAssetPropertyService {
 
-    @Resource
-    private DatasourceInstanceAssetPropertyMapper dsInstanceAssetPropertyMapper;
+    private final DatasourceInstanceAssetPropertyMapper dsInstanceAssetPropertyMapper;
 
     @Override
     public void add(DatasourceInstanceAssetProperty property) {

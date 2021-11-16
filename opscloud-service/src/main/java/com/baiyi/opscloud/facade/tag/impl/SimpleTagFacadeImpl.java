@@ -8,14 +8,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.BusinessTagParam;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
+import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
-import com.baiyi.opscloud.domain.vo.tag.TagVO;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Iterator;
 import java.util.List;
 
@@ -25,16 +25,14 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class SimpleTagFacadeImpl implements SimpleTagFacade {
 
-    @Resource
-    private TagService tagService;
+    private final TagService tagService;
 
-    @Resource
-    private BusinessTagService businessTagService;
+    private final BusinessTagService businessTagService;
 
-    @Resource
-    private TagPacker tagPacker;
+    private final TagPacker tagPacker;
 
     @Override
     public List<Tag> queryBusinessTagByParam(TagParam.BusinessQuery queryParam) {

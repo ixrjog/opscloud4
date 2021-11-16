@@ -38,7 +38,7 @@ public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandM
         ServerCommandMessage commandMessage = getMessage(message);
         if (StringUtils.isEmpty(commandMessage.getData()))
             return;
-        if (!isBatch(terminalSession)) {
+        if (!needBatch(terminalSession)) {
             printCommand(terminalSession.getSessionId(), commandMessage.getInstanceId(), commandMessage.getData());
         } else {
             Map<String, JSchSession> sessionMap = JSchSessionContainer.getBySessionId(terminalSession.getSessionId());

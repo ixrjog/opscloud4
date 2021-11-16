@@ -37,6 +37,7 @@ public class ResizeProcess extends AbstractServerTerminalProcess<ServerResizeMes
         ServerResizeMessage resizeMessage = getMessage(message);
         try {
             JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
+            assert jSchSession != null;
             RemoteInvokeHandler.setChannelPtySize((ChannelShell) jSchSession.getChannel(), resizeMessage);
         } catch (Exception ignored) {
         }

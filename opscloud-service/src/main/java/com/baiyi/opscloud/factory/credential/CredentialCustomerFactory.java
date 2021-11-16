@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.factory.credential;
 
+import com.baiyi.opscloud.factory.credential.base.ICredentialCustomer;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.Map;

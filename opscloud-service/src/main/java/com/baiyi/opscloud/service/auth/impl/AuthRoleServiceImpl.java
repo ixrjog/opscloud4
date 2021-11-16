@@ -8,11 +8,11 @@ import com.baiyi.opscloud.service.auth.AuthRoleService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -21,10 +21,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class AuthRoleServiceImpl implements AuthRoleService {
 
-    @Resource
-    private AuthRoleMapper authRoleMapper;
+    private final AuthRoleMapper authRoleMapper;
 
     @Override
     public AuthRole getByRoleName(String roleName){

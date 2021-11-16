@@ -17,10 +17,10 @@ import com.baiyi.opscloud.mapper.opscloud.ServerGroupMapper;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -30,10 +30,10 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.SERVERGROUP)
 @Service
+@RequiredArgsConstructor
 public class ServerGroupServiceImpl extends AbstractBusinessService<ServerGroup> implements ServerGroupService {
 
-    @Resource
-    private ServerGroupMapper serverGroupMapper;
+    private final ServerGroupMapper serverGroupMapper;
 
     @Override
     public ServerGroup getById(Integer id) {

@@ -22,7 +22,7 @@ import javax.sql.DataSource;
         basePackages = {"com.baiyi.opscloud.mapper.opscloud"},
         sqlSessionTemplateRef = "opscloudSqlSessionTemplate"
 )
-public class DatasourceConfig {
+public class DatasourceConfiguration {
 
     @Bean
     @Primary

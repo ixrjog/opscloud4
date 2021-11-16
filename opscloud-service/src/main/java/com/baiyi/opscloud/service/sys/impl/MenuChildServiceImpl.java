@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.sys.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.MenuChild;
 import com.baiyi.opscloud.mapper.opscloud.MenuChildMapper;
 import com.baiyi.opscloud.service.sys.MenuChildService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class MenuChildServiceImpl implements MenuChildService {
 
-    @Resource
-    private MenuChildMapper menuChildMapper;
+    private final MenuChildMapper menuChildMapper;
 
     @Override
     public void add(MenuChild menuChild) {

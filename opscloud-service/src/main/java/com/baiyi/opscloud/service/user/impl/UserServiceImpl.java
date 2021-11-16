@@ -18,10 +18,10 @@ import com.baiyi.opscloud.mapper.opscloud.UserMapper;
 import com.baiyi.opscloud.service.user.UserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 
@@ -32,10 +32,10 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.USER)
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl extends AbstractBusinessService<User> implements UserService {
 
-    @Resource
-    private UserMapper userMapper;
+    private final UserMapper userMapper;
 
     @Override
     public DataTable<User> queryPageByParam(UserParam.UserPageQuery pageQuery) {

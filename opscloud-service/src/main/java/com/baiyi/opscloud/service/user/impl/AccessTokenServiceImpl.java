@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.user.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.mapper.opscloud.AccessTokenMapper;
 import com.baiyi.opscloud.service.user.AccessTokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class AccessTokenServiceImpl implements AccessTokenService {
 
-    @Resource
-    private AccessTokenMapper accessTokenMapper;
+    private final AccessTokenMapper accessTokenMapper;
 
     @Override
     public void add(AccessToken accessToken) {

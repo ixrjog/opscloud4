@@ -2,8 +2,8 @@ package com.baiyi.opscloud.ssh;
 
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
-import com.baiyi.opscloud.sshcore.config.TerminalConfig;
-import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
+import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
+import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
 import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
 import io.netty.util.AsciiString;
 import org.junit.jupiter.api.Test;
@@ -22,10 +22,10 @@ import java.util.regex.Pattern;
 public class AuditRecordHandlerTest extends BaseUnit {
 
     @Resource
-    private AuditServerCommandHandler auditCommandHandler;
+    private AuditServerCommandAudit auditCommandHandler;
 
     @Resource
-    private TerminalConfig terminalConfig;
+    private TerminalConfigurationProperties terminalConfig;
 
     private static final String REGEX = "\\u001b.*\\$?";
 

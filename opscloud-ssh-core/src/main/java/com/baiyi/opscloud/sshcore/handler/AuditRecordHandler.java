@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
 import com.baiyi.opscloud.common.util.IOUtil;
-import com.baiyi.opscloud.sshcore.config.TerminalConfig;
+import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -18,7 +18,7 @@ public class AuditRecordHandler {
 
     // private static RedisUtil redisUtil;
 
-    private static TerminalConfig terminalConfig;
+    private static TerminalConfigurationProperties terminalConfig;
 
 //    @Autowired
 //    private void setRedisUtil(RedisUtil redisUtil) {
@@ -26,7 +26,7 @@ public class AuditRecordHandler {
 //    }
 
     @Autowired
-    private void setTerminalConfig(TerminalConfig terminalConfig) {
+    private void setTerminalConfig(TerminalConfigurationProperties terminalConfig) {
         AuditRecordHandler.terminalConfig = terminalConfig;
     }
 
@@ -41,10 +41,6 @@ public class AuditRecordHandler {
     public static String getAuditLogPath(String sessionId, String instanceId) {
         return terminalConfig.buildAuditLogPath(sessionId, instanceId);
     }
-
-
-
-
 
     /**
      * 用户命令操作审计日志，暂不使用

@@ -17,7 +17,7 @@ import com.baiyi.opscloud.event.factory.EventFactory;
 import com.baiyi.opscloud.service.event.EventBusinessService;
 import com.baiyi.opscloud.service.event.EventService;
 import com.baiyi.opscloud.service.server.ServerService;
-import com.baiyi.opscloud.service.tag.BaseTagService;
+import com.baiyi.opscloud.service.tag.SimpleTagService;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -51,7 +51,7 @@ public abstract class AbstractEventProcess<E extends IRecover> extends SimpleDsI
     protected DsConfigHelper dsFactory;
 
     @Resource
-    private BaseTagService baseTagService;
+    private SimpleTagService baseTagService;
 
     @Resource
     protected ServerService serverService;

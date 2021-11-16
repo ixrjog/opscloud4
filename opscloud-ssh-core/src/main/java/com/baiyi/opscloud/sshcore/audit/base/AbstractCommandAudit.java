@@ -1,10 +1,11 @@
-package com.baiyi.opscloud.sshcore.audit;
+package com.baiyi.opscloud.sshcore.audit.base;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstanceCommand;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceCommandService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
-import com.baiyi.opscloud.sshcore.config.TerminalConfig;
+import com.baiyi.opscloud.sshcore.audit.InstanceCommandBuilder;
+import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.springframework.util.StringUtils;
 
@@ -19,10 +20,10 @@ import java.util.regex.Pattern;
  * @Date 2021/7/28 4:31 下午
  * @Version 1.0
  */
-public abstract class AbstractCommandHandler {
+public abstract class AbstractCommandAudit {
 
     @Resource
-    private TerminalConfig terminalConfig;
+    private TerminalConfigurationProperties terminalConfig;
 
     @Resource
     private TerminalSessionInstanceService terminalSessionInstanceService;

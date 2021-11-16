@@ -15,7 +15,7 @@ public enum InstanceSessionTypeEnum {
     CONTAINER_LOG("CONTAINER_LOG"),
     CONTAINER_TERMINAL("CONTAINER_TERMINAL");
 
-    private String type;
+    private final String type;
 
     InstanceSessionTypeEnum(String type) {
         this.type = type;

@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.application.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.ApplicationResource;
 import com.baiyi.opscloud.mapper.opscloud.ApplicationResourceMapper;
 import com.baiyi.opscloud.service.application.ApplicationResourceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class ApplicationResourceServiceImpl implements ApplicationResourceService {
 
-    @Resource
-    private ApplicationResourceMapper applicationResourceMapper;
+    private final ApplicationResourceMapper applicationResourceMapper;
 
     @Override
     public void add(ApplicationResource applicationResource) {

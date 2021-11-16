@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.business.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.mapper.opscloud.BusinessAssetRelationMapper;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationService {
 
-    @Resource
-    private BusinessAssetRelationMapper businessAssetRelationMapper;
+    private final BusinessAssetRelationMapper businessAssetRelationMapper;
 
     @Override
     public BusinessAssetRelation getByUniqueKey(BusinessAssetRelation businessAssetRelation) {

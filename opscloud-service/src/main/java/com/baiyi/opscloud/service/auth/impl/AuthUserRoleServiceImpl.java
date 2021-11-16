@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.auth.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthUserRole;
 import com.baiyi.opscloud.mapper.opscloud.AuthUserRoleMapper;
 import com.baiyi.opscloud.service.auth.AuthUserRoleService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class AuthUserRoleServiceImpl implements AuthUserRoleService {
 
-    @Resource
-    private AuthUserRoleMapper authUserRoleMapper;
+    private final AuthUserRoleMapper authUserRoleMapper;
 
     @Override
     public void add(AuthUserRole authUserRole) {

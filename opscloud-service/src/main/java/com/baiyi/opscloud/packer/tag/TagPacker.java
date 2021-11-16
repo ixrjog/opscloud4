@@ -4,12 +4,12 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
 import com.baiyi.opscloud.domain.param.tag.TagParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
+import com.baiyi.opscloud.facade.tag.SimpleTagFacade;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,13 +19,12 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class TagPacker {
 
-    @Resource
-    private SimpleTagFacade tagFacade;
+    private final SimpleTagFacade tagFacade;
 
-    @Resource
-    private BusinessTagService businessTagService;
+    private final BusinessTagService businessTagService;
 
     public void wrap(TagVO.ITags iTags) {
         TagParam.BusinessQuery queryParam = TagParam.BusinessQuery.builder()

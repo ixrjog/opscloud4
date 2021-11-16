@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.service.user.UserService;
-import com.baiyi.opscloud.sshcore.audit.AuditPodCommandHandler;
+import com.baiyi.opscloud.sshcore.audit.AuditPodCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.model.SessionIdMapper;
@@ -80,7 +80,7 @@ public class KubernetesPodCommand extends BaseKubernetesCommand implements Initi
     private UserService userService;
 
     @Resource
-    private AuditPodCommandHandler auditPodCommandHandler;
+    private AuditPodCommandAudit auditPodCommandHandler;
 
     // ^C
     private static final int QUIT = 3;

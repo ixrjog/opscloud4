@@ -18,8 +18,8 @@ import java.io.LineNumberReader;
 @Slf4j
 public class TerminalAuditOutputTask implements Runnable {
 
-    private SessionOutput sessionOutput;
-    private Session session;
+    private final SessionOutput sessionOutput;
+    private final Session session;
 
     public TerminalAuditOutputTask(Session session, SessionOutput sessionOutput) {
         this.session = session;

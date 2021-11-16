@@ -3,10 +3,9 @@ package com.baiyi.opscloud.service.sys.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.Document;
 import com.baiyi.opscloud.mapper.opscloud.DocumentMapper;
 import com.baiyi.opscloud.service.sys.DocumentService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -14,10 +13,10 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DocumentServiceImpl implements DocumentService {
 
-    @Resource
-    private DocumentMapper documentMapper;
+    private final DocumentMapper documentMapper;
 
     @Override
     public Document getByKey(String key) {

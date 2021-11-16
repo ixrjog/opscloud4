@@ -14,7 +14,7 @@ public enum SessionTypeEnum {
     SSH_SERVER("SSH_SERVER"),
     KUBERNETES_TERMINAL("KUBERNETES_TERMINAL");
 
-    private String type;
+    private final String type;
 
     SessionTypeEnum(String type) {
         this.type = type;

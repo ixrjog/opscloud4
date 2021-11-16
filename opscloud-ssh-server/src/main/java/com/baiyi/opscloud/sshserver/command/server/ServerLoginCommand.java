@@ -7,7 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.baiyi.opscloud.sshcore.account.SshAccount;
-import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
+import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
 import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
@@ -59,7 +59,7 @@ public class ServerLoginCommand implements InitializingBean {
     private static String SERVER_EXECUTE_ARTHAS = "cd /tmp && curl -O https://arthas.aliyun.com/arthas-boot.jar && sudo su - app -c 'java -jar /tmp/arthas-boot.jar'\n";
 
     @Resource
-    private AuditServerCommandHandler auditCommandHandler;
+    private AuditServerCommandAudit auditCommandHandler;
 
     @Resource
     private SshShellHelper helper;

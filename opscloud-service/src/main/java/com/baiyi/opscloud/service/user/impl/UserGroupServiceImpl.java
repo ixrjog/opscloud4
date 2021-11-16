@@ -18,11 +18,11 @@ import com.baiyi.opscloud.service.user.UserGroupService;
 import com.baiyi.opscloud.util.SQLUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -32,10 +32,10 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.USERGROUP)
 @Service
+@RequiredArgsConstructor
 public class UserGroupServiceImpl extends AbstractBusinessService<UserGroup> implements UserGroupService {
 
-    @Resource
-    private UserGroupMapper userGroupMapper;
+    private final UserGroupMapper userGroupMapper;
 
     @Override
     @EventPublisher(eventAction = EventActionTypeEnum.CREATE)

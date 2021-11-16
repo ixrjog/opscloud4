@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.user.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.UserToken;
 import com.baiyi.opscloud.mapper.opscloud.UserTokenMapper;
 import com.baiyi.opscloud.service.user.UserTokenService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class UserTokenServiceImpl implements UserTokenService {
 
-    @Resource
-    private UserTokenMapper userTokenMapper;
+    private final UserTokenMapper userTokenMapper;
 
     @Override
     public void add(UserToken userToken) {

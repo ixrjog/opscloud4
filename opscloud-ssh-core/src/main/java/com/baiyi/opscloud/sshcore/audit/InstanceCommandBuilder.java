@@ -13,8 +13,8 @@ import java.util.List;
  */
 public class InstanceCommandBuilder {
 
-    private List<String> outputs;
-    private TerminalSessionInstanceCommand command;
+    private final List<String> outputs;
+    private final TerminalSessionInstanceCommand command;
 
     private InstanceCommandBuilder(TerminalSessionInstanceCommand command) {
         this.outputs = Lists.newArrayList();
@@ -35,6 +35,5 @@ public class InstanceCommandBuilder {
          command.setOutput(Joiner.on("\n").join(outputs));
          return command;
     }
-
 
 }

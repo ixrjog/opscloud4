@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.auth.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleMenu;
 import com.baiyi.opscloud.mapper.opscloud.AuthRoleMenuMapper;
 import com.baiyi.opscloud.service.auth.AuthRoleMenuService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -16,10 +16,10 @@ import java.util.List;
  */
 
 @Service
+@RequiredArgsConstructor
 public class AuthRoleMenuServiceImpl implements AuthRoleMenuService {
 
-    @Resource
-    private AuthRoleMenuMapper authRoleMenuMapper;
+    private final AuthRoleMenuMapper authRoleMenuMapper;
 
     @Override
     public void addList(List<AuthRoleMenu> authRoleMenuList) {

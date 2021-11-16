@@ -16,10 +16,10 @@ import com.baiyi.opscloud.mapper.opscloud.ServerMapper;
 import com.baiyi.opscloud.service.server.ServerService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -29,10 +29,10 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.SERVER)
 @Service
+@RequiredArgsConstructor
 public class ServerServiceImpl extends AbstractBusinessService<Server> implements ServerService {
 
-    @Resource
-    private ServerMapper serverMapper;
+    private final ServerMapper serverMapper;
 
     @Override
     public Server getById(Integer id) {

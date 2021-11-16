@@ -30,7 +30,7 @@ public class SessionOutputUtil {
         SessionOutputUtil.redisUtil = redisUtil;
     }
 
-    private static Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
+    private static final Map<String, UserSessionsOutput> userSessionsOutputMap = new ConcurrentHashMap<>();
 
     private SessionOutputUtil() {
     }

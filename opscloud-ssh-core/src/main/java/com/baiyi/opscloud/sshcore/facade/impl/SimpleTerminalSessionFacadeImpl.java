@@ -5,11 +5,11 @@ import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
 import com.baiyi.opscloud.service.terminal.TerminalSessionService;
-import com.baiyi.opscloud.sshcore.config.TerminalConfig;
+import com.baiyi.opscloud.sshcore.config.TerminalConfigurationProperties;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.Date;
 
 /**
@@ -18,16 +18,14 @@ import java.util.Date;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class SimpleTerminalSessionFacadeImpl implements SimpleTerminalSessionFacade {
 
-    @Resource
-    private TerminalConfig terminalConfig;
+    private final TerminalConfigurationProperties terminalConfig;
 
-    @Resource
-    private TerminalSessionService terminalSessionService;
+    private final TerminalSessionService terminalSessionService;
 
-    @Resource
-    private TerminalSessionInstanceService terminalSessionInstanceService;
+    private final TerminalSessionInstanceService terminalSessionInstanceService;
 
     @Override
     public void closeTerminalSessionInstance(TerminalSessionInstance terminalSessionInstance){

@@ -1,10 +1,15 @@
 package com.baiyi.opscloud.sshcore.enums;
 
+import lombok.Getter;
+
+import java.util.Arrays;
+
 /**
  * @Author baiyi
  * @Date 2020/5/11 10:54 上午
  * @Version 1.0
  */
+@Getter
 public enum MessageState {
 
     LOGIN("LOGIN", "会话初始建立"),
@@ -18,11 +23,9 @@ public enum MessageState {
     BATCH_COMMAND("BATCH_COMMAND","批量命令"),
 
     PLAY("PLAY","播放"),
-
-
     ;
-    private String state;
-    private String desc;
+    private final String state;
+    private final String desc;
 
     MessageState(String code, String desc) {
         this.state = code;
@@ -38,11 +41,6 @@ public enum MessageState {
     }
 
     public String getDescByState(String state) {
-        for(MessageState typeEnum : MessageState.values()) {
-            if (typeEnum.getState().equals(state)) {
-                return typeEnum.getDesc();
-            }
-        }
-        return "未知类型";
+        return Arrays.stream(MessageState.values()).filter(typeEnum -> typeEnum.getState().equals(state)).findFirst().map(MessageState::getDesc).orElse("undefined");
     }
 }

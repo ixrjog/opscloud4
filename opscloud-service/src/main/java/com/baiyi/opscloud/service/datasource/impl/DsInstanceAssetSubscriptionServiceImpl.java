@@ -7,10 +7,10 @@ import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceAssetSubscriptionMap
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetSubscriptionService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -19,10 +19,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsInstanceAssetSubscriptionServiceImpl implements DsInstanceAssetSubscriptionService {
 
-    @Resource
-    private DatasourceInstanceAssetSubscriptionMapper dsInstanceAssetSubscriptionMapper;
+    private final DatasourceInstanceAssetSubscriptionMapper dsInstanceAssetSubscriptionMapper;
 
     @Override
     public void add(DatasourceInstanceAssetSubscription datasourceInstanceAssetSubscription) {

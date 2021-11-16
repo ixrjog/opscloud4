@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.factory.credential;
+package com.baiyi.opscloud.factory.credential.base;
 
 /**
  * @Author baiyi
@@ -12,7 +12,7 @@ public interface ICredentialCustomer {
      * @param credentialId
      * @return
      */
-    default boolean isUsedCredential(int credentialId){
+    default boolean hasUsedCredential(int credentialId){
         return countByCredentialId(credentialId) != 0;
     }
 

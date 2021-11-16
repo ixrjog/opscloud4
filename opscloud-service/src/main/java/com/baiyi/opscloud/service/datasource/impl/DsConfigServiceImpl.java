@@ -8,10 +8,10 @@ import com.baiyi.opscloud.mapper.opscloud.DatasourceConfigMapper;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,10 +20,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsConfigServiceImpl extends AbstractCredentialCustomer implements DsConfigService {
 
-    @Resource
-    private DatasourceConfigMapper dsConfigMapper;
+    private final DatasourceConfigMapper dsConfigMapper;
 
     @Override
     public String getBeanName() {

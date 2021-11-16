@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.terminal.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSessionInstance;
 import com.baiyi.opscloud.mapper.opscloud.TerminalSessionInstanceMapper;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class TerminalSessionInstanceServiceImpl implements TerminalSessionInstanceService {
 
-    @Resource
-    private TerminalSessionInstanceMapper sessionInstanceMapper;
+    private final TerminalSessionInstanceMapper sessionInstanceMapper;
 
     @Override
     public void add(TerminalSessionInstance terminalSessionInstance){

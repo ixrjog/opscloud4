@@ -3,10 +3,9 @@ package com.baiyi.opscloud.service.auth.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.AuthRoleResource;
 import com.baiyi.opscloud.mapper.opscloud.AuthRoleResourceMapper;
 import com.baiyi.opscloud.service.auth.AuthRoleResourceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -14,10 +13,10 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class AuthRoleResourceServiceImpl implements AuthRoleResourceService {
 
-    @Resource
-    private AuthRoleResourceMapper authRoleResourceMapper;
+    private final AuthRoleResourceMapper authRoleResourceMapper;
 
     @Override
     public Integer countByRoleId(Integer roleId) {

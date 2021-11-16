@@ -6,10 +6,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.BusinessPropertyMapper;
 import com.baiyi.opscloud.service.business.BusinessPropertyService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
-
-import javax.annotation.Resource;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -17,10 +16,10 @@ import javax.annotation.Resource;
  * @Since 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class BusinessPropertyServiceImpl implements BusinessPropertyService {
 
-    @Resource
-    private BusinessPropertyMapper businessPropertyMapper;
+    private final BusinessPropertyMapper businessPropertyMapper;
 
     @Override
     public BusinessProperty getById(int id) {

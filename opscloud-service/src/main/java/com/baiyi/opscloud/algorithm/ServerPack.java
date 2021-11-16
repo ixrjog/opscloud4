@@ -17,6 +17,7 @@ import java.io.Serializable;
 @Builder
 public class ServerPack implements Serializable {
 
+    private static final long serialVersionUID = 6584215052593066163L;
     private Server server;
     private ServerProperty.Server property;
     private Env env;

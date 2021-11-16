@@ -7,10 +7,10 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.mapper.opscloud.UserPermissionMapper;
 import com.baiyi.opscloud.service.user.UserPermissionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -20,10 +20,10 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.USER_PERMISSION)
 @Service
+@RequiredArgsConstructor
 public class UserPermissionServiceImpl implements UserPermissionService {
 
-    @Resource
-    private UserPermissionMapper permissionMapper;
+    private final UserPermissionMapper permissionMapper;
 
     @Override
     public UserPermission getById(Integer id) {

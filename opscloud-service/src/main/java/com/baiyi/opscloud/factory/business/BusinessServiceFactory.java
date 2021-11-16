@@ -17,7 +17,7 @@ public class BusinessServiceFactory {
     private BusinessServiceFactory() {
     }
 
-    private static Map<Integer, IBusinessService> context = new ConcurrentHashMap<>();
+    private static final Map<Integer, IBusinessService> context = new ConcurrentHashMap<>();
 
     public static IBusinessService getIBusinessServiceByBusinessType(Integer businessType) {
         return context.get(businessType);

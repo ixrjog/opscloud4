@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.server.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccountPermission;
 import com.baiyi.opscloud.mapper.opscloud.ServerAccountPermissionMapper;
 import com.baiyi.opscloud.service.server.ServerAccountPermissionService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class ServerAccountPermissionServiceImpl implements ServerAccountPermissionService {
 
-    @Resource
-    private ServerAccountPermissionMapper accountPermissionMapper;
+    private final ServerAccountPermissionMapper accountPermissionMapper;
 
     @Override
     public void add(ServerAccountPermission permission) {

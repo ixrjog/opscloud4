@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.service.datasource;
 
-import com.baiyi.opscloud.factory.credential.ICredentialCustomer;
+import com.baiyi.opscloud.factory.credential.base.ICredentialCustomer;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.param.datasource.DsConfigParam;

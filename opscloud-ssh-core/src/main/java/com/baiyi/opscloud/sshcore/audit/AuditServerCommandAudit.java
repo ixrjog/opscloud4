@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.sshcore.audit;
 
+import com.baiyi.opscloud.sshcore.audit.base.AbstractCommandAudit;
 import org.springframework.stereotype.Component;
 
 /**
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
  * @Version 1.0
  */
 @Component
-public class AuditServerCommandHandler extends AbstractCommandHandler {
+public class AuditServerCommandAudit extends AbstractCommandAudit {
 
     // private static final String INPUT_REGEX = "\\u001b.*\\[\\$|#]?";
 

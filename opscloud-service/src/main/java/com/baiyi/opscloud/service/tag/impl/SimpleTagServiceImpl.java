@@ -2,12 +2,11 @@ package com.baiyi.opscloud.service.tag.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTag;
 import com.baiyi.opscloud.domain.generator.opscloud.Tag;
-import com.baiyi.opscloud.service.tag.BaseTagService;
+import com.baiyi.opscloud.service.tag.SimpleTagService;
 import com.baiyi.opscloud.service.tag.BusinessTagService;
 import com.baiyi.opscloud.service.tag.TagService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.annotation.Resource;
 
 /**
  * @Author baiyi
@@ -15,13 +14,12 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Service
-public class BaseTagServiceImpl implements BaseTagService {
+@RequiredArgsConstructor
+public class SimpleTagServiceImpl implements SimpleTagService {
 
-    @Resource
-    private TagService tagService;
+    private final TagService tagService;
 
-    @Resource
-    private BusinessTagService businessTagService;
+    private final BusinessTagService businessTagService;
 
     // 检查业务是否有标签
     @Override

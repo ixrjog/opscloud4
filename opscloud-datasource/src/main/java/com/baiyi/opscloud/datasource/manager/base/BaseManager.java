@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.service.tag.BaseTagService;
+import com.baiyi.opscloud.service.tag.SimpleTagService;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 public abstract class BaseManager {
 
     @Resource
-    private BaseTagService baseTagService;
+    private SimpleTagService baseTagService;
 
     @Resource
     private DsInstanceService dsInstanceService;

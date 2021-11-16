@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshcore.handler;
 
-import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.constant.enums.ProtocolEnum;
+import com.baiyi.opscloud.common.exception.ssh.SshRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.CredentialUtil;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;
@@ -22,11 +22,11 @@ import com.baiyi.opscloud.sshcore.account.SshAccount;
 import com.baiyi.opscloud.sshcore.message.server.BaseServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.ServerNode;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -36,25 +36,20 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class HostSystemHandler {
 
-    @Resource
-    private UserPermissionService userPermissionService;
+    private final UserPermissionService userPermissionService;
 
-    @Resource
-    private ServerAccountService serverAccountService;
+    private final ServerAccountService serverAccountService;
 
-    @Resource
-    private ServerService serverService;
+    private final ServerService serverService;
 
-    @Resource
-    private CredentialService credentialService;
+    private final CredentialService credentialService;
 
-    @Resource
-    private CredentialUtil credentialUtil;
+    private final CredentialUtil credentialUtil;
 
-    @Resource
-    private SshAccount sshAccount;
+    private final SshAccount sshAccount;
 
     private interface LoginType {
         int LOW_AUTHORITY = 0;

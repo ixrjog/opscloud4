@@ -10,11 +10,11 @@ import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -24,22 +24,18 @@ import java.util.List;
  */
 @BusinessType(BusinessTypeEnum.ASSET)
 @Service
+@RequiredArgsConstructor
 public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsInstanceAssetRelationService dsInstanceAssetRelationService;
+    private final DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
-    @Resource
-    private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
+    private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
-    @Resource
-    private ApplicationResourceService applicationResourceService;
+    private final ApplicationResourceService applicationResourceService;
 
-    @Resource
-    private BusinessAssetRelationService businessAssetRelationService;
+    private final BusinessAssetRelationService businessAssetRelationService;
 
     @Override
     @TagClear

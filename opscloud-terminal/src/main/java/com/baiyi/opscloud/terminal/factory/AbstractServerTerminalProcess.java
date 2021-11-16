@@ -2,7 +2,7 @@ package com.baiyi.opscloud.terminal.factory;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.service.terminal.TerminalSessionInstanceService;
-import com.baiyi.opscloud.sshcore.audit.AuditServerCommandHandler;
+import com.baiyi.opscloud.sshcore.audit.AuditServerCommandAudit;
 import com.baiyi.opscloud.sshcore.base.ITerminalProcess;
 import com.baiyi.opscloud.sshcore.facade.SimpleTerminalSessionFacade;
 import com.baiyi.opscloud.sshcore.handler.HostSystemHandler;
@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage> implements ITerminalProcess, InitializingBean {
 
     @Resource
-    protected AuditServerCommandHandler auditCommandHandler;
+    protected AuditServerCommandAudit auditCommandHandler;
 
     @Resource
     protected TerminalSessionInstanceService terminalSessionInstanceService;
@@ -36,11 +36,10 @@ public abstract class AbstractServerTerminalProcess<T extends BaseServerMessage>
 
     abstract protected T getMessage(String message);
 
-    protected Boolean isBatch(TerminalSession terminalSession) {
-        Boolean isBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
-        return isBatch == null ? false : isBatch;
+    protected Boolean needBatch(TerminalSession terminalSession) {
+        Boolean needBatch = JSchSessionContainer.getBatchBySessionId(terminalSession.getSessionId());
+        return needBatch != null && needBatch;
     }
-
 
     protected void heartbeat(String sessionId) {
        // redisUtil.set(TerminalKeyUtil.buildSessionHeartbeatKey(sessionId), true, 60L);

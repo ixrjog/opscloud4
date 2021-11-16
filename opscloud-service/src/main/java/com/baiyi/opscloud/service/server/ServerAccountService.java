@@ -3,7 +3,7 @@ package com.baiyi.opscloud.service.server;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.domain.param.server.ServerAccountParam;
-import com.baiyi.opscloud.factory.credential.ICredentialCustomer;
+import com.baiyi.opscloud.factory.credential.base.ICredentialCustomer;
 
 import java.util.List;
 

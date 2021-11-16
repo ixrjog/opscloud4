@@ -4,11 +4,11 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.mapper.opscloud.DatasourceInstanceMapper;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -17,10 +17,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsInstanceServiceImpl implements DsInstanceService {
 
-    @Resource
-    private DatasourceInstanceMapper dsInstanceMapper;
+    private final DatasourceInstanceMapper dsInstanceMapper;
 
     @Override
     public DatasourceInstance getById(Integer id) {

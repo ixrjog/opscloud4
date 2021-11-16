@@ -5,10 +5,10 @@ import com.baiyi.opscloud.common.util.ServerAccountUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.service.server.ServerAccountService;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -18,10 +18,10 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class SshAccount {
 
-    @Resource
-    private ServerAccountService serverAccountService;
+    private final ServerAccountService serverAccountService;
 
     public Map<Integer, List<ServerAccount>> getServerAccountCatMap(Integer serverId) {
         List<ServerAccount> accounts = serverAccountService.getPermissionServerAccountByTypeAndProtocol(serverId, null, ProtocolEnum.SSH.getType());

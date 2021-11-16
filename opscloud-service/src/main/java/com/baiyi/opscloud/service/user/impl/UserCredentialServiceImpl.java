@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.user.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.UserCredential;
 import com.baiyi.opscloud.mapper.opscloud.UserCredentialMapper;
 import com.baiyi.opscloud.service.user.UserCredentialService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class UserCredentialServiceImpl implements UserCredentialService {
 
-    @Resource
-    private UserCredentialMapper userCredentialMapper;
+    private final UserCredentialMapper userCredentialMapper;
 
     @Override
     public List<UserCredential> queryByUserIdAndType(Integer userId, int credentialType) {

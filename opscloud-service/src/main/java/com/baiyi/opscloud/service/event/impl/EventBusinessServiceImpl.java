@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.event.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.EventBusiness;
 import com.baiyi.opscloud.mapper.opscloud.EventBusinessMapper;
 import com.baiyi.opscloud.service.event.EventBusinessService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class EventBusinessServiceImpl implements EventBusinessService {
 
-    @Resource
-    private EventBusinessMapper eventBusinessMapper;
+    private final EventBusinessMapper eventBusinessMapper;
 
     @Override
     public void add(EventBusiness eventBusiness) {

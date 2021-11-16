@@ -3,10 +3,10 @@ package com.baiyi.opscloud.service.task.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTaskMember;
 import com.baiyi.opscloud.mapper.opscloud.ServerTaskMemberMapper;
 import com.baiyi.opscloud.service.task.ServerTaskMemberService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**
@@ -15,10 +15,10 @@ import java.util.List;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class ServerTaskMemberServiceImpl implements ServerTaskMemberService {
 
-    @Resource
-    private ServerTaskMemberMapper serverTaskMemberMapper;
+    private final ServerTaskMemberMapper serverTaskMemberMapper;
 
     @Override
     public ServerTaskMember getById(Integer id) {
