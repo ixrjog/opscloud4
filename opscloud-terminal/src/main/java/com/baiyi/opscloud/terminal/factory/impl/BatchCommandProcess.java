@@ -2,7 +2,7 @@ package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.server.ServerBatchCommandMessage;
+import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
 import com.google.gson.GsonBuilder;
@@ -18,7 +18,7 @@ import javax.websocket.Session;
  */
 @Slf4j
 @Component
-public class BatchCommandProcess extends AbstractServerTerminalProcess<ServerBatchCommandMessage> {
+public class BatchCommandProcess extends AbstractServerTerminalProcess<ServerMessage.BatchCommand> {
 
     /**
      * 设置批量命令
@@ -33,13 +33,13 @@ public class BatchCommandProcess extends AbstractServerTerminalProcess<ServerBat
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerBatchCommandMessage batchMessage = getMessage(message);
+        ServerMessage.BatchCommand batchMessage = getMessage(message);
         JSchSessionContainer.setBatch(terminalSession.getSessionId(), batchMessage.getIsBatch());
     }
 
     @Override
-    protected ServerBatchCommandMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, ServerBatchCommandMessage.class);
+    protected ServerMessage.BatchCommand getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerMessage.BatchCommand.class);
     }
 
 }

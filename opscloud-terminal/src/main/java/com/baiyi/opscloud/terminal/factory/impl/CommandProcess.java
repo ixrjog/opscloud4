@@ -2,7 +2,7 @@ package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.server.ServerCommandMessage;
+import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
@@ -21,7 +21,7 @@ import java.util.Map;
  */
 @Component
 @Slf4j
-public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandMessage> {
+public class CommandProcess extends AbstractServerTerminalProcess<ServerMessage.Command> {
 
     /**
      * 发送指令
@@ -35,7 +35,7 @@ public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandM
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerCommandMessage commandMessage = getMessage(message);
+        ServerMessage.Command commandMessage = getMessage(message);
         if (StringUtils.isEmpty(commandMessage.getData()))
             return;
         if (!needBatch(terminalSession)) {
@@ -53,8 +53,8 @@ public class CommandProcess extends AbstractServerTerminalProcess<ServerCommandM
     }
 
     @Override
-    protected ServerCommandMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, ServerCommandMessage.class);
+    protected ServerMessage.Command getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerMessage.Command.class);
     }
 
 }

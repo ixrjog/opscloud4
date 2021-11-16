@@ -3,6 +3,7 @@ package com.baiyi.opscloud.terminal.factory.impl;
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
+import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
 import com.baiyi.opscloud.sshcore.message.server.ServerResizeMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -19,7 +20,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class ResizeProcess extends AbstractServerTerminalProcess<ServerResizeMessage> {
+public class ResizeProcess extends AbstractServerTerminalProcess<ServerMessage.Resize> {
 
     /**
      * XTerm改变形体
@@ -34,7 +35,7 @@ public class ResizeProcess extends AbstractServerTerminalProcess<ServerResizeMes
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerResizeMessage resizeMessage = getMessage(message);
+        ServerMessage.Resize resizeMessage = getMessage(message);
         try {
             JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), resizeMessage.getInstanceId());
             assert jSchSession != null;
@@ -44,8 +45,8 @@ public class ResizeProcess extends AbstractServerTerminalProcess<ServerResizeMes
     }
 
     @Override
-    protected ServerResizeMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, ServerResizeMessage.class);
+    protected ServerMessage.Resize getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerMessage.Resize.class);
     }
 }
 

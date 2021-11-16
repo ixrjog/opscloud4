@@ -5,7 +5,7 @@ import com.baiyi.opscloud.sshcore.builder.TerminalSessionInstanceBuilder;
 import com.baiyi.opscloud.sshcore.enums.InstanceSessionTypeEnum;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
 import com.baiyi.opscloud.sshcore.handler.RemoteInvokeHandler;
-import com.baiyi.opscloud.sshcore.message.server.ServerDuplicateSessionMessage;
+import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.HostSystem;
 import com.baiyi.opscloud.sshcore.model.JSchSession;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
@@ -21,7 +21,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class DuplicateSessionProcess extends AbstractServerTerminalProcess<ServerDuplicateSessionMessage> {
+public class DuplicateSessionProcess extends AbstractServerTerminalProcess<ServerMessage.DuplicateSession> {
 
     /**
      * 复制会话
@@ -36,7 +36,7 @@ public class DuplicateSessionProcess extends AbstractServerTerminalProcess<Serve
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerDuplicateSessionMessage baseMessage = getMessage(message);
+        ServerMessage.DuplicateSession baseMessage = getMessage(message);
         JSchSession jSchSession = JSchSessionContainer.getBySessionId(terminalSession.getSessionId(), baseMessage.getDuplicateServerNode().getInstanceId());
         assert jSchSession != null;
         HostSystem hostSystem = hostSystemHandler.buildHostSystem(baseMessage.getServerNode(), baseMessage);
@@ -46,8 +46,8 @@ public class DuplicateSessionProcess extends AbstractServerTerminalProcess<Serve
 
 
     @Override
-    protected ServerDuplicateSessionMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, ServerDuplicateSessionMessage.class);
+    protected ServerMessage.DuplicateSession getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerMessage.DuplicateSession.class);
     }
 
 }

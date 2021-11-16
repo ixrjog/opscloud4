@@ -2,7 +2,7 @@ package com.baiyi.opscloud.terminal.factory.impl;
 
 import com.baiyi.opscloud.domain.generator.opscloud.TerminalSession;
 import com.baiyi.opscloud.sshcore.enums.MessageState;
-import com.baiyi.opscloud.sshcore.message.server.ServerLogoutMessage;
+import com.baiyi.opscloud.sshcore.message.server.ServerMessage;
 import com.baiyi.opscloud.sshcore.model.JSchSessionContainer;
 import com.baiyi.opscloud.terminal.factory.AbstractServerTerminalProcess;
 import com.google.gson.GsonBuilder;
@@ -16,7 +16,7 @@ import javax.websocket.Session;
  * @Version 1.0
  */
 @Component
-public class LogoutProcess extends AbstractServerTerminalProcess<ServerLogoutMessage> {
+public class LogoutProcess extends AbstractServerTerminalProcess<ServerMessage.Logout> {
 
     /**
      * 单个关闭
@@ -32,7 +32,7 @@ public class LogoutProcess extends AbstractServerTerminalProcess<ServerLogoutMes
 
     @Override
     public void process(String message, Session session, TerminalSession terminalSession) {
-        ServerLogoutMessage baseMessage = getMessage(message);
+        ServerMessage.Logout baseMessage = getMessage(message);
         //  recordAuditLog(terminalSession, baseMessage.getInstanceId()); // 写审计日志
         //  AuditRecordHandler.formatCommanderLog(terminalSession.getSessionId(),baseMessage.getInstanceId());
         simpleTerminalSessionFacade.closeTerminalSessionInstance(terminalSession, baseMessage.getInstanceId()); // 设置关闭会话
@@ -41,7 +41,7 @@ public class LogoutProcess extends AbstractServerTerminalProcess<ServerLogoutMes
     }
 
     @Override
-    protected ServerLogoutMessage getMessage(String message) {
-        return new GsonBuilder().create().fromJson(message, ServerLogoutMessage.class);
+    protected ServerMessage.Logout getMessage(String message) {
+        return new GsonBuilder().create().fromJson(message, ServerMessage.Logout.class);
     }
 }
