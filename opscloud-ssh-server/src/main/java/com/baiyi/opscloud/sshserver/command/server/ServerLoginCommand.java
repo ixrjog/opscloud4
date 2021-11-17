@@ -86,7 +86,7 @@ public class ServerLoginCommand implements InitializingBean {
 
     @InvokeSessionUser(invokeAdmin = true)
     @ShellMethod(value = "登录服务器(开启会话)", key = {"open", "login"})
-    public void login(@ShellOption(help = "Server Id") int id,
+    public void login(@ShellOption(help = "Server Id", defaultValue = "1") int id,
                       @ShellOption(help = "Account Name", defaultValue = "") String account,
                       @ShellOption(value = {"-R", "--arthas"}, help = "Arthas") boolean arthas,
                       @ShellOption(value = {"-A", "--admin"}, help = "Admin") boolean admin) {
