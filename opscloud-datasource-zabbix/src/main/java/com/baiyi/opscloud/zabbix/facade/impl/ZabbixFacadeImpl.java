@@ -20,10 +20,10 @@ import javax.annotation.Resource;
 public class ZabbixFacadeImpl implements ZabbixFacade {
 
     @Resource
-    private ZabbixUserGroupDatasource zabbixUserGroupHandler;
+    private ZabbixUserGroupDatasource zabbixUserGroupDatasource;
 
     @Resource
-    private ZabbixHostGroupDatasource zabbixHostGroupHandler;
+    private ZabbixHostGroupDatasource zabbixHostGroupDatasource;
 
     /**
      * 查询并创建用户组
@@ -34,19 +34,19 @@ public class ZabbixFacadeImpl implements ZabbixFacade {
      */
     @Override
     public ZabbixUserGroup getOrCreateUserGroup(ZabbixConfig.Zabbix zabbix, String usergroup) {
-        ZabbixUserGroup zabbixUserGroup = zabbixUserGroupHandler.getByName(zabbix, usergroup);
+        ZabbixUserGroup zabbixUserGroup = zabbixUserGroupDatasource.getByName(zabbix, usergroup);
         if (zabbixUserGroup != null) return zabbixUserGroup;
         // 用户组不存在
         String hostgroup = ZabbixUtil.toHostgroupName(usergroup);
         ZabbixHostGroup zabbixHostGroup = getOrCreateHostGroup(zabbix, hostgroup);
-        return zabbixUserGroupHandler.create(zabbix, usergroup, zabbixHostGroup);
+        return zabbixUserGroupDatasource.create(zabbix, usergroup, zabbixHostGroup);
     }
 
     @Override
     public ZabbixHostGroup getOrCreateHostGroup(ZabbixConfig.Zabbix zabbix, String hostgroup) {
-        ZabbixHostGroup zabbixHostGroup = zabbixHostGroupHandler.getByName(zabbix, hostgroup);
+        ZabbixHostGroup zabbixHostGroup = zabbixHostGroupDatasource.getByName(zabbix, hostgroup);
         if (zabbixHostGroup != null) return zabbixHostGroup;
-        zabbixHostGroupHandler.create(zabbix, hostgroup);
-        return zabbixHostGroupHandler.getByName(zabbix, hostgroup);
+        zabbixHostGroupDatasource.create(zabbix, hostgroup);
+        return zabbixHostGroupDatasource.getByName(zabbix, hostgroup);
     }
 }

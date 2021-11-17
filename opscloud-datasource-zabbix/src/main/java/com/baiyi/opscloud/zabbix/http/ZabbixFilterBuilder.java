@@ -7,7 +7,7 @@ package com.baiyi.opscloud.zabbix.http;
  */
 public class ZabbixFilterBuilder {
 
-    private ZabbixFilter filter = new ZabbixFilter();
+    private final ZabbixFilter filter = new ZabbixFilter();
 
     private ZabbixFilterBuilder() {
     }

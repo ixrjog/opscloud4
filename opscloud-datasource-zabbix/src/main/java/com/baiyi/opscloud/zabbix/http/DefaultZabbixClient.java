@@ -36,8 +36,8 @@ import static com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer.ApiConstant
  */
 public class DefaultZabbixClient implements IZabbixClient {
 
-    private CloseableHttpClient httpClient;
-    private URI uri;
+    private final CloseableHttpClient httpClient;
+    private final URI uri;
     @Getter
     private String auth;
     @Getter
@@ -115,6 +115,7 @@ public class DefaultZabbixClient implements IZabbixClient {
         JsonNode data = call(request);
         JsonNode userData = data.get(RESULT);
         ZabbixUser user = ZabbixMapper.mapper(userData, ZabbixUser.class);
+        assert user != null;
         this.auth = user.getSessionid();
         this.loginUser = user;
     }

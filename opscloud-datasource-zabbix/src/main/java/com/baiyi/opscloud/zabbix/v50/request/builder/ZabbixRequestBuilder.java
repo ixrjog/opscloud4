@@ -1,6 +1,8 @@
-package com.baiyi.opscloud.zabbix.http;
+package com.baiyi.opscloud.zabbix.v50.request.builder;
 
 import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.v50.request.ZabbixRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.StringUtils;
 
@@ -8,36 +10,36 @@ import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
- * @Date 2021/6/25 11:13 上午
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2021/11/17 11:23 上午
+ * @Version 1.0
  */
-public class SimpleZabbixRequestBuilder {
+public class ZabbixRequestBuilder {
 
     private static final AtomicInteger nextId = new AtomicInteger(1);
 
-    private final SimpleZabbixRequest request = new SimpleZabbixRequest();
+    private final ZabbixRequest.DefaultRequest request = ZabbixRequest.DefaultRequest.builder().build();
 
-    private SimpleZabbixRequestBuilder() {
+    private ZabbixRequestBuilder() {
     }
 
-    public static SimpleZabbixRequestBuilder builder() {
-        return new SimpleZabbixRequestBuilder();
+    public static ZabbixRequestBuilder builder() {
+        return new ZabbixRequestBuilder();
     }
 
-    public SimpleZabbixRequest build() {
+    public ZabbixRequest.DefaultRequest build() {
         if (request.getId() == null) {
             request.setId(nextId.getAndIncrement());
         }
         return request;
     }
 
-    public SimpleZabbixRequestBuilder version(String version) {
+    public ZabbixRequestBuilder setVersion(String version) {
         request.setJsonrpc(version);
         return this;
     }
 
-    public SimpleZabbixRequestBuilder paramEntry(String key, Object value) {
+    public ZabbixRequestBuilder putParam(String key, Object value) {
         request.putParam(key, value);
         return this;
     }
@@ -49,7 +51,7 @@ public class SimpleZabbixRequestBuilder {
      * @param value
      * @return
      */
-    public SimpleZabbixRequestBuilder paramEntrySkipEmpty(String key, Object value) {
+    public ZabbixRequestBuilder putParamSkipEmpty(String key, Object value) {
         if (value != null && !org.springframework.util.ObjectUtils.isEmpty(value) && !StringUtils.isEmpty(key)) {
             String str = JSON.toJSONString(value);
             if (str.equals("{}") || str.equals("[]") || str.equals("\"\""))
@@ -59,7 +61,7 @@ public class SimpleZabbixRequestBuilder {
         return this;
     }
 
-    public SimpleZabbixRequestBuilder paramEntry(Map<String, Object> map) {
+    public ZabbixRequestBuilder putParam(Map<String, Object> map) {
         map.forEach((k, v) -> {
             if (!ObjectUtils.isNotEmpty(v)) {
                 return;
@@ -69,22 +71,22 @@ public class SimpleZabbixRequestBuilder {
         return this;
     }
 
-    public SimpleZabbixRequestBuilder filter(ZabbixFilter zabbixFilter) {
+    public ZabbixRequestBuilder putFilter(ZabbixFilter zabbixFilter) {
         request.putParam("filter", zabbixFilter.getFilter());
         return this;
     }
 
-    public SimpleZabbixRequestBuilder auth(String auth) {
+    public ZabbixRequestBuilder setAuth(String auth) {
         request.setAuth(auth);
         return this;
     }
 
-    public SimpleZabbixRequestBuilder method(String method) {
+    public ZabbixRequestBuilder setMethod(String method) {
         request.setMethod(method);
         return this;
     }
 
-    public SimpleZabbixRequestBuilder id(Integer id) {
+    public ZabbixRequestBuilder setId(Integer id) {
         request.setId(id);
         return this;
     }
