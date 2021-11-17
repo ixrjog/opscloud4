@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.v50.request;
+package com.baiyi.opscloud.zabbix.v5.request;
 
 import com.baiyi.opscloud.zabbix.http.IZabbixRequest;
 import com.google.common.collect.Maps;

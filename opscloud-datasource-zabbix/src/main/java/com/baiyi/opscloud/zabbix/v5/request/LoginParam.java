@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.v50.request;
+package com.baiyi.opscloud.zabbix.v5.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

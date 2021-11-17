@@ -1,7 +1,7 @@
-package com.baiyi.opscloud.zabbix.v50.feign;
+package com.baiyi.opscloud.zabbix.v5.feign;
 
-import com.baiyi.opscloud.zabbix.v50.request.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.v50.response.LoginResponse;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.response.LoginResponse;
 import feign.Headers;
 import feign.RequestLine;
 

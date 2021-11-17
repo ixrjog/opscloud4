@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.v50.response;
+package com.baiyi.opscloud.zabbix.v5.response;
 
 import lombok.Data;
 

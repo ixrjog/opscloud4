@@ -1,11 +1,11 @@
-package com.baiyi.opscloud.zabbix.v50.datasource;
+package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.zabbix.v50.feign.ZabbixLoginFeign;
-import com.baiyi.opscloud.zabbix.v50.request.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.v50.request.builder.ZabbixRequestBuilder;
-import com.baiyi.opscloud.zabbix.v50.response.LoginResponse;
+import com.baiyi.opscloud.zabbix.v5.feign.ZabbixLoginFeign;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.v5.response.LoginResponse;
 import com.google.common.base.Joiner;
 import feign.Feign;
 import feign.Retryer;

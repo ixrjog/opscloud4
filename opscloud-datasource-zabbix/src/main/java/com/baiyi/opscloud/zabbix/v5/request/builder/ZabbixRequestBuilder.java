@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.zabbix.v50.request.builder;
+package com.baiyi.opscloud.zabbix.v5.request.builder;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v50.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.StringUtils;
 
