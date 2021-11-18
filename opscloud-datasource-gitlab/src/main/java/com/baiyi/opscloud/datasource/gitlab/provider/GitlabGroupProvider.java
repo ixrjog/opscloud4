@@ -47,12 +47,12 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    protected List<GitlabGroup> listEntries(DsInstanceContext dsInstanceContext, GitlabProject target) {
+    protected List<GitlabGroup> listEntities(DsInstanceContext dsInstanceContext, GitlabProject target) {
         return Collections.emptyList();
     }
 
     @Override
-    protected List<GitlabGroup> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<GitlabGroup> listEntities(DsInstanceContext dsInstanceContext) {
         try {
             return GitlabGroupDatasource.queryGroups(buildConfig(dsInstanceContext.getDsConfig()));
         } catch (IOException ex) {
@@ -91,8 +91,8 @@ public class GitlabGroupProvider extends AbstractAssetRelationProvider<GitlabGro
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabGroup entry) {
-        return GitlabAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabGroup entity) {
+        return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

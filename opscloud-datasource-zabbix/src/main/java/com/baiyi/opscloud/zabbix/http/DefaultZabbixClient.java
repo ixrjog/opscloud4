@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.JSONMapper;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -107,9 +107,9 @@ public class DefaultZabbixClient implements IZabbixClient {
     private void login(ZabbixConfig.Zabbix zabbix) {
         this.auth = null;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
-                .paramEntry("user", zabbix.getUser())
-                .paramEntry("password", zabbix.getPassword())
-                .paramEntry("userData", true)
+                .putParam("user", zabbix.getUser())
+                .putParam("password", zabbix.getPassword())
+                .putParam("userData", true)
                 .method("user.login")
                 .build();
         JsonNode data = call(request);

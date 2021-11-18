@@ -1,9 +1,9 @@
 package com.baiyi.opscloud.tencent.exmail.datasource;
 
 import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
-import com.baiyi.opscloud.tencent.exmail.entry.ExmailToken;
-import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
-import com.baiyi.opscloud.tencent.exmail.entry.base.BaseExmailModel;
+import com.baiyi.opscloud.tencent.exmail.entity.ExmailToken;
+import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
+import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailModel;
 import com.baiyi.opscloud.tencent.exmail.feign.TencentExmailUserFeign;
 import com.baiyi.opscloud.tencent.exmail.param.ExmailParam;
 import feign.Feign;

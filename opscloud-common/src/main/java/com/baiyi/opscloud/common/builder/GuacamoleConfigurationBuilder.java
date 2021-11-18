@@ -16,7 +16,7 @@ public class GuacamoleConfigurationBuilder {
         return new GuacamoleConfigurationBuilder();
     }
 
-    public GuacamoleConfigurationBuilder paramEntry(String name, String value) {
+    public GuacamoleConfigurationBuilder putParam(String name, String value) {
         guacamoleConfigurationDict.put(name, value);
         return this;
     }

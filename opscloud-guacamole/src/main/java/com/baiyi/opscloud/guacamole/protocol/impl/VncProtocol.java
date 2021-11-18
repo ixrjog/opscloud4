@@ -27,14 +27,14 @@ public class VncProtocol extends AbstractGuacamoleProtocol {
     protected Map<String, String> buildParameters(Server server, ServerAccount serverAccount, GuacamoleParam.Login guacamoleLogin) {
         Credential credential = getCredential(serverAccount);
         return GuacamoleConfigurationBuilder.newBuilder()
-                .paramEntry("hostname", server.getPrivateIp())
-                .paramEntry("username", serverAccount.getUsername())
-                .paramEntry("password", credential.getCredential())
-                .paramEntry("port", "5901")
-                .paramEntry("ignore-cert", "true")
-                .paramEntry("dpi", guacamoleLogin.getScreenDpi().toString())
-                .paramEntry("width", guacamoleLogin.getScreenWidth().toString())
-                .paramEntry("height", guacamoleLogin.getScreenHeight().toString())
+                .putParam("hostname", server.getPrivateIp())
+                .putParam("username", serverAccount.getUsername())
+                .putParam("password", credential.getCredential())
+                .putParam("port", "5901")
+                .putParam("ignore-cert", "true")
+                .putParam("dpi", guacamoleLogin.getScreenDpi().toString())
+                .putParam("width", guacamoleLogin.getScreenWidth().toString())
+                .putParam("height", guacamoleLogin.getScreenHeight().toString())
                 .build().getDict();
     }
 

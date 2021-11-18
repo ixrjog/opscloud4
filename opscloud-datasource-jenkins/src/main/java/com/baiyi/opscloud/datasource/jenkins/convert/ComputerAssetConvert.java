@@ -14,30 +14,30 @@ import com.offbytwo.jenkins.model.ComputerWithDetails;
  */
 public class ComputerAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getDisplayName()) // 资产id
-                .name(entry.getDisplayName())
-                .assetKey(entry.getDisplayName())
+                .assetId(entity.getDisplayName()) // 资产id
+                .name(entity.getDisplayName())
+                .assetKey(entity.getDisplayName())
                 .kind("computer")
                 .assetType(DsAssetTypeEnum.JENKINS_COMPUTER.name())
-                .isActive(!entry.getOffline())
+                .isActive(!entity.getOffline())
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("numExecutos", entry.getNumExecutors()) // 并发
+                .paramProperty("numExecutos", entity.getNumExecutors()) // 并发
                 .paramProperty("totalPhysicalMemory",
-                        entry.getMonitorData().get("hudson.node_monitors.SwapSpaceMonitor").get("totalPhysicalMemory"))
+                        entity.getMonitorData().get("hudson.node_monitors.SwapSpaceMonitor").get("totalPhysicalMemory"))
                 .paramProperty("availablePhysicalMemory",
-                        entry.getMonitorData().get("hudson.node_monitors.SwapSpaceMonitor").get("availablePhysicalMemory"))
+                        entity.getMonitorData().get("hudson.node_monitors.SwapSpaceMonitor").get("availablePhysicalMemory"))
                 .paramProperty("remoteRootDirectory",
-                        entry.getMonitorData().get("hudson.node_monitors.DiskSpaceMonitor").get("path"))
+                        entity.getMonitorData().get("hudson.node_monitors.DiskSpaceMonitor").get("path"))
                 .paramProperty("remoteRootDirectorySize",
-                        entry.getMonitorData().get("hudson.node_monitors.DiskSpaceMonitor").get("size"))
+                        entity.getMonitorData().get("hudson.node_monitors.DiskSpaceMonitor").get("size"))
                 .paramProperty("os",
-                        entry.getMonitorData().get("hudson.node_monitors.ArchitectureMonitor"))
+                        entity.getMonitorData().get("hudson.node_monitors.ArchitectureMonitor"))
                 .build();
     }
 }

@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.account.impl.base.BaseZabbixAccountProvider
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixUserDatasource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

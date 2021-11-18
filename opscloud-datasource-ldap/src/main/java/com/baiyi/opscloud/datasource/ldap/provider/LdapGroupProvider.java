@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.ldap.entry.Group;
-import com.baiyi.opscloud.datasource.ldap.entry.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -47,14 +47,14 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
 
 
     @Override
-    protected List<Group> listEntries(DsInstanceContext dsInstanceContext, Person target) {
+    protected List<Group> listEntities(DsInstanceContext dsInstanceContext, Person target) {
         LdapConfig.Ldap ldap = buildConfig(dsInstanceContext.getDsConfig());
         return groupRepo.searchGroupByUsername(ldap, target.getUsername());
     }
 
 
     @Override
-    protected List<Group> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<Group> listEntities(DsInstanceContext dsInstanceContext) {
         return groupRepo.getGroupList(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
@@ -80,8 +80,8 @@ public class LdapGroupProvider extends AbstractAssetRelationProvider<Group, Pers
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entry) {
-        return LdapAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entity) {
+        return LdapAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

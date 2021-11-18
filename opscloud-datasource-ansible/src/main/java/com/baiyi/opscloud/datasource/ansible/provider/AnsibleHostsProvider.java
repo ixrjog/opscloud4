@@ -64,7 +64,7 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     }
 
     @Override
-    protected List<AnsibleHosts.Hosts> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<AnsibleHosts.Hosts> listEntities(DsInstanceContext dsInstanceContext) {
         AnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         List<AnsibleHosts.Hosts> hosts = Lists.newArrayList();
         Credential credential = getCredential(dsInstanceContext.getDsConfig().getCredentialId());
@@ -119,8 +119,8 @@ public class AnsibleHostsProvider extends BaseAssetProvider<AnsibleHosts.Hosts> 
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleHosts.Hosts entry) {
-        return AnsibleAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleHosts.Hosts entity) {
+        return AnsibleAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

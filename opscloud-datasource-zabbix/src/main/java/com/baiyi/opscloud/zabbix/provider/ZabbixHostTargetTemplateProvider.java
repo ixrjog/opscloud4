@@ -4,8 +4,8 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.provider.base.BaseZabbixHostProvider;
 import org.springframework.stereotype.Component;
 
@@ -25,7 +25,7 @@ public class ZabbixHostTargetTemplateProvider extends BaseZabbixHostProvider<Zab
     private ZabbixHostTargetTemplateProvider zabbixHostTargetTemplateProvider;
 
     @Override
-    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTemplate target) {
+    protected List<ZabbixHost> listEntities(DsInstanceContext dsInstanceContext, ZabbixTemplate target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixHostHandler.listByTemplate(zabbix, target);
     }

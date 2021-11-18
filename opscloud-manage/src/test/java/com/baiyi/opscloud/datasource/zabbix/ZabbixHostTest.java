@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.zabbix;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostTag;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostTag;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixHostTagDatasource;
 import lombok.extern.slf4j.Slf4j;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.nexus.datasource;
 
 import com.baiyi.opscloud.common.datasource.NexusConfig;
 import com.baiyi.opscloud.domain.model.Authorization;
-import com.baiyi.opscloud.nexus.entry.NexusAsset;
+import com.baiyi.opscloud.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.nexus.feign.NexusAssetsV1Feign;
 import feign.Feign;
 import feign.Retryer;

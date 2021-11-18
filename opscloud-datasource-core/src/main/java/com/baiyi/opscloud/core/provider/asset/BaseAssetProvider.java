@@ -54,23 +54,23 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         return Model.SYNC;
     }
 
-    protected abstract List<T> listEntries(DsInstanceContext dsInstanceContext);
+    protected abstract List<T> listEntities(DsInstanceContext dsInstanceContext);
 
-    protected T getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+    protected T getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
         throw new UnsupportedOperationException("该数据源实例不支持单个查询资产");
     }
 
-    protected List<T> listEntries(DsInstanceContext dsInstanceContext, AssetFilterParam param) {
+    protected List<T> listEntities(DsInstanceContext dsInstanceContext, AssetFilterParam param) {
         throw new UnsupportedOperationException("该数据源实例不支持筛选资产");
     }
 
-    private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entries) {
+    private void enterAssets(DsInstanceContext dsInstanceContext, List<T> entities) {
         if (executeMode()) {
             Set<Integer> idSet = listAssetsIdSet(dsInstanceContext);
-            entries.forEach(e -> enterEntry(dsInstanceContext, idSet, e));
+            entities.forEach(e -> enterEntity(dsInstanceContext, idSet, e));
             idSet.forEach(id -> simpleDsAssetFacade.deleteAssetById(id));
         } else {
-            entries.forEach(e -> enterEntry(dsInstanceContext, e));
+            entities.forEach(e -> enterEntity(dsInstanceContext, e));
         }
     }
 
@@ -90,8 +90,8 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         return idSet;
     }
 
-    protected void enterEntry(DsInstanceContext dsInstanceContext, Set<Integer> idSet, T entry) {
-        DatasourceInstanceAsset asset = enterEntry(dsInstanceContext, entry);
+    protected void enterEntity(DsInstanceContext dsInstanceContext, Set<Integer> idSet, T entity) {
+        DatasourceInstanceAsset asset = enterEntity(dsInstanceContext, entity);
         filterAsset(idSet, asset.getId());
     }
 
@@ -99,8 +99,8 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         idSet.remove(id);
     }
 
-    protected DatasourceInstanceAsset enterEntry(DsInstanceContext dsInstanceContext, T entry) {
-        return enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entry));
+    protected DatasourceInstanceAsset enterEntity(DsInstanceContext dsInstanceContext, T entity) {
+        return enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entity));
     }
 
     protected DatasourceInstanceAsset enterAsset(AssetContainer assetContainer) {
@@ -146,24 +146,24 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
      */
     protected abstract boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset);
 
-    protected abstract AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entry);
+    protected abstract AssetContainer toAssetContainer(DatasourceInstance dsInstance, T entity);
 
     protected void doPull(int dsInstanceId) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        List<T> entries = listEntries(dsInstanceContext);
-        enterAssets(dsInstanceContext, entries);
+        List<T> entities = listEntities(dsInstanceContext);
+        enterAssets(dsInstanceContext, entities);
     }
 
     protected DatasourceInstanceAsset doPull(int dsInstanceId, UniqueAssetParam param) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        T entry = getEntry(dsInstanceContext, param);
-        return enterEntry(dsInstanceContext, entry);
+        T entity = getEntity(dsInstanceContext, param);
+        return enterEntity(dsInstanceContext, entity);
     }
 
     protected void doPull(int dsInstanceId, AssetFilterParam filter) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        List<T> entries = listEntries(dsInstanceContext, filter);
-        enterAssets(dsInstanceContext, entries);
+        List<T> entities = listEntities(dsInstanceContext, filter);
+        enterAssets(dsInstanceContext, entities);
     }
 
     @Override

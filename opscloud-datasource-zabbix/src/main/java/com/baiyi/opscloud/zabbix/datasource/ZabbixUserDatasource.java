@@ -2,9 +2,9 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.http.*;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
@@ -49,7 +49,7 @@ public class ZabbixUserDatasource extends BaseZabbixDatasource<ZabbixUser> {
                 .build();
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
-                .paramEntry("selectMedias", "extend")   // 在medias 属性返回用户使用的媒体。
+                .putParam("selectMedias", "extend")   // 在medias 属性返回用户使用的媒体。
                 .filter(filter)
                 .build();
         JsonNode data = call(zabbix, request);
@@ -59,7 +59,7 @@ public class ZabbixUserDatasource extends BaseZabbixDatasource<ZabbixUser> {
     public List<ZabbixUser> list(ZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
-                .paramEntry("selectMedias", "extend")
+                .putParam("selectMedias", "extend")
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixUser.class);
@@ -68,8 +68,8 @@ public class ZabbixUserDatasource extends BaseZabbixDatasource<ZabbixUser> {
     public List<ZabbixUser> listByGroup(ZabbixConfig.Zabbix zabbix, ZabbixUserGroup userGroup) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
-                .paramEntry("selectMedias", "extend")
-                .paramEntry("usrgrpids", userGroup.getUsrgrpid())
+                .putParam("selectMedias", "extend")
+                .putParam("usrgrpids", userGroup.getUsrgrpid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixUser.class);
@@ -78,11 +78,11 @@ public class ZabbixUserDatasource extends BaseZabbixDatasource<ZabbixUser> {
     public void create(ZabbixConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<ZabbixMedia> medias, List<Map<String, String>> usrgrps) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.CREATE)
-                .paramEntry("alias", zabbixUser.getAlias())
-                .paramEntry("name", zabbixUser.getName())
-                .paramEntry("passwd", UUID.randomUUID())
-                .paramEntry("usrgrps", usrgrps)
-                .paramEntrySkipEmpty("user_medias", medias)
+                .putParam("alias", zabbixUser.getAlias())
+                .putParam("name", zabbixUser.getName())
+                .putParam("passwd", UUID.randomUUID())
+                .putParam("usrgrps", usrgrps)
+                .putParamSkipEmpty("user_medias", medias)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("userids").isEmpty()) {
@@ -103,10 +103,10 @@ public class ZabbixUserDatasource extends BaseZabbixDatasource<ZabbixUser> {
     public void update(ZabbixConfig.Zabbix zabbix, ZabbixUser zabbixUser, List<Map<String, String>> usrgrps, List<ZabbixMedia> mediaList) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.UPDATE)
-                .paramEntry("userid", zabbixUser.getUserid())
-                .paramEntry("name", zabbixUser.getName())
-                .paramEntry("usrgrps", usrgrps)
-                .paramEntrySkipEmpty("user_medias", mediaList)
+                .putParam("userid", zabbixUser.getUserid())
+                .putParam("name", zabbixUser.getName())
+                .putParam("usrgrps", usrgrps)
+                .putParamSkipEmpty("user_medias", mediaList)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("userids").isEmpty()) {
@@ -153,8 +153,8 @@ public class ZabbixUserDatasource extends BaseZabbixDatasource<ZabbixUser> {
     public ZabbixUser getById(ZabbixConfig.Zabbix zabbix, String userid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserAPIMethod.GET)
-                .paramEntry("selectMedias", "extend")
-                .paramEntry("userids", userid)
+                .putParam("selectMedias", "extend")
+                .putParam("userids", userid)
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixUser.class);

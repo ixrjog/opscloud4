@@ -20,7 +20,7 @@ public class AssetFilterParamBuilder {
         return param;
     }
 
-    public AssetFilterParamBuilder filterEntry(String key, Object value) {
+    public AssetFilterParamBuilder filterEntiry(String key, Object value) {
         param.putFilter(key, value);
         return this;
     }

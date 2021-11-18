@@ -2,8 +2,8 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
 import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
@@ -43,12 +43,11 @@ public class ZabbixProblemDatasource {
                  * true - 仅返回被抑制问题;
                  * false - 返回问题在正常状态。
                  */
-                // .paramEntry("suppressed", "false")
                 /**
                  * 只返回给定事件严重程度的问题。仅当对象是触发器时才应用。
                  */
-                .paramEntry("severities", severityTypes.stream().map(SeverityType::getType).collect(Collectors.toList()))
-                .paramEntry("recent", "true")
+                .putParam("severities", severityTypes.stream().map(SeverityType::getType).collect(Collectors.toList()))
+                .putParam("recent", "true")
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
@@ -57,7 +56,7 @@ public class ZabbixProblemDatasource {
     public List<ZabbixProblem> listByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
-                .paramEntry(HOST_IDS, host.getHostid())
+                .putParam(HOST_IDS, host.getHostid())
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
@@ -66,7 +65,7 @@ public class ZabbixProblemDatasource {
     public ZabbixProblem getByEventId(ZabbixConfig.Zabbix zabbix, String eventId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
-                .paramEntry("eventids", eventId)
+                .putParam("eventids", eventId)
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         List<ZabbixProblem> hosts = ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);
@@ -78,11 +77,11 @@ public class ZabbixProblemDatasource {
     public ZabbixProblem getByTriggerId(ZabbixConfig.Zabbix zabbix, String triggerId) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ProblemAPIMethod.GET)
-                .paramEntry("selectAcknowledges", "extend")
-                .paramEntry("objectids", triggerId)
-                .paramEntry("recent", "true")
-                .paramEntry("sortfield", Lists.newArrayList("eventid"))
-                .paramEntry("sortorder", "DESC")
+                .putParam("selectAcknowledges", "extend")
+                .putParam("objectids", triggerId)
+                .putParam("recent", "true")
+                .putParam("sortfield", Lists.newArrayList("eventid"))
+                .putParam("sortorder", "DESC")
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         List<ZabbixProblem> hosts = ZabbixMapper.mapperList(data.get(RESULT), ZabbixProblem.class);

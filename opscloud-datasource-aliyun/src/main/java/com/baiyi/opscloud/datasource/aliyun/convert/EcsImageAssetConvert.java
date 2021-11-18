@@ -16,23 +16,23 @@ import static com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert.t
  */
 public class EcsImageAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getImageId()) // 资产id = 实例id
-                .name(entry.getImageName())
-                .assetKey(entry.getImageId())
+                .assetId(entity.getImageId()) // 资产id = 实例id
+                .name(entity.getImageName())
+                .assetKey(entity.getImageId())
                 .kind("ecsImage")
                 .assetType(DsAssetTypeEnum.ECS_IMAGE.name())
-                .description(entry.getDescription())
-                .createdTime(toGmtDate(entry.getCreationTime()))
+                .description(entity.getDescription())
+                .createdTime(toGmtDate(entity.getCreationTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("oSType", entry.getOSType())
-                .paramProperty("oSName", entry.getOSName())
-                .paramProperty("size",entry.getSize())
+                .paramProperty("oSType", entity.getOSType())
+                .paramProperty("oSName", entity.getOSName())
+                .paramProperty("size",entity.getSize())
                 .build();
     }
 }

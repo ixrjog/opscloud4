@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.nacos.convert.NacosClusterNodeConvert;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosCluster;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
 import com.baiyi.opscloud.datasource.nacos.datasource.NacosClusterDatasource;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -51,7 +51,7 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
     }
 
     @Override
-    protected List<NacosCluster.Node> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<NacosCluster.Node> listEntities(DsInstanceContext dsInstanceContext) {
 
         try {
             NacosCluster.NodesResponse nodesResponse = nacosClusterDatasource.listNodes(buildConfig(dsInstanceContext.getDsConfig()));
@@ -82,8 +82,8 @@ public class NacosClusterNodeProvider extends BaseAssetProvider<NacosCluster.Nod
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosCluster.Node entry) {
-        return NacosClusterNodeConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosCluster.Node entity) {
+        return NacosClusterNodeConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

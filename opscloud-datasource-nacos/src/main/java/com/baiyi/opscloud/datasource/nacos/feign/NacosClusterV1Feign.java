@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.feign;
 
-import com.baiyi.opscloud.datasource.nacos.entry.NacosCluster;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
 import feign.Headers;
 import feign.Param;
 import feign.RequestLine;

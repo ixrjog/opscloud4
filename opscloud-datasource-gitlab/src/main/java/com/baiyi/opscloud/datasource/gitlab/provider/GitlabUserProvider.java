@@ -56,7 +56,7 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
     }
 
     @Override
-    protected List<GitlabUser> listEntries(DsInstanceContext dsInstanceContext, GitlabSSHKey target) {
+    protected List<GitlabUser> listEntities(DsInstanceContext dsInstanceContext, GitlabSSHKey target) {
         GitlabConfig.Gitlab gitlab = buildConfig(dsInstanceContext.getDsConfig());
         List<GitlabUser> users = Lists.newArrayList();
         try {
@@ -68,7 +68,7 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
 
 
     @Override
-    protected List<GitlabUser> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<GitlabUser> listEntities(DsInstanceContext dsInstanceContext) {
         return GitlabUserDatasource.queryUsers(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
@@ -90,8 +90,8 @@ public class GitlabUserProvider extends AbstractAssetRelationProvider<GitlabUser
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabUser entry) {
-        return GitlabAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabUser entity) {
+        return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

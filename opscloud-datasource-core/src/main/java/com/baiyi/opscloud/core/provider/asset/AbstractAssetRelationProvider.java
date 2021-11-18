@@ -27,7 +27,7 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
     @Resource
     private DsInstanceAssetRelationService dsInstanceAssetRelationService;
 
-    protected abstract List<S> listEntries(DsInstanceContext dsInstanceContext, T target);
+    protected abstract List<S> listEntities(DsInstanceContext dsInstanceContext, T target);
 
     private AbstractAssetRelationProvider<T, S> getTargetProvider() {
         List<AbstractAssetRelationProvider<T, S>> providers = AssetProviderFactory.getProviders(getInstanceType(), getTargetAssetKey());
@@ -41,22 +41,22 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
     protected List<T> listTarget(DsInstanceContext dsInstanceContext, S source) {
         AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
         if (targetAssetProvider == null) return Collections.emptyList();
-        return targetAssetProvider.listEntries(dsInstanceContext, source);
+        return targetAssetProvider.listEntities(dsInstanceContext, source);
     }
 
     @Override
-    protected DatasourceInstanceAsset enterEntry(DsInstanceContext dsInstanceContext, S source) {
-        DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), source));
-        List<T> targets = listTarget(dsInstanceContext, source);
+    protected DatasourceInstanceAsset enterEntity(DsInstanceContext dsInstanceContext, S entity) {
+        DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entity));
+        List<T> targets = listTarget(dsInstanceContext, entity);
         if (!CollectionUtils.isEmpty(targets)) {
             targets.forEach(target->
-              enterEntry(dsInstanceContext,asset,target)
+              enterEntity(dsInstanceContext,asset,target)
             );
         }
         return asset;
     }
 
-    private void enterEntry(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset ,T target){
+    private void enterEntity(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset , T target){
         // 目标关系生产者
         AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
         AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.sonar.convert;
 
-import com.baiyi.opscloud.datasource.sonar.entry.base.BaseSonarElement;
+import com.baiyi.opscloud.datasource.sonar.entity.base.BaseSonarElement;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -26,13 +26,13 @@ public class SonarAssetConvert {
      *       "revision": "cfb82f55c6ef32e61828c4cb3db2da12795fd767"
      *     }
      */
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, BaseSonarElement.Project entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, BaseSonarElement.Project entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getId())
-                .name(entry.getName())
-                .assetKey(entry.getKey())
-                .assetKey2(entry.getOrganization())
+                .assetId(entity.getId())
+                .name(entity.getName())
+                .assetKey(entity.getKey())
+                .assetKey2(entity.getOrganization())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.SONAR_PROJECT.name())
                 .kind("project")
@@ -40,8 +40,8 @@ public class SonarAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("revision", entry.getRevision())
-                .paramProperty("visibility",entry.getVisibility())
+                .paramProperty("revision", entity.getRevision())
+                .paramProperty("visibility",entity.getVisibility())
                 .build();
     }
 }

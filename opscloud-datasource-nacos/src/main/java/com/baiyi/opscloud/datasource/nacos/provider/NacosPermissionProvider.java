@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.nacos.convert.NacosPermissionConvert;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosPermission;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosPermission;
 import com.baiyi.opscloud.datasource.nacos.datasource.NacosAuthDatasource;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -51,7 +51,7 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
     }
 
     @Override
-    protected List<NacosPermission.Permission> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<NacosPermission.Permission> listEntities(DsInstanceContext dsInstanceContext) {
         try {
             NacosPermission.PermissionsResponse permissionsResponse = nacosAuthDatasource.listPermissions(buildConfig(dsInstanceContext.getDsConfig()), NacosPageParam.PageQuery.builder().build());
             return permissionsResponse.getPageItems();
@@ -77,8 +77,8 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosPermission.Permission entry) {
-        return NacosPermissionConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosPermission.Permission entity) {
+        return NacosPermissionConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

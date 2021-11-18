@@ -54,8 +54,8 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListPoliciesResponse.Policy entry) {
-        return RamAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListPoliciesResponse.Policy entity) {
+        return RamAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     }
 
     @Override
-    protected List<ListPoliciesResponse.Policy> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ListPoliciesResponse.Policy> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
@@ -95,13 +95,13 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     }
 
     @Override
-    protected List<ListPoliciesResponse.Policy> listEntries(DsInstanceContext dsInstanceContext, ListUsersResponse.User target) {
+    protected List<ListPoliciesResponse.Policy> listEntities(DsInstanceContext dsInstanceContext, ListUsersResponse.User target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRamDatasource.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName()).stream().map(this::toTargetEntry
+        return aliyunRamDatasource.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName()).stream().map(this::toTargetEntity
         ).collect(Collectors.toList());
     }
 
-    private ListPoliciesResponse.Policy toTargetEntry(ListPoliciesForUserResponse.Policy policy) {
+    private ListPoliciesResponse.Policy toTargetEntity(ListPoliciesForUserResponse.Policy policy) {
         ListPoliciesResponse.Policy target = new ListPoliciesResponse.Policy();
         target.setPolicyName(policy.getPolicyName());
         target.setPolicyType(policy.getPolicyType());

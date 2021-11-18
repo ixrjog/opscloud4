@@ -18,7 +18,7 @@ public class SimpleDictBuilder {
         return new SimpleDictBuilder();
     }
 
-    public SimpleDictBuilder paramEntry(String name, String value) {
+    public SimpleDictBuilder putParam(String name, String value) {
         if (!StringUtils.isEmpty(value))
             simpleDict.put(name, value);
         return this;

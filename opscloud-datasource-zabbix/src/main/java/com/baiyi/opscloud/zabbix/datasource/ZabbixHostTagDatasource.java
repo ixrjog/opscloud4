@@ -2,8 +2,8 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostTag;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostTag;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
@@ -37,9 +37,9 @@ public class ZabbixHostTagDatasource extends BaseZabbixDatasource<ZabbixHostTag>
     public ZabbixHostTag getHostTag(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostDatasource.HostAPIMethod.GET)
-                .paramEntry("output", new String[]{"name"})
-                .paramEntry("hostids", zabbixHost.getHostid())
-                .paramEntry("selectTags", new String[]{"tag", "value"})
+                .putParam("output", new String[]{"name"})
+                .putParam("hostids", zabbixHost.getHostid())
+                .putParam("selectTags", new String[]{"tag", "value"})
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixHostTag.class);
@@ -48,8 +48,8 @@ public class ZabbixHostTagDatasource extends BaseZabbixDatasource<ZabbixHostTag>
     public void updateHostTags(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, List<ZabbixHostParam.Tag> tags) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostDatasource.HostAPIMethod.UPDATE)
-                .paramEntry("hostid", zabbixHost.getHostid())
-                .paramEntry("tags", tags)
+                .putParam("hostid", zabbixHost.getHostid())
+                .putParam("tags", tags)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get(HOST_IDS).isEmpty()) {

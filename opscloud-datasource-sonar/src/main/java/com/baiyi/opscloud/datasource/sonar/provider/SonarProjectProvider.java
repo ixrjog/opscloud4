@@ -8,8 +8,8 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.sonar.convert.SonarAssetConvert;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarProjects;
-import com.baiyi.opscloud.datasource.sonar.entry.base.BaseSonarElement;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
+import com.baiyi.opscloud.datasource.sonar.entity.base.BaseSonarElement;
 import com.baiyi.opscloud.datasource.sonar.datasource.SonarProjectsDatasource;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -57,9 +57,9 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
     }
 
     @Override
-    protected List<BaseSonarElement.Project> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<BaseSonarElement.Project> listEntities(DsInstanceContext dsInstanceContext) {
         SonarConfig.Sonar sonar = buildConfig(dsInstanceContext.getDsConfig());
-        List<BaseSonarElement.Project> entries = Lists.newArrayList();
+        List<BaseSonarElement.Project> entities = Lists.newArrayList();
         PagingParam pagingParam = PagingParam.builder().build();
         sonarProjectsDatasource.searchProjects(sonar, pagingParam);
         while (true) {
@@ -68,14 +68,14 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
             if (CollectionUtils.isEmpty(components)) {
                 break;
             }
-            entries.addAll(components);
+            entities.addAll(components);
             if (components.size() < pagingParam.getPs()) {
                 break;
             } else {
                 pagingParam.setP(pagingParam.getP() + 1);
             }
         }
-        return entries;
+        return entities;
     }
 
     @Override
@@ -94,8 +94,8 @@ public class SonarProjectProvider extends BaseAssetProvider<BaseSonarElement.Pro
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, BaseSonarElement.Project entry) {
-        return SonarAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, BaseSonarElement.Project entity) {
+        return SonarAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

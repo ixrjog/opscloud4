@@ -27,8 +27,8 @@ public class OcServerProvider {
 
     public DataTable<OcServerVO.Server> queryServers() throws IOException {
         SimpleDict param = SimpleDictBuilder.newBuilder()
-                .paramEntry("page", "1")
-                .paramEntry("length", "1000")
+                .putParam("page", "1")
+                .putParam("length", "1000")
                 .build();
         JsonNode jsonNode = OcHttpUtil.httpGetExecutor(OcServerProvider.Api.QUERY_SERVER_PAGE, param.getDict());
         if (jsonNode.get("success").asBoolean()) {

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.sonar.datasource;
 
 import com.baiyi.opscloud.common.datasource.SonarConfig;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarComponents;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarComponents;
 import com.baiyi.opscloud.datasource.sonar.feign.SonarComponentsFeign;
 import com.baiyi.opscloud.datasource.sonar.param.SonarQubeRequestBuilder;
 import com.google.common.base.Joiner;
@@ -33,10 +33,10 @@ public class SonarComponentsDatasource {
 
     private Map<String, String> buildSearchComponentsParam(String queryName) {
         return SonarQubeRequestBuilder.newBuilder()
-                .paramEntry("p", "1")
-                .paramEntry("ps", "500")
-                .paramEntry("q", queryName)
-                .paramEntry("qualifiers", QUALIFIERS)
+                .putParam("p", "1")
+                .putParam("ps", "500")
+                .putParam("q", queryName)
+                .putParam("qualifiers", QUALIFIERS)
                 .build().getParams();
     }
 

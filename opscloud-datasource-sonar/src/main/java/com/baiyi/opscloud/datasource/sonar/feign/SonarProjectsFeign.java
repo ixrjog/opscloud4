@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.sonar.feign;
 
-import com.baiyi.opscloud.datasource.sonar.entry.SonarProjects;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
 import feign.Headers;
 import feign.Param;
 import feign.QueryMap;

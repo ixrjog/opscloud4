@@ -28,9 +28,9 @@ public class OcAuthProvider {
 
     public DataTable<UserRoleVO.UserRole> queryUserRolePage(Integer roleId) throws IOException {
         SimpleDict param = SimpleDictBuilder.newBuilder()
-                .paramEntry("roleId", String.valueOf(roleId))
-                .paramEntry("page", "1")
-                .paramEntry("length", "1000")
+                .putParam("roleId", String.valueOf(roleId))
+                .putParam("page", "1")
+                .putParam("length", "1000")
                 .build();
         JsonNode jsonNode = OcHttpUtil.httpGetExecutor(Api.QUERY_USER_ROLE_PAGE, param.getDict());
         if (jsonNode.get("success").asBoolean()) {

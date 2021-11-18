@@ -50,12 +50,10 @@ public class GitlabKeyEventConsume extends AbstractGitlabEventConsume {
                 .assetKey2(systemHook.getKey())
                 .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
                 .kind("gitlabSshKey")
-                //.description(entry.getTitle())
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                //.paramProperty("userId", gitlabUser.getId())
                 .build();
     }
 

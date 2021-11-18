@@ -18,35 +18,35 @@ import static com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert.t
  */
 public class RamAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUserId())
-                .name(entry.getDisplayName())
-                .assetKey(entry.getUserName())
-                .assetKey2(entry.getEmail())
+                .assetId(entity.getUserId())
+                .name(entity.getDisplayName())
+                .assetKey(entity.getUserName())
+                .assetKey2(entity.getEmail())
                 .kind("ramUser")
                 .assetType(DsAssetTypeEnum.RAM_USER.name())
-                .description(entry.getComments())
-                .createdTime(toGmtDate(entry.getCreateDate()))
+                .description(entity.getComments())
+                .createdTime(toGmtDate(entity.getCreateDate()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("mobilePhone", entry.getMobilePhone())
+                .paramProperty("mobilePhone", entity.getMobilePhone())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListPoliciesResponse.Policy entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListPoliciesResponse.Policy entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getPolicyName())
-                .name(entry.getPolicyName())
-                .assetKey(entry.getPolicyType())
+                .assetId(entity.getPolicyName())
+                .name(entity.getPolicyName())
+                .assetKey(entity.getPolicyType())
                 .kind("ramUser")
                 .assetType(DsAssetTypeEnum.RAM_POLICY.name())
-                .description(entry.getDescription())
-                .createdTime(toGmtDate(entry.getCreateDate()))
+                .description(entity.getDescription())
+                .createdTime(toGmtDate(entity.getCreateDate()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
@@ -54,16 +54,16 @@ public class RamAssetConvert {
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getAccessKeyId())
-                .name(entry.getAccessKeyId())
-                .assetKey(entry.getAccessKeyId())
+                .assetId(entity.getAccessKeyId())
+                .name(entity.getAccessKeyId())
+                .assetKey(entity.getAccessKeyId())
                 .kind("ramAccessKey")
                 .assetType(DsAssetTypeEnum.RAM_ACCESS_KEY.name())
-                .createdTime(toGmtDate(entry.getCreateDate()))
-                .isActive("Active".equals(entry.getStatus()))
+                .createdTime(toGmtDate(entity.getCreateDate()))
+                .isActive("Active".equals(entity.getStatus()))
                 .build();
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)

@@ -5,9 +5,9 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -19,19 +19,19 @@ import java.util.List;
  */
 public class ZabbixUserAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUserid())
-                .name(entry.getName())
-                .assetKey(entry.getAlias())
-                .assetKey2(entry.getSurname())
-                .kind(String.valueOf(entry.getType()))
+                .assetId(entity.getUserid())
+                .name(entity.getName())
+                .assetKey(entity.getAlias())
+                .assetKey2(entity.getSurname())
+                .kind(String.valueOf(entity.getType()))
                 .assetType(DsAssetTypeEnum.ZABBIX_USER.name())
                 .build();
         AssetContainerBuilder builder = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset);
-        List<ZabbixMedia> medias = entry.getMedias();
+        List<ZabbixMedia> medias = entity.getMedias();
         if (!CollectionUtils.isEmpty(medias)) {
             for (ZabbixMedia media : medias) {
                 if ("1".equals(media.getMediatypeid())) {
@@ -48,14 +48,14 @@ public class ZabbixUserAssetConvert {
         return builder.build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUsrgrpid())
-                .name(entry.getName())
-                .assetKey(entry.getUsrgrpid())
+                .assetId(entity.getUsrgrpid())
+                .name(entity.getName())
+                .assetKey(entity.getUsrgrpid())
                 .assetType(DsAssetTypeEnum.ZABBIX_USER_GROUP.name())
-                .isActive("0".equals(entry.getStatus()))
+                .isActive("0".equals(entity.getStatus()))
                 .kind("zabbixUserGroup")
                 .build();
         return AssetContainerBuilder.newBuilder()

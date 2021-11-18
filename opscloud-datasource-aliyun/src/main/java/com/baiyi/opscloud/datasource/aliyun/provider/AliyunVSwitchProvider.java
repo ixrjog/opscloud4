@@ -53,8 +53,8 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVSwitchesResponse.VSwitch entry) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVSwitchesResponse.VSwitch entity) {
+        return VpcAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class AliyunVSwitchProvider extends AbstractAssetChildProvider<DescribeVS
     }
 
     @Override
-    protected List<DescribeVSwitchesResponse.VSwitch> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+    protected List<DescribeVSwitchesResponse.VSwitch> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.nacos.convert;
 
-import com.baiyi.opscloud.datasource.nacos.entry.NacosRole;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosRole;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -14,13 +14,13 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
  */
 public class NacosRoleConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosRole.Role entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosRole.Role entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUsername())
-                .name(entry.getUsername().replace("LDAP_",""))
-                .assetKey(entry.getUsername())
-                .assetKey2(entry.getRole())
+                .assetId(entity.getUsername())
+                .name(entity.getUsername().replace("LDAP_",""))
+                .assetKey(entity.getUsername())
+                .assetKey2(entity.getRole())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.NACOS_USER.name())
                 .kind("user")

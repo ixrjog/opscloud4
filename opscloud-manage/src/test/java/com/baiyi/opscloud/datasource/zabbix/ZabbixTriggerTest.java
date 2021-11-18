@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.zabbix;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import com.baiyi.opscloud.zabbix.param.base.SeverityType;
 import lombok.extern.slf4j.Slf4j;

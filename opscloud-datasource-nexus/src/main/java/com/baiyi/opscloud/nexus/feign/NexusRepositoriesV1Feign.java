@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.nexus.feign;
 
-import com.baiyi.opscloud.nexus.entry.NexusRepository;
+import com.baiyi.opscloud.nexus.entity.NexusRepository;
 import feign.Headers;
 import feign.RequestLine;
 

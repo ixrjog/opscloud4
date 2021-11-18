@@ -51,7 +51,7 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     @Override
-    protected List<Deployment> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<Deployment> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Namespace> namespaces = KubernetesNamespaceDatasource.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Deployment> deployments = Lists.newArrayList();
@@ -81,8 +81,8 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entry) {
-        return DeploymentAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
+        return DeploymentAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

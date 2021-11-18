@@ -14,8 +14,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixUserDatasource;
 import org.springframework.stereotype.Component;
 
@@ -49,18 +49,18 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     }
 
     @Override
-    protected List<ZabbixUser> listEntries(DsInstanceContext dsInstanceContext, ZabbixUserGroup target) {
+    protected List<ZabbixUser> listEntities(DsInstanceContext dsInstanceContext, ZabbixUserGroup target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixUserDatasource.listByGroup(zabbix, target);
     }
 
     @Override
-    protected List<ZabbixUser> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ZabbixUser> listEntities(DsInstanceContext dsInstanceContext) {
         return zabbixUserDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
-    protected ZabbixUser getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+    protected ZabbixUser getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
         return zabbixUserDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
@@ -92,8 +92,8 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entry) {
-        return ZabbixUserAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entity) {
+        return ZabbixUserAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

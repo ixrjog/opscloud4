@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
-import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixProblem;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 
 import java.util.Date;
 

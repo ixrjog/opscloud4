@@ -53,8 +53,8 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeDatabasesResponse.Database entry) {
-        return RdsMysqlAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeDatabasesResponse.Database entity) {
+        return RdsMysqlAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -65,20 +65,20 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<DescribeDatabasesResponse.Database> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<DescribeDatabasesResponse.Database> entries = Lists.newArrayList();
+        List<DescribeDatabasesResponse.Database> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             List<DescribeDBInstancesResponse.DBInstance> instances = aliyunRdsMysqlDatasource.listDbInstance(regionId, aliyun);
             if (!CollectionUtils.isEmpty(instances)) {
                 instances.forEach(instance -> {
-                    entries.addAll(aliyunRdsMysqlDatasource.listDatabase(regionId, aliyun, instance.getDBInstanceId()));
+                    entities.addAll(aliyunRdsMysqlDatasource.listDatabase(regionId, aliyun, instance.getDBInstanceId()));
                 });
             }
         });
-        return entries;
+        return entities;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class AliyunRdsMysqlDatabaseProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<DescribeDatabasesResponse.Database> listEntries(DsInstanceContext dsInstanceContext, DescribeDBInstancesResponse.DBInstance target) {
+    protected List<DescribeDatabasesResponse.Database> listEntities(DsInstanceContext dsInstanceContext, DescribeDBInstancesResponse.DBInstance target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRdsMysqlDatasource.listDatabase(aliyun.getRegionId(), aliyun, target.getDBInstanceId());
     }

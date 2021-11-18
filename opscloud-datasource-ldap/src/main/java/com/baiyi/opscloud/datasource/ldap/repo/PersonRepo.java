@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entry.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
 
 import java.util.List;
 

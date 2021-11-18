@@ -59,7 +59,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     @Override
-    protected List<AnsibleVersion.Version> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<AnsibleVersion.Version> listEntities(DsInstanceContext dsInstanceContext) {
         AnsibleConfig.Ansible ansible = buildConfig(dsInstanceContext.getDsConfig());
         List<AnsibleVersion.Version> versions = Lists.newArrayList();
         versions.add(getAnsibleVersion(ansible));
@@ -123,8 +123,8 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleVersion.Version entry) {
-        return AnsibleAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleVersion.Version entity) {
+        return AnsibleAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

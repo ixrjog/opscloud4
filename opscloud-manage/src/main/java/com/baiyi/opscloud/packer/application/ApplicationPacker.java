@@ -75,8 +75,8 @@ public class ApplicationPacker {
         DatasourceInstanceAsset dsInstanceAsset = dsInstanceAssetService.getById(resource.getBusinessId());
         if (dsInstanceAsset == null) return resourceVO;
         Map<String, String> params = SimpleDictBuilder.newBuilder()
-                .paramEntry("namespace", dsInstanceAsset.getAssetKey2())
-                .paramEntry("deploymentName", dsInstanceAsset.getAssetKey())
+                .putParam("namespace", dsInstanceAsset.getAssetKey2())
+                .putParam("deploymentName", dsInstanceAsset.getAssetKey())
                 .build().getDict();
         resourceVO.setAsset(BeanCopierUtil.copyProperties(dsInstanceAsset, DsAssetVO.Asset.class));
         try {

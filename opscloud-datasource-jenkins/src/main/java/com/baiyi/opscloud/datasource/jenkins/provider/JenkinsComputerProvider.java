@@ -51,7 +51,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     }
 
     @Override
-    protected List<ComputerWithDetails> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ComputerWithDetails> listEntities(DsInstanceContext dsInstanceContext) {
         try {
             Map<String, Computer> computerMap = JenkinsServerDatasource.getComputers(buildConfig(dsInstanceContext.getDsConfig()));
             List<ComputerWithDetails> computerWithDetails = Lists.newArrayList();
@@ -80,8 +80,8 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entry) {
-        return ComputerAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ComputerWithDetails entity) {
+        return ComputerAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

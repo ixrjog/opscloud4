@@ -23,10 +23,9 @@ public class DeploymentAssetConvert {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entry) {
-
-        String namespace = entry.getMetadata().getNamespace();
-        String name = entry.getMetadata().getName();
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
+        String namespace = entity.getMetadata().getNamespace();
+        String name = entity.getMetadata().getName();
         /**
          * 为了兼容多集群中deployment名称相同导致无法拉取资产
          * 资产id使用联合键 namespace:deploymentName
@@ -38,17 +37,17 @@ public class DeploymentAssetConvert {
                 .assetId(assetId)
                 .name(name)
                 .assetKey(name)
-                // entry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
+                // entiry.getSpec().getTemplate().getSpec().getContainers().get(0).getImage() 容器模版镜像
                 .assetKey2(namespace) // namespace
-                .kind(entry.getKind())
+                .kind(entity.getKind())
                 .assetType(DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.name())
-                .createdTime(toGmtDate(entry.getMetadata().getCreationTimestamp()))
+                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("replicas", entry.getSpec().getReplicas())
-                .paramProperty("uid", entry.getMetadata().getUid())
+                .paramProperty("replicas", entity.getSpec().getReplicas())
+                .paramProperty("uid", entity.getMetadata().getUid())
                 .build();
     }
 }

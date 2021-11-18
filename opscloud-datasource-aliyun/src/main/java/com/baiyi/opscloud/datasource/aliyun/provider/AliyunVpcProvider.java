@@ -52,8 +52,8 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entry) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entity) {
+        return VpcAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -64,7 +64,7 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
     }
 
     @Override
-    protected List<DescribeVpcsResponse.Vpc> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<DescribeVpcsResponse.Vpc> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

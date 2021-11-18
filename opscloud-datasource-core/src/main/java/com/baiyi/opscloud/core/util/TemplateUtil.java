@@ -52,10 +52,10 @@ public class TemplateUtil {
     private SimpleDict buildDict(Credential credential) {
         String decryptedCredential = decrypt(credential.getCredential());
         return CredentialTemplateDictBuilder.newBuilder()
-                .paramEntry(Names.USERNAME, credential.getUsername())
-                .paramEntry(Names.PASSWORD, decryptedCredential)
-                .paramEntry(Names.TOKEN, decryptedCredential)
-                .paramEntry(Names.ACCESS_KEY, decryptedCredential)
+                .putParam(Names.USERNAME, credential.getUsername())
+                .putParam(Names.PASSWORD, decryptedCredential)
+                .putParam(Names.TOKEN, decryptedCredential)
+                .putParam(Names.ACCESS_KEY, decryptedCredential)
                 .build();
     }
 

@@ -17,14 +17,14 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
  */
 public class AnsibleAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleVersion.Version entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleVersion.Version entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getType().equals(AnsibleVersion.VersionType.ANSIBLE) ? "1" : "2")
-                .name(entry.getType().toLowerCase())
-                .assetKey(entry.getType())
-                .assetKey2(entry.getExecutableLocation())
-                .description(entry.getDetails())
+                .assetId(entity.getType().equals(AnsibleVersion.VersionType.ANSIBLE) ? "1" : "2")
+                .name(entity.getType().toLowerCase())
+                .assetKey(entity.getType())
+                .assetKey2(entity.getExecutableLocation())
+                .description(entity.getDetails())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.ANSIBLE_VERSION.name())
                 .kind("ansibleVersion")
@@ -35,14 +35,14 @@ public class AnsibleAssetConvert {
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleHosts.Hosts entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AnsibleHosts.Hosts entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId("1")
                 .name(DsAssetTypeEnum.ANSIBLE_HOSTS.name().toLowerCase())
                 .assetKey(DsAssetTypeEnum.ANSIBLE_HOSTS.name())
-                .assetKey2(SystemEnvUtil.renderEnvHome(entry.getInventoryHost()))
-                .description(entry.toInventory())
+                .assetKey2(SystemEnvUtil.renderEnvHome(entity.getInventoryHost()))
+                .description(entity.toInventory())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.ANSIBLE_HOSTS.name())
                 .kind("ansibleHosts")

@@ -2,9 +2,9 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixAction;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixAction;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.http.*;
 import com.baiyi.opscloud.zabbix.param.ConditionsBuilder;
@@ -65,8 +65,8 @@ public class ZabbixActionDatasource extends BaseZabbixDatasource<ZabbixAction> {
 
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ActionAPIMethod.GET)
-                .paramEntry("output", "extend")
-                .paramEntry("selectOperations", "extend")
+                .putParam("output", "extend")
+                .putParam("selectOperations", "extend")
                 .filter(filter)
                 .build();
         JsonNode data = call(zabbix, request);
@@ -81,11 +81,11 @@ public class ZabbixActionDatasource extends BaseZabbixDatasource<ZabbixAction> {
                 .build();
 
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
-                .paramEntry("name", actionName)
-                .paramEntry("eventsource", 0)
-                .paramEntry("status", 0)
-                .paramEntry("esc_period", "10m")
-                .paramEntry("operations", buildOperations(zabbix, usergrpName)) // 操作
+                .putParam("name", actionName)
+                .putParam("eventsource", 0)
+                .putParam("status", 0)
+                .putParam("esc_period", "10m")
+                .putParam("operations", buildOperations(zabbix, usergrpName)) // 操作
                 .filter(filter)
                 .method(ActionAPIMethod.CREATE)
                 .build();

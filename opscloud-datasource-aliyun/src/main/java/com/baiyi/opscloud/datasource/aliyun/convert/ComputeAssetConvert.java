@@ -29,43 +29,43 @@ public class ComputeAssetConvert {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getInstanceId()) // 资产id = 实例id
-                .name(entry.getInstanceName())
+                .assetId(entity.getInstanceId()) // 资产id = 实例id
+                .name(entity.getInstanceName())
                 // priveteIp
-                .assetKey(entry.getInstanceNetworkType().equals(VPC) ? entry.getVpcAttributes().getPrivateIpAddress().get(0) :
-                        entry.getInnerIpAddress().get(0))
+                .assetKey(entity.getInstanceNetworkType().equals(VPC) ? entity.getVpcAttributes().getPrivateIpAddress().get(0) :
+                        entity.getInnerIpAddress().get(0))
                 // publicIp
-                .assetKey2(getPublicIp(entry))
+                .assetKey2(getPublicIp(entity))
                 .assetType(DsAssetTypeEnum.ECS.name())
-                .kind(entry.getInstanceType())
-                .regionId(entry.getRegionId())
-                .zone(entry.getZoneId())
-                .createdTime(toGmtDate(entry.getCreationTime()))
+                .kind(entity.getInstanceType())
+                .regionId(entity.getRegionId())
+                .zone(entity.getZoneId())
+                .createdTime(toGmtDate(entity.getCreationTime()))
                 .expiredTime(
-                        entry.getInstanceChargeType().equalsIgnoreCase(PRE_PAID) && !StringUtils.isEmpty(entry.getExpiredTime())
-                                ? toGmtDate(entry.getExpiredTime()) : null)
+                        entity.getInstanceChargeType().equalsIgnoreCase(PRE_PAID) && !StringUtils.isEmpty(entity.getExpiredTime())
+                                ? toGmtDate(entity.getExpiredTime()) : null)
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("cpu", entry.getCpu())
-                .paramProperty("vpcId", entry.getVpcAttributes() != null ? entry.getVpcAttributes().getVpcId() : "")
-                .paramProperty("memory", entry.getMemory())
-                .paramProperty("chargeType", entry.getInstanceChargeType())
-                .paramProperty("imageId", entry.getImageId())
-                .paramProperty("osName", entry.getOSName())
-                .paramProperty("osType", entry.getOSType())
+                .paramProperty("cpu", entity.getCpu())
+                .paramProperty("vpcId", entity.getVpcAttributes() != null ? entity.getVpcAttributes().getVpcId() : "")
+                .paramProperty("memory", entity.getMemory())
+                .paramProperty("chargeType", entity.getInstanceChargeType())
+                .paramProperty("imageId", entity.getImageId())
+                .paramProperty("osName", entity.getOSName())
+                .paramProperty("osType", entity.getOSType())
                 .build();
     }
 
-    private static String getPublicIp(DescribeInstancesResponse.Instance entry) {
-        if (!CollectionUtils.isEmpty(entry.getPublicIpAddress()))
-            return entry.getPublicIpAddress().get(0);
-        if (entry.getEipAddress() != null)
-            return entry.getEipAddress().getIpAddress();
+    private static String getPublicIp(DescribeInstancesResponse.Instance entity) {
+        if (!CollectionUtils.isEmpty(entity.getPublicIpAddress()))
+            return entity.getPublicIpAddress().get(0);
+        if (entity.getEipAddress() != null)
+            return entity.getEipAddress().getIpAddress();
         return Strings.EMPTY;
     }
 }

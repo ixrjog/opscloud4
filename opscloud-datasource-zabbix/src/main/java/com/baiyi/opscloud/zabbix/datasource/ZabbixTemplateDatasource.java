@@ -2,9 +2,9 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
@@ -59,7 +59,7 @@ public class ZabbixTemplateDatasource extends BaseZabbixDatasource<ZabbixTemplat
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_template_hostid_' + #host.hostid", unless = "#result == null")
     public List<ZabbixTemplate> getByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(HOST_IDS, host.getHostid())
+                .putParam(HOST_IDS, host.getHostid())
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
@@ -67,7 +67,7 @@ public class ZabbixTemplateDatasource extends BaseZabbixDatasource<ZabbixTemplat
 
     public List<ZabbixTemplate> listTemplatesByGroup(ZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(HOST_GROUP_IDS, group.getGroupid())
+                .putParam(HOST_GROUP_IDS, group.getGroupid())
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         return ZabbixMapper.mapperList(data.get(RESULT), ZabbixTemplate.class);
@@ -77,7 +77,7 @@ public class ZabbixTemplateDatasource extends BaseZabbixDatasource<ZabbixTemplat
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#zabbix.url + '_template_id_' + #templateId", unless = "#result == null")
     public ZabbixTemplate getById(ZabbixConfig.Zabbix zabbix, String templateId) {
         SimpleZabbixRequest request = queryRequestBuilder()
-                .paramEntry(TEMPLATE_IDS, templateId)
+                .putParam(TEMPLATE_IDS, templateId)
                 .build();
         JsonNode data = zabbixServer.call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixTemplate.class);

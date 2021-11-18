@@ -40,7 +40,7 @@ public class DocumentFacadeImpl implements DocumentFacade {
         render(doc, query.getDict()); // 反向注入
 
         SimpleDict simpleDict = SimpleDictBuilder.newBuilder()
-                .paramEntry("username", SessionUtil.getUsername())
+                .putParam("username", SessionUtil.getUsername())
                 .build();
         render(doc, simpleDict.getDict());
     }

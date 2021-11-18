@@ -2,9 +2,9 @@ package com.baiyi.opscloud.datasource.sonar;
 
 import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.datasource.sonar.base.BaseSonarTest;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarComponents;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarMeasures;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarProjects;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarComponents;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarMeasures;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
 import com.baiyi.opscloud.datasource.sonar.datasource.SonarComponentsDatasource;
 import com.baiyi.opscloud.datasource.sonar.datasource.SonarMeasuresDatasource;
 import com.baiyi.opscloud.datasource.sonar.datasource.SonarProjectsDatasource;

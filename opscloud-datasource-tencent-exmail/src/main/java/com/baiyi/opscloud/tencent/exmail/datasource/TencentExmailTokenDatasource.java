@@ -2,7 +2,7 @@ package com.baiyi.opscloud.tencent.exmail.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
-import com.baiyi.opscloud.tencent.exmail.entry.ExmailToken;
+import com.baiyi.opscloud.tencent.exmail.entity.ExmailToken;
 import com.baiyi.opscloud.tencent.exmail.feign.TencentExmailTokenFeign;
 import feign.Feign;
 import feign.jackson.JacksonDecoder;

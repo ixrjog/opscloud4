@@ -29,7 +29,7 @@ public class OcUserProvider {
 
     public OcUserVO.User queryUserDetail(String username) throws IOException {
         SimpleDict param = SimpleDictBuilder.newBuilder()
-                .paramEntry("username", username)
+                .putParam("username", username)
                 .build();
         JsonNode jsonNode = OcHttpUtil.httpGetExecutor(Api.QUERY_USER_DETAIL, param.getDict());
         if (jsonNode.get("success").asBoolean()) {
@@ -44,8 +44,8 @@ public class OcUserProvider {
 
     public DataTable<UserVO.User> queryUsers() throws IOException {
         SimpleDict param = SimpleDictBuilder.newBuilder()
-                .paramEntry("page", "1")
-                .paramEntry("length", "1000")
+                .putParam("page", "1")
+                .putParam("length", "1000")
                 .build();
         JsonNode jsonNode = OcHttpUtil.httpGetExecutor(Api.QUERY_USER_PAGE, param.getDict());
         if (jsonNode.get("success").asBoolean()) {

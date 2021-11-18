@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.sonar.datasource;
 
 import com.baiyi.opscloud.common.datasource.SonarConfig;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarProjects;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarProjects;
 import com.baiyi.opscloud.datasource.sonar.enums.QualifierEnum;
 import com.baiyi.opscloud.datasource.sonar.feign.SonarProjectsFeign;
 import com.baiyi.opscloud.datasource.sonar.param.PagingParam;
@@ -29,8 +29,8 @@ public class SonarProjectsDatasource {
 
     private Map<String, String> buildSearchProjectsParam(PagingParam pagingParam) {
         return SonarQubeRequestBuilder.newBuilder()
-                .paramEntry(pagingParam)
-                .paramEntry(QUALIFIERS)
+                .putParam(pagingParam)
+                .putParam(QUALIFIERS)
                 .build()
                 .getParams();
     }

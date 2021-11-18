@@ -57,8 +57,8 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsTopicListResponse.PublishInfoDo entry) {
-        return OnsRocketMqConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsTopicListResponse.PublishInfoDo entity) {
+        return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -73,19 +73,19 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<OnsTopicListResponse.PublishInfoDo> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<OnsTopicListResponse.PublishInfoDo> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<OnsTopicListResponse.PublishInfoDo> entries = Lists.newArrayList();
+        List<OnsTopicListResponse.PublishInfoDo> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             List<OnsInstanceInServiceListResponse.InstanceVO> instances = aliyunOnsRocketMqInstanceDatasource.listInstance(regionId, aliyun);
             if (!CollectionUtils.isEmpty(instances)) {
                 instances.forEach(instance ->
-                        entries.addAll(aliyunOnsRocketMqTopicDatasource.listTopic(regionId, aliyun, instance.getInstanceId())));
+                        entities.addAll(aliyunOnsRocketMqTopicDatasource.listTopic(regionId, aliyun, instance.getInstanceId())));
             }
         });
-        return entries;
+        return entities;
     }
 
     @Override
@@ -104,7 +104,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<OnsTopicListResponse.PublishInfoDo> listEntries(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
+    protected List<OnsTopicListResponse.PublishInfoDo> listEntities(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunOnsRocketMqTopicDatasource.listTopic(aliyun.getRegionId(), aliyun, target.getInstanceId());
     }

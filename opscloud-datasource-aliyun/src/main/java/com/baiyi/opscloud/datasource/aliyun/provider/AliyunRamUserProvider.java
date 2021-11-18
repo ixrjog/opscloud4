@@ -55,8 +55,8 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entry) {
-        return RamAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entity) {
+        return RamAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -71,7 +71,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ListUsersResponse.User> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
@@ -96,14 +96,14 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected List<ListUsersResponse.User> listEntries(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
+    protected List<ListUsersResponse.User> listEntities(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunRamDatasource.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName())
-                .stream().map(this::toTargetEntry)
+                .stream().map(this::toTargetEntity)
                 .collect(Collectors.toList());
     }
 
-    private ListUsersResponse.User toTargetEntry(ListEntitiesForPolicyResponse.User user) {
+    private ListUsersResponse.User toTargetEntity(ListEntitiesForPolicyResponse.User user) {
         ListUsersResponse.User target = new ListUsersResponse.User();
         target.setUserName(user.getUserName());
         target.setDisplayName(user.getDisplayName());

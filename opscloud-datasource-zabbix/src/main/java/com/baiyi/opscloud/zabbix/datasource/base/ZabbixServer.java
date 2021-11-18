@@ -4,7 +4,7 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
 import com.baiyi.opscloud.common.util.StringToDurationUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.http.DefaultZabbixClient;
 import com.baiyi.opscloud.zabbix.http.IZabbixRequest;
 import com.fasterxml.jackson.databind.JsonNode;

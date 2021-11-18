@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.ldap.mapper;
 
-import com.baiyi.opscloud.datasource.ldap.entry.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.Group;
 import org.springframework.ldap.core.AttributesMapper;
 
 import javax.naming.NamingException;

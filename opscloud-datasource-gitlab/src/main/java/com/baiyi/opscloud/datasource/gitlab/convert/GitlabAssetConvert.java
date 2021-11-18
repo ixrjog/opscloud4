@@ -21,82 +21,82 @@ import org.gitlab.api.models.GitlabUser;
 public class GitlabAssetConvert {
 
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabUser entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabUser entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(String.valueOf(entry.getId()))
-                .name(entry.getName())
-                .assetKey(entry.getUsername())
-                .assetKey2(entry.getEmail())
-                .isActive(entry.isBlocked() == null || !entry.isBlocked())
-                .createdTime(entry.getCreatedAt())
+                .assetId(String.valueOf(entity.getId()))
+                .name(entity.getName())
+                .assetKey(entity.getUsername())
+                .assetKey2(entity.getEmail())
+                .isActive(entity.isBlocked() == null || !entity.isBlocked())
+                .createdTime(entity.getCreatedAt())
                 .assetType(DsAssetTypeEnum.GITLAB_USER.name())
                 .kind("gitlabUser")
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("isAdmin", entry.isAdmin())
-                .paramProperty("projectsLimit", entry.getProjectsLimit())
+                .paramProperty("isAdmin", entity.isAdmin())
+                .paramProperty("projectsLimit", entity.getProjectsLimit())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabProject entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabProject entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(String.valueOf(entry.getId()))
-                .name(entry.getName())
-                .assetKey(entry.getSshUrl())
-                .assetKey2(entry.getWebUrl())
-                .createdTime(entry.getCreatedAt())
-                .description(entry.getDescription())
+                .assetId(String.valueOf(entity.getId()))
+                .name(entity.getName())
+                .assetKey(entity.getSshUrl())
+                .assetKey2(entity.getWebUrl())
+                .createdTime(entity.getCreatedAt())
+                .description(entity.getDescription())
                 .assetType(DsAssetTypeEnum.GITLAB_PROJECT.name())
                 .kind("gitlabProject")
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("visibility", entry.getVisibility())
-                .paramProperty("nameWithNamespace", entry.getNameWithNamespace())
-                .paramProperty("httUrl", entry.getHttpUrl())
-                .paramProperty("namespaceId", entry.getNamespace().getId())
-                .paramProperty("namespaceName", entry.getNamespace().getName())
-                .paramProperty("namespacePath", entry.getNamespace().getPath())
-                .paramProperty("namespaceKind", entry.getNamespace().getKind())
-                .paramProperty("defaultBranch", entry.getDefaultBranch())
+                .paramProperty("visibility", entity.getVisibility())
+                .paramProperty("nameWithNamespace", entity.getNameWithNamespace())
+                .paramProperty("httUrl", entity.getHttpUrl())
+                .paramProperty("namespaceId", entity.getNamespace().getId())
+                .paramProperty("namespaceName", entity.getNamespace().getName())
+                .paramProperty("namespacePath", entity.getNamespace().getPath())
+                .paramProperty("namespaceKind", entity.getNamespace().getKind())
+                .paramProperty("defaultBranch", entity.getDefaultBranch())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabGroup entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabGroup entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(String.valueOf(entry.getId()))
-                .name(entry.getName())
-                .assetKey(entry.getWebUrl())
-                .assetKey2(entry.getPath())
-                .description(entry.getDescription())
+                .assetId(String.valueOf(entity.getId()))
+                .name(entity.getName())
+                .assetKey(entity.getWebUrl())
+                .assetKey2(entity.getPath())
+                .description(entity.getDescription())
                 .assetType(DsAssetTypeEnum.GITLAB_GROUP.name())
                 .kind("gitlabProject")
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("visibility", entry.getVisibility())
-                .paramProperty("parentId", entry.getParentId())
+                .paramProperty("visibility", entity.getVisibility())
+                .paramProperty("parentId", entity.getParentId())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabSSHKey entry) {
-        GitlabUser gitlabUser = entry.getUser();
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabSSHKey entity) {
+        GitlabUser gitlabUser = entity.getUser();
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(String.valueOf(entry.getId()))
+                .assetId(String.valueOf(entity.getId()))
                 .name(gitlabUser.getUsername())
-                .assetKey(SSHUtil.getFingerprint(entry.getKey()))
-                .assetKey2(entry.getKey())
+                .assetKey(SSHUtil.getFingerprint(entity.getKey()))
+                .assetKey2(entity.getKey())
                 .assetType(DsAssetTypeEnum.GITLAB_SSHKEY.name())
                 .kind("gitlabSshKey")
-                .description(entry.getTitle())
+                .description(entity.getTitle())
                 .build();
 
         return AssetContainerBuilder.newBuilder()

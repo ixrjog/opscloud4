@@ -44,12 +44,12 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
     }
 
     @Override
-    protected List<GitlabProject> listEntries(DsInstanceContext dsInstanceContext, GitlabGroup target) {
+    protected List<GitlabProject> listEntities(DsInstanceContext dsInstanceContext, GitlabGroup target) {
         return GitlabProjectDatasource.queryGroupProjects(buildConfig(dsInstanceContext.getDsConfig()), target.getId());
     }
 
     @Override
-    protected List<GitlabProject> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<GitlabProject> listEntities(DsInstanceContext dsInstanceContext) {
         return GitlabProjectDatasource.queryProjects(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
@@ -83,8 +83,8 @@ public class GitlabProjectProvider extends AbstractAssetRelationProvider<GitlabP
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabProject entry) {
-        return GitlabAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, GitlabProject entity) {
+        return GitlabAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

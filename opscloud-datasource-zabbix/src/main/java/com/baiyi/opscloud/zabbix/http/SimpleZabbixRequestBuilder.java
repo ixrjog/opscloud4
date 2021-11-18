@@ -37,7 +37,7 @@ public class SimpleZabbixRequestBuilder {
         return this;
     }
 
-    public SimpleZabbixRequestBuilder paramEntry(String key, Object value) {
+    public SimpleZabbixRequestBuilder putParam(String key, Object value) {
         request.putParam(key, value);
         return this;
     }
@@ -49,7 +49,7 @@ public class SimpleZabbixRequestBuilder {
      * @param value
      * @return
      */
-    public SimpleZabbixRequestBuilder paramEntrySkipEmpty(String key, Object value) {
+    public SimpleZabbixRequestBuilder putParamSkipEmpty(String key, Object value) {
         if (value != null && !org.springframework.util.ObjectUtils.isEmpty(value) && !StringUtils.isEmpty(key)) {
             String str = JSON.toJSONString(value);
             if (str.equals("{}") || str.equals("[]") || str.equals("\"\""))
@@ -59,7 +59,7 @@ public class SimpleZabbixRequestBuilder {
         return this;
     }
 
-    public SimpleZabbixRequestBuilder paramEntry(Map<String, Object> map) {
+    public SimpleZabbixRequestBuilder putParam(Map<String, Object> map) {
         map.forEach((k, v) -> {
             if (!ObjectUtils.isNotEmpty(v)) {
                 return;

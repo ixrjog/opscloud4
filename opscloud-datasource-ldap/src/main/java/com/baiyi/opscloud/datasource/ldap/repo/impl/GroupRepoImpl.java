@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entry.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.Group;
 import com.baiyi.opscloud.datasource.ldap.datasource.LdapDatasource;
 import com.baiyi.opscloud.datasource.ldap.repo.GroupRepo;
 import lombok.extern.slf4j.Slf4j;
@@ -53,7 +53,7 @@ public class GroupRepoImpl implements GroupRepo {
 
     @Override
     public void create(LdapConfig.Ldap ldapConfig, String groupName) {
-        com.baiyi.opscloud.datasource.ldap.entry.Group group = Group.builder()
+        com.baiyi.opscloud.datasource.ldap.entity.Group group = Group.builder()
                 .groupName(groupName)
                 .build();
         ldapHandler.bindGroup(ldapConfig, group);

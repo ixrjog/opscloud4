@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.zabbix.facade.impl;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixHostGroupDatasource;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixUserGroupDatasource;

@@ -7,8 +7,8 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.provider.base.BaseZabbixHostProvider;
 import org.springframework.stereotype.Component;
 
@@ -28,7 +28,7 @@ public class ZabbixHostTargetTriggerProvider extends BaseZabbixHostProvider<Zabb
     private ZabbixHostTargetTriggerProvider zabbixHostTargetTriggerProvider;
 
     @Override
-    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext, ZabbixTrigger target) {
+    protected List<ZabbixHost> listEntities(DsInstanceContext dsInstanceContext, ZabbixTrigger target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixHostHandler.listByTrigger(zabbix, target);
     }
@@ -40,8 +40,8 @@ public class ZabbixHostTargetTriggerProvider extends BaseZabbixHostProvider<Zabb
 
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHost entry) {
-        return ZabbixHostAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHost entity) {
+        return ZabbixHostAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

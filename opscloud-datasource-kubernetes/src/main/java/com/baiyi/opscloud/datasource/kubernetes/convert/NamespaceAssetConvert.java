@@ -22,20 +22,20 @@ public class NamespaceAssetConvert {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Namespace entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Namespace entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getMetadata().getUid()) // 资产id
-                .name(entry.getMetadata().getName())
-                .assetKey(entry.getMetadata().getName())
-                .kind(entry.getKind())
+                .assetId(entity.getMetadata().getUid()) // 资产id
+                .name(entity.getMetadata().getName())
+                .assetKey(entity.getMetadata().getName())
+                .kind(entity.getKind())
                 .assetType(DsAssetTypeEnum.KUBERNETES_NAMESPACE.name())
-                .createdTime(toGmtDate(entry.getMetadata().getCreationTimestamp()))
+                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("phase", entry.getStatus().getPhase())
+                .paramProperty("phase", entity.getStatus().getPhase())
                 .build();
     }
 }

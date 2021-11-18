@@ -2,8 +2,8 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
@@ -44,7 +44,7 @@ public class ZabbixHostGroupDatasource extends BaseZabbixDatasource<ZabbixHostGr
     public List<ZabbixHostGroup> listByHost(ZabbixConfig.Zabbix zabbix, ZabbixHost host) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
-                .paramEntry("hostids", host.getHostid())
+                .putParam("hostids", host.getHostid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHostGroup.class);
@@ -54,7 +54,7 @@ public class ZabbixHostGroupDatasource extends BaseZabbixDatasource<ZabbixHostGr
     public ZabbixHostGroup getById(ZabbixConfig.Zabbix zabbix, String groupid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.GET)
-                .paramEntry("groupids", groupid)
+                .putParam("groupids", groupid)
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixHostGroup.class);
@@ -81,7 +81,7 @@ public class ZabbixHostGroupDatasource extends BaseZabbixDatasource<ZabbixHostGr
     public void create(ZabbixConfig.Zabbix zabbix, String name) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostGroupAPIMethod.CREATE)
-                .paramEntry("name", name)
+                .putParam("name", name)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("groupids").isEmpty()) {

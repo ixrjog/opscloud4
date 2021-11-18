@@ -29,8 +29,8 @@ public class OcServerGroupProvider {
 
     public DataTable<OcServerGroupTypeVO.ServerGroupType> queryServerGroupTypes() throws IOException {
         SimpleDict param = SimpleDictBuilder.newBuilder()
-                .paramEntry("page", "1")
-                .paramEntry("length", "1000")
+                .putParam("page", "1")
+                .putParam("length", "1000")
                 .build();
         JsonNode jsonNode = OcHttpUtil.httpGetExecutor(OcServerGroupProvider.Api.QUERY_SERVERGROUP_TYPE_PAGE, param.getDict());
         if (jsonNode.get("success").asBoolean()) {
@@ -45,8 +45,8 @@ public class OcServerGroupProvider {
 
     public DataTable<OcServerGroupVO.ServerGroup> queryServerGroups() throws IOException {
         SimpleDict param = SimpleDictBuilder.newBuilder()
-                .paramEntry("page", "1")
-                .paramEntry("length", "1000")
+                .putParam("page", "1")
+                .putParam("length", "1000")
                 .build();
         JsonNode jsonNode = OcHttpUtil.httpGetExecutor(OcServerGroupProvider.Api.QUERY_SERVERGROUP_PAGE , param.getDict());
         if (jsonNode.get("success").asBoolean()) {

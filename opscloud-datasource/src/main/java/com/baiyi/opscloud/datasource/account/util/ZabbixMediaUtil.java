@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.account.util;
 
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.zabbix.entry.ZabbixMedia;
+import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;

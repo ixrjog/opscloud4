@@ -18,7 +18,7 @@ public class CredentialTemplateDictBuilder {
         return new CredentialTemplateDictBuilder();
     }
 
-    public CredentialTemplateDictBuilder paramEntry(String name, String value) {
+    public CredentialTemplateDictBuilder putParam(String name, String value) {
         if (!StringUtils.isEmpty(value))
             credentialTemplateDict.put(name, value);
         return this;

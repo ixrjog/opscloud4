@@ -18,64 +18,64 @@ import static com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert.t
  */
 public class VpcAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getVpcId()) // 资产id = 实例id
-                .name(entry.getVpcName())
-                .assetKey(entry.getVpcId())
+                .assetId(entity.getVpcId()) // 资产id = 实例id
+                .name(entity.getVpcName())
+                .assetKey(entity.getVpcId())
                 // cidrBlock
-                .assetKey2(entry.getCidrBlock())
+                .assetKey2(entity.getCidrBlock())
                 .kind("aliyunVpc")
                 .assetType(DsAssetTypeEnum.VPC.name())
-                .regionId(entry.getRegionId())
-                .description(entry.getDescription())
-                .createdTime(toGmtDate(entry.getCreationTime()))
+                .regionId(entity.getRegionId())
+                .description(entity.getDescription())
+                .createdTime(toGmtDate(entity.getCreationTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("isDefault", entry.getIsDefault())
-                .paramProperty("vRouterId", entry.getVRouterId())
+                .paramProperty("isDefault", entity.getIsDefault())
+                .paramProperty("vRouterId", entity.getVRouterId())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getSecurityGroupId()) // 资产id = 实例id
-                .name(entry.getSecurityGroupName())
-                .assetKey(entry.getSecurityGroupId())
+                .assetId(entity.getSecurityGroupId()) // 资产id = 实例id
+                .name(entity.getSecurityGroupName())
+                .assetKey(entity.getSecurityGroupId())
                 .kind("aliyunSecurityGroup")
                 .assetType(DsAssetTypeEnum.ECS_SG.name())
-                .description(entry.getDescription())
-                .createdTime(toGmtDate(entry.getCreationTime()))
+                .description(entity.getDescription())
+                .createdTime(toGmtDate(entity.getCreationTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("securityGroupType", entry.getSecurityGroupType())
+                .paramProperty("securityGroupType", entity.getSecurityGroupType())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVSwitchesResponse.VSwitch entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVSwitchesResponse.VSwitch entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getVSwitchId()) // 资产id = 实例id
-                .name(entry.getVSwitchName())
-                .assetKey(entry.getVSwitchId())
+                .assetId(entity.getVSwitchId()) // 资产id = 实例id
+                .name(entity.getVSwitchName())
+                .assetKey(entity.getVSwitchId())
                 // cidrBlock
-                .assetKey2(entry.getCidrBlock())
+                .assetKey2(entity.getCidrBlock())
                 .kind("aliyunVSwitch")
                 .assetType(DsAssetTypeEnum.V_SWITCH.name())
-                .zone(entry.getZoneId())
-                .description(entry.getDescription())
-                .createdTime(toGmtDate(entry.getCreationTime()))
+                .zone(entity.getZoneId())
+                .description(entity.getDescription())
+                .createdTime(toGmtDate(entity.getCreationTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("isDefault", entry.getIsDefault())
+                .paramProperty("isDefault", entity.getIsDefault())
                 .build();
     }
 }

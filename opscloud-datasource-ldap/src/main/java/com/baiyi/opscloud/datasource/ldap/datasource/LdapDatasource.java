@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.ldap.datasource;
 
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entry.Group;
-import com.baiyi.opscloud.datasource.ldap.entry.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
 import com.baiyi.opscloud.datasource.ldap.mapper.GroupAttributesMapper;
 import com.baiyi.opscloud.datasource.ldap.mapper.PersonAttributesMapper;
 import com.baiyi.opscloud.domain.model.Authorization;

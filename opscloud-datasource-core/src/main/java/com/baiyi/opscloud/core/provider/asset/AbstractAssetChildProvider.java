@@ -23,7 +23,7 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
     private DsInstanceAssetService dsInstanceAssetService;
 
     @Override
-    protected List<C> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<C> listEntities(DsInstanceContext dsInstanceContext) {
         throw new UnsupportedOperationException();
     }
 
@@ -31,7 +31,7 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
         return AopUtils.getTargetClass(this).getAnnotation(ChildProvider.class).parentType().getType();
     }
 
-    protected abstract List<C> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset);
+    protected abstract List<C> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset);
 
     protected List<DatasourceInstanceAsset> listParents(DsInstanceContext dsInstanceContext) {
         return dsInstanceAssetService.listByInstanceAssetType(dsInstanceContext.getDsInstance().getUuid(), getParentAssetKey());
@@ -42,28 +42,28 @@ public abstract class AbstractAssetChildProvider<C> extends BaseAssetProvider<C>
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         List<DatasourceInstanceAsset> parents = listParents(dsInstanceContext);
         parents.forEach(p -> {
-            List<C> entries = listEntries(dsInstanceContext, p);
-            enterAssets(dsInstanceContext, entries, p);
+            List<C> entities = listEntities(dsInstanceContext, p);
+            enterAssets(dsInstanceContext, entities, p);
         });
     }
 
-    private void enterAssets(DsInstanceContext dsInstanceContext, List<C> entries, DatasourceInstanceAsset parent) {
+    private void enterAssets(DsInstanceContext dsInstanceContext, List<C> entities, DatasourceInstanceAsset parent) {
         if (executeMode()) {
             Set<Integer> idSet = listAssetsIdSet(dsInstanceContext, parent);
-            entries.forEach(e -> enterEntry(dsInstanceContext, idSet, e, parent));
+            entities.forEach(e -> enterEntity(dsInstanceContext, idSet, e, parent));
             idSet.forEach(id -> simpleDsAssetFacade.deleteAssetById(id));
         } else {
-            entries.forEach(e -> enterEntry(dsInstanceContext, e));
+            entities.forEach(e -> enterEntity(dsInstanceContext, e));
         }
     }
 
-    private void enterEntry(DsInstanceContext dsInstanceContext, Set<Integer> idSet, C entry, DatasourceInstanceAsset parent) {
-        DatasourceInstanceAsset asset = enterEntry(dsInstanceContext, entry, parent);
+    private void enterEntity(DsInstanceContext dsInstanceContext, Set<Integer> idSet, C entity, DatasourceInstanceAsset parent) {
+        DatasourceInstanceAsset asset = enterEntity(dsInstanceContext, entity, parent);
         idSet.remove(asset.getId());
     }
 
-    private DatasourceInstanceAsset enterEntry(DsInstanceContext dsInstanceContext, C entry, DatasourceInstanceAsset parent) {
-        AssetContainer assetContainer = toAssetContainer(dsInstanceContext.getDsInstance(), entry);
+    private DatasourceInstanceAsset enterEntity(DsInstanceContext dsInstanceContext, C entity, DatasourceInstanceAsset parent) {
+        AssetContainer assetContainer = toAssetContainer(dsInstanceContext.getDsInstance(), entity);
         assetContainer.getAsset().setParentId(parent.getId());
         return enterAsset(assetContainer);
     }

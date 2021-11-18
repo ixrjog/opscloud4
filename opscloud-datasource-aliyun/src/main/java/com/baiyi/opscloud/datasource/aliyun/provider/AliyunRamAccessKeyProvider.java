@@ -52,8 +52,8 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entry) {
-        return RamAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entity) {
+        return RamAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
     }
 
     @Override
-    protected List<ListAccessKeysResponse.AccessKey> listEntries(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+    protected List<ListAccessKeysResponse.AccessKey> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

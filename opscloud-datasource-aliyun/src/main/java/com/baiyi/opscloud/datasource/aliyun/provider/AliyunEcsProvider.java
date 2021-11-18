@@ -50,8 +50,8 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entry) {
-        return ComputeAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeInstancesResponse.Instance entity) {
+        return ComputeAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -70,7 +70,7 @@ public class AliyunEcsProvider extends AbstractAssetBusinessRelationProvider<Des
     }
 
     @Override
-    protected List<DescribeInstancesResponse.Instance> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<DescribeInstancesResponse.Instance> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

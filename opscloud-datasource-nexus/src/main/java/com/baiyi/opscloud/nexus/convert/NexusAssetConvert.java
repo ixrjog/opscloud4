@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.nexus.entry.NexusAsset;
+import com.baiyi.opscloud.nexus.entity.NexusAsset;
 
 /**
  * @Author baiyi
@@ -14,13 +14,13 @@ import com.baiyi.opscloud.nexus.entry.NexusAsset;
  */
 public class NexusAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, NexusAsset.Item entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, NexusAsset.Item entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getId())
-                .name(entry.getDownloadUrl())
-                .assetKey(entry.getDownloadUrl())
-                .assetKey2(entry.getRepository())
+                .assetId(entity.getId())
+                .name(entity.getDownloadUrl())
+                .assetKey(entity.getDownloadUrl())
+                .assetKey2(entity.getRepository())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.NEXUS_ASSET.name())
                 .kind("user")
@@ -28,10 +28,8 @@ public class NexusAssetConvert {
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("md5", entry.getChecksum().getMd5())
-                .paramProperty("sha1", entry.getChecksum().getSha1())
-                // .paramProperty("sha256", entry.getChecksum().getSha256())
-                // .paramProperty("sha512", entry.getChecksum().getSha512())
+                .paramProperty("md5", entity.getChecksum().getMd5())
+                .paramProperty("sha1", entity.getChecksum().getSha1())
                 .build();
     }
 }

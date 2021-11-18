@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.sonar.datasource;
 
 import com.baiyi.opscloud.common.datasource.SonarConfig;
-import com.baiyi.opscloud.datasource.sonar.entry.SonarMeasures;
+import com.baiyi.opscloud.datasource.sonar.entity.SonarMeasures;
 import com.baiyi.opscloud.datasource.sonar.feign.SonarMeasuresFeign;
 import com.baiyi.opscloud.datasource.sonar.param.SonarQubeRequestBuilder;
 import com.baiyi.opscloud.domain.model.Authorization;
@@ -28,9 +28,9 @@ public class SonarMeasuresDatasource {
 
     private Map<String, String> buildMeasuresComponentParam(String component) {
         return SonarQubeRequestBuilder.newBuilder()
-                .paramEntry("additionalFields", "metrics,periods")
-                .paramEntry("component", component)
-                .paramEntry("metricKeys", METRIC_KEYS)
+                .putParam("additionalFields", "metrics,periods")
+                .putParam("component", component)
+                .putParam("metricKeys", METRIC_KEYS)
                 .build().getParams();
     }
 

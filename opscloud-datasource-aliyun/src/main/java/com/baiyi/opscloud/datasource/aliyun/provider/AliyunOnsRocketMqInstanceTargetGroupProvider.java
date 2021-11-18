@@ -52,8 +52,8 @@ public class AliyunOnsRocketMqInstanceTargetGroupProvider extends AbstractAssetR
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstanceInServiceListResponse.InstanceVO entry) {
-        return OnsRocketMqConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstanceInServiceListResponse.InstanceVO entity) {
+        return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -70,15 +70,15 @@ public class AliyunOnsRocketMqInstanceTargetGroupProvider extends AbstractAssetR
     }
 
     @Override
-    protected List<OnsInstanceInServiceListResponse.InstanceVO> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<OnsInstanceInServiceListResponse.InstanceVO> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<OnsInstanceInServiceListResponse.InstanceVO> entries = Lists.newArrayList();
+        List<OnsInstanceInServiceListResponse.InstanceVO> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId ->
-                entries.addAll(aliyunOnsRocketMqInstanceDatasource.listInstance(regionId, aliyun))
+                entities.addAll(aliyunOnsRocketMqInstanceDatasource.listInstance(regionId, aliyun))
         );
-        return entries;
+        return entities;
     }
 
     @Override
@@ -97,7 +97,7 @@ public class AliyunOnsRocketMqInstanceTargetGroupProvider extends AbstractAssetR
     }
 
     @Override
-    protected List<OnsInstanceInServiceListResponse.InstanceVO> listEntries(DsInstanceContext dsInstanceContext, OnsGroupListResponse.SubscribeInfoDo target) {
+    protected List<OnsInstanceInServiceListResponse.InstanceVO> listEntities(DsInstanceContext dsInstanceContext, OnsGroupListResponse.SubscribeInfoDo target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunOnsRocketMqInstanceDatasource.listInstance(aliyun.getRegionId(), aliyun).stream().filter(e ->
                 e.getInstanceId().equals(target.getInstanceId())

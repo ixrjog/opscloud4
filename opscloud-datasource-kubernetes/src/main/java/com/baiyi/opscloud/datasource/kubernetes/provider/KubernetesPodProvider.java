@@ -63,7 +63,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     }
 
     @Override
-    protected List<Pod> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<Pod> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Namespace> namespaces = KubernetesNamespaceDatasource.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Pod> pods = Lists.newArrayList();
@@ -95,8 +95,8 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entry) {
-        return PodAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entity) {
+        return PodAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

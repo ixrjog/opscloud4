@@ -27,15 +27,15 @@ public class RdpProtocol extends AbstractGuacamoleProtocol {
     protected Map<String, String> buildParameters(Server server, ServerAccount serverAccount, GuacamoleParam.Login guacamoleLogin) {
         Credential credential = getCredential(serverAccount);
         return GuacamoleConfigurationBuilder.newBuilder()
-                .paramEntry("hostname", server.getPrivateIp())
-                .paramEntry("username", serverAccount.getUsername())
-                .paramEntry("password", credential.getCredential())
-                .paramEntry("port", "3389")
-                .paramEntry("security", "any")
-                .paramEntry("ignore-cert", "true")
-                .paramEntry("dpi", guacamoleLogin.getScreenDpi().toString())
-                .paramEntry("width", guacamoleLogin.getScreenWidth().toString())
-                .paramEntry("height", guacamoleLogin.getScreenHeight().toString())
+                .putParam("hostname", server.getPrivateIp())
+                .putParam("username", serverAccount.getUsername())
+                .putParam("password", credential.getCredential())
+                .putParam("port", "3389")
+                .putParam("security", "any")
+                .putParam("ignore-cert", "true")
+                .putParam("dpi", guacamoleLogin.getScreenDpi().toString())
+                .putParam("width", guacamoleLogin.getScreenWidth().toString())
+                .putParam("height", guacamoleLogin.getScreenHeight().toString())
                 .build().getDict();
     }
 

@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.nexus;
 
 import com.baiyi.opscloud.datasource.nexus.base.BaseNexusTest;
-import com.baiyi.opscloud.nexus.entry.NexusAsset;
-import com.baiyi.opscloud.nexus.entry.NexusRepository;
+import com.baiyi.opscloud.nexus.entity.NexusAsset;
+import com.baiyi.opscloud.nexus.entity.NexusRepository;
 import com.baiyi.opscloud.nexus.datasource.NexusAssetDatasource;
 import com.baiyi.opscloud.nexus.datasource.NexusRepositoryDatasource;
 import org.junit.jupiter.api.Test;

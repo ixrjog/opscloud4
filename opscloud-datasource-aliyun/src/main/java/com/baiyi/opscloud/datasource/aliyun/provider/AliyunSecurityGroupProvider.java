@@ -53,8 +53,8 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entry) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeSecurityGroupsResponse.SecurityGroup entity) {
+        return VpcAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -65,7 +65,7 @@ public class AliyunSecurityGroupProvider extends AbstractAssetChildProvider<Desc
     }
 
     @Override
-    protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntries(DsInstanceContext dsInstanceContext,DatasourceInstanceAsset asset) {
+    protected List<DescribeSecurityGroupsResponse.SecurityGroup> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

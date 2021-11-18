@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
@@ -32,11 +32,11 @@ public class ZabbixHostServerProvider extends BaseZabbixHostServerProvider {
         if (!isEnabled(property)) return;
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(ZabbixHostDatasource.HostAPIMethod.CREATE)
-                .paramEntry("host", SimpleServerNameFacade.toServerName(server))
-                .paramEntry("interfaces", buildHostInterfaceParams(server, property))
-                .paramEntry("groups", buildHostGroupParams(configContext.get(), server))
-                .paramEntry("templates", buildTemplatesParams(configContext.get(), property))
-                .paramEntry("tags", buildTagsParams(server))
+                .putParam("host", SimpleServerNameFacade.toServerName(server))
+                .putParam("interfaces", buildHostInterfaceParams(server, property))
+                .putParam("groups", buildHostGroupParams(configContext.get(), server))
+                .putParam("templates", buildTemplatesParams(configContext.get(), property))
+                .putParam("tags", buildTagsParams(server))
                 //  .paramEntrySkipEmpty("macros", ZabbixUtils.buildMacrosParameter(serverAttributeMap))
                 //  .paramEntrySkipEmpty("proxy_hostid", getProxyhostid(serverAttributeMap))
                 .build();

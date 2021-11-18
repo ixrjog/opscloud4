@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
@@ -66,18 +66,18 @@ public class ZabbixTriggerDatasource extends BaseZabbixDatasource<ZabbixTrigger>
         // https://www.zabbix.com/documentation/5.0/manual/api/reference/trigger/get
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
-                .paramEntry("output", TRIGGER_OUTPUT)
-                .paramEntry("selectFunctions", "extend")
+                .putParam("output", TRIGGER_OUTPUT)
+                .putParam("selectFunctions", "extend")
                 .filter(filter)
-                .paramEntry("active", 1) // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
-                .paramEntry("sortfield", "priority") // 排序
-                .paramEntry("sortorder", "DESC") // 正排还是倒排
-                .paramEntry("min_severity", severityType.getType()) // 大于等于给定的触发器级别，这里是大于等于严重
-                .paramEntry("skipDependent", 1) // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
-                .paramEntry("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
-                .paramEntry("monitored", 1) // 属于受监控主机的已启用触发器，并仅包含已启用的项目
-                .paramEntry("only_true", 1) // 只返回最近处于问题状态的触发器（处于告警状态的主机）
-                .paramEntry("expandDescription", 1) // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
+                .putParam("active", 1) // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
+                .putParam("sortfield", "priority") // 排序
+                .putParam("sortorder", "DESC") // 正排还是倒排
+                .putParam("min_severity", severityType.getType()) // 大于等于给定的触发器级别，这里是大于等于严重
+                .putParam("skipDependent", 1) // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
+                .putParam("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
+                .putParam("monitored", 1) // 属于受监控主机的已启用触发器，并仅包含已启用的项目
+                .putParam("only_true", 1) // 只返回最近处于问题状态的触发器（处于告警状态的主机）
+                .putParam("expandDescription", 1) // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
                 .build();
 
         JsonNode data = zabbixHandler.call(zabbix, request);
@@ -88,15 +88,15 @@ public class ZabbixTriggerDatasource extends BaseZabbixDatasource<ZabbixTrigger>
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
-                .paramEntry("active", 1)
+                .putParam("active", 1)
                 // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
-                .paramEntry("skipDependent", 1)
+                .putParam("skipDependent", 1)
                 // 属于受监控主机的已启用触发器，并仅包含已启用的项目
-                .paramEntry("monitored", 1)
+                .putParam("monitored", 1)
                 // 只返回最近处于问题状态的触发器（处于告警状态的主机）
-                .paramEntry("only_true", 1)
+                .putParam("only_true", 1)
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
-                .paramEntry("expandDescription", 1)
+                .putParam("expandDescription", 1)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
@@ -106,16 +106,16 @@ public class ZabbixTriggerDatasource extends BaseZabbixDatasource<ZabbixTrigger>
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
-                .paramEntry("active", 1)
+                .putParam("active", 1)
                 // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
-                .paramEntry("skipDependent", 1)
+                .putParam("skipDependent", 1)
                 // 属于受监控主机的已启用触发器，并仅包含已启用的项目
-                .paramEntry("monitored", 1)
+                .putParam("monitored", 1)
                 // 只返回最近处于问题状态的触发器（处于告警状态的主机）
-                .paramEntry("only_true", 1)
+                .putParam("only_true", 1)
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
-                .paramEntry("expandDescription", 1)
-                .paramEntry(HOST_IDS, host.getHostid())
+                .putParam("expandDescription", 1)
+                .putParam(HOST_IDS, host.getHostid())
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixTrigger.class);
@@ -125,17 +125,17 @@ public class ZabbixTriggerDatasource extends BaseZabbixDatasource<ZabbixTrigger>
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(TriggerAPIMethod.GET)
                 // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
-                .paramEntry("active", 1)
+                .putParam("active", 1)
                 // 跳过依赖于其他触发器的问题状态中的触发器。请注意，如果禁用了其他触发器，则会禁用其他触发器，禁用项目或禁用项目主机。
-                .paramEntry("skipDependent", 1)
+                .putParam("skipDependent", 1)
                 // 属于受监控主机的已启用触发器，并仅包含已启用的项目
-                .paramEntry("monitored", 1)
+                .putParam("monitored", 1)
                 // 只返回最近处于问题状态的触发器（处于告警状态的主机）
-                .paramEntry("only_true", 1)
-                .paramEntry("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
+                .putParam("only_true", 1)
+                .putParam("selectHosts", "hosts") // 在结果中返回关联的主机信息（意思就是显示出那台主机告警的）
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
-                .paramEntry("expandDescription", 1)
-                .paramEntry("triggerids", triggerId)
+                .putParam("expandDescription", 1)
+                .putParam("triggerids", triggerId)
                 .build();
         JsonNode data = zabbixHandler.call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixTrigger.class);

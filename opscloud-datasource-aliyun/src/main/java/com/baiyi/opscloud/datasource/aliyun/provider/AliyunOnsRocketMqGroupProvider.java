@@ -57,8 +57,8 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsGroupListResponse.SubscribeInfoDo entry) {
-        return OnsRocketMqConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsGroupListResponse.SubscribeInfoDo entity) {
+        return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -71,19 +71,19 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<OnsGroupListResponse.SubscribeInfoDo> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<OnsGroupListResponse.SubscribeInfoDo> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<OnsGroupListResponse.SubscribeInfoDo> entries = Lists.newArrayList();
+        List<OnsGroupListResponse.SubscribeInfoDo> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             List<OnsInstanceInServiceListResponse.InstanceVO> instances = aliyunOnsRocketMqInstanceDatasource.listInstance(regionId, aliyun);
             if (!CollectionUtils.isEmpty(instances)) {
                 instances.forEach(instance ->
-                        entries.addAll(aliyunOnsRocketMqGroupDatasource.listGroup(regionId, aliyun, instance.getInstanceId())));
+                        entities.addAll(aliyunOnsRocketMqGroupDatasource.listGroup(regionId, aliyun, instance.getInstanceId())));
             }
         });
-        return entries;
+        return entities;
     }
 
     @Override
@@ -102,7 +102,7 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<OnsGroupListResponse.SubscribeInfoDo> listEntries(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
+    protected List<OnsGroupListResponse.SubscribeInfoDo> listEntities(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         return aliyunOnsRocketMqGroupDatasource.listGroup(aliyun.getRegionId(), aliyun, target.getInstanceId());
     }

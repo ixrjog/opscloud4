@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
 import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
 
@@ -44,12 +44,12 @@ public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationPro
     }
 
     @Override
-    protected List<ZabbixHost> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ZabbixHost> listEntities(DsInstanceContext dsInstanceContext) {
         return zabbixHostHandler.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
-    protected ZabbixHost getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+    protected ZabbixHost getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
         return zabbixHostHandler.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
@@ -80,8 +80,8 @@ public abstract class BaseZabbixHostProvider<T> extends AbstractAssetRelationPro
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHost entry) {
-        return ZabbixHostAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixHost entity) {
+        return ZabbixHostAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

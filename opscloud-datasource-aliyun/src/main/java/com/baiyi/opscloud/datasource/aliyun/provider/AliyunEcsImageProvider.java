@@ -51,8 +51,8 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entry) {
-        return EcsImageAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {
+        return EcsImageAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     }
 
     @Override
-    protected List<DescribeImagesResponse.Image> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<DescribeImagesResponse.Image> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();

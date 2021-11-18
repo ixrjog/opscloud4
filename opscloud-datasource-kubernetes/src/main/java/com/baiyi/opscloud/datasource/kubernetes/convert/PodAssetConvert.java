@@ -26,30 +26,30 @@ public class PodAssetConvert {
         return TimeUtil.toGmtDate(time, TimeZoneEnum.UTC);
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Pod entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getMetadata().getUid()) // 资产id
-                .name(entry.getMetadata().getName())
-                .assetKey(entry.getStatus().getPodIP())    // podIp
-                .assetKey2(entry.getMetadata().getNamespace()) // namespace
-                .kind(entry.getKind())
+                .assetId(entity.getMetadata().getUid()) // 资产id
+                .name(entity.getMetadata().getName())
+                .assetKey(entity.getStatus().getPodIP())    // podIp
+                .assetKey2(entity.getMetadata().getNamespace()) // namespace
+                .kind(entity.getKind())
                 .assetType(DsAssetTypeEnum.KUBERNETES_POD.name())
-                .createdTime(toGmtDate(entry.getMetadata().getCreationTimestamp()))
+                .createdTime(toGmtDate(entity.getMetadata().getCreationTimestamp()))
                 .build();
 
-        Date startTime = toGmtDate(entry.getStatus().getStartTime());
+        Date startTime = toGmtDate(entity.getStatus().getStartTime());
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramChildren(toChildren(entry))
-                .paramProperty("phase", entry.getStatus().getPhase())
+                .paramChildren(toChildren(entity))
+                .paramProperty("phase", entity.getStatus().getPhase())
                 .paramProperty("startTime", com.baiyi.opscloud.common.util.TimeUtil.dateToStr(startTime))
-                .paramProperty("nodeName", entry.getSpec().getNodeName())
-                .paramProperty("restartCount",entry.getStatus().getContainerStatuses().get(0).getRestartCount())
-                .paramProperty("hostIp", entry.getStatus().getHostIP())
-                .paramProperty("image", entry.getStatus().getContainerStatuses().get(0).getImage())
-                .paramProperty("imageId", entry.getStatus().getContainerStatuses().get(0).getImageID())
-                .paramProperty("containerId",entry.getStatus().getContainerStatuses().get(0).getContainerID())
+                .paramProperty("nodeName", entity.getSpec().getNodeName())
+                .paramProperty("restartCount",entity.getStatus().getContainerStatuses().get(0).getRestartCount())
+                .paramProperty("hostIp", entity.getStatus().getHostIP())
+                .paramProperty("image", entity.getStatus().getContainerStatuses().get(0).getImage())
+                .paramProperty("imageId", entity.getStatus().getContainerStatuses().get(0).getImageID())
+                .paramProperty("containerId",entity.getStatus().getContainerStatuses().get(0).getContainerID())
                 .build();
     }
 

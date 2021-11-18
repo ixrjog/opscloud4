@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
+import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
 
 /**
  * @Author baiyi
@@ -14,22 +14,22 @@ import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
  */
 public class ExmailAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ExmailUser entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ExmailUser entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUserId())
-                .name(entry.getName())
-                .assetKey(entry.getUserId())
-                .assetKey2(entry.getUserId().split("@")[0])  // 用户名
-                .description(entry.getPosition())
-                .isActive("1".equals(entry.getEnable()))
+                .assetId(entity.getUserId())
+                .name(entity.getName())
+                .assetKey(entity.getUserId())
+                .assetKey2(entity.getUserId().split("@")[0])  // 用户名
+                .description(entity.getPosition())
+                .isActive("1".equals(entity.getEnable()))
                 .assetType(DsAssetTypeEnum.TENCENT_EXMAIL_USER.name())
                 .kind("user")
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("mobile", entry.getMobile())
+                .paramProperty("mobile", entity.getMobile())
                 .build();
     }
 }

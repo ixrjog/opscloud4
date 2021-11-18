@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.repo.impl;
 
 import com.baiyi.opscloud.common.datasource.LdapConfig;
-import com.baiyi.opscloud.datasource.ldap.entry.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
 import com.baiyi.opscloud.datasource.ldap.datasource.LdapDatasource;
 import com.baiyi.opscloud.datasource.ldap.repo.PersonRepo;
 import com.google.common.collect.Lists;

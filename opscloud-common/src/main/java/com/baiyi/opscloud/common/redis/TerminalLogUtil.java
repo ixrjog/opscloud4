@@ -10,7 +10,7 @@ import com.google.common.base.Joiner;
 public class TerminalLogUtil {
 
     public static String toAuditLogKey(String sessionId, String instanceId) {
-        return Joiner.on("#").join(sessionId, instanceId, "auditLog");
+        return Joiner.on("_").join(sessionId, instanceId, "auditLog");
     }
 
 }

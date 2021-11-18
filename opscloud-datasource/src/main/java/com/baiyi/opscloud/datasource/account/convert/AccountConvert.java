@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.account.convert;
 
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.datasource.ldap.entry.Person;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
 import org.springframework.util.StringUtils;
 
 /**

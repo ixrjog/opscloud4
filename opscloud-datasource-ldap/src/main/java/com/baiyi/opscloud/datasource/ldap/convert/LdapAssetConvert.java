@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ldap.convert;
 
-import com.baiyi.opscloud.datasource.ldap.entry.Group;
-import com.baiyi.opscloud.datasource.ldap.entry.Person;
+import com.baiyi.opscloud.datasource.ldap.entity.Group;
+import com.baiyi.opscloud.datasource.ldap.entity.Person;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
@@ -15,28 +15,28 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
  */
 public class LdapAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Person entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Person entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getUsername()) // 资产id = username
-                .name(entry.getDisplayName())
-                .assetKey(entry.getUsername())
-                .assetKey2(entry.getEmail())
+                .assetId(entity.getUsername()) // 资产id = username
+                .name(entity.getDisplayName())
+                .assetKey(entity.getUsername())
+                .assetKey2(entity.getEmail())
                 .assetType(DsAssetTypeEnum.USER.name())
                 .kind("user")
                 .build();
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("mobile", entry.getMobile())
+                .paramProperty("mobile", entity.getMobile())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Group entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getGroupName()) // 资产id = 组名
-                .name(entry.getGroupName())
-                .assetKey(entry.getGroupName())
+                .assetId(entity.getGroupName()) // 资产id = 组名
+                .name(entity.getGroupName())
+                .assetKey(entity.getGroupName())
                 .assetType(DsAssetTypeEnum.GROUP.name())
                 .kind("userGroup")
                 .build();

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
  */
 public class SonarQubeRequestBuilder {
 
-    private SonarQubeParamMap request = new SonarQubeParamMap();
+    private final SonarQubeParamMap request = new SonarQubeParamMap();
 
     private SonarQubeRequestBuilder() {
     }
@@ -27,17 +27,17 @@ public class SonarQubeRequestBuilder {
         return request;
     }
 
-    public SonarQubeRequestBuilder paramEntry(QualifierEnum[] qualifiers) {
+    public SonarQubeRequestBuilder putParam(QualifierEnum[] qualifiers) {
         request.putParam("qualifiers", Joiner.on(",").join(Arrays.stream(qualifiers).map(Enum::name).collect(Collectors.toList())));
         return this;
     }
 
-    public SonarQubeRequestBuilder paramEntry(PagingParam pagingParam) {
+    public SonarQubeRequestBuilder putParam(PagingParam pagingParam) {
         request.putParam(pagingParam.toParamMap());
         return this;
     }
 
-    public SonarQubeRequestBuilder paramEntry(String key, String value) {
+    public SonarQubeRequestBuilder putParam(String key, String value) {
         if (!StringUtils.isBlank(value)) {
             request.putParam(key, value);
         }

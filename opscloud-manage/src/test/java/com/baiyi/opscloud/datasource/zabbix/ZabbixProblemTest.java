@@ -2,8 +2,8 @@ package com.baiyi.opscloud.datasource.zabbix;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.entry.ZabbixProblem;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixProblem;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixProblemDatasource;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import com.baiyi.opscloud.zabbix.param.base.SeverityType;

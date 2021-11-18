@@ -2,9 +2,9 @@ package com.baiyi.opscloud.zabbix.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entry.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
+import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequest;
 import com.baiyi.opscloud.zabbix.http.SimpleZabbixRequestBuilder;
@@ -47,7 +47,7 @@ public class ZabbixUserGroupDatasource extends BaseZabbixDatasource<ZabbixUserGr
     public List<ZabbixUserGroup> listByUser(ZabbixConfig.Zabbix zabbix, ZabbixUser user) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserGroupAPIMethod.GET)
-                .paramEntry("userids", user.getUserid())
+                .putParam("userids", user.getUserid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixUserGroup.class);
@@ -57,7 +57,7 @@ public class ZabbixUserGroupDatasource extends BaseZabbixDatasource<ZabbixUserGr
     public ZabbixUserGroup getById(ZabbixConfig.Zabbix zabbix, String usrgrpid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserGroupAPIMethod.GET)
-                .paramEntry("usrgrpids", usrgrpid)
+                .putParam("usrgrpids", usrgrpid)
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixUserGroup.class);
@@ -70,7 +70,7 @@ public class ZabbixUserGroupDatasource extends BaseZabbixDatasource<ZabbixUserGr
                 .build();
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserGroupAPIMethod.GET)
-                .paramEntry("status", 0)
+                .putParam("status", 0)
                 .filter(filter)
                 .build();
         JsonNode data = call(zabbix, request);
@@ -90,8 +90,8 @@ public class ZabbixUserGroupDatasource extends BaseZabbixDatasource<ZabbixUserGr
         rights.put("id", zabbixHostGroup.getGroupid());
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(UserGroupAPIMethod.CREATE)
-                .paramEntry("name", usergroup)
-                .paramEntry("rights", rights)
+                .putParam("name", usergroup)
+                .putParam("rights", rights)
                 .build();
         JsonNode data = call(zabbix, request);
         String usrgrpid = ZabbixMapper.mapperList(data.get(RESULT).get("usrgrpids"), String.class).get(0);

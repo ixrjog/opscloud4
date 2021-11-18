@@ -14,8 +14,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixTriggerAssetConvert;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import org.springframework.stereotype.Component;
 
@@ -49,18 +49,18 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     }
 
     @Override
-    protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext, ZabbixHost target) {
+    protected List<ZabbixTrigger> listEntities(DsInstanceContext dsInstanceContext, ZabbixHost target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
         return zabbixTriggerDatasource.listByHost(zabbix, target);
     }
 
     @Override
-    protected List<ZabbixTrigger> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ZabbixTrigger> listEntities(DsInstanceContext dsInstanceContext) {
         return zabbixTriggerDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
-    protected ZabbixTrigger getEntry(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+    protected ZabbixTrigger getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
         return zabbixTriggerDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
@@ -94,8 +94,8 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger entry) {
-        return ZabbixTriggerAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger entity) {
+        return ZabbixTriggerAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

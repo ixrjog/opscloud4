@@ -3,10 +3,10 @@ package com.baiyi.opscloud.zabbix.datasource;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entry.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTemplate;
-import com.baiyi.opscloud.zabbix.entry.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTemplate;
+import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.datasource.base.BaseZabbixDatasource;
 import com.baiyi.opscloud.zabbix.http.*;
 import com.baiyi.opscloud.zabbix.param.ZabbixHostParam;
@@ -41,7 +41,7 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
     public List<ZabbixHost> list(ZabbixConfig.Zabbix zabbix) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
-                .paramEntry("selectInterfaces", "extend")
+                .putParam("selectInterfaces", "extend")
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -50,8 +50,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
     public List<ZabbixHost> getByGroup(ZabbixConfig.Zabbix zabbix, ZabbixHostGroup group) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
-                .paramEntry("selectInterfaces", "extend")
-                .paramEntry("groupids", group.getGroupid())
+                .putParam("selectInterfaces", "extend")
+                .putParam("groupids", group.getGroupid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -60,8 +60,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
     public List<ZabbixHost> listByTemplate(ZabbixConfig.Zabbix zabbix, ZabbixTemplate template) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
-                .paramEntry("selectInterfaces", "extend")
-                .paramEntry("templateids", template.getTemplateid())
+                .putParam("selectInterfaces", "extend")
+                .putParam("templateids", template.getTemplateid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -70,8 +70,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
     public List<ZabbixHost> listByTrigger(ZabbixConfig.Zabbix zabbix, ZabbixTrigger trigger) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
-                .paramEntry("selectInterfaces", "extend")
-                .paramEntry("triggerids", trigger.getTriggerid())
+                .putParam("selectInterfaces", "extend")
+                .putParam("triggerids", trigger.getTriggerid())
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperList(data.get(RESULT), ZabbixHost.class);
@@ -86,8 +86,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
     public ZabbixHost getById(ZabbixConfig.Zabbix zabbix, String hostid) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.GET)
-                .paramEntry("selectInterfaces", "extend")
-                .paramEntry("hostids", hostid)
+                .putParam("selectInterfaces", "extend")
+                .putParam("hostids", hostid)
                 .build();
         JsonNode data = call(zabbix, request);
         return mapperListGetOne(data.get(RESULT), ZabbixHost.class);
@@ -114,8 +114,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
     public void updateHostName(ZabbixConfig.Zabbix zabbix, ZabbixHost zabbixHost, String hostName) {
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.UPDATE)
-                .paramEntry("hostid", zabbixHost.getHostid())
-                .paramEntry("host", hostName)
+                .putParam("hostid", zabbixHost.getHostid())
+                .putParam("host", hostName)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("hostids").isEmpty()) {
@@ -130,8 +130,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
         List<ZabbixHostParam.Template> templatesParams = toTemplateParams(zabbixTemplates);
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.UPDATE)
-                .paramEntry("hostid", zabbixHost.getHostid())
-                .paramEntrySkipEmpty("templates", templatesParams)
+                .putParam("hostid", zabbixHost.getHostid())
+                .putParamSkipEmpty("templates", templatesParams)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("hostids").isEmpty()) {
@@ -151,8 +151,8 @@ public class ZabbixHostDatasource extends BaseZabbixDatasource<ZabbixHost> {
         List<ZabbixHostParam.Template> templatesParams = toTemplateParams(zabbixTemplates);
         SimpleZabbixRequest request = SimpleZabbixRequestBuilder.builder()
                 .method(HostAPIMethod.UPDATE)
-                .paramEntry("hostid", zabbixHost.getHostid())
-                .paramEntrySkipEmpty("templates_clear", templatesParams)
+                .putParam("hostid", zabbixHost.getHostid())
+                .putParamSkipEmpty("templates_clear", templatesParams)
                 .build();
         JsonNode data = call(zabbix, request);
         if (data.get(RESULT).get("hostids").isEmpty()) {

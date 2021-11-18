@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.tencent.exmail.convert.ExmailAssetConvert;
 import com.baiyi.opscloud.tencent.exmail.datasource.TencentExmailUserDatasource;
-import com.baiyi.opscloud.tencent.exmail.entry.ExmailUser;
+import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
@@ -55,7 +55,7 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     }
 
     @Override
-    protected List<ExmailUser> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<ExmailUser> listEntities(DsInstanceContext dsInstanceContext) {
         TencentExmailConfig.Tencent tencent = buildConfig(dsInstanceContext.getDsConfig());
         return tencentExmailUserDatasource.list(tencent, ALL_DEPARTMENT);
     }
@@ -76,8 +76,8 @@ public class TencentExmailUserProvider extends BaseAssetProvider<ExmailUser> {
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ExmailUser entry) {
-        return ExmailAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ExmailUser entity) {
+        return ExmailAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

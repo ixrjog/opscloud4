@@ -2,10 +2,10 @@ package com.baiyi.opscloud.datasource.nacos.datasource;
 
 import com.baiyi.opscloud.common.datasource.NacosConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosPermission;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosRole;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosUser;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosLogin;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosPermission;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosRole;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosUser;
 import com.baiyi.opscloud.datasource.nacos.feign.NacosAuthV1Feign;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import feign.Feign;

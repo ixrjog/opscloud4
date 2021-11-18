@@ -15,51 +15,48 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
  */
 public class RdsMysqlAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeDBInstancesResponse.DBInstance entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeDBInstancesResponse.DBInstance entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getDBInstanceId()) // 资产id = 实例id
-                .name(entry.getDBInstanceDescription())
-                .assetKey(entry.getDBInstanceId())
+                .assetId(entity.getDBInstanceId()) // 资产id = 实例id
+                .name(entity.getDBInstanceDescription())
+                .assetKey(entity.getDBInstanceId())
                 //.assetKey2()
                 .assetType(DsAssetTypeEnum.RDS_MYSQL_INSTANCE.name())
-                .kind(entry.getDBInstanceClass()) // 类 rds.mysql.s3.large
-                .regionId(entry.getRegionId())
-                .zone(entry.getZoneId())
-                .createdTime(ComputeAssetConvert.toGmtDate(entry.getCreateTime()))
-                .expiredTime(ComputeAssetConvert.toGmtDate(entry.getExpireTime()))
+                .kind(entity.getDBInstanceClass()) // 类 rds.mysql.s3.large
+                .regionId(entity.getRegionId())
+                .zone(entity.getZoneId())
+                .createdTime(ComputeAssetConvert.toGmtDate(entity.getCreateTime()))
+                .expiredTime(ComputeAssetConvert.toGmtDate(entity.getExpireTime()))
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("engine", entry.getEngine()) // e.g: MySQL
-                .paramProperty("engineVersion", entry.getEngineVersion()) // e.g: 5.7 ; 8.0
-                .paramProperty("payType", entry.getPayType())
-                .paramProperty("status", entry.getDBInstanceStatus()) // e.g: Running
-                .paramProperty("networkType", entry.getInstanceNetworkType())
-                .paramProperty("instanceType", entry.getDBInstanceType())
-                .paramProperty("connectionMode", entry.getConnectionMode())
+                .paramProperty("engine", entity.getEngine()) // e.g: MySQL
+                .paramProperty("engineVersion", entity.getEngineVersion()) // e.g: 5.7 ; 8.0
+                .paramProperty("payType", entity.getPayType())
+                .paramProperty("status", entity.getDBInstanceStatus()) // e.g: Running
+                .paramProperty("networkType", entity.getInstanceNetworkType())
+                .paramProperty("instanceType", entity.getDBInstanceType())
+                .paramProperty("connectionMode", entity.getConnectionMode())
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeDatabasesResponse.Database entry) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeDatabasesResponse.Database entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entry.getDBInstanceId()) // 资产id = 实例id
-                .name(entry.getDBName())
-                .assetKey(entry.getDBName())
-                //.assetKey2()
+                .assetId(entity.getDBInstanceId()) // 资产id = 实例id
+                .name(entity.getDBName())
+                .assetKey(entity.getDBName())
                 .assetType(DsAssetTypeEnum.RDS_MYSQL_DATABASE.name())
-                .kind(entry.getEngine())
-                //.regionId()
-                //.zone(entry.getZoneId())
+                .kind(entity.getEngine())
                 .build();
 
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
-                .paramProperty("engine", entry.getEngine()) // e.g: MySQL
-                .paramProperty("characterSetName", entry.getCharacterSetName()) // e.g: utf8mb4
-                .paramProperty("status", entry.getDBStatus())  // e.g: Running
+                .paramProperty("engine", entity.getEngine()) // e.g: MySQL
+                .paramProperty("characterSetName", entity.getCharacterSetName()) // e.g: utf8mb4
+                .paramProperty("status", entity.getDBStatus())  // e.g: Running
                 .build();
     }
 

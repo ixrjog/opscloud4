@@ -48,7 +48,7 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
     }
 
     @Override
-    protected List<Namespace> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<Namespace> listEntities(DsInstanceContext dsInstanceContext) {
         return KubernetesNamespaceDatasource.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
@@ -70,8 +70,8 @@ public class KubernetesNamespaceProvider extends BaseAssetProvider<Namespace> {
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Namespace entry) {
-        return NamespaceAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Namespace entity) {
+        return NamespaceAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.nacos;
 
 import com.baiyi.opscloud.datasource.nacos.base.BaseNacosTest;
-import com.baiyi.opscloud.datasource.nacos.entry.*;
+import com.baiyi.opscloud.datasource.nacos.entity.*;
 import com.baiyi.opscloud.datasource.nacos.datasource.NacosAuthDatasource;
 import com.baiyi.opscloud.datasource.nacos.datasource.NacosClusterDatasource;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;

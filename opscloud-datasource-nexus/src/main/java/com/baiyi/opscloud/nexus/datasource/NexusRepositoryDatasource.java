@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.nexus.datasource;
 
 import com.baiyi.opscloud.common.datasource.NexusConfig;
-import com.baiyi.opscloud.nexus.entry.NexusRepository;
+import com.baiyi.opscloud.nexus.entity.NexusRepository;
 import com.baiyi.opscloud.nexus.feign.NexusRepositoriesV1Feign;
 import feign.Feign;
 import feign.Retryer;

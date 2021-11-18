@@ -9,7 +9,7 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.nacos.convert.NacosRoleConvert;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosRole;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosRole;
 import com.baiyi.opscloud.datasource.nacos.datasource.NacosAuthDatasource;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -52,20 +52,20 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
     }
 
     @Override
-    protected List<NacosRole.Role> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<NacosRole.Role> listEntities(DsInstanceContext dsInstanceContext) {
         try {
             NacosPageParam.PageQuery pageQuery = NacosPageParam.PageQuery.builder()
                     .pageSize(100)
                     .build();
-            List<NacosRole.Role> entries = Lists.newArrayList();
+            List<NacosRole.Role> entities = Lists.newArrayList();
             while (true) {
                 NacosRole.RolesResponse rolesResponse = nacosAuthDatasource.listRoles(buildConfig(dsInstanceContext.getDsConfig()), pageQuery);
-                entries.addAll(rolesResponse.getPageItems());
+                entities.addAll(rolesResponse.getPageItems());
                 if (rolesResponse.getPagesAvailable() >= rolesResponse.getPageNumber())
                     break;
                 pageQuery.setPageNo(pageQuery.getPageNo() + 1);
             }
-            return entries;
+            return entities;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -90,8 +90,8 @@ public class NacosUserProvider extends BaseAssetProvider<NacosRole.Role> {
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosRole.Role entry) {
-        return NacosRoleConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NacosRole.Role entity) {
+        return NacosRoleConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override

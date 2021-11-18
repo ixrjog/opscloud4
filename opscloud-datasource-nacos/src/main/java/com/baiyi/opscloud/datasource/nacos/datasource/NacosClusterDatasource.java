@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.datasource.nacos.datasource;
 
 import com.baiyi.opscloud.common.datasource.NacosConfig;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosCluster;
-import com.baiyi.opscloud.datasource.nacos.entry.NacosLogin;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosCluster;
+import com.baiyi.opscloud.datasource.nacos.entity.NacosLogin;
 import com.baiyi.opscloud.datasource.nacos.feign.NacosClusterV1Feign;
 import com.baiyi.opscloud.datasource.nacos.param.NacosClusterParam;
 import feign.Feign;

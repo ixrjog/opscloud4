@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.nexus.convert.NexusAssetConvert;
-import com.baiyi.opscloud.nexus.entry.NexusAsset;
+import com.baiyi.opscloud.nexus.entity.NexusAsset;
 import com.baiyi.opscloud.nexus.datasource.NexusAssetDatasource;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -57,22 +57,21 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     }
 
     @Override
-    protected List<NexusAsset.Item> listEntries(DsInstanceContext dsInstanceContext) {
+    protected List<NexusAsset.Item> listEntities(DsInstanceContext dsInstanceContext) {
         NexusConfig.Nexus nexus = buildConfig(dsInstanceContext.getDsConfig());
-        List<NexusAsset.Item> entries = Lists.newArrayList();
+        List<NexusAsset.Item> entities = Lists.newArrayList();
         nexus.getRepositories().forEach(r -> {
             String continuationToken = "";
             while (true) {
                 NexusAsset.Assets assets = nexusAssetDatasource.list(nexus, r.getName(), continuationToken);
                 if (assets == null || CollectionUtils.isEmpty(assets.getItems()))
                     return;
-                System.out.println(JSON.toJSONString(assets ));
-                entries.addAll(filter(nexus, assets.getItems()));
-                System.out.println(JSON.toJSONString("Size: " +entries.size()));
+                entities.addAll(filter(nexus, assets.getItems()));
+                System.out.println(JSON.toJSONString("Size: " +entities.size()));
                 continuationToken = assets.getContinuationToken();
             }
         });
-        return entries;
+        return entities;
     }
 
     private List<NexusAsset.Item> filter(NexusConfig.Nexus nexus, List<NexusAsset.Item> items) {
@@ -102,8 +101,8 @@ public class NexusAssetProvider extends BaseAssetProvider<NexusAsset.Item> {
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NexusAsset.Item entry) {
-        return NexusAssetConvert.toAssetContainer(dsInstance, entry);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, NexusAsset.Item entity) {
+        return NexusAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
