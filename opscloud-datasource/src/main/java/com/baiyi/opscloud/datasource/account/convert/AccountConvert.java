@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.datasource.account.convert;
 
-import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.datasource.ldap.entity.Person;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import org.springframework.util.StringUtils;
 
 /**
@@ -22,8 +21,8 @@ public class AccountConvert {
                 .build();
     }
 
-    public static ZabbixUser toZabbixUser(User user){
-        return  ZabbixUser.builder()
+    public static com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User toZabbixUser(User user){
+        return  com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser.User.builder()
                 .alias(user.getUsername())
                 .name(StringUtils.isEmpty(user.getDisplayName())? user.getUsername(): user.getDisplayName())
                 .build();

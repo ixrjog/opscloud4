@@ -4,8 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.JSONMapper;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
-import com.baiyi.opscloud.zabbix.mapper.ZabbixMapper;
+import com.baiyi.opscloud.zabbix.v5.request.IZabbixRequest;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import lombok.Getter;
@@ -40,8 +39,7 @@ public class DefaultZabbixClient implements IZabbixClient {
     private final URI uri;
     @Getter
     private String auth;
-    @Getter
-    private ZabbixUser loginUser;
+
 
     private final static RequestConfig requestConfig = RequestConfig.custom()
             .setConnectTimeout(5 * 1000)
@@ -51,7 +49,8 @@ public class DefaultZabbixClient implements IZabbixClient {
 
     public DefaultZabbixClient(ZabbixConfig.Zabbix zabbix) {
         try {
-            this.uri = new URI(zabbix.getUrl().trim());
+            String url = zabbix.getUrl() + "/api_jsonrpc.php";
+            this.uri = new URI(url.trim());
             this.httpClient = buildHttpClient();
             login(zabbix);
         } catch (URISyntaxException e) {
@@ -114,13 +113,10 @@ public class DefaultZabbixClient implements IZabbixClient {
                 .build();
         JsonNode data = call(request);
         JsonNode userData = data.get(RESULT);
-        ZabbixUser user = ZabbixMapper.mapper(userData, ZabbixUser.class);
-        assert user != null;
-        this.auth = user.getSessionid();
-        this.loginUser = user;
+
     }
 
-    private CloseableHttpClient buildHttpClient(){
+    private CloseableHttpClient buildHttpClient() {
         PoolingHttpClientConnectionManager connManager = new PoolingHttpClientConnectionManager();
         return HttpClients.custom()
                 .setConnectionManager(connManager)

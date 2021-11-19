@@ -1,7 +1,8 @@
 package com.baiyi.opscloud.zabbix.v5.feign;
 
+import com.baiyi.opscloud.zabbix.v5.feign.constant.ZabbixConstant;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
-import com.baiyi.opscloud.zabbix.v5.response.LoginResponse;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixLogin;
 import feign.Headers;
 import feign.RequestLine;
 
@@ -10,10 +11,10 @@ import feign.RequestLine;
  * @Date 2021/11/17 10:46 上午
  * @Version 1.0
  */
-public interface ZabbixLoginFeign {
+public interface ZabbixLoginFeign extends ZabbixConstant {
 
-    @RequestLine("POST api_jsonrpc.php")
-    @Headers({"Content-Type: application/json-rpc"})
-    LoginResponse.LoginAuth userLogin(ZabbixRequest.DefaultRequest request);
+    @RequestLine(REQUEST_API)
+    @Headers({CONTENT_TYPE})
+    ZabbixLogin.LoginAuth userLogin(ZabbixRequest.DefaultRequest request);
 
 }

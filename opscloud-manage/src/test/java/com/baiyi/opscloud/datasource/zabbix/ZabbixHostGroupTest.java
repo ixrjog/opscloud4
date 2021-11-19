@@ -1,15 +1,11 @@
 package com.baiyi.opscloud.datasource.zabbix;
 
-import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.datasource.ZabbixHostGroupDatasource;
 import org.junit.jupiter.api.Test;
 
 import javax.annotation.Resource;
@@ -27,23 +23,23 @@ public class ZabbixHostGroupTest extends BaseUnit {
     @Resource
     private DsConfigHelper dsFactory;
 
-    @Resource
-    private ZabbixHostGroupDatasource zabbixHostGroupHandler;
+//    @Resource
+//    private ZabbixHostGroupDatasource zabbixHostGroupHandler;
 
     @Resource
     private ZabbixFacade zabbixFacade;
 
-    @Test
-    void t1() {
-        ZabbixHostGroup group = zabbixHostGroupHandler.getByName(getConfig().getZabbix(), "group_trade");
-        System.err.println(JSON.toJSONString(group));
-    }
-
-    @Test
-    void t2() {
-        ZabbixUserGroup zabbixUserGroup = zabbixFacade.getOrCreateUserGroup(getConfig().getZabbix(), "users_test1111");
-        System.err.println(JSON.toJSONString(zabbixUserGroup));
-    }
+//    @Test
+//    void t1() {
+//        ZabbixHostGroup group = zabbixHostGroupHandler.getByName(getConfig().getZabbix(), "group_trade");
+//        System.err.println(JSON.toJSONString(group));
+//    }
+//
+//    @Test
+//    void t2() {
+//        ZabbixUserGroup zabbixUserGroup = zabbixFacade.getOrCreateUserGroup(getConfig().getZabbix(), "users_test1111");
+//        System.err.println(JSON.toJSONString(zabbixUserGroup));
+//    }
 
     @Test
     ZabbixConfig getConfig() {

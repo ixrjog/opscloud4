@@ -4,9 +4,8 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.provider.base.BaseZabbixHostProvider;
+import com.baiyi.opscloud.zabbix.provider.base.AbstractZabbixHostProvider;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -19,15 +18,15 @@ import java.util.List;
  */
 
 @Component
-public class ZabbixHostProvider extends BaseZabbixHostProvider<ZabbixHostGroup> {
+public class ZabbixHostProvider extends AbstractZabbixHostProvider<ZabbixHostGroup.HostGroup> {
 
     @Resource
     private ZabbixHostProvider zabbixHostProvider;
 
     @Override
-    protected List<ZabbixHost> listEntities(DsInstanceContext dsInstanceContext, ZabbixHostGroup target) {
+    protected List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host> listEntities(DsInstanceContext dsInstanceContext, com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup.HostGroup target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixHostHandler.getByGroup(zabbix, target);
+        return zabbixV5HostDatasource.getByGroup(zabbix, target);
     }
 
     @Override

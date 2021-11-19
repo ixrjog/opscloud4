@@ -170,10 +170,11 @@
         </dependency>
 
         <!--yaml工具-->
+        <!-- https://mvnrepository.com/artifact/org.yaml/snakeyaml -->
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>
-            <version>1.26</version>
+            <version>1.29</version>
         </dependency>
 
         <dependency>
@@ -375,7 +376,7 @@
     <repositories><!-- 代码库 -->
         <repository>
             <id>maven repo</id>
-            <url>http://mvnrepository.com/artifact/</url>
+            <url>https://mvnrepository.com/artifact/</url>
         </repository>
 
         <repository>

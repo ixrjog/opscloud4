@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.zabbix.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
@@ -14,9 +14,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixTemplateAssetConvert;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entity.ZabbixTemplate;
-import com.baiyi.opscloud.zabbix.datasource.ZabbixTemplateDatasource;
+import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TemplateDatasource;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
@@ -31,10 +31,10 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
  */
 
 @Component
-public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<ZabbixTemplate, ZabbixHost> {
+public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template, ZabbixHost.Host> {
 
     @Resource
-    private ZabbixTemplateDatasource zabbixTemplateDatasource;
+    private ZabbixV5TemplateDatasource zabbixV5TemplateDatasource;
 
     @Resource
     private ZabbixTemplateProvider zabbixTemplateProvider;
@@ -49,23 +49,23 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
     }
 
     @Override
-    protected List<ZabbixTemplate> listEntities(DsInstanceContext dsInstanceContext, ZabbixHost target) {
+    protected List<ZabbixTemplate.Template> listEntities(DsInstanceContext dsInstanceContext, ZabbixHost.Host target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixTemplateDatasource.getByHost(zabbix, target);
+        return zabbixV5TemplateDatasource.getByHost(zabbix, target);
     }
 
     @Override
-    protected List<ZabbixTemplate> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixTemplateDatasource.listAll(buildConfig(dsInstanceContext.getDsConfig()));
+    protected List<ZabbixTemplate.Template> listEntities(DsInstanceContext dsInstanceContext) {
+        return zabbixV5TemplateDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
-    protected ZabbixTemplate getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixTemplateDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+    protected ZabbixTemplate.Template getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
+        return zabbixV5TemplateDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override
-    @SingleTask(name = PULL_ZABBIX_TEMPLATE , lockTime = "5m")
+    @SingleTask(name = PULL_ZABBIX_TEMPLATE, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -90,7 +90,7 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTemplate entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTemplate.Template entity) {
         return ZabbixTemplateAssetConvert.toAssetContainer(dsInstance, entity);
     }
 

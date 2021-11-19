@@ -8,9 +8,9 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.server.ServerGroupService;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
 import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import com.google.common.collect.Maps;
 import org.springframework.util.CollectionUtils;
 
@@ -52,8 +52,8 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider 
         return userPermissions.stream().map(e -> {
             ServerGroup serverGroup = serverGroupService.getById(e.getBusinessId());
             String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());
-            ZabbixUserGroup zabbixUserGroup = zabbixFacade.getOrCreateUserGroup(zabbix, usergroupName);
-            return buildUsrgrp(zabbixUserGroup.getUsrgrpid());
+            ZabbixUserGroup.UserGroup userGroup = zabbixFacade.getOrCreateUserGroup(zabbix, usergroupName);
+            return buildUsrgrp(userGroup.getUsrgrpid());
         }).collect(Collectors.toList());
     }
 

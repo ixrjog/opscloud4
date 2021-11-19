@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.zabbix.v5.request;
 
-import com.baiyi.opscloud.zabbix.http.IZabbixRequest;
 import com.google.common.collect.Maps;
 import lombok.Builder;
 import lombok.Data;

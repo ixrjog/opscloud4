@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.serverGroup.impl;
 
-import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.datasource.account.impl.ZabbixAccountProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
@@ -11,8 +11,8 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.datasource.ZabbixActionDatasource;
 import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5ActionDatasource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -32,7 +32,7 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
     private ZabbixFacade zabbixFacade;
 
     @Resource
-    private ZabbixActionDatasource zabbixActionHandler;
+    private ZabbixV5ActionDatasource zabbixV5ActionDatasource;
 
     @Resource
     private BusinessPropertyHelper businessPropertyHelper;
@@ -63,9 +63,9 @@ public class ZabbixServerGroupProvider extends AbstractServerGroupProvider {
         String usergroupName = ZabbixUtil.toUsergrpName(serverGroup.getName());
         zabbixFacade.getOrCreateUserGroup(configContext.get(), usergroupName);
         // 创建动作
-        String actionName = zabbixActionHandler.buildActionName(usergroupName);
-        if (zabbixActionHandler.getActionByName(configContext.get(), actionName) == null)
-            zabbixActionHandler.create(configContext.get(), actionName, usergroupName);
+        String actionName = zabbixV5ActionDatasource.buildActionName(usergroupName);
+        if (zabbixV5ActionDatasource.getActionByName(configContext.get(), actionName) == null)
+            zabbixV5ActionDatasource.create(configContext.get(), actionName, usergroupName);
     }
 
     @Override

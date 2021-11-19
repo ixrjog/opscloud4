@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.event.process;
 
-import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.domain.DataTable;
@@ -14,14 +14,13 @@ import com.baiyi.opscloud.event.convert.EventConvert;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.process.base.AbstractEventProcess;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHost;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHostInterface;
-import com.baiyi.opscloud.zabbix.entity.ZabbixProblem;
-import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
-import com.baiyi.opscloud.zabbix.datasource.ZabbixHostDatasource;
-import com.baiyi.opscloud.zabbix.datasource.ZabbixProblemDatasource;
-import com.baiyi.opscloud.zabbix.datasource.ZabbixTriggerDatasource;
 import com.baiyi.opscloud.zabbix.param.base.SeverityType;
+import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
+import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5ProblemDatasource;
+import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TriggerDatasource;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProblem;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import com.google.common.collect.Lists;
 import com.google.gson.GsonBuilder;
 import lombok.extern.slf4j.Slf4j;
@@ -39,16 +38,16 @@ import java.util.Optional;
  */
 @Slf4j
 @Component
-public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem> {
+public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Problem> {
 
     @Resource
-    private ZabbixTriggerDatasource zabbixTriggerHandler;
+    private ZabbixV5TriggerDatasource zabbixV5TriggerDatasource;
 
     @Resource
-    private ZabbixProblemDatasource zabbixProblemHandler;
+    private ZabbixV5ProblemDatasource zabbixV5ProblemDatasource;
 
     @Resource
-    private ZabbixHostDatasource zabbixHostHandler;
+    private ZabbixV5HostDatasource zabbixV5HostDatasource;
 
     private static final List<SeverityType> severityTypes = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
 
@@ -68,38 +67,38 @@ public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem> {
     }
 
     @Override
-    protected Event toEvent(DatasourceInstance dsInstance, ZabbixProblem zabbixProblem) {
-        ZabbixTrigger zabbixTrigger = zabbixTriggerHandler.getById(getConfig(dsInstance.getUuid()).getZabbix(), zabbixProblem.getObjectid());
-        return EventConvert.toEvent(dsInstance, zabbixProblem, zabbixTrigger);
+    protected Event toEvent(DatasourceInstance dsInstance, ZabbixProblem.Problem zabbixProblem) {
+        ZabbixTrigger.Trigger trigger = zabbixV5TriggerDatasource.getById(getConfig(dsInstance.getUuid()).getZabbix(), zabbixProblem.getObjectid());
+        return EventConvert.toEvent(dsInstance, zabbixProblem, trigger);
     }
 
     @Override
-    protected List<ZabbixProblem> listeningEvents(DatasourceInstance dsInstance) {
-        return zabbixProblemHandler.list(getConfig(dsInstance.getUuid()).getZabbix(), severityTypes);
+    protected List<ZabbixProblem.Problem> listeningEvents(DatasourceInstance dsInstance) {
+        return zabbixV5ProblemDatasource.list(getConfig(dsInstance.getUuid()).getZabbix(), severityTypes);
     }
 
     @Override
-    protected ZabbixProblem getByEventId(String instanceUuid, String eventId) {
-        return zabbixProblemHandler.getByEventId(getConfig(instanceUuid).getZabbix(), eventId);
+    protected ZabbixProblem.Problem getByEventId(String instanceUuid, String eventId) {
+        return zabbixV5ProblemDatasource.getByEventId(getConfig(instanceUuid).getZabbix(), eventId);
     }
 
     @Override
     protected void recordEventBusiness(DatasourceInstance dsInstance, Event event) {
-        ZabbixProblem problem = new GsonBuilder().create().fromJson(event.getEventMessage(), ZabbixProblem.class);
+        ZabbixProblem.Problem problem = new GsonBuilder().create().fromJson(event.getEventMessage(), ZabbixProblem.Problem.class);
         ZabbixConfig config = getConfig(dsInstance.getUuid());
-        ZabbixTrigger trigger = zabbixTriggerHandler.getById(config.getZabbix(), problem.getObjectid());
+        ZabbixTrigger.Trigger trigger = zabbixV5TriggerDatasource.getById(config.getZabbix(), problem.getObjectid());
         if (trigger == null) {
             log.info("Zabbix Trigger 不存在: problemId = {}, triggerId = {}", problem.getEventid(), problem.getObjectid());
             return;
         }
         log.info("Zabbix Trigger 存在: problemId = {}, triggerId = {}", problem.getEventid(), problem.getObjectid());
-        List<ZabbixHost> hosts = trigger.getHosts();
+        List<ZabbixHost.Host> hosts = trigger.getHosts();
         if (!CollectionUtils.isEmpty(hosts)) {
-            for (ZabbixHost h : hosts) {
-                ZabbixHost zabbixHost = zabbixHostHandler.getById(config.getZabbix(), h.getHostid());
-                List<ZabbixHostInterface> interfaces = zabbixHost.getInterfaces();
+            for (ZabbixHost.Host h : hosts) {
+                ZabbixHost.Host zabbixHost = zabbixV5HostDatasource.getById(config.getZabbix(), h.getHostid());
+                List<ZabbixHost.HostInterface> interfaces = zabbixHost.getInterfaces();
                 // filter type = agent interface
-                Optional<ZabbixHostInterface> optional = interfaces.stream().filter(i -> i.getType() == 1).findFirst();
+                Optional<ZabbixHost.HostInterface> optional = interfaces.stream().filter(i -> i.getType() == 1).findFirst();
                 if (optional.isPresent()) {
                     Server server = serverService.getByPrivateIp(optional.get().getIp());
                     if (server != null) {

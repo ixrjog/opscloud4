@@ -71,17 +71,17 @@ public class ZabbixRequestBuilder {
         return this;
     }
 
-    public ZabbixRequestBuilder putFilter(ZabbixFilter zabbixFilter) {
+    public ZabbixRequestBuilder filter(ZabbixFilter zabbixFilter) {
         request.putParam("filter", zabbixFilter.getFilter());
         return this;
     }
 
-    public ZabbixRequestBuilder setAuth(String auth) {
+    public ZabbixRequestBuilder auth(String auth) {
         request.setAuth(auth);
         return this;
     }
 
-    public ZabbixRequestBuilder setMethod(String method) {
+    public ZabbixRequestBuilder method(String method) {
         request.setMethod(method);
         return this;
     }

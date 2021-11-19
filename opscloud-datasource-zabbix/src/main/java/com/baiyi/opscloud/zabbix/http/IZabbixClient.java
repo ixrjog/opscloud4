@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.zabbix.http;
 
+import com.baiyi.opscloud.zabbix.v5.request.IZabbixRequest;
 import com.fasterxml.jackson.databind.JsonNode;
 
 /**

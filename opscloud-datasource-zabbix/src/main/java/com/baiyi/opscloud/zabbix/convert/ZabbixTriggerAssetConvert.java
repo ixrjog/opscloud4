@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 
 import java.util.Date;
 
@@ -16,7 +16,7 @@ import java.util.Date;
  */
 public class ZabbixTriggerAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTrigger.Trigger entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getTriggerid())

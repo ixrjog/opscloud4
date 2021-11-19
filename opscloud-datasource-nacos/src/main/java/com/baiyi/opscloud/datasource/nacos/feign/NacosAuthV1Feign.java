@@ -19,7 +19,7 @@ import java.util.Map;
 public interface NacosAuthV1Feign {
 
     @RequestLine("POST /nacos/v1/auth/users/login")
-    @Headers({"content-type: application/x-www-form-urlencoded"})
+    @Headers({"Content-type: application/x-www-form-urlencoded"})
     NacosLogin.AccessToken login(@QueryMap Map<String, String> loginParam);
 
     @RequestLine("GET /nacos/v1/auth/permissions?" +

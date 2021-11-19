@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
-import com.baiyi.opscloud.zabbix.entity.ZabbixProblem;
-import com.baiyi.opscloud.zabbix.entity.ZabbixTrigger;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProblem;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 
 import java.util.Date;
 
@@ -23,7 +23,7 @@ public class EventConvert {
      * @param trigger
      * @return
      */
-    public static Event toEvent(DatasourceInstance dsInstance, ZabbixProblem problem, ZabbixTrigger trigger) {
+    public static Event toEvent(DatasourceInstance dsInstance, ZabbixProblem.Problem problem, ZabbixTrigger.Trigger trigger) {
         if (trigger == null) return toEvent(dsInstance, problem);
         return Event.builder()
                 .instanceUuid(dsInstance.getUuid())
@@ -38,7 +38,7 @@ public class EventConvert {
                 .build();
     }
 
-    public static Event toEvent(DatasourceInstance dsInstance, ZabbixProblem problem) {
+    public static Event toEvent(DatasourceInstance dsInstance, ZabbixProblem.Problem problem) {
         return Event.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .eventName(problem.getName())

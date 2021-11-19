@@ -1,8 +1,8 @@
 package com.baiyi.opscloud.zabbix.facade;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entity.ZabbixHostGroup;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 
 /**
  * @Author baiyi
@@ -14,16 +14,16 @@ public interface ZabbixFacade {
     /**
      * 查询并创建用户组
      * @param zabbix
-     * @param usergroup
+     * @param usergroupName
      * @return
      */
-    ZabbixUserGroup getOrCreateUserGroup(ZabbixConfig.Zabbix zabbix, String usergroup);
+    ZabbixUserGroup.UserGroup getOrCreateUserGroup(ZabbixConfig.Zabbix zabbix, String usergroupName);
 
     /**
      * 查询并创建主机组
      * @param zabbix
-     * @param hostgroup
+     * @param hostgroupName
      * @return
      */
-    ZabbixHostGroup getOrCreateHostGroup(ZabbixConfig.Zabbix zabbix, String hostgroup);
+    ZabbixHostGroup.HostGroup getOrCreateHostGroup(ZabbixConfig.Zabbix zabbix, String hostgroupName);
 }

@@ -44,7 +44,6 @@ public class ZabbixMedia implements Serializable {
     //@JsonProperty("sendto")
     private JsonNode sendto;
 
-
     @JsonProperty
     public Object getSendto() {
         if ("1".equals(mediatypeid)) {

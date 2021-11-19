@@ -1,13 +1,12 @@
 package com.baiyi.opscloud.zabbix.convert;
 
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
-import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetRelation;
 import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.zabbix.entity.ZabbixTemplate;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -18,7 +17,7 @@ import com.baiyi.opscloud.zabbix.entity.ZabbixTemplate;
 
 public class ZabbixTemplateAssetConvert implements IAssetRelation {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixTemplate entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getTemplateid())

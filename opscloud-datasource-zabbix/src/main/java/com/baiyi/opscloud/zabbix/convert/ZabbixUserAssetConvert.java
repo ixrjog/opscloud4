@@ -6,8 +6,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUser;
-import com.baiyi.opscloud.zabbix.entity.ZabbixUserGroup;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  */
 public class ZabbixUserAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUser.User entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getUserid())
@@ -48,7 +48,7 @@ public class ZabbixUserAssetConvert {
         return builder.build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ZabbixUserGroup.UserGroup entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getUsrgrpid())
