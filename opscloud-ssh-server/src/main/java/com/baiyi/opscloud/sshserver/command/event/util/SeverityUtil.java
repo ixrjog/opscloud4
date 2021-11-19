@@ -2,7 +2,7 @@ package com.baiyi.opscloud.sshserver.command.event.util;
 
 import com.baiyi.opscloud.sshserver.PromptColor;
 import com.baiyi.opscloud.sshserver.SshShellHelper;
-import com.baiyi.opscloud.zabbix.param.base.SeverityType;
+import com.baiyi.opscloud.zabbix.v5.util.base.SeverityType;
 
 /**
  * @Author baiyi

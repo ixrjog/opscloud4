@@ -9,7 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.server.ServerGroupService;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.v5.util.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import com.google.common.collect.Maps;
 import org.springframework.util.CollectionUtils;

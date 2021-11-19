@@ -15,7 +15,7 @@ public class ServerGroupProviderFactory {
     private ServerGroupProviderFactory() {
     }
 
-    private static Map<String, IServerGroup> context = new ConcurrentHashMap<>();
+    private static final Map<String, IServerGroup> context = new ConcurrentHashMap<>();
 
     public static IServerGroup getIServerGroupByInstanceType(String instanceType) {
         return context.get(instanceType);

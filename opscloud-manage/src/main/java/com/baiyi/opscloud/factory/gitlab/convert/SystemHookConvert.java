@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.util.JSONUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
-import com.baiyi.opscloud.zabbix.param.base.SeverityType;
+import com.baiyi.opscloud.zabbix.v5.util.base.SeverityType;
 
 /**
  * @Author baiyi

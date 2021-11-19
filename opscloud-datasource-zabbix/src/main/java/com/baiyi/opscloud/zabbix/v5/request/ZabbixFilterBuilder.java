@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.http;
+package com.baiyi.opscloud.zabbix.v5.request;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>

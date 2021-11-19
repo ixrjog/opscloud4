@@ -1,13 +1,13 @@
 package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.param.base.SeverityType;
+import com.baiyi.opscloud.zabbix.v5.util.base.SeverityType;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixTriggerFeign;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import feign.Feign;
@@ -20,8 +20,6 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-
-import static com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer.ApiConstant.HOST_IDS;
 
 /**
  * @Author baiyi
@@ -129,7 +127,7 @@ public class ZabbixV5TriggerDatasource {
                 .putParam("only_true", 1)
                 // 在触发器描述中展开宏（Expand macros in the name of the trigger.）
                 .putParam("expandDescription", 1)
-                .putParam(HOST_IDS, host.getHostid())
+                .putParam("hostids", host.getHostid())
                 .build();
         ZabbixTrigger.QueryTriggerResponse response = queryHandle(config, request);
         return response.getResult();

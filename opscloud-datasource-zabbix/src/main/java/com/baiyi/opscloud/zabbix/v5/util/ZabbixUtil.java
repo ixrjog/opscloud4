@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.util;
+package com.baiyi.opscloud.zabbix.v5.util;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;

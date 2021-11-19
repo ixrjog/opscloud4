@@ -11,5 +11,4 @@ import com.baiyi.opscloud.domain.generator.opscloud.UserGroup;
  */
 public interface IAccountGroup extends IManagerProvider<UserGroup>, IInstanceType  {
 
-
 }

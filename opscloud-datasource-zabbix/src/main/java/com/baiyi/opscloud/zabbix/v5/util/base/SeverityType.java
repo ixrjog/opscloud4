@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.param.base;
+package com.baiyi.opscloud.zabbix.v5.util.base;
 
 import lombok.Getter;
 

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.http;
+package com.baiyi.opscloud.zabbix.v5.request;
 
 import com.google.common.collect.Maps;
 import lombok.Data;

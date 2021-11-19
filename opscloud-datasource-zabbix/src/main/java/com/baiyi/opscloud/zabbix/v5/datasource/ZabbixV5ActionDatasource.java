@@ -2,11 +2,11 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.param.ConditionsBuilder;
-import com.baiyi.opscloud.zabbix.param.ZabbixActionParam;
-import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
+import com.baiyi.opscloud.zabbix.v5.util.ConditionsBuilder;
+import com.baiyi.opscloud.zabbix.v5.util.ZabbixActionParam;
+import com.baiyi.opscloud.zabbix.v5.util.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5ActionDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixAction;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;

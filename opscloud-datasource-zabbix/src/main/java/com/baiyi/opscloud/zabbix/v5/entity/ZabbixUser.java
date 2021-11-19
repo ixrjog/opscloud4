@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.zabbix.v5.entity;
 
-import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.v5.entity.base.ZabbixResponse;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
@@ -87,6 +86,6 @@ public class ZabbixUser {
         /**
          * 用户使用的媒体
          */
-        private List<ZabbixMedia> medias;
+        private List<ZabbixMedia.Media> medias;
     }
 }

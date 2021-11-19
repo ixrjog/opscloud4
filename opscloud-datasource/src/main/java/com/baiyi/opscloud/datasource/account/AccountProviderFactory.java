@@ -13,7 +13,7 @@ public class AccountProviderFactory {
     private AccountProviderFactory() {
     }
 
-    private static Map<String, IAccount> context = new ConcurrentHashMap<>();
+    private static final Map<String, IAccount> context = new ConcurrentHashMap<>();
 
     public static IAccount getIAccountByInstanceType(String instanceType) {
         return context.get(instanceType);

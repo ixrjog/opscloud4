@@ -2,13 +2,13 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5UserDatasource;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import com.google.common.collect.Lists;
@@ -68,7 +68,7 @@ public class ZabbixV5UserDatasource extends AbstractZabbixV5UserDatasource {
         return response.getResult();
     }
 
-    public void create(ZabbixConfig.Zabbix config, ZabbixUser.User user, List<ZabbixMedia> medias, List<Map<String, String>> usrgrps) {
+    public void create(ZabbixConfig.Zabbix config, ZabbixUser.User user, List<ZabbixMedia.Media> medias, List<Map<String, String>> usrgrps) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("alias", user.getAlias())
                 .putParam("name", user.getName())
@@ -89,7 +89,7 @@ public class ZabbixV5UserDatasource extends AbstractZabbixV5UserDatasource {
      * @param usrgrps
      * @param mediaList
      */
-    public void update(ZabbixConfig.Zabbix config, ZabbixUser.User user, List<Map<String, String>> usrgrps, List<ZabbixMedia> mediaList) {
+    public void update(ZabbixConfig.Zabbix config, ZabbixUser.User user, List<Map<String, String>> usrgrps, List<ZabbixMedia.Media> mediaList) {
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("userid", user.getUserid())
                 .putParam("name", user.getName())

@@ -41,7 +41,7 @@ public class ExmailParam {
     @Builder
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class searchDept {
+    public static class SearchDept {
 
         private String name;
         @Builder.Default

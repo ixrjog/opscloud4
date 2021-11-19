@@ -25,7 +25,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class TencentExmailUserDatasource {
 
-    private final TencentExmailTokenDatasource tencentExmailTokenHandler;
+    private final TencentExmailTokenDatasource tencentExmailTokenDatasource;
 
     public static final long ALL_DEPARTMENT = 1L;
 
@@ -38,31 +38,31 @@ public class TencentExmailUserDatasource {
     }
 
     public void create(TencentExmailConfig.Tencent config, ExmailParam.User param) {
-        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailModel result = exmailAPI.createUser(exmailToken.getAccessToken(), param);
     }
 
     public ExmailUser get(TencentExmailConfig.Tencent config, String userId) {
-        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
         return exmailAPI.getUser(exmailToken.getAccessToken(), userId);
     }
 
     public List<ExmailUser> list(TencentExmailConfig.Tencent config, Long departmentId) {
-        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
         return exmailAPI.listUser(exmailToken.getAccessToken(), departmentId);
     }
 
     public void update(TencentExmailConfig.Tencent config, ExmailParam.User param) {
-        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailModel result = exmailAPI.updateUser(exmailToken.getAccessToken(), param);
     }
 
     public void delete(TencentExmailConfig.Tencent config, String userId) {
-        ExmailToken exmailToken = tencentExmailTokenHandler.getToken(config);
+        ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
         BaseExmailModel result = exmailAPI.deleteUser(exmailToken.getAccessToken(), userId);
     }

@@ -8,17 +8,14 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.zabbix.datasource.base.ZabbixServer;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.v5.request.IZabbixRequest;
-import com.baiyi.opscloud.zabbix.param.ZabbixHostParam;
+import com.baiyi.opscloud.zabbix.v5.util.ZabbixHostParam;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostTagDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TemplateDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
-import com.fasterxml.jackson.databind.JsonNode;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.apache.commons.lang3.StringUtils;
@@ -49,9 +46,6 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     @Resource
     private ZabbixV5TemplateDatasource zabbixV5TemplateDatasource;
 
-    @Resource
-    private ZabbixServer zabbixServer;
-
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 
     @Override
@@ -65,10 +59,6 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
 
     @Override
     protected void doRevoke(User user, BaseBusiness.IBusiness businessResource) {
-    }
-
-    protected JsonNode call(ZabbixConfig.Zabbix zabbix, IZabbixRequest request) {
-        return zabbixServer.call(zabbix, request);
     }
 
     protected void updateHost(Server server, ServerProperty.Server property, ZabbixHost.Host host) {

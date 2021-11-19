@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.account.util;
 
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -23,8 +23,8 @@ public class ZabbixMediaUtil {
      * @param user
      * @return
      */
-    public static List<ZabbixMedia> buildMedias(User user) {
-        List<ZabbixMedia> medias = Lists.newArrayList();
+    public static List<ZabbixMedia.Media> buildMedias(User user) {
+        List<ZabbixMedia.Media> medias = Lists.newArrayList();
         try {
             if (RegexUtil.isEmail(user.getEmail())) {
                 medias.add(buildMailMedia(user.getEmail()));
@@ -37,15 +37,15 @@ public class ZabbixMediaUtil {
         return medias;
     }
 
-    private static ZabbixMedia buildMailMedia(String mail) throws JsonProcessingException{
-        return ZabbixMedia.builder()
+    private static ZabbixMedia.Media buildMailMedia(String mail) throws JsonProcessingException{
+        return ZabbixMedia.Media.builder()
                 .mediatypeid(String.valueOf(ZabbixMedia.MediaType.MAIL))
                 .sendto(toJsonNode(new String[] {mail}))
                 .build();
     }
 
-    private static ZabbixMedia buildPhoneMedia(String phone) throws JsonProcessingException{
-        return ZabbixMedia.builder()
+    private static ZabbixMedia.Media buildPhoneMedia(String phone) throws JsonProcessingException{
+        return ZabbixMedia.Media.builder()
                 .mediatypeid(String.valueOf(ZabbixMedia.MediaType.PHONE))
                 .sendto(toJsonNode(phone))
                 .build();

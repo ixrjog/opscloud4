@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
-import com.baiyi.opscloud.zabbix.entity.ZabbixMedia;
+import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import org.springframework.util.CollectionUtils;
@@ -31,9 +31,9 @@ public class ZabbixUserAssetConvert {
                 .build();
         AssetContainerBuilder builder = AssetContainerBuilder.newBuilder()
                 .paramAsset(asset);
-        List<ZabbixMedia> medias = entity.getMedias();
+        List<ZabbixMedia.Media> medias = entity.getMedias();
         if (!CollectionUtils.isEmpty(medias)) {
-            for (ZabbixMedia media : medias) {
+            for (ZabbixMedia.Media media : medias) {
                 if ("1".equals(media.getMediatypeid())) {
                     //  String email = ZabbixMapper.mapperList(media.getSendto(), String.class).get(0);
                     String email = ((List<String>) media.getSendto()).get(0);

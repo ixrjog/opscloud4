@@ -2,8 +2,8 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.http.ZabbixFilterBuilder;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;

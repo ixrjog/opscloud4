@@ -11,7 +11,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.v5.util.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5ActionDatasource;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
