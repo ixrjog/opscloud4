@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.tencent.exmail.entity;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailModel;
+import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @EqualsAndHashCode(callSuper = true)
 @Data
-public class ExmailToken extends BaseExmailModel implements Serializable {
+public class ExmailToken extends BaseExmailResult implements Serializable {
 
     private static final long serialVersionUID = 7304652109423141557L;
 

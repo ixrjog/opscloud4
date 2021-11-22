@@ -3,7 +3,7 @@ package com.baiyi.opscloud.tencent.exmail.datasource;
 import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
 import com.baiyi.opscloud.tencent.exmail.entity.ExmailToken;
 import com.baiyi.opscloud.tencent.exmail.entity.ExmailUser;
-import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailModel;
+import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailResult;
 import com.baiyi.opscloud.tencent.exmail.feign.TencentExmailUserFeign;
 import com.baiyi.opscloud.tencent.exmail.param.ExmailParam;
 import feign.Feign;
@@ -40,7 +40,7 @@ public class TencentExmailUserDatasource {
     public void create(TencentExmailConfig.Tencent config, ExmailParam.User param) {
         ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
-        BaseExmailModel result = exmailAPI.createUser(exmailToken.getAccessToken(), param);
+        BaseExmailResult result = exmailAPI.createUser(exmailToken.getAccessToken(), param);
     }
 
     public ExmailUser get(TencentExmailConfig.Tencent config, String userId) {
@@ -58,12 +58,12 @@ public class TencentExmailUserDatasource {
     public void update(TencentExmailConfig.Tencent config, ExmailParam.User param) {
         ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
-        BaseExmailModel result = exmailAPI.updateUser(exmailToken.getAccessToken(), param);
+        BaseExmailResult result = exmailAPI.updateUser(exmailToken.getAccessToken(), param);
     }
 
     public void delete(TencentExmailConfig.Tencent config, String userId) {
         ExmailToken exmailToken = tencentExmailTokenDatasource.getToken(config);
         TencentExmailUserFeign exmailAPI = buildFeign(config);
-        BaseExmailModel result = exmailAPI.deleteUser(exmailToken.getAccessToken(), userId);
+        BaseExmailResult result = exmailAPI.deleteUser(exmailToken.getAccessToken(), userId);
     }
 }

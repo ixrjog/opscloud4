@@ -8,7 +8,7 @@ import lombok.Data;
  * @Version 1.0
  */
 @Data
-public class BaseExmailModel {
+public class BaseExmailResult {
 
     private String errcode;
     private String errmsg;

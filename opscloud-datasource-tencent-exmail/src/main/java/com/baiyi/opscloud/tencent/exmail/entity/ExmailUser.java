@@ -1,9 +1,10 @@
 package com.baiyi.opscloud.tencent.exmail.entity;
 
-import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailModel;
+import com.baiyi.opscloud.tencent.exmail.entity.base.BaseExmailResult;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
@@ -14,10 +15,11 @@ import java.util.List;
  * @Since 1.0
  */
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ExmailUser extends BaseExmailModel {
+public class ExmailUser extends BaseExmailResult {
 
     /**
      * 企业邮帐号名，邮箱格式
