@@ -2,13 +2,12 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixHostGroupFeign;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import feign.Feign;
 import feign.Retryer;
@@ -95,11 +94,10 @@ public class ZabbixV5HostGroupDatasource {
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_hostgroup_name_' + #name", unless = "#result == null")
     public ZabbixHostGroup.HostGroup getByName(ZabbixConfig.Zabbix config, String name) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("name", name)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("name", name)
+                        .build())
                 .build();
         ZabbixHostGroup.QueryHostGroupResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))

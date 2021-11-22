@@ -8,8 +8,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.generator.opscloud.UserPermission;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.service.server.ServerGroupService;
-import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
+import com.baiyi.opscloud.zabbix.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import com.google.common.collect.Maps;
 import org.springframework.util.CollectionUtils;
@@ -32,7 +32,7 @@ public abstract class BaseZabbixAccountProvider extends AbstractAccountProvider 
     private ServerGroupService serverGroupService;
 
     @Resource
-    private ZabbixFacade zabbixFacade;
+    private ZabbixGroupHelper zabbixFacade;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 

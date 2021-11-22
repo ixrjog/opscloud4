@@ -14,7 +14,7 @@ import com.baiyi.opscloud.event.convert.EventConvert;
 import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.process.base.AbstractEventProcess;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.zabbix.v5.util.base.SeverityType;
+import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5ProblemDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TriggerDatasource;

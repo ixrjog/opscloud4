@@ -1,15 +1,14 @@
 package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.util.base.SeverityType;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixTriggerFeign;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import feign.Feign;
 import feign.Retryer;
 import feign.jackson.JacksonDecoder;
@@ -71,19 +70,19 @@ public class ZabbixV5TriggerDatasource {
     public List<ZabbixTrigger.Trigger> getBySeverityType(ZabbixConfig.Zabbix config, SeverityType severityType) {
 
         /**
+         * filter
          * (readonly 只读) Whether the trigger is in OK or problem state. 触发器是否处于正常或故障状态。
          Possible values are: 许可值为：
          0 - (default 默认) OK; 正常；
          1 - problem. 故障。
          */
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("value", PROBLEM)
-                .build();
         // https://www.zabbix.com/documentation/5.0/manual/api/reference/trigger/get
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", TRIGGER_OUTPUT)
                 .putParam("selectFunctions", "extend")
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("value", PROBLEM)
+                        .build())
                 .putParam("active", 1) // 只返回属于受监控主机的启用的触发器（与上条意思差不多，至于什么区别，未测）
                 .putParam("sortfield", "priority") // 排序
                 .putParam("sortorder", "DESC") // 正排还是倒排

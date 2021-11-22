@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.v5.util;
+package com.baiyi.opscloud.zabbix.v5.param;
 
 import lombok.Builder;
 import lombok.Data;
@@ -14,13 +14,6 @@ import java.util.Map;
  */
 @Component
 public class ZabbixActionParam {
-
-//    private static ZabbixConfig zabbixConfig;
-//
-//    @Resource
-//    public void setZabbixConfig(ZabbixConfig zabbixConfig) {
-//        ZabbixActionParam.zabbixConfig = zabbixConfig;
-//    }
 
     @Data
     @Builder
@@ -78,7 +71,7 @@ public class ZabbixActionParam {
         @Builder.Default
         private Integer default_msg = 0;
 
-//        @Builder.Default
+        //        @Builder.Default
 //        private String subject = zabbixConfig.getOperation().getSubject();
         private String subject;
 

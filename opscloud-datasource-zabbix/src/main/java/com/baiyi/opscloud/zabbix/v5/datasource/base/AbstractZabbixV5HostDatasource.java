@@ -50,7 +50,7 @@ public abstract class AbstractZabbixV5HostDatasource {
         return zabbixAPI.update(request);
     }
 
-    protected ZabbixHost.DeleteHostResponse deleteHandle(ZabbixConfig.Zabbix config, com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest request) {
+    protected ZabbixHost.DeleteHostResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DeleteRequest request) {
         ZabbixHostFeign zabbixAPI = buildFeign(config);
         request.setMethod(HostAPIMethod.DELETE);
         request.setAuth(simpleZabbixAuth.getAuth(config));

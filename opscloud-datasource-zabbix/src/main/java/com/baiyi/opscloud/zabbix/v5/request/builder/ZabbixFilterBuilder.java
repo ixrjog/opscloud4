@@ -1,4 +1,6 @@
-package com.baiyi.opscloud.zabbix.v5.request;
+package com.baiyi.opscloud.zabbix.v5.request.builder;
+
+import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
@@ -7,7 +9,7 @@ package com.baiyi.opscloud.zabbix.v5.request;
  */
 public class ZabbixFilterBuilder {
 
-    private final ZabbixFilter filter = new ZabbixFilter();
+    private final ZabbixRequest.Filter filter = ZabbixRequest.Filter.builder().build();
 
     private ZabbixFilterBuilder() {
     }
@@ -21,7 +23,7 @@ public class ZabbixFilterBuilder {
         return this;
     }
 
-    public ZabbixFilter build() {
+    public ZabbixRequest.Filter build() {
         return filter;
     }
 }

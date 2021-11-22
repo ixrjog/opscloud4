@@ -6,10 +6,8 @@ import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5UserDatasour
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixMedia;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
@@ -38,12 +36,11 @@ public class ZabbixV5UserDatasource extends AbstractZabbixV5UserDatasource {
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_user_name_' + #username", unless = "#result == null")
     public ZabbixUser.User getByUsername(ZabbixConfig.Zabbix config, String username) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("alias", username)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("selectMedias", "extend")   // 在medias 属性返回用户使用的媒体。
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("alias", username)
+                        .build())
                 .build();
         ZabbixUser.QueryUserResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))
@@ -84,6 +81,7 @@ public class ZabbixV5UserDatasource extends AbstractZabbixV5UserDatasource {
 
     /**
      * 更新用户信息 需要userid
+     *
      * @param config
      * @param user
      * @param usrgrps
@@ -117,7 +115,7 @@ public class ZabbixV5UserDatasource extends AbstractZabbixV5UserDatasource {
         ZabbixUser.User user = getByUsername(config, username);
         if (user == null) return;
         // 数组形参数 https://www.zabbix.com/documentation/2.2/manual/api/reference/user/delete
-        ZabbixDeleteRequest request =ZabbixDeleteRequest.builder()
+        ZabbixRequest.DeleteRequest request = ZabbixRequest.DeleteRequest.builder()
                 .params(new String[]{user.getUserid()})
                 .build();
         ZabbixUser.DeleteUserResponse response = deleteHandle(config, request);

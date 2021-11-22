@@ -21,6 +21,8 @@ import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import javax.annotation.Resource;
 import java.util.List;
 
+import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_HOST;
+
 /**
  * @Author baiyi
  * @Date 2021/8/2 6:20 下午
@@ -54,7 +56,7 @@ public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelatio
     }
 
     @Override
-    @SingleTask(name = "PullZabbixHost", lockTime = "5m")
+    @SingleTask(name = PULL_ZABBIX_HOST, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }

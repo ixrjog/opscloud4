@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.feign;
 
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixAction;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import feign.Headers;
 import feign.RequestLine;
@@ -31,5 +30,5 @@ public interface ZabbixActionFeign {
 
     @RequestLine(REQUEST_API)
     @Headers({CONTENT_TYPE})
-    ZabbixAction.DeleteActionResponse delete(ZabbixDeleteRequest request);
+    ZabbixAction.DeleteActionResponse delete(ZabbixRequest.DeleteRequest request);
 }

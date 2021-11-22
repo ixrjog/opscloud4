@@ -31,7 +31,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
  */
 
 @Component
-public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate.Template, ZabbixHost.Host> {
+public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<ZabbixTemplate.Template, ZabbixHost.Host> {
 
     @Resource
     private ZabbixV5TemplateDatasource zabbixV5TemplateDatasource;

@@ -1,4 +1,6 @@
-package com.baiyi.opscloud.zabbix.v5.util.base;
+package com.baiyi.opscloud.zabbix.constant;
+
+import lombok.Getter;
 
 /**
  * @Author baiyi
@@ -52,13 +54,11 @@ public enum Conditiontype {
     // event tag value
     EVENT_TAG_VALUE(26);
 
-    private int type;
+    @Getter
+    private final int type;
 
     Conditiontype(int type) {
         this.type = type;
     }
 
-    public int getType() {
-        return this.type;
-    }
 }

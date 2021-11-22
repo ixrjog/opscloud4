@@ -60,7 +60,7 @@ public abstract class AbstractZabbixV5ActionDatasource {
         return zabbixAPI.create(request);
     }
 
-    protected ZabbixAction.DeleteActionResponse deleteHandle(ZabbixConfig.Zabbix config, com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest request) {
+    protected ZabbixAction.DeleteActionResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DeleteRequest request) {
         ZabbixActionFeign zabbixAPI = buildFeign(config);
         request.setMethod(ActionAPIMethod.DELETE);
         request.setAuth(simpleZabbixAuth.getAuth(config));

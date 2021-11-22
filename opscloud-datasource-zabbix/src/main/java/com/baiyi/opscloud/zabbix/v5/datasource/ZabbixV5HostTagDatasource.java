@@ -2,7 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixHostParam;
+import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5HostDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;

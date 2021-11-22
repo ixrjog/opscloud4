@@ -2,13 +2,12 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5UserGroupDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -56,12 +55,11 @@ public class ZabbixV5UserGroupDatasource extends AbstractZabbixV5UserGroupDataso
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_usergroup_name_' + #usergroup", unless = "#result == null")
     public ZabbixUserGroup.UserGroup getByName(ZabbixConfig.Zabbix config, String usergroup) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("name", usergroup)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("status", 0)
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("name", usergroup)
+                        .build())
                 .build();
         ZabbixUserGroup.QueryUserGroupResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))

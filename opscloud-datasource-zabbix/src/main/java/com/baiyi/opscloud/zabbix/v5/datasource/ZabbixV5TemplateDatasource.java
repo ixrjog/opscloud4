@@ -2,14 +2,13 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixTemplateFeign;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
 import feign.Feign;
 import feign.Retryer;
@@ -96,11 +95,10 @@ public class ZabbixV5TemplateDatasource {
     }
 
     public List<ZabbixTemplate.Template> listByNames(ZabbixConfig.Zabbix config, List<String> names) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("host", names)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("host", names)
+                        .build())
                 .build();
         ZabbixTemplate.QueryTemplateResponse response = queryHandle(config, request);
         return response.getResult();
@@ -108,11 +106,10 @@ public class ZabbixV5TemplateDatasource {
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_template_name_' + #templateName", unless = "#result == null")
     public ZabbixTemplate.Template getByName(ZabbixConfig.Zabbix config, String templateName) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("host", templateName)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("host", templateName)
+                        .build())
                 .build();
         ZabbixTemplate.QueryTemplateResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))

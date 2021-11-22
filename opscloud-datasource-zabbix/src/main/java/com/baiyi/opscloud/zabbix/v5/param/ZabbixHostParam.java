@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.zabbix.v5.util;
+package com.baiyi.opscloud.zabbix.v5.param;
 
 import lombok.Builder;
 import lombok.Data;

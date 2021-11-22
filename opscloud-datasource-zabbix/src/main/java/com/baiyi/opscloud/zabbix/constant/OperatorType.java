@@ -1,16 +1,17 @@
-package com.baiyi.opscloud.zabbix.v5.util.base;
+package com.baiyi.opscloud.zabbix.constant;
+
+import lombok.Getter;
 
 /**
  * @Author baiyi
  * @Date 2021/2/1 11:17 上午
  * @Version 1.0
  */
-public enum  OperatorType {
+public enum OperatorType {
 
     /**
-     *
      * Condition operator.
-     *
+     * <p>
      * Possible values:
      * 0 - (default) equals;
      * 1 - does not equal;
@@ -24,20 +25,16 @@ public enum  OperatorType {
      * 9 - does not match;
      * 10 - Yes;
      * 11 - No.
-     *
      */
 
     EQUALS(0),
-    IS_GREATER_THAN_OR_EQUALS(5)
-    ;
+    IS_GREATER_THAN_OR_EQUALS(5);
 
-    private int type;
+    @Getter
+    private final int type;
 
     OperatorType(int type) {
         this.type = type;
     }
 
-    public int getType() {
-        return this.type;
-    }
 }

@@ -2,6 +2,7 @@ package com.baiyi.opscloud.zabbix.v5.datasource.base;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.redis.RedisUtil;
+import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixLogin;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixLoginFeign;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
@@ -37,9 +38,13 @@ public class SimpleZabbixAuth {
             return (String) redisUtil.get(key);
         } else {
             ZabbixLogin.LoginAuth loginAuth = login(config);
-            redisUtil.set(key, loginAuth.getResult(), 300);
+            cacheAuth(key, loginAuth.getResult());
             return loginAuth.getResult();
         }
+    }
+
+    private void cacheAuth(String key, String auth) {
+        redisUtil.set(key, auth, TimeUtil.minuteTime * 14 / 1000); // 缓存14分钟
     }
 
     private ZabbixLogin.LoginAuth login(ZabbixConfig.Zabbix config) {
@@ -57,14 +62,5 @@ public class SimpleZabbixAuth {
 
         return zabbixAPI.userLogin(request);
     }
-
-//    private long getAuthCacheTime(ZabbixUser zabbixUser) {
-//        if (1 == zabbixUser.getAutologin()) {
-//            // 缓存7天
-//            return TimeUtil.dayTime / 1000 * 7;
-//        }
-//        Duration cacheTime = StringToDurationUtil.parse(zabbixUser.getAutologout());
-//        return cacheTime.getSeconds();
-//    }
 
 }

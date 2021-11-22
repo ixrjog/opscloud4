@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.zabbix.v5.request.builder;
 
 import com.alibaba.fastjson.JSON;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.util.StringUtils;
@@ -20,6 +19,8 @@ public class ZabbixRequestBuilder {
 
     private final ZabbixRequest.DefaultRequest request = ZabbixRequest.DefaultRequest.builder().build();
 
+    private final ZabbixRequest.Filter filter = ZabbixRequest.Filter.builder().build();
+
     private ZabbixRequestBuilder() {
     }
 
@@ -32,11 +33,6 @@ public class ZabbixRequestBuilder {
             request.setId(nextId.getAndIncrement());
         }
         return request;
-    }
-
-    public ZabbixRequestBuilder setVersion(String version) {
-        request.setJsonrpc(version);
-        return this;
     }
 
     public ZabbixRequestBuilder putParam(String key, Object value) {
@@ -71,7 +67,7 @@ public class ZabbixRequestBuilder {
         return this;
     }
 
-    public ZabbixRequestBuilder filter(ZabbixFilter zabbixFilter) {
+    public ZabbixRequestBuilder filter(ZabbixRequest.Filter zabbixFilter) {
         request.putParam("filter", zabbixFilter.getFilter());
         return this;
     }

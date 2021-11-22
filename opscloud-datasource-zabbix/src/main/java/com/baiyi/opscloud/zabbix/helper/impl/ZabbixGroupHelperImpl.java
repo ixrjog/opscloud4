@@ -1,8 +1,8 @@
-package com.baiyi.opscloud.zabbix.facade.impl;
+package com.baiyi.opscloud.zabbix.helper.impl;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixUtil;
+import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
+import com.baiyi.opscloud.zabbix.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostGroupDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5UserGroupDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
@@ -16,7 +16,7 @@ import javax.annotation.Resource;
  * @Version 1.0
  */
 @Component
-public class ZabbixFacadeImpl implements ZabbixFacade {
+public class ZabbixGroupHelperImpl implements ZabbixGroupHelper {
 
     @Resource
     private ZabbixV5UserGroupDatasource zabbixV5UserGroupDatasource;

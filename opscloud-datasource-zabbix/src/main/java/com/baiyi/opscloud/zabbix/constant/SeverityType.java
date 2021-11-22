@@ -1,6 +1,8 @@
-package com.baiyi.opscloud.zabbix.v5.util.base;
+package com.baiyi.opscloud.zabbix.constant;
 
 import lombok.Getter;
+
+import java.util.Arrays;
 
 /**
  * @Author baiyi
@@ -29,9 +31,9 @@ public enum SeverityType {
     HIGH(4, "HIGH"),
     DISASTER(5, "DISASTER");
 
-    private int type;
+    private final int type;
 
-    private String name;
+    private final String name;
 
     SeverityType(int type, String name) {
         this.type = type;
@@ -39,10 +41,7 @@ public enum SeverityType {
     }
 
     public static String getName(int type) {
-        for (SeverityType severityType : SeverityType.values())
-            if (severityType.getType() == type)
-                return severityType.getName();
-        return "DEFAULT";
+        return Arrays.stream(SeverityType.values()).filter(severityType -> severityType.getType() == type).findFirst().map(SeverityType::getName).orElse("DEFAULT");
     }
 
 }

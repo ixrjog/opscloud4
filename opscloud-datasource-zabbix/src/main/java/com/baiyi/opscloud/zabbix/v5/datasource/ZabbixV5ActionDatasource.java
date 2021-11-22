@@ -2,18 +2,16 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.v5.util.ConditionsBuilder;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixActionParam;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixUtil;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5ActionDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixAction;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.ConditionsBuilder;
+import com.baiyi.opscloud.zabbix.v5.param.ZabbixActionParam;
+import com.baiyi.opscloud.zabbix.ZabbixUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
@@ -45,13 +43,12 @@ public class ZabbixV5ActionDatasource extends AbstractZabbixV5ActionDatasource {
      */
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_action_name_' + #actionName", unless = "#result == null")
     public ZabbixAction.Action getActionByName(ZabbixConfig.Zabbix config, String actionName) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("name", actionName)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("output", "extend")
                 .putParam("selectOperations", "extend")
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("name", actionName)
+                        .build())
                 .build();
         ZabbixAction.QueryActionResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))
@@ -61,17 +58,16 @@ public class ZabbixV5ActionDatasource extends AbstractZabbixV5ActionDatasource {
 
     public void create(ZabbixConfig.Zabbix config, String actionName, String usergrpName) {
         ZabbixHostGroup.HostGroup hostGroup = zabbixV5HostGroupDatasource.getByName(config, ZabbixUtil.toHostgroupName(usergrpName));
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("evaltype", 1)
-                .putEntry("conditions", ConditionsBuilder.build(hostGroup.getGroupid()))
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
                 .putParam("name", actionName)
                 .putParam("eventsource", 0)
                 .putParam("status", 0)
                 .putParam("esc_period", "10m")
                 .putParam("operations", buildOperations(config, usergrpName)) // 操作
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("evaltype", 1)
+                        .putEntry("conditions", ConditionsBuilder.build(hostGroup.getGroupid()))
+                        .build())
                 .build();
         ZabbixAction.CreateActionResponse response = createHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult().getActionids())) {
@@ -101,7 +97,7 @@ public class ZabbixV5ActionDatasource extends AbstractZabbixV5ActionDatasource {
 
     public void delete(ZabbixConfig.Zabbix config, ZabbixAction.Action action) {
         if (action == null) return;
-        ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
+        ZabbixRequest.DeleteRequest request = ZabbixRequest.DeleteRequest.builder()
                 .params(new String[]{action.getActionid()})
                 .build();
         ZabbixAction.DeleteActionResponse response = deleteHandle(config, request);

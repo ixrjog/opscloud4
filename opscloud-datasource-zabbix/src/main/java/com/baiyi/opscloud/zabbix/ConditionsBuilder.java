@@ -1,7 +1,8 @@
-package com.baiyi.opscloud.zabbix.v5.util;
+package com.baiyi.opscloud.zabbix;
 
-import com.baiyi.opscloud.zabbix.v5.util.base.Conditiontype;
-import com.baiyi.opscloud.zabbix.v5.util.base.OperatorType;
+import com.baiyi.opscloud.zabbix.v5.param.ZabbixActionParam;
+import com.baiyi.opscloud.zabbix.constant.Conditiontype;
+import com.baiyi.opscloud.zabbix.constant.OperatorType;
 import com.google.common.collect.Lists;
 
 import java.util.List;

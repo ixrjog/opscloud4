@@ -8,8 +8,8 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
-import com.baiyi.opscloud.zabbix.facade.ZabbixFacade;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixHostParam;
+import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
+import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostTagDatasource;
 import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TemplateDatasource;
@@ -35,7 +35,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractZabbixHostServerProvider extends AbstractServerProvider<ZabbixConfig.Zabbix> {
 
     @Resource
-    private ZabbixFacade zabbixFacade;
+    private ZabbixGroupHelper zabbixFacade;
 
     @Resource
     protected ZabbixV5HostDatasource zabbixV5HostDatasource;

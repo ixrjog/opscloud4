@@ -21,7 +21,6 @@ public class ZabbixTest extends BaseUnit {
         assetProvider.pullAsset(4);
     }
 
-
     @Test
     void pullUserGroupTest() {
         SimpleAssetProvider assetProvider = AssetProviderFactory.getProvider(DsTypeEnum.ZABBIX.getName(), DsAssetTypeEnum.ZABBIX_USER_GROUP.getType());

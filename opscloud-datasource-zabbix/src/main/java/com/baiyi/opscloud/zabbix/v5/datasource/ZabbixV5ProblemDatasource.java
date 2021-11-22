@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.v5.datasource;
 
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
-import com.baiyi.opscloud.zabbix.v5.util.base.SeverityType;
+import com.baiyi.opscloud.zabbix.constant.SeverityType;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.SimpleZabbixAuth;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProblem;

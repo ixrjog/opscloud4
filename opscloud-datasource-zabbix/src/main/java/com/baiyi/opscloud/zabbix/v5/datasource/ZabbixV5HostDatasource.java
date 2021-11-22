@@ -3,16 +3,14 @@ package com.baiyi.opscloud.zabbix.v5.datasource;
 import com.baiyi.opscloud.common.config.CachingConfiguration;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.common.util.JSONUtil;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilter;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixFilterBuilder;
-import com.baiyi.opscloud.zabbix.v5.util.ZabbixHostParam;
 import com.baiyi.opscloud.zabbix.v5.datasource.base.AbstractZabbixV5HostDatasource;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
+import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixFilterBuilder;
 import com.baiyi.opscloud.zabbix.v5.request.builder.ZabbixRequestBuilder;
+import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -91,11 +89,10 @@ public class ZabbixV5HostDatasource extends AbstractZabbixV5HostDatasource {
 
     @Cacheable(cacheNames = CachingConfiguration.Repositories.ZABBIX, key = "#config.url + '_v5_host_ip_' + #ip", unless = "#result == null")
     public ZabbixHost.Host getByIp(ZabbixConfig.Zabbix config, String ip) {
-        ZabbixFilter filter = ZabbixFilterBuilder.builder()
-                .putEntry("ip", ip)
-                .build();
         ZabbixRequest.DefaultRequest request = ZabbixRequestBuilder.builder()
-                .filter(filter)
+                .filter(ZabbixFilterBuilder.builder()
+                        .putEntry("ip", ip)
+                        .build())
                 .build();
         ZabbixHost.QueryHostResponse response = queryHandle(config, request);
         if (CollectionUtils.isEmpty(response.getResult()))
@@ -155,7 +152,7 @@ public class ZabbixV5HostDatasource extends AbstractZabbixV5HostDatasource {
     }
 
     private void delete(ZabbixConfig.Zabbix config, ZabbixHost.Host host) {
-        ZabbixDeleteRequest request = ZabbixDeleteRequest.builder()
+        ZabbixRequest.DeleteRequest request = ZabbixRequest.DeleteRequest.builder()
                 .params(new String[]{host.getHostid()})
                 .build();
         ZabbixHost.DeleteHostResponse response = deleteHandle(config, request);

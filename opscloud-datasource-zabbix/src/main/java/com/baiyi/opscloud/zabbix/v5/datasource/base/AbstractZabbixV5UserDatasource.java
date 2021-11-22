@@ -3,7 +3,6 @@ package com.baiyi.opscloud.zabbix.v5.datasource.base;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.feign.ZabbixUserFeign;
-import com.baiyi.opscloud.zabbix.v5.request.ZabbixDeleteRequest;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 import feign.Feign;
 import feign.Retryer;
@@ -58,7 +57,7 @@ public abstract class AbstractZabbixV5UserDatasource {
         return zabbixAPI.create(request);
     }
 
-    protected ZabbixUser.DeleteUserResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixDeleteRequest request) {
+    protected ZabbixUser.DeleteUserResponse deleteHandle(ZabbixConfig.Zabbix config, ZabbixRequest.DeleteRequest request) {
         ZabbixUserFeign zabbixAPI = buildFeign(config);
         request.setMethod(UserAPIMethod.DELETE);
         request.setAuth(simpleZabbixAuth.getAuth(config));
