@@ -38,6 +38,14 @@
             <if test="isActive != null">
                 and is_active = #{isActive}
             </if>
+            <if test="filterSystemUser != null and filterSystemUser">
+                and id not in (
+                select business_id from business_tag
+                where
+                     business_type = #{businessType}
+                     and tag_id = ( select id from tag where tag_key = #{SYSTEM_TAG} )
+                )
+            </if>
         </where>
         order by create_time
     </select>
