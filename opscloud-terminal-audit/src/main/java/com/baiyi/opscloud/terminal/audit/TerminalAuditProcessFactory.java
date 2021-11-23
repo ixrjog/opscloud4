@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class TerminalAuditProcessFactory {
 
-    static Map<String, ITerminalAuditProcess> context = new ConcurrentHashMap<>();
+    private static final Map<String, ITerminalAuditProcess> context = new ConcurrentHashMap<>();
 
     public static ITerminalAuditProcess getProcessByKey(String key) {
         return context.get(key);
