@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.ErrorEnum;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessRelation;
 import com.baiyi.opscloud.domain.annotation.BusinessType;
+import com.baiyi.opscloud.domain.annotation.RevokeUserPermission;
 import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -161,12 +162,25 @@ public class UserFacadeImpl implements UserFacade {
         userService.updateBySelective(updateUser);
     }
 
+    @Override
+    public void setActive(String username) {
+        User user = userService.getByUsername(username);
+        if (user.getIsActive()) {
+            userService.setInactive(user);
+        } else {
+            userService.setActive(user);
+        }
+    }
+
+    @RevokeUserPermission
     @TagClear
     @Override
     public void deleteUser(Integer id) {
         User user = userService.getById(id);
         if (user == null) return;
-        // 不删除用户，只修改isActive字段
+        if (user.getIsActive()) {
+            throw new CommonRuntimeException("当前用户为活跃状态不能删除！");
+        }
         userService.delete(user);
     }
 

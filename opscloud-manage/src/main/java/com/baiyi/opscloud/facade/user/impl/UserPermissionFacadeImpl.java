@@ -27,6 +27,13 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     private final AuthRoleService authRoleService;
 
     @Override
+    public void revokeByUserId(int userId) {
+        List<UserPermission> permissions = permissionService.queryByUserId(userId);
+        if(CollectionUtils.isEmpty(permissions)) return;
+        permissions.forEach(permissionService::delete);
+    }
+
+    @Override
     public void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission) {
         permissionService.delete(BeanCopierUtil.copyProperties(userBusinessPermission, UserPermission.class));
     }
@@ -38,7 +45,7 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
                 .businessId(businessId)
                 .build();
         List<UserPermission> permissions = permissionService.queryByBusiness(userPermission);
-        if(CollectionUtils.isEmpty(permissions)) return;
+        if (CollectionUtils.isEmpty(permissions)) return;
         permissions.forEach(e -> permissionService.deleteById(e.getId()));
     }
 
@@ -48,7 +55,7 @@ public class UserPermissionFacadeImpl implements UserPermissionFacade {
     }
 
     @Override
-    public void settUserBusinessPermission(int id) {
+    public void setUserBusinessPermission(int id) {
         UserPermission userPermission = permissionService.getById(id);
         userPermission.setPermissionRole(StringUtils.isEmpty(userPermission.getPermissionRole()) ? "admin" : "");
         permissionService.update(userPermission);

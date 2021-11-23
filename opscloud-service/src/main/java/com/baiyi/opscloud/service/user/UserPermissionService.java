@@ -48,4 +48,6 @@ public interface UserPermissionService {
      * @return
      */
     List<UserPermission> queryByUserPermission(Integer userId, Integer businessType);
+
+    List<UserPermission> queryByUserId(Integer userId);
 }

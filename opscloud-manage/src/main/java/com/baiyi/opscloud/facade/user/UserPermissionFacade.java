@@ -9,11 +9,13 @@ import com.baiyi.opscloud.domain.vo.user.UserPermissionVO;
  */
 public interface UserPermissionFacade {
 
+    void revokeByUserId(int userId);
+
     void revokeUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission);
 
     void grantUserBusinessPermission(UserPermissionVO.UserBusinessPermission userBusinessPermission);
 
-    void settUserBusinessPermission(int id);
+    void setUserBusinessPermission(int id);
 
     int getUserAccessLevel(String username);
 

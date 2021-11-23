@@ -43,10 +43,10 @@ public class RevokeUserPermissionAspect {
                 // 通过@BusinessType 获取业务类型
                 if (joinPoint.getTarget().getClass().isAnnotationPresent(BusinessType.class)) {
                     BusinessType businessType = joinPoint.getTarget().getClass().getAnnotation(BusinessType.class);
-                    doRevoke(businessType.value().getType(), businessId);
+                    revokeHandle(businessType.value().getType(), businessId);
                 }
             } else {
-                doRevoke(revokeUserPermission.value().getType(), businessId);
+                revokeHandle(revokeUserPermission.value().getType(), businessId);
             }
         }
         try {
@@ -56,9 +56,15 @@ public class RevokeUserPermissionAspect {
         }
     }
 
-    private void doRevoke(Integer businessType, Integer businessId) {
+    private void revokeHandle(Integer businessType, Integer businessId) {
         log.info("撤销当前业务对象的所有用户授权: businessType = {} , businessId = {}", businessType, businessId);
-        userPermissionFacade.revokeUserPermissionByBusiness(businessType, businessId);
+        if (BusinessTypeEnum.USER.getType() == businessType) {
+            // 撤销用户的所有授权
+            userPermissionFacade.revokeByUserId(businessId);
+        } else {
+            // 撤销业务的所有授权
+            userPermissionFacade.revokeUserPermissionByBusiness(businessType, businessId);
+        }
     }
 
 }
