@@ -85,4 +85,12 @@ public class UserPermissionServiceImpl implements UserPermissionService {
         return permissionMapper.selectByExample(example);
     }
 
+    @Override
+    public List<UserPermission> queryByUserId(Integer userId) {
+        Example example = new Example(UserPermission.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("userId", userId);
+        return permissionMapper.selectByExample(example);
+    }
+
 }

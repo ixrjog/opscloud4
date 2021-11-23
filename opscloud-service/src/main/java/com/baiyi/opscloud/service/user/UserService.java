@@ -30,16 +30,27 @@ public interface UserService {
 
     /**
      * 登录更新接口，不触发事件
+     *
      * @param user
      */
     void updateLogin(User user);
 
     void delete(User user);
 
+    void setActive(User user);
+
+    void setInactive(User user);
+
     void updateBySelective(User user);
 
-    List<User> listActive();
+    default List<User> listActive() {
+        return listByIsActive(true);
+    }
 
-    List<User> listInactive();
+    default List<User> listInactive() {
+        return listByIsActive(false);
+    }
+
+    List<User> listByIsActive(boolean isActive);
 
 }

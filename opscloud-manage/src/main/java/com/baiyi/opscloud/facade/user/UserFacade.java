@@ -23,6 +23,7 @@ public interface UserFacade {
 
     /**
      * 从数据源实例中同步用户与用户组关系
+     *
      * @return
      */
     void syncUserPermissionGroupForAsset();
@@ -30,6 +31,8 @@ public interface UserFacade {
     void addUser(UserVO.User user);
 
     void updateUser(UserVO.User user);
+
+    void setUserActive(String username);
 
     void deleteUser(Integer id);
 
@@ -42,6 +45,7 @@ public interface UserFacade {
 
     /**
      * 授予用户AccessToken
+     *
      * @param accessToken
      * @return
      */

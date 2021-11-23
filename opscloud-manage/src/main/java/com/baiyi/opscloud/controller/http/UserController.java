@@ -79,6 +79,20 @@ public class UserController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "设置用户是否有效")
+    @PutMapping(value = "/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setUserActive(@RequestParam @Valid String username) {
+        userFacade.setUserActive(username);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "删除用户")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteUser(@RequestParam @Valid int id) {
+        userFacade.deleteUser(id);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "同步用户")
     @PutMapping(value = "/sync", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> syncUserPermissionGroupForAsset() {
@@ -124,7 +138,7 @@ public class UserController {
     @ApiOperation(value = "设置用户业务许可（角色）")
     @PutMapping(value = "/business/permission/set", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> setUserBusinessPermission(@RequestParam @Valid int id) {
-        permissionFacade.settUserBusinessPermission(id);
+        permissionFacade.setUserBusinessPermission(id);
         return HttpResult.SUCCESS;
     }
 

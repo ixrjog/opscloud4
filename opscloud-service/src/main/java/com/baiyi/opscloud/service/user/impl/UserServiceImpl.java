@@ -63,7 +63,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     }
 
     @Override
-    public List<User> queryAll(){
+    public List<User> queryAll() {
         return userMapper.selectAll();
     }
 
@@ -76,7 +76,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     }
 
     @Override
-    public User getByKey(String key){
+    public User getByKey(String key) {
         return getByUsername(key);
     }
 
@@ -107,24 +107,32 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
 
     @Override
     @Encrypt
+    @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
+    public void setActive(User user) {
+        user.setIsActive(true);
+        userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    @Encrypt
+    @EventPublisher(eventAction = EventActionTypeEnum.DELETE)
+    public void setInactive(User user) {
+        user.setIsActive(false);
+        userMapper.updateByPrimaryKey(user);
+    }
+
+    @Override
+    @Encrypt
     @EventPublisher(eventAction = EventActionTypeEnum.UPDATE)
     public void updateBySelective(User user) {
         userMapper.updateByPrimaryKeySelective(user);
     }
 
     @Override
-    public List<User> listActive() {
+    public List<User> listByIsActive(boolean isActive) {
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("isActive", true);
-        return userMapper.selectByExample(example);
-    }
-
-    @Override
-    public List<User> listInactive() {
-        Example example = new Example(User.class);
-        Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("isActive", false);
+        criteria.andEqualTo("isActive", isActive);
         return userMapper.selectByExample(example);
     }
 }

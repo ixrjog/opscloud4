@@ -163,7 +163,7 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public void setActive(String username) {
+    public void setUserActive(String username) {
         User user = userService.getByUsername(username);
         if (user.getIsActive()) {
             userService.setInactive(user);
