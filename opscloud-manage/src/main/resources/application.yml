@@ -8,6 +8,13 @@ knife4j:
 opscloud:
   version: 4.0.0
   dataPath: ${HOME}/opscloud-data
+  instance:
+    register:
+      # IP段前缀
+      ignore:
+        - 192.168
+        - 127.0.0
+        - 10.100
 
 spring:
   profiles:
