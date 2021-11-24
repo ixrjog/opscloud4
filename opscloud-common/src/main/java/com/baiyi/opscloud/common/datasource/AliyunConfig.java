@@ -6,7 +6,7 @@ import io.swagger.annotations.ApiModel;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Set;
 
@@ -45,13 +45,7 @@ public class AliyunConfig extends BaseConfig {
         private String secret;
 
         public String getDomain() {
-            if (!StringUtils.isEmpty(this.company)) {
-                return Joiner.on("").join("@", company, ".onaliyun.com");
-            }
-            if (!StringUtils.isEmpty(uid)) {
-                return Joiner.on("").join("@", uid, ".onaliyun.com");
-            }
-            return "";
+            return Joiner.on("").skipNulls().join("@", StringUtils.isEmpty(this.company) ? this.uid : this.company, ".onaliyun.com");
         }
 
         /**
@@ -60,14 +54,9 @@ public class AliyunConfig extends BaseConfig {
          * @return
          */
         public String getRamLoginUrl() {
-            String company = "";
-            if (!StringUtils.isEmpty(this.company)) {
-                company = this.company;
-            } else if (!StringUtils.isEmpty(uid)) {
-                company = this.uid;
-            }
-            return RAM_LOGIN_URL.replace("${COMPANY}", company);
+            return RAM_LOGIN_URL.replace("${COMPANY}", StringUtils.isEmpty(this.company) ? this.uid : this.company);
         }
+
     }
 
 }
