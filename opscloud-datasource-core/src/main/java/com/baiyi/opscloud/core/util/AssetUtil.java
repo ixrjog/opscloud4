@@ -25,5 +25,5 @@ public class AssetUtil {
             return data2 == null;
         return date1.equals(data2);
     }
-    
+
 }
