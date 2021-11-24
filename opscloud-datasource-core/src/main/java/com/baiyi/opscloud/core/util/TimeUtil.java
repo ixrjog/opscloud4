@@ -15,6 +15,8 @@ import java.util.TimeZone;
  */
 public class TimeUtil {
 
+    private TimeUtil(){}
+
     public static Date toGmtDate(String time, TimeZoneEnum timeZoneEnum) {
         if (StringUtils.isEmpty(time)) return new Date();
         SimpleDateFormat formatter = new SimpleDateFormat(timeZoneEnum.getFormat());

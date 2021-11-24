@@ -4,12 +4,12 @@ import com.baiyi.opscloud.common.builder.CredentialTemplateDictBuilder;
 import com.baiyi.opscloud.common.builder.SimpleDict;
 import com.baiyi.opscloud.common.constant.enums.CredentialKindEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.StringSubstitutor;
 import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.Resource;
 import java.util.Map;
 
 /**
@@ -18,10 +18,10 @@ import java.util.Map;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class TemplateUtil {
 
-    @Resource
-    private StringEncryptor stringEncryptor;
+    private final StringEncryptor stringEncryptor;
 
     private static final String CREDENTIAL = "credential";
 
