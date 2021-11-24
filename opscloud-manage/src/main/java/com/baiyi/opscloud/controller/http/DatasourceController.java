@@ -77,6 +77,4 @@ public class DatasourceController {
         return new HttpResult<>(datasourceFacade.queryDsInstance(query));
     }
 
-
-
 }
