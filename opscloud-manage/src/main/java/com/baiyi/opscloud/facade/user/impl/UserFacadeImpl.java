@@ -172,7 +172,7 @@ public class UserFacadeImpl implements UserFacade {
         }
     }
 
-    @RevokeUserPermission
+    @RevokeUserPermission // 撤销用户的所有授权信息
     @TagClear
     @Override
     public void deleteUser(Integer id) {
