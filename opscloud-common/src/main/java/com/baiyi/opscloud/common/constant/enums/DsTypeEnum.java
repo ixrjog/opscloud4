@@ -5,7 +5,6 @@ import com.baiyi.opscloud.domain.vo.common.OptionsVO;
 import lombok.Getter;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -28,10 +27,11 @@ public enum DsTypeEnum {
     GUACAMOLE(9, "GUACAMOLE"),
     NEXUS(10, "NEXUS"),
     TENCENT_EXMAIL(11, "TENCENT_EXMAIL"),
-    NACOS(12,"NACOS"),
+    NACOS(12, "NACOS"),
+    DINGTALK(13, "DINGTALK"),
+    DINGTALK_APP(14, "DINGTALK_APP"),
     ALIYUN(50, "ALIYUN"),
     AWS(51, "AWS");
-
 
     private final int type;
 
@@ -47,12 +47,12 @@ public enum DsTypeEnum {
     }
 
     public static OptionsVO.Options toOptions() {
-        List<OptionsVO.Option> optionList = Arrays.stream(DsTypeEnum.values()).map(e -> OptionsVO.Option.builder()
-                .label(e.getName())
-                .value(e.getType())
-                .build()).collect(Collectors.toList());
         return OptionsVO.Options.builder()
-                .options(optionList)
+                .options(Arrays.stream(DsTypeEnum.values()).map(e -> OptionsVO.Option.builder()
+                        .label(e.getName())
+                        .value(e.getType())
+                        .build()).collect(Collectors.toList()))
                 .build();
     }
+    
 }
