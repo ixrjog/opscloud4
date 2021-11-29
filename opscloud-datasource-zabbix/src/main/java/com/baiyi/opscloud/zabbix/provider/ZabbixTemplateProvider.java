@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixTemplateAssetConvert;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TemplateDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TemplateDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<ZabbixTemplate.Template, ZabbixHost.Host> {
 
     @Resource
-    private ZabbixV5TemplateDatasource zabbixV5TemplateDatasource;
+    private ZabbixV5TemplateDrive zabbixV5TemplateDrive;
 
     @Resource
     private ZabbixTemplateProvider zabbixTemplateProvider;
@@ -51,17 +51,17 @@ public class ZabbixTemplateProvider extends AbstractAssetRelationProvider<Zabbix
     @Override
     protected List<ZabbixTemplate.Template> listEntities(DsInstanceContext dsInstanceContext, ZabbixHost.Host target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5TemplateDatasource.getByHost(zabbix, target);
+        return zabbixV5TemplateDrive.getByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixTemplate.Template> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5TemplateDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5TemplateDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixTemplate.Template getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5TemplateDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixV5TemplateDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

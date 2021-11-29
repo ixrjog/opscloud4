@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.datasource.JenkinsConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.jenkins.convert.ComputerAssetConvert;
-import com.baiyi.opscloud.datasource.jenkins.datasource.JenkinsServerDatasource;
+import com.baiyi.opscloud.datasource.jenkins.drive.JenkinsServerDrive;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -53,7 +53,7 @@ public class JenkinsComputerProvider extends BaseAssetProvider<ComputerWithDetai
     @Override
     protected List<ComputerWithDetails> listEntities(DsInstanceContext dsInstanceContext) {
         try {
-            Map<String, Computer> computerMap = JenkinsServerDatasource.getComputers(buildConfig(dsInstanceContext.getDsConfig()));
+            Map<String, Computer> computerMap = JenkinsServerDrive.getComputers(buildConfig(dsInstanceContext.getDsConfig()));
             List<ComputerWithDetails> computerWithDetails = Lists.newArrayList();
             for (String k : computerMap.keySet())
                 computerWithDetails.add(computerMap.get(k).details());

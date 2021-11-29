@@ -5,8 +5,8 @@ import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
-import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesNamespaceDatasource;
-import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesPodDatasource;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesPodDrive;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -56,7 +56,7 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Pod> pods = KubernetesPodDatasource.listPod(kubernetes, params.get("namespace"), params.get("deploymentName"));
+        List<Pod> pods = KubernetesPodDrive.listPod(kubernetes, params.get("namespace"), params.get("deploymentName"));
         return pods.stream().map(e->
             toAssetContainer(dsInstanceContext.getDsInstance(),e)
         ).collect(Collectors.toList());
@@ -65,10 +65,10 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
     @Override
     protected List<Pod> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Namespace> namespaces = KubernetesNamespaceDatasource.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
+        List<Namespace> namespaces = KubernetesNamespaceDrive.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
         List<Pod> pods = Lists.newArrayList();
         namespaces.forEach(e ->
-                pods.addAll(KubernetesPodDatasource.listPod(kubernetes, e.getMetadata().getName()))
+                pods.addAll(KubernetesPodDrive.listPod(kubernetes, e.getMetadata().getName()))
         );
         return pods;
     }

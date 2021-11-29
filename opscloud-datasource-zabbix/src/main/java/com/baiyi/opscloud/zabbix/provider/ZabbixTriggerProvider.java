@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixTriggerAssetConvert;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TriggerDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TriggerDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixTrigger.Trigger, ZabbixHost.Host> {
 
     @Resource
-    private ZabbixV5TriggerDatasource zabbixV5TriggerDatasource;
+    private ZabbixV5TriggerDrive zabbixV5TriggerDrive;
 
     @Resource
     private ZabbixTriggerProvider zabbixTriggerProvider;
@@ -51,17 +51,17 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
     @Override
     protected List<ZabbixTrigger.Trigger> listEntities(DsInstanceContext dsInstanceContext, ZabbixHost.Host target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5TriggerDatasource.listByHost(zabbix, target);
+        return zabbixV5TriggerDrive.listByHost(zabbix, target);
     }
 
     @Override
     protected List<ZabbixTrigger.Trigger> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5TriggerDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5TriggerDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixTrigger.Trigger getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5TriggerDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixV5TriggerDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

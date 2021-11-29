@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5UserDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser.User, ZabbixUserGroup.UserGroup> {
 
     @Resource
-    private ZabbixV5UserDatasource zabbixV5UserDatasource;
+    private ZabbixV5UserDrive zabbixV5UserDrive;
 
     @Resource
     private ZabbixUserProvider zabbixUserProvider;
@@ -51,17 +51,17 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     @Override
     protected List<ZabbixUser.User> listEntities(DsInstanceContext dsInstanceContext, ZabbixUserGroup.UserGroup target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5UserDatasource.listByGroup(zabbix, target);
+        return zabbixV5UserDrive.listByGroup(zabbix, target);
     }
 
     @Override
     protected List<ZabbixUser.User> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5UserDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5UserDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixUser.User getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5UserDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixV5UserDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

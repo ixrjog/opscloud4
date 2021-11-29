@@ -26,7 +26,7 @@ public class ZabbixHostProvider extends AbstractZabbixHostProvider<ZabbixHostGro
     @Override
     protected List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host> listEntities(DsInstanceContext dsInstanceContext, com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup.HostGroup target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5HostDatasource.getByGroup(zabbix, target);
+        return zabbixV5HostDrive.getByGroup(zabbix, target);
     }
 
     @Override

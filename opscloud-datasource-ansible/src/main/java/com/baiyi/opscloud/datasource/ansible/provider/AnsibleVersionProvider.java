@@ -5,9 +5,9 @@ import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsibleCommandArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.convert.AnsibleAssetConvert;
-import com.baiyi.opscloud.datasource.ansible.handler.AnsibleHandler;
-import com.baiyi.opscloud.datasource.ansible.model.AnsibleExecuteResult;
-import com.baiyi.opscloud.datasource.ansible.model.AnsibleVersion;
+import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleVersion;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -72,7 +72,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
                 .version(true)
                 .build();
         CommandLine commandLine = AnsibleCommandArgsBuilder.build(ansible, args);
-        AnsibleExecuteResult er = AnsibleHandler.execute(commandLine, EXEC_TIMEOUT);
+        AnsibleExecuteResult er = AnsibleExecutor.execute(commandLine, EXEC_TIMEOUT);
         try {
             return AnsibleVersion.Version.builder()
                     .executableLocation(ansible.getAnsible())
@@ -89,7 +89,7 @@ public class AnsibleVersionProvider extends BaseAssetProvider<AnsibleVersion.Ver
                 .version(true)
                 .build();
         CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
-        AnsibleExecuteResult er = AnsibleHandler.execute(commandLine, EXEC_TIMEOUT);
+        AnsibleExecuteResult er = AnsibleExecutor.execute(commandLine, EXEC_TIMEOUT);
         try {
             return AnsibleVersion.Version.builder()
                     .executableLocation(ansible.getPlaybook())

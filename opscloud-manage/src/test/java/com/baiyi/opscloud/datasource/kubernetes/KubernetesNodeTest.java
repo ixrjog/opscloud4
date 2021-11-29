@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.kubernetes;
 
 import com.baiyi.opscloud.datasource.kubernetes.base.BaseKubernetesTest;
-import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesNodeDatasource;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNodeDrive;
 import io.fabric8.kubernetes.api.model.Node;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ public class KubernetesNodeTest extends BaseKubernetesTest {
 
     @Test
     void listNodeTest() {
-        List<Node> nodes = KubernetesNodeDatasource.listNode(getConfig().getKubernetes());
+        List<Node> nodes = KubernetesNodeDrive.listNode(getConfig().getKubernetes());
         print(nodes);
     }
 

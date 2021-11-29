@@ -8,8 +8,8 @@ import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.aliyun.log.AliyunLogDatasource;
-import com.baiyi.opscloud.datasource.aliyun.log.AliyunLogMachineGroupDatasource;
+import com.baiyi.opscloud.datasource.aliyun.log.drive.AliyunLogDrive;
+import com.baiyi.opscloud.datasource.aliyun.log.drive.AliyunLogMachineGroupDrive;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
@@ -47,7 +47,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
 
     private final AliyunLogMemberService aliyunLogMemberService;
 
-    private final AliyunLogDatasource aliyunLogHandler;
+    private final AliyunLogDrive aliyunLogHandler;
 
     private final ServerGroupService serverGroupService;
 
@@ -55,7 +55,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
 
     private final AliyunLogMemberPacker aliyunLogMemberPacker;
 
-    private final AliyunLogMachineGroupDatasource aliyunLogMachineGroupHandler;
+    private final AliyunLogMachineGroupDrive aliyunLogMachineGroupHandler;
 
     private final DsConfigService dsConfigService;
 

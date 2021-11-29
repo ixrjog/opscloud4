@@ -10,9 +10,9 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
 import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesPodWatch;
 import com.baiyi.opscloud.datasource.kubernetes.event.KubernetesWatchEvent;
-import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesNamespaceDatasource;
-import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesPodDatasource;
-import com.baiyi.opscloud.datasource.kubernetes.datasource.KubernetesTestDatasource;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesPodDrive;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesTestDrive;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
@@ -67,7 +67,7 @@ public class KubernetesTest extends BaseUnit {
         KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
         // KubernetesClient kubernetesClient = KubeClient.build(kubernetesDsInstanceConfig.getKubernetes());
 
-        List<Namespace> namespaces = KubernetesNamespaceDatasource.listNamespace(kubernetesDsInstanceConfig.getKubernetes());
+        List<Namespace> namespaces = KubernetesNamespaceDrive.listNamespace(kubernetesDsInstanceConfig.getKubernetes());
 
         //  NamespaceList namespaceList = kubernetesClient.namespaces().list();
         for (Namespace item : namespaces) {
@@ -110,7 +110,7 @@ public class KubernetesTest extends BaseUnit {
         //  System.err.print(JSON.toJSONString(matchLabels));
 
         KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
-        List<Pod> pods = KubernetesPodDatasource.listPod(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment");
+        List<Pod> pods = KubernetesPodDrive.listPod(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment");
         for (Pod item : pods) {
             System.err.print(item.getSpec());
         }
@@ -120,7 +120,7 @@ public class KubernetesTest extends BaseUnit {
     @Test
     void logTest() {
         KubernetesConfig kubernetesDsInstanceConfig = (KubernetesConfig) getConfig();
-        LogWatch logWatch = KubernetesTestDatasource.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment-5db56d8d8c-54svd");
+        LogWatch logWatch = KubernetesTestDrive.getPodLogWatch(kubernetesDsInstanceConfig.getKubernetes(), "dev", "coms-dev-deployment-5db56d8d8c-54svd");
 
 
         try {

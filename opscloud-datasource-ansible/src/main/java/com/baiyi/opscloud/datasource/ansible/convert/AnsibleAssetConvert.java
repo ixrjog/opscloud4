@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.ansible.convert;
 
-import com.baiyi.opscloud.datasource.ansible.model.AnsibleHosts;
-import com.baiyi.opscloud.datasource.ansible.model.AnsibleVersion;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleHosts;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleVersion;
 import com.baiyi.opscloud.common.util.IOUtil;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;

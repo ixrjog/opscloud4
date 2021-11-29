@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.ansible.provider;
 import com.baiyi.opscloud.algorithm.ServerPack;
 import com.baiyi.opscloud.datasource.ansible.ServerGroupingAlgorithm;
 import com.baiyi.opscloud.datasource.ansible.convert.AnsibleAssetConvert;
-import com.baiyi.opscloud.datasource.ansible.model.AnsibleHosts;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleHosts;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;

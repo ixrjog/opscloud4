@@ -26,7 +26,7 @@ public class ZabbixHostTargetTemplateProvider extends AbstractZabbixHostProvider
     @Override
     protected List<com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost.Host> listEntities(DsInstanceContext dsInstanceContext, ZabbixTemplate.Template target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5HostDatasource.listByTemplate(zabbix, target);
+        return zabbixV5HostDrive.listByTemplate(zabbix, target);
     }
 
     @Override

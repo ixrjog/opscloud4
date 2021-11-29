@@ -5,7 +5,7 @@ import com.baiyi.opscloud.datasource.account.impl.base.BaseZabbixAccountProvider
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5UserDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserDrive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 public class ZabbixAccountProvider extends BaseZabbixAccountProvider {
 
     @Resource
-    private ZabbixV5UserDatasource zabbixV5UserDatasource;
+    private ZabbixV5UserDrive zabbixV5UserDatasource;
 
     public static final String ZABBIX_DEFAULT_USERGROUP = "users_default";
 

@@ -2,8 +2,8 @@ package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
-import com.baiyi.opscloud.datasource.ansible.handler.AnsibleHandler;
-import com.baiyi.opscloud.datasource.ansible.model.AnsibleExecuteResult;
+import com.baiyi.opscloud.datasource.ansible.executor.AnsibleExecutor;
+import com.baiyi.opscloud.datasource.ansible.entity.AnsibleExecuteResult;
 import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
@@ -90,7 +90,7 @@ public class DsInstanceAssetSubscriptionFacadeImpl extends SimpleDsInstanceProvi
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))
                 .build();
         CommandLine commandLine = AnsiblePlaybookArgsBuilder.build(ansible, args);
-        AnsibleExecuteResult er = AnsibleHandler.execute(commandLine, TimeUtil.minuteTime * 2);
+        AnsibleExecuteResult er = AnsibleExecutor.execute(commandLine, TimeUtil.minuteTime * 2);
         try {
             datasourceInstanceAssetSubscription.setLastSubscriptionLog(er.getOutput().toString("utf8"));
             datasourceInstanceAssetSubscription.setLastSubscriptionTime(new Date());

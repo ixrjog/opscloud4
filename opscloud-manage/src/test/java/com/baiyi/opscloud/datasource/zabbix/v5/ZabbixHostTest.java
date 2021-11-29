@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.zabbix.v5;
 
 import com.baiyi.opscloud.datasource.zabbix.base.BaseZabbixTest;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +16,7 @@ import java.util.List;
 public class ZabbixHostTest extends BaseZabbixTest {
 
     @Resource
-    private ZabbixV5HostDatasource zabbixV5HostDatasource;
+    private ZabbixV5HostDrive zabbixV5HostDatasource;
 
     @Test
     void listHostTest() {

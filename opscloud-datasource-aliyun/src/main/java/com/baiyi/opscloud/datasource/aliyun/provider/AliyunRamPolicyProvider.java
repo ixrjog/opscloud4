@@ -7,7 +7,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ram.AliyunRamDatasource;
+import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
@@ -38,7 +38,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListPoliciesResponse.Policy, ListUsersResponse.User> {
 
     @Resource
-    private AliyunRamDatasource aliyunRamDatasource;
+    private AliyunRamDrive aliyunRamDrive;
 
     @Resource
     private AliyunRamPolicyProvider aliyunRamPolicyProvider;
@@ -75,7 +75,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<ListPoliciesResponse.Policy> policyList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> policyList.addAll(aliyunRamDatasource.listPolicies(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> policyList.addAll(aliyunRamDrive.listPolicies(regionId, aliyun)));
         return policyList;
     }
 
@@ -97,7 +97,7 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<ListP
     @Override
     protected List<ListPoliciesResponse.Policy> listEntities(DsInstanceContext dsInstanceContext, ListUsersResponse.User target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRamDatasource.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName()).stream().map(this::toTargetEntity
+        return aliyunRamDrive.listPoliciesForUser(aliyun.getRegionId(), aliyun, target.getUserName()).stream().map(this::toTargetEntity
         ).collect(Collectors.toList());
     }
 

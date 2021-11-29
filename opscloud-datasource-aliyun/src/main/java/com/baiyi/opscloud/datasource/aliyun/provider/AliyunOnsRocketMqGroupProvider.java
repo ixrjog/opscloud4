@@ -6,8 +6,8 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
-import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.AliyunOnsRocketMqGroupDatasource;
-import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.AliyunOnsRocketMqInstanceDatasource;
+import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqGroupDrive;
+import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqInstanceDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
@@ -37,10 +37,10 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvider<OnsGroupListResponse.SubscribeInfoDo, OnsInstanceInServiceListResponse.InstanceVO> {
 
     @Resource
-    private AliyunOnsRocketMqInstanceDatasource aliyunOnsRocketMqInstanceDatasource;
+    private AliyunOnsRocketMqInstanceDrive aliyunOnsRocketMqInstanceDrive;
 
     @Resource
-    private AliyunOnsRocketMqGroupDatasource aliyunOnsRocketMqGroupDatasource;
+    private AliyunOnsRocketMqGroupDrive aliyunOnsRocketMqGroupDrive;
 
     @Resource
     private AliyunOnsRocketMqGroupProvider aliyunOnsRocketMqGroupProvider;
@@ -77,10 +77,10 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
             return Collections.emptyList();
         List<OnsGroupListResponse.SubscribeInfoDo> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
-            List<OnsInstanceInServiceListResponse.InstanceVO> instances = aliyunOnsRocketMqInstanceDatasource.listInstance(regionId, aliyun);
+            List<OnsInstanceInServiceListResponse.InstanceVO> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
             if (!CollectionUtils.isEmpty(instances)) {
                 instances.forEach(instance ->
-                        entities.addAll(aliyunOnsRocketMqGroupDatasource.listGroup(regionId, aliyun, instance.getInstanceId())));
+                        entities.addAll(aliyunOnsRocketMqGroupDrive.listGroup(regionId, aliyun, instance.getInstanceId())));
             }
         });
         return entities;
@@ -104,7 +104,7 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetRelationProvide
     @Override
     protected List<OnsGroupListResponse.SubscribeInfoDo> listEntities(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunOnsRocketMqGroupDatasource.listGroup(aliyun.getRegionId(), aliyun, target.getInstanceId());
+        return aliyunOnsRocketMqGroupDrive.listGroup(aliyun.getRegionId(), aliyun, target.getInstanceId());
     }
 
     @Override

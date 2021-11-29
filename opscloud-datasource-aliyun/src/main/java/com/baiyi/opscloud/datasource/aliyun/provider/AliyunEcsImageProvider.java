@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.EcsImageAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.AliyunEcsDatasource;
+import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunEcsDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -35,7 +35,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResponse.Image> {
 
     @Resource
-    private AliyunEcsDatasource aliyunEcsDatasource;
+    private AliyunEcsDrive aliyunEcsDrive;
 
     @Resource
     private AliyunEcsImageProvider aliyunEcsImageProvider;
@@ -72,7 +72,7 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<DescribeImagesResponse.Image> imageList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> imageList.addAll(aliyunEcsDatasource.listImages(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> imageList.addAll(aliyunEcsDrive.listImages(regionId, aliyun)));
         return imageList;
     }
 

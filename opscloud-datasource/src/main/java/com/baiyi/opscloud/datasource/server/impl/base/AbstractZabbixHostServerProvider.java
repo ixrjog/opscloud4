@@ -10,9 +10,9 @@ import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostTagDatasource;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TemplateDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostTagDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TemplateDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHostGroup;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTemplate;
@@ -38,13 +38,13 @@ public abstract class AbstractZabbixHostServerProvider extends AbstractServerPro
     private ZabbixGroupHelper zabbixFacade;
 
     @Resource
-    protected ZabbixV5HostDatasource zabbixV5HostDatasource;
+    protected ZabbixV5HostDrive zabbixV5HostDatasource;
 
     @Resource
-    protected ZabbixV5HostTagDatasource zabbixV5HostTagDatasource;
+    protected ZabbixV5HostTagDrive zabbixV5HostTagDatasource;
 
     @Resource
-    private ZabbixV5TemplateDatasource zabbixV5TemplateDatasource;
+    private ZabbixV5TemplateDrive zabbixV5TemplateDatasource;
 
     protected static ThreadLocal<ZabbixConfig.Zabbix> configContext = new ThreadLocal<>();
 

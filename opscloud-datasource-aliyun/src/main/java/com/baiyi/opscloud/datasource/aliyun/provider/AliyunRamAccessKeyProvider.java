@@ -5,7 +5,7 @@ import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ram.AliyunRamDatasource;
+import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
@@ -36,7 +36,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN
 public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListAccessKeysResponse.AccessKey> {
 
     @Resource
-    private AliyunRamDatasource aliyunRamDatasource;
+    private AliyunRamDrive aliyunRamDrive;
 
     @Resource
     private AliyunRamAccessKeyProvider aliyunRamAccessKeyProvider;
@@ -67,7 +67,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<ListAccessKeysResponse.AccessKey> accessKeyList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> accessKeyList.addAll(aliyunRamDatasource.listAccessKeys(regionId, aliyun, asset.getAssetKey())));
+        aliyun.getRegionIds().forEach(regionId -> accessKeyList.addAll(aliyunRamDrive.listAccessKeys(regionId, aliyun, asset.getAssetKey())));
         return accessKeyList;
     }
 

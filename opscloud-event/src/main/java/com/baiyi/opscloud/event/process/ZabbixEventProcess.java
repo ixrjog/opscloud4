@@ -15,9 +15,9 @@ import com.baiyi.opscloud.event.enums.EventTypeEnum;
 import com.baiyi.opscloud.event.process.base.AbstractEventProcess;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.constant.SeverityType;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5ProblemDatasource;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5TriggerDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5ProblemDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5TriggerDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixProblem;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
@@ -41,13 +41,13 @@ import java.util.Optional;
 public class ZabbixEventProcess extends AbstractEventProcess<ZabbixProblem.Problem> {
 
     @Resource
-    private ZabbixV5TriggerDatasource zabbixV5TriggerDatasource;
+    private ZabbixV5TriggerDrive zabbixV5TriggerDatasource;
 
     @Resource
-    private ZabbixV5ProblemDatasource zabbixV5ProblemDatasource;
+    private ZabbixV5ProblemDrive zabbixV5ProblemDatasource;
 
     @Resource
-    private ZabbixV5HostDatasource zabbixV5HostDatasource;
+    private ZabbixV5HostDrive zabbixV5HostDatasource;
 
     private static final List<SeverityType> severityTypes = Lists.newArrayList(SeverityType.HIGH, SeverityType.DISASTER);
 

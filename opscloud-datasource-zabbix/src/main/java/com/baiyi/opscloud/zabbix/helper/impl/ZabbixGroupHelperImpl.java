@@ -3,8 +3,8 @@ package com.baiyi.opscloud.zabbix.helper.impl;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.ZabbixUtil;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostGroupDatasource;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5UserGroupDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostGroupDrive;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserGroupDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import org.springframework.stereotype.Component;
 
@@ -19,10 +19,10 @@ import javax.annotation.Resource;
 public class ZabbixGroupHelperImpl implements ZabbixGroupHelper {
 
     @Resource
-    private ZabbixV5UserGroupDatasource zabbixV5UserGroupDatasource;
+    private ZabbixV5UserGroupDrive zabbixV5UserGroupDatasource;
 
     @Resource
-    private ZabbixV5HostGroupDatasource zabbixV5HostGroupDatasource;
+    private ZabbixV5HostGroupDrive zabbixV5HostGroupDatasource;
 
     /**
      * 查询并创建用户组

@@ -15,7 +15,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixHostAssetConvert;
 import com.baiyi.opscloud.zabbix.provider.ZabbixHostProvider;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5HostDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5HostDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 
 import javax.annotation.Resource;
@@ -31,7 +31,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelationProvider<ZabbixHost.Host, T> {
 
     @Resource
-    protected ZabbixV5HostDatasource zabbixV5HostDatasource;
+    protected ZabbixV5HostDrive zabbixV5HostDrive;
 
     @Resource
     private ZabbixHostProvider zabbixHostTargetGroupProvider;
@@ -47,12 +47,12 @@ public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelatio
 
     @Override
     protected List<ZabbixHost.Host> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5HostDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5HostDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixHost.Host getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5HostDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixV5HostDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

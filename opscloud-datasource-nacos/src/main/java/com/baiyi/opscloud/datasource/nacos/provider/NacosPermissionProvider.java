@@ -10,7 +10,7 @@ import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.nacos.convert.NacosPermissionConvert;
 import com.baiyi.opscloud.datasource.nacos.entity.NacosPermission;
-import com.baiyi.opscloud.datasource.nacos.datasource.NacosAuthDatasource;
+import com.baiyi.opscloud.datasource.nacos.drive.NacosAuthDrive;
 import com.baiyi.opscloud.datasource.nacos.param.NacosPageParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -34,7 +34,7 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
     private NacosPermissionProvider nacosPermissionProvider;
 
     @Resource
-    private NacosAuthDatasource nacosAuthDatasource;
+    private NacosAuthDrive nacosAuthDrive;
 
     @Override
     public String getInstanceType() {
@@ -53,7 +53,7 @@ public class NacosPermissionProvider extends BaseAssetProvider<NacosPermission.P
     @Override
     protected List<NacosPermission.Permission> listEntities(DsInstanceContext dsInstanceContext) {
         try {
-            NacosPermission.PermissionsResponse permissionsResponse = nacosAuthDatasource.listPermissions(buildConfig(dsInstanceContext.getDsConfig()), NacosPageParam.PageQuery.builder().build());
+            NacosPermission.PermissionsResponse permissionsResponse = nacosAuthDrive.listPermissions(buildConfig(dsInstanceContext.getDsConfig()), NacosPageParam.PageQuery.builder().build());
             return permissionsResponse.getPageItems();
         } catch (Exception e) {
             e.printStackTrace();

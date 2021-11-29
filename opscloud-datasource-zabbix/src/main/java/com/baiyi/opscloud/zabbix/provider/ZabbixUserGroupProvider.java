@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.zabbix.convert.ZabbixUserAssetConvert;
-import com.baiyi.opscloud.zabbix.v5.datasource.ZabbixV5UserGroupDatasource;
+import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserGroupDrive;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUser;
 import com.baiyi.opscloud.zabbix.v5.entity.ZabbixUserGroup;
 import org.springframework.stereotype.Component;
@@ -34,7 +34,7 @@ import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX
 public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<ZabbixUserGroup.UserGroup, ZabbixUser.User> {
 
     @Resource
-    private ZabbixV5UserGroupDatasource zabbixV5UserGroupDatasource;
+    private ZabbixV5UserGroupDrive zabbixV5UserGroupDrive;
 
     @Resource
     private ZabbixUserGroupProvider zabbixUserGroupProvider;
@@ -51,17 +51,17 @@ public class ZabbixUserGroupProvider extends AbstractAssetRelationProvider<Zabbi
     @Override
     protected List<ZabbixUserGroup.UserGroup> listEntities(DsInstanceContext dsInstanceContext, ZabbixUser.User target) {
         ZabbixConfig.Zabbix zabbix = buildConfig(dsInstanceContext.getDsConfig());
-        return zabbixV5UserGroupDatasource.listByUser(zabbix, target);
+        return zabbixV5UserGroupDrive.listByUser(zabbix, target);
     }
 
     @Override
     protected List<ZabbixUserGroup.UserGroup> listEntities(DsInstanceContext dsInstanceContext) {
-        return zabbixV5UserGroupDatasource.list(buildConfig(dsInstanceContext.getDsConfig()));
+        return zabbixV5UserGroupDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
     @Override
     protected ZabbixUserGroup.UserGroup getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5UserGroupDatasource.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
+        return zabbixV5UserGroupDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override
