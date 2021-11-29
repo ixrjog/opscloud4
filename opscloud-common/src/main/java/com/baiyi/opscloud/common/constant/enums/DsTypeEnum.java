@@ -54,5 +54,5 @@ public enum DsTypeEnum {
                         .build()).collect(Collectors.toList()))
                 .build();
     }
-    
+
 }

@@ -36,6 +36,7 @@
         <module>opscloud-order</module>
         <module>opscloud-datasource-sonar</module>
         <module>opscloud-datasource-nacos</module>
+        <module>opscloud-datasource-dingtalk</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>
