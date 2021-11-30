@@ -51,7 +51,6 @@ public abstract class BaseAssetToBO implements IAssetConvert, InitializingBean {
         return 0;
     }
 
-
     protected List<BusinessAssetRelation> queryBusinessAssetRelations(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
         return businessAssetRelationService.queryAssetRelations(businessTypeEnum.getType(), asset.getId());
     }
