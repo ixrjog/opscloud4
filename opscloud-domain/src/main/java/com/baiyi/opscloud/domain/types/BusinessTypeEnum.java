@@ -2,6 +2,8 @@ package com.baiyi.opscloud.domain.types;
 
 import lombok.Getter;
 
+import java.util.Arrays;
+
 /**
  * @Author baiyi
  * @Date 2020/2/22 5:46 下午
@@ -46,15 +48,12 @@ public enum BusinessTypeEnum {
 
     USER_PERMISSION(100, "USER_PERMISSION");
 
-    private String name;
-    private int type;
-    private boolean inApplication;
+    private final String name;
+    private final int type;
+    private final boolean inApplication;
 
     public static BusinessTypeEnum getByType(int type) {
-        for (BusinessTypeEnum typeEnum : BusinessTypeEnum.values())
-            if (typeEnum.type == type)
-                return typeEnum;
-        return null;
+        return Arrays.stream(BusinessTypeEnum.values()).filter(typeEnum -> typeEnum.type == type).findFirst().orElse(null);
     }
 
     BusinessTypeEnum(int type, String name, boolean inApplication) {

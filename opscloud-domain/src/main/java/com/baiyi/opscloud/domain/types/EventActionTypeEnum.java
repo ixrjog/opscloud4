@@ -6,6 +6,7 @@ package com.baiyi.opscloud.domain.types;
  * @Version 1.0
  */
 public enum EventActionTypeEnum {
+
     UPDATE,
     CREATE,
     DELETE

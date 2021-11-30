@@ -50,7 +50,6 @@ public class NacosConfig extends BaseConfig {
 
     }
 
-
 }
 
 

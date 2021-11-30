@@ -48,7 +48,6 @@
             <artifactId>opscloud-datasource</artifactId>
         </dependency>
 
-
         <dependency>
             <groupId>com.baiyi</groupId>
             <artifactId>opscloud-event</artifactId>

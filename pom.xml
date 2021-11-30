@@ -371,6 +371,13 @@
                 <version>${project.version}</version>
             </dependency>
 
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-dingtalk</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+
         </dependencies>
     </dependencyManagement>
 

@@ -1,6 +1,6 @@
 package com.baiyi.opscloud;
 
-import com.alibaba.fastjson.JSON;
+import com.baiyi.opscloud.common.util.JSONUtil;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.retry.annotation.Retryable;
@@ -24,7 +24,7 @@ public class BaseUnit {
         if (t instanceof String) {
             System.err.println((String) t);
         } else {
-            System.err.println(JSON.toJSONString(t));
+            System.err.println(JSONUtil.writeValueAsString(t));
         }
     }
 

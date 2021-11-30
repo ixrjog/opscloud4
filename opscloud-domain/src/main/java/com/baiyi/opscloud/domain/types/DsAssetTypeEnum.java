@@ -61,10 +61,12 @@ public enum DsAssetTypeEnum {
     NACOS_CLUSTER_NODE("NACOS_CLUSTER_NODE"),
     NACOS_PERMISSION("NACOS_PERMISSION"),
     NACOS_USER("NACOS_USER"),
-    NACOS_ROLE("NACOS_ROLE")
-    ;
+    NACOS_ROLE("NACOS_ROLE"),
 
-    private String type;
+    DINGTALK_USER("DINGTALK_USER"),
+    DINGTALK_DEPARTMENT("DINGTALK_DEPARTMENT");
+
+    private final String type;
 
     DsAssetTypeEnum(String type) {
         this.type = type;

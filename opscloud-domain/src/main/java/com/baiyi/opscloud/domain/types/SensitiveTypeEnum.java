@@ -6,6 +6,7 @@ package com.baiyi.opscloud.domain.types;
  * @Since 1.0
  */
 public enum SensitiveTypeEnum {
+
     // 手机号
     MOBILE_PHONE,
     // 密码

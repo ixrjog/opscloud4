@@ -1,0 +1,29 @@
+package com.baiyi.opscloud.datasource.dingtalk;
+
+import com.baiyi.opscloud.datasource.dingtalk.base.BaseDingtalkTest;
+import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkUserDrive;
+import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkUser;
+import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkUserParam;
+import org.junit.jupiter.api.Test;
+
+import javax.annotation.Resource;
+
+/**
+ * @Author baiyi
+ * @Date 2021/11/29 4:46 下午
+ * @Version 1.0
+ */
+public class DingtalkUserTest extends BaseDingtalkTest {
+
+    @Resource
+    private DingtalkUserDrive dingtalkUserDrive;
+
+    @Test
+    void listUserTest() {
+        DingtalkUserParam.QueryUserPage queryUserPage = DingtalkUserParam.QueryUserPage.builder().build();
+        print(queryUserPage);
+        DingtalkUser.UserResponse userResponse = dingtalkUserDrive.list(getConfig().getDingtalk(), queryUserPage);
+        print(userResponse);
+    }
+
+}

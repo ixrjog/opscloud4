@@ -34,7 +34,7 @@ public interface SonarProjectsFeign {
      * @param paramMap
      * @return
      */
-    @RequestLine("GET api/projects/search")
+    @RequestLine("GET /api/projects/search")
     @Headers({"Content-Type: application/json;charset=utf-8",
             "Authorization: Basic {authBasic}"})
     SonarProjects searchProjects(@Param("authBasic") String authBasic, @QueryMap Map<String, String> paramMap);
