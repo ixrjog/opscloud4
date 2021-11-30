@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.task.impl;
 
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
@@ -31,6 +32,7 @@ import com.baiyi.opscloud.util.PlaybookUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -78,6 +80,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 , table.getTotalNum());
     }
 
+    @Async(value = Global.TaskPools.EXECUTOR)
     @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask);
