@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
 import com.baiyi.opscloud.domain.vo.auth.AuthRoleVO;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
@@ -36,9 +36,7 @@ public class UserVO {
     }
 
     public interface IUserPermission extends BaseBusiness.IBusiness {
-
         void setUserPermission(UserPermissionVO.UserPermission userPermission);
-
         Integer getUserId();
     }
 
@@ -69,7 +67,6 @@ public class UserVO {
         private List<DsAssetVO.Asset> ramPolicies;
 
     }
-
 
     @EqualsAndHashCode(callSuper = true)
     @Builder

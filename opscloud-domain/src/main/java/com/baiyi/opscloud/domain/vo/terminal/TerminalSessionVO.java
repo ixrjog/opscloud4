@@ -26,6 +26,7 @@ public class TerminalSessionVO {
     @ApiModel
     public static class Session extends BaseVO implements TerminalSessionInstanceVO.ISessionInstances, UserVO.IUser, Serializable {
 
+        private static final long serialVersionUID = 7671719435444459757L;
         private List<TerminalSessionInstanceVO.SessionInstance> sessionInstances;
 
         private UserVO.User user;

@@ -34,7 +34,7 @@ public class DsAssetVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelation {
+    public static class Asset extends BaseVO implements TagVO.ITags, BusinessRelationVO.IRelations {
 
         // ITags
         private List<TagVO.Tag> tags;

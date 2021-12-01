@@ -16,7 +16,6 @@ import java.util.List;
  */
 public class UserUIVO {
 
-
     @Data
     @NoArgsConstructor
     @AllArgsConstructor

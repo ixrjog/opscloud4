@@ -33,6 +33,7 @@ public class ServerAccountVO {
     public static class Account extends BaseVO implements CredentialVO.ICredential, Serializable {
 
         private static final long serialVersionUID = 1815467621572374314L;
+
         private CredentialVO.Credential credential;
 
         private Integer serverSize;

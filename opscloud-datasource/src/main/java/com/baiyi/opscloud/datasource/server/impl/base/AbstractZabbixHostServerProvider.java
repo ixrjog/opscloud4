@@ -6,7 +6,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.Env;
 import com.baiyi.opscloud.domain.generator.opscloud.Server;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.facade.server.SimpleServerNameFacade;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.v5.param.ZabbixHostParam;

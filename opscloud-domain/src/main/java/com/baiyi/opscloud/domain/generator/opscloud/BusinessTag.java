@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -13,7 +14,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "business_tag")
-public class BusinessTag {
+public class BusinessTag implements BaseBusiness.IBusiness {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

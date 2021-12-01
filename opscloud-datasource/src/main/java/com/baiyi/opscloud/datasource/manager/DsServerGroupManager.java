@@ -7,7 +7,7 @@ import com.baiyi.opscloud.datasource.serverGroup.factory.ServerGroupProviderFact
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

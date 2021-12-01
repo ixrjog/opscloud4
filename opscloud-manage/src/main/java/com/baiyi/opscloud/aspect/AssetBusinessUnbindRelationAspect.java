@@ -2,8 +2,8 @@ package com.baiyi.opscloud.aspect;
 
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.domain.annotation.AssetBusinessUnbindRelation;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
-import com.baiyi.opscloud.domain.vo.business.SimpleBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;

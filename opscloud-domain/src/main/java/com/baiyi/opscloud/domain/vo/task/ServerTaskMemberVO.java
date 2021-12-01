@@ -18,7 +18,6 @@ public class ServerTaskMemberVO {
 
     public interface IServerTaskMembers {
         Integer getServerTaskId();
-
         void setServerTaskMembers(List<Member> serverTaskMembers);
     }
 

@@ -48,8 +48,6 @@ public class TerminalSessionInstanceVO {
         @ApiModelProperty(value = "会话实例关闭时间")
         @JsonFormat(timezone = "GMT+8", pattern = "yyyy-MM-dd HH:mm:ss")
         private Date closeTime;
-
-
-
     }
+
 }

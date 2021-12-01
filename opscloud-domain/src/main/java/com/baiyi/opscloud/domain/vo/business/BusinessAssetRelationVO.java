@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.business;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import lombok.*;
@@ -38,7 +39,7 @@ public class BusinessAssetRelationVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Relation extends BaseVO {
+    public static class Relation extends BaseVO implements BaseBusiness.IBusiness {
 
         private Integer id;
         private Integer businessType;

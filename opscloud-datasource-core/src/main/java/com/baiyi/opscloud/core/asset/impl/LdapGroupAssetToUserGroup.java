@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.core.asset.impl;
 
-import com.baiyi.opscloud.core.asset.impl.base.BaseAssetToBO;
+import com.baiyi.opscloud.core.asset.impl.base.AbstractAssetToBO;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
@@ -17,7 +17,7 @@ import java.util.List;
  * @Version 1.0
  */
 @Component
-public class LdapGroupAssetToUserGroup extends BaseAssetToBO {
+public class LdapGroupAssetToUserGroup extends AbstractAssetToBO {
 
     @Override
     public String getAssetType() {

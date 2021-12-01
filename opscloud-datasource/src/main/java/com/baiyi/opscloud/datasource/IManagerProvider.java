@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource;
 
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 
 /**
  * @Author baiyi

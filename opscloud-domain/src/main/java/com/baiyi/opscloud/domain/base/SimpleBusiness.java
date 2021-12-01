@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.domain.vo.business;
+package com.baiyi.opscloud.domain.base;
 
 import lombok.Builder;
 import lombok.Data;

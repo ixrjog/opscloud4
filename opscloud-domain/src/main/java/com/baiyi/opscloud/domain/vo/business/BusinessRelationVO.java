@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.business;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
@@ -10,13 +11,13 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/21 4:32 下午
  * @Since 1.0
  */
 public class BusinessRelationVO {
 
-    public interface IRelation extends BaseBusiness.IBusiness {
+    public interface IRelations extends BaseBusiness.IBusiness {
 
         void setSourceBusinessRelations(List<BusinessRelationVO.Relation> sourceBusinessRelations);
 

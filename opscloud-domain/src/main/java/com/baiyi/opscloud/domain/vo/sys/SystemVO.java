@@ -25,6 +25,7 @@ public class SystemVO {
     @AllArgsConstructor
     @ApiModel
     public static class Info implements Serializable {
+        private static final long serialVersionUID = 2152909622535993214L;
         private Cpu cpu;
         private Mem mem;
     }
@@ -39,6 +40,7 @@ public class SystemVO {
     @AllArgsConstructor
     @ApiModel
     public static class Cpu implements Serializable {
+        private static final long serialVersionUID = 916243397197915613L;
         /**
          * 核心数
          */
@@ -80,6 +82,7 @@ public class SystemVO {
     @AllArgsConstructor
     @ApiModel
     public static class Mem implements Serializable {
+        private static final long serialVersionUID = -2293050628937451167L;
         /**
          * 内存总量
          */

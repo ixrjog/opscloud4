@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.domain.vo.business;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 
 import java.util.List;

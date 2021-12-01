@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.datasource;
 
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 
 /**

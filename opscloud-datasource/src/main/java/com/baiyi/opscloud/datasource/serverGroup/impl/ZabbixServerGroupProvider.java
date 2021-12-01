@@ -8,7 +8,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.ServerGroup;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.model.property.ServerProperty;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.service.business.BusinessPropertyHelper;
 import com.baiyi.opscloud.zabbix.helper.ZabbixGroupHelper;
 import com.baiyi.opscloud.zabbix.ZabbixUtil;

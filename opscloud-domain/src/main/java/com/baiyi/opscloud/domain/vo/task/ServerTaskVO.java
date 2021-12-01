@@ -24,7 +24,11 @@ public class ServerTaskVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class ServerTask extends BaseVO implements ServerTaskMemberVO.IServerTaskMembers, AnsiblePlaybookVO.IPlaybook, UserVO.IUser, ShowTime.IAgo, ShowTime.IDuration {
+    public static class ServerTask extends BaseVO implements ServerTaskMemberVO.IServerTaskMembers,
+            AnsiblePlaybookVO.IPlaybook,
+            UserVO.IUser,
+            ShowTime.IAgo,
+            ShowTime.IDuration {
 
         private List<ServerTaskMemberVO.Member> serverTaskMembers; // 任务成员
 

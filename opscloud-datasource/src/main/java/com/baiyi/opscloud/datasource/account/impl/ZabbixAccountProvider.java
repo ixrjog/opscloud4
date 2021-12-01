@@ -4,7 +4,7 @@ import com.baiyi.opscloud.datasource.account.convert.AccountConvert;
 import com.baiyi.opscloud.datasource.account.impl.base.BaseZabbixAccountProvider;
 import com.baiyi.opscloud.datasource.account.util.ZabbixMediaUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.zabbix.v5.drive.ZabbixV5UserDrive;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;

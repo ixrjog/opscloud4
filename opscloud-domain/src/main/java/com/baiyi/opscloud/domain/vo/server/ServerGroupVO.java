@@ -24,11 +24,8 @@ import java.util.List;
 public class ServerGroupVO {
 
     public interface IServerGroup {
-
         Integer getServerGroupId();
-
         void setServerGroup(ServerGroup serverGroup);
-
     }
 
     @Builder

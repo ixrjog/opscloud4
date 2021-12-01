@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.service.business;
 
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>

@@ -23,7 +23,7 @@ import java.util.Map;
  * @Version 1.0
  */
 @Slf4j
-public abstract class BaseAssetToBO implements IAssetConvert, InitializingBean {
+public abstract class AbstractAssetToBO implements IAssetConvert, InitializingBean {
 
     @Resource
     protected BusinessAssetRelationService businessAssetRelationService;

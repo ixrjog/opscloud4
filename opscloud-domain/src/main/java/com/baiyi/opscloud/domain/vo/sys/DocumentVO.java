@@ -21,8 +21,8 @@ public class DocumentVO {
     @NoArgsConstructor
     @ApiModel
     public static class Doc {
-
         private String content;
         private Map<String, String> dict;
     }
+
 }

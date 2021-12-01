@@ -25,7 +25,7 @@ public class AliyunLogMemberVO {
     @Data
     @NoArgsConstructor
     @ApiModel
-    public static class LogMember extends BaseVO implements ShowTime.IAgo , EnvVO.IEnv {
+    public static class LogMember extends BaseVO implements ShowTime.IAgo, EnvVO.IEnv {
 
         private AliyunLogVO.Log log;
 

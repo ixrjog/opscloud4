@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

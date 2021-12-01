@@ -3,7 +3,7 @@ package com.baiyi.opscloud.factory.resource;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.base.IApplicationResourceType;
 
 /**

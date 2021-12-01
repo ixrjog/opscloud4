@@ -16,6 +16,11 @@ import java.io.Serializable;
  */
 public class EnvVO {
 
+    public interface IEnv {
+        void setEnv(Env env);
+        Integer getEnvType();
+    }
+
     @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
@@ -43,10 +48,4 @@ public class EnvVO {
 
     }
 
-    public interface IEnv {
-
-        void setEnv(Env env);
-
-        Integer getEnvType();
-    }
 }

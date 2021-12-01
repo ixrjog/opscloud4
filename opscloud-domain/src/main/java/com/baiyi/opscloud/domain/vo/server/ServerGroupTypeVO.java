@@ -18,9 +18,7 @@ import java.io.Serializable;
 public class ServerGroupTypeVO {
 
     public interface IServerGroupType {
-
         void setServerGroupType(ServerGroupTypeVO.ServerGroupType serverGroupType);
-
         Integer getServerGroupTypeId();
     }
 

@@ -22,9 +22,7 @@ import java.util.List;
 public class ServerVO {
 
     public interface IServer {
-
         void setServer(Server server);
-
         Integer getServerId();
     }
 
@@ -34,7 +32,8 @@ public class ServerVO {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class Server extends BaseVO implements EnvVO.IEnv, TagVO.ITags,
+    public static class Server extends BaseVO implements EnvVO.IEnv,
+            TagVO.ITags,
             ServerGroupVO.IServerGroup,
             ServerAccountVO.IAccount,
             BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系

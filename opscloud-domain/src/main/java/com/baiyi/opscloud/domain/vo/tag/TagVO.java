@@ -2,7 +2,7 @@ package com.baiyi.opscloud.domain.vo.tag;
 
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
@@ -20,10 +20,8 @@ import java.util.List;
 public class TagVO {
 
     public interface ITags extends BaseBusiness.IBusiness {
-
         void setTags(List<Tag> tags);
         List<Tag> getTags();
-
     }
 
     @EqualsAndHashCode(callSuper = true)
@@ -53,6 +51,5 @@ public class TagVO {
 
         private BusinessTypeEnum businessTypeEnum;
     }
-
 
 }

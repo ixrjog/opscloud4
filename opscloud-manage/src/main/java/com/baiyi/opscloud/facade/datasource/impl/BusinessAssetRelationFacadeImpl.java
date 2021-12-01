@@ -3,7 +3,7 @@ package com.baiyi.opscloud.facade.datasource.impl;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
-import com.baiyi.opscloud.domain.vo.business.BaseBusiness;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.facade.datasource.BusinessAssetRelationFacade;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;

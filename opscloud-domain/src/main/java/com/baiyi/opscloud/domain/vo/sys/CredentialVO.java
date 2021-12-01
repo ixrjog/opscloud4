@@ -25,7 +25,7 @@ public class CredentialVO {
     @AllArgsConstructor
     @ApiModel
     @Builder
-    public static class Credential extends BaseVO implements ISecret , Serializable {
+    public static class Credential extends BaseVO implements ISecret, Serializable {
 
         private static final long serialVersionUID = -8663845116665600709L;
         private Integer id;

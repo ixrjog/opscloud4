@@ -18,7 +18,6 @@ public class InstanceVO {
     @ApiModel
     public static class Health {
         private String status;
-
         private boolean isHealth;
     }
 
