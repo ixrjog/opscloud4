@@ -37,6 +37,9 @@ public class DingtalkUser {
     public static class User implements Serializable {
 
         private static final long serialVersionUID = 161013059944723592L;
+
+        private String username; // 转换类处理
+
         @JsonProperty("dept_order")
         private Long deptOrder;
         private Boolean leader;

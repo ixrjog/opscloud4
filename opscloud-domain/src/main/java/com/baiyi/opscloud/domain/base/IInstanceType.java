@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.core.provider.base.common;
+package com.baiyi.opscloud.domain.base;
 
 /**
  * @Author baiyi

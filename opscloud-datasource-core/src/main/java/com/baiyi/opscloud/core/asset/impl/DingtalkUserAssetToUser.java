@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.core.asset.impl;
 
+import com.baiyi.opscloud.common.util.EmailUtil;
 import com.baiyi.opscloud.core.asset.impl.base.AbstractAssetToBO;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
@@ -26,7 +27,7 @@ public class DingtalkUserAssetToUser extends AbstractAssetToBO {
 
     protected BusinessAssetRelationVO.IBusinessAssetRelation toBO(DsAssetVO.Asset asset, BusinessTypeEnum businessTypeEnum) {
         return UserVO.User.builder()
-                .username(asset.getAssetKey())
+                .username(EmailUtil.toUsername(asset.getAssetKey2()))
                 .displayName(asset.getName())
                 .email(asset.getAssetKey2())
                 .phone(asset.getProperties().get("mobile"))

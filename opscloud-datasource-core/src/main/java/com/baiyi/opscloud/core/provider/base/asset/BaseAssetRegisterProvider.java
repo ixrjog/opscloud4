@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.core.provider.base.asset;
 
-import com.baiyi.opscloud.core.asset.IAssetType;
-import com.baiyi.opscloud.core.provider.base.common.IInstanceType;
+import com.baiyi.opscloud.domain.base.IAssetType;
+import com.baiyi.opscloud.domain.base.IInstanceType;
 
 /**
  * @Author baiyi

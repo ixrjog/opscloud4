@@ -53,4 +53,6 @@ public interface UserService {
 
     List<User> listByIsActive(boolean isActive);
 
+    List<User> listByPhone(String phone);
+
 }

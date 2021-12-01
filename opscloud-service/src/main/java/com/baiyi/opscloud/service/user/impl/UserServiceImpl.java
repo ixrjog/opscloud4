@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
@@ -19,6 +20,7 @@ import com.baiyi.opscloud.service.user.UserService;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
@@ -30,6 +32,7 @@ import java.util.List;
  * @Date 2021/5/14 10:27 上午
  * @Version 1.0
  */
+@Slf4j
 @BusinessType(BusinessTypeEnum.USER)
 @Service
 @RequiredArgsConstructor
@@ -58,7 +61,19 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
 
     @Override
     public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
-        User user = getByKey(asset.getAssetKey());
+        String assetKey;
+        // 处理Dingtalk
+        if (asset.getAssetType().equals(DsAssetTypeEnum.DINGTALK_USER.name())) {
+            if (asset.getProperties().containsKey("username")) {
+                assetKey = asset.getProperties().get("username");
+                log.info(assetKey);
+            } else {
+                return null;
+            }
+        } else {
+            assetKey = asset.getAssetKey();
+        }
+        User user = getByKey(assetKey);
         return BeanCopierUtil.copyProperties(user, UserVO.User.class);
     }
 
@@ -133,6 +148,14 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
         Example example = new Example(User.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("isActive", isActive);
+        return userMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<User> listByPhone(String phone) {
+        Example example = new Example(User.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("phone", phone);
         return userMapper.selectByExample(example);
     }
 }

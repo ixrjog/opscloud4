@@ -3,6 +3,7 @@ package com.baiyi.opscloud.datasource.dingtalk.provider;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constant.SingleTaskConstants;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
+import com.baiyi.opscloud.common.util.EmailUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.util.AssetUtil;
@@ -15,9 +16,12 @@ import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,6 +40,9 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
 
     @Resource
     private DingtalkUserDrive dingtalkUserDrive;
+
+    @Resource
+    private UserService userService;
 
     @Override
     public String getAssetType() {
@@ -58,6 +65,14 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
                         .build();
                 DingtalkUser.UserResponse userResponse = dingtalkUserDrive.list(dingtalk, queryUserPage);
                 entities.addAll(userResponse.getResult().getList());
+            });
+            entities.forEach(e -> {
+                List<User> users = userService.listByPhone(e.getMobile());
+                if (!CollectionUtils.isEmpty(users)) {
+                    e.setUsername(users.get(0).getUsername());
+                } else {
+                    e.setUsername(EmailUtil.toUsername(e.getEmail()));
+                }
             });
             return entities;
         } catch (Exception e) {
@@ -90,4 +105,5 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
     public void afterPropertiesSet() {
         AssetProviderFactory.register(dingtalkUserProvider);
     }
+
 }

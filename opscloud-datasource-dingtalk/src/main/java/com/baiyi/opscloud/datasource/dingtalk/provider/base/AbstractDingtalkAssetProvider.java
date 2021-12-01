@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.dingtalk.provider.base;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
+import com.baiyi.opscloud.core.provider.asset.AbstractAssetBusinessRelationProvider;
 import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkDepartmentDrive;
 import com.baiyi.opscloud.datasource.dingtalk.entity.DingtalkDepartment;
 import com.baiyi.opscloud.datasource.dingtalk.param.DingtalkDepartmentParam;
@@ -22,7 +22,7 @@ import java.util.Set;
  * @Version 1.0
  */
 @Slf4j
-public abstract class AbstractDingtalkAssetProvider<T> extends BaseAssetProvider<T> {
+public abstract class AbstractDingtalkAssetProvider<T> extends AbstractAssetBusinessRelationProvider<T> {
 
     @Resource
     protected DingtalkDepartmentDrive dingtalkDepartmentDrive;

@@ -77,7 +77,7 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
     }
 
     @Override
-    @Async
+    //@Async
     public void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness) {
         DatasourceInstance dsInstance = dsInstanceService.getById(scanAssetBusiness.getInstanceId());
         DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);

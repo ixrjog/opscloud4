@@ -29,6 +29,7 @@ public class DingtalkAssetConvert {
                 .build();
         return AssetContainerBuilder.newBuilder()
                 .paramAsset(asset)
+                .paramProperty("username",entity.getUsername())
                 .paramProperty("mobile", entity.getMobile())
                 .paramProperty("leader", entity.getLeader())
                 .paramProperty("avatar", entity.getAvatar())

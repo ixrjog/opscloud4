@@ -8,6 +8,7 @@ import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
@@ -15,10 +16,13 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.factory.business.BusinessServiceFactory;
 import com.baiyi.opscloud.factory.business.base.IBusinessService;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.SCAN_ASSET_BUSINESS;
 
@@ -35,6 +39,9 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     @Resource
     private BusinessAssetRelationService businessAssetRelationService;
 
+    @Resource
+    private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
+
     @Override
     @SingleTask(name = SCAN_ASSET_BUSINESS, lockTime = "5m")
     public void scan(int dsInstanceId) {
@@ -45,7 +52,15 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
         pageQuery.setPage(1);
         pageQuery.setLength(10000);
         DataTable<DatasourceInstanceAsset> dataTable = dsInstanceAssetService.queryPageByParam(pageQuery);
-        dataTable.getData().forEach(a -> scan(BeanCopierUtil.copyProperties(a, DsAssetVO.Asset.class)));
+        dataTable.getData().forEach(a -> scan(toAssetVO(a)));
+    }
+
+    private DsAssetVO.Asset toAssetVO(DatasourceInstanceAsset asset) {
+        DsAssetVO.Asset assetVO = BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class);
+        Map<String, String> properties = dsInstanceAssetPropertyService.queryByAssetId(asset.getId())
+                .stream().collect(Collectors.toMap(DatasourceInstanceAssetProperty::getName, DatasourceInstanceAssetProperty::getValue, (k1, k2) -> k1));
+        assetVO.setProperties(properties);
+        return assetVO;
     }
 
     @Override
@@ -66,12 +81,13 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     private void bind(BusinessTypeEnum businessTypeEnum, DsAssetVO.Asset asset) {
         IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(businessTypeEnum.getType());
         if (iBusinessService != null) {
-            iBusinessService.toBusinessAssetRelation(asset);
+            //iBusinessService.toBusinessAssetRelation(asset);
             bind(asset, iBusinessService.toBusinessAssetRelation(asset));
         }
     }
 
     private void bind(DsAssetVO.Asset asset, BusinessAssetRelationVO.IBusinessAssetRelation iBusinessAssetRelation) {
+        if (iBusinessAssetRelation == null) return;
         iBusinessAssetRelation.setAssetId(asset.getId());
         BusinessAssetRelationVO.Relation relation = iBusinessAssetRelation.toBusinessAssetRelation();
         if (businessAssetRelationService.getByUniqueKey(relation) == null) {
@@ -80,4 +96,5 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
             businessAssetRelationService.add(businessAssetRelation);
         }
     }
+
 }
