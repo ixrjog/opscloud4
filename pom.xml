@@ -40,9 +40,10 @@
         <module>opscloud-datasource-message</module>
     </modules>
     <parent>
+        <!--https://spring.io/projects/spring-boot#learn-->
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.3.10.RELEASE</version>
+        <version>2.3.12.RELEASE</version>
         <relativePath/> <!-- lookup parent from repository -->
     </parent>
     <groupId>com.baiyi</groupId>
@@ -285,25 +286,25 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-ram</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-log</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-rds</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-ons</artifactId>
-                <version>0.0.1-SNAPSHOT</version>
+                <version>${project.version}</version>
             </dependency>
 
             <dependency>
