@@ -37,6 +37,7 @@
         <module>opscloud-datasource-sonar</module>
         <module>opscloud-datasource-nacos</module>
         <module>opscloud-datasource-dingtalk</module>
+        <module>opscloud-datasource-message</module>
     </modules>
     <parent>
         <groupId>org.springframework.boot</groupId>

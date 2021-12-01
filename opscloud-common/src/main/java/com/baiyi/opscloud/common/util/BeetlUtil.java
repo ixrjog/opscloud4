@@ -35,6 +35,8 @@ public class BeetlUtil {
         contentMap.keySet().forEach(k -> t.binding(k, contentMap.get(k)));
         // t.binding("name", "beetl");
         //渲染结果
+
+
         return t.render();
     }
 }

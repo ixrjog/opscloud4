@@ -81,7 +81,6 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     private void bind(BusinessTypeEnum businessTypeEnum, DsAssetVO.Asset asset) {
         IBusinessService iBusinessService = BusinessServiceFactory.getIBusinessServiceByBusinessType(businessTypeEnum.getType());
         if (iBusinessService != null) {
-            //iBusinessService.toBusinessAssetRelation(asset);
             bind(asset, iBusinessService.toBusinessAssetRelation(asset));
         }
     }

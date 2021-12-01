@@ -41,11 +41,13 @@
             <version>2.3.2</version>
         </dependency>
 
-        <!--        模版引擎-->
+        <!--   模版引擎
+        http://ibeetl.com/guide/#/beetl/basic
+        -->
         <dependency>
             <groupId>com.ibeetl</groupId>
             <artifactId>beetl</artifactId>
-            <version>3.1.7.RELEASE</version>
+            <version>3.1.8.RELEASE</version>
         </dependency>
 
         <!--   Shedlock 分布式任务锁 -->
