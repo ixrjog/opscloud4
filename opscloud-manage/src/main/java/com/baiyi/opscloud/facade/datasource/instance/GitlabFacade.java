@@ -1,7 +1,8 @@
 package com.baiyi.opscloud.facade.datasource.instance;
 
-import com.baiyi.opscloud.common.datasource.GitlabConfig;
+import com.baiyi.opscloud.common.constant.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.GitlabConfig;
 import com.baiyi.opscloud.common.util.GitlabTokenUtil;
 import com.baiyi.opscloud.datasource.InstanceConfigHelper;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
@@ -28,12 +29,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class GitlabFacade extends BaseManager {
 
-    private static final String SYSTEM_HOOKS_TAG = "SystemHooks";
-
     /**
      * 支持SystemHooks标签的实例类型
      */
-    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.GITLAB};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.GITLAB};
 
     private final InstanceConfigHelper instanceConfigHelper;
 
@@ -46,8 +45,7 @@ public class GitlabFacade extends BaseManager {
             DatasourceInstance instance = filter();
             if (instance == null) return; // 未配置 SystemHooks.SecretToken
             IGitlabEventConsume eventConsume = GitlabEventConsumeFactory.getByEventName(systemHook.getEvent_name());
-            if (eventConsume != null)
-                eventConsume.consumeEventV4(instance, systemHook);
+            if (eventConsume != null) eventConsume.consumeEventV4(instance, systemHook);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -58,23 +56,20 @@ public class GitlabFacade extends BaseManager {
         if (CollectionUtils.isEmpty(instances)) return null;
         Optional<DatasourceInstance> optional = instances.stream().filter(i -> {
             GitlabConfig gitlabDsInstanceConfig = (GitlabConfig) instanceConfigHelper.getConfig(i);
-            String secretToken = Optional.ofNullable(gitlabDsInstanceConfig.getGitlab())
-                    .map(GitlabConfig.Gitlab::getSystemHooks)
-                    .map(GitlabConfig.SystemHooks::getToken)
-                    .get();
+            String secretToken =
+                    Optional.ofNullable(gitlabDsInstanceConfig.getGitlab()).map(GitlabConfig.Gitlab::getSystemHooks).map(GitlabConfig.SystemHooks::getToken).get();
             return GitlabTokenUtil.getToken().equals(secretToken);
-
         }).findFirst();
         return optional.get();
     }
 
     @Override
     protected DsTypeEnum[] getFilterInstanceTypes() {
-        return filterInstanceTypes;
+        return FILTER_INSTANCE_TYPES;
     }
 
     @Override
     protected String getTag() {
-        return SYSTEM_HOOKS_TAG;
+        return DsInstanceTagConstants.SYSTEM_HOOKS.getTag();
     }
 }

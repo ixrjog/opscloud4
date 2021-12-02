@@ -8,7 +8,7 @@ import lombok.Getter;
  * @Version 1.0
  */
 public enum DsInstanceTagConstants {
-
+    SYSTEM_HOOKS("SystemHooks"),
     SERVER("Server"),
     AUTHORIZATION("Authorization"),
     ACCOUNT("Account"),
