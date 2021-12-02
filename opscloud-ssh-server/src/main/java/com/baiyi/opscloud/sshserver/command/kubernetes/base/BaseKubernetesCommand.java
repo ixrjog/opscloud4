@@ -47,7 +47,7 @@ public class BaseKubernetesCommand {
     }
 
     protected KubernetesConfig buildConfig(String instanceUuid) {
-       return dsConfigHelper.buildConfig(instanceUuid);
+       return dsConfigHelper.buildKubernetesConfig(instanceUuid);
     }
 
 }

@@ -73,6 +73,11 @@
             <artifactId>opscloud-datasource-dingtalk</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-message</artifactId>
+        </dependency>
+
     </dependencies>
 
 

@@ -11,8 +11,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
-
 /**
  * @Author baiyi
  * @Date 2021/5/15 9:59 上午
@@ -31,8 +29,6 @@ public class UserTokenFacadeImpl implements UserTokenFacade {
     public LogVO.Login userLogin(User user) {
         revokeUserToken(user.getUsername());
         UserToken userToken = grantUserToken(user.getUsername());
-        user.setLastLogin(new Date());
-        userService.update(user); // 更新用户登录事件
         return LogVO.Login.builder()
                 .name(user.getDisplayName())
                 .uuid(user.getUuid())

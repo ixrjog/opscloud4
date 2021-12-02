@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.manager;
 
+import com.baiyi.opscloud.common.constant.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.exception.auth.AuthRuntimeException;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AuthProviderFactory;
@@ -29,31 +30,25 @@ public class DsAuthManager extends BaseManager {
     @Resource
     private StringEncryptor stringEncryptor;
 
-
-    private static final String AUTHORIZATION_TAG = "Authorization";
-
     /**
      * 支持认证的实例类型
      */
-    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.LDAP};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LDAP};
 
     @Override
     protected DsTypeEnum[] getFilterInstanceTypes() {
-        return filterInstanceTypes;
+        return FILTER_INSTANCE_TYPES;
     }
 
     @Override
     protected String getTag() {
-        return AUTHORIZATION_TAG;
+        return DsInstanceTagConstants.AUTHORIZATION.getTag();
     }
 
     public boolean tryLogin(User user, LoginParam.Login loginParam) throws AuthRuntimeException {
         List<DatasourceInstance> instances = listInstance();
         if (!CollectionUtils.isEmpty(instances)) {
-            Authorization.Credential credential = Authorization.Credential.builder()
-                    .username(loginParam.getUsername())
-                    .password(loginParam.getPassword())
-                    .build();
+            Authorization.Credential credential = Authorization.Credential.builder().username(loginParam.getUsername()).password(loginParam.getPassword()).build();
             for (DatasourceInstance instance : instances) {
                 BaseAuthProvider authProvider = AuthProviderFactory.getProvider(instance.getInstanceType());
                 if (authProvider == null) continue;

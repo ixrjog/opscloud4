@@ -23,6 +23,8 @@ import org.jasypt.encryption.StringEncryptor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.util.Date;
+
 import static com.baiyi.opscloud.common.base.Global.SUPER_ADMIN;
 
 /**
@@ -120,6 +122,7 @@ public class UserAuthFacadeImpl implements UserAuthFacade {
         if (authProviderManager.tryLogin(user, loginParam)) {
             // 更新用户登录信息
             user.setPassword(stringEncryptor.encrypt(loginParam.getPassword()));
+            user.setLastLogin(new Date()); // 更新用户登录时间
             userService.updateLogin(user);
             return userTokenFacade.userLogin(user);
         } else {

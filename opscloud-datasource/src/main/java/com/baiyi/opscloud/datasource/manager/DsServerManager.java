@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.manager;
 
+import com.baiyi.opscloud.common.constant.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
@@ -23,21 +24,19 @@ import java.util.List;
 @Component
 public class DsServerManager extends BaseManager implements IManager<Server> {
 
-    private static final String SERVER_TAG = "Server";
-
     /**
      * 过滤实例类型
      */
-    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.ZABBIX};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.ZABBIX};
 
     @Override
     protected DsTypeEnum[] getFilterInstanceTypes() {
-        return filterInstanceTypes;
+        return FILTER_INSTANCE_TYPES;
     }
 
     @Override
     protected String getTag() {
-        return SERVER_TAG;
+        return DsInstanceTagConstants.SERVER.getTag();
     }
 
     @Override

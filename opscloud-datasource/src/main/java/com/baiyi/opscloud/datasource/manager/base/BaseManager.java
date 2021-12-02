@@ -1,17 +1,12 @@
 package com.baiyi.opscloud.datasource.manager.base;
 
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
-import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
-import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
-import com.baiyi.opscloud.service.datasource.DsInstanceService;
-import com.baiyi.opscloud.service.tag.SimpleTagService;
-import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -22,12 +17,7 @@ import java.util.stream.Collectors;
 public abstract class BaseManager {
 
     @Resource
-    private SimpleTagService baseTagService;
-
-    @Resource
-    private DsInstanceService dsInstanceService;
-
-    protected static final int DsInstanceBusinessType = BusinessTypeEnum.DATASOURCE_INSTANCE.getType();
+    private InstanceHelper instanceHelper;
 
     abstract protected DsTypeEnum[] getFilterInstanceTypes();
 
@@ -39,19 +29,7 @@ public abstract class BaseManager {
      * @return
      */
     protected List<DatasourceInstance> listInstance() {
-        List<DatasourceInstance> instances = Lists.newArrayList();
-        for (DsTypeEnum typeEnum : getFilterInstanceTypes()) {
-            DsInstanceParam.DsInstanceQuery query = DsInstanceParam.DsInstanceQuery.builder()
-                    .instanceType(typeEnum.getName())
-                    .build();
-            // 过滤掉没有标签的实例
-            instances.addAll(
-                    dsInstanceService.queryByParam(query).stream().filter(e ->
-                            baseTagService.hasBusinessTag(getTag(), DsInstanceBusinessType, e.getId())
-                    ).collect(Collectors.toList())
-            );
-        }
-        return instances;
+        return instanceHelper.listInstance(getFilterInstanceTypes(), getTag());
     }
 
 }

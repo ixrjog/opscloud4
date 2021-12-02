@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.manager;
 
+import com.baiyi.opscloud.common.constant.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
@@ -23,21 +24,19 @@ import java.util.List;
 @Component
 public class DsAccountGroupManager extends BaseManager implements IManager<UserGroup> {
 
-    private static final String ACCOUNT_TAG = "Account";
-
     /**
      * 支持账户管理的实例类型
      */
-    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.LDAP};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LDAP};
 
     @Override
     protected DsTypeEnum[] getFilterInstanceTypes() {
-        return filterInstanceTypes;
+        return FILTER_INSTANCE_TYPES;
     }
 
     @Override
     protected String getTag() {
-        return ACCOUNT_TAG;
+        return DsInstanceTagConstants.ACCOUNT.getTag();
     }
 
     @Override

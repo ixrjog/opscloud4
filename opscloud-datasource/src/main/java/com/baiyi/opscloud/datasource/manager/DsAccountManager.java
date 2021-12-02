@@ -1,12 +1,14 @@
 package com.baiyi.opscloud.datasource.manager;
 
+import com.baiyi.opscloud.common.constant.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.account.AccountProviderFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;
+import com.baiyi.opscloud.datasource.manager.base.NoticeManager;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
-import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.jasypt.encryption.StringEncryptor;
@@ -27,24 +29,25 @@ import java.util.List;
 @Component
 public class DsAccountManager extends BaseManager implements IManager<User> {
 
-    private static final String ACCOUNT_TAG = "Account";
-
     /**
      * 支持账户管理的实例类型
      */
-    private static final DsTypeEnum[] filterInstanceTypes = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
+    private static final DsTypeEnum[] FILTER_INSTANCE_TYPES = {DsTypeEnum.LDAP, DsTypeEnum.ZABBIX};
 
     @Resource
     private StringEncryptor stringEncryptor;
 
+    @Resource
+    private NoticeManager noticeManager;
+
     @Override
     protected DsTypeEnum[] getFilterInstanceTypes() {
-        return filterInstanceTypes;
+        return FILTER_INSTANCE_TYPES;
     }
 
     @Override
     protected String getTag() {
-        return ACCOUNT_TAG;
+        return DsInstanceTagConstants.ACCOUNT.getTag();
     }
 
     /**
@@ -54,8 +57,7 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
      * @return
      */
     private void decrypt(User user) {
-        if (!StringUtils.isEmpty(user.getPassword()))
-            user.setPassword(stringEncryptor.decrypt(user.getPassword()));
+        if (!StringUtils.isEmpty(user.getPassword())) user.setPassword(stringEncryptor.decrypt(user.getPassword()));
     }
 
     @Override
@@ -67,10 +69,10 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         }
         decrypt(user);
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).create(e, user));
+        noticeManager.sendMessage(user, NoticeManager.MsgKeys.CREATE_USER);
     }
 
     @Override
-    // @Async(value = Global.TaskPools.EXECUTOR)
     public void update(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
@@ -79,10 +81,12 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
         }
         decrypt(user);
         instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).update(e, user));
+        if (!StringUtils.isEmpty(user.getPassword())) { // 非修改密码不发通知
+            noticeManager.sendMessage(user, NoticeManager.MsgKeys.UPDATE_USER_PASSWORD);
+        }
     }
 
     @Override
-    // @Async(value = Global.TaskPools.EXECUTOR)
     public void delete(User user) {
         List<DatasourceInstance> instances = listInstance();
         if (CollectionUtils.isEmpty(instances)) {
@@ -99,7 +103,8 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user, businessResource));
+        instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).grant(e, user,
+                businessResource));
     }
 
     @Override
@@ -109,7 +114,8 @@ public class DsAccountManager extends BaseManager implements IManager<User> {
             log.info("{} 数据源账户管理: 无可用实例", this.getClass().getSimpleName());
             return;
         }
-        instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).revoke(e, user, businessResource));
+        instances.forEach(e -> AccountProviderFactory.getIAccountByInstanceType(e.getInstanceType()).revoke(e, user,
+                businessResource));
     }
 
 }

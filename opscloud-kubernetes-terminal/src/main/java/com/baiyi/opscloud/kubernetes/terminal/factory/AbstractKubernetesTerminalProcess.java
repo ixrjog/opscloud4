@@ -47,7 +47,7 @@ public abstract class AbstractKubernetesTerminalProcess<T extends KubernetesMess
     }
 
     private KubernetesConfig buildConfig(String instanceUuid) {
-        return dsConfigHelper.buildConfig(instanceUuid);
+        return dsConfigHelper.buildKubernetesConfig(instanceUuid);
     }
 
     private DatasourceInstanceAsset getAssetByResource(KubernetesResource kubernetesResource) {

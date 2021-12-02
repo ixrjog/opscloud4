@@ -35,6 +35,10 @@ public class DsConfigHelper {
 
     private final DsConfigService dsConfigService;
 
+    public DatasourceConfig getConfigById(Integer id) {
+        return dsConfigService.getById(id);
+    }
+
     public DatasourceConfig getConfigByDsType(int dsType) {
         List<DatasourceConfig> configs = dsConfigService.queryByDsType(dsType);
         if (CollectionUtils.isEmpty(configs))
@@ -52,7 +56,7 @@ public class DsConfigHelper {
         return DsUtil.toDatasourceConfig(propsYml, targetClass);
     }
 
-    public KubernetesConfig buildConfig(String instanceUuid) {
+    public KubernetesConfig buildKubernetesConfig(String instanceUuid) {
         DatasourceInstance instance = dsInstanceService.getByUuid(instanceUuid);
         DatasourceConfig datasourceConfig = dsConfigService.getById(instance.getConfigId());
         return build(datasourceConfig, KubernetesConfig.class);

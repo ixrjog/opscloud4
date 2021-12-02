@@ -20,12 +20,11 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource</artifactId>
+            <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
-
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-core</artifactId>
+            <artifactId>opscloud-datasource-dingtalk</artifactId>
         </dependency>
 
     </dependencies>
