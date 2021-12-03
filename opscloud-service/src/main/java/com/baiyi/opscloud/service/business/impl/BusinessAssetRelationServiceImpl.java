@@ -24,14 +24,15 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     public BusinessAssetRelation getByUniqueKey(BusinessAssetRelation businessAssetRelation) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessAssetRelation.getBusinessType())
-                .andEqualTo("businessId", businessAssetRelation.getBusinessId())
-                .andEqualTo("datasourceInstanceAssetId", businessAssetRelation.getDatasourceInstanceAssetId());
+        criteria.andEqualTo("businessType", businessAssetRelation.getBusinessType()).andEqualTo("businessId",
+                businessAssetRelation.getBusinessId()).andEqualTo("datasourceInstanceAssetId",
+                businessAssetRelation.getDatasourceInstanceAssetId());
         return businessAssetRelationMapper.selectOneByExample(example);
     }
 
     @Override
     public void add(BusinessAssetRelation businessAssetRelation) {
+        if (businessAssetRelation.getBusinessId() == null || businessAssetRelation.getBusinessId() <= 0) return;
         businessAssetRelationMapper.insert(businessAssetRelation);
     }
 
@@ -45,8 +46,7 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("datasourceInstanceAssetId", datasourceInstanceAssetId);
-        if (businessType >= 0)
-            criteria.andEqualTo("businessType", businessType);
+        if (businessType >= 0) criteria.andEqualTo("businessType", businessType);
         return businessAssetRelationMapper.selectByExample(example);
     }
 
@@ -54,8 +54,7 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     public List<BusinessAssetRelation> queryBusinessRelations(int businessType, int businessId) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessType)
-                .andEqualTo("businessId", businessId);
+        criteria.andEqualTo("businessType", businessType).andEqualTo("businessId", businessId);
         return businessAssetRelationMapper.selectByExample(example);
     }
 

@@ -31,7 +31,7 @@ public class DingtalkMessageTest extends BaseDingtalkTest {
 
         DingtalkMessageParam.AsyncSendMessage message = DingtalkMessageParam.AsyncSendMessage.builder()
                 .msg(msg)
-                .useridList("159719264")
+                .useridList("160947950")
                 .build();
 
         DingtalkMessage.MessageResponse messageResponse = dingtalkMessageDrive.asyncSend(getConfig().getDingtalk(), message);

@@ -22,6 +22,7 @@ import com.github.pagehelper.PageHelper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -61,19 +62,30 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
 
     @Override
     public BusinessAssetRelationVO.IBusinessAssetRelation toBusinessAssetRelation(DsAssetVO.Asset asset) {
-        String assetKey;
         // 处理Dingtalk
         if (asset.getAssetType().equals(DsAssetTypeEnum.DINGTALK_USER.name())) {
             if (asset.getProperties().containsKey("username")) {
-                assetKey = asset.getProperties().get("username");
-                log.info(assetKey);
-            } else {
-                return null;
+                log.info("同步钉钉，查询本地用户: name = {} , username = {}", asset.getName(), asset.getProperties().get(
+                        "username"));
+                User user = getByKey(asset.getProperties().get("username"));
+                if (user != null) {
+                    return toVO(user);
+                }
+                if (asset.getProperties().containsKey("mobile")) {
+                    List<User> users = listByPhone(asset.getProperties().get("mobile"));
+                    if (!CollectionUtils.isEmpty(users) && users.size() == 1) {
+                        log.info("同步钉钉，查询本地用户: name = {} , mobile = {}", asset.getName(), asset.getProperties().get(
+                                "mobile"));
+                        return toVO(users.get(0));
+                    }
+                }
             }
-        } else {
-            assetKey = asset.getAssetKey();
+            return null;
         }
-        User user = getByKey(assetKey);
+        return toVO(getByKey(asset.getAssetKey()));
+    }
+
+    private UserVO.User toVO(User user) {
         return BeanCopierUtil.copyProperties(user, UserVO.User.class);
     }
 
