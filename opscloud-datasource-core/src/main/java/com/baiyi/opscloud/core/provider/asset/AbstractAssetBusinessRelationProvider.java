@@ -43,7 +43,7 @@ public abstract class AbstractAssetBusinessRelationProvider<T> extends BaseAsset
     private DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     @Override
-    @SingleTask(name = SCAN_ASSET_BUSINESS, lockTime = "5m")
+    @SingleTask(name = SCAN_ASSET_BUSINESS, lockTime = "2m")
     public void scan(int dsInstanceId) {
         DsAssetParam.AssetPageQuery pageQuery = DsAssetParam.AssetPageQuery.builder()
                 .instanceId(dsInstanceId)
