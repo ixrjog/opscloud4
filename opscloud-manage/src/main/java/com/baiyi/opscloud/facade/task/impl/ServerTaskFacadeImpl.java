@@ -1,11 +1,5 @@
 package com.baiyi.opscloud.facade.task.impl;
 
-import com.baiyi.opscloud.common.base.Global;
-import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
-import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
-import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
-import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
-import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -14,6 +8,11 @@ import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.util.SystemEnvUtil;
+import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
+import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
+import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
+import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
+import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
@@ -32,7 +31,6 @@ import com.baiyi.opscloud.util.PlaybookUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -80,7 +78,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 , table.getTotalNum());
     }
 
-    @Async(value = Global.TaskPools.EXECUTOR)
+    // @Async(value = Global.TaskPools.EXECUTOR)
     @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask);
