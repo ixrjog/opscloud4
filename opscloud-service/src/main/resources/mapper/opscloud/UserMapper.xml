@@ -64,7 +64,12 @@
             </otherwise>
         </choose>
         <if test="queryName != null and queryName != ''">
-            and ( username like "%" #{queryName} "%" or display_name like "%" #{queryName} "%" )
+            and  ( username like "%" #{queryName} "%"
+            or name like "%" #{queryName} "%"
+            or display_name like "%" #{queryName} "%"
+            or email like "%" #{queryName} "%"
+            or phone like "%" #{queryName} "%"
+            or wechat like "%" #{queryName} "%" )
         </if>
 --         and is_active = true
         order by create_time
