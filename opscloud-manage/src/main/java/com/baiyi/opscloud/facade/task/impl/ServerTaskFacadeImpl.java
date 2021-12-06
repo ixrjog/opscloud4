@@ -76,7 +76,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     @Override
     public DataTable<ServerTaskVO.ServerTask> queryServerTaskPage(ServerTaskParam.ServerTaskPageQuery pageQuery) {
         DataTable<ServerTask> table = serverTaskService.queryServerTaskPage(pageQuery);
-        return new DataTable<>(table.getData().stream().map(e -> serverTaskPacker.wrapToVO(e, pageQuery)).collect(Collectors.toList())
+        return new DataTable<>(table.getData().stream().map(e ->
+                serverTaskPacker.wrapToVO(e, pageQuery)).collect(Collectors.toList())
                 , table.getTotalNum());
     }
 
@@ -171,6 +172,5 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
             }
         }
     }
-
 
 }
