@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.facade.task.impl;
 
+import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -31,6 +32,7 @@ import com.baiyi.opscloud.util.PlaybookUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.exec.CommandLine;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -78,10 +80,10 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 , table.getTotalNum());
     }
 
-    // @Async(value = Global.TaskPools.EXECUTOR)
+    @Async(value = Global.TaskPools.EXECUTOR)
     @Override
-    public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask) {
-        ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask);
+    public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask, String username) {
+        ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask, username);
         serverTaskService.add(serverTask);
         List<ServerTaskMember> members = record(serverTask, submitServerTask.getServers());
         executeServerTask(serverTask, members);
@@ -99,7 +101,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         servers.forEach(server -> {
             ServerTaskMember member = ServerTaskMemberBuilder.newBuilder(serverTask, server);
             member.setOutputMsg(taskLogStorehouse.buildOutputLogPath(serverTask.getTaskUuid(), member));
-            member.setErrorMsg(taskLogStorehouse.buildErrorLogPath(serverTask.getTaskUuid(),  member));
+            member.setErrorMsg(taskLogStorehouse.buildErrorLogPath(serverTask.getTaskUuid(), member));
             serverTaskMemberService.add(member);
             members.add(member);
         });
@@ -109,7 +111,8 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
     private void executeServerTask(ServerTask serverTask, List<ServerTaskMember> members) {
         // 构建上下文
         DsInstanceContext instanceContext = buildDsInstanceContext(serverTask.getInstanceUuid());
-        AnsibleConfig.Ansible ansible = dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
+        AnsibleConfig.Ansible ansible =
+                dsConfigHelper.build(instanceContext.getDsConfig(), AnsibleConfig.class).getAnsible();
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
         PlaybookArgs args = PlaybookArgs.builder()

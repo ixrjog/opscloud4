@@ -1,6 +1,7 @@
 package com.baiyi.opscloud.controller.http;
 
 import com.baiyi.opscloud.common.HttpResult;
+import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.param.task.ServerTaskParam;
 import com.baiyi.opscloud.domain.vo.task.ServerTaskVO;
@@ -38,7 +39,7 @@ public class ServerTaskController {
     @ApiOperation(value = "提交服务器任务")
     @PostMapping(value = "/submit", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> submitServerTask(@RequestBody @Valid ServerTaskParam.SubmitServerTask submitServerTask) {
-        serverTaskFacade.submitServerTask(submitServerTask);
+        serverTaskFacade.submitServerTask(submitServerTask, SessionUtil.getUsername());
         return HttpResult.SUCCESS;
     }
 }
