@@ -6,7 +6,6 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -48,11 +47,6 @@ public abstract class AbstractZabbixHostProvider<T> extends AbstractAssetRelatio
     @Override
     protected List<ZabbixHost.Host> listEntities(DsInstanceContext dsInstanceContext) {
         return zabbixV5HostDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
-    }
-
-    @Override
-    protected ZabbixHost.Host getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5HostDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

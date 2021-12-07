@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.packer.application;
 
-import com.baiyi.opscloud.common.builder.SimpleDictBuilder;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.kubernetes.provider.KubernetesPodProvider;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
@@ -72,17 +71,15 @@ public class ApplicationPacker {
 
     private ApplicationResourceVO.Resource wrapPodByDeployment(ApplicationResource resource) {
         ApplicationResourceVO.Resource resourceVO = BeanCopierUtil.copyProperties(resource, ApplicationResourceVO.Resource.class);
-        DatasourceInstanceAsset dsInstanceAsset = dsInstanceAssetService.getById(resource.getBusinessId());
-        if (dsInstanceAsset == null) return resourceVO;
-        Map<String, String> params = SimpleDictBuilder.newBuilder()
-                .putParam("namespace", dsInstanceAsset.getAssetKey2())
-                .putParam("deploymentName", dsInstanceAsset.getAssetKey())
-                .build().getDict();
-        resourceVO.setAsset(BeanCopierUtil.copyProperties(dsInstanceAsset, DsAssetVO.Asset.class));
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(resource.getBusinessId());
+        if (asset == null) return resourceVO;
+        String namespace = asset.getAssetKey2();
+        String deployment = asset.getAssetKey();
+        resourceVO.setAsset(BeanCopierUtil.copyProperties(asset, DsAssetVO.Asset.class));
         try {
-            DatasourceInstance dsInstance = dsInstanceService.getByUuid(dsInstanceAsset.getInstanceUuid());
+            DatasourceInstance dsInstance = dsInstanceService.getByUuid(asset.getInstanceUuid());
             if (dsInstance != null) {
-                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssets(dsInstance.getId(), params);
+                List<AssetContainer> assetContainers = kubernetesPodProvider.queryAssetsByDeployment(dsInstance.getId(), namespace,deployment );
                 resourceVO.setAssetContainers(assetContainers);
             }
         } catch (NullPointerException ignored) {

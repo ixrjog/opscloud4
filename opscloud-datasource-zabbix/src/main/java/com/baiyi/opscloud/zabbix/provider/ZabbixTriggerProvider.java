@@ -6,7 +6,6 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -25,7 +24,7 @@ import java.util.List;
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_TRIGGER;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/2 3:43 下午
  * @Since 1.0
  */
@@ -59,10 +58,6 @@ public class ZabbixTriggerProvider extends AbstractAssetRelationProvider<ZabbixT
         return zabbixV5TriggerDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
     }
 
-    @Override
-    protected ZabbixTrigger.Trigger getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5TriggerDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
-    }
 
     @Override
     @SingleTask(name = PULL_ZABBIX_TRIGGER, lockTime = "5m")

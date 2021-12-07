@@ -24,6 +24,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -33,7 +34,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class DsInstanceFacadeImpl implements DsInstanceFacade {
+public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
 
     private final DsInstanceService dsInstanceService;
 
@@ -62,6 +63,17 @@ public class DsInstanceFacadeImpl implements DsInstanceFacade {
         List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), pullAsset.getAssetType());
         assert providers != null;
         providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
+    }
+
+    @Override
+    public List<DatasourceInstanceAsset> pullAsset(String instanceUuid, String assetType, T entity) {
+        DatasourceInstance dsInstance = dsInstanceService.getByUuid(instanceUuid);
+        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        dsInstancePacker.wrap(instance);
+        List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
+        assert providers != null;
+        return providers.stream().map(e -> e.pullAsset(instance.getId(), entity)).collect(Collectors.toList())
+                .stream().filter(e -> e.getAssetType().equals(assetType)).collect(Collectors.toList());
     }
 
     @Override

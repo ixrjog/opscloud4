@@ -6,7 +6,6 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -25,7 +24,7 @@ import java.util.List;
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_USER;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/25 3:32 下午
  * @Since 1.0
  */
@@ -57,11 +56,6 @@ public class ZabbixUserProvider extends AbstractAssetRelationProvider<ZabbixUser
     @Override
     protected List<ZabbixUser.User> listEntities(DsInstanceContext dsInstanceContext) {
         return zabbixV5UserDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
-    }
-
-    @Override
-    protected ZabbixUser.User getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5UserDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

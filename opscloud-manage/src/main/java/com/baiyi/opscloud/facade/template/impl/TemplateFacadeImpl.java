@@ -1,14 +1,11 @@
 package com.baiyi.opscloud.facade.template.impl;
 
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.BeetlUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -19,19 +16,21 @@ import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
+import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import com.baiyi.opscloud.facade.template.TemplateFacade;
+import com.baiyi.opscloud.facade.template.factory.ITemplateConsume;
+import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
+import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
 import com.baiyi.opscloud.packer.template.TemplatePacker;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import com.baiyi.opscloud.service.template.TemplateService;
 import com.google.common.base.Joiner;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
-
-import java.io.IOException;
 
 /**
  * @Author baiyi
@@ -50,9 +49,15 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     private final TemplatePacker templatePacker;
 
+    private final DsInstanceService dsInstanceService;
+
+    private final DsInstancePacker dsInstancePacker;
+
     private final DsConfigHelper dsConfigHelper;
 
     private final EnvService envService;
+
+    private final DsInstanceFacade dsInstanceFacade;
 
 
     @Override
@@ -67,6 +72,15 @@ public class TemplateFacadeImpl implements TemplateFacade {
         return new DataTable<>(businessTemplatePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
     }
 
+    private YamlVars.Vars toVars(BusinessTemplate bizTemplate) {
+        YamlVars.Vars vars = YamlUtil.toVars(bizTemplate.getVars());
+        if (!vars.getVars().containsKey("envName")) {
+            Env env = envService.getByEnvType(bizTemplate.getEnvType());
+            vars.getVars().put("envName", env.getEnvName());
+        }
+        return vars;
+    }
+
     @Override
     public BusinessTemplateVO.BusinessTemplate createAssetByBusinessTemplate(int id) {
         BusinessTemplate bizTemplate = businessTemplateService.getById(id);
@@ -75,24 +89,11 @@ public class TemplateFacadeImpl implements TemplateFacade {
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null)
             throw new CommonRuntimeException("无法创建资产: 模板不存在!");
-        YamlVars.Vars vars = YamlUtil.toVars(bizTemplate.getVars());
-        // 渲染模板
-        String content;
-        try {
-            content = BeetlUtil.renderTemplate(template.getContent(), vars);
-        } catch (IOException e) {
-            e.printStackTrace();
-            throw new CommonRuntimeException("无法创建资产: 渲染模板失败!");
+        ITemplateConsume iTemplateConsume = TemplateFactory.getByInstanceAsset(template.getInstanceType(), template.getTemplateKey());
+        if (iTemplateConsume == null) {
+            throw new CommonRuntimeException("无法创建资产: 无可用的生产者!");
         }
-        // Kubernetes
-        if (template.getInstanceType().equals(DsTypeEnum.KUBERNETES.getName())) {
-            DatasourceConfig dsConfig = dsConfigHelper.getConfigByInstanceUuid(bizTemplate.getInstanceUuid());
-            KubernetesConfig.Kubernetes config = dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
-            if ("DEPLOYMENT".equals(template.getTemplateKey())) {
-                Deployment deployment = KubernetesDeploymentDrive.createOrReplaceDeployment(config, content);
-            }
-        }
-        return null;
+        return iTemplateConsume.produce(bizTemplate);
     }
 
     @Override
@@ -153,6 +154,7 @@ public class TemplateFacadeImpl implements TemplateFacade {
     }
 
     private void setName(BusinessTemplate bizTemplate, KubernetesConfig.Nomenclature nomenclature, YamlVars.Vars vars, Env env) {
+        if (!vars.getVars().containsKey("appName")) return;
         String name = Joiner.on("").skipNulls().join(nomenclature.getPrefix(),
                 vars.getVars().get("appName"),
                 nomenclature.getSuffix(), "-", env.getEnvName()

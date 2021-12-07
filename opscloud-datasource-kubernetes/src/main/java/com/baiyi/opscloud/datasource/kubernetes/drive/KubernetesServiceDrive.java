@@ -2,10 +2,14 @@ package com.baiyi.opscloud.datasource.kubernetes.drive;
 
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.client.KubeClient;
+import io.fabric8.kubernetes.api.model.HasMetadata;
 import io.fabric8.kubernetes.api.model.Service;
 import io.fabric8.kubernetes.api.model.ServiceList;
+import io.fabric8.kubernetes.client.KubernetesClient;
 import org.springframework.util.CollectionUtils;
 
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Collections;
 import java.util.List;
 
@@ -28,9 +32,9 @@ public class KubernetesServiceDrive {
                 .services()
                 .inNamespace(namespace)
                 .list();
-        if (CollectionUtils.isEmpty(serviceList .getItems()))
+        if (CollectionUtils.isEmpty(serviceList.getItems()))
             return Collections.emptyList();
-        return serviceList .getItems();
+        return serviceList.getItems();
     }
 
     /**
@@ -46,4 +50,34 @@ public class KubernetesServiceDrive {
                 .withName(name)
                 .get();
     }
+
+    public static Service createOrReplaceService(KubernetesConfig.Kubernetes kubernetes, Service service) {
+        return KubeClient.build(kubernetes).services().createOrReplace(service);
+    }
+
+    public static Service createOrReplaceService(KubernetesConfig.Kubernetes kubernetes, String content) {
+        KubernetesClient kuberClient = KubeClient.build(kubernetes);
+        Service service = toService(kuberClient, content);
+        return createOrReplaceService(kubernetes, service);
+    }
+
+    /**
+     * 配置文件转换为服务资源
+     *
+     * @param kuberClient
+     * @param content     YAML
+     * @return
+     * @throws RuntimeException
+     */
+    public static Service toService(KubernetesClient kuberClient, String content) throws RuntimeException {
+        InputStream is = new ByteArrayInputStream(content.getBytes());
+        List<HasMetadata> resources = kuberClient.load(is).get();
+        if (resources.isEmpty()) // 配置文件为空
+            throw new RuntimeException("转换配置文件错误");
+        HasMetadata resource = resources.get(0);
+        if (resource instanceof Service)
+            return (Service) resource;
+        throw new RuntimeException("类型不匹配");
+    }
+
 }

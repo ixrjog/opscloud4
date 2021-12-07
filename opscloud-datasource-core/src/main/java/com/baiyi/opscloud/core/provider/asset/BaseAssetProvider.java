@@ -5,7 +5,6 @@ import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.core.provider.base.common.SimpleDsInstanceProvider;
 import com.baiyi.opscloud.core.provider.base.param.AssetFilterParam;
-import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.Credential;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -18,7 +17,6 @@ import com.google.common.collect.Sets;
 import org.springframework.beans.factory.InitializingBean;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,7 +26,7 @@ import java.util.Set;
  * @Date 2021/6/19 4:22 下午
  * @Version 1.0
  */
-public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider, InitializingBean {
+public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider<T>, InitializingBean {
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
@@ -55,10 +53,6 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
     }
 
     protected abstract List<T> listEntities(DsInstanceContext dsInstanceContext);
-
-    protected T getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        throw new UnsupportedOperationException("该数据源实例不支持单个查询资产");
-    }
 
     protected List<T> listEntities(DsInstanceContext dsInstanceContext, AssetFilterParam param) {
         throw new UnsupportedOperationException("该数据源实例不支持筛选资产");
@@ -154,32 +148,25 @@ public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider impl
         enterAssets(dsInstanceContext, entities);
     }
 
-    protected DatasourceInstanceAsset doPull(int dsInstanceId, UniqueAssetParam param) {
-        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
-        T entity = getEntity(dsInstanceContext, param);
-        return enterEntity(dsInstanceContext, entity);
-    }
-
     protected void doPull(int dsInstanceId, AssetFilterParam filter) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         List<T> entities = listEntities(dsInstanceContext, filter);
         enterAssets(dsInstanceContext, entities);
     }
 
+    /**
+     * PULL单个资产
+     *
+     * @param dsInstanceId
+     * @param entity
+     * @return
+     */
     @Override
-    public DatasourceInstanceAsset pullAsset(int dsInstanceId, UniqueAssetParam param) {
-        return doPull(dsInstanceId, param);
+    public DatasourceInstanceAsset pullAsset(int dsInstanceId, T entity) {
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
+        return enterEntity(dsInstanceContext, entity);
     }
 
-    @Override
-    public void pullAsset(int dsInstanceId, AssetFilterParam filter) {
-        doPull(dsInstanceId, filter);
-    }
-
-    @Override
-    public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
-        return Collections.emptyList();
-    }
 
     protected Credential getCredential(int credentialId) {
         return credentialService.getById(credentialId);

@@ -6,7 +6,6 @@ import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
@@ -25,7 +24,7 @@ import java.util.List;
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_HOST_GROUP;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/1 2:23 下午
  * @Since 1.0
  */
@@ -57,11 +56,6 @@ public class ZabbixHostGroupProvider extends AbstractAssetRelationProvider<Zabbi
     @Override
     protected List<ZabbixHostGroup.HostGroup> listEntities(DsInstanceContext dsInstanceContext) {
         return zabbixV5HostGroupDrive.list(buildConfig(dsInstanceContext.getDsConfig()));
-    }
-
-    @Override
-    protected ZabbixHostGroup.HostGroup getEntity(DsInstanceContext dsInstanceContext, UniqueAssetParam param) {
-        return zabbixV5HostGroupDrive.getById(buildConfig(dsInstanceContext.getDsConfig()), param.getAssetId());
     }
 
     @Override

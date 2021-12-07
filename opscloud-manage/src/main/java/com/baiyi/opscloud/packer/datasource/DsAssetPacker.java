@@ -48,6 +48,7 @@ public class DsAssetPacker {
     private TagPacker tagPacker;
 
     public void wrap(DsAssetVO.IDsAsset iDsAsset) {
+        if (iDsAsset.getAssetId() == 0) return;
         DatasourceInstanceAsset asset = dsInstanceAssetService.getById(iDsAsset.getAssetId());
         if (asset == null) return;
         iDsAsset.setAsset(toVO(asset));

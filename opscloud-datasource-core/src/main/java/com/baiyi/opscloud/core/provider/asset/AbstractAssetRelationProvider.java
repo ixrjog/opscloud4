@@ -3,7 +3,6 @@ package com.baiyi.opscloud.core.provider.asset;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.base.common.ITargetProvider;
-import com.baiyi.opscloud.core.provider.base.param.UniqueAssetParam;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetRelation;
@@ -49,29 +48,30 @@ public abstract class AbstractAssetRelationProvider<S, T> extends AbstractAssetB
         DatasourceInstanceAsset asset = super.enterAsset(toAssetContainer(dsInstanceContext.getDsInstance(), entity));
         List<T> targets = listTarget(dsInstanceContext, entity);
         if (!CollectionUtils.isEmpty(targets)) {
-            targets.forEach(target->
-              enterEntity(dsInstanceContext,asset,target)
+            targets.forEach(target ->
+                    enterEntity(dsInstanceContext, asset, target)
             );
         }
         return asset;
     }
 
-    private void enterEntity(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset , T target){
+    private void enterEntity(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset, T target) {
         // 目标关系生产者
         AbstractAssetRelationProvider<T, S> targetAssetProvider = getTargetProvider();
         AssetContainer assetContainer = targetAssetProvider.toAssetContainer(dsInstanceContext.getDsInstance(), target);
         DatasourceInstanceAsset targetAsset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
-        if (targetAsset == null) {
-            UniqueAssetParam param = UniqueAssetParam.builder()
-                    .assetId(assetContainer.getAsset().getAssetId())
-                    .build();
-            try {
-                targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
-            } catch (Exception e) {
-                log.info(e.getMessage());
-                return;
-            }
-        }
+        if (targetAsset == null) return;
+//        if (targetAsset == null) {
+//            UniqueAssetParam param = UniqueAssetParam.builder()
+//                    .assetId(assetContainer.getAsset().getAssetId())
+//                    .build();
+//            try {
+//                targetAsset = targetAssetProvider.doPull(dsInstanceContext.getDsInstance().getId(), param);
+//            } catch (Exception e) {
+//                log.info(e.getMessage());
+//                return;
+//            }
+//        }
         DatasourceInstanceAssetRelation relation = DatasourceInstanceAssetRelation.builder()
                 .instanceUuid(dsInstanceContext.getDsInstance().getUuid())
                 .sourceAssetId(asset.getId())

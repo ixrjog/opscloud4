@@ -1,15 +1,15 @@
 package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesPodDrive;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.kubernetes.convert.PodAssetConvert;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesPodDrive;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -22,7 +22,6 @@ import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_KUBERNETES_POD;
@@ -52,13 +51,12 @@ public class KubernetesPodProvider extends BaseAssetProvider<Pod> {
         return dsConfigHelper.build(dsConfig, KubernetesConfig.class).getKubernetes();
     }
 
-    @Override
-    public List<AssetContainer> queryAssets(int dsInstanceId, Map<String, String> params) {
+    public List<AssetContainer> queryAssetsByDeployment(int dsInstanceId, String namespace,String deployment) {
         DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
-        List<Pod> pods = KubernetesPodDrive.listPod(kubernetes, params.get("namespace"), params.get("deploymentName"));
+        List<Pod> pods = KubernetesPodDrive.listPod(kubernetes, namespace, deployment);
         return pods.stream().map(e->
-            toAssetContainer(dsInstanceContext.getDsInstance(),e)
+                toAssetContainer(dsInstanceContext.getDsInstance(),e)
         ).collect(Collectors.toList());
     }
 

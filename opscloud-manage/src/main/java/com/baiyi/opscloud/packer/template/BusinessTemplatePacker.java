@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
+import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.packer.sys.EnvPacker;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,8 @@ public class BusinessTemplatePacker {
 
     private final EnvPacker envPacker;
 
+    private final DsAssetPacker dsAssetPacker;
+
     public List<BusinessTemplateVO.BusinessTemplate> wrapVOList(List<BusinessTemplate> data, IExtend iExtend) {
         return data.stream().map(e -> wrapVO(e, iExtend)).collect(Collectors.toList());
     }
@@ -37,6 +40,7 @@ public class BusinessTemplatePacker {
         if (iExtend.getExtend()) {
             templatePacker.wrap(vo);
             dsInstancePacker.wrap(vo);
+            dsAssetPacker.wrap(vo);
         }
         return vo;
     }

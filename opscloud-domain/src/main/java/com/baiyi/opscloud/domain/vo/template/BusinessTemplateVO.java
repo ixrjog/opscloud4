@@ -1,7 +1,9 @@
 package com.baiyi.opscloud.domain.vo.template;
 
 import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.base.BaseVO;
+import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import io.swagger.annotations.ApiModel;
@@ -23,9 +25,12 @@ public class BusinessTemplateVO {
     public static class BusinessTemplate extends BaseVO implements EnvVO.IEnv,
             TemplateVO.ITempate,
             BaseBusiness.IBusiness,
-            DsInstanceVO.IDsInstance {
+            DsInstanceVO.IDsInstance,
+            DsAssetVO.IDsAsset {
 
         private DsInstanceVO.Instance instance;
+
+        private DsAssetVO.Asset asset;
 
         private TemplateVO.Template template;
 
@@ -50,6 +55,15 @@ public class BusinessTemplateVO {
         private String content;
 
         private String comment;
+
+        @Override
+        public Integer getAssetId() {
+            if (BusinessTypeEnum.ASSET.getType() == businessType) {
+                return businessId;
+            }
+            return 0;
+        }
+
     }
 
 }

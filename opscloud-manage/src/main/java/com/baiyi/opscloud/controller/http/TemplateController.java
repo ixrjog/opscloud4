@@ -53,8 +53,8 @@ public class TemplateController {
     }
 
     @ApiOperation(value = "业务模版创建资产")
-    @PostMapping(value = "/business/asset/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<BusinessTemplateVO.BusinessTemplate> createAssetByBusinessTemplate(@RequestParam @Valid int id) {
+    @PutMapping(value = "/business/asset/create", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<BusinessTemplateVO.BusinessTemplate> createAssetByBusinessTemplateId(@RequestParam @Valid int id) {
         return new HttpResult<>(templateFacade.createAssetByBusinessTemplate(id));
     }
 
