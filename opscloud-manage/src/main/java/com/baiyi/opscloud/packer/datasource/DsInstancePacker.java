@@ -9,6 +9,7 @@ import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.util.ExtendUtil;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -36,6 +37,7 @@ public class DsInstancePacker {
     }
 
     public void wrap(DsInstanceVO.IDsInstance iDsInstance) {
+        if(StringUtils.isEmpty(iDsInstance.getInstanceUuid())) return;
         DatasourceInstance datasourceInstance = dsInstanceService.getByUuid(iDsInstance.getInstanceUuid());
         if(datasourceInstance == null) return;
         iDsInstance.setInstance(toVO(datasourceInstance));
@@ -63,7 +65,6 @@ public class DsInstancePacker {
         List<DsInstanceVO.Instance> voList = wrapVOList(data);
         if (!ExtendUtil.isExtend(iExtend))
             return voList;
-
         return voList.stream().peek(this::wrap
         ).collect(Collectors.toList());
     }

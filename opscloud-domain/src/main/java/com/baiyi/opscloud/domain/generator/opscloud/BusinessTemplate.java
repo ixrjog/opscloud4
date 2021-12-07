@@ -1,8 +1,9 @@
 package com.baiyi.opscloud.domain.generator.opscloud;
 
-import java.util.Date;
-import javax.persistence.*;
 import lombok.Data;
+
+import javax.persistence.*;
+import java.util.Date;
 
 @Data
 @Table(name = "business_template")
@@ -10,6 +11,8 @@ public class BusinessTemplate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
+
+    private String name;
 
     /**
      * 实例UUID

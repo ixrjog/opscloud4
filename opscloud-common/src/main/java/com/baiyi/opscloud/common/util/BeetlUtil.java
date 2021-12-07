@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.common.util;
 
+import com.baiyi.opscloud.common.template.YamlVars;
 import org.beetl.core.Configuration;
 import org.beetl.core.GroupTemplate;
 import org.beetl.core.Template;
@@ -35,8 +36,24 @@ public class BeetlUtil {
         contentMap.keySet().forEach(k -> t.binding(k, contentMap.get(k)));
         // t.binding("name", "beetl");
         //渲染结果
+        return t.render();
+    }
 
-
+    /**
+     * 渲染模版
+     * @param template
+     * @param vars
+     * @return
+     * @throws IOException
+     */
+    public static String renderTemplate(String template, YamlVars.Vars vars) throws IOException {
+        //初始化代码
+        StringTemplateResourceLoader resourceLoader = new StringTemplateResourceLoader();
+        Configuration cfg = Configuration.defaultConfiguration();
+        GroupTemplate gt = new GroupTemplate(resourceLoader, cfg);
+        //获取模板
+        Template t = gt.getTemplate(template);
+        vars.getVars().keySet().forEach(k -> t.binding(k, vars.getVars().get(k)));
         return t.render();
     }
 }

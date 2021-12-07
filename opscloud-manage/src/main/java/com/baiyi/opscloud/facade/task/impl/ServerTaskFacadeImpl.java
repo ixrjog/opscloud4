@@ -4,6 +4,7 @@ import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.util.TimeUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -13,7 +14,6 @@ import com.baiyi.opscloud.datasource.ansible.args.PlaybookArgs;
 import com.baiyi.opscloud.datasource.ansible.builder.AnsiblePlaybookArgsBuilder;
 import com.baiyi.opscloud.datasource.ansible.recorder.TaskLogStorehouse;
 import com.baiyi.opscloud.datasource.ansible.task.AnsibleServerTask;
-import com.baiyi.opscloud.datasource.ansible.util.AnsibleUtil;
 import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.AnsiblePlaybook;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerTask;
@@ -117,7 +117,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
         AnsiblePlaybook ansiblePlaybook = ansiblePlaybookService.getById(serverTask.getAnsiblePlaybookId());
 
         PlaybookArgs args = PlaybookArgs.builder()
-                .extraVars(AnsibleUtil.toVars(serverTask.getVars()).getVars())
+                .extraVars(YamlUtil.toVars(serverTask.getVars()).getVars())
                 .keyFile(SystemEnvUtil.renderEnvHome(ansible.getPrivateKey()))
                 .playbook(PlaybookUtil.toPath(ansiblePlaybook))
                 .inventory(SystemEnvUtil.renderEnvHome(ansible.getInventoryHost()))

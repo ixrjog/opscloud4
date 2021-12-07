@@ -35,6 +35,11 @@ public class DsConfigHelper {
 
     private final DsConfigService dsConfigService;
 
+    public DatasourceConfig getConfigByInstanceUuid(String uuid) {
+        DatasourceInstance instance = dsInstanceService.getByUuid(uuid);
+        return getConfigById(instance.getConfigId());
+    }
+
     public DatasourceConfig getConfigById(Integer id) {
         return dsConfigService.getById(id);
     }

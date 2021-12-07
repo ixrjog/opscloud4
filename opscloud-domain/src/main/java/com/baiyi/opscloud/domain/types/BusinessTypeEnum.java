@@ -31,7 +31,7 @@ public enum BusinessTypeEnum {
      * Gitlab项目
      **/
     GITLAB_PROJECT(9, "GITLAB_PROJECT"),
-    //JENKINS_TPL(10,"JENKINS_TPL"),
+    // JENKINS_TPL(10,"JENKINS_TPL"),
     DINGTALK(11, "DINGTALK"),
     ALIYUN_OSS_BUCKET(12, "ALIYUN_OSS_BUCKET"),
     /**
@@ -41,10 +41,10 @@ public enum BusinessTypeEnum {
     /**
      * 部署任务
      **/
-    //APPLICATION_DEPLOYMENT_JOB(14),
+    // APPLICATION_DEPLOYMENT_JOB(14),
     GITLAB_GROUP(15, "GITLAB_GROUP"),
     DATASOURCE_INSTANCE(16, "数据源实例"),
-   // DATASOURCE_ASSET(17, "数据源实例资产"),
+    // DATASOURCE_ASSET(17, "数据源实例资产"),
 
     USER_PERMISSION(100, "USER_PERMISSION");
 
