@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.domain.vo.env.EnvVO;
 import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
 /**
@@ -27,6 +28,10 @@ public class BusinessTemplateVO {
             BaseBusiness.IBusiness,
             DsInstanceVO.IDsInstance,
             DsAssetVO.IDsAsset {
+
+        @ApiModelProperty(value = "前端按钮使用", example = "false")
+        @Builder.Default
+        private final Boolean creating = false;
 
         private DsInstanceVO.Instance instance;
 

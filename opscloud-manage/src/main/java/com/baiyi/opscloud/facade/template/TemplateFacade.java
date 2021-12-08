@@ -23,4 +23,6 @@ public interface TemplateFacade {
 
     BusinessTemplateVO.BusinessTemplate createAssetByBusinessTemplate(int id);
 
+    void deleteBusinessTemplateById(int id);
+
 }

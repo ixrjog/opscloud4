@@ -4,6 +4,8 @@ import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/12/6 11:03 AM
@@ -17,5 +19,9 @@ public interface BusinessTemplateService {
 
     void update(BusinessTemplate businessTemplate);
 
+    List<BusinessTemplate> queryByBusinessId(int businessId);
+
     BusinessTemplate getById(Integer id);
+
+    void deleteById(int id);
 }

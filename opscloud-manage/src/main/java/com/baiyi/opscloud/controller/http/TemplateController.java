@@ -28,33 +28,40 @@ public class TemplateController {
 
     private final TemplateFacade templateFacade;
 
-    @ApiOperation(value = "分页查询模版列表")
+    @ApiOperation(value = "分页查询模板列表")
     @PostMapping(value = "/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<TemplateVO.Template>> queryTemplatePage(@RequestBody @Valid TemplateParam.TemplatePageQuery pageQuery) {
         return new HttpResult<>(templateFacade.queryTemplatePage(pageQuery));
     }
 
-    @ApiOperation(value = "分页查询业务模版列表")
+    @ApiOperation(value = "分页查询业务模板列表")
     @PostMapping(value = "/business/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<BusinessTemplateVO.BusinessTemplate>> queryBusinessTemplatePage(@RequestBody @Valid BusinessTemplateParam.BusinessTemplatePageQuery pageQuery) {
         return new HttpResult<>(templateFacade.queryBusinessTemplatePage(pageQuery));
     }
 
-    @ApiOperation(value = "新增业务模版")
+    @ApiOperation(value = "新增业务模板")
     @PostMapping(value = "/business/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessTemplateVO.BusinessTemplate> addBusinessTemplate(@RequestBody @Valid BusinessTemplateParam.BusinessTemplate businessTemplate) {
         return new HttpResult<>(templateFacade.addBusinessTemplate(businessTemplate));
     }
 
-    @ApiOperation(value = "更新业务模版")
+    @ApiOperation(value = "更新业务模板")
     @PostMapping(value = "/business/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<BusinessTemplateVO.BusinessTemplate> updateBusinessTemplate(@RequestBody @Valid BusinessTemplateParam.BusinessTemplate businessTemplate) {
         return new HttpResult<>(templateFacade.updateBusinessTemplate(businessTemplate));
     }
 
+    @ApiOperation(value = "删除指定的业务模板")
+    @DeleteMapping(value = "/business/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteBusinessTemplateById(@RequestParam int id) {
+        templateFacade.deleteBusinessTemplateById(id);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "业务模版创建资产")
     @PutMapping(value = "/business/asset/create", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<BusinessTemplateVO.BusinessTemplate> createAssetByBusinessTemplateId(@RequestParam @Valid int id) {
+    public HttpResult<BusinessTemplateVO.BusinessTemplate> createAssetByBusinessTemplateId(@RequestParam int id) {
         return new HttpResult<>(templateFacade.createAssetByBusinessTemplate(id));
     }
 

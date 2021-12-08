@@ -14,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 import tk.mybatis.mapper.entity.Example;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,8 +51,22 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
     }
 
     @Override
+    public List<BusinessTemplate> queryByBusinessId(int businessId) {
+        if (businessId == 0) return Collections.emptyList();
+        Example example = new Example(BusinessTemplate.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessId", businessId);
+        return businessTemplateMapper.selectByExample(example);
+    }
+
+    @Override
     public BusinessTemplate getById(Integer id) {
         return businessTemplateMapper.selectByPrimaryKey(id);
+    }
+
+    @Override
+    public void deleteById(int id) {
+        businessTemplateMapper.deleteByPrimaryKey(id);
     }
 
 }

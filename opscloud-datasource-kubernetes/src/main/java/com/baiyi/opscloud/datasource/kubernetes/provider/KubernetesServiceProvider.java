@@ -1,15 +1,14 @@
 package com.baiyi.opscloud.datasource.kubernetes.provider;
 
-import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.datasource.kubernetes.convert.DeploymentAssetConvert;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
-import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.kubernetes.convert.ServiceAssetConvert;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesNamespaceDrive;
+import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesServiceDrive;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -17,24 +16,22 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
 import io.fabric8.kubernetes.api.model.Namespace;
-import io.fabric8.kubernetes.api.model.apps.Deployment;
+import io.fabric8.kubernetes.api.model.Service;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_KUBERNETES_DEPLOYMENT;
-
 /**
  * @Author baiyi
- * @Date 2021/6/25 4:20 下午
+ * @Date 2021/12/7 6:02 PM
  * @Version 1.0
  */
 @Component
-public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> {
+public class KubernetesServiceProvider extends BaseAssetProvider<Service> {
 
     @Resource
-    private KubernetesDeploymentProvider kubernetesDeploymentProvider;
+    private KubernetesServiceProvider kubernetesServiceProvider;
 
     @Override
     public String getInstanceType() {
@@ -43,7 +40,7 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.KUBERNETES_DEPLOYMENT.getType();
+        return DsAssetTypeEnum.KUBERNETES_SERVICE.getType();
     }
 
     private KubernetesConfig.Kubernetes buildConfig(DatasourceConfig dsConfig) {
@@ -51,18 +48,18 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     @Override
-    protected List<Deployment> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<Service> listEntities(DsInstanceContext dsInstanceContext) {
         KubernetesConfig.Kubernetes kubernetes = buildConfig(dsInstanceContext.getDsConfig());
         List<Namespace> namespaces = KubernetesNamespaceDrive.listNamespace(buildConfig(dsInstanceContext.getDsConfig()));
-        List<Deployment> entities = Lists.newArrayList();
+        List<Service> entities = Lists.newArrayList();
         namespaces.forEach(e ->
-                entities.addAll(KubernetesDeploymentDrive.listDeployment(kubernetes, e.getMetadata().getName()))
+                entities.addAll(KubernetesServiceDrive.listService(kubernetes, e.getMetadata().getName()))
         );
         return entities;
     }
 
     @Override
-    @SingleTask(name = PULL_KUBERNETES_DEPLOYMENT , lockTime = "5m")
+   // @SingleTask(name = PULL_KUBERNETES_SERVICE, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -81,12 +78,13 @@ public class KubernetesDeploymentProvider extends BaseAssetProvider<Deployment> 
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Deployment entity) {
-        return DeploymentAssetConvert.toAssetContainer(dsInstance, entity);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Service entity) {
+        return ServiceAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(kubernetesDeploymentProvider);
+        AssetProviderFactory.register(kubernetesServiceProvider);
     }
 }
+

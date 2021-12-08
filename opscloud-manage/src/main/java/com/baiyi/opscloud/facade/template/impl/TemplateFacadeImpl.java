@@ -86,6 +86,8 @@ public class TemplateFacadeImpl implements TemplateFacade {
         BusinessTemplate bizTemplate = businessTemplateService.getById(id);
         if (bizTemplate == null)
             throw new CommonRuntimeException("无法创建资产: 业务模板不存在!");
+        if (StringUtils.isEmpty(bizTemplate.getName()))
+            throw new CommonRuntimeException("无法创建资产: 业务模板名称不合规（空值）!");
         Template template = templateService.getById(bizTemplate.getTemplateId());
         if (template == null)
             throw new CommonRuntimeException("无法创建资产: 模板不存在!");
@@ -94,6 +96,11 @@ public class TemplateFacadeImpl implements TemplateFacade {
             throw new CommonRuntimeException("无法创建资产: 无可用的生产者!");
         }
         return iTemplateConsume.produce(bizTemplate);
+    }
+
+    @Override
+    public void deleteBusinessTemplateById(int id) {
+        businessTemplateService.deleteById(id);
     }
 
     @Override

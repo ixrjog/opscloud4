@@ -10,6 +10,7 @@ import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetRelationService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.template.BusinessTemplateService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,6 +37,8 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
     private final ApplicationResourceService applicationResourceService;
 
     private final BusinessAssetRelationService businessAssetRelationService;
+
+    private final BusinessTemplateService businessTemplateService;
 
     @Override
     @TagClear
@@ -65,6 +68,14 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
         if (!CollectionUtils.isEmpty(datasourceInstanceAssetRelations)) {
             assetList.parallelStream().forEach(x -> deleteAssetById(x.getId()));
+        }
+        // 删除模板关联资产
+        List<BusinessTemplate> businessTemplates = businessTemplateService.queryByBusinessId(id);
+        if (!CollectionUtils.isEmpty(businessTemplates)) {
+            businessTemplates.forEach(e -> {
+                e.setBusinessId(0);
+                businessTemplateService.update(e);
+            });
         }
         // 删除自己
         dsInstanceAssetService.deleteById(id);
