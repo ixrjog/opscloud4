@@ -19,4 +19,10 @@ public interface TemplateService {
 
     List<Template> listByTemplate(Template template);
 
+    void add(Template template);
+
+    void updateSelective(Template template);
+
+    void deleteById(Integer id);
+
 }

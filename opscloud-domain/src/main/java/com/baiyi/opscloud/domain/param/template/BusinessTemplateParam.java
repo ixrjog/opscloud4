@@ -6,6 +6,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 /**
@@ -45,27 +46,19 @@ public class BusinessTemplateParam {
     public static class BusinessTemplate {
 
         private Integer id;
-
         @ApiModelProperty(value = "实例UUID")
-        @NotNull(message = "必须指定实例UUID")
+        @NotBlank(message = "必须指定实例UUID")
         private String instanceUuid;
-
         @ApiModelProperty(value = "环境类型")
         private Integer envType;
-
         @ApiModelProperty(value = "业务模板名称，不填写则自动生成")
         private String name;
-
         private Integer businessType;
-
         private Integer businessId;
-
+        @NotBlank(message = "必须指定模板")
         private Integer templateId;
-
         private String vars;
-
         private String content;
-
         private String comment;
 
     }

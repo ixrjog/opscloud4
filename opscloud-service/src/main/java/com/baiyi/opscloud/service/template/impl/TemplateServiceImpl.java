@@ -56,4 +56,19 @@ public class TemplateServiceImpl implements TemplateService {
         return templateMapper.select(template);
     }
 
+    @Override
+    public void add(Template template) {
+        templateMapper.insert(template);
+    }
+
+    @Override
+    public void updateSelective(Template template) {
+        templateMapper.updateByPrimaryKeySelective(template);
+    }
+
+    @Override
+    public void deleteById(Integer id) {
+        templateMapper.deleteByPrimaryKey(id);
+    }
+
 }

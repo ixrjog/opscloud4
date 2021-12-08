@@ -24,4 +24,6 @@ public interface BusinessTemplateService {
     BusinessTemplate getById(Integer id);
 
     void deleteById(int id);
+
+    int countByTemplateId(int templateId);
 }

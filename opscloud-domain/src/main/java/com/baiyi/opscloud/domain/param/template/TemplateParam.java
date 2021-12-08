@@ -6,6 +6,9 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+
 /**
  * @Author baiyi
  * @Date 2021/12/6 11:37 AM
@@ -38,6 +41,30 @@ public class TemplateParam {
 
         @ApiModelProperty(value = "展开数据")
         private Boolean extend;
+    }
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    @ApiModel
+    public static class Template {
+
+        private Integer id;
+        @NotBlank(message = "必须指定模板名称")
+        private String name;
+        @NotNull(message = "必须指定环境类型")
+        private Integer envType;
+        @NotBlank(message = "必须指定实例类型")
+        private String instanceType;
+        @NotBlank(message = "必须指定模板Key")
+        private String templateKey;
+        @NotBlank(message = "必须指定模板格式类型")
+        private String templateType;
+        private String vars;
+        private String content;
+        private String comment;
+
     }
 
 }

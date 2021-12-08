@@ -69,4 +69,12 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
         businessTemplateMapper.deleteByPrimaryKey(id);
     }
 
+    @Override
+    public int countByTemplateId(int templateId) {
+        Example example = new Example(BusinessTemplate.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("templateId", templateId);
+        return businessTemplateMapper.selectCountByExample(example);
+    }
+
 }

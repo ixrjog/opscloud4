@@ -59,11 +59,37 @@ public class TemplateFacadeImpl implements TemplateFacade {
 
     private final DsInstanceFacade dsInstanceFacade;
 
-
     @Override
     public DataTable<TemplateVO.Template> queryTemplatePage(TemplateParam.TemplatePageQuery pageQuery) {
         DataTable<Template> table = templateService.queryPageByParam(pageQuery);
         return new DataTable<>(templatePacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
+    @Override
+    public TemplateVO.Template addTemplate(TemplateParam.Template template) {
+        Template pre = BeanCopierUtil.copyProperties(template, Template.class);
+        templateService.add(pre);
+        return templatePacker.wrapVO(pre, SimpleExtend.EXTEND);
+    }
+
+    @Override
+    public TemplateVO.Template updateTemplate(TemplateParam.Template template) {
+        Template pre = BeanCopierUtil.copyProperties(template, Template.class);
+        if (businessTemplateService.countByTemplateId(pre.getId()) > 0) {
+            pre.setEnvType(null);
+            pre.setInstanceType(null);
+            pre.setTemplateKey(null);
+            pre.setTemplateType(null);
+        }
+        templateService.updateSelective(pre);
+        return templatePacker.wrapVO(templateService.getById(pre.getId()), SimpleExtend.EXTEND);
+    }
+
+    @Override
+    public void deleteTemplateById(int id) {
+        if (businessTemplateService.countByTemplateId(id) > 0)
+            throw new CommonRuntimeException("模板已经使用无法删除！");
+        templateService.deleteById(id);
     }
 
     @Override

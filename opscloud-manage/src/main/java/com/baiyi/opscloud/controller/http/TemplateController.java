@@ -34,6 +34,25 @@ public class TemplateController {
         return new HttpResult<>(templateFacade.queryTemplatePage(pageQuery));
     }
 
+    @ApiOperation(value = "新增模板")
+    @PostMapping(value = "/add", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<TemplateVO.Template> addTemplate(@RequestBody @Valid TemplateParam.Template template) {
+        return new HttpResult<>(templateFacade.addTemplate(template));
+    }
+
+    @ApiOperation(value = "更新模板")
+    @PostMapping(value = "/update", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<TemplateVO.Template> updateTemplate(@RequestBody @Valid TemplateParam.Template template) {
+        return new HttpResult<>(templateFacade.updateTemplate(template));
+    }
+
+    @ApiOperation(value = "删除指定的模板")
+    @DeleteMapping(value = "/del", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> deleteTemplateById(@RequestParam int id) {
+        templateFacade.deleteTemplateById(id);
+        return HttpResult.SUCCESS;
+    }
+
     @ApiOperation(value = "分页查询业务模板列表")
     @PostMapping(value = "/business/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<BusinessTemplateVO.BusinessTemplate>> queryBusinessTemplatePage(@RequestBody @Valid BusinessTemplateParam.BusinessTemplatePageQuery pageQuery) {

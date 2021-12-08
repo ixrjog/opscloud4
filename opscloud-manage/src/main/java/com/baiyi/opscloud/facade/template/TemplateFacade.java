@@ -15,6 +15,12 @@ public interface TemplateFacade {
 
     DataTable<TemplateVO.Template> queryTemplatePage(TemplateParam.TemplatePageQuery pageQuery);
 
+    TemplateVO.Template addTemplate(TemplateParam.Template template);
+
+    TemplateVO.Template updateTemplate(TemplateParam.Template template);
+
+    void deleteTemplateById(int id);
+
     DataTable<BusinessTemplateVO.BusinessTemplate> queryBusinessTemplatePage(BusinessTemplateParam.BusinessTemplatePageQuery pageQuery);
 
     BusinessTemplateVO.BusinessTemplate addBusinessTemplate(BusinessTemplateParam.BusinessTemplate businessTemplate);
