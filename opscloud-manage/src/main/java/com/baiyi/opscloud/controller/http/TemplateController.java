@@ -84,4 +84,11 @@ public class TemplateController {
         return new HttpResult<>(templateFacade.createAssetByBusinessTemplate(id));
     }
 
+    @ApiOperation(value = "扫描业务模板与业务对象的关联关系")
+    @PutMapping(value = "/business/scan", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> scanBusinessTemplateByInstance(@RequestParam @Valid String instanceUuid) {
+        templateFacade.scanBusinessTemplateByInstanceUuid(instanceUuid);
+        return HttpResult.SUCCESS;
+    }
+
 }

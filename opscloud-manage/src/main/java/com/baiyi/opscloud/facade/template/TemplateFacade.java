@@ -29,6 +29,8 @@ public interface TemplateFacade {
 
     BusinessTemplateVO.BusinessTemplate createAssetByBusinessTemplate(int id);
 
+    void scanBusinessTemplateByInstanceUuid(String instanceUuid);
+
     void deleteBusinessTemplateById(int id);
 
 }

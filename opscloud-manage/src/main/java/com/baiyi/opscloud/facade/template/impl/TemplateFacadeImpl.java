@@ -5,15 +5,14 @@ import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.template.YamlUtil;
 import com.baiyi.opscloud.common.template.YamlVars;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
+import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.domain.DataTable;
-import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;
-import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
-import com.baiyi.opscloud.domain.generator.opscloud.Env;
-import com.baiyi.opscloud.domain.generator.opscloud.Template;
+import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.param.SimpleExtend;
 import com.baiyi.opscloud.domain.param.template.BusinessTemplateParam;
 import com.baiyi.opscloud.domain.param.template.TemplateParam;
+import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.domain.vo.template.BusinessTemplateVO;
 import com.baiyi.opscloud.domain.vo.template.TemplateVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
@@ -23,6 +22,7 @@ import com.baiyi.opscloud.facade.template.factory.TemplateFactory;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
 import com.baiyi.opscloud.packer.template.BusinessTemplatePacker;
 import com.baiyi.opscloud.packer.template.TemplatePacker;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.baiyi.opscloud.service.sys.EnvService;
 import com.baiyi.opscloud.service.template.BusinessTemplateService;
@@ -30,7 +30,10 @@ import com.baiyi.opscloud.service.template.TemplateService;
 import com.google.common.base.Joiner;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
+
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -58,6 +61,8 @@ public class TemplateFacadeImpl implements TemplateFacade {
     private final EnvService envService;
 
     private final DsInstanceFacade dsInstanceFacade;
+
+    private final DsInstanceAssetService dsInstanceAssetService;
 
     @Override
     public DataTable<TemplateVO.Template> queryTemplatePage(TemplateParam.TemplatePageQuery pageQuery) {
@@ -122,6 +127,38 @@ public class TemplateFacadeImpl implements TemplateFacade {
             throw new CommonRuntimeException("无法创建资产: 无可用的生产者!");
         }
         return iTemplateConsume.produce(bizTemplate);
+    }
+
+    /**
+     * 扫描业务模板与业务对象的关联关系
+     *
+     * @param instanceUuid
+     */
+    @Override
+    public void scanBusinessTemplateByInstanceUuid(String instanceUuid) {
+        List<BusinessTemplate> bizTemplates = businessTemplateService.queryByInstanceUuid(instanceUuid);
+        if (CollectionUtils.isEmpty(bizTemplates))
+            return;
+        bizTemplates.forEach(t -> {
+            // 非资产
+            if (BusinessTypeEnum.ASSET.getType() != t.getBusinessType())
+                return;
+            if (!IdUtil.isEmpty(t.getBusinessId())) {
+                if (dsInstanceAssetService.getById(t.getBusinessId()) != null)
+                    return;
+            }
+            Template template = templateService.getById(t.getTemplateId());
+            DatasourceInstanceAsset queryParam = DatasourceInstanceAsset.builder()
+                    .instanceUuid(t.getInstanceUuid())
+                    .assetType(Joiner.on("_").join(template.getInstanceType(), template.getTemplateKey()))
+                    .name(t.getName())
+                    .build();
+            List<DatasourceInstanceAsset> assets = dsInstanceAssetService.queryAssetByAssetParam(queryParam);
+            if (!CollectionUtils.isEmpty(assets) && assets.size() == 1) {
+                t.setBusinessId(assets.get(0).getId());
+                businessTemplateService.update(t);
+            }
+        });
     }
 
     @Override

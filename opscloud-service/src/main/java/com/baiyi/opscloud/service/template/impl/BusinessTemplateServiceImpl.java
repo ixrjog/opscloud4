@@ -60,6 +60,14 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
     }
 
     @Override
+    public List<BusinessTemplate> queryByInstanceUuid(String instanceUuid) {
+        Example example = new Example(BusinessTemplate.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", instanceUuid);
+        return businessTemplateMapper.selectByExample(example);
+    }
+
+    @Override
     public BusinessTemplate getById(Integer id) {
         return businessTemplateMapper.selectByPrimaryKey(id);
     }
