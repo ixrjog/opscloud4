@@ -55,7 +55,7 @@ public class BusinessTemplateParam {
         private String name;
         private Integer businessType;
         private Integer businessId;
-        @NotBlank(message = "必须指定模板")
+        @NotNull(message = "必须指定模板")
         private Integer templateId;
         private String vars;
         private String content;
