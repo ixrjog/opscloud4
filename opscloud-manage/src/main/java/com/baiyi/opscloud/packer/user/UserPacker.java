@@ -4,21 +4,30 @@ import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.RegexUtil;
 import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.base.BaseBusiness;
+import com.baiyi.opscloud.domain.base.SimpleBusiness;
+import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAssetProperty;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.domain.param.IExtend;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 import com.baiyi.opscloud.facade.user.base.IUserBusinessPermissionPageQuery;
 import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.auth.AuthRolePacker;
 import com.baiyi.opscloud.packer.base.IPacker;
+import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.desensitized.DesensitizedPacker;
 import com.baiyi.opscloud.packer.tag.TagPacker;
 import com.baiyi.opscloud.packer.user.child.RamUserPacker;
+import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetPropertyService;
 import com.baiyi.opscloud.service.user.UserService;
 import com.baiyi.opscloud.util.ExtendUtil;
 import com.google.common.collect.Maps;
+import lombok.RequiredArgsConstructor;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.stereotype.Component;
@@ -35,28 +44,29 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Component
+@RequiredArgsConstructor
 public class UserPacker implements IPacker<UserVO.User, User> {
 
-    @Resource
-    private AuthRolePacker authRolePacker;
+    private final AuthRolePacker authRolePacker;
+
+    private final UserCredentialPacker userCredentialPacker;
+
+    private final DesensitizedPacker<UserVO.User> desensitizedPacker;
+
+    private final UserService userService;
+
+    private final UserAccessTokenPacker userAccessTokenPacker;
+
+    private final RamUserPacker ramUserPacker;
+
+    private final TagPacker tagPacker;
+
+    private final DsAssetPacker dsAssetPacker;
+
+    private final DsInstanceAssetPropertyService dsInstanceAssetPropertyService;
 
     @Resource
-    private UserCredentialPacker userCredentialPacker;
-
-    @Resource
-    private DesensitizedPacker<UserVO.User> desensitizedPacker;
-
-    @Resource
-    private UserService userService;
-
-    @Resource
-    private UserAccessTokenPacker userAccessTokenPacker;
-
-    @Resource
-    private RamUserPacker ramUserPacker;
-
-    @Resource
-    private TagPacker tagPacker;
+    private BusinessAssetRelationService bizAssetRelationService;
 
     @Override
     public UserVO.User toVO(User user) {
@@ -102,7 +112,30 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         wrapPermission(user);
         ramUserPacker.wrap(user);
         tagPacker.wrap(user);
+        // 插入头像
+        wrapAvatar(user);
         return desensitizedPacker.desensitized(user);
+    }
+
+    /**
+     *  从资产获取用户头像并插入
+     * @param user
+     */
+    private void wrapAvatar(UserVO.User user) {
+        BaseBusiness.IBusiness iBusiness = SimpleBusiness.builder()
+                .businessType(BusinessTypeEnum.USER.getType())
+                .businessId(user.getId())
+                .build();
+        List<BusinessAssetRelation> relations = bizAssetRelationService.queryBusinessRelations(iBusiness, DsAssetTypeEnum.DINGTALK_USER.name());
+        if (CollectionUtils.isEmpty(relations)) return;
+        for (BusinessAssetRelation relation : relations) {
+            DatasourceInstanceAssetProperty property =
+                    dsInstanceAssetPropertyService.queryByAssetId(relation.getDatasourceInstanceAssetId()).stream().filter(p -> p.getName().equals("avatar")).findFirst().orElse(null);
+            if (property != null) {
+                user.setAvatar(property.getValue());
+                return;
+            }
+        }
     }
 
     public void wrap(UserVO.IUser iUser) {
@@ -132,8 +165,6 @@ public class UserPacker implements IPacker<UserVO.User, User> {
         });
         user.setBusinessPermissions(businessPermissions);
     }
-
-
 
 
 }

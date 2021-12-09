@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.service.business.impl;
 
+import com.baiyi.opscloud.domain.base.BaseBusiness;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessAssetRelation;
 import com.baiyi.opscloud.mapper.opscloud.BusinessAssetRelationMapper;
 import com.baiyi.opscloud.service.business.BusinessAssetRelationService;
@@ -54,7 +55,18 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     public List<BusinessAssetRelation> queryBusinessRelations(int businessType, int businessId) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessType).andEqualTo("businessId", businessId);
+        criteria.andEqualTo("businessType", businessType)
+                .andEqualTo("businessId", businessId);
+        return businessAssetRelationMapper.selectByExample(example);
+    }
+
+    @Override
+    public List<BusinessAssetRelation> queryBusinessRelations(BaseBusiness.IBusiness iBusiness, String assetType) {
+        Example example = new Example(BusinessAssetRelation.class);
+        Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("businessType", iBusiness.getBusinessType())
+                .andEqualTo("businessId", iBusiness.getBusinessId())
+                .andEqualTo("assetType", assetType);
         return businessAssetRelationMapper.selectByExample(example);
     }
 

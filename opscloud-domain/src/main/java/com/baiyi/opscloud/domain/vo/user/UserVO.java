@@ -92,6 +92,9 @@ public class UserVO {
 
         private List<AuthRoleVO.Role> roles;
 
+        @ApiModelProperty(value = "头像")
+        private String avatar;
+
         @ApiModelProperty(value = "用户凭证")
         private UserCredentialVO.CredentialDetails credentialDetails;
 

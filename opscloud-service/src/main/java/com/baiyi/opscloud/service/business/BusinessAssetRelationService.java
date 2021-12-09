@@ -56,5 +56,7 @@ public interface BusinessAssetRelationService {
         return queryAssetRelations(iBusiness.getBusinessType(), iBusiness.getBusinessId());
     }
 
+    List<BusinessAssetRelation> queryBusinessRelations(BaseBusiness.IBusiness iBusiness, String assetType);
+
 
 }
