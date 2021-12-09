@@ -42,8 +42,8 @@
                 and id not in (
                 select business_id from business_tag
                 where
-                     business_type = #{businessType}
-                     and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} )
+                business_type = #{businessType}
+                and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} )
                 )
             </if>
         </where>
@@ -54,32 +54,35 @@
             parameterType="com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam$BusinessPermissionUserPageQuery"
             resultMap="BaseResultMap">
         select * from user
-        where
-        <choose>
-            <when test="authorized">
-                id in ( select user_id from user_permission where business_id = #{businessId} and business_type = #{businessType} )
-            </when>
-            <otherwise>
-                id not in ( select user_id from user_permission where business_id = #{businessId} and business_type = #{businessType} )
-            </otherwise>
-        </choose>
-        <if test="queryName != null and queryName != ''">
-            and  ( username like "%" #{queryName} "%"
-            or name like "%" #{queryName} "%"
-            or display_name like "%" #{queryName} "%"
-            or email like "%" #{queryName} "%"
-            or phone like "%" #{queryName} "%"
-            or wechat like "%" #{queryName} "%" )
-        </if>
-        <if test="filterTag != null and filterTag">
-            and id not in (
-            select business_id from business_tag
-            where
-            business_type = 3
-            and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} )
-            )
-        </if>
---         and is_active = true
+        <where>
+            <choose>
+                <when test="authorized">
+                    id in ( select user_id from user_permission where business_id = #{businessId} and business_type =
+                    #{businessType} )
+                </when>
+                <otherwise>
+                    id not in ( select user_id from user_permission where business_id = #{businessId} and business_type
+                    = #{businessType} )
+                </otherwise>
+            </choose>
+            <if test="queryName != null and queryName != ''">
+                and ( username like "%" #{queryName} "%"
+                or name like "%" #{queryName} "%"
+                or display_name like "%" #{queryName} "%"
+                or email like "%" #{queryName} "%"
+                or phone like "%" #{queryName} "%"
+                or wechat like "%" #{queryName} "%" )
+            </if>
+            <if test="filterTag != null and filterTag">
+                and id not in (
+                select business_id from business_tag
+                where
+                business_type = 3
+                and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} )
+                )
+            </if>
+            and is_active = true
+        </where>
         order by create_time
     </select>
 
