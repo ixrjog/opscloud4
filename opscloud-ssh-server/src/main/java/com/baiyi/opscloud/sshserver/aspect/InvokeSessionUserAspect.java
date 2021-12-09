@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.sshserver.aspect;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.constant.enums.SessionSource;
+import com.baiyi.opscloud.common.constants.enums.SessionSource;
 import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
 import com.baiyi.opscloud.service.auth.AuthRoleService;

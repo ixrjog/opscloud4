@@ -4,7 +4,7 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsMysqlAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.rds.mysql.drive.AliyunRdsMysqlDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -25,7 +25,7 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_RDS_MYSQL_INSTANCE;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_RDS_MYSQL_INSTANCE;
 
 /**
  * @Author baiyi

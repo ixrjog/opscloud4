@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.message.customer.impl;
 
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.datasource.dingtalk.drive.DingtalkMessageDrive;

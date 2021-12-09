@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.manager;
 
-import com.baiyi.opscloud.common.constant.DsInstanceTagConstants;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;
 import com.baiyi.opscloud.datasource.manager.base.BaseManager;
 import com.baiyi.opscloud.datasource.manager.base.IManager;

@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.constant.enums;
+package com.baiyi.opscloud.common.constants.enums;
 
 /**
  * @Author baiyi

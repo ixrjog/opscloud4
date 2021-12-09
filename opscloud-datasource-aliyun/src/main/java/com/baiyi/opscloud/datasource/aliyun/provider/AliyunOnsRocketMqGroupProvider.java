@@ -4,7 +4,7 @@ import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
 import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqGroupDrive;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqInstanceDrive;
@@ -26,7 +26,7 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_GROUP;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_GROUP;
 
 /**
  * @Author baiyi

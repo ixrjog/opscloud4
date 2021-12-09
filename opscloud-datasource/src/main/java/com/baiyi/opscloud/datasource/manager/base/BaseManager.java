@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.manager.base;
 
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import lombok.extern.slf4j.Slf4j;

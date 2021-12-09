@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.kubernetes.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.kubernetes.convert.DeploymentAssetConvert;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
@@ -23,7 +23,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_KUBERNETES_DEPLOYMENT;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_KUBERNETES_DEPLOYMENT;
 
 /**
  * @Author baiyi

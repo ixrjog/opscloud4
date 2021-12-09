@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.packer.sys;
 
-import com.baiyi.opscloud.common.constant.enums.CredentialKindEnum;
+import com.baiyi.opscloud.common.constants.enums.CredentialKindEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;

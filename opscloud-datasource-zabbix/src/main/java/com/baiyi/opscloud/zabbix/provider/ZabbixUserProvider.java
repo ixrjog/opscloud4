@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -21,7 +21,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_USER;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBIX_USER;
 
 /**
  * @Author 修远

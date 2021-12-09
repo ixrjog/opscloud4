@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
 import com.baiyi.opscloud.common.datasource.LdapConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
 import com.baiyi.opscloud.datasource.account.impl.LdapAccountProvider;
 import com.baiyi.opscloud.datasource.accountGroup.AccountGroupProviderFactory;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.gitlab.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.GitlabConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.gitlab.convert.GitlabAssetConvert;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -25,7 +25,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_GITLAB_SSH_KEY;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_GITLAB_SSH_KEY;
 
 /**
  * @Author baiyi

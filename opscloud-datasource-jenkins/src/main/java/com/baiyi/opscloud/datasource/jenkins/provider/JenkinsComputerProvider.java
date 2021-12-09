@@ -2,7 +2,7 @@ package com.baiyi.opscloud.datasource.jenkins.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.JenkinsConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.datasource.jenkins.convert.ComputerAssetConvert;
 import com.baiyi.opscloud.datasource.jenkins.drive.JenkinsServerDrive;
@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_JENKINS_COMPUTER;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_JENKINS_COMPUTER;
 
 /**
  * @Author baiyi

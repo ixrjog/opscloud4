@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.datasource.dingtalk.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.constant.SingleTaskConstants;
+import com.baiyi.opscloud.common.constants.SingleTaskConstants;
 import com.baiyi.opscloud.common.datasource.DingtalkConfig;
 import com.baiyi.opscloud.common.util.EmailUtil;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;

@@ -2,7 +2,7 @@ package com.baiyi.opscloud.task;
 
 import com.baiyi.opscloud.datasource.ansible.provider.AnsibleHostsProvider;
 import com.baiyi.opscloud.common.helper.TopicHelper;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.domain.annotation.InstanceHealth;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;

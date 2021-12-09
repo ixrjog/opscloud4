@@ -3,7 +3,7 @@ package com.baiyi.opscloud.nexus.provider;
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.NexusConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
@@ -25,7 +25,7 @@ import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_NEXUS_ASSET;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_NEXUS_ASSET;
 
 /**
  * @Author baiyi

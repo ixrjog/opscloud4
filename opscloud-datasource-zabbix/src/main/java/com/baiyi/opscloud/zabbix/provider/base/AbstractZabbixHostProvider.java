@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.zabbix.provider.base;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.ZabbixConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -20,7 +20,7 @@ import com.baiyi.opscloud.zabbix.v5.entity.ZabbixHost;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ZABBIX_HOST;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ZABBIX_HOST;
 
 /**
  * @Author baiyi

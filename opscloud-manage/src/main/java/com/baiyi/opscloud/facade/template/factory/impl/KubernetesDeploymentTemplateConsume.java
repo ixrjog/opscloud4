@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.template.factory.impl;
 
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.KubernetesConfig;
 import com.baiyi.opscloud.datasource.kubernetes.drive.KubernetesDeploymentDrive;
 import com.baiyi.opscloud.domain.generator.opscloud.BusinessTemplate;

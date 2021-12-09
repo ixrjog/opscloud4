@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.core;
 
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;

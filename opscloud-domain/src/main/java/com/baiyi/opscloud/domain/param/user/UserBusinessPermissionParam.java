@@ -1,6 +1,8 @@
 package com.baiyi.opscloud.domain.param.user;
 
+import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.domain.param.IExtend;
+import com.baiyi.opscloud.domain.param.IFilterTag;
 import com.baiyi.opscloud.domain.param.PageParam;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import io.swagger.annotations.ApiModel;
@@ -47,7 +49,7 @@ public class UserBusinessPermissionParam {
     @AllArgsConstructor
     @NoArgsConstructor
     @ApiModel
-    public static class BusinessPermissionUserPageQuery extends PageParam implements IExtend {
+    public static class BusinessPermissionUserPageQuery extends PageParam implements IFilterTag, IExtend {
 
         @ApiModelProperty(value = "查询用户")
         private String queryName;
@@ -66,6 +68,11 @@ public class UserBusinessPermissionParam {
         @ApiModelProperty(value = "业务对象ID")
         @NotNull(message = "业务对象ID不能为空")
         private int businessId;
+
+        private final String FILTER_SYSTEM_TAG = DsInstanceTagConstants.SYSTEM.getTag();
+
+        @ApiModelProperty(value = "过滤系统标签对象")
+        private Boolean filterTag;
 
     }
 

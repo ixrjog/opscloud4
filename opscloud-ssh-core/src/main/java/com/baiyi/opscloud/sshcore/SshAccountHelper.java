@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshcore;
 
-import com.baiyi.opscloud.common.constant.enums.ProtocolEnum;
+import com.baiyi.opscloud.common.constants.enums.ProtocolEnum;
 import com.baiyi.opscloud.common.util.ServerAccountUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.ServerAccount;
 import com.baiyi.opscloud.service.server.ServerAccountService;

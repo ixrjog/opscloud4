@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.tencent.exmail.provider;
 
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.TencentExmailConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
@@ -22,7 +22,7 @@ import org.springframework.stereotype.Component;
 import javax.annotation.Resource;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_TENCENT_EXMAIL_USER;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_TENCENT_EXMAIL_USER;
 import static com.baiyi.opscloud.tencent.exmail.drive.TencentExmailUserDrive.ALL_DEPARTMENT;
 
 /**

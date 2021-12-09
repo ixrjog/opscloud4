@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.constant;
+package com.baiyi.opscloud.domain.constants;
 
 import lombok.Getter;
 
@@ -12,7 +12,8 @@ public enum DsInstanceTagConstants {
     SERVER("Server"),
     AUTHORIZATION("Authorization"),
     ACCOUNT("Account"),
-    NOTICE("Notice");
+    NOTICE("Notice"),
+    SYSTEM("System");
 
     @Getter
     private final String tag;

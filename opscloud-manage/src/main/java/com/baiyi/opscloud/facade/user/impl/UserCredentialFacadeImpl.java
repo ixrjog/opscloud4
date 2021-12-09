@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.facade.user.impl;
 
-import com.baiyi.opscloud.common.constant.enums.UserCredentialTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.UserCredentialTypeEnum;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.SSHUtil;
@@ -16,7 +16,6 @@ import com.google.common.base.Splitter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 
 /**

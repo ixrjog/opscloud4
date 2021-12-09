@@ -3,7 +3,7 @@ package com.baiyi.opscloud.datasource.aliyun.provider;
 import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
-import com.baiyi.opscloud.common.constant.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamDrive;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
@@ -23,7 +23,7 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.PULL_ALIYUN_RAM_ACCESS_KEY;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_RAM_ACCESS_KEY;
 
 /**
  * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>

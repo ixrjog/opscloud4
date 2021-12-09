@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.sshserver.annotation;
 
-import com.baiyi.opscloud.common.constant.enums.SessionSource;
+import com.baiyi.opscloud.common.constants.enums.SessionSource;
 
 import java.lang.annotation.*;
 

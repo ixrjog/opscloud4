@@ -2,7 +2,7 @@ package com.baiyi.opscloud.util;
 
 import com.alibaba.fastjson.JSON;
 import com.baiyi.opscloud.BaseUnit;
-import com.baiyi.opscloud.common.constant.enums.CredentialKindEnum;
+import com.baiyi.opscloud.common.constants.enums.CredentialKindEnum;
 import org.junit.jupiter.api.Test;
 
 /**

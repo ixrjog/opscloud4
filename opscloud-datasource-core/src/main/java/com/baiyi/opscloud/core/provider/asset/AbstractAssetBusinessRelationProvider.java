@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.baiyi.opscloud.common.constant.SingleTaskConstants.SCAN_ASSET_BUSINESS;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.SCAN_ASSET_BUSINESS;
 
 /**
  * 资产与业务对象绑定

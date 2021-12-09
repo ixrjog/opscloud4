@@ -38,12 +38,12 @@
             <if test="isActive != null">
                 and is_active = #{isActive}
             </if>
-            <if test="filterSystemUser != null and filterSystemUser">
+            <if test="filterTag != null and filterTag">
                 and id not in (
                 select business_id from business_tag
                 where
                      business_type = #{businessType}
-                     and tag_id = ( select id from tag where tag_key = #{SYSTEM_TAG} )
+                     and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} )
                 )
             </if>
         </where>
@@ -70,6 +70,14 @@
             or email like "%" #{queryName} "%"
             or phone like "%" #{queryName} "%"
             or wechat like "%" #{queryName} "%" )
+        </if>
+        <if test="filterTag != null and filterTag">
+            and id not in (
+            select business_id from business_tag
+            where
+            business_type = 3
+            and tag_id = ( select id from tag where tag_key = #{FILTER_SYSTEM_TAG} )
+            )
         </if>
 --         and is_active = true
         order by create_time

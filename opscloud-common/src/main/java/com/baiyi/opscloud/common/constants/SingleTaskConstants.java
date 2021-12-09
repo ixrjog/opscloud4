@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.constant;
+package com.baiyi.opscloud.common.constants;
 
 /**
  * @Author baiyi
