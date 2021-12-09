@@ -33,9 +33,11 @@ public class BusinessTemplateServiceImpl implements BusinessTemplateService {
         Page page = PageHelper.startPage(pageQuery.getPage(), pageQuery.getLength());
         Example example = new Example(BusinessTemplate.class);
         Example.Criteria criteria = example.createCriteria();
+        criteria.andEqualTo("instanceUuid", pageQuery.getInstanceUuid());
+        if (IdUtil.isNotEmpty(pageQuery.getEnvType()))
+            criteria.andEqualTo("envType", pageQuery.getEnvType());
         if (StringUtils.isNotBlank(pageQuery.getQueryName()))
             criteria.andLike("name", SQLUtil.toLike(pageQuery.getQueryName()));
-        if (IdUtil.isNotEmpty(pageQuery.getEnvType())) criteria.andEqualTo("envType", pageQuery.getEnvType());
         List<BusinessTemplate> data = businessTemplateMapper.selectByExample(example);
         return new DataTable<>(data, page.getTotal());
     }
