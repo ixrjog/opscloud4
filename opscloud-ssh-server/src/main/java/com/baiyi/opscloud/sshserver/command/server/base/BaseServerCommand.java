@@ -62,7 +62,7 @@ public class BaseServerCommand {
         this.terminal = terminal;
     }
 
-    private final static String NO_AUTHORIZED_ACCOUNT = SshShellHelper.getBackgroundColoredMessage("No authorized account", PromptColor.YELLOW);
+    private final static String NO_AUTHORIZED_ACCOUNT = SshShellHelper.getBackgroundColoredMessage("No authorized account", PromptColor.MAGENTA);
 
     public interface LoginType {
         int LOW_AUTHORITY = 0;
