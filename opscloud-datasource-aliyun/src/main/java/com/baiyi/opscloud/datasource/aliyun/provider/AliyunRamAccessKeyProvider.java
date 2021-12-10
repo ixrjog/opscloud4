@@ -1,15 +1,15 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamDrive;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
+import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamAccessKeyDrive;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.AccessKey;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -26,17 +26,17 @@ import java.util.List;
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_RAM_ACCESS_KEY;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/8 2:46 下午
  * @Since 1.0
  */
 
 @Component
 @ChildProvider(parentType = DsAssetTypeEnum.RAM_USER)
-public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListAccessKeysResponse.AccessKey> {
+public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<AccessKey.Key> {
 
     @Resource
-    private AliyunRamDrive aliyunRamDrive;
+    private AliyunRamAccessKeyDrive aliyunRamAccessKeyDrive;
 
     @Resource
     private AliyunRamAccessKeyProvider aliyunRamAccessKeyProvider;
@@ -52,7 +52,7 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AccessKey.Key entity) {
         return RamAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
@@ -62,13 +62,13 @@ public class AliyunRamAccessKeyProvider extends AbstractAssetChildProvider<ListA
     }
 
     @Override
-    protected List<ListAccessKeysResponse.AccessKey> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+    protected List<AccessKey.Key> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<ListAccessKeysResponse.AccessKey> accessKeyList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> accessKeyList.addAll(aliyunRamDrive.listAccessKeys(regionId, aliyun, asset.getAssetKey())));
-        return accessKeyList;
+        List<AccessKey.Key> entities = Lists.newArrayList();
+        aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamAccessKeyDrive.listAccessKeys(regionId, aliyun, asset.getAssetKey())));
+        return entities;
     }
 
     @Override

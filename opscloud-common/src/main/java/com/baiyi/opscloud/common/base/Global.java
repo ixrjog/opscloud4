@@ -15,7 +15,7 @@ public class Global {
     }
 
 
-    public static final String CREATED_BY = "Created by opscloud";
+    public static final String CREATED_BY = "Created by opscloud4";
 
     // extend
     public static final int EXTEND = 1;
