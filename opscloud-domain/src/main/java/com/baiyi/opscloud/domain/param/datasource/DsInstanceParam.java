@@ -25,7 +25,6 @@ public class DsInstanceParam {
     public static class DsInstanceQuery implements IExtend {
 
         @ApiModelProperty(value = "数据源类型")
-        @Valid
         private String instanceType;
 
         @ApiModelProperty(value = "有效")

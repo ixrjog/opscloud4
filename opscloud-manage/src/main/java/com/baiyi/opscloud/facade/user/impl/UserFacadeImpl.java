@@ -35,6 +35,7 @@ import com.baiyi.opscloud.facade.user.factory.UserBusinessPermissionFactory;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.user.UserAccessTokenPacker;
 import com.baiyi.opscloud.packer.user.UserPacker;
+import com.baiyi.opscloud.packer.user.child.RamUserPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.AccessTokenService;
 import com.baiyi.opscloud.service.user.UserGroupService;
@@ -80,6 +81,8 @@ public class UserFacadeImpl implements UserFacade {
     private final UserGroupService userGroupService;
 
     private final UserPermissionService userPermissionService;
+
+    private final RamUserPacker ramUserPacker;
 
     @Override
     public DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery) {
@@ -231,6 +234,16 @@ public class UserFacadeImpl implements UserFacade {
     public DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery) {
         DataTable<User> table = userService.queryPageByParam(pageQuery);
         return new DataTable<>(userPacker.wrapVOList(table.getData(), pageQuery), table.getTotalNum());
+    }
+
+    @Override
+    public List<UserVO.RamUser> queryUserRamUsers(String username) {
+        UserVO.User vo = UserVO.User.builder()
+                .username(username)
+                .build();
+
+        ramUserPacker.wrap(vo);
+        return vo.getRamUsers();
     }
 
 }

@@ -104,11 +104,8 @@ public class AliyunRamUserDrive {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-
         return BeanCopierUtil.copyListProperties(userList, RamUser.User.class);
     }
-
-
 
     /**
      * 查询 策略授权的所有用户
