@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "business_asset_relation")
-public class BusinessAssetRelation {
+public class BusinessAssetRelation  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
