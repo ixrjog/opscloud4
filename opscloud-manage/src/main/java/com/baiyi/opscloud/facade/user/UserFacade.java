@@ -10,6 +10,8 @@ import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
 
+import java.util.List;
+
 /**
  * @Author baiyi
  * @Date 2021/5/14 10:38 上午
@@ -57,4 +59,7 @@ public interface UserFacade {
     void revokeUserAccessToken(String tokenId);
 
     DataTable<UserVO.User> queryBusinessPermissionUserPage(UserBusinessPermissionParam.BusinessPermissionUserPageQuery pageQuery);
+
+    List<UserVO.RamUser> queryUserRamUsers(String username);
+
 }

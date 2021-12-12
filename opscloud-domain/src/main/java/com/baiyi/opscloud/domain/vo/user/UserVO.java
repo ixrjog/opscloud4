@@ -10,6 +10,7 @@ import com.baiyi.opscloud.domain.vo.business.BusinessAssetRelationVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.tag.TagVO;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.google.common.collect.Lists;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.*;
@@ -37,6 +38,7 @@ public class UserVO {
 
     public interface IUserPermission extends BaseBusiness.IBusiness {
         void setUserPermission(UserPermissionVO.UserPermission userPermission);
+
         Integer getUserId();
     }
 
@@ -62,7 +64,7 @@ public class UserVO {
 
         @ApiModelProperty(value = "AccessKey列表")
         private List<DsAssetVO.Asset> accessKeys;
-        
+
         @ApiModelProperty(value = "策略列表")
         private List<DsAssetVO.Asset> ramPolicies;
 
@@ -75,8 +77,7 @@ public class UserVO {
     @NoArgsConstructor
     @ApiModel
     public static class User extends BaseVO implements BusinessAssetRelationVO.IBusinessAssetRelation, // 资产与业务对象绑定关系
-            TagVO.ITags
-    {
+            TagVO.ITags {
 
         private List<TagVO.Tag> tags;
 
@@ -104,7 +105,8 @@ public class UserVO {
         private Map<String, List<IUserPermission>> businessPermissions;
 
         @ApiModelProperty(value = "阿里云RAM用户列表")
-        private List<RamUser> ramUsers;
+        @Builder.Default
+        private List<RamUser> ramUsers = Lists.newArrayList();
 
         @ApiModelProperty(value = "主键")
         @Builder.Default

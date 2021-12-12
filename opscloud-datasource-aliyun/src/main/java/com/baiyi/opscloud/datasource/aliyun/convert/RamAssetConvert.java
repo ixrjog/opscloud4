@@ -1,13 +1,13 @@
 package com.baiyi.opscloud.datasource.aliyun.convert;
 
-import com.aliyuncs.ram.model.v20150501.ListAccessKeysResponse;
-import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
-import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.AccessKey;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 
 import static com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert.toGmtDate;
 
@@ -18,7 +18,7 @@ import static com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert.t
  */
 public class RamAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, RamUser.User entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getUserId())
@@ -37,7 +37,7 @@ public class RamAssetConvert {
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListPoliciesResponse.Policy entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, RamPolicy.Policy entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getPolicyName())
@@ -54,7 +54,7 @@ public class RamAssetConvert {
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListAccessKeysResponse.AccessKey entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AccessKey.Key entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getAccessKeyId())

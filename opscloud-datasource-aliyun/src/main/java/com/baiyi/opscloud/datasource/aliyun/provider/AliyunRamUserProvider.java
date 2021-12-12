@@ -1,18 +1,17 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ram.model.v20150501.ListEntitiesForPolicyResponse;
 import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
-import com.aliyuncs.ram.model.v20150501.ListUsersResponse;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamDrive;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.aliyun.convert.RamAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -25,20 +24,19 @@ import org.springframework.util.CollectionUtils;
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_RAM_USER;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/2 7:46 下午
  * @Since 1.0
  */
 @Component
-public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUsersResponse.User, ListPoliciesResponse.Policy> {
+public class AliyunRamUserProvider extends AbstractAssetRelationProvider<RamUser.User, ListPoliciesResponse.Policy> {
 
     @Resource
-    private AliyunRamDrive aliyunRamDrive;
+    private AliyunRamUserDrive aliyunRamUserDrive;
 
     @Resource
     private AliyunRamUserProvider aliyunRamUserProvider;
@@ -55,7 +53,7 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, ListUsersResponse.User entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, RamUser.User entity) {
         return RamAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
@@ -71,13 +69,13 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected List<ListUsersResponse.User> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<RamUser.User> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<ListUsersResponse.User> userList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> userList.addAll(aliyunRamDrive.listUsers(regionId, aliyun)));
-        return userList;
+        List<RamUser.User> entities = Lists.newArrayList();
+        aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamUserDrive.listUsers(regionId, aliyun)));
+        return entities;
     }
 
     @Override
@@ -96,19 +94,9 @@ public class AliyunRamUserProvider extends AbstractAssetRelationProvider<ListUse
     }
 
     @Override
-    protected List<ListUsersResponse.User> listEntities(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
+    protected List<RamUser.User> listEntities(DsInstanceContext dsInstanceContext, ListPoliciesResponse.Policy target) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunRamDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName())
-                .stream().map(this::toTargetEntity)
-                .collect(Collectors.toList());
-    }
-
-    private ListUsersResponse.User toTargetEntity(ListEntitiesForPolicyResponse.User user) {
-        ListUsersResponse.User target = new ListUsersResponse.User();
-        target.setUserName(user.getUserName());
-        target.setDisplayName(user.getDisplayName());
-        target.setUserId(user.getUserId());
-        return target;
+        return aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, target.getPolicyType(), target.getPolicyName());
     }
 
     @Override

@@ -54,8 +54,11 @@ public class AssetBusinessRelationAspect {
         return result;
     }
 
+    /**
+     * 业务对象与资产绑定（无需传入assetId）
+     * @param bar
+     */
     private void bindRelation(BusinessAssetRelationVO.IBusinessAssetRelation bar) {
-        if (bar.getAssetId() == null) return;
         log.info("业务对象绑定资产: businessType = {} , businessId = {} , assetId = {}", bar.getBusinessType(), bar.getBusinessId(), bar.getAssetId());
         businessAssetRelationFacade.bindAsset(bar);
     }

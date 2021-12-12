@@ -18,6 +18,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 /**
  * @Author baiyi
@@ -183,6 +184,12 @@ public class UserController {
     public HttpResult<Boolean> revokeUserAccessToken(@RequestParam @Valid String tokenId) {
         userFacade.revokeUserAccessToken(tokenId);
         return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "查询用户RAM授权信息")
+    @GetMapping(value = "/ram/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<List<UserVO.RamUser>> getUserRamUsers(String username) {
+        return new HttpResult<>(userFacade.queryUserRamUsers(username));
     }
 
 }
