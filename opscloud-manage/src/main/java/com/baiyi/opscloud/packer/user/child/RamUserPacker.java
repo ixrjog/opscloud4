@@ -69,13 +69,15 @@ public class RamUserPacker {
         List<DsAssetVO.Asset> ramPolicies
                 = asset.getChildren().containsKey(DsAssetTypeEnum.RAM_POLICY.name()) ? asset.getChildren().get(DsAssetTypeEnum.RAM_POLICY.name()) : Lists.newArrayList();
         return UserVO.RamUser.builder()
+                .instanceUuid(instance.getUuid())
+                .instanceName(instance.getInstanceName())
                 .username(asset.getAssetKey())
                 .loginUser(asset.getAssetKey() + config.getAliyun().getAccount().getDomain())
                 .loginUrl(config.getAliyun().getAccount().getRamLoginUrl())
-                .instanceName(instance.getInstanceName())
                 .name(asset.getName())
                 .accessKeys(accessKeys)
                 .ramPolicies(ramPolicies)
                 .build();
     }
+    
 }

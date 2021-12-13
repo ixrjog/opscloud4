@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.param.server.ServerParam;
 import com.baiyi.opscloud.domain.param.user.UserBusinessPermissionParam;
 import com.baiyi.opscloud.domain.param.user.UserGroupParam;
 import com.baiyi.opscloud.domain.param.user.UserParam;
+import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.*;
@@ -40,6 +41,8 @@ public class UserController {
     private final UserUIFacade uiFacade;
 
     private final UserPermissionFacade permissionFacade;
+
+    private final UserRamFacade userRamFacade;
 
     @ApiOperation(value = "查询用户前端界面信息(菜单&UI鉴权)")
     @GetMapping(value = "/ui/info/get", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -188,8 +191,15 @@ public class UserController {
 
     @ApiOperation(value = "查询用户RAM授权信息")
     @GetMapping(value = "/ram/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public HttpResult<List<UserVO.RamUser>> getUserRamUsers(String username) {
+    public HttpResult<List<UserVO.RamUser>> queryUserRamUsers(@RequestParam @Valid String username) {
         return new HttpResult<>(userFacade.queryUserRamUsers(username));
+    }
+
+    @ApiOperation(value = "创建RAM账户")
+    @PostMapping(value = "/ram/user/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> createRamUser(@RequestBody @Valid UserRamParam.CreateRamUser createRamUser) {
+        userRamFacade.createUser(createRamUser);
+        return HttpResult.SUCCESS;
     }
 
 }

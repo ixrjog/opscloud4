@@ -16,9 +16,12 @@ import java.util.List;
  */
 public class DsInstanceVO {
 
-    public interface IDsInstance {
+    public interface IInstance {
 
         String getInstanceUuid();
+    }
+
+    public interface IDsInstance extends IInstance {
 
         void setInstance(Instance instance);
 

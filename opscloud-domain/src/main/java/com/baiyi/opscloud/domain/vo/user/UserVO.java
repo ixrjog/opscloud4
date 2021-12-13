@@ -52,6 +52,9 @@ public class UserVO {
         @ApiModelProperty(value = "实例名称")
         private String instanceName;
 
+        @ApiModelProperty(value = "实例UUID")
+        private String instanceUuid;
+
         private String name;
 
         private String username;
