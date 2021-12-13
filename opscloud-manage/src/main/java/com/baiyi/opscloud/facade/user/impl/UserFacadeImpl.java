@@ -143,7 +143,7 @@ public class UserFacadeImpl implements UserFacade {
 //        if (StringUtils.isEmpty(newUser.getPassword()))
 //            throw new CommonRuntimeException("密码不能为空");
         userService.add(newUser);
-        user.setId(newUser.getId());
+        user.setId(newUser.getId()); // 给切面提供businessId
     }
 
     /**
@@ -241,7 +241,6 @@ public class UserFacadeImpl implements UserFacade {
         UserVO.User vo = UserVO.User.builder()
                 .username(username)
                 .build();
-
         ramUserPacker.wrap(vo);
         return vo.getRamUsers();
     }

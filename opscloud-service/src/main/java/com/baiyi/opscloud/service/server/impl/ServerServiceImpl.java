@@ -82,6 +82,7 @@ public class ServerServiceImpl extends AbstractBusinessService<Server> implement
     @Override
     @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(Server server) {
+        server.setId(null);
         serverMapper.insert(server);
     }
 

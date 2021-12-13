@@ -25,9 +25,9 @@ public class BusinessAssetRelationServiceImpl implements BusinessAssetRelationSe
     public BusinessAssetRelation getByUniqueKey(BusinessAssetRelation businessAssetRelation) {
         Example example = new Example(BusinessAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
-        criteria.andEqualTo("businessType", businessAssetRelation.getBusinessType()).andEqualTo("businessId",
-                businessAssetRelation.getBusinessId()).andEqualTo("datasourceInstanceAssetId",
-                businessAssetRelation.getDatasourceInstanceAssetId());
+        criteria.andEqualTo("businessType", businessAssetRelation.getBusinessType())
+                .andEqualTo("businessId", businessAssetRelation.getBusinessId())
+                .andEqualTo("datasourceInstanceAssetId", businessAssetRelation.getDatasourceInstanceAssetId());
         return businessAssetRelationMapper.selectOneByExample(example);
     }
 

@@ -40,6 +40,7 @@ public class UserGroupServiceImpl extends AbstractBusinessService<UserGroup> imp
     @Override
     @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(UserGroup userGroup) {
+        userGroup.setId(null);
         userGroupMapper.insert(userGroup);
     }
 

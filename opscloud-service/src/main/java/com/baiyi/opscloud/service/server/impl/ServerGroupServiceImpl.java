@@ -62,6 +62,7 @@ public class ServerGroupServiceImpl extends AbstractBusinessService<ServerGroup>
     @Override
     @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(ServerGroup serverGroup) {
+        serverGroup.setId(null);
         serverGroupMapper.insert(serverGroup);
     }
 

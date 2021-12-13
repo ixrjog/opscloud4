@@ -111,6 +111,7 @@ public class UserServiceImpl extends AbstractBusinessService<User> implements Us
     @Encrypt
     @EventPublisher(eventAction = EventActionTypeEnum.CREATE)
     public void add(User user) {
+        user.setId(null);
         userMapper.insert(user);
     }
 
