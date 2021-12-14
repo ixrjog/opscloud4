@@ -15,7 +15,7 @@ public interface DsInstanceAssetRelationService {
 
     void add(DatasourceInstanceAssetRelation relation);
 
-    void save(DatasourceInstanceAssetRelation relation);
+    DatasourceInstanceAssetRelation save(DatasourceInstanceAssetRelation relation);
 
     List<DatasourceInstanceAssetRelation> queryTargetAsset(String instanceUuid, Integer sourceAssetId);
 

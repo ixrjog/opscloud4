@@ -31,15 +31,19 @@ public class DsInstanceAssetRelationServiceImpl implements DsInstanceAssetRelati
     }
 
     @Override
-    public void save(DatasourceInstanceAssetRelation relation) {
+    public DatasourceInstanceAssetRelation save(DatasourceInstanceAssetRelation relation) {
         Example example = new Example(DatasourceInstanceAssetRelation.class);
         Example.Criteria criteria = example.createCriteria();
         criteria.andEqualTo("instanceUuid", relation.getInstanceUuid())
                 .andEqualTo("relationType", relation.getRelationType())
                 .andEqualTo("sourceAssetId", relation.getSourceAssetId())
                 .andEqualTo("targetAssetId", relation.getTargetAssetId());
-        if (dsInstanceAssetRelationMapper.selectOneByExample(example) == null)
-            add(relation);
+        DatasourceInstanceAssetRelation pre = dsInstanceAssetRelationMapper.selectOneByExample(example);
+        if (pre != null) {
+            return pre;
+        }
+        add(relation);
+        return relation;
     }
 
     @Override
