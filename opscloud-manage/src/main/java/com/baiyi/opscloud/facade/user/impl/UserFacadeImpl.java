@@ -45,6 +45,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.List;
 
@@ -88,8 +89,8 @@ public class UserFacadeImpl implements UserFacade {
     }
 
     @Override
-    public UserVO.User getUserDetails() {
-        User user = userService.getByUsername(SessionUtil.getUsername());
+    public UserVO.User getUserDetailsByUsername(String username) {
+        User user = userService.getByUsername(StringUtils.isEmpty(username) ? SessionUtil.getUsername() : username);
         return userPacker.wrap(user);
     }
 

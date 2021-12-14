@@ -52,6 +52,12 @@ public class UserController {
         return new HttpResult<>(userFacade.getUserDetails());
     }
 
+    @ApiOperation(value = "查询用户详情")
+    @GetMapping(value = "/details/username/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<UserVO.User> getUserDetailsByUsername(@RequestParam @Valid String username) {
+        return new HttpResult<>(userFacade.getUserDetailsByUsername(username));
+    }
+
     @ApiOperation(value = "保存用户凭证")
     @PostMapping(value = "/credential/save", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> saveUserCredential(@RequestBody @Valid UserCredentialVO.Credential credential) {
