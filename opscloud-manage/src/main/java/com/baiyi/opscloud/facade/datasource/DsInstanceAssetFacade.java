@@ -1,5 +1,7 @@
 package com.baiyi.opscloud.facade.datasource;
 
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 
 import java.util.List;
@@ -11,11 +13,17 @@ import java.util.List;
  */
 public interface DsInstanceAssetFacade {
 
+    DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery);
+
     /**
      *  查询用户密钥
      * @param username
      * @return
      */
     List<DsAssetVO.Asset> querySshKeyAssets(String username);
+
+    void deleteAssetByAssetId(int assetId);
+
+    void setAssetActiveByAssetId(int assetId);
 
 }

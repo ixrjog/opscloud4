@@ -1,19 +1,24 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.domain.DataTable;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.datasource.DsInstanceParam;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.facade.datasource.DsFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
+import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
+import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import com.google.common.collect.Lists;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,16 +28,26 @@ import java.util.stream.Collectors;
  * @Version 1.0
  */
 @Service
+@RequiredArgsConstructor
 public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
 
-    @Resource
-    private DsFacade dsFacade;
+    private final DsFacade dsFacade;
 
-    @Resource
-    private DsInstanceAssetService dsInstanceAssetService;
+    private final DsInstanceAssetService dsInstanceAssetService;
 
-    @Resource
-    private DsAssetPacker dsAssetPacker;
+    private final SimpleDsAssetFacade simpleDsAssetFacade;
+
+    private final DsAssetPacker dsAssetPacker;
+
+    private final DsInstanceService dsInstanceService;
+
+    @Override
+    public DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery) {
+        DatasourceInstance dsInstance = dsInstanceService.getById(pageQuery.getInstanceId());
+        pageQuery.setInstanceUuid(dsInstance.getUuid());
+        DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
+        return new DataTable<>(dsAssetPacker.wrapVOList(table.getData(), pageQuery, pageQuery), table.getTotalNum());
+    }
 
     @Override
     public List<DsAssetVO.Asset> querySshKeyAssets(String username) {
@@ -55,6 +70,16 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
 
         });
         return result;
+    }
+
+    @Override
+    public void deleteAssetByAssetId(int assetId) {
+        simpleDsAssetFacade.deleteAssetById(assetId);
+    }
+
+    @Override
+    public void setAssetActiveByAssetId(int assetId) {
+
     }
 
 

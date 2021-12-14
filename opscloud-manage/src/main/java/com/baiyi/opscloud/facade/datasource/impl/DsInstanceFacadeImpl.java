@@ -6,17 +6,12 @@ import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.core.provider.base.common.AbstractSetDsInstanceConfigProvider;
-import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsInstanceVO;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
-import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
-import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.packer.datasource.DsInstancePacker;
-import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -40,19 +35,6 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
 
     private final DsInstancePacker dsInstancePacker;
 
-    private final DsInstanceAssetService dsInstanceAssetService;
-
-    private final DsAssetPacker dsAssetPacker;
-
-    private final SimpleDsAssetFacade baseDsAssetFacade;
-
-    @Override
-    public DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery) {
-        DatasourceInstance dsInstance = dsInstanceService.getById(pageQuery.getInstanceId());
-        pageQuery.setInstanceUuid(dsInstance.getUuid());
-        DataTable<DatasourceInstanceAsset> table = dsInstanceAssetService.queryPageByParam(pageQuery);
-        return new DataTable<>(dsAssetPacker.wrapVOList(table.getData(), pageQuery, pageQuery), table.getTotalNum());
-    }
 
     @Override
     @Async(value = Global.TaskPools.EXECUTOR)
@@ -74,11 +56,6 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
         assert providers != null;
         return providers.stream().map(e -> e.pullAsset(instance.getId(), entity)).collect(Collectors.toList())
                 .stream().filter(e -> e.getAssetType().equals(assetType)).collect(Collectors.toList());
-    }
-
-    @Override
-    public void deleteAssetById(Integer id) {
-        baseDsAssetFacade.deleteAssetById(id);
     }
 
     @Override

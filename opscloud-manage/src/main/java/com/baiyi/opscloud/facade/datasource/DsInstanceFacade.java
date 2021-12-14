@@ -1,9 +1,7 @@
 package com.baiyi.opscloud.facade.datasource;
 
-import com.baiyi.opscloud.domain.DataTable;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
-import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
 
 import java.util.List;
 
@@ -14,15 +12,13 @@ import java.util.List;
  */
 public interface DsInstanceFacade<T> {
 
-    DataTable<DsAssetVO.Asset> queryAssetPage(DsAssetParam.AssetPageQuery pageQuery);
-
     void pullAsset(DsAssetParam.PullAsset pullAsset);
 
     List<DatasourceInstanceAsset> pullAsset(String instanceUuid, String assetType, T entity);
 
-    void deleteAssetById(Integer id);
-
     void setDsInstanceConfig(DsAssetParam.SetDsInstanceConfig setDsInstanceConfig);
 
     void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness);
+
+
 }

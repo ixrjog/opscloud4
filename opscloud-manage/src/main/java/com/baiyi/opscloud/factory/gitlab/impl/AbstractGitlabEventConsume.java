@@ -7,6 +7,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.domain.param.notify.gitlab.GitlabNotifyParam;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
+import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
 import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventConsumeFactory;
 import com.baiyi.opscloud.factory.gitlab.GitlabEventNameEnum;
@@ -36,6 +37,9 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
+
+    @Resource
+    protected SimpleDsAssetFacade simpleDsAssetFacade;
 
     @Resource
     protected DsInstanceFacade dsInstanceFacade;

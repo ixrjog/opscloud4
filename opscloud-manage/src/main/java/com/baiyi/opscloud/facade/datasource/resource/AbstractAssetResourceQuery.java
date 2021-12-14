@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.param.application.ApplicationResourceParam;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.vo.application.ApplicationResourceVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
-import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.factory.resource.base.AbstractApplicationResourceQuery;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 public abstract class AbstractAssetResourceQuery extends AbstractApplicationResourceQuery {
 
     @Autowired
-    private DsInstanceFacade dsInstanceFacade;
+    private DsInstanceAssetFacade dsInstanceAssetFacade;
 
     protected static ThreadLocal<ApplicationResourceParam.ResourcePageQuery> resourceQuery = new ThreadLocal<>();
 
@@ -37,7 +37,7 @@ public abstract class AbstractAssetResourceQuery extends AbstractApplicationReso
                 .build();
         query.setPage(pageQuery.getPage());
         query.setLength(pageQuery.getLength());
-        DataTable<DsAssetVO.Asset> table = dsInstanceFacade.queryAssetPage(query);
+        DataTable<DsAssetVO.Asset> table = dsInstanceAssetFacade.queryAssetPage(query);
         return new DataTable<>(table.getData().stream().map(this::toResource
         ).collect(Collectors.toList()), table.getTotalNum());
     }

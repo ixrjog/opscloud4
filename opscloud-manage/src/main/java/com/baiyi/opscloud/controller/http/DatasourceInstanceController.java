@@ -6,6 +6,7 @@ import com.baiyi.opscloud.domain.param.datasource.DsAssetParam;
 import com.baiyi.opscloud.domain.param.datasource.DsAssetSubscriptionParam;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetSubscriptionVO;
 import com.baiyi.opscloud.domain.vo.datasource.DsAssetVO;
+import com.baiyi.opscloud.facade.datasource.DsInstanceAssetFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceAssetSubscriptionFacade;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import io.swagger.annotations.Api;
@@ -29,12 +30,21 @@ public class DatasourceInstanceController {
 
     private final DsInstanceFacade dsInstanceFacade;
 
+    private final DsInstanceAssetFacade dsInstanceAssetFacade;
+
     private final DsInstanceAssetSubscriptionFacade dsInstanceAssetSubscriptionFacade;
 
     @ApiOperation(value = "分页查询数据源资产列表")
     @PostMapping(value = "/asset/page/query", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<DataTable<DsAssetVO.Asset>> queryAssetPage(@RequestBody @Valid DsAssetParam.AssetPageQuery pageQuery) {
-        return new HttpResult<>(dsInstanceFacade.queryAssetPage(pageQuery));
+        return new HttpResult<>(dsInstanceAssetFacade.queryAssetPage(pageQuery));
+    }
+
+    @ApiOperation(value = "设置数据源资产是否有效")
+    @PutMapping(value = "/asset/active/set", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> setAssetActiveByAssetId(@RequestParam @Valid int assetId) {
+        dsInstanceAssetFacade.setAssetActiveByAssetId(assetId);
+        return HttpResult.SUCCESS;
     }
 
     @ApiOperation(value = "拉取数据源资产信息")
@@ -47,7 +57,7 @@ public class DatasourceInstanceController {
     @ApiOperation(value = "删除指定的资产")
     @DeleteMapping(value = "/asset/del", produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> deleteAssetById(@RequestParam @Valid int id) {
-        dsInstanceFacade.deleteAssetById(id);
+        dsInstanceAssetFacade.deleteAssetByAssetId(id);
         return HttpResult.SUCCESS;
     }
 

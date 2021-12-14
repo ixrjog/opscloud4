@@ -32,7 +32,7 @@ public class GitlabKeyEventConsume extends AbstractGitlabEventConsume {
             AssetContainer assetContainer = toAssetContainer();
             DatasourceInstanceAsset asset = dsInstanceAssetService.getByUniqueKey(assetContainer.getAsset());
             if (asset != null) // 删除资产
-                dsInstanceFacade.deleteAssetById(asset.getId());
+                simpleDsAssetFacade.deleteAssetById(asset.getId());
         } else {
             super.proceed(); // 用户创建新Key
         }
