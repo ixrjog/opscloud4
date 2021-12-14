@@ -31,6 +31,7 @@ public class AliyunConfig extends BaseConfig {
         private Account account;
         private String regionId;
         private Set<String> regionIds; // 可用区
+        private Ons ons;
 
     }
 
@@ -56,7 +57,13 @@ public class AliyunConfig extends BaseConfig {
         public String getRamLoginUrl() {
             return RAM_LOGIN_URL.replace("${COMPANY}", StringUtils.isEmpty(this.company) ? this.uid : this.company);
         }
+    }
 
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Ons {
+        private String internetRegionId;
     }
 
 }

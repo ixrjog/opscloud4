@@ -1,48 +1,49 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ecs.model.v20140526.DescribeVpcsResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
-import com.baiyi.opscloud.datasource.aliyun.convert.VpcAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunVpcDrive;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
+import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqInstanceDrive;
+import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
+import entity.OnsInstance;
 import org.springframework.stereotype.Component;
-import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_VPC;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_INSTANCE;
 
 /**
- * @Author 修远
- * @Date 2021/6/23 1:21 下午
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2021/12/14 5:26 PM
+ * @Version 1.0
  */
 @Component
-public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vpc> {
+public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInstance.Instance> {
 
     @Resource
-    private AliyunVpcDrive aliyunVpcDrive;
+    private AliyunOnsRocketMqInstanceDrive aliyunOnsRocketMqInstanceDrive;
 
     @Resource
-    private AliyunVpcProvider aliyunVpcProvider;
+    private AliyunOnsRocketMqInstanceProvider aliyunOnsRocketMqInstanceProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.VPC)
-    @SingleTask(name = PULL_ALIYUN_VPC, lockTime = "5m")
+    @EnablePullChild(type = DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE)
+    @SingleTask(name = PULL_ALIYUN_ONS_ROCKETMQ_INSTANCE, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -52,8 +53,8 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeVpcsResponse.Vpc entity) {
-        return VpcAssetConvert.toAssetContainer(dsInstance, entity);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.Instance entity) {
+        return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
@@ -64,13 +65,17 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
     }
 
     @Override
-    protected List<DescribeVpcsResponse.Vpc> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<OnsInstance.Instance> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
-            return Collections.emptyList();
-        List<DescribeVpcsResponse.Vpc> vpcList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> vpcList.addAll(aliyunVpcDrive.listVpcs(regionId, aliyun)));
-        return vpcList;
+        Set<String> regionIds = AliyunRegionIdUtil.toOnsRegionIds(aliyun);
+        List<OnsInstance.Instance> entities = Lists.newArrayList();
+        regionIds.forEach(regionId -> {
+            try {
+                entities.addAll(aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun));
+            } catch (ClientException e) {
+            }
+        });
+        return entities;
     }
 
     @Override
@@ -80,12 +85,14 @@ public class AliyunVpcProvider extends BaseAssetProvider<DescribeVpcsResponse.Vp
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.VPC.name();
+        return DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE.name();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunVpcProvider);
+        AssetProviderFactory.register(aliyunOnsRocketMqInstanceProvider);
     }
 
 }
+
+

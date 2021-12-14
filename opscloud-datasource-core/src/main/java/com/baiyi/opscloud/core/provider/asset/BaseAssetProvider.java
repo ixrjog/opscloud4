@@ -26,7 +26,7 @@ import java.util.Set;
  * @Date 2021/6/19 4:22 下午
  * @Version 1.0
  */
-public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider<T>, InitializingBean {
+public abstract class  BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider<T>, InitializingBean {
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;

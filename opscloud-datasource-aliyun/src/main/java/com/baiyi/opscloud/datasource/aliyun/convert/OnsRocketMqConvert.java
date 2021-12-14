@@ -1,14 +1,14 @@
 package com.baiyi.opscloud.datasource.aliyun.convert;
 
-import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
-import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
-import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
 import com.baiyi.opscloud.datasource.aliyun.convert.enums.OnsMessageTypeEnum;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import entity.OnsInstance;
+import entity.OnsRocketMqGroup;
+import entity.OnsRocketMqTopic;
 
 import java.util.Date;
 
@@ -27,7 +27,7 @@ public class OnsRocketMqConvert {
      * @param entity
      * @return
      */
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstanceInServiceListResponse.InstanceVO entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.Instance entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getInstanceId()) // 资产id = 实例id
@@ -35,7 +35,7 @@ public class OnsRocketMqConvert {
                 .assetKey(entity.getInstanceId())
                 .kind(entity.getInstanceType() == 1 ? "标准版实例" : "铂金版实例")
                 .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE.name())
-                //.description()
+                .regionId(entity.getRegionId())
                 .expiredTime(entity.getReleaseTime() != null ? new Date(entity.getReleaseTime()) : null) // 铂金版本过期时间
                 .build();
 
@@ -53,7 +53,7 @@ public class OnsRocketMqConvert {
      * @param entity
      * @return
      */
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsTopicListResponse.PublishInfoDo entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsRocketMqTopic.Topic entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getInstanceId())
@@ -62,6 +62,7 @@ public class OnsRocketMqConvert {
                 .assetKey2(entity.getRelationName())
                 .kind(OnsMessageTypeEnum.getDesc(entity.getMessageType()))
                 .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC.name())
+                .regionId(entity.getRegionId())
                 .description(entity.getRemark())
                 .createdTime(new Date(entity.getCreateTime()))
                 .build();
@@ -78,7 +79,7 @@ public class OnsRocketMqConvert {
      * @param entity
      * @return
      */
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsGroupListResponse.SubscribeInfoDo entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsRocketMqGroup.Group entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getInstanceId())
@@ -86,6 +87,7 @@ public class OnsRocketMqConvert {
                 .assetKey(entity.getGroupId())
                 .kind(entity.getGroupType())
                 .assetType(DsAssetTypeEnum.ONS_ROCKETMQ_GROUP.name())
+                .regionId(entity.getRegionId())
                 .description(entity.getRemark())
                 .createdTime(new Date(entity.getCreateTime()))
                 .build();

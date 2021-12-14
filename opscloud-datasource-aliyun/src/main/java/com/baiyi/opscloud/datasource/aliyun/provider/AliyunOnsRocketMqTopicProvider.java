@@ -1,30 +1,33 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ons.model.v20190214.OnsInstanceInServiceListResponse;
-import com.aliyuncs.ons.model.v20190214.OnsTopicListResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
-import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.model.DsInstanceContext;
+import com.baiyi.opscloud.core.provider.annotation.ChildProvider;
+import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
+import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.convert.OnsRocketMqConvert;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqInstanceDrive;
 import com.baiyi.opscloud.datasource.aliyun.ons.rocketmq.drive.AliyunOnsRocketMqTopicDrive;
-import com.baiyi.opscloud.core.factory.AssetProviderFactory;
-import com.baiyi.opscloud.core.model.DsInstanceContext;
-import com.baiyi.opscloud.core.provider.annotation.EnablePullChild;
-import com.baiyi.opscloud.core.provider.asset.AbstractAssetRelationProvider;
-import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.aliyun.util.AliyunRegionIdUtil;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
+import entity.OnsInstance;
+import entity.OnsRocketMqTopic;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ONS_ROCKETMQ_TOPIC;
 
@@ -34,7 +37,8 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Version 1.0
  */
 @Component
-public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvider<OnsTopicListResponse.PublishInfoDo, OnsInstanceInServiceListResponse.InstanceVO> {
+@ChildProvider(parentType = DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE)
+public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<OnsRocketMqTopic.Topic> {
 
     @Resource
     private AliyunOnsRocketMqInstanceDrive aliyunOnsRocketMqInstanceDrive;
@@ -46,7 +50,6 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     private AliyunOnsRocketMqTopicProvider aliyunOnsRocketMqTopicProvider;
 
     @Override
-    @EnablePullChild(type = DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC)
     @SingleTask(name = PULL_ALIYUN_ONS_ROCKETMQ_TOPIC, lockTime = "5m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
@@ -57,7 +60,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsTopicListResponse.PublishInfoDo entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsRocketMqTopic.Topic entity) {
         return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
@@ -73,19 +76,35 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     }
 
     @Override
-    protected List<OnsTopicListResponse.PublishInfoDo> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<OnsRocketMqTopic.Topic> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
-            return Collections.emptyList();
-        List<OnsTopicListResponse.PublishInfoDo> entities = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> {
-            List<OnsInstanceInServiceListResponse.InstanceVO> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
-            if (!CollectionUtils.isEmpty(instances)) {
-                instances.forEach(instance ->
-                        entities.addAll(aliyunOnsRocketMqTopicDrive.listTopic(regionId, aliyun, instance.getInstanceId())));
+        Set<String> regionIds = AliyunRegionIdUtil.toOnsRegionIds(aliyun);
+        List<OnsRocketMqTopic.Topic> entities = Lists.newArrayList();
+        regionIds.forEach(regionId -> {
+            try {
+                List<OnsInstance.Instance> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
+                if (!CollectionUtils.isEmpty(instances)) {
+                    instances.forEach(instance -> {
+                        try {
+                            entities.addAll(aliyunOnsRocketMqTopicDrive.listTopic(regionId, aliyun, instance.getInstanceId()));
+                        } catch (ClientException e) {
+                        }
+                    });
+                }
+            } catch (ClientException e) {
             }
         });
         return entities;
+    }
+
+    @Override
+    protected List<OnsRocketMqTopic.Topic> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        try {
+            return aliyunOnsRocketMqTopicDrive.listTopic(asset.getRegionId(), aliyun, asset.getAssetId());
+        } catch (ClientException e) {
+            return Collections.emptyList();
+        }
     }
 
     @Override
@@ -96,17 +115,6 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetRelationProvide
     @Override
     public String getAssetType() {
         return DsAssetTypeEnum.ONS_ROCKETMQ_TOPIC.name();
-    }
-
-    @Override
-    public String getTargetAssetKey() {
-        return DsAssetTypeEnum.ONS_ROCKETMQ_INSTANCE.name();
-    }
-
-    @Override
-    protected List<OnsTopicListResponse.PublishInfoDo> listEntities(DsInstanceContext dsInstanceContext, OnsInstanceInServiceListResponse.InstanceVO target) {
-        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
-        return aliyunOnsRocketMqTopicDrive.listTopic(aliyun.getRegionId(), aliyun, target.getInstanceId());
     }
 
     @Override

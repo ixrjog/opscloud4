@@ -4,14 +4,18 @@ import com.aliyuncs.exceptions.ClientException;
 import com.aliyuncs.ons.model.v20190214.OnsGroupListRequest;
 import com.aliyuncs.ons.model.v20190214.OnsGroupListResponse;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
+import entity.OnsRocketMqGroup;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Author baiyi
@@ -35,7 +39,7 @@ public class AliyunOnsRocketMqGroupDrive {
      * @param instanceId 必选参数
      * @return
      */
-    public List<OnsGroupListResponse.SubscribeInfoDo> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) {
+    public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId) throws ClientException {
         return listGroup(regionId, aliyun, instanceId, QUERY_ALL, QUERY_ALL);
     }
 
@@ -49,7 +53,7 @@ public class AliyunOnsRocketMqGroupDrive {
      * @param groupType
      * @return
      */
-    public List<OnsGroupListResponse.SubscribeInfoDo> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) {
+    public List<OnsRocketMqGroup.Group> listGroup(String regionId, AliyunConfig.Aliyun aliyun, String instanceId, String groupId, String groupType) throws ClientException {
         OnsGroupListRequest request = new OnsGroupListRequest();
         request.setInstanceId(instanceId);
         if (StringUtils.isBlank(groupId)) {
@@ -58,12 +62,13 @@ public class AliyunOnsRocketMqGroupDrive {
         if (StringUtils.isBlank(groupType)) {
             request.setGroupType(groupType);
         }
-        try {
-            OnsGroupListResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-            return response == null ? Collections.emptyList() : response.getData();
-        } catch (ClientException e) {
-            log.error("查询ONSGroup列表失败", e);
+        OnsGroupListResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        if (response == null || CollectionUtils.isEmpty(response.getData()))
             return Collections.emptyList();
-        }
+        return response.getData().stream().map(e -> {
+            OnsRocketMqGroup.Group g = BeanCopierUtil.copyProperties(e, OnsRocketMqGroup.Group.class);
+            g.setRegionId(regionId);
+            return g;
+        }).collect(Collectors.toList());
     }
 }
