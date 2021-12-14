@@ -1,11 +1,12 @@
 package com.baiyi.opscloud.datasource.manager.base;
 
-import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.core.InstanceHelper;
 import com.baiyi.opscloud.datasource.message.notice.NoticeHelper;
+import com.baiyi.opscloud.domain.constants.DsInstanceTagConstants;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
+import com.baiyi.opscloud.domain.notice.INoticeMessage;
 import com.github.xiaoymin.knife4j.core.util.CollectionUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,7 @@ public class NoticeManager {
     public interface MsgKeys {
         String CREATE_USER = "CREATE_USER";
         String UPDATE_USER_PASSWORD = "UPDATE_USER_PASSWORD";
+        String CREATE_RAM_USER = "CREATE_RAM_USER";
     }
 
     /**
@@ -46,4 +48,14 @@ public class NoticeManager {
             noticeHelper.sendMessage(user, msgKey, instances);
         }
     }
+
+    public void sendMessage(User user, String msgKey, INoticeMessage iNoticeMessage) {
+        List<DatasourceInstance> instances = instanceHelper.listInstance(FILTER_INSTANCE_TYPES,
+                DsInstanceTagConstants.NOTICE.getTag());
+        if (!CollectionUtils.isEmpty(instances)) {
+            noticeHelper.sendMessage(user, msgKey, instances, iNoticeMessage);
+        }
+    }
+
+
 }

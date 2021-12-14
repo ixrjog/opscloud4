@@ -204,7 +204,7 @@ public class UserController {
     @ApiOperation(value = "创建RAM账户")
     @PostMapping(value = "/ram/user/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public HttpResult<Boolean> createRamUser(@RequestBody @Valid UserRamParam.CreateRamUser createRamUser) {
-        userRamFacade.createUser(createRamUser);
+        userRamFacade.createRamUser(createRamUser);
         return HttpResult.SUCCESS;
     }
 

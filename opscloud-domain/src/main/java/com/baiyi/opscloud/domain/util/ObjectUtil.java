@@ -1,4 +1,4 @@
-package com.baiyi.opscloud.common.util;
+package com.baiyi.opscloud.domain.util;
 
 import com.google.common.collect.Maps;
 

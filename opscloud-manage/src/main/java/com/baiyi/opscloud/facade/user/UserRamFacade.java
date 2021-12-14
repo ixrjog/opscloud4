@@ -14,7 +14,7 @@ public interface UserRamFacade {
      *
      * @param createRamUser
      */
-    void createUser(UserRamParam.CreateRamUser createRamUser);
+    void createRamUser(UserRamParam.CreateRamUser createRamUser);
 
     void grantRamPolicy(UserRamParam.GrantRamPolicy grantRamPolicy);
 

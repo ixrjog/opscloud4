@@ -14,6 +14,7 @@ import com.baiyi.opscloud.packer.datasource.DsAssetPacker;
 import com.baiyi.opscloud.service.datasource.DsConfigService;
 import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.datasource.DsInstanceService;
+import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -72,12 +73,12 @@ public class RamUserPacker {
                 .instanceUuid(instance.getUuid())
                 .instanceName(instance.getInstanceName())
                 .username(asset.getAssetKey())
-                .loginUser(asset.getAssetKey() + config.getAliyun().getAccount().getDomain())
+                .loginUser(Joiner.on("").join(asset.getAssetKey(), config.getAliyun().getAccount().getDomain()))
                 .loginUrl(config.getAliyun().getAccount().getRamLoginUrl())
                 .name(asset.getName())
                 .accessKeys(accessKeys)
                 .ramPolicies(ramPolicies)
                 .build();
     }
-    
+
 }
