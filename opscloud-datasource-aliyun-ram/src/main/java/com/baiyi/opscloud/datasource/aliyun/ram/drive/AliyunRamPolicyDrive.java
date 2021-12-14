@@ -1,8 +1,7 @@
 package com.baiyi.opscloud.datasource.aliyun.ram.drive;
 
 import com.aliyuncs.exceptions.ClientException;
-import com.aliyuncs.ram.model.v20150501.ListPoliciesRequest;
-import com.aliyuncs.ram.model.v20150501.ListPoliciesResponse;
+import com.aliyuncs.ram.model.v20150501.*;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
@@ -29,54 +28,47 @@ public class AliyunRamPolicyDrive {
 
     /**
      * 查询RAM所有策略
+     *
      * @param regionId
      * @param aliyun
      * @return
      */
-    public List<RamPolicy.Policy> listPolicies(String regionId, AliyunConfig.Aliyun aliyun) {
+    public List<RamPolicy.Policy> listPolicies(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {
         List<ListPoliciesResponse.Policy> policies = Lists.newArrayList();
         String marker;
-        try {
-            ListPoliciesRequest request = new ListPoliciesRequest();
-            request.setMaxItems(PAGE_SIZE);
-            do {
-                ListPoliciesResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-                policies.addAll(response.getPolicies());
-                marker = response.getMarker();
-                request.setMarker(marker);
-            } while (Strings.isNotBlank(marker));
-        } catch (ClientException e) {
-            e.printStackTrace();
-        }
-        return BeanCopierUtil.copyListProperties(policies ,RamPolicy.Policy.class);
+        ListPoliciesRequest request = new ListPoliciesRequest();
+        request.setMaxItems(PAGE_SIZE);
+        do {
+            ListPoliciesResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+            policies.addAll(response.getPolicies());
+            marker = response.getMarker();
+            request.setMarker(marker);
+        } while (Strings.isNotBlank(marker));
+        return BeanCopierUtil.copyListProperties(policies, RamPolicy.Policy.class);
     }
 
-//    public void attachPolicyToUser(String regionId,AliyunConfig.Aliyun aliyun, String ramUsername, AliyunRAMVO.RAMPolicy ramPolicy) throws RuntimeException {
-//        AttachPolicyToUserRequest request = new AttachPolicyToUserRequest();
-//        request.setUserName(ramUsername);
-//        request.setPolicyName(ramPolicy.getPolicyName());
-//        request.setPolicyType(ramPolicy.getPolicyType());
-//        try {
-//            if (StringUtils.isEmpty(aliyunClient.getAcsResponse(regionId, aliyun, request).getRequestId()))
-//                throw new CommonRuntimeException("API请求错误: requestId不存在 !");
-//        } catch (ClientException e) {
-//            throw new CommonRuntimeException( e.getMessage());
-//        }
-//    }
-//
-//    public BusinessWrapper<Boolean> detachPolicyFromUser(AliyunCoreConfig.AliyunAccount aliyunAccount, OcAliyunRamUser ocAliyunRamUser, AliyunRAMVO.RAMPolicy ramPolicy) {
-//        DetachPolicyFromUserRequest request = new DetachPolicyFromUserRequest();
-//        request.setUserName(ocAliyunRamUser.getRamUsername());
-//        request.setPolicyName(ramPolicy.getPolicyName());
-//        request.setPolicyType(ramPolicy.getPolicyType());
-//        IAcsClient client = acqAcsClient(aliyunAccount);
-//        try {
-//            if (StringUtils.isEmpty(client.getAcsResponse(request).getRequestId()))
-//                return new BusinessWrapper<>(10000, "RequestId不存在！");
-//        } catch (ClientException e) {
-//            return new BusinessWrapper<>(10000, e.getMessage());
-//        }
-//        return BusinessWrapper.SUCCESS;
-//    }
+    public void attachPolicyToUser(String regionId, AliyunConfig.Aliyun aliyun, String ramUsername, RamPolicy.Policy policy) throws ClientException {
+        AttachPolicyToUserRequest request = new AttachPolicyToUserRequest();
+        request.setUserName(ramUsername);
+        request.setPolicyName(policy.getPolicyName());
+        request.setPolicyType(policy.getPolicyType());
+        AttachPolicyToUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+    }
+
+    public void detachPolicyFromUser(String regionId, AliyunConfig.Aliyun aliyun, String ramUsername, RamPolicy.Policy policy) throws ClientException {
+        DetachPolicyFromUserRequest request = new DetachPolicyFromUserRequest();
+        request.setUserName(ramUsername);
+        request.setPolicyName(policy.getPolicyName());
+        request.setPolicyType(policy.getPolicyType());
+        DetachPolicyFromUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+    }
+
+    public RamPolicy.Policy getPolicy(String regionId, AliyunConfig.Aliyun aliyun, RamPolicy.Policy policy) throws ClientException {
+        GetPolicyRequest request = new GetPolicyRequest();
+        request.setPolicyName(policy.getPolicyName());
+        request.setPolicyType(policy.getPolicyType());
+        GetPolicyResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        return BeanCopierUtil.copyProperties(response.getPolicy(), RamPolicy.Policy.class);
+    }
 
 }

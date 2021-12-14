@@ -1,6 +1,9 @@
 package com.baiyi.opscloud.datasource.aliyun.ram.entity;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 /**
  * @Author baiyi
@@ -9,6 +12,9 @@ import lombok.Data;
  */
 public class RamUser {
 
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
     @Data
     public static class User {
         private String userId;

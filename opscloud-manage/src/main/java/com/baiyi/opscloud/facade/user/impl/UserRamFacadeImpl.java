@@ -1,8 +1,13 @@
 package com.baiyi.opscloud.facade.user.impl;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
+import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.core.factory.DsConfigHelper;
+import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamPolicyDrive;
 import com.baiyi.opscloud.datasource.aliyun.ram.drive.AliyunRamUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamPolicy;
 import com.baiyi.opscloud.datasource.aliyun.ram.entity.RamUser;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.User;
@@ -10,6 +15,7 @@ import com.baiyi.opscloud.domain.param.user.UserRamParam;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.baiyi.opscloud.facade.datasource.DsInstanceFacade;
 import com.baiyi.opscloud.facade.user.UserRamFacade;
+import com.baiyi.opscloud.service.datasource.DsInstanceAssetService;
 import com.baiyi.opscloud.service.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.jasypt.encryption.StringEncryptor;
@@ -27,6 +33,8 @@ public class UserRamFacadeImpl implements UserRamFacade {
 
     private final AliyunRamUserDrive aliyunRamUserDrive;
 
+    private final AliyunRamPolicyDrive aliyunRamPolicyDrive;
+
     private final DsConfigHelper dsConfigHelper;
 
     private final UserService userService;
@@ -35,7 +43,9 @@ public class UserRamFacadeImpl implements UserRamFacade {
 
     private final DsInstanceFacade dsInstanceFacade;
 
-    private final static boolean DO_NOT_RESET = false;
+    private final DsInstanceAssetService dsInstanceAssetService;
+
+    private final static boolean CREATE_LOGIN_PROFILE = true;
 
     @Override
     public void createUser(UserRamParam.CreateRamUser createRamUser) {
@@ -45,9 +55,60 @@ public class UserRamFacadeImpl implements UserRamFacade {
         }
         DatasourceConfig config = dsConfigHelper.getConfigByInstanceUuid(createRamUser.getInstanceUuid());
         AliyunConfig.Aliyun aliyun = dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
-        RamUser.User ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, DO_NOT_RESET);
-        // 同步资产
-        dsInstanceFacade.pullAsset(createRamUser.getInstanceUuid(), DsAssetTypeEnum.RAM_USER.name(), ramUser);
+        createUser(aliyun, createRamUser.getInstanceUuid(), user);
+    }
+
+
+    private RamUser.User createUser(AliyunConfig.Aliyun aliyun, String instanceUuid, User user) {
+        RamUser.User ramUser = aliyunRamUserDrive.createUser(aliyun.getRegionId(), aliyun, user, CREATE_LOGIN_PROFILE);
+        // 同步资产 RAM_USER
+        dsInstanceFacade.pullAsset(instanceUuid, DsAssetTypeEnum.RAM_USER.name(), ramUser);
+        return ramUser;
+    }
+
+    @Override
+    public void grantRamPolicy(UserRamParam.GrantRamPolicy grantRamPolicy) {
+        User user = userService.getByUsername(grantRamPolicy.getUsername());
+        DatasourceConfig config = dsConfigHelper.getConfigByInstanceUuid(grantRamPolicy.getInstanceUuid());
+        AliyunConfig.Aliyun aliyun = dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
+        try {
+            RamUser.User ramUser = aliyunRamUserDrive.getUser(aliyun.getRegionId(), aliyun, grantRamPolicy.getUsername());
+            if (ramUser == null)
+                ramUser = createUser(aliyun, grantRamPolicy.getInstanceUuid(), user);
+            RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(grantRamPolicy.getPolicy(), RamPolicy.Policy.class);
+            if (aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName())
+                    .stream().anyMatch(e -> e.getUserName().equals(grantRamPolicy.getUsername())))
+                throw new CommonRuntimeException("RAM用户授权策略错误： 重复授权！");
+            aliyunRamPolicyDrive.attachPolicyToUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
+            RamPolicy.Policy policy = aliyunRamPolicyDrive.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
+            // 同步资产 RAM_USER
+            dsInstanceFacade.pullAsset(grantRamPolicy.getInstanceUuid(), DsAssetTypeEnum.RAM_USER.name(), ramUser);
+        } catch (ClientException e) {
+            throw new CommonRuntimeException("AliyunAPI查询错误！");
+        }
+    }
+
+    public void revokeRamPolicy(UserRamParam.RevokeRamPolicy revokeRamPolicy) {
+        User user = userService.getByUsername(revokeRamPolicy.getUsername());
+        DatasourceConfig config = dsConfigHelper.getConfigByInstanceUuid(revokeRamPolicy.getInstanceUuid());
+        AliyunConfig.Aliyun aliyun = dsConfigHelper.build(config, AliyunConfig.class).getAliyun();
+        try {
+            RamUser.User ramUser = aliyunRamUserDrive.getUser(aliyun.getRegionId(), aliyun, revokeRamPolicy.getUsername());
+            //    throw new CommonRuntimeException("RAM用户撤销授权策略错误：RAM账户不存在！");
+            if (ramUser != null) {
+                RamPolicy.Policy ramPolicy = BeanCopierUtil.copyProperties(revokeRamPolicy.getPolicy(), RamPolicy.Policy.class);
+                //    throw new CommonRuntimeException("RAM用户撤销授权策略错误： 未授权当前策略！");
+                if (aliyunRamUserDrive.listUsersForPolicy(aliyun.getRegionId(), aliyun, ramPolicy.getPolicyType(), ramPolicy.getPolicyName())
+                        .stream().anyMatch(e -> e.getUserName().equals(revokeRamPolicy.getUsername()))) {
+                    aliyunRamPolicyDrive.detachPolicyFromUser(aliyun.getRegionId(), aliyun, ramUser.getUserName(), ramPolicy);
+                    RamPolicy.Policy policy = aliyunRamPolicyDrive.getPolicy(aliyun.getRegionId(), aliyun, ramPolicy);
+                }
+                // 同步资产 RAM_USER
+                dsInstanceFacade.pullAsset(revokeRamPolicy.getInstanceUuid(), DsAssetTypeEnum.RAM_USER.name(), ramUser);
+            }
+        } catch (ClientException e) {
+            throw new CommonRuntimeException("AliyunAPI查询错误！");
+        }
     }
 
 }

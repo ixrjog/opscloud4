@@ -11,7 +11,13 @@ public interface UserRamFacade {
 
     /**
      * 创建RAM账户
+     *
      * @param createRamUser
      */
     void createUser(UserRamParam.CreateRamUser createRamUser);
+
+    void grantRamPolicy(UserRamParam.GrantRamPolicy grantRamPolicy);
+
+    void revokeRamPolicy(UserRamParam.RevokeRamPolicy revokeRamPolicy);
+
 }

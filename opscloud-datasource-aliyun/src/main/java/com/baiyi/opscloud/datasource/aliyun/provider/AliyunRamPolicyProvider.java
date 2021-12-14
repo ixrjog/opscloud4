@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
+import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -18,6 +19,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
@@ -32,7 +34,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Date 2021/7/2 8:15 下午
  * @Since 1.0
  */
-
+@Slf4j
 @Component
 public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPolicy.Policy, RamUser.User> {
 
@@ -77,7 +79,13 @@ public class AliyunRamPolicyProvider extends AbstractAssetRelationProvider<RamPo
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
         List<RamPolicy.Policy> entities = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> entities.addAll(aliyunRamPolicyDrive.listPolicies(regionId, aliyun)));
+        aliyun.getRegionIds().forEach(regionId -> {
+            try {
+                entities.addAll(aliyunRamPolicyDrive.listPolicies(regionId, aliyun));
+            } catch (ClientException e) {
+                log.error("查询AliyunRAM策略错误！");
+            }
+        });
         return entities;
     }
 

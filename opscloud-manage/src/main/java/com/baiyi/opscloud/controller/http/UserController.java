@@ -202,4 +202,18 @@ public class UserController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "授权RAM账户策略")
+    @PostMapping(value = "/ram/policy/grant", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> grantRamPolicy(@RequestBody @Valid UserRamParam.GrantRamPolicy grantRamPolicy) {
+        userRamFacade.grantRamPolicy(grantRamPolicy);
+        return HttpResult.SUCCESS;
+    }
+
+    @ApiOperation(value = "撤销RAM账户策略")
+    @PutMapping(value = "/ram/policy/revoke", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> revokeRamPolicy(@RequestBody @Valid UserRamParam.RevokeRamPolicy revokeRamPolicy) {
+        userRamFacade.revokeRamPolicy(revokeRamPolicy);
+        return HttpResult.SUCCESS;
+    }
+
 }

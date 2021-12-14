@@ -107,6 +107,14 @@ public class AliyunRamUserDrive {
         return BeanCopierUtil.copyListProperties(userList, RamUser.User.class);
     }
 
+    public RamUser.User getUser(String regionId, AliyunConfig.Aliyun aliyun, String ramUsername) throws ClientException {
+        GetUserRequest request = new GetUserRequest();
+        request.setUserName(ramUsername);
+        GetUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
+        if (response == null || response.getUser() == null) return null;
+        return BeanCopierUtil.copyProperties(response.getUser(), RamUser.User.class);
+    }
+
     /**
      * 查询 策略授权的所有用户
      *
@@ -142,7 +150,7 @@ public class AliyunRamUserDrive {
         try {
             ListPoliciesForUserResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
             return response == null ? Collections.emptyList() :
-                  BeanCopierUtil.copyListProperties(response.getPolicies(), RamPolicy.Policy.class)  ;
+                    BeanCopierUtil.copyListProperties(response.getPolicies(), RamPolicy.Policy.class);
         } catch (ClientException e) {
             return Collections.emptyList();
         }
