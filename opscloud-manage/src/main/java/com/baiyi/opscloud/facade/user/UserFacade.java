@@ -9,6 +9,7 @@ import com.baiyi.opscloud.domain.vo.server.ServerTreeVO;
 import com.baiyi.opscloud.domain.vo.server.ServerVO;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
+import org.apache.logging.log4j.util.Strings;
 
 import java.util.List;
 
@@ -21,7 +22,11 @@ public interface UserFacade {
 
     DataTable<UserVO.User> queryUserPage(UserParam.UserPageQuery pageQuery);
 
-    UserVO.User getUserDetails();
+    default UserVO.User getUserDetails() {
+        return getUserDetailsByUsername(Strings.EMPTY);
+    }
+
+    UserVO.User getUserDetailsByUsername(String username);
 
     /**
      * 从数据源实例中同步用户与用户组关系
