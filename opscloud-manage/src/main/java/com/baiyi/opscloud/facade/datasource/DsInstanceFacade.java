@@ -20,5 +20,4 @@ public interface DsInstanceFacade<T> {
 
     void scanAssetBusiness(DsAssetParam.ScanAssetBusiness scanAssetBusiness);
 
-
 }

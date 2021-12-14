@@ -79,7 +79,10 @@ public class DsInstanceAssetFacadeImpl implements DsInstanceAssetFacade {
 
     @Override
     public void setAssetActiveByAssetId(int assetId) {
-
+        DatasourceInstanceAsset asset = dsInstanceAssetService.getById(assetId);
+        if (asset == null) return;
+        asset.setIsActive(!asset.getIsActive());
+        dsInstanceAssetService.update(asset);
     }
 
 
