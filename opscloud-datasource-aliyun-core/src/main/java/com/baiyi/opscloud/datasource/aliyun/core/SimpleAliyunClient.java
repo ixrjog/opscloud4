@@ -16,6 +16,7 @@ public class SimpleAliyunClient {
 
     public interface Query {
         int PAGE_SIZE = 50;
+        int RDS_INSTANCE_PAGE_SIZE = 30;
     }
 
     protected IAcsClient buildAcsClient(String regionId, AliyunConfig.Aliyun aliyun) {
