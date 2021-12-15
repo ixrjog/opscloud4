@@ -1,7 +1,5 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
-import com.baiyi.opscloud.domain.annotation.BusinessType;
-import com.baiyi.opscloud.domain.annotation.TagClear;
 import com.baiyi.opscloud.domain.generator.opscloud.*;
 import com.baiyi.opscloud.domain.types.BusinessTypeEnum;
 import com.baiyi.opscloud.facade.datasource.SimpleDsAssetFacade;
@@ -23,7 +21,6 @@ import java.util.List;
  * @Date 2021/6/29 4:36 下午
  * @Version 1.0
  */
-@BusinessType(BusinessTypeEnum.ASSET)
 @Service
 @RequiredArgsConstructor
 public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
@@ -41,7 +38,6 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
     private final BusinessTemplateService businessTemplateService;
 
     @Override
-    @TagClear
     @Transactional(rollbackFor = {Exception.class})
     public void deleteAssetById(Integer id) {
         // 删除业务对象绑定关系
@@ -66,8 +62,8 @@ public class SimpleDsAssetFacadeImpl implements SimpleDsAssetFacade {
         }
         // 删除children
         List<DatasourceInstanceAsset> assetList = dsInstanceAssetService.listByParentId(id);
-        if (!CollectionUtils.isEmpty(datasourceInstanceAssetRelations)) {
-            assetList.parallelStream().forEach(x -> deleteAssetById(x.getId()));
+        if (!CollectionUtils.isEmpty(assetList)) {
+            assetList.forEach(x -> deleteAssetById(x.getId()));
         }
         // 删除模板关联资产
         List<BusinessTemplate> businessTemplates = businessTemplateService.queryByBusinessId(id);
