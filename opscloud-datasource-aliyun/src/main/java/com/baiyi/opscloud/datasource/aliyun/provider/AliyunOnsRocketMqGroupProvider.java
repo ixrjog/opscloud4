@@ -80,10 +80,9 @@ public class AliyunOnsRocketMqGroupProvider extends AbstractAssetChildProvider<O
         List<OnsRocketMqGroup.Group> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
-                List<OnsInstance.Instance> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
+                List<OnsInstance.InstanceBaseInfo> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
                 if (!CollectionUtils.isEmpty(instances)) {
-                    instances.forEach(instance ->
-                    {
+                    instances.forEach(instance -> {
                         try {
                             entities.addAll(aliyunOnsRocketMqGroupDrive.listGroup(regionId, aliyun, instance.getInstanceId()));
                         } catch (ClientException e) {

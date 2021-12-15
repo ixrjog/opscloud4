@@ -27,7 +27,7 @@ public class OnsRocketMqConvert {
      * @param entity
      * @return
      */
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.Instance entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.InstanceBaseInfo entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getInstanceId()) // 资产id = 实例id
@@ -43,6 +43,10 @@ public class OnsRocketMqConvert {
                 .paramAsset(asset)
                 .paramProperty("independentNaming", entity.getIndependentNaming() ? "拥有独立命名空间(资源命名确保实例内唯一，跨实例之间可重名)" : "无独立命名空间(实例内或者跨实例之间，资源命名必须全局唯一)")
                 .paramProperty("instanceStatus", entity.getInstanceStatus())
+                .paramProperty("tcpEndpoint",entity.getEndpoints().getTcpEndpoint())
+                .paramProperty("httpInternetEndpoint",entity.getEndpoints().getHttpInternetEndpoint())
+                .paramProperty("httpInternetSecureEndpoint",entity.getEndpoints().getHttpInternetSecureEndpoint())
+                .paramProperty("httpInternalEndpoint",entity.getEndpoints().getHttpInternalEndpoint())
                 .build();
     }
 

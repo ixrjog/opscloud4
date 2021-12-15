@@ -33,7 +33,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Version 1.0
  */
 @Component
-public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInstance.Instance> {
+public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInstance.InstanceBaseInfo> {
 
     @Resource
     private AliyunOnsRocketMqInstanceDrive aliyunOnsRocketMqInstanceDrive;
@@ -53,7 +53,7 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.Instance entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, OnsInstance.InstanceBaseInfo entity) {
         return OnsRocketMqConvert.toAssetContainer(dsInstance, entity);
     }
 
@@ -65,10 +65,10 @@ public class AliyunOnsRocketMqInstanceProvider extends BaseAssetProvider<OnsInst
     }
 
     @Override
-    protected List<OnsInstance.Instance> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<OnsInstance.InstanceBaseInfo> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         Set<String> regionIds = AliyunRegionIdUtil.toOnsRegionIds(aliyun);
-        List<OnsInstance.Instance> entities = Lists.newArrayList();
+        List<OnsInstance.InstanceBaseInfo> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
                 entities.addAll(aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun));

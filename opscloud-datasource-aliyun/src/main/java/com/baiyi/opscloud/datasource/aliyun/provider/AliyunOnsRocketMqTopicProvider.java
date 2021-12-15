@@ -82,7 +82,7 @@ public class AliyunOnsRocketMqTopicProvider extends AbstractAssetChildProvider<O
         List<OnsRocketMqTopic.Topic> entities = Lists.newArrayList();
         regionIds.forEach(regionId -> {
             try {
-                List<OnsInstance.Instance> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
+                List<OnsInstance.InstanceBaseInfo> instances = aliyunOnsRocketMqInstanceDrive.listInstance(regionId, aliyun);
                 if (!CollectionUtils.isEmpty(instances)) {
                     instances.forEach(instance -> {
                         try {
