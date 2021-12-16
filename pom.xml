@@ -30,6 +30,7 @@
         <module>opscloud-datasource-aliyun-log</module>
         <module>opscloud-datasource-aliyun-rds</module>
         <module>opscloud-datasource-aliyun-ons</module>
+        <module>opscloud-datasource-aliyun-redis</module>
         <module>opscloud-datasource-tencent-exmail</module>
         <module>opscloud-datasource-nexus</module>
         <module>opscloud-order</module>
@@ -303,6 +304,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-ons</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-redis</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

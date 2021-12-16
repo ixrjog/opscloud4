@@ -11,7 +11,7 @@ import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.rds.drive.AliyunRdsInstanceDrive;
-import com.baiyi.opscloud.datasource.aliyun.rds.entity.Rds;
+import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -33,7 +33,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  * @Version 1.0
  */
 @Component
-public class AliyunRdsInstanceProvider extends BaseAssetProvider<Rds.DBInstanceAttribute> {
+public class AliyunRdsInstanceProvider extends BaseAssetProvider<AliyunRds.DBInstanceAttribute> {
 
     @Resource
     private AliyunRdsInstanceDrive aliyunRdsInstanceDrive;
@@ -53,7 +53,7 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<Rds.DBInstanceA
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Rds.DBInstanceAttribute entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AliyunRds.DBInstanceAttribute entity) {
         return RdsAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
@@ -65,11 +65,11 @@ public class AliyunRdsInstanceProvider extends BaseAssetProvider<Rds.DBInstanceA
     }
 
     @Override
-    protected List<Rds.DBInstanceAttribute> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<AliyunRds.DBInstanceAttribute> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<Rds.DBInstanceAttribute> entities = Lists.newArrayList();
+        List<AliyunRds.DBInstanceAttribute> entities = Lists.newArrayList();
         aliyun.getRegionIds().forEach(regionId -> {
             try {
                 entities.addAll(aliyunRdsInstanceDrive.listDbInstance(regionId, aliyun));

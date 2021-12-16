@@ -1,5 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.convert;
 
+import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
 import com.aliyuncs.ecs.model.v20140526.DescribeInstancesResponse;
 import com.baiyi.opscloud.core.util.enums.TimeZoneEnum;
 import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
@@ -67,5 +68,25 @@ public class ComputeAssetConvert {
         if (entity.getEipAddress() != null)
             return entity.getEipAddress().getIpAddress();
         return Strings.EMPTY;
+    }
+
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {
+        DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
+                .instanceUuid(dsInstance.getUuid())
+                .assetId(entity.getImageId()) // 资产id = 实例id
+                .name(entity.getImageName())
+                .assetKey(entity.getImageId())
+                .kind("ecsImage")
+                .assetType(DsAssetTypeEnum.ECS_IMAGE.name())
+                .description(entity.getDescription())
+                .createdTime(toGmtDate(entity.getCreationTime()))
+                .build();
+
+        return AssetContainerBuilder.newBuilder()
+                .paramAsset(asset)
+                .paramProperty("oSType", entity.getOSType())
+                .paramProperty("oSName", entity.getOSName())
+                .paramProperty("size",entity.getSize())
+                .build();
     }
 }

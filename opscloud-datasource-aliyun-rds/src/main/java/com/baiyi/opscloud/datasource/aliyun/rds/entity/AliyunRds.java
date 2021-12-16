@@ -7,7 +7,7 @@ import lombok.*;
  * @Date 2021/12/14 8:02 PM
  * @Version 1.0
  */
-public class Rds {
+public class AliyunRds {
 
     @EqualsAndHashCode(callSuper = true)
     @NoArgsConstructor

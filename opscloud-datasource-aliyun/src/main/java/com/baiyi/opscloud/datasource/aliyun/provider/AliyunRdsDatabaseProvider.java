@@ -11,7 +11,7 @@ import com.baiyi.opscloud.core.provider.asset.AbstractAssetChildProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
 import com.baiyi.opscloud.datasource.aliyun.convert.RdsAssetConvert;
 import com.baiyi.opscloud.datasource.aliyun.rds.drive.AliyunRdsDatabaseDrive;
-import com.baiyi.opscloud.datasource.aliyun.rds.entity.Rds;
+import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -32,7 +32,7 @@ import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYU
  */
 @ChildProvider(parentType = DsAssetTypeEnum.RDS_INSTANCE)
 @Component
-public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<Rds.Database> {
+public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<AliyunRds.Database> {
 
     @Resource
     private AliyunRdsDatabaseDrive aliyunRdsDatabaseDrive;
@@ -51,7 +51,7 @@ public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<Rds.Da
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, Rds.Database entity) {
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AliyunRds.Database entity) {
         return RdsAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
@@ -63,7 +63,7 @@ public class AliyunRdsDatabaseProvider extends AbstractAssetChildProvider<Rds.Da
     }
 
     @Override
-    protected List<Rds.Database> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
+    protected List<AliyunRds.Database> listEntities(DsInstanceContext dsInstanceContext, DatasourceInstanceAsset asset) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         try {
             return aliyunRdsDatabaseDrive.listDatabase(asset.getRegionId(), aliyun, asset.getAssetId());

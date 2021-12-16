@@ -20,14 +20,14 @@
         </dependency>
 
         <dependency>
-            <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-ram</artifactId>
-            <version>3.2.0</version>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-core</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-datasource-core</artifactId>
+            <groupId>com.aliyun</groupId>
+            <artifactId>aliyun-java-sdk-ram</artifactId>
+            <version>3.2.0</version>
         </dependency>
 
     </dependencies>

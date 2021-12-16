@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.provider;
 
-import com.aliyuncs.ecs.model.v20140526.DescribeImagesResponse;
+import com.aliyuncs.exceptions.ClientException;
 import com.baiyi.opscloud.common.annotation.SingleTask;
 import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
@@ -8,8 +8,9 @@ import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.model.DsInstanceContext;
 import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
 import com.baiyi.opscloud.core.util.AssetUtil;
-import com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert;
-import com.baiyi.opscloud.datasource.aliyun.ecs.drive.AliyunEcsDrive;
+import com.baiyi.opscloud.datasource.aliyun.convert.RedisAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.redis.drive.AliyunRedisInstanceDrive;
+import com.baiyi.opscloud.datasource.aliyun.redis.entity.AliyunRedis;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -23,25 +24,24 @@ import javax.annotation.Resource;
 import java.util.Collections;
 import java.util.List;
 
-import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_ECS_IMAGE;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_REDIS_INSTANCE;
 
 /**
- * @Author 修远
- * @Date 2021/6/23 3:42 下午
- * @Since 1.0
+ * @Author baiyi
+ * @Date 2021/12/16 10:09 AM
+ * @Version 1.0
  */
-
 @Component
-public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResponse.Image> {
+public class AliyunRedisInstanceProvider extends BaseAssetProvider<AliyunRedis.KVStoreInstance> {
 
     @Resource
-    private AliyunEcsDrive aliyunEcsDrive;
+    private AliyunRedisInstanceDrive aliyunRedisInstanceDrive;
 
     @Resource
-    private AliyunEcsImageProvider aliyunEcsImageProvider;
+    private AliyunRedisInstanceProvider aliunRedisInstanceProvider;
 
     @Override
-    @SingleTask(name = PULL_ALIYUN_ECS_IMAGE, lockTime = "5m")
+    @SingleTask(name = PULL_ALIYUN_REDIS_INSTANCE, lockTime = "2m")
     public void pullAsset(int dsInstanceId) {
         doPull(dsInstanceId);
     }
@@ -51,29 +51,30 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
     }
 
     @Override
-    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DescribeImagesResponse.Image entity) {
-        return ComputeAssetConvert.toAssetContainer(dsInstance, entity);
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, AliyunRedis.KVStoreInstance entity) {
+        return RedisAssetConvert.toAssetContainer(dsInstance, entity);
     }
 
     @Override
     protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
-        if (!AssetUtil.equals(preAsset.getKind(), asset.getKind()))
-            return false;
-        if (!AssetUtil.equals(preAsset.getDescription(), asset.getDescription()))
-            return false;
-        if (!AssetUtil.equals(preAsset.getExpiredTime(), asset.getExpiredTime()))
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
             return false;
         return true;
     }
 
     @Override
-    protected List<DescribeImagesResponse.Image> listEntities(DsInstanceContext dsInstanceContext) {
+    protected List<AliyunRedis.KVStoreInstance> listEntities(DsInstanceContext dsInstanceContext) {
         AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
         if (CollectionUtils.isEmpty(aliyun.getRegionIds()))
             return Collections.emptyList();
-        List<DescribeImagesResponse.Image> imageList = Lists.newArrayList();
-        aliyun.getRegionIds().forEach(regionId -> imageList.addAll(aliyunEcsDrive.listImages(regionId, aliyun)));
-        return imageList;
+        List<AliyunRedis.KVStoreInstance> entities = Lists.newArrayList();
+        aliyun.getRegionIds().forEach(regionId -> {
+            try {
+                entities.addAll(aliyunRedisInstanceDrive.listInstance(regionId, aliyun));
+            } catch (ClientException e) {
+            }
+        });
+        return entities;
     }
 
     @Override
@@ -83,12 +84,13 @@ public class AliyunEcsImageProvider extends BaseAssetProvider<DescribeImagesResp
 
     @Override
     public String getAssetType() {
-        return DsAssetTypeEnum.ECS_IMAGE.getType();
+        return DsAssetTypeEnum.REDIS_INSTANCE.name();
     }
 
     @Override
     public void afterPropertiesSet() {
-        AssetProviderFactory.register(aliyunEcsImageProvider);
+        AssetProviderFactory.register(aliunRedisInstanceProvider);
     }
 
 }
+

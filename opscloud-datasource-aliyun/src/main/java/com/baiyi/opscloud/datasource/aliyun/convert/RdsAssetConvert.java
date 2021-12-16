@@ -1,6 +1,6 @@
 package com.baiyi.opscloud.datasource.aliyun.convert;
 
-import com.baiyi.opscloud.datasource.aliyun.rds.entity.Rds;
+import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
 import com.baiyi.opscloud.domain.builder.asset.AssetContainerBuilder;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -14,7 +14,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
  */
 public class RdsAssetConvert {
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Rds.DBInstanceAttribute entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AliyunRds.DBInstanceAttribute entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getDBInstanceId()) // 资产id = 实例id
@@ -47,7 +47,7 @@ public class RdsAssetConvert {
                 .build();
     }
 
-    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, Rds.Database entity) {
+    public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, AliyunRds.Database entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
                 .assetId(entity.getDBInstanceId()) // 资产id = 实例id

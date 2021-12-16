@@ -6,7 +6,7 @@ import com.aliyuncs.rds.model.v20140815.DescribeDatabasesResponse;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
-import com.baiyi.opscloud.datasource.aliyun.rds.entity.Rds;
+import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -36,7 +36,7 @@ public class AliyunRdsDatabaseDrive {
      * @param dbInstanceId
      * @return
      */
-    public List<Rds.Database> listDatabase(String regionId, AliyunConfig.Aliyun aliyun, String dbInstanceId) throws ClientException {
+    public List<AliyunRds.Database> listDatabase(String regionId, AliyunConfig.Aliyun aliyun, String dbInstanceId) throws ClientException {
         DescribeDatabasesRequest describe = new DescribeDatabasesRequest();
         describe.setDBInstanceId(dbInstanceId);
         describe.setPageSize(PAGE_SIZE);
@@ -53,7 +53,7 @@ public class AliyunRdsDatabaseDrive {
             pageNumber++;
         }
         return databases.stream().map(e -> {
-            Rds.Database database = BeanCopierUtil.copyProperties(e, Rds.Database.class);
+            AliyunRds.Database database = BeanCopierUtil.copyProperties(e, AliyunRds.Database.class);
             database.setRegionId(regionId);
             return database;
         }).collect(Collectors.toList());

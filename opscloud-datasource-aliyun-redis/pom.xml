@@ -9,8 +9,12 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>opscloud-datasource-aliyun-ecs</artifactId>
+    <artifactId>opscloud-datasource-aliyun-redis</artifactId>
 
+    <properties>
+        <maven.compiler.source>8</maven.compiler.source>
+        <maven.compiler.target>8</maven.compiler.target>
+    </properties>
 
     <dependencies>
 
@@ -26,9 +30,10 @@
 
         <dependency>
             <groupId>com.aliyun</groupId>
-            <artifactId>aliyun-java-sdk-ecs</artifactId>
-            <version>4.24.3</version>
+            <artifactId>aliyun-java-sdk-r-kvstore</artifactId>
+            <version>2.20.1</version>
         </dependency>
 
     </dependencies>
+
 </project>

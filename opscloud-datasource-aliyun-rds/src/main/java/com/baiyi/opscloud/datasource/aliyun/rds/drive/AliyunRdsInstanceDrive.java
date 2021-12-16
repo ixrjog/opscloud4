@@ -8,7 +8,7 @@ import com.aliyuncs.rds.model.v20140815.DescribeDBInstancesResponse;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
 import com.baiyi.opscloud.datasource.aliyun.core.AliyunClient;
-import com.baiyi.opscloud.datasource.aliyun.rds.entity.Rds;
+import com.baiyi.opscloud.datasource.aliyun.rds.entity.AliyunRds;
 import com.google.common.base.Joiner;
 import com.google.common.collect.Lists;
 import lombok.RequiredArgsConstructor;
@@ -41,7 +41,7 @@ public class AliyunRdsInstanceDrive {
      * @param aliyun
      * @return
      */
-    public List<Rds.DBInstanceAttribute> listDbInstance(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {
+    public List<AliyunRds.DBInstanceAttribute> listDbInstance(String regionId, AliyunConfig.Aliyun aliyun) throws ClientException {
         return listDbInstance(regionId, aliyun, QUERY_ALL_INSTANCE);
     }
 
@@ -53,9 +53,8 @@ public class AliyunRdsInstanceDrive {
      * @param dbInstanceId
      * @return
      */
-    public List<Rds.DBInstanceAttribute> listDbInstance(String regionId, AliyunConfig.Aliyun aliyun, String dbInstanceId) throws ClientException {
-
-        List<Rds.DBInstanceAttribute> instances = Lists.newArrayList();
+    public List<AliyunRds.DBInstanceAttribute> listDbInstance(String regionId, AliyunConfig.Aliyun aliyun, String dbInstanceId) throws ClientException {
+        List<AliyunRds.DBInstanceAttribute> instances = Lists.newArrayList();
         DescribeDBInstancesRequest describe = new DescribeDBInstancesRequest();
         if (!StringUtils.isEmpty(dbInstanceId))
             describe.setDBInstanceId(dbInstanceId);
@@ -72,7 +71,7 @@ public class AliyunRdsInstanceDrive {
         return instances;
     }
 
-    public List<Rds.DBInstanceAttribute> getDbInstance(String regionId, AliyunConfig.Aliyun aliyun, List<DescribeDBInstancesResponse.DBInstance> instances) throws ClientException {
+    public List<AliyunRds.DBInstanceAttribute> getDbInstance(String regionId, AliyunConfig.Aliyun aliyun, List<DescribeDBInstancesResponse.DBInstance> instances) throws ClientException {
         Iterator<DescribeDBInstancesResponse.DBInstance> iter = instances.iterator();
         List<String> ids = instances.stream().map(DescribeDBInstancesResponse.DBInstance::getDBInstanceId).collect(Collectors.toList());
         DescribeDBInstanceAttributeRequest request = new DescribeDBInstanceAttributeRequest();
@@ -80,23 +79,8 @@ public class AliyunRdsInstanceDrive {
 
         DescribeDBInstanceAttributeResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
         return response.getItems().stream().map(e ->
-                BeanCopierUtil.copyProperties(e, Rds.DBInstanceAttribute.class)
+                BeanCopierUtil.copyProperties(e, AliyunRds.DBInstanceAttribute.class)
         ).collect(Collectors.toList());
     }
-
-
-    /**
-     *
-     * @param regionId
-     * @param aliyun
-     * @param dbInstanceIds 最多查询30个实例
-     * @throws ClientException
-     */
-//    public List<Rds.DBInstanceAttribute> getDbInstance(String regionId, AliyunConfig.Aliyun aliyun, List<String> dbInstanceIds) throws ClientException {
-//        DescribeDBInstanceAttributeRequest request = new DescribeDBInstanceAttributeRequest();
-//        request.setDBInstanceId(dbInstanceId);
-//        DescribeDBInstanceAttributeResponse response = aliyunClient.getAcsResponse(regionId, aliyun, request);
-//        response.getItems()
-//    }
 
 }
