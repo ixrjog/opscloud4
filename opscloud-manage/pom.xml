@@ -55,11 +55,6 @@
 
         <dependency>
             <groupId>com.baiyi</groupId>
-            <artifactId>opscloud-opscloud3</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.baiyi</groupId>
             <artifactId>opscloud-kubernetes-terminal</artifactId>
         </dependency>
 
