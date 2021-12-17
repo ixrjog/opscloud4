@@ -29,10 +29,10 @@ public class SonarAssetConvert {
     public static AssetContainer toAssetContainer(DatasourceInstance dsInstance, BaseSonarElement.Project entity) {
         DatasourceInstanceAsset asset = DatasourceInstanceAsset.builder()
                 .instanceUuid(dsInstance.getUuid())
-                .assetId(entity.getId())
+                .assetId(entity.getKey())
                 .name(entity.getName())
                 .assetKey(entity.getKey())
-                .assetKey2(entity.getOrganization())
+                .assetKey2(entity.getRevision())
                 .isActive(true)
                 .assetType(DsAssetTypeEnum.SONAR_PROJECT.name())
                 .kind("project")

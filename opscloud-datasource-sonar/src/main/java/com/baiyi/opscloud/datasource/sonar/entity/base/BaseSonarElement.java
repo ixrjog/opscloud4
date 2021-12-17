@@ -22,27 +22,27 @@ public class BaseSonarElement {
     }
 
     /**
-     *     {
-     *       "organization": "my-org-1",
-     *       "id": "project-uuid-1",
-     *       "key": "project-key-1",
-     *       "name": "Project Name 1",
-     *       "qualifier": "TRK",
-     *       "visibility": "public",
-     *       "lastAnalysisDate": "2017-03-01T11:39:03+0300",
-     *       "revision": "cfb82f55c6ef32e61828c4cb3db2da12795fd767"
-     *     }
+     * {
+     * "organization": "my-org-1",
+     * "id": "project-uuid-1",
+     * "key": "project-key-1",
+     * "name": "Project Name 1",
+     * "qualifier": "TRK",
+     * "visibility": "public",
+     * "lastAnalysisDate": "2017-03-01T11:39:03+0300",
+     * "revision": "cfb82f55c6ef32e61828c4cb3db2da12795fd767"
+     * }
      */
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
     public static class Project {
-        private String organization;
-        private String id;
+        // private String organization;
+        // private String id;
         private String key;
         private String name;
         private String qualifier;
         private String visibility;
-       // private Date lastAnalysisDate;
+        // private Date lastAnalysisDate;
         private String revision;
 
     }
@@ -62,7 +62,7 @@ public class BaseSonarElement {
     @EqualsAndHashCode(callSuper = true)
     @Data
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Measure extends BasePeriod{
+    public static class Measure extends BasePeriod {
 
         private String metric;
         private String value;
