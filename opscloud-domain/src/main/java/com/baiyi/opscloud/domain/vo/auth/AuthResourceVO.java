@@ -4,7 +4,11 @@ import com.baiyi.opscloud.domain.vo.base.BaseVO;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 /**
  * @Author baiyi
@@ -13,6 +17,7 @@ import lombok.NoArgsConstructor;
  */
 public class AuthResourceVO {
 
+    @EqualsAndHashCode(callSuper = true)
     @Data
     @NoArgsConstructor
     @ApiModel
@@ -25,9 +30,11 @@ public class AuthResourceVO {
         private Integer id;
 
         @ApiModelProperty(value = "资源组id",example="1")
+        @Valid
         private Integer groupId;
 
         @ApiModelProperty(value = "资源路径")
+        @NotNull(message = "必须指定资源名称")
         private String resourceName;
 
         @ApiModelProperty(value = "资源描述")
@@ -39,6 +46,5 @@ public class AuthResourceVO {
         @ApiModelProperty(value = "用户界面")
         private Boolean ui;
     }
-
 
 }

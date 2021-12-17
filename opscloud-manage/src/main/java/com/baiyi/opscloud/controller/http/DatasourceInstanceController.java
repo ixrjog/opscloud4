@@ -109,5 +109,11 @@ public class DatasourceInstanceController {
         return HttpResult.SUCCESS;
     }
 
+    @ApiOperation(value = "推送数据源资产信息")
+    @PutMapping(value = "/asset/push", produces = MediaType.APPLICATION_JSON_VALUE)
+    public HttpResult<Boolean> pushAsset(@RequestBody DsAssetParam.PushAsset pushAssetParam) {
+        dsInstanceFacade.pushAsset(pushAssetParam);
+        return HttpResult.SUCCESS;
+    }
 
 }

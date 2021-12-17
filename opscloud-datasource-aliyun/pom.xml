@@ -48,5 +48,10 @@
             <artifactId>opscloud-datasource-aliyun-redis</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>com.baiyi</groupId>
+            <artifactId>opscloud-datasource-aliyun-dms</artifactId>
+        </dependency>
+
     </dependencies>
 </project>

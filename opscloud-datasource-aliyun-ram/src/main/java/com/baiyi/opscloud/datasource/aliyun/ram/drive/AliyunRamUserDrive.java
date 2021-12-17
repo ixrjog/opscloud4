@@ -104,7 +104,17 @@ public class AliyunRamUserDrive {
         } catch (ClientException e) {
             e.printStackTrace();
         }
-        return BeanCopierUtil.copyListProperties(userList, RamUser.User.class);
+        List<RamUser.User> result = Lists.newArrayList();
+        // 获取用户详情
+        userList.forEach(e -> {
+            try {
+                result.add(getUser(regionId, aliyun, e.getUserName()));
+            } catch (ClientException ex) {
+                ex.printStackTrace();
+            }
+
+        });
+        return result;
     }
 
     public RamUser.User getUser(String regionId, AliyunConfig.Aliyun aliyun, String ramUsername) throws ClientException {

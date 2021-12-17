@@ -21,18 +21,19 @@ public class AliyunConfig extends BaseConfig {
 
     private static final String RAM_LOGIN_URL = "https://signin.aliyun.com/${COMPANY}.onaliyun.com/login.htm";
 
+    public static final String DMS_ENDPOINT = "dms-enterprise.aliyuncs.com";
+
     private Aliyun aliyun;
 
     @Data
     @NoArgsConstructor
     @ApiModel
     public static class Aliyun {
-
         private Account account;
         private String regionId;
         private Set<String> regionIds; // 可用区
         private Ons ons;
-
+        private Dms dms;
     }
 
     @Data
@@ -64,6 +65,14 @@ public class AliyunConfig extends BaseConfig {
     @ApiModel
     public static class Ons {
         private String internetRegionId;
+    }
+
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class Dms {
+        private String endpoint;
+        private Long tid;
     }
 
 }

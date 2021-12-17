@@ -38,6 +38,7 @@
         <module>opscloud-datasource-nacos</module>
         <module>opscloud-datasource-dingtalk</module>
         <module>opscloud-datasource-message</module>
+        <module>opscloud-datasource-aliyun-dms</module>
     </modules>
     <parent>
         <!--https://spring.io/projects/spring-boot#learn-->
@@ -310,6 +311,12 @@
             <dependency>
                 <groupId>com.baiyi</groupId>
                 <artifactId>opscloud-datasource-aliyun-redis</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>com.baiyi</groupId>
+                <artifactId>opscloud-datasource-aliyun-dms</artifactId>
                 <version>${project.version}</version>
             </dependency>
 

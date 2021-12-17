@@ -35,16 +35,26 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
 
     private final DsInstancePacker dsInstancePacker;
 
-
     @Override
     @Async(value = Global.TaskPools.EXECUTOR)
     public void pullAsset(DsAssetParam.PullAsset pullAsset) {
-        DatasourceInstance dsInstance = dsInstanceService.getById(pullAsset.getInstanceId());
-        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
-        dsInstancePacker.wrap(instance);
-        List<SimpleAssetProvider> providers = AssetProviderFactory.getProviders(instance.getInstanceType(), pullAsset.getAssetType());
+        List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
         assert providers != null;
         providers.forEach(x -> x.pullAsset(pullAsset.getInstanceId()));
+    }
+
+    @Override
+    public void pushAsset(DsAssetParam.PushAsset pushAsset) {
+        List<SimpleAssetProvider> providers = getProviders(pushAsset.getInstanceId(), pushAsset.getAssetType());
+        assert providers != null;
+        providers.forEach(x -> x.pushAsset(pushAsset.getInstanceId()));
+    }
+
+    private List<SimpleAssetProvider> getProviders(Integer instanceId, String assetType) {
+        DatasourceInstance dsInstance = dsInstanceService.getById(instanceId);
+        DsInstanceVO.Instance instance = DsInstancePacker.toVO(dsInstance);
+        dsInstancePacker.wrap(instance);
+        return AssetProviderFactory.getProviders(instance.getInstanceType(), assetType);
     }
 
     @Override

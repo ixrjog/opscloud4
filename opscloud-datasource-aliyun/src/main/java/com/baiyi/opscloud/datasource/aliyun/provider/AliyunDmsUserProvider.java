@@ -1,0 +1,127 @@
+package com.baiyi.opscloud.datasource.aliyun.provider;
+
+import com.baiyi.opscloud.common.annotation.SingleTask;
+import com.baiyi.opscloud.common.constants.enums.DsTypeEnum;
+import com.baiyi.opscloud.common.datasource.AliyunConfig;
+import com.baiyi.opscloud.core.factory.AssetProviderFactory;
+import com.baiyi.opscloud.core.model.DsInstanceContext;
+import com.baiyi.opscloud.core.provider.asset.BaseAssetProvider;
+import com.baiyi.opscloud.core.util.AssetUtil;
+import com.baiyi.opscloud.datasource.aliyun.convert.DmsAssetConvert;
+import com.baiyi.opscloud.datasource.aliyun.dms.drive.AliyunDmsTenantDrive;
+import com.baiyi.opscloud.datasource.aliyun.dms.drive.AliyunDmsUserDrive;
+import com.baiyi.opscloud.datasource.aliyun.dms.entity.DmsUser;
+import com.baiyi.opscloud.datasource.aliyun.provider.push.AliyunDmsUserPushHelper;
+import com.baiyi.opscloud.domain.builder.asset.AssetContainer;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceConfig;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
+import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstanceAsset;
+import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
+
+import javax.annotation.Resource;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
+
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_DMS_USER;
+import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PUSH_ALIYUN_DMS_USER;
+
+/**
+ * @Author baiyi
+ * @Date 2021/12/16 4:19 PM
+ * @Version 1.0
+ */
+@Slf4j
+@Component
+public class AliyunDmsUserProvider extends BaseAssetProvider<DmsUser.User> {
+
+    @Resource
+    private AliyunDmsUserProvider aliyunDmsUserProvider;
+
+    @Resource
+    private AliyunDmsUserPushHelper aliyunDmsUserPushHelper;
+
+    @Override
+    @SingleTask(name = PULL_ALIYUN_DMS_USER, lockTime = "2m")
+    public void pullAsset(int dsInstanceId) {
+        doPull(dsInstanceId);
+    }
+
+    /**
+     * 同步资产
+     *
+     * @param dsInstanceId
+     */
+    @Override
+    @SingleTask(name = PUSH_ALIYUN_DMS_USER, lockTime = "2m")
+    public void pushAsset(int dsInstanceId) {
+        DsInstanceContext dsInstanceContext = buildDsInstanceContext(dsInstanceId);
+        List<DmsUser.User> users = aliyunDmsUserPushHelper.getPushAssets(dsInstanceContext);
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        try {
+            Long tid = Optional.of(aliyun)
+                    .map(AliyunConfig.Aliyun::getDms)
+                    .map(AliyunConfig.Dms::getTid)
+                    .orElse(AliyunDmsTenantDrive.getTenant(aliyun).getTid());
+            users.forEach(r -> {
+                try {
+                    AliyunDmsUserDrive.registerUser(aliyun, tid, r);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+            this.doPull(dsInstanceId);
+        } catch (Exception e) {
+            log.error("推送DMS用户资产错误: 查询租户TID失败！");
+        }
+    }
+
+    private AliyunConfig.Aliyun buildConfig(DatasourceConfig dsConfig) {
+        return dsConfigHelper.build(dsConfig, AliyunConfig.class).getAliyun();
+    }
+
+    @Override
+    protected AssetContainer toAssetContainer(DatasourceInstance dsInstance, DmsUser.User entity) {
+        return DmsAssetConvert.toAssetContainer(dsInstance, entity);
+    }
+
+    @Override
+    protected boolean equals(DatasourceInstanceAsset asset, DatasourceInstanceAsset preAsset) {
+        if (!AssetUtil.equals(preAsset.getName(), asset.getName()))
+            return false;
+        return true;
+    }
+
+    @Override
+    protected List<DmsUser.User> listEntities(DsInstanceContext dsInstanceContext) {
+        AliyunConfig.Aliyun aliyun = buildConfig(dsInstanceContext.getDsConfig());
+        try {
+            Long tid = Optional.of(aliyun)
+                    .map(AliyunConfig.Aliyun::getDms)
+                    .map(AliyunConfig.Dms::getTid)
+                    .orElse(AliyunDmsTenantDrive.getTenant(aliyun).getTid());
+            return AliyunDmsUserDrive.listUser(aliyun, tid);
+        } catch (Exception e) {
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public String getInstanceType() {
+        return DsTypeEnum.ALIYUN.name();
+    }
+
+    @Override
+    public String getAssetType() {
+        return DsAssetTypeEnum.DMS_USER.name();
+    }
+
+    @Override
+    public void afterPropertiesSet() {
+        AssetProviderFactory.register(aliyunDmsUserProvider);
+    }
+
+}
+

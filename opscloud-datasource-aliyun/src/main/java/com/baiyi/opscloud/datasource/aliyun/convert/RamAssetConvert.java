@@ -12,7 +12,7 @@ import com.baiyi.opscloud.domain.types.DsAssetTypeEnum;
 import static com.baiyi.opscloud.datasource.aliyun.convert.ComputeAssetConvert.toGmtDate;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/2 7:49 下午
  * @Since 1.0
  */

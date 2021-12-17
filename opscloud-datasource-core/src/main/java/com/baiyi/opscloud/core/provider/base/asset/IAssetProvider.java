@@ -11,6 +11,8 @@ public interface IAssetProvider<T> {
 
     void pullAsset(int dsInstanceId);
 
+    void pushAsset(int dsInstanceId);
+
     DatasourceInstanceAsset pullAsset(int dsInstanceId, T entity);
 
 }

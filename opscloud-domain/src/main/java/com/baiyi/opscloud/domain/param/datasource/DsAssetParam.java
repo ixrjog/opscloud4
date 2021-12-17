@@ -78,7 +78,6 @@ public class DsAssetParam {
 
     }
 
-
     @Data
     @NoArgsConstructor
     @ApiModel
@@ -92,6 +91,13 @@ public class DsAssetParam {
         @NotNull
         private String assetType;
 
+    }
+
+    @EqualsAndHashCode(callSuper = true)
+    @Data
+    @NoArgsConstructor
+    @ApiModel
+    public static class PushAsset extends BaseAsset {
     }
 
     @EqualsAndHashCode(callSuper = true)

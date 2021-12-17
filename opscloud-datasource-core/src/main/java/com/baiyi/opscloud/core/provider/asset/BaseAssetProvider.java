@@ -26,7 +26,7 @@ import java.util.Set;
  * @Date 2021/6/19 4:22 下午
  * @Version 1.0
  */
-public abstract class  BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider<T>, InitializingBean {
+public abstract class BaseAssetProvider<T> extends SimpleDsInstanceProvider implements SimpleAssetProvider<T>, InitializingBean {
 
     @Resource
     protected DsInstanceAssetService dsInstanceAssetService;
@@ -47,6 +47,7 @@ public abstract class  BaseAssetProvider<T> extends SimpleDsInstanceProvider imp
         boolean INCREMENT = false; // 增量模式: 不删除旧数据
         boolean SYNC = true;       // 同步模式: 删除旧数据
     }
+
 
     protected boolean executeMode() {
         return Model.SYNC;
@@ -167,6 +168,10 @@ public abstract class  BaseAssetProvider<T> extends SimpleDsInstanceProvider imp
         return enterEntity(dsInstanceContext, entity);
     }
 
+
+    @Override
+    public void pushAsset(int dsInstanceId) {
+    }
 
     protected Credential getCredential(int credentialId) {
         return credentialService.getById(credentialId);
