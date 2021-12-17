@@ -38,4 +38,5 @@ public class NamespaceAssetConvert {
                 .paramProperty("phase", entity.getStatus().getPhase())
                 .build();
     }
+
 }
