@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.packer.user;
 
 import com.baiyi.opscloud.common.util.BeanCopierUtil;
-import com.baiyi.opscloud.common.util.SessionUtil;
 import com.baiyi.opscloud.domain.generator.opscloud.AccessToken;
 import com.baiyi.opscloud.domain.vo.user.AccessTokenVO;
 import com.baiyi.opscloud.domain.vo.user.UserVO;
@@ -28,14 +27,14 @@ public class UserAccessTokenPacker {
     private AccessTokenService accessTokenService;
 
     public void wrap(UserVO.User user) {
-        List<AccessToken> accessTokens = accessTokenService.queryByUsername(SessionUtil.getUsername());
+        List<AccessToken> accessTokens = accessTokenService.queryByUsername(user.getUsername());
         user.setAccessTokens(wrapToVOList(accessTokens));
     }
 
     public List<AccessTokenVO.AccessToken> wrapToVOList(List<AccessToken> accessTokens) {
         accessTokens = filter(accessTokens);
         if (CollectionUtils.isEmpty(accessTokens))
-            return Collections.EMPTY_LIST;
+            return Collections.emptyList();
         return accessTokens.stream().map(e -> wrapToVO(e, true)
         ).collect(Collectors.toList());
     }
