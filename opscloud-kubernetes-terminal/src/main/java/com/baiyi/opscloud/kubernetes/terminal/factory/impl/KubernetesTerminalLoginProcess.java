@@ -13,15 +13,19 @@ import com.baiyi.opscloud.sshcore.message.KubernetesMessage;
 import com.baiyi.opscloud.sshcore.model.KubernetesResource;
 import com.google.common.base.Joiner;
 import com.google.gson.GsonBuilder;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.Session;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /**
  * @Author baiyi
  * @Date 2021/7/15 10:10 上午
  * @Version 1.0
  */
+@Slf4j
 @Component
 public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalProcess<KubernetesMessage.Login> implements ITerminalProcess {
 
@@ -29,6 +33,8 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
         String CONTAINER_LOG = "CONTAINER_LOG";
         String CONTAINER_TERMINAL = "CONTAINER_TERMINAL";
     }
+
+    private static final ExecutorService executor = Executors.newFixedThreadPool(4);
 
     /**
      * 登录
@@ -47,17 +53,20 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
         KubernetesResource kubernetesResource = loginMessage.getData();
         kubernetesResource.getPods().forEach(pod ->
                 pod.getContainers().forEach(container -> {
-                    KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
-                    if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
-                        processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
-                        return;
-                    }
-                    if (loginMessage.getSessionType().equals(SessionType.CONTAINER_TERMINAL)) {
-                        processTerminal(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, pod, container);
-                        return;
-                    }
-                    // 会话类型不正确,直接关闭
-                    KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process(message, session, terminalSession);
+                    executor.submit(() -> {
+                        log.info("初始化容器终端: sessionType = {} , container = {} ", loginMessage.getSessionType(), container.getName());
+                        KubernetesConfig kubernetesDsInstanceConfig = buildConfig(kubernetesResource);
+                        if (loginMessage.getSessionType().equals(SessionType.CONTAINER_LOG)) {
+                            processLog(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, kubernetesResource, pod, container);
+                            return;
+                        }
+                        if (loginMessage.getSessionType().equals(SessionType.CONTAINER_TERMINAL)) {
+                            processTerminal(kubernetesDsInstanceConfig.getKubernetes(), terminalSession, pod, container);
+                            return;
+                        }
+                        // 会话类型不正确,直接关闭
+                        KubernetesTerminalProcessFactory.getProcessByKey(MessageState.CLOSE.getState()).process(message, session, terminalSession);
+                    });
                 })
         );
     }
@@ -77,7 +86,7 @@ public class KubernetesTerminalLoginProcess extends AbstractKubernetesTerminalPr
                 container,
                 kubernetesResource.getLines());
         simpleTerminalSessionFacade.recordTerminalSessionInstance(
-                TerminalSessionInstanceBuilder.build(terminalSession.getSessionId(), pod, toInstanceId(pod, container),InstanceSessionTypeEnum.CONTAINER_LOG)
+                TerminalSessionInstanceBuilder.build(terminalSession.getSessionId(), pod, toInstanceId(pod, container), InstanceSessionTypeEnum.CONTAINER_LOG)
         );
     }
 
