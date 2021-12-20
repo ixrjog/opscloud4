@@ -5,7 +5,7 @@ import com.baiyi.opscloud.domain.types.SensitiveTypeEnum;
 import java.lang.annotation.*;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/11 10:53 上午
  * @Since 1.0
  */

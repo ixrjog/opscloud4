@@ -2,7 +2,6 @@ package com.baiyi.opscloud.facade.datasource.aliyun.impl;
 
 import com.aliyun.openservices.log.common.MachineGroup;
 import com.aliyun.openservices.log.common.Project;
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.datasource.AliyunConfig;
 import com.baiyi.opscloud.common.datasource.base.BaseConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -33,6 +32,8 @@ import org.springframework.util.CollectionUtils;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -110,7 +111,7 @@ public class AliyunLogFacadeImpl implements AliyunLogFacade {
         return aliyunLogHandler.listConfig(aliyunDsInstanceConfig.getAliyun(), query.getProjectName(), query.getLogstoreName());
     }
 
-    @Async(value = Global.TaskPools.DEFAULT)
+    @Async(value = CORE)
     @Override
     public void pushLogMemberByServerGroupId(Integer id) {
         List<AliyunLogMember> aliyunLogMembers = aliyunLogMemberService.queryByServerGroupId(id);

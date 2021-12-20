@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.annotation.DesensitizedMethod;
 import org.springframework.stereotype.Component;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/11 2:18 下午
  * @Since 1.0
  */

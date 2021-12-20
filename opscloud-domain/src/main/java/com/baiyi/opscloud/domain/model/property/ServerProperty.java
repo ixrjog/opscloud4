@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/27 10:38 上午
  * @Since 1.0
  */
@@ -22,9 +22,9 @@ public class ServerProperty {
         @Builder.Default
         private Metadata metadata = Metadata.builder().build();
         @Builder.Default
-        private Zabbix zabbix;
+        private Zabbix zabbix = Zabbix.builder().build();
         @Builder.Default
-        private Ansible ansible;
+        private Ansible ansible = Ansible.builder().build();
     }
 
     @Builder

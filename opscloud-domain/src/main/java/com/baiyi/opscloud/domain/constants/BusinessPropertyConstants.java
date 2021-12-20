@@ -1,7 +1,7 @@
 package com.baiyi.opscloud.domain.constants;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/22 5:25 下午
  * @Since 1.0
  */

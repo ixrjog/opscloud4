@@ -24,7 +24,7 @@ import java.util.List;
 import static com.baiyi.opscloud.common.constants.SingleTaskConstants.PULL_ALIYUN_VSWITCH;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/23 2:00 下午
  * @Since 1.0
  */

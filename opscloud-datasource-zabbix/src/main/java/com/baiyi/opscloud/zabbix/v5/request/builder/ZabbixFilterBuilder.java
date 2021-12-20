@@ -3,7 +3,7 @@ package com.baiyi.opscloud.zabbix.v5.request.builder;
 import com.baiyi.opscloud.zabbix.v5.request.ZabbixRequest;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/23 2:01 下午
  * @Since 1.0
  */

@@ -17,7 +17,7 @@ import java.util.List;
 import static com.baiyi.opscloud.datasource.aliyun.core.SimpleAliyunClient.Query.PAGE_SIZE;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/23 1:22 下午
  * @Since 1.0
  */

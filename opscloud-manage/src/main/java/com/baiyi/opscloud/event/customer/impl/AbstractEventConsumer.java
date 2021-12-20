@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.event.customer.impl;
 
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.helper.TopicHelper;
 import com.baiyi.opscloud.domain.types.EventActionTypeEnum;
 import com.baiyi.opscloud.event.IEvent;
@@ -11,6 +10,8 @@ import org.springframework.beans.factory.InitializingBean;
 import org.springframework.scheduling.annotation.Async;
 
 import javax.annotation.Resource;
+
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -23,7 +24,7 @@ public abstract class AbstractEventConsumer<T> implements IEventConsumer, Initia
     protected TopicHelper topicHelper;
 
     @Override
-    @Async(value = Global.TaskPools.DEFAULT)
+    @Async(value = CORE)
     public void onMessage(NoticeEvent noticeEvent) {
         preHandle(noticeEvent); // 预处理
         String action = noticeEvent.getMessage().getAction();

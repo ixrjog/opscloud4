@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.config;
 
-import com.baiyi.opscloud.common.base.Global;
 import com.google.common.eventbus.AsyncEventBus;
 import com.google.common.eventbus.EventBus;
 import org.springframework.context.ApplicationContext;
@@ -10,9 +9,11 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import javax.annotation.Resource;
 
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/15 5:42 下午
  * @Since 1.0
  */
@@ -30,7 +31,7 @@ public class EventBusConfiguration {
 
     @Bean
     public AsyncEventBus asyncEventBus() {
-        ThreadPoolTaskExecutor executor = applicationContext.getBean(Global.TaskPools.DEFAULT, ThreadPoolTaskExecutor.class);
+        ThreadPoolTaskExecutor executor = applicationContext.getBean(CORE, ThreadPoolTaskExecutor.class);
         return new AsyncEventBus(executor);
     }
 }

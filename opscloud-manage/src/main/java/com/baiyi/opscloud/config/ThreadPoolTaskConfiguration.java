@@ -1,11 +1,14 @@
 package com.baiyi.opscloud.config;
 
-import com.baiyi.opscloud.common.base.Global;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
 import java.util.concurrent.ThreadPoolExecutor;
+
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
+
 
 /**
  * @Author baiyi
@@ -17,14 +20,12 @@ public class ThreadPoolTaskConfiguration {
     // https://blog.csdn.net/CJ_66/article/details/82503665
     // https://blog.csdn.net/xie19900123/article/details/81771793
 
-    /**
-     * 核心线程数（默认线程数）
-     */
-    private static final int corePoolSize = 100;
-    /**
-     * 最大线程数
-     */
-    private static final int maxPoolSize = 100;
+    public interface TaskPools {
+        String CORE = "CORE";
+        String EXECUTOR = "EXECUTOR";
+    }
+
+
     /**
      * 允许线程空闲时间（单位：默认为秒）
      */
@@ -37,8 +38,7 @@ public class ThreadPoolTaskConfiguration {
      * 线程池名前缀
      */
     private static final String threadNamePrefix = "Async-Service-";
-
-    @Bean(name = Global.TaskPools.EXECUTOR)
+    @Bean(name = CORE)
     public ThreadPoolTaskExecutor getExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**
@@ -51,8 +51,8 @@ public class ThreadPoolTaskConfiguration {
          *
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
-        executor.setCorePoolSize(corePoolSize);
-        executor.setMaxPoolSize(maxPoolSize);
+        executor.setCorePoolSize(20); // 核心线程数（默认线程数）
+        executor.setMaxPoolSize(200); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
         executor.setThreadNamePrefix(threadNamePrefix);
@@ -68,7 +68,7 @@ public class ThreadPoolTaskConfiguration {
         return executor;
     }
 
-    @Bean(name = Global.TaskPools.DEFAULT)
+    @Bean(name = EXECUTOR)
     public ThreadPoolTaskExecutor getCommonExecutor() {
         ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
         /**
@@ -81,8 +81,8 @@ public class ThreadPoolTaskConfiguration {
          *
          * 所以通过上面的描述可知corePoolSize<=maximumPoolSize，poolSize<=maximumPoolSize；而poolSize和corePoolSize无法比较，poolSize是有可能比corePoolSize大的。
          */
-        executor.setCorePoolSize(50);
-        executor.setMaxPoolSize(maxPoolSize);
+        executor.setCorePoolSize(50); // 核心线程数（默认线程数）
+        executor.setMaxPoolSize(300); // 最大线程数
         executor.setQueueCapacity(queueCapacity);
         executor.setKeepAliveSeconds(keepAliveTime);
         executor.setThreadNamePrefix(threadNamePrefix);

@@ -7,7 +7,7 @@ import org.apache.sshd.server.session.ServerSession;
 import java.util.UUID;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/6/10 11:09 上午
  * @Since 1.0
  */

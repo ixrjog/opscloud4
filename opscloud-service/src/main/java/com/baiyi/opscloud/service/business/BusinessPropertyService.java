@@ -4,7 +4,7 @@ import com.baiyi.opscloud.domain.generator.opscloud.BusinessProperty;
 import com.baiyi.opscloud.domain.base.BaseBusiness;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/21 2:40 下午
  * @Since 1.0
  */

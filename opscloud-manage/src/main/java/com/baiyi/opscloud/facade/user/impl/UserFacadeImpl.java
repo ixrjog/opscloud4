@@ -1,7 +1,6 @@
 package com.baiyi.opscloud.facade.user.impl;
 
 import com.baiyi.opscloud.common.base.AccessLevel;
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
 import com.baiyi.opscloud.common.util.IdUtil;
 import com.baiyi.opscloud.common.util.PasswordUtil;
@@ -50,6 +49,8 @@ import org.springframework.util.StringUtils;
 
 import java.util.List;
 
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+
 /**
  * @Author baiyi
  * @Date 2021/5/14 10:38 上午
@@ -97,7 +98,7 @@ public class UserFacadeImpl implements UserFacade {
         return userPacker.wrap(user);
     }
 
-    @Async(value = Global.TaskPools.EXECUTOR)
+    @Async(value = CORE)
     @Override
     public void syncUserPermissionGroupForAsset() {
         List<User> users = userService.queryAll();

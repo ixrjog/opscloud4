@@ -1,12 +1,13 @@
 package com.baiyi.opscloud.facade.event.impl;
 
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.domain.generator.opscloud.Event;
 import com.baiyi.opscloud.facade.event.EventFacade;
 import com.baiyi.opscloud.service.event.EventService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
+
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -20,7 +21,7 @@ public class EventFacadeImpl implements EventFacade {
     private final EventService eventService;
 
     @Override
-    @Async(value = Global.TaskPools.DEFAULT)
+    @Async(value = CORE)
     public void recordEvent(Event event){
         eventService.add(event);
     }

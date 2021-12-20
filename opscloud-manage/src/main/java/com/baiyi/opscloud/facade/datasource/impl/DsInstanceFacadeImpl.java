@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.datasource.impl;
 
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.factory.SetDsInstanceConfigFactory;
 import com.baiyi.opscloud.core.provider.base.asset.IAssetBusinessRelation;
@@ -21,6 +20,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
+
 /**
  * @Author baiyi
  * @Date 2021/6/11 10:19 上午
@@ -36,7 +37,7 @@ public class DsInstanceFacadeImpl<T> implements DsInstanceFacade<T> {
     private final DsInstancePacker dsInstancePacker;
 
     @Override
-    @Async(value = Global.TaskPools.EXECUTOR)
+    @Async(value = CORE)
     public void pullAsset(DsAssetParam.PullAsset pullAsset) {
         List<SimpleAssetProvider> providers = getProviders(pullAsset.getInstanceId(), pullAsset.getAssetType());
         assert providers != null;

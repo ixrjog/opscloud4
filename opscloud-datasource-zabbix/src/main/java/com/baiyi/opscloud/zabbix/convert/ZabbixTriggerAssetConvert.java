@@ -10,7 +10,7 @@ import com.baiyi.opscloud.zabbix.v5.entity.ZabbixTrigger;
 import java.util.Date;
 
 /**
- * @Author <a href="mailto:xiuyuan@xinc818.group">修远</a>
+ * @Author 修远
  * @Date 2021/7/2 3:44 下午
  * @Since 1.0
  */

@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.facade.task.impl;
 
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.common.base.ServerTaskStatusEnum;
 import com.baiyi.opscloud.common.datasource.AnsibleConfig;
 import com.baiyi.opscloud.common.exception.common.CommonRuntimeException;
@@ -44,6 +43,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.EXECUTOR;
+
 /**
  * @Author baiyi
  * @Date 2021/9/18 3:21 下午
@@ -81,7 +82,7 @@ public class ServerTaskFacadeImpl extends SimpleDsInstanceProvider implements Se
                 , table.getTotalNum());
     }
 
-    @Async(value = Global.TaskPools.EXECUTOR)
+    @Async(value = EXECUTOR)
     @Override
     public void submitServerTask(ServerTaskParam.SubmitServerTask submitServerTask, String username) {
         ServerTask serverTask = ServerTaskBuilder.newBuilder(submitServerTask, username);

@@ -37,8 +37,8 @@ public class SwaggerConfiguration {
                 .title("OPSCLOUD (IaC) 4.0.0")
                 .description("OPSCLOUD OPENAPI接口文档")
                 .version("4.0.0-RELEASE")
-                .license("GNU General Public License v2")
-                .licenseUrl("https://www.gnu.org/licenses/old-licenses/gpl-2.0.html")
+                .license("APACHE LICENSE, VERSION 2.0")
+                .licenseUrl("https://www.apache.org/licenses/LICENSE-2.0")
                 .contact(new Contact("白衣", "https://github.com/ixrjog/opscloud", "ixrjog@qq.com"))
                 .build();
     }

@@ -1,6 +1,5 @@
 package com.baiyi.opscloud.factory.gitlab.impl;
 
-import com.baiyi.opscloud.common.base.Global;
 import com.baiyi.opscloud.core.factory.AssetProviderFactory;
 import com.baiyi.opscloud.core.provider.base.asset.SimpleAssetProvider;
 import com.baiyi.opscloud.domain.generator.opscloud.DatasourceInstance;
@@ -23,6 +22,8 @@ import javax.annotation.Resource;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.baiyi.opscloud.config.ThreadPoolTaskConfiguration.TaskPools.CORE;
 
 /**
  * @Author baiyi
@@ -54,7 +55,7 @@ public abstract class AbstractGitlabEventConsume implements IGitlabEventConsume,
     }
 
     @Override
-    @Async(value = Global.TaskPools.DEFAULT)
+    @Async(value = CORE)
     public void consumeEventV4(DatasourceInstance instance, GitlabNotifyParam.SystemHook systemHook) {
         eventContext.get().setInstance(instance);
         eventContext.get().setSystemHook(systemHook);
