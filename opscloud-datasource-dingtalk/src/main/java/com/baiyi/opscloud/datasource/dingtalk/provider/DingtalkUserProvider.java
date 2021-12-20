@@ -22,6 +22,7 @@ import com.baiyi.opscloud.service.user.UserService;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -67,11 +68,23 @@ public class DingtalkUserProvider extends AbstractDingtalkAssetProvider<Dingtalk
                 entities.addAll(userResponse.getResult().getList());
             });
             entities.forEach(e -> {
-                List<User> users = userService.listByPhone(e.getMobile());
-                if (!CollectionUtils.isEmpty(users)) {
-                    e.setUsername(users.get(0).getUsername());
+                if (!StringUtils.isEmpty(e.getMobile())) {
+                    if (StringUtils.isEmpty(e.getEmail())) {
+                        e.setUsername(e.getName());
+                    } else {
+                        e.setUsername(EmailUtil.toUsername(e.getEmail()));
+                    }
                 } else {
-                    e.setUsername(EmailUtil.toUsername(e.getEmail()));
+                    List<User> users = userService.listByPhone(e.getMobile());
+                    if (!CollectionUtils.isEmpty(users)) {
+                        e.setUsername(users.get(0).getUsername());
+                    } else {
+                        if (StringUtils.isEmpty(e.getEmail())) {
+                            e.setUsername(e.getName());
+                        } else {
+                            e.setUsername(EmailUtil.toUsername(e.getEmail()));
+                        }
+                    }
                 }
             });
             return entities;

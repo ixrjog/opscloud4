@@ -40,15 +40,14 @@ public abstract class AbstractDingtalkAssetProvider<T> extends AbstractAssetBusi
 
     protected Set<Long> queryDeptSubIds(DsInstanceContext dsInstanceContext) {
         DingtalkConfig.Dingtalk dingtalk = buildConfig(dsInstanceContext.getDsConfig());
-        // 结果集
-        Set<Long> subIdSet = Sets.newHashSet();
         // 遍历参数
         Set<Long> queryDeptIdSet = Optional.ofNullable(dingtalk)
                 .map(DingtalkConfig.Dingtalk::getApp)
                 .map(DingtalkConfig.App::getDepartment)
                 .map(DingtalkConfig.Department::getDeptIds)
                 .orElse(Sets.newHashSet(DEPT_ROOT_ID));
-
+        // 结果集
+        Set<Long> subIdSet = Sets.newHashSet(queryDeptIdSet);
         while (!queryDeptIdSet.isEmpty()) {
             final Long deptId = queryDeptIdSet.iterator().next();
             DingtalkDepartmentParam.ListSubDepartmentId listSubDepartmentId = DingtalkDepartmentParam.ListSubDepartmentId.builder()
